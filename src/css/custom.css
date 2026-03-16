@@ -869,15 +869,23 @@
   }
 
   .prose-solution h2 {
-    @apply mt-10 mb-3 border-b border-black/10 pb-2.5 text-2xl font-bold tracking-tight text-black dark:border-white/10 dark:text-white;
+    @apply mt-14 mb-4 border-b border-black/10 pb-3 text-2xl font-bold tracking-tight text-black dark:border-white/10 dark:text-white;
+  }
+
+  .prose-solution h2:first-child {
+    @apply mt-0;
   }
 
   .prose-solution h3 {
-    @apply mt-8 mb-2.5 text-xl font-semibold tracking-tight text-black dark:text-white;
+    @apply relative mt-10 mb-3 border-b border-black/6 pb-2.5 text-xl font-semibold tracking-tight text-black dark:border-white/8 dark:text-white;
+  }
+
+  .prose-solution h4 {
+    @apply mt-8 mb-2 text-lg font-semibold tracking-tight text-black dark:text-white;
   }
 
   .prose-solution p {
-    @apply my-5 text-[1.04rem] leading-8 text-black/85 dark:text-white/85;
+    @apply my-6 text-[1.04rem] leading-8 text-black/85 dark:text-white/85;
   }
 
   .prose-solution strong {
@@ -886,7 +894,16 @@
 
   .prose-solution ul,
   .prose-solution ol {
-    @apply my-5 ml-7 space-y-2.5 text-[1.02rem] text-black/85 dark:text-white/85;
+    @apply my-6 ml-7 space-y-2.5 text-[1.02rem] text-black/85 dark:text-white/85;
+  }
+
+  .prose-solution ol {
+    @apply list-decimal;
+  }
+
+  .prose-solution ol > li::marker {
+    color: var(--db-lava);
+    font-weight: 600;
   }
 
   .prose-solution li {
@@ -894,11 +911,11 @@
   }
 
   .prose-solution a {
-    @apply text-db-lava underline underline-offset-2 transition-colors hover:text-db-lava-dark;
+    @apply font-medium text-db-lava underline decoration-db-lava/35 underline-offset-4 transition-colors hover:text-db-lava-dark;
   }
 
   .prose-solution blockquote {
-    @apply my-6 rounded-xl border border-db-cyan/40 bg-db-cyan/8 px-5 py-4 dark:border-db-cyan/25 dark:bg-db-cyan/5;
+    @apply my-8 rounded-xl border border-db-cyan/40 bg-db-cyan/8 px-5 py-4 dark:border-db-cyan/25 dark:bg-db-cyan/5;
   }
 
   .prose-solution blockquote p {
@@ -906,11 +923,31 @@
   }
 
   .prose-solution hr {
-    @apply my-10 border-black/10 dark:border-white/10;
+    @apply my-14 border-0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      var(--db-border) 20%,
+      var(--db-border) 80%,
+      transparent
+    );
+  }
+
+  .prose-solution code:not(pre code) {
+    @apply rounded-md border border-black/10 bg-black/4 px-1.5 py-0.5 font-mono text-[0.88em] font-medium text-black/90 dark:border-white/12 dark:bg-white/8 dark:text-white/90;
+  }
+
+  .prose-solution .theme-code-block {
+    @apply my-8 overflow-hidden rounded-xl border border-db-border shadow-sm;
+  }
+
+  .prose-solution .theme-code-block pre {
+    @apply m-0 rounded-none;
   }
 
   .prose-solution table {
-    @apply my-6 w-full border-collapse overflow-hidden rounded-lg border border-black/10 text-sm dark:border-white/10;
+    @apply my-8 w-full border-collapse overflow-hidden rounded-lg border border-black/10 text-sm dark:border-white/10;
   }
 
   .prose-solution thead {
@@ -927,5 +964,31 @@
 
   .prose-solution tbody tr:hover {
     @apply bg-black/2 dark:bg-white/3;
+  }
+
+  .recipe-content-card .theme-code-block {
+    @apply my-8 overflow-hidden rounded-xl border border-db-border shadow-sm;
+  }
+
+  .recipe-content-card .theme-code-block pre {
+    @apply m-0 rounded-none;
+  }
+
+  .recipe-content-card [class*="codeBlockTitle"] {
+    @apply border-b border-db-border bg-black/3 px-4 py-1.5 font-mono text-xs font-medium text-black/55 dark:bg-white/4 dark:text-white/55;
+  }
+
+  .recipe-toc {
+    @apply mt-0;
+  }
+
+  .recipe-toc a {
+    text-decoration: none !important;
+  }
+
+  @media (max-width: 1023px) {
+    .recipe-toc {
+      display: none;
+    }
   }
 }

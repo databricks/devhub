@@ -1,61 +1,49 @@
-import { createServer, type IncomingMessage, type ServerResponse } from "http";
-import handler from "../api/mcp";
+import { createServer, type IncomingMessage } from "http";
+import { POST } from "../api/mcp";
 
-const PORT = 3001;
+const PORT = Number(process.env.PORT) || 3001;
 
-function parseBody(req: IncomingMessage): Promise<unknown> {
+function toWebRequest(req: IncomingMessage, body: string): Request {
+  const url = new URL(req.url || "/", `http://localhost:${PORT}`);
+  return new Request(url, {
+    method: req.method,
+    headers: req.headers as Record<string, string>,
+    body: req.method !== "GET" && req.method !== "HEAD" ? body : undefined,
+  });
+}
+
+function readBody(req: IncomingMessage): Promise<string> {
   return new Promise((resolve, reject) => {
     const chunks: Buffer[] = [];
     req.on("data", (chunk: Buffer) => chunks.push(chunk));
-    req.on("end", () => {
-      const raw = Buffer.concat(chunks).toString();
-      if (!raw) return resolve(null);
-      try {
-        resolve(JSON.parse(raw));
-      } catch {
-        resolve(raw);
-      }
-    });
+    req.on("end", () => resolve(Buffer.concat(chunks).toString()));
     req.on("error", reject);
   });
 }
 
-const server = createServer(
-  async (req: IncomingMessage, raw: ServerResponse) => {
-    const body = req.method === "POST" ? await parseBody(req) : null;
+const server = createServer(async (req, raw) => {
+  raw.setHeader("Access-Control-Allow-Origin", "*");
+  raw.setHeader("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS");
+  raw.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
-    const vercelReq = {
-      method: req.method,
-      headers: req.headers,
-      body,
-      url: req.url,
-    };
+  if (req.method === "OPTIONS") {
+    raw.writeHead(204);
+    raw.end();
+    return;
+  }
 
-    const vercelRes = {
-      statusCode: 200,
-      _headers: {} as Record<string, string>,
-      setHeader(key: string, value: string) {
-        this._headers[key] = value;
-        raw.setHeader(key, value);
-      },
-      status(code: number) {
-        this.statusCode = code;
-        return {
-          json(data: unknown) {
-            raw.writeHead(code, { "Content-Type": "application/json" });
-            raw.end(JSON.stringify(data));
-          },
-          end() {
-            raw.writeHead(code);
-            raw.end();
-          },
-        };
-      },
-    };
+  const body = await readBody(req);
+  const webRequest = toWebRequest(req, body);
+  const response = await POST(webRequest);
 
-    await handler(vercelReq as never, vercelRes as never);
-  },
-);
+  const headers: Record<string, string> = {};
+  response.headers.forEach((value, key) => {
+    headers[key] = value;
+  });
+  raw.writeHead(response.status, headers);
+  const responseBody = await response.text();
+  raw.end(responseBody);
+});
 
 server.listen(PORT, () => {
   console.log(`MCP server listening on http://localhost:${PORT}/api/mcp`);

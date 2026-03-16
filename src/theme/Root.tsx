@@ -1,13 +1,16 @@
 import type { ReactNode } from "react";
 import BrowserOnly from "@docusaurus/BrowserOnly";
-import { useColorMode } from "@docusaurus/theme-common";
 import { Toaster } from "sonner";
 
 function SonnerToaster() {
-  const { colorMode } = useColorMode();
+  const theme =
+    document.documentElement.getAttribute("data-theme") === "dark"
+      ? "dark"
+      : "light";
+
   return (
     <Toaster
-      theme={colorMode}
+      theme={theme}
       className="toaster group"
       style={
         {

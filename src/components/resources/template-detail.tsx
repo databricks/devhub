@@ -32,19 +32,28 @@ export function TemplateDetail({
 
   return (
     <Layout title={template.name} description={template.description}>
-      <main className="container px-4 py-12 md:py-16">
-        <div className="mx-auto max-w-5xl">
-          <Link
-            to="/resources"
-            className="mb-6 inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground no-underline transition-colors hover:text-foreground"
-          >
-            <span aria-hidden="true">&larr;</span>
-            All resources
-          </Link>
+      <main>
+        <div className="container px-4 py-8 md:py-12">
+          <div className="mx-auto max-w-5xl">
+            <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_220px]">
+              <div>
+                <Link
+                  to="/resources"
+                  className="mb-6 inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground no-underline transition-colors hover:text-foreground"
+                >
+                  <span aria-hidden="true">&larr;</span>
+                  All resources
+                </Link>
 
-          <div className="mb-10 overflow-hidden rounded-2xl border border-black/10 bg-gradient-to-br from-white via-white to-slate-50 shadow-lg dark:border-white/10 dark:from-slate-950 dark:via-slate-950 dark:to-slate-900">
-            <div className="grid items-center gap-0 md:grid-cols-[1.15fr_0.85fr]">
-              <div className="p-6 md:p-8">
+                <div className="mb-3 flex justify-end">
+                  <AIExportMenu
+                    contentRef={contentRef}
+                    title={template.name}
+                    description={template.description}
+                    permalink={permalink}
+                  />
+                </div>
+
                 <div className="mb-3 flex flex-wrap items-center gap-3">
                   <h1 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">
                     {template.name}
@@ -58,10 +67,10 @@ export function TemplateDetail({
                     </Badge>
                   )}
                 </div>
-                <p className="mb-5 max-w-lg text-base leading-relaxed text-muted-foreground">
+                <p className="mb-4 max-w-2xl text-base leading-relaxed text-muted-foreground">
                   {template.description}
                 </p>
-                <div className="mb-5 flex flex-wrap gap-2">
+                <div className="mb-8 flex flex-wrap gap-2">
                   {template.tags.map((tag) => (
                     <Badge
                       key={tag}
@@ -72,39 +81,27 @@ export function TemplateDetail({
                     </Badge>
                   ))}
                 </div>
-                <AIExportMenu
-                  contentRef={contentRef}
-                  title={template.name}
-                  description={template.description}
-                  permalink={permalink}
-                />
-              </div>
-              <div className="relative min-h-[220px] overflow-hidden bg-gradient-to-br from-[#0f172a] to-[#1e293b] md:min-h-[280px] md:rounded-r-2xl">
-                <img
-                  src={heroImageUrl}
-                  alt="Template architecture preview"
-                  className="h-full w-full object-cover"
-                  loading="lazy"
-                />
-              </div>
-            </div>
-          </div>
 
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_220px]">
-            <div>
-              <RecipeList recipes={templateRecipes} />
-              <div
-                className="recipe-content-card px-1 py-2 md:px-2 md:py-3"
-                ref={contentRef}
-              >
-                <MDXProvider components={recipeComponents}>
-                  <div className="prose-solution">{children}</div>
-                </MDXProvider>
-              </div>
-            </div>
+                <div className="mb-12 overflow-hidden rounded-xl bg-gradient-to-br from-[#0f172a] to-[#1e293b]">
+                  <img
+                    src={heroImageUrl}
+                    alt="Template architecture preview"
+                    className="h-auto w-full object-cover"
+                    loading="lazy"
+                  />
+                </div>
 
-            <div className="hidden lg:block">
-              <RecipeToc contentRef={contentRef} />
+                <RecipeList recipes={templateRecipes} />
+                <div className="recipe-content-card" ref={contentRef}>
+                  <MDXProvider components={recipeComponents}>
+                    <div className="prose-solution">{children}</div>
+                  </MDXProvider>
+                </div>
+              </div>
+
+              <div className="hidden lg:block">
+                <RecipeToc contentRef={contentRef} />
+              </div>
             </div>
           </div>
         </div>

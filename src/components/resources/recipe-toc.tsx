@@ -89,37 +89,35 @@ export function RecipeToc({ contentRef }: RecipeTocProps): ReactNode {
   if (items.length < 2) return null;
 
   return (
-    <nav className="recipe-toc sticky top-[calc(var(--ifm-navbar-height)+1rem)]">
-      <div className="rounded-2xl border border-db-border bg-db-card p-4 shadow-sm">
-        <p className="mb-3 text-xs font-semibold tracking-[0.06em] uppercase text-muted-foreground">
-          On this page
-        </p>
-        <ul className="m-0 list-none space-y-1 p-0">
-          {items.map((item) => (
-            <li key={item.id} className="m-0 p-0">
-              <a
-                href={`#${item.id}`}
-                className={[
-                  "block rounded-md px-2 py-1 text-[13px] no-underline transition-colors",
-                  activeId === item.id
-                    ? "font-medium text-db-lava"
-                    : "text-muted-foreground hover:text-foreground",
-                ].join(" ")}
-                onClick={(e) => {
-                  e.preventDefault();
-                  const el = document.getElementById(item.id);
-                  if (el) {
-                    el.scrollIntoView({ behavior: "smooth", block: "start" });
-                    setActiveId(item.id);
-                  }
-                }}
-              >
-                {item.text}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
+    <nav className="recipe-toc sticky top-[calc(var(--ifm-navbar-height)+1rem)] max-h-[calc(100vh-var(--ifm-navbar-height)-2rem)] overflow-y-auto text-sm thin-scrollbar">
+      <p className="m-0 mb-3 text-xs font-semibold uppercase tracking-[0.06em] text-muted-foreground dark:text-[rgb(245_247_248/0.5)]">
+        On this page
+      </p>
+      <ul className="m-0 list-none space-y-0.5 border-l-2 border-db-border p-0 dark:border-[rgb(245_247_248/0.12)]">
+        {items.map((item) => (
+          <li key={item.id} className="m-0 p-0">
+            <a
+              href={`#${item.id}`}
+              className={[
+                "block py-1 pl-3 -ml-px border-l-2 text-[13px] leading-snug no-underline transition-colors",
+                activeId === item.id
+                  ? "border-db-lava font-medium text-db-lava"
+                  : "border-transparent text-muted-foreground hover:text-foreground hover:border-db-navy dark:text-[rgb(245_247_248/0.55)] dark:hover:text-white dark:hover:border-white",
+              ].join(" ")}
+              onClick={(e) => {
+                e.preventDefault();
+                const el = document.getElementById(item.id);
+                if (el) {
+                  el.scrollIntoView({ behavior: "smooth", block: "start" });
+                  setActiveId(item.id);
+                }
+              }}
+            >
+              {item.text}
+            </a>
+          </li>
+        ))}
+      </ul>
     </nav>
   );
 }

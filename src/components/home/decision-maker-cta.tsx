@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 
 export function DecisionMakerCta(): ReactNode {
   return (
-    <section className="bg-[#ecebe9] py-16 text-black dark:bg-[#0d1518] dark:text-white md:py-20">
+    <section className="bg-db-navy py-16 text-white dark:bg-black md:py-20">
       <div className="container px-4">
         <div className="mx-auto grid max-w-6xl grid-cols-1 gap-8 md:grid-cols-[1.05fr_1.4fr] md:gap-10">
           <div>
@@ -13,7 +13,7 @@ export function DecisionMakerCta(): ReactNode {
             </h2>
           </div>
 
-          <div className="relative min-h-[360px] overflow-hidden border border-black/8 bg-[#0d1216] dark:border-white/10 md:min-h-[420px]">
+          <div className="relative min-h-[360px] overflow-hidden border border-white/10 bg-[#0d1216] md:min-h-[420px]">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_18%,rgba(255,255,255,0.2)_0,transparent_40%),radial-gradient(circle_at_82%_18%,rgba(255,197,92,0.35)_0,transparent_34%),radial-gradient(circle_at_35%_86%,rgba(120,205,255,0.33)_0,transparent_40%)]" />
             <div className="absolute inset-0 opacity-60 [background-image:radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.26)_1px,transparent_0)] [background-size:6px_6px]" />
             <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(0,0,0,0.68)_15%,rgba(0,0,0,0.2)_55%,rgba(0,0,0,0.8)_100%)]" />

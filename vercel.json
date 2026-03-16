@@ -3,8 +3,34 @@
     "api/mcp.ts": {
       "includeFiles": "docs/**",
       "maxDuration": 30
+    },
+    "api/markdown.ts": {
+      "includeFiles": [
+        "docs/**",
+        "content/solutions/**",
+        "src/pages/resources/_recipes/**"
+      ],
+      "maxDuration": 30
     }
   },
+  "rewrites": [
+    {
+      "source": "/docs/(.+)\\.md",
+      "destination": "/api/markdown?section=docs&slug=$1"
+    },
+    {
+      "source": "/solutions/(.+)\\.md",
+      "destination": "/api/markdown?section=solutions&slug=$1"
+    },
+    {
+      "source": "/resources/(.+)\\.md",
+      "destination": "/api/markdown?section=templates&slug=$1"
+    },
+    {
+      "source": "/templates/(.+)\\.md",
+      "destination": "/api/markdown?section=templates&slug=$1"
+    }
+  ],
   "headers": [
     {
       "source": "/api/(.*)",

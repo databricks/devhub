@@ -1,0 +1,38 @@
+<svg width="960" height="540" viewBox="0 0 960 540" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="120" y1="40" x2="840" y2="500" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0B1220"/>
+      <stop offset="1" stop-color="#1B2437"/>
+    </linearGradient>
+    <linearGradient id="accentA" x1="145" y1="105" x2="415" y2="330" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FF3621"/>
+      <stop offset="1" stop-color="#FF6B59"/>
+    </linearGradient>
+    <linearGradient id="accentB" x1="475" y1="155" x2="845" y2="395" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#00B6CB"/>
+      <stop offset="1" stop-color="#5ED6E4"/>
+    </linearGradient>
+    <filter id="blur" x="0" y="0" width="960" height="540" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="36"/>
+    </filter>
+  </defs>
+  <rect x="8" y="8" width="944" height="524" rx="28" fill="url(#bg)"/>
+  <g opacity="0.3" filter="url(#blur)">
+    <circle cx="214" cy="112" r="88" fill="#FF3621"/>
+    <circle cx="776" cy="420" r="120" fill="#00B6CB"/>
+  </g>
+  <rect x="76" y="84" width="808" height="372" rx="24" fill="#0F172A" fill-opacity="0.82" stroke="white" stroke-opacity="0.16" stroke-width="2"/>
+  <rect x="126" y="136" width="292" height="266" rx="16" fill="url(#accentA)" fill-opacity="0.22" stroke="#FF9A8E" stroke-opacity="0.4"/>
+  <rect x="450" y="166" width="384" height="64" rx="12" fill="#E2E8F0" fill-opacity="0.1"/>
+  <rect x="450" y="246" width="314" height="24" rx="8" fill="#E2E8F0" fill-opacity="0.24"/>
+  <rect x="450" y="286" width="262" height="24" rx="8" fill="#E2E8F0" fill-opacity="0.16"/>
+  <rect x="450" y="326" width="344" height="24" rx="8" fill="#E2E8F0" fill-opacity="0.16"/>
+  <rect x="126" y="418" width="166" height="18" rx="8" fill="#FF3621"/>
+  <rect x="304" y="418" width="122" height="18" rx="8" fill="#00B6CB"/>
+  <rect x="126" y="176" width="184" height="20" rx="8" fill="white" fill-opacity="0.6"/>
+  <rect x="126" y="208" width="236" height="14" rx="7" fill="white" fill-opacity="0.34"/>
+  <rect x="126" y="232" width="198" height="14" rx="7" fill="white" fill-opacity="0.26"/>
+  <rect x="126" y="259" width="104" height="104" rx="12" fill="url(#accentB)" fill-opacity="0.5"/>
+  <rect x="244" y="259" width="174" height="44" rx="10" fill="white" fill-opacity="0.1"/>
+  <rect x="244" y="319" width="122" height="44" rx="10" fill="white" fill-opacity="0.1"/>
+</svg>

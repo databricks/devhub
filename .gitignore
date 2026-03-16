@@ -22,3 +22,6 @@ yarn-error.log*
 # Playwright
 /test-results
 /playwright-report
+
+# Screenshots
+/screenshots

@@ -5,7 +5,7 @@ import { CopyButton } from "@/components/code/copy-button";
 
 export function HeroSection(): ReactNode {
   return (
-    <section className="relative bg-white text-black dark:bg-black dark:text-white">
+    <section className="relative bg-white text-black dark:bg-db-navy dark:text-white">
       <div className="container px-4 py-10 md:py-14">
         <div className="grid min-h-[560px] grid-cols-1 md:grid-cols-2">
           <div className="flex max-w-xl flex-col justify-center gap-8 md:py-8">
@@ -14,7 +14,7 @@ export function HeroSection(): ReactNode {
                 Build agentic applications in minutes, not months.
               </h1>
               <div className="flex flex-wrap items-center gap-4">
-                <div className="inline-flex h-10 items-stretch overflow-hidden rounded-full border border-black/22 bg-white pl-4 font-mono text-sm text-black dark:border-white/24 dark:bg-black dark:text-white">
+                <div className="inline-flex h-10 items-stretch overflow-hidden rounded-full border border-black/22 bg-white pl-4 font-mono text-sm text-black dark:border-white/24 dark:bg-db-navy dark:text-white">
                   <code className="m-0 flex items-center bg-transparent p-0 pr-2 text-inherit dark:text-white">
                     $ npx databricks-init
                   </code>

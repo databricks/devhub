@@ -1,7 +1,9 @@
 import Link from "@docusaurus/Link";
+import useBaseUrl from "@docusaurus/useBaseUrl";
 import Layout from "@theme/Layout";
 import { MDXProvider } from "@mdx-js/react";
 import { useRef, type ReactNode } from "react";
+import { AIExportMenu } from "@/components/ai-export-menu";
 import { Badge } from "@/components/ui/badge";
 import { RecipePre } from "@/components/resources/recipe-code-block";
 import { RecipeList } from "@/components/resources/recipe-list";
@@ -21,6 +23,8 @@ export function TemplateDetail({
   children,
 }: TemplateDetailProps): ReactNode {
   const contentRef = useRef<HTMLDivElement>(null);
+  const heroImageUrl = useBaseUrl("/img/template-detail-hero.svg");
+  const permalink = `/resources/${template.id}`;
 
   const templateRecipes = template.recipeIds
     .map((id) => recipes.find((r) => r.id === id))
@@ -38,40 +42,61 @@ export function TemplateDetail({
             All resources
           </Link>
 
-          <div className="mb-8">
-            <div className="mb-3 flex items-center gap-3">
-              <h1 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">
-                {template.name}
-              </h1>
-              {templateRecipes.length > 1 && (
-                <Badge
-                  variant="secondary"
-                  className="shrink-0 rounded-full border border-db-lava/20 bg-db-lava/8 px-2.5 py-0.5 text-xs font-semibold text-db-lava"
-                >
-                  {templateRecipes.length} recipes
-                </Badge>
-              )}
-            </div>
-            <p className="mb-4 max-w-2xl text-lg text-muted-foreground">
-              {template.description}
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {template.tags.map((tag) => (
-                <Badge
-                  key={tag}
-                  variant="secondary"
-                  className="rounded-sm border border-black/10 bg-black/4 px-2 py-0.5 text-xs font-medium text-black/78 dark:border-white/10 dark:bg-white/8 dark:text-white/78"
-                >
-                  {tag}
-                </Badge>
-              ))}
+          <div className="mb-10 overflow-hidden rounded-2xl border border-black/10 bg-gradient-to-br from-white via-white to-slate-50 shadow-lg dark:border-white/10 dark:from-slate-950 dark:via-slate-950 dark:to-slate-900">
+            <div className="grid items-center gap-0 md:grid-cols-[1.15fr_0.85fr]">
+              <div className="p-6 md:p-8">
+                <div className="mb-3 flex flex-wrap items-center gap-3">
+                  <h1 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">
+                    {template.name}
+                  </h1>
+                  {templateRecipes.length > 1 && (
+                    <Badge
+                      variant="secondary"
+                      className="shrink-0 rounded-full border border-db-lava/20 bg-db-lava/8 px-2.5 py-0.5 text-xs font-semibold text-db-lava"
+                    >
+                      {templateRecipes.length} recipes
+                    </Badge>
+                  )}
+                </div>
+                <p className="mb-5 max-w-lg text-base leading-relaxed text-muted-foreground">
+                  {template.description}
+                </p>
+                <div className="mb-5 flex flex-wrap gap-2">
+                  {template.tags.map((tag) => (
+                    <Badge
+                      key={tag}
+                      variant="secondary"
+                      className="rounded-sm border border-black/10 bg-black/4 px-2 py-0.5 text-xs font-medium text-black/78 dark:border-white/10 dark:bg-white/8 dark:text-white/78"
+                    >
+                      {tag}
+                    </Badge>
+                  ))}
+                </div>
+                <AIExportMenu
+                  contentRef={contentRef}
+                  title={template.name}
+                  description={template.description}
+                  permalink={permalink}
+                />
+              </div>
+              <div className="relative min-h-[220px] overflow-hidden bg-gradient-to-br from-[#0f172a] to-[#1e293b] md:min-h-[280px] md:rounded-r-2xl">
+                <img
+                  src={heroImageUrl}
+                  alt="Template architecture preview"
+                  className="h-full w-full object-cover"
+                  loading="lazy"
+                />
+              </div>
             </div>
           </div>
 
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_220px]">
             <div>
               <RecipeList recipes={templateRecipes} />
-              <div className="recipe-content-card px-1 py-2 md:px-2 md:py-3" ref={contentRef}>
+              <div
+                className="recipe-content-card px-1 py-2 md:px-2 md:py-3"
+                ref={contentRef}
+              >
                 <MDXProvider components={recipeComponents}>
                   <div className="prose-solution">{children}</div>
                 </MDXProvider>

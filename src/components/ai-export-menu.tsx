@@ -107,7 +107,7 @@ export function AIExportMenu({
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="sm">
-          AI Export
+          Copy as
           <ChevronDownIcon />
         </Button>
       </DropdownMenuTrigger>

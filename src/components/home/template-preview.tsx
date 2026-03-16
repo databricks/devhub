@@ -17,7 +17,7 @@ export function TemplatePreview(): ReactNode {
   const displayTemplates: TemplatePreviewItem[] = landingTemplates.slice(0, 3);
 
   return (
-    <section className="border-t border-db-cyan/30 bg-[#edf6fa] py-16 dark:border-db-cyan/25 dark:bg-[#0d1a1f] md:py-20">
+    <section className="border-t border-db-cyan/30 bg-[#edf6fa] py-16 dark:border-db-cyan/25 dark:bg-[#111b20] md:py-20">
       <div className="container px-4">
         <div className="mx-auto max-w-6xl">
           <p className="mb-4 inline-flex items-center gap-2 text-[10px] font-semibold tracking-[0.12em] text-black/60 uppercase dark:text-white/60">

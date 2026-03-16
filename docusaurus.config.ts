@@ -91,7 +91,6 @@ const config: Config = {
         src: "img/databricks-logo.svg",
       },
       items: [
-        { to: "/", label: "Home", position: "left" },
         { to: "/solutions", label: "Solutions", position: "left" },
         { to: "/resources", label: "Resources", position: "left" },
         {

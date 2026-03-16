@@ -6,7 +6,7 @@ import { pillars } from "@/lib/landing-content";
 
 export function PillarStrip(): ReactNode {
   return (
-    <section className="bg-[#f3f2f1] py-16 dark:bg-[#111b20] md:py-20">
+    <section className="bg-db-oat-medium py-16 dark:bg-black md:py-20">
       <div className="container px-4">
         <div className="mx-auto mb-10 grid max-w-5xl grid-cols-1 gap-8 md:grid-cols-[220px_1fr] md:items-start">
           <p className="max-w-[210px] text-xs leading-relaxed tracking-[0.01em] text-black/60 dark:text-white/60">

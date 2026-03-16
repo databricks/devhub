@@ -7,13 +7,14 @@
 @layer base {
   :root {
     /* Databricks brand palette */
-    --db-navy: #1b3139;
-    --db-navy-light: #243d47;
+    --db-navy: #0b2026;
+    --db-navy-light: #1b3139;
     --db-lava: #ff3621;
     --db-lava-dark: #eb1600;
     --db-lava-light: #ff5542;
     --db-lava-lightest: #ff9488;
     --db-cyan: #7dd3fc;
+    --db-oat-medium: #eeede9;
     --db-bg: #f9f7f4;
     --db-card: #ffffff;
     --db-border: #dce0e2;
@@ -27,11 +28,11 @@
     --popover-foreground: var(--db-navy);
     --primary: var(--db-lava);
     --primary-foreground: #ffffff;
-    --secondary: #eef2f4;
+    --secondary: var(--db-oat-medium);
     --secondary-foreground: var(--db-navy);
-    --muted: #eef2f4;
-    --muted-foreground: rgb(27 49 57 / 0.65);
-    --accent: #e8eef1;
+    --muted: var(--db-oat-medium);
+    --muted-foreground: rgb(11 32 38 / 0.65);
+    --accent: #e3e2dd;
     --accent-foreground: var(--db-navy);
     --destructive: #d41400;
     --destructive-foreground: #ffffff;
@@ -59,6 +60,7 @@
     --ifm-font-family-monospace:
       "DM Mono", SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     --ifm-code-font-size: 95%;
+    --ifm-pre-padding: 1rem 1.25rem;
     --ifm-navbar-background-color: #000000;
     --ifm-footer-background-color: var(--db-navy);
     --ifm-card-background-color: var(--db-card);
@@ -169,6 +171,7 @@
   --color-db-lava-light: var(--db-lava-light);
   --color-db-lava-lightest: var(--db-lava-lightest);
   --color-db-cyan: var(--db-cyan);
+  --color-db-oat-medium: var(--db-oat-medium);
   --color-db-bg: var(--db-bg);
   --color-db-card: var(--db-card);
   --color-db-border: var(--db-border);
@@ -570,11 +573,15 @@
   }
 
   .db-docs-article .theme-doc-markdown .theme-code-block {
-    @apply my-6 overflow-hidden rounded-xl border border-db-border shadow-sm;
+    @apply my-6 overflow-hidden rounded-xl border border-black/12 shadow-md dark:border-white/12;
   }
 
   .db-docs-article .theme-doc-markdown .theme-code-block pre {
-    @apply m-0 rounded-none;
+    @apply m-0 rounded-none px-5 py-4;
+  }
+
+  .db-docs-article .theme-doc-markdown [class*="codeBlockTitle"] {
+    @apply border-b border-black/8 bg-black/5 px-5 py-2.5 font-mono text-xs font-semibold tracking-wide text-black/50 uppercase dark:border-white/8 dark:bg-white/5 dark:text-white/50;
   }
 
   .db-docs-article .theme-doc-markdown .theme-code-block-highlighted-line {
@@ -647,97 +654,6 @@
     @apply mt-5 inline-flex items-center gap-1.5 text-sm text-db-navy/60 transition-colors hover:text-db-lava;
   }
 
-  .db-docs-sidebar-nav {
-    @apply p-0;
-    background: transparent;
-    border: none;
-    box-shadow: none;
-    border-radius: 0;
-  }
-
-  .db-docs-sidebar-nav > .menu__list {
-    @apply space-y-0.5;
-  }
-
-  .db-docs-sidebar-nav .menu__list-item {
-    @apply my-0;
-  }
-
-  .db-docs-sidebar-nav
-    > .menu__list
-    > .theme-doc-sidebar-item-category
-    + .theme-doc-sidebar-item-category {
-    @apply mt-2 pt-2;
-    border-top: 1px solid var(--border);
-  }
-
-  .db-docs-sidebar-nav .menu__link--sublist {
-    @apply rounded-md px-2.5 py-1.5 text-[11px] font-semibold tracking-[0.06em] uppercase;
-    color: var(--muted-foreground);
-  }
-
-  .db-docs-sidebar-nav .menu__link--sublist:hover {
-    color: var(--foreground);
-    background-color: transparent;
-    border-color: transparent;
-  }
-
-  .db-docs-sidebar-nav .menu__list-item-collapsible--active > .menu__link {
-    color: var(--foreground);
-  }
-
-  .db-docs-sidebar-nav .menu__link--sublist-caret::after {
-    background-size: 1.1em 1.1em;
-    min-width: 1.1em;
-    opacity: 0.45;
-    transition: opacity 0.15s ease;
-  }
-
-  .db-docs-sidebar-nav .menu__link--sublist-caret:hover::after {
-    opacity: 0.8;
-  }
-
-  .db-docs-sidebar-nav .menu__caret::before {
-    display: none;
-  }
-
-  .db-docs-sidebar-nav .menu__list .menu__list {
-    @apply ml-0 mt-0.5 space-y-0.5 border-l-0 pl-0;
-  }
-
-  .db-docs-sidebar-nav .menu__link {
-    @apply relative rounded-md border-none px-2.5 py-1.5 text-[13px] font-normal transition-colors;
-    color: var(--muted-foreground);
-  }
-
-  .db-docs-sidebar-nav .menu__link:hover {
-    color: var(--foreground);
-    background-color: var(--accent);
-    border-color: transparent;
-  }
-
-  .db-docs-sidebar-nav .menu__link--active {
-    @apply font-medium;
-    color: var(--foreground);
-    background-color: var(--accent);
-  }
-
-  .db-docs-sidebar-nav .menu__link--active::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 4px;
-    bottom: 4px;
-    width: 3px;
-    border-radius: 3px;
-    background-color: var(--primary);
-  }
-
-  .db-docs-sidebar-nav .menu__link:focus-visible {
-    outline: 2px solid var(--ring);
-    outline-offset: 2px;
-  }
-
   .db-docs-toc-col .table-of-contents {
     @apply sticky p-4 text-sm;
     top: calc(var(--ifm-navbar-height) + 1rem);
@@ -754,14 +670,6 @@
   .db-docs-toc-col .table-of-contents__link:focus-visible {
     outline: 2px solid var(--ring);
     outline-offset: 2px;
-  }
-
-  [data-theme="dark"]
-    .db-docs-sidebar-nav
-    > .menu__list
-    > .theme-doc-sidebar-item-category
-    + .theme-doc-sidebar-item-category {
-    border-color: var(--db-dark-border);
   }
 
   [data-theme="dark"]
@@ -838,9 +746,6 @@
   [data-theme="dark"] .db-docs-article .theme-doc-markdown h6 {
     color: rgb(245 247 248 / 0.9);
   }
-
-  /* Sidebar uses CSS custom properties (--foreground, --muted-foreground, --accent)
-     that auto-switch in dark mode, so no explicit dark overrides needed for links. */
 
   [data-theme="dark"] .db-docs-toc-col .table-of-contents__link {
     color: rgb(245 247 248 / 0.65);
@@ -939,11 +844,15 @@
   }
 
   .prose-solution .theme-code-block {
-    @apply my-8 overflow-hidden rounded-xl border border-db-border shadow-sm;
+    @apply my-8 overflow-hidden rounded-xl border border-black/12 shadow-md dark:border-white/12;
   }
 
   .prose-solution .theme-code-block pre {
-    @apply m-0 rounded-none;
+    @apply m-0 rounded-none px-5 py-4;
+  }
+
+  .prose-solution [class*="codeBlockTitle"] {
+    @apply border-b border-black/8 bg-black/5 px-5 py-2.5 font-mono text-xs font-semibold tracking-wide text-black/50 uppercase dark:border-white/8 dark:bg-white/5 dark:text-white/50;
   }
 
   .prose-solution table {
@@ -967,15 +876,15 @@
   }
 
   .recipe-content-card .theme-code-block {
-    @apply my-8 overflow-hidden rounded-xl border border-db-border shadow-sm;
+    @apply my-8 overflow-hidden rounded-xl border border-black/12 shadow-md dark:border-white/12;
   }
 
   .recipe-content-card .theme-code-block pre {
-    @apply m-0 rounded-none;
+    @apply m-0 rounded-none px-5 py-4;
   }
 
   .recipe-content-card [class*="codeBlockTitle"] {
-    @apply border-b border-db-border bg-black/3 px-4 py-1.5 font-mono text-xs font-medium text-black/55 dark:bg-white/4 dark:text-white/55;
+    @apply border-b border-black/8 bg-black/5 px-5 py-2.5 font-mono text-xs font-semibold tracking-wide text-black/50 uppercase dark:border-white/8 dark:bg-white/5 dark:text-white/50;
   }
 
   .recipe-toc {

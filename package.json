@@ -51,6 +51,7 @@
     "@docusaurus/types": "3.9.2",
     "@playwright/test": "^1.58.2",
     "@tailwindcss/postcss": "^4.2.1",
+    "@vercel/node": "^5.6.15",
     "postcss": "^8.5.8",
     "tailwindcss": "^4.2.1",
     "typescript": "~5.6.2",

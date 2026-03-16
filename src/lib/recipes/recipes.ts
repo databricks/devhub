@@ -1,21 +1,9 @@
-type RecipeStep = {
-  id: string;
-  title: string;
-  details?: string;
-  command?: string;
-};
-
-type Recipe = {
+export type Recipe = {
   id: string;
   name: string;
   description: string;
   tags: string[];
   prerequisites?: string[];
-  steps: RecipeStep[];
-  references?: Array<{
-    label: string;
-    href: string;
-  }>;
 };
 
 export type Template = {
@@ -24,7 +12,6 @@ export type Template = {
   description: string;
   recipeIds: string[];
   tags: string[];
-  steps: RecipeStep[];
 };
 
 type TemplatePreviewItem = {
@@ -42,120 +29,38 @@ export const recipes: Recipe[] = [
     description:
       "Prepare a local Databricks app workspace: install CLI, authenticate, scaffold, and install Databricks agent skills.",
     tags: ["Databricks CLI", "Setup", "Agent Skills"],
-    steps: [
-      {
-        id: "check-cli",
-        title: "Verify Databricks CLI version",
-        command: "databricks --version",
-        details:
-          "Use Databricks CLI 0.292+ before running setup and app scaffolding commands.",
-      },
-      {
-        id: "install-cli",
-        title: "Install or upgrade Databricks CLI (if needed)",
-        command: "brew tap databricks/tap && brew install databricks",
-        details:
-          "On Linux/Windows use the official installer alternatives from Databricks docs.",
-      },
-      {
-        id: "auth-login",
-        title: "Authenticate to your Databricks workspace",
-        command: "databricks auth login --host <workspace-url>",
-      },
-      {
-        id: "select-profile",
-        title: "List and select profile",
-        command: "databricks auth profiles",
-        details: "Always run workspace commands with --profile <PROFILE>.",
-      },
-      {
-        id: "scaffold-app",
-        title: "Scaffold a new Databricks app folder",
-        command:
-          'databricks apps init --name <app-name> --description "<desc>" --run none --profile <PROFILE>',
-        details:
-          "This creates a new workspace folder for app development and skips auto-run so code can be reviewed first.",
-      },
-      {
-        id: "install-skills",
-        title: "Install Databricks agent skills",
-        command: "npx skills add databricks/databricks-agent-skills --all",
-        details:
-          "--all installs all skills to all detected agents with confirmation skipped.",
-      },
-      {
-        id: "verify-skills",
-        title: "Verify installed skills",
-        command: "npx skills list",
-      },
-    ],
-    references: [
-      {
-        label: "Databricks CLI install",
-        href: "https://docs.databricks.com/en/dev-tools/cli/install",
-      },
-      {
-        label: "Databricks CLI authentication",
-        href: "https://docs.databricks.com/en/dev-tools/cli/authentication.html",
-      },
-    ],
   },
   {
     id: "vercel-ai-chat-app",
-    name: "Vercel AI SDK + AI Elements Chat",
+    name: "AI Chat with Databricks Model Serving",
     description:
-      "Build a minimal streaming chat app using Vercel AI SDK and AI Elements patterns.",
-    tags: ["AI SDK", "AI Elements", "Chat"],
+      "Build a streaming chat app powered by Databricks AI Gateway (model serving). Uses Vercel AI SDK with an OpenAI-compatible provider pointed at your Databricks serving endpoint, plus AI Elements for the chat UI.",
+    tags: ["AI SDK", "AI Gateway", "Model Serving", "Chat"],
     prerequisites: ["databricks-local-bootstrap"],
-    steps: [
-      {
-        id: "install-ai-sdk",
-        title: "Install AI SDK",
-        command: "bun add ai @ai-sdk/react",
-      },
-      {
-        id: "install-ai-elements",
-        title: "Install AI Elements UI components",
-        command: "bunx shadcn@latest add @ai-elements/all",
-      },
-      {
-        id: "set-provider-env",
-        title: "Configure AI provider environment variables",
-        details:
-          "Set either VERCEL_OIDC_TOKEN or AI_GATEWAY_API_KEY (or provider-specific keys such as OPENAI_API_KEY).",
-      },
-      {
-        id: "create-chat-route",
-        title: "Create a streaming chat API route",
-        details:
-          "Implement /api/chat with streamText and return toUIMessageStreamResponse().",
-      },
-      {
-        id: "create-chat-ui",
-        title: "Create a client chat UI with useChat",
-        details:
-          "Use useChat + DefaultChatTransport and render text parts with a submit form.",
-      },
-      {
-        id: "run-and-test",
-        title: "Run and test locally",
-        command: "bun run dev",
-      },
-    ],
-    references: [
-      {
-        label: "AI SDK docs",
-        href: "https://ai-sdk.dev/docs/introduction",
-      },
-      {
-        label: "AI Elements docs",
-        href: "https://ui.shadcn.com/docs/registry/ai-elements",
-      },
-      {
-        label: "Fullstackrecipes AI SDK setup",
-        href: "recipe://fullstackrecipes.com/ai-sdk-setup",
-      },
-    ],
+  },
+  {
+    id: "lakebase-data-persistence",
+    name: "Lakebase Data Persistence",
+    description:
+      "Add a managed Postgres database to your Databricks app using the Lakebase plugin. Covers schema setup, table creation, and full CRUD REST API routes.",
+    tags: ["Lakebase", "Postgres", "CRUD", "Data"],
+    prerequisites: ["databricks-local-bootstrap"],
+  },
+  {
+    id: "genie-conversational-analytics",
+    name: "Genie Conversational Analytics",
+    description:
+      "Embed a Databricks AI/BI Genie chat interface so users can explore data through natural language. Configure a Genie space, wire up the plugin, and render the chat component.",
+    tags: ["Genie", "AI/BI", "Natural Language", "Data"],
+    prerequisites: ["databricks-local-bootstrap"],
+  },
+  {
+    id: "sql-analytics-dashboard",
+    name: "SQL Analytics Dashboard",
+    description:
+      "Build interactive dashboards with parameterized SQL queries and chart components. Uses the Analytics plugin for SQL Warehouse queries and AppKit UI for visualizations.",
+    tags: ["Analytics", "SQL", "Charts", "Dashboard"],
+    prerequisites: ["databricks-local-bootstrap"],
   },
 ];
 
@@ -180,7 +85,6 @@ function createTemplate(config: TemplateConfig): Template {
   });
 
   const tags = [...new Set(selectedRecipes.flatMap((recipe) => recipe.tags))];
-  const steps = selectedRecipes.flatMap((recipe) => recipe.steps);
 
   return {
     id: config.id,
@@ -188,7 +92,6 @@ function createTemplate(config: TemplateConfig): Template {
     description: config.description,
     recipeIds: config.recipeIds,
     tags,
-    steps,
   };
 }
 
@@ -204,8 +107,38 @@ export const templates: Template[] = [
     id: "ai-chat-app-template",
     name: "AI Chat App Template",
     description:
-      "Databricks local bootstrap plus a simple AI chat implementation using AI SDK and AI Elements.",
+      "Databricks local bootstrap plus a streaming AI chat powered by Databricks Model Serving (AI Gateway) with AI SDK and AI Elements.",
     recipeIds: ["databricks-local-bootstrap", "vercel-ai-chat-app"],
+  }),
+  createTemplate({
+    id: "data-app-template",
+    name: "Data App Template",
+    description:
+      "Bootstrap a Databricks app with Lakebase for persistent data storage. Includes schema setup and full CRUD API routes.",
+    recipeIds: ["databricks-local-bootstrap", "lakebase-data-persistence"],
+  }),
+  createTemplate({
+    id: "analytics-dashboard-app-template",
+    name: "Analytics Dashboard App Template",
+    description:
+      "Build an interactive analytics dashboard backed by Lakebase and powered by parameterized SQL queries and chart components.",
+    recipeIds: [
+      "databricks-local-bootstrap",
+      "lakebase-data-persistence",
+      "sql-analytics-dashboard",
+    ],
+  }),
+  createTemplate({
+    id: "ai-data-explorer-template",
+    name: "AI Data Explorer Template",
+    description:
+      "A full-stack data application with Lakebase persistence, AI chat powered by Databricks Model Serving, and Genie natural-language data exploration.",
+    recipeIds: [
+      "databricks-local-bootstrap",
+      "lakebase-data-persistence",
+      "vercel-ai-chat-app",
+      "genie-conversational-analytics",
+    ],
   }),
 ];
 

@@ -48,9 +48,9 @@ For every change to DevHub, do the following:
 ### Tailwind
 
 - Always use Tailwind over CSS Modules
-- Use brand colors
-- Prefer built-in values, occasionally allow dynamic values, rarely globals
-- Always use v4 + global CSS file format + shadcn/ui
+- Avoid `@apply` in favor of inline Tailwind classes
+- Use brand colors and avoid raw color values
+- Always use shadcn/ui components as the foundation for all UI
 
 ## Browser Automation
 

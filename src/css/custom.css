@@ -426,6 +426,10 @@
     border-bottom: 1px solid var(--border);
   }
 
+  .db-docs-article .theme-doc-breadcrumbs .breadcrumbs {
+    @apply flex items-center;
+  }
+
   .db-docs-article
     .theme-doc-breadcrumbs
     .breadcrumbs__item--active
@@ -433,6 +437,7 @@
   .db-docs-article .theme-doc-breadcrumbs .breadcrumbs__item--active span {
     @apply font-semibold text-db-navy;
     color: var(--foreground) !important;
+    padding: 0.4rem 1rem;
   }
 
   .theme-doc-breadcrumbs .breadcrumbs__item--active .breadcrumbs__link,

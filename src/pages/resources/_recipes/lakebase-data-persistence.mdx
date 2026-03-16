@@ -1,0 +1,114 @@
+## Lakebase Data Persistence
+
+Add a managed Postgres database to your Databricks app using the Lakebase plugin. Covers schema setup, table creation, and full CRUD REST API routes.
+
+### 1. Enable the Lakebase plugin
+
+Add the lakebase plugin to your server entry point. Use `autoStart: false` on the server plugin so you can run database setup before accepting requests:
+
+```typescript
+import { createApp, server, lakebase } from "@databricks/appkit";
+
+createApp({ plugins: [server({ autoStart: false }), lakebase()] })
+  .then(async (appkit) => {
+    // setup routes then start
+    await appkit.server.start();
+  })
+  .catch(console.error);
+```
+
+### 2. Define your database schema
+
+Create a schema and table using raw SQL. Lakebase provides a Postgres-compatible interface through `appkit.lakebase.query()`:
+
+```typescript
+const SETUP_SCHEMA = `CREATE SCHEMA IF NOT EXISTS app`;
+
+const CREATE_TABLE = `
+  CREATE TABLE IF NOT EXISTS app.items (
+    id SERIAL PRIMARY KEY,
+    title TEXT NOT NULL,
+    completed BOOLEAN NOT NULL DEFAULT false,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  )
+`;
+
+await appkit.lakebase.query(SETUP_SCHEMA);
+await appkit.lakebase.query(CREATE_TABLE);
+```
+
+### 3. Create CRUD API routes
+
+Use `appkit.server.extend()` to register Express routes that call `appkit.lakebase.query()` with parameterized SQL:
+
+```typescript
+appkit.server.extend((app) => {
+  app.get("/api/items", async (_req, res) => {
+    const { rows } = await appkit.lakebase.query(
+      "SELECT * FROM app.items ORDER BY created_at DESC"
+    );
+    res.json(rows);
+  });
+
+  app.post("/api/items", async (req, res) => {
+    const { rows } = await appkit.lakebase.query(
+      "INSERT INTO app.items (title) VALUES ($1) RETURNING *",
+      [req.body.title]
+    );
+    res.status(201).json(rows[0]);
+  });
+
+  app.patch("/api/items/:id", async (req, res) => {
+    const { rows } = await appkit.lakebase.query(
+      "UPDATE app.items SET completed = NOT completed WHERE id = $1 RETURNING *",
+      [req.params.id]
+    );
+    res.json(rows[0]);
+  });
+
+  app.delete("/api/items/:id", async (req, res) => {
+    await appkit.lakebase.query(
+      "DELETE FROM app.items WHERE id = $1",
+      [req.params.id]
+    );
+    res.status(204).send();
+  });
+});
+```
+
+### 4. Wire up schema setup and start the server
+
+Run the schema setup before registering routes and starting the server:
+
+```typescript
+createApp({ plugins: [server({ autoStart: false }), lakebase()] })
+  .then(async (appkit) => {
+    await appkit.lakebase.query(SETUP_SCHEMA);
+    await appkit.lakebase.query(CREATE_TABLE);
+    registerRoutes(appkit);
+    await appkit.server.start();
+  })
+  .catch(console.error);
+```
+
+### 5. Run and test locally
+
+Verify the endpoints with curl:
+
+```bash
+bun run dev
+```
+
+```bash
+curl -X POST http://localhost:3000/api/items \
+  -H 'Content-Type: application/json' \
+  -d '{"title":"My first item"}'
+
+curl http://localhost:3000/api/items
+```
+
+#### References
+
+- [Lakebase plugin docs](https://databricks.github.io/appkit/docs/plugins/lakebase)
+- [Lakebase database permissions](https://databricks.github.io/appkit/docs/plugins/lakebase#database-permissions)
+- [What is a Lakebase?](/solutions/what-is-a-lakebase)

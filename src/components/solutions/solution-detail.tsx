@@ -53,7 +53,7 @@ export function SolutionDetail({
               </div>
             </div>
 
-            <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_200px]">
+            <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_220px]">
               <div
                 className="recipe-content-card rounded-2xl border border-db-border bg-db-card px-5 py-8 shadow-sm md:px-10 md:py-10"
                 ref={contentRef}

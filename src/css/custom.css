@@ -409,7 +409,7 @@
   }
 
   .db-docs-content-container {
-    @apply rounded-2xl border border-db-border bg-db-card px-5 py-6 shadow-sm md:px-8 md:py-8;
+    @apply px-5 py-6 md:px-8 md:py-8;
   }
 
   @media (max-width: 996px) {
@@ -739,7 +739,7 @@
   }
 
   .db-docs-toc-col .table-of-contents {
-    @apply sticky rounded-2xl border border-db-border bg-db-card p-4 text-sm shadow-sm;
+    @apply sticky p-4 text-sm;
     top: calc(var(--ifm-navbar-height) + 1rem);
   }
 

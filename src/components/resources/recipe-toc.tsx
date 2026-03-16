@@ -9,7 +9,6 @@ import {
 type TocItem = {
   id: string;
   text: string;
-  level: number;
 };
 
 type RecipeTocProps = {
@@ -25,7 +24,7 @@ export function RecipeToc({ contentRef }: RecipeTocProps): ReactNode {
     const container = contentRef.current;
     if (!container) return;
 
-    const headings = container.querySelectorAll("h2, h3");
+    const headings = container.querySelectorAll("h2");
     const tocItems: TocItem[] = [];
 
     headings.forEach((heading) => {
@@ -40,7 +39,6 @@ export function RecipeToc({ contentRef }: RecipeTocProps): ReactNode {
         tocItems.push({
           id: heading.id,
           text: heading.textContent ?? "",
-          level: heading.tagName === "H2" ? 2 : 3,
         });
       }
     });
@@ -103,7 +101,6 @@ export function RecipeToc({ contentRef }: RecipeTocProps): ReactNode {
                 href={`#${item.id}`}
                 className={[
                   "block rounded-md px-2 py-1 text-[13px] no-underline transition-colors",
-                  item.level === 3 ? "pl-4" : "",
                   activeId === item.id
                     ? "font-medium text-db-lava"
                     : "text-muted-foreground hover:text-foreground",

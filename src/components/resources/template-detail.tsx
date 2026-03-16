@@ -68,7 +68,7 @@ export function TemplateDetail({
             </div>
           </div>
 
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_200px]">
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_220px]">
             <div>
               <RecipeList recipes={templateRecipes} />
               <div

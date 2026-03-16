@@ -33,8 +33,14 @@ Import `useAnalyticsQuery` for data fetching and chart components for visualizat
 
 ```tsx
 import {
-  useAnalyticsQuery, AreaChart, LineChart, BarChart,
-  Card, CardContent, CardHeader, CardTitle,
+  useAnalyticsQuery,
+  AreaChart,
+  LineChart,
+  BarChart,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
 } from "@databricks/appkit-ui/react";
 import { sql } from "@databricks/appkit-ui/js";
 import { useState } from "react";
@@ -46,13 +52,17 @@ export function DashboardPage() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       <Card>
-        <CardHeader><CardTitle>Revenue Trend</CardTitle></CardHeader>
+        <CardHeader>
+          <CardTitle>Revenue Trend</CardTitle>
+        </CardHeader>
         <CardContent>
           <AreaChart queryKey="monthly_metrics" parameters={params} />
         </CardContent>
       </Card>
       <Card>
-        <CardHeader><CardTitle>User Growth</CardTitle></CardHeader>
+        <CardHeader>
+          <CardTitle>User Growth</CardTitle>
+        </CardHeader>
         <CardContent>
           <LineChart queryKey="monthly_metrics" parameters={params} />
         </CardContent>

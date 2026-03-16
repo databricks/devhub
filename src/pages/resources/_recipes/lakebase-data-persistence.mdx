@@ -45,7 +45,7 @@ Use `appkit.server.extend()` to register Express routes that call `appkit.lakeba
 appkit.server.extend((app) => {
   app.get("/api/items", async (_req, res) => {
     const { rows } = await appkit.lakebase.query(
-      "SELECT * FROM app.items ORDER BY created_at DESC"
+      "SELECT * FROM app.items ORDER BY created_at DESC",
     );
     res.json(rows);
   });
@@ -53,7 +53,7 @@ appkit.server.extend((app) => {
   app.post("/api/items", async (req, res) => {
     const { rows } = await appkit.lakebase.query(
       "INSERT INTO app.items (title) VALUES ($1) RETURNING *",
-      [req.body.title]
+      [req.body.title],
     );
     res.status(201).json(rows[0]);
   });
@@ -61,16 +61,15 @@ appkit.server.extend((app) => {
   app.patch("/api/items/:id", async (req, res) => {
     const { rows } = await appkit.lakebase.query(
       "UPDATE app.items SET completed = NOT completed WHERE id = $1 RETURNING *",
-      [req.params.id]
+      [req.params.id],
     );
     res.json(rows[0]);
   });
 
   app.delete("/api/items/:id", async (req, res) => {
-    await appkit.lakebase.query(
-      "DELETE FROM app.items WHERE id = $1",
-      [req.params.id]
-    );
+    await appkit.lakebase.query("DELETE FROM app.items WHERE id = $1", [
+      req.params.id,
+    ]);
     res.status(204).send();
   });
 });

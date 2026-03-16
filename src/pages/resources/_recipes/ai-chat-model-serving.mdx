@@ -54,7 +54,7 @@ const databricks = createOpenAICompatible({
 });
 
 export const chatModel = databricks.chatModel(
-  process.env.DATABRICKS_SERVING_ENDPOINT!
+  process.env.DATABRICKS_SERVING_ENDPOINT!,
 );
 ```
 

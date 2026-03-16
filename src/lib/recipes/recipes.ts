@@ -102,16 +102,24 @@ export const recipes: Recipe[] = [
   },
   {
     id: "vercel-ai-chat-app",
-    name: "Vercel AI SDK + AI Elements Chat",
+    name: "AI Chat with Databricks Model Serving",
     description:
-      "Build a minimal streaming chat app using Vercel AI SDK and AI Elements patterns.",
-    tags: ["AI SDK", "AI Elements", "Chat"],
+      "Build a streaming chat app powered by Databricks AI Gateway (model serving). Uses Vercel AI SDK with an OpenAI-compatible provider pointed at your Databricks serving endpoint, plus AI Elements for the chat UI.",
+    tags: ["AI SDK", "AI Gateway", "Model Serving", "Chat"],
     prerequisites: ["databricks-local-bootstrap"],
     steps: [
       {
+        id: "list-serving-endpoints",
+        title: "Identify your model serving endpoint",
+        command:
+          "databricks serving-endpoints list --profile <PROFILE> -o json",
+        details:
+          "List available serving endpoints in your workspace. Pick the endpoint name you want to use for chat (e.g. a foundation model endpoint or a custom model endpoint). You can also check a specific endpoint with:\n\ndatabricks serving-endpoints get <endpoint-name> --profile <PROFILE>",
+      },
+      {
         id: "install-ai-sdk",
-        title: "Install AI SDK",
-        command: "bun add ai @ai-sdk/react",
+        title: "Install AI SDK and the OpenAI-compatible provider",
+        command: "bun add ai @ai-sdk/react @ai-sdk/openai-compatible",
       },
       {
         id: "install-ai-elements",
@@ -120,40 +128,54 @@ export const recipes: Recipe[] = [
       },
       {
         id: "set-provider-env",
-        title: "Configure AI provider environment variables",
+        title: "Configure Databricks environment variables",
+        command:
+          "echo 'DATABRICKS_HOST=https://<workspace>.cloud.databricks.com\\nDATABRICKS_TOKEN=<your-token>\\nDATABRICKS_SERVING_ENDPOINT=<endpoint-name>' >> .env",
         details:
-          "Set either VERCEL_OIDC_TOKEN or AI_GATEWAY_API_KEY (or provider-specific keys such as OPENAI_API_KEY).",
+          "DATABRICKS_HOST is your workspace URL. DATABRICKS_TOKEN is a personal access token or service principal token. DATABRICKS_SERVING_ENDPOINT is the name of the model serving endpoint you identified in step 1.",
+      },
+      {
+        id: "create-provider",
+        title: "Create the Databricks AI provider",
+        details:
+          'Create a provider module that connects AI SDK to your Databricks model serving endpoint using the OpenAI-compatible interface:\n\nimport { createOpenAICompatible } from "@ai-sdk/openai-compatible";\n\nconst databricks = createOpenAICompatible({\n  name: "databricks",\n  baseURL: `${process.env.DATABRICKS_HOST}/serving-endpoints`,\n  headers: {\n    Authorization: `Bearer ${process.env.DATABRICKS_TOKEN}`,\n  },\n});\n\nexport const chatModel = databricks.chatModel(\n  process.env.DATABRICKS_SERVING_ENDPOINT!\n);',
       },
       {
         id: "create-chat-route",
         title: "Create a streaming chat API route",
         details:
-          "Implement /api/chat with streamText and return toUIMessageStreamResponse().",
+          'Implement a /api/chat route that streams responses from your Databricks model serving endpoint:\n\nimport { streamText } from "ai";\nimport { chatModel } from "./provider";\n\napp.post("/api/chat", async (req, res) => {\n  const { messages } = req.body;\n  const result = streamText({\n    model: chatModel,\n    messages,\n  });\n  result.pipeDataStreamToResponse(res);\n});',
       },
       {
         id: "create-chat-ui",
-        title: "Create a client chat UI with useChat",
+        title: "Create the chat UI with useChat and AI Elements",
         details:
-          "Use useChat + DefaultChatTransport and render text parts with a submit form.",
+          'Use the useChat hook for streaming and AI Elements components for the chat interface:\n\nimport { useChat } from "@ai-sdk/react";\n\nexport function ChatPage() {\n  const { messages, input, handleInputChange, handleSubmit } = useChat();\n\n  return (\n    <div className="flex flex-col h-[600px]">\n      <div className="flex-1 overflow-y-auto space-y-4 p-4">\n        {messages.map((m) => (\n          <div key={m.id} className={m.role === "user" ? "text-right" : ""}>\n            <span className="text-sm font-medium">\n              {m.role === "user" ? "You" : "Assistant"}\n            </span>\n            <p>{m.content}</p>\n          </div>\n        ))}\n      </div>\n      <form onSubmit={handleSubmit} className="border-t p-4 flex gap-2">\n        <input\n          value={input}\n          onChange={handleInputChange}\n          placeholder="Ask a question..."\n          className="flex-1 border rounded px-3 py-2"\n        />\n        <button type="submit">Send</button>\n      </form>\n    </div>\n  );\n}',
       },
       {
         id: "run-and-test",
         title: "Run and test locally",
         command: "bun run dev",
+        details:
+          "Open the chat page in your browser and send a message. Responses stream from your Databricks model serving endpoint through the AI SDK.",
       },
     ],
     references: [
       {
-        label: "AI SDK docs",
-        href: "https://ai-sdk.dev/docs/introduction",
+        label: "AI Gateway docs",
+        href: "https://docs.databricks.com/en/ai-gateway/",
+      },
+      {
+        label: "Model Serving endpoints",
+        href: "https://docs.databricks.com/en/machine-learning/model-serving/create-manage-serving-endpoints.html",
+      },
+      {
+        label: "AI SDK OpenAI-compatible providers",
+        href: "https://ai-sdk.dev/providers/openai-compatible-providers",
       },
       {
         label: "AI Elements docs",
         href: "https://ui.shadcn.com/docs/registry/ai-elements",
-      },
-      {
-        label: "Fullstackrecipes AI SDK setup",
-        href: "recipe://fullstackrecipes.com/ai-sdk-setup",
       },
     ],
   },
@@ -366,7 +388,7 @@ export const templates: Template[] = [
     id: "ai-chat-app-template",
     name: "AI Chat App Template",
     description:
-      "Databricks local bootstrap plus a simple AI chat implementation using AI SDK and AI Elements.",
+      "Databricks local bootstrap plus a streaming AI chat powered by Databricks Model Serving (AI Gateway) with AI SDK and AI Elements.",
     recipeIds: ["databricks-local-bootstrap", "vercel-ai-chat-app"],
   }),
   createTemplate({
@@ -391,7 +413,7 @@ export const templates: Template[] = [
     id: "ai-data-explorer-template",
     name: "AI Data Explorer Template",
     description:
-      "A full-stack data application with Lakebase persistence, AI chat, and Genie natural-language data exploration.",
+      "A full-stack data application with Lakebase persistence, AI chat powered by Databricks Model Serving, and Genie natural-language data exploration.",
     recipeIds: [
       "databricks-local-bootstrap",
       "lakebase-data-persistence",

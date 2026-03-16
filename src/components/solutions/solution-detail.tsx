@@ -26,7 +26,7 @@ export function SolutionDetail({
 
   return (
     <Layout title={solution.title} description={solution.description}>
-      <main className="border-t border-db-cyan/30 bg-[#edf6fa] dark:border-db-cyan/25 dark:bg-[#0d1a1f]">
+      <main className="border-t border-db-cyan/30 bg-db-bg dark:border-db-cyan/25 dark:bg-[#0d1a1f]">
         <div className="container px-4 py-12 md:py-16">
           <div className="mx-auto max-w-5xl">
             <Link

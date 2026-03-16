@@ -80,7 +80,7 @@ const CARD_VISUALS: Array<{
 export default function ResourcesPage(): ReactNode {
   return (
     <Layout title="Resources" description="Templates and starter resources">
-      <main className="border-t border-db-cyan/30 bg-[#edf6fa] dark:border-db-cyan/25 dark:bg-[#0d1a1f]">
+      <main className="border-t border-db-cyan/30 bg-db-bg dark:border-db-cyan/25 dark:bg-[#0d1a1f]">
         <div className="container px-4 py-16 md:py-20">
           <div className="mx-auto max-w-6xl">
             <p className="mb-4 inline-flex items-center gap-2 text-[10px] font-semibold tracking-[0.12em] text-black/60 uppercase dark:text-white/60">

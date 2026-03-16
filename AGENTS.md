@@ -10,7 +10,7 @@ Review the [Contributing](./CONTRIBUTING.md) guide for more information on how t
 
 For every change to DevHub, do the following:
 
-- run the `devhub dev` command to start the development server
+- run `npm run dev` to start the development server (both Docusaurus and the API functions)
 - use the `building-components` skill to understand how to write React components
 - make your changes
 - run `npm run fmt` to format the code
@@ -47,6 +47,7 @@ For every change to DevHub, do the following:
 
 ### Tailwind
 
+- Always use Tailwind over CSS Modules
 - Use brand colors
 - Prefer built-in values, occasionally allow dynamic values, rarely globals
 - Always use v4 + global CSS file format + shadcn/ui

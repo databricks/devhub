@@ -16,7 +16,7 @@ This site is built with Docusaurus and TypeScript.
 
 ```bash
 npm install
-npm run start
+npm run dev
 ```
 
 ## Build

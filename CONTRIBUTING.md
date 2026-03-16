@@ -18,8 +18,10 @@ npm install
 2. Start the site locally:
 
 ```bash
-npm run start
+npm run dev
 ```
+
+This will run both the Docusaurus and the API functions locally.
 
 3. Run formatting:
 

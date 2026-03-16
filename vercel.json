@@ -1,4 +1,5 @@
 {
+  "devCommand": "docusaurus start --port $PORT",
   "functions": {
     "api/mcp.ts": {
       "includeFiles": "docs/**",

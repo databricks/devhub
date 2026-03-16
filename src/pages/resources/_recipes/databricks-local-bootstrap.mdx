@@ -32,12 +32,17 @@ Always run workspace commands with `--profile <PROFILE>`.
 databricks auth profiles
 ```
 
-### 5. Scaffold a new Databricks app folder
+### 5. Scaffold a new Databricks app
 
-This creates a new workspace folder for app development and skips auto-run so code can be reviewed first.
+Use `--version latest` to get the latest AppKit template with all available plugins (lakebase, genie, analytics). Add `--features` to enable specific plugins.
 
 ```bash
-databricks apps init --name <app-name> --description "<desc>" --run none --profile <PROFILE>
+databricks apps init \
+  --name <app-name> \
+  --description "<desc>" \
+  --version latest \
+  --run none \
+  --profile <PROFILE>
 ```
 
 ### 6. Install Databricks agent skills
@@ -53,6 +58,16 @@ npx skills add databricks/databricks-agent-skills --all
 ```bash
 npx skills list
 ```
+
+### 8. Deploy your app
+
+Deploy the scaffolded app to your Databricks workspace:
+
+```bash
+databricks apps deploy --profile <PROFILE>
+```
+
+The CLI validates, builds, uploads, and starts your app. Once deployed, it prints the app URL.
 
 #### References
 

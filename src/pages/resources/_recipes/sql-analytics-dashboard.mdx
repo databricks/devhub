@@ -2,19 +2,32 @@
 
 Build interactive dashboards with parameterized SQL queries and chart components. Uses the Analytics plugin for SQL Warehouse queries and AppKit UI for visualizations.
 
-### 1. Enable the Analytics plugin
+### 1. Identify your SQL Warehouse
 
-Add the analytics plugin to your server entry point:
+List available SQL Warehouses in your workspace:
 
-```typescript
-import { createApp, server, analytics } from "@databricks/appkit";
-
-createApp({
-  plugins: [server(), analytics()],
-}).catch(console.error);
+```bash
+databricks warehouses list --profile <PROFILE> -o json
 ```
 
-### 2. Create parameterized SQL query files
+Note the warehouse `id` — you will need it for configuration.
+
+### 2. Scaffold with the Analytics feature
+
+When scaffolding your app, enable the `analytics` feature and provide the SQL Warehouse ID:
+
+```bash
+databricks apps init \
+  --name <app-name> \
+  --version latest \
+  --features=analytics \
+  --set 'analytics.sql-warehouse.id=<warehouse-id>' \
+  --run none --profile <PROFILE>
+```
+
+The scaffold creates a `databricks.yml` with an `sql_warehouse` resource and sample SQL query files under `config/queries/`.
+
+### 3. Create parameterized SQL query files
 
 Add `.sql` files under `config/queries/`. Use `:param_name` for parameters and `@param` annotations for type safety:
 
@@ -27,7 +40,7 @@ WHERE month_num <= :max_month_num
 ORDER BY month_num;
 ```
 
-### 3. Build the dashboard UI with charts
+### 4. Build the dashboard UI with charts
 
 Import `useAnalyticsQuery` for data fetching and chart components for visualization:
 
@@ -72,7 +85,7 @@ export function DashboardPage() {
 }
 ```
 
-### 4. Add interactive filters with typed parameters
+### 5. Add interactive filters with typed parameters
 
 Use `sql.string()` and `sql.number()` helpers for type-safe query parameters. Bind them to UI controls like `Select` or `Input` to let users filter the dashboard interactively:
 
@@ -83,13 +96,13 @@ const params = {
 };
 ```
 
-### 5. Run and test locally
-
-Open the dashboard page and verify that charts render with data from your SQL Warehouse. Adjust filters to see the queries update.
+### 6. Deploy and test
 
 ```bash
-bun run dev
+databricks apps deploy --profile <PROFILE>
 ```
+
+Open the dashboard page and verify that charts render with data from your SQL Warehouse. Adjust filters to see the queries update.
 
 #### References
 

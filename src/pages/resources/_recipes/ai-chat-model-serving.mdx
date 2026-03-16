@@ -4,7 +4,7 @@ Build a streaming chat app powered by Databricks AI Gateway (model serving). Use
 
 ### 1. Identify your model serving endpoint
 
-List available serving endpoints in your workspace. Pick the endpoint name you want to use for chat (e.g. a foundation model endpoint or a custom model endpoint).
+List available serving endpoints in your workspace. Pick the endpoint name you want to use for chat (e.g. a foundation model endpoint like `databricks-claude-haiku-4-5` or a custom model endpoint).
 
 ```bash
 databricks serving-endpoints list --profile <PROFILE> -o json
@@ -32,11 +32,23 @@ bunx shadcn@latest add @ai-elements/all
 
 `DATABRICKS_HOST` is your workspace URL. `DATABRICKS_TOKEN` is a personal access token or service principal token. `DATABRICKS_SERVING_ENDPOINT` is the name of the model serving endpoint you identified in step 1.
 
+For local development, add these to `.env`:
+
 ```bash
 echo 'DATABRICKS_HOST=https://<workspace>.cloud.databricks.com
 DATABRICKS_TOKEN=<your-token>
 DATABRICKS_SERVING_ENDPOINT=<endpoint-name>' >> .env
 ```
+
+For deployment, add the environment variables to `app.yaml`:
+
+```yaml
+env:
+  - name: DATABRICKS_SERVING_ENDPOINT
+    value: "<endpoint-name>"
+```
+
+The app has access to the workspace host and token automatically at runtime.
 
 ### 5. Create the Databricks AI provider
 
@@ -112,13 +124,13 @@ export function ChatPage() {
 }
 ```
 
-### 8. Run and test locally
-
-Open the chat page in your browser and send a message. Responses stream from your Databricks model serving endpoint through the AI SDK.
+### 8. Deploy and test
 
 ```bash
-bun run dev
+databricks apps deploy --profile <PROFILE>
 ```
+
+Open the chat page in your browser and send a message. Responses stream from your Databricks model serving endpoint through the AI SDK.
 
 #### References
 

@@ -654,17 +654,47 @@
     @apply mt-5 inline-flex items-center gap-1.5 text-sm text-db-navy/60 transition-colors hover:text-db-lava;
   }
 
-  .db-docs-toc-col .table-of-contents {
-    @apply sticky p-4 text-sm;
+  .db-docs-toc-col .db-toc {
+    @apply sticky p-0 text-sm;
     top: calc(var(--ifm-navbar-height) + 1rem);
+    max-height: calc(100vh - var(--ifm-navbar-height) - 2rem);
+    overflow-y: auto;
+  }
+
+  .db-toc-heading {
+    @apply m-0 mb-3 text-xs font-semibold tracking-[0.06em] uppercase text-muted-foreground;
+  }
+
+  .db-docs-toc-col .table-of-contents {
+    @apply m-0 list-none space-y-0.5 p-0;
+    border-left: 2px solid var(--db-border);
+  }
+
+  .db-docs-toc-col .table-of-contents ul {
+    @apply m-0 list-none pl-0;
+    padding-left: 0;
+  }
+
+  .db-docs-toc-col .table-of-contents li {
+    @apply m-0;
   }
 
   .db-docs-toc-col .table-of-contents__link {
-    @apply text-db-navy/65 hover:text-db-navy;
+    @apply block py-1 pl-3 text-[13px] leading-snug no-underline transition-colors;
+    color: var(--muted-foreground);
+    margin-left: -2px;
+    border-left: 2px solid transparent;
+  }
+
+  .db-docs-toc-col .table-of-contents__link:hover {
+    color: var(--foreground);
+    border-left-color: var(--db-navy);
   }
 
   .db-docs-toc-col .table-of-contents__link--active {
-    @apply text-db-lava;
+    color: var(--db-lava);
+    border-left-color: var(--db-lava);
+    font-weight: 500;
   }
 
   .db-docs-toc-col .table-of-contents__link:focus-visible {
@@ -747,12 +777,26 @@
     color: rgb(245 247 248 / 0.9);
   }
 
+  [data-theme="dark"] .db-docs-toc-col .table-of-contents {
+    border-left-color: rgb(245 247 248 / 0.12);
+  }
+
   [data-theme="dark"] .db-docs-toc-col .table-of-contents__link {
-    color: rgb(245 247 248 / 0.65);
+    color: rgb(245 247 248 / 0.55);
   }
 
   [data-theme="dark"] .db-docs-toc-col .table-of-contents__link:hover {
     color: rgb(245 247 248);
+    border-left-color: rgb(245 247 248);
+  }
+
+  [data-theme="dark"] .db-docs-toc-col .table-of-contents__link--active {
+    color: var(--db-lava-light);
+    border-left-color: var(--db-lava-light);
+  }
+
+  [data-theme="dark"] .db-toc-heading {
+    color: rgb(245 247 248 / 0.5);
   }
 
   [data-theme="dark"] .db-docs-paginator .pagination-nav__sublabel {
@@ -768,7 +812,7 @@
   }
 
   @media (max-width: 996px) {
-    .db-docs-toc-col .table-of-contents {
+    .db-docs-toc-col .db-toc {
       position: static;
     }
   }

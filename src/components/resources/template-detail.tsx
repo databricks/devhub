@@ -71,10 +71,7 @@ export function TemplateDetail({
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_220px]">
             <div>
               <RecipeList recipes={templateRecipes} />
-              <div
-                className="recipe-content-card rounded-2xl border border-db-border bg-db-card px-5 py-8 shadow-sm md:px-10 md:py-10"
-                ref={contentRef}
-              >
+              <div className="recipe-content-card px-1 py-2 md:px-2 md:py-3" ref={contentRef}>
                 <MDXProvider components={recipeComponents}>
                   <div className="prose-solution">{children}</div>
                 </MDXProvider>

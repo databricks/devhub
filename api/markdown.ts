@@ -2,7 +2,11 @@ import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { getDetailMarkdown, type MarkdownSection } from "./content-markdown";
 
 function parseSection(section: unknown): MarkdownSection {
-  if (section === "docs" || section === "solutions" || section === "templates") {
+  if (
+    section === "docs" ||
+    section === "solutions" ||
+    section === "templates"
+  ) {
     return section;
   }
   throw new Error(

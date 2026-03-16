@@ -20,14 +20,14 @@ Traditional databases still force three painful tradeoffs:
 
 The core shift is to **separate compute from storage** and keep data in open formats in cloud object storage.
 
-| Feature | Benefit |
-| --- | --- |
-| Storage separated from compute | Elastic scale and rapid scale-to-zero behavior |
-| Unlimited, low-cost storage | Data lives in the lake with dramatically lower storage costs |
-| Serverless Postgres compute | Fast scale-up under load and scale-down when idle |
-| Instant branching and cloning | Git-like workflows for developers and agents |
-| Unified OLTP + OLAP | Analytics and ML on operational data |
-| Open and multicloud | Portability and reduced lock-in |
+| Feature                        | Benefit                                                      |
+| ------------------------------ | ------------------------------------------------------------ |
+| Storage separated from compute | Elastic scale and rapid scale-to-zero behavior               |
+| Unlimited, low-cost storage    | Data lives in the lake with dramatically lower storage costs |
+| Serverless Postgres compute    | Fast scale-up under load and scale-down when idle            |
+| Instant branching and cloning  | Git-like workflows for developers and agents                 |
+| Unified OLTP + OLAP            | Analytics and ML on operational data                         |
+| Open and multicloud            | Portability and reduced lock-in                              |
 
 ## Database architecture evolution
 

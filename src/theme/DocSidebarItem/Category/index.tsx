@@ -1,9 +1,4 @@
-import {
-  type ComponentProps,
-  type ReactNode,
-  useEffect,
-  useMemo,
-} from "react";
+import { type ComponentProps, type ReactNode, useEffect, useMemo } from "react";
 import clsx from "clsx";
 import {
   ThemeClassNames,
@@ -220,7 +215,8 @@ function DocSidebarItemCategoryCollapsible({
             "!text-muted-foreground hover:!text-foreground hover:!bg-transparent",
             "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
             collapsible && "menu__link--sublist",
-            collapsible && "!text-[11px] !font-semibold !tracking-[0.06em] !uppercase",
+            collapsible &&
+              "!text-[11px] !font-semibold !tracking-[0.06em] !uppercase",
             !href && collapsible && "menu__link--sublist-caret",
             !href &&
               collapsible &&
@@ -232,7 +228,9 @@ function DocSidebarItemCategoryCollapsible({
           aria-current={isCurrentPage ? "page" : undefined}
           role={collapsible && !href ? "button" : undefined}
           aria-expanded={collapsible && !href ? !collapsed : undefined}
-          href={collapsible ? (hrefWithSSRFallback ?? "#") : hrefWithSSRFallback}
+          href={
+            collapsible ? (hrefWithSSRFallback ?? "#") : hrefWithSSRFallback
+          }
           {...props}
         >
           <span title={label} className="flex-1 overflow-hidden line-clamp-2">

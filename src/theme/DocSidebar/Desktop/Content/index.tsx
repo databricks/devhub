@@ -40,8 +40,7 @@ export default function DocSidebarDesktopContent({
       className={clsx(
         "menu thin-scrollbar",
         "grow overflow-y-auto border-r border-border px-3 pt-4 pb-6 [scrollbar-gutter:stable]",
-        showAnnouncementBar &&
-          "mb-[var(--docusaurus-announcement-bar-height)]",
+        showAnnouncementBar && "mb-[var(--docusaurus-announcement-bar-height)]",
         className,
       )}
     >

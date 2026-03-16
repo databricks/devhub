@@ -8,7 +8,8 @@ export type MarkdownSection = "docs" | "solutions" | "templates";
 const RECIPE_MARKDOWN_PATH_BY_ID: Record<string, string> = {
   "databricks-local-bootstrap":
     "src/pages/resources/_recipes/databricks-local-bootstrap.mdx",
-  "vercel-ai-chat-app": "src/pages/resources/_recipes/ai-chat-model-serving.mdx",
+  "vercel-ai-chat-app":
+    "src/pages/resources/_recipes/ai-chat-model-serving.mdx",
   "lakebase-data-persistence":
     "src/pages/resources/_recipes/lakebase-data-persistence.mdx",
   "genie-conversational-analytics":

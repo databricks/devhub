@@ -5,11 +5,7 @@
       "maxDuration": 30
     },
     "api/markdown.ts": {
-      "includeFiles": [
-        "docs/**",
-        "content/solutions/**",
-        "src/pages/resources/_recipes/**"
-      ],
+      "includeFiles": "{docs/**,content/solutions/**,src/pages/resources/_recipes/**}",
       "maxDuration": 30
     }
   },

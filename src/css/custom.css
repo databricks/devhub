@@ -211,6 +211,10 @@
     border-bottom: 1px solid rgb(255 255 255 / 0.12);
   }
 
+  .navbar__toggle {
+    color: #fff;
+  }
+
   .navbar__brand {
     margin-right: 0.5rem;
     padding: 0.25rem 0.375rem 0.25rem 0.75rem;
@@ -376,6 +380,12 @@
 
   .navbar-sidebar--show .navbar__items--right > :not(.navbar__toggle) {
     display: none;
+  }
+
+  @media (max-width: 996px) {
+    :root {
+      --ifm-navbar-sidebar-width: 100vw;
+    }
   }
 }
 

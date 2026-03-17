@@ -56,7 +56,7 @@ export default function DocItemLayout({ children }: Props): ReactNode {
             <DocVersionBadge />
             {docToc.mobile}
 
-            <div className="flex justify-end mb-3">
+            <div className="mt-3 flex justify-end mb-3">
               <AIExportMenu
                 contentRef={contentRef}
                 title={metadata.title ?? ""}

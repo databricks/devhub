@@ -35,12 +35,12 @@ class MyPlugin extends Plugin {
           permission: "READ",
           fields: {
             scope: { env: "MY_SECRET_SCOPE", description: "Secret scope" },
-            key: { env: "MY_API_KEY", description: "Secret key name" },
-          },
-        },
+            key: { env: "MY_API_KEY", description: "Secret key name" }
+          }
+        }
       ],
-      optional: [],
-    },
+      optional: []
+    }
   } satisfies PluginManifest<"myPlugin">;
 
   async setup() {
@@ -57,8 +57,8 @@ class MyPlugin extends Plugin {
 
   exports() {
     return {
-      myCustomMethod: this.myCustomMethod,
-    };
+      myCustomMethod: this.myCustomMethod
+    }
   }
 }
 
@@ -83,30 +83,13 @@ class MyPlugin extends Plugin<MyPluginConfig> {
     description: "A plugin with optional caching",
     resources: {
       required: [
-        {
-          type: "sql_warehouse",
-          alias: "warehouse",
-          resourceKey: "sqlWarehouse",
-          description: "Query execution",
-          permission: "CAN_USE",
-          fields: { id: { env: "DATABRICKS_WAREHOUSE_ID" } },
-        },
+        { type: "sql_warehouse", alias: "warehouse", resourceKey: "sqlWarehouse", description: "Query execution", permission: "CAN_USE", fields: { id: { env: "DATABRICKS_WAREHOUSE_ID" } } }
       ],
       optional: [
         // Listed as optional in manifest for static analysis
-        {
-          type: "database",
-          alias: "cache",
-          resourceKey: "cache",
-          description: "Query result caching (if enabled)",
-          permission: "CAN_CONNECT_AND_CREATE",
-          fields: {
-            instance_name: { env: "DATABRICKS_CACHE_INSTANCE" },
-            database_name: { env: "DATABRICKS_CACHE_DB" },
-          },
-        },
-      ],
-    },
+        { type: "database", alias: "cache", resourceKey: "cache", description: "Query result caching (if enabled)", permission: "CAN_CONNECT_AND_CREATE", fields: { instance_name: { env: "DATABRICKS_CACHE_INSTANCE" }, database_name: { env: "DATABRICKS_CACHE_DB" } } }
+      ]
+    }
   } satisfies PluginManifest<"myPlugin">;
 
   // Runtime: Convert optional resources to required based on config
@@ -124,7 +107,7 @@ class MyPlugin extends Plugin<MyPluginConfig> {
           instance_name: { env: "DATABRICKS_CACHE_INSTANCE" },
           database_name: { env: "DATABRICKS_CACHE_DB" },
         },
-        required: true, // Mark as required at runtime
+        required: true  // Mark as required at runtime
       });
     }
     return resources;
@@ -133,7 +116,6 @@ class MyPlugin extends Plugin<MyPluginConfig> {
 ```
 
 This pattern allows:
-
 - **Static tools** (CLI, docs) to show all possible resources
 - **Runtime validation** to enforce resources based on actual configuration
 
@@ -153,7 +135,11 @@ To do that, your plugin needs to implement the `exports` method, returning an ob
 
 ```ts
 const AppKit = await createApp({
-  plugins: [server({ port: 8000 }), analytics(), myPlugin()],
+  plugins: [
+    server({ port: 8000 }),
+    analytics(),
+    myPlugin(),
+  ],
 });
 
 AppKit.myPlugin.myCustomMethod();

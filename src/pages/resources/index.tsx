@@ -1,7 +1,9 @@
 import Link from "@docusaurus/Link";
 import Layout from "@theme/Layout";
-import type { ReactNode } from "react";
+import { useMemo, useRef, useState, type ReactNode } from "react";
+import { AIExportMenu } from "@/components/ai-export-menu";
 import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Card,
   CardContent,
@@ -9,7 +11,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { templates } from "@/lib/recipes/recipes";
+import { recipeContentById } from "@/lib/recipes/recipe-content";
+import { recipesInOrder, templates } from "@/lib/recipes/recipes";
 
 const CARD_VISUALS: Array<{
   gradient: string;
@@ -78,6 +81,39 @@ const CARD_VISUALS: Array<{
 ];
 
 export default function ResourcesPage(): ReactNode {
+  const [selectedRecipeIds, setSelectedRecipeIds] = useState<string[]>(() =>
+    recipesInOrder.map((recipe) => recipe.id),
+  );
+  const selectedRecipeSet = useMemo(
+    () => new Set(selectedRecipeIds),
+    [selectedRecipeIds],
+  );
+  const selectedRecipes = recipesInOrder.filter((recipe) =>
+    selectedRecipeSet.has(recipe.id),
+  );
+  const selectedRecipesContentRef = useRef<HTMLDivElement>(null);
+  const isAllRecipesSelected =
+    selectedRecipeIds.length === recipesInOrder.length;
+  const isSomeRecipesSelected =
+    selectedRecipeIds.length > 0 && !isAllRecipesSelected;
+
+  const handleToggleAllRecipes = () => {
+    if (isAllRecipesSelected) {
+      setSelectedRecipeIds([]);
+      return;
+    }
+    setSelectedRecipeIds(recipesInOrder.map((recipe) => recipe.id));
+  };
+
+  const handleToggleRecipe = (recipeId: string) => {
+    setSelectedRecipeIds((current) => {
+      if (current.includes(recipeId)) {
+        return current.filter((id) => id !== recipeId);
+      }
+      return [...current, recipeId];
+    });
+  };
+
   return (
     <Layout title="Resources" description="Templates and starter resources">
       <main className="border-t border-db-cyan/30 bg-db-bg dark:border-db-cyan/25 dark:bg-[#0d1a1f]">
@@ -98,7 +134,15 @@ export default function ResourcesPage(): ReactNode {
               coding agent.
             </p>
 
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <h2 className="mb-4 text-2xl font-semibold tracking-tight text-black dark:text-white md:text-3xl">
+              Cookbooks
+            </h2>
+            <p className="mb-8 max-w-2xl text-[15px] leading-relaxed text-black/68 dark:text-white/68">
+              Ready-to-run cookbook bundles with end-to-end recipes for common
+              app patterns.
+            </p>
+
+            <div className="mb-16 grid grid-cols-1 gap-6 md:grid-cols-2">
               {templates.map((template, index) => {
                 const visual = CARD_VISUALS[index % CARD_VISUALS.length];
                 return (
@@ -138,6 +182,112 @@ export default function ResourcesPage(): ReactNode {
                       </CardFooter>
                     </Card>
                   </Link>
+                );
+              })}
+            </div>
+
+            <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+              <h2 className="m-0 text-2xl font-semibold tracking-tight text-black dark:text-white md:text-3xl">
+                All Recipes
+              </h2>
+              <div className="flex items-center gap-3">
+                <label className="inline-flex cursor-pointer items-center gap-2 text-sm text-black/78 dark:text-white/78">
+                  <Checkbox
+                    checked={
+                      isAllRecipesSelected
+                        ? true
+                        : isSomeRecipesSelected
+                          ? "indeterminate"
+                          : false
+                    }
+                    onCheckedChange={handleToggleAllRecipes}
+                    aria-label="Select all recipes"
+                  />
+                  Select all
+                </label>
+                <AIExportMenu
+                  contentRef={selectedRecipesContentRef}
+                  title="Custom cookbook"
+                  description="Selected Databricks recipes combined into a custom cookbook."
+                  permalink="/resources"
+                  disabled={selectedRecipes.length === 0}
+                />
+              </div>
+            </div>
+            <p className="mb-8 max-w-3xl text-[15px] leading-relaxed text-black/68 dark:text-white/68">
+              Cookbooks combine recipes for an in-depth start to finish guide.
+              Browse all recipes here or assemble your own cookbook.
+            </p>
+
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+              {recipesInOrder.map((recipe, index) => {
+                const visual = CARD_VISUALS[index % CARD_VISUALS.length];
+                const isSelected = selectedRecipeSet.has(recipe.id);
+                return (
+                  <Card
+                    key={recipe.id}
+                    className="group flex h-full flex-col overflow-hidden rounded-xl border border-black/10 bg-[#f7f6f4] shadow-none transition-all duration-200 hover:border-black/20 dark:border-white/10 dark:bg-[#182a32] dark:hover:border-white/20"
+                  >
+                    <div
+                      className={`relative h-52 overflow-hidden border-b border-black/10 dark:border-white/10 ${visual.gradient}`}
+                    >
+                      {visual.shapes}
+                    </div>
+                    <CardHeader className="pb-2">
+                      <div className="mb-3 flex items-start justify-between gap-3">
+                        <CardTitle className="text-xl leading-tight font-medium text-black dark:text-white">
+                          <Link
+                            to={`/resources/recipes/${recipe.id}`}
+                            className="text-inherit no-underline hover:underline"
+                          >
+                            {recipe.name}
+                          </Link>
+                        </CardTitle>
+                        <Checkbox
+                          checked={isSelected}
+                          onCheckedChange={() => handleToggleRecipe(recipe.id)}
+                          aria-label={`Select ${recipe.name}`}
+                        />
+                      </div>
+                    </CardHeader>
+                    <CardContent className="flex-1 pt-0">
+                      <p className="m-0 text-[15px] leading-relaxed text-black/68 dark:text-white/68">
+                        {recipe.description}
+                      </p>
+                    </CardContent>
+                    <CardFooter className="flex items-end justify-between gap-4 pt-0">
+                      <div className="flex flex-wrap gap-1.5">
+                        {recipe.tags.map((tag) => (
+                          <Badge
+                            key={tag}
+                            variant="secondary"
+                            className="rounded-sm border border-black/10 bg-black/4 px-1.5 py-0 text-[11px] font-medium text-black/78 dark:border-white/10 dark:bg-white/8 dark:text-white/78"
+                          >
+                            {tag}
+                          </Badge>
+                        ))}
+                      </div>
+                      <Link
+                        to={`/resources/recipes/${recipe.id}`}
+                        className="shrink-0 text-xs font-medium text-db-lava no-underline hover:underline"
+                      >
+                        Open recipe
+                      </Link>
+                    </CardFooter>
+                  </Card>
+                );
+              })}
+            </div>
+
+            <div ref={selectedRecipesContentRef} className="sr-only">
+              {selectedRecipes.map((recipe, index) => {
+                const RecipeContent = recipeContentById[recipe.id];
+                if (!RecipeContent) return null;
+                return (
+                  <div key={recipe.id}>
+                    {index > 0 && <hr />}
+                    <RecipeContent />
+                  </div>
                 );
               })}
             </div>

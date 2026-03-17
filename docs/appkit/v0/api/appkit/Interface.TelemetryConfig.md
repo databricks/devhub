@@ -10,7 +10,7 @@ OpenTelemetry configuration for AppKit applications
 optional exportIntervalMs: number;
 ```
 
----
+***
 
 ### headers?
 
@@ -18,7 +18,7 @@ optional exportIntervalMs: number;
 optional headers: Record<string, string>;
 ```
 
----
+***
 
 ### instrumentations?
 
@@ -26,7 +26,7 @@ optional headers: Record<string, string>;
 optional instrumentations: Instrumentation<InstrumentationConfig>[];
 ```
 
----
+***
 
 ### serviceName?
 
@@ -34,7 +34,7 @@ optional instrumentations: Instrumentation<InstrumentationConfig>[];
 optional serviceName: string;
 ```
 
----
+***
 
 ### serviceVersion?
 

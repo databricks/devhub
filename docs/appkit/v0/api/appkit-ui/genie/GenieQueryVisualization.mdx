@@ -2,6 +2,7 @@
 
 Renders a chart + data table for a Genie query result.
 
+
 ## GenieQueryVisualization
 
 Renders a chart + data table for a Genie query result.
@@ -10,19 +11,24 @@ Renders a chart + data table for a Genie query result.
 - When no chart fits: shows only the data table
 - When data is empty/malformed: renders nothing
 
+
 **Source:** [`packages/appkit-ui/src/react/genie/genie-query-visualization.tsx`](https://github.com/databricks/appkit/blob/main/packages/appkit-ui/src/react/genie/genie-query-visualization.tsx)
+
 
 ### Props
 
-| Prop        | Type                     | Required | Default | Description                               |
-| ----------- | ------------------------ | -------- | ------- | ----------------------------------------- |
-| `data`      | `GenieStatementResponse` | ✓        | -       | Raw statement_response from the Genie API |
-| `className` | `string`                 |          | -       | Additional CSS classes                    |
+| Prop | Type | Required | Default | Description |
+|------|------|----------|---------|-------------|
+| `data` | `GenieStatementResponse` | ✓ | - | Raw statement_response from the Genie API |
+| `className` | `string` |  | - | Additional CSS classes |
+
+
 
 ### Usage
 
 ```tsx
-import { GenieQueryVisualization } from "@databricks/appkit-ui";
+import { GenieQueryVisualization } from '@databricks/appkit-ui';
 
-<GenieQueryVisualization /* props */ />;
+<GenieQueryVisualization /* props */ />
 ```
+

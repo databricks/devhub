@@ -5,7 +5,7 @@ When specified, the returned token will be scoped to only the requested tables
 
 ## Properties
 
-### permission_set?
+### permission\_set?
 
 ```ts
 optional permission_set: READ_ONLY;
@@ -13,7 +13,7 @@ optional permission_set: READ_ONLY;
 
 Permission level to request
 
----
+***
 
 ### resources?
 

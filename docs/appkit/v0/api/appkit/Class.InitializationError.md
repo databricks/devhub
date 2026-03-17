@@ -7,9 +7,7 @@ Use when accessing services before they are ready.
 
 ```typescript
 throw new InitializationError("CacheManager not initialized");
-throw new InitializationError(
-  "ServiceContext not initialized. Call ServiceContext.initialize() first.",
-);
+throw new InitializationError("ServiceContext not initialized. Call ServiceContext.initialize() first.");
 ```
 
 ## Extends
@@ -29,12 +27,12 @@ new InitializationError(message: string, options?: {
 
 #### Parameters
 
-| Parameter          | Type                                                                  |
-| ------------------ | --------------------------------------------------------------------- |
-| `message`          | `string`                                                              |
-| `options?`         | \{ `cause?`: `Error`; `context?`: `Record`\<`string`, `unknown`\>; \} |
-| `options.cause?`   | `Error`                                                               |
-| `options.context?` | `Record`\<`string`, `unknown`\>                                       |
+| Parameter | Type |
+| ------ | ------ |
+| `message` | `string` |
+| `options?` | \{ `cause?`: `Error`; `context?`: `Record`\<`string`, `unknown`\>; \} |
+| `options.cause?` | `Error` |
+| `options.context?` | `Record`\<`string`, `unknown`\> |
 
 #### Returns
 
@@ -58,7 +56,7 @@ Optional cause of the error
 
 [`AppKitError`](Class.AppKitError.md).[`cause`](Class.AppKitError.md#cause)
 
----
+***
 
 ### code
 
@@ -72,7 +70,7 @@ Error code for programmatic error handling
 
 [`AppKitError`](Class.AppKitError.md).[`code`](Class.AppKitError.md#code)
 
----
+***
 
 ### context?
 
@@ -86,7 +84,7 @@ Additional context for the error
 
 [`AppKitError`](Class.AppKitError.md).[`context`](Class.AppKitError.md#context)
 
----
+***
 
 ### isRetryable
 
@@ -100,7 +98,7 @@ Whether this error type is generally safe to retry
 
 [`AppKitError`](Class.AppKitError.md).[`isRetryable`](Class.AppKitError.md#isretryable)
 
----
+***
 
 ### statusCode
 
@@ -133,7 +131,7 @@ Sensitive values in context are automatically redacted.
 
 [`AppKitError`](Class.AppKitError.md).[`toJSON`](Class.AppKitError.md#tojson)
 
----
+***
 
 ### toString()
 
@@ -151,7 +149,7 @@ Create a human-readable string representation
 
 [`AppKitError`](Class.AppKitError.md).[`toString`](Class.AppKitError.md#tostring)
 
----
+***
 
 ### migrationFailed()
 
@@ -163,15 +161,15 @@ Create an initialization error for migration failure
 
 #### Parameters
 
-| Parameter | Type    |
-| --------- | ------- |
-| `cause?`  | `Error` |
+| Parameter | Type |
+| ------ | ------ |
+| `cause?` | `Error` |
 
 #### Returns
 
 `InitializationError`
 
----
+***
 
 ### notInitialized()
 
@@ -183,16 +181,16 @@ Create an initialization error for a service that is not ready
 
 #### Parameters
 
-| Parameter     | Type     |
-| ------------- | -------- |
+| Parameter | Type |
+| ------ | ------ |
 | `serviceName` | `string` |
-| `hint?`       | `string` |
+| `hint?` | `string` |
 
 #### Returns
 
 `InitializationError`
 
----
+***
 
 ### setupFailed()
 
@@ -204,10 +202,10 @@ Create an initialization error for setup failure
 
 #### Parameters
 
-| Parameter   | Type     |
-| ----------- | -------- |
+| Parameter | Type |
+| ------ | ------ |
 | `component` | `string` |
-| `cause?`    | `Error`  |
+| `cause?` | `Error` |
 
 #### Returns
 

@@ -49,12 +49,12 @@ new AppKitError(message: string, options?: {
 
 #### Parameters
 
-| Parameter          | Type                                                                  |
-| ------------------ | --------------------------------------------------------------------- |
-| `message`          | `string`                                                              |
-| `options?`         | \{ `cause?`: `Error`; `context?`: `Record`\<`string`, `unknown`\>; \} |
-| `options.cause?`   | `Error`                                                               |
-| `options.context?` | `Record`\<`string`, `unknown`\>                                       |
+| Parameter | Type |
+| ------ | ------ |
+| `message` | `string` |
+| `options?` | \{ `cause?`: `Error`; `context?`: `Record`\<`string`, `unknown`\>; \} |
+| `options.cause?` | `Error` |
+| `options.context?` | `Record`\<`string`, `unknown`\> |
 
 #### Returns
 
@@ -63,7 +63,7 @@ new AppKitError(message: string, options?: {
 #### Overrides
 
 ```ts
-Error.constructor;
+Error.constructor
 ```
 
 ## Properties
@@ -79,10 +79,10 @@ Optional cause of the error
 #### Overrides
 
 ```ts
-Error.cause;
+Error.cause
 ```
 
----
+***
 
 ### code
 
@@ -92,7 +92,7 @@ abstract readonly code: string;
 
 Error code for programmatic error handling
 
----
+***
 
 ### context?
 
@@ -102,7 +102,7 @@ readonly optional context: Record<string, unknown>;
 
 Additional context for the error
 
----
+***
 
 ### isRetryable
 
@@ -112,7 +112,7 @@ abstract readonly isRetryable: boolean;
 
 Whether this error type is generally safe to retry
 
----
+***
 
 ### statusCode
 
@@ -137,7 +137,7 @@ Sensitive values in context are automatically redacted.
 
 `Record`\<`string`, `unknown`\>
 
----
+***
 
 ### toString()
 

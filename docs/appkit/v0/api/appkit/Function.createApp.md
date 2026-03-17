@@ -18,19 +18,19 @@ with an `asUser(req)` method for user-scoped execution.
 
 ## Type Parameters
 
-| Type Parameter                                                                                      |
-| --------------------------------------------------------------------------------------------------- |
-| `T` _extends_ [`PluginData`](TypeAlias.PluginData.md)\<`PluginConstructor`, `unknown`, `string`\>[] |
+| Type Parameter |
+| ------ |
+| `T` *extends* [`PluginData`](TypeAlias.PluginData.md)\<`PluginConstructor`, `unknown`, `string`\>[] |
 
 ## Parameters
 
-| Parameter           | Type                                                                                                                                                                       |
-| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `config`            | \{ `cache?`: [`CacheConfig`](Interface.CacheConfig.md); `client?`: `WorkspaceClient`; `plugins?`: `T`; `telemetry?`: [`TelemetryConfig`](Interface.TelemetryConfig.md); \} |
-| `config.cache?`     | [`CacheConfig`](Interface.CacheConfig.md)                                                                                                                                  |
-| `config.client?`    | `WorkspaceClient`                                                                                                                                                          |
-| `config.plugins?`   | `T`                                                                                                                                                                        |
-| `config.telemetry?` | [`TelemetryConfig`](Interface.TelemetryConfig.md)                                                                                                                          |
+| Parameter | Type |
+| ------ | ------ |
+| `config` | \{ `cache?`: [`CacheConfig`](Interface.CacheConfig.md); `client?`: `WorkspaceClient`; `plugins?`: `T`; `telemetry?`: [`TelemetryConfig`](Interface.TelemetryConfig.md); \} |
+| `config.cache?` | [`CacheConfig`](Interface.CacheConfig.md) |
+| `config.client?` | `WorkspaceClient` |
+| `config.plugins?` | `T` |
+| `config.telemetry?` | [`TelemetryConfig`](Interface.TelemetryConfig.md) |
 
 ## Returns
 

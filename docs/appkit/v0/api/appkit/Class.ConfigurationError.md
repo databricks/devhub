@@ -6,12 +6,8 @@ Use for missing environment variables, invalid settings, or setup issues.
 ## Example
 
 ```typescript
-throw new ConfigurationError(
-  "DATABRICKS_HOST environment variable is required",
-);
-throw new ConfigurationError("Warehouse ID not found", {
-  context: { env: "production" },
-});
+throw new ConfigurationError("DATABRICKS_HOST environment variable is required");
+throw new ConfigurationError("Warehouse ID not found", { context: { env: "production" } });
 ```
 
 ## Extends
@@ -31,12 +27,12 @@ new ConfigurationError(message: string, options?: {
 
 #### Parameters
 
-| Parameter          | Type                                                                  |
-| ------------------ | --------------------------------------------------------------------- |
-| `message`          | `string`                                                              |
-| `options?`         | \{ `cause?`: `Error`; `context?`: `Record`\<`string`, `unknown`\>; \} |
-| `options.cause?`   | `Error`                                                               |
-| `options.context?` | `Record`\<`string`, `unknown`\>                                       |
+| Parameter | Type |
+| ------ | ------ |
+| `message` | `string` |
+| `options?` | \{ `cause?`: `Error`; `context?`: `Record`\<`string`, `unknown`\>; \} |
+| `options.cause?` | `Error` |
+| `options.context?` | `Record`\<`string`, `unknown`\> |
 
 #### Returns
 
@@ -60,7 +56,7 @@ Optional cause of the error
 
 [`AppKitError`](Class.AppKitError.md).[`cause`](Class.AppKitError.md#cause)
 
----
+***
 
 ### code
 
@@ -74,7 +70,7 @@ Error code for programmatic error handling
 
 [`AppKitError`](Class.AppKitError.md).[`code`](Class.AppKitError.md#code)
 
----
+***
 
 ### context?
 
@@ -88,7 +84,7 @@ Additional context for the error
 
 [`AppKitError`](Class.AppKitError.md).[`context`](Class.AppKitError.md#context)
 
----
+***
 
 ### isRetryable
 
@@ -102,7 +98,7 @@ Whether this error type is generally safe to retry
 
 [`AppKitError`](Class.AppKitError.md).[`isRetryable`](Class.AppKitError.md#isretryable)
 
----
+***
 
 ### statusCode
 
@@ -135,7 +131,7 @@ Sensitive values in context are automatically redacted.
 
 [`AppKitError`](Class.AppKitError.md).[`toJSON`](Class.AppKitError.md#tojson)
 
----
+***
 
 ### toString()
 
@@ -153,7 +149,7 @@ Create a human-readable string representation
 
 [`AppKitError`](Class.AppKitError.md).[`toString`](Class.AppKitError.md#tostring)
 
----
+***
 
 ### invalidConnection()
 
@@ -165,16 +161,16 @@ Create a configuration error for invalid connection config
 
 #### Parameters
 
-| Parameter  | Type     |
-| ---------- | -------- |
-| `service`  | `string` |
+| Parameter | Type |
+| ------ | ------ |
+| `service` | `string` |
 | `details?` | `string` |
 
 #### Returns
 
 `ConfigurationError`
 
----
+***
 
 ### missingConnectionParam()
 
@@ -186,15 +182,15 @@ Create a configuration error for missing connection string parameter
 
 #### Parameters
 
-| Parameter | Type     |
-| --------- | -------- |
-| `param`   | `string` |
+| Parameter | Type |
+| ------ | ------ |
+| `param` | `string` |
 
 #### Returns
 
 `ConfigurationError`
 
----
+***
 
 ### missingEnvVar()
 
@@ -206,15 +202,15 @@ Create a configuration error for missing environment variable
 
 #### Parameters
 
-| Parameter | Type     |
-| --------- | -------- |
+| Parameter | Type |
+| ------ | ------ |
 | `varName` | `string` |
 
 #### Returns
 
 `ConfigurationError`
 
----
+***
 
 ### resourceNotFound()
 
@@ -226,10 +222,10 @@ Create a configuration error for missing resource
 
 #### Parameters
 
-| Parameter  | Type     |
-| ---------- | -------- |
+| Parameter | Type |
+| ------ | ------ |
 | `resource` | `string` |
-| `hint?`    | `string` |
+| `hint?` | `string` |
 
 #### Returns
 

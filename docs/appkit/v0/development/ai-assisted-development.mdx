@@ -2,7 +2,7 @@
 sidebar_position: 2
 ---
 
-import Prerequisites from "./_prerequisites_app.mdx";
+import Prerequisites from './_prerequisites_app.mdx';
 
 # AI-Assisted development
 
@@ -31,28 +31,21 @@ The Agent Skills expose the following capabilities for AI assistants:
 Here are some basic examples you can use to explore your app and workspace:
 
 1. Creating a new basic app
-
-```
-Create a new Databricks app that displays a dashboard of the users table in main.default.
-```
-
+  ```
+  Create a new Databricks app that displays a dashboard of the users table in main.default.
+  ```
 1. Introspecting a table schema
-
-```
-Show me the schema of the users table in main.default.
-```
-
+  ```
+  Show me the schema of the users table in main.default.
+  ```
 1. Creating a new query
-
-```
-Create a new query to find users created in the last 7 days.
-```
-
+  ```
+  Create a new query to find users created in the last 7 days.
+  ```
 1. Deploying an app
-
-```
-Deploy the app to Databricks with the name "my-app".
-```
+  ```
+  Deploy the app to Databricks with the name "my-app".
+  ```
 
 Possibilities are virtually endless. Ask your AI assistant to help you with your app and workspace.
 
@@ -62,22 +55,20 @@ AppKit provides specialized guidance files to help AI coding assistants work mor
 
 If you're building applications using AppKit packages, reference the `llms.txt` file.
 There are two ways to access the documentation:
-
 1. Use the [hosted llms.txt file](https://databricks.github.io/appkit/llms.txt)
 2. Use the `npx @databricks/appkit docs` command to view the documentation in the terminal.
 
-```bash
-npx @databricks/appkit docs            # documentation index with section overview
+  ```bash
+  npx @databricks/appkit docs            # documentation index with section overview
 	npx @databricks/appkit docs <query> # for specific documentation file or section
-```
+  ```
 
-Examples of documentation queries:
-
-```bash
-npx @databricks/appkit docs "appkit-ui API reference"  # view a specific section
-npx @databricks/appkit docs --full     # full index with all API entries
-npx @databricks/appkit docs ./docs.md  # view a specific documentation file
-```
+  Examples of documentation queries:
+  ```bash
+  npx @databricks/appkit docs "appkit-ui API reference"  # view a specific section
+  npx @databricks/appkit docs --full     # full index with all API entries
+  npx @databricks/appkit docs ./docs.md  # view a specific documentation file
+  ```
 
 ## See more
 

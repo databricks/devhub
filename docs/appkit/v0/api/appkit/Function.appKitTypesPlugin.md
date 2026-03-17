@@ -9,8 +9,8 @@ Calls generateFromEntryPoint under the hood.
 
 ## Parameters
 
-| Parameter  | Type                       | Description                         |
-| ---------- | -------------------------- | ----------------------------------- |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
 | `options?` | `AppKitTypesPluginOptions` | Options to override default values. |
 
 ## Returns

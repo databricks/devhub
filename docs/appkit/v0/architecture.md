@@ -11,7 +11,7 @@ AppKit follows a plugin-based architecture designed for building production-read
 ```mermaid
 graph LR
     User[User/Browser]
-
+    
     subgraph serverLayer [Server Layer]
         AppKitCore["appkit"]
         PluginSystem[Plugin System]
@@ -19,15 +19,15 @@ graph LR
         AppKitCore -->|Manages| PluginSystem
         PluginSystem -->|Initializes| Plugins
     end
-
+    
     subgraph clientLayer [Client Layer]
         ReactApp[React Application]
         AppKitUI["appkit-ui"]
         ReactApp -->|Uses| AppKitUI
     end
-
+    
     DatabricksServices[Databricks Services]
-
+    
     User -->|Accesses| ReactApp
     ReactApp <-->|HTTP/SSE| Plugins
     Plugins -->|Queries| DatabricksServices
@@ -65,7 +65,6 @@ See the [API reference](./api/appkit-ui/) for component documentation.
 ### Client layer
 
 The React frontend layer that optionally uses `@databricks/appkit-ui` components:
-
 - Renders UI components and visualizations
 - Manages client state and user interactions
 - Consumes backend APIs via HTTP and SSE
@@ -74,7 +73,6 @@ The React frontend layer that optionally uses `@databricks/appkit-ui` components
 ### Server layer
 
 The Node.js backend layer built with `@databricks/appkit`:
-
 - Serves the React application (dev and production modes)
 - Executes SQL queries against Databricks SQL Warehouses
 - Handles authentication and authorization
@@ -84,7 +82,6 @@ The Node.js backend layer built with `@databricks/appkit`:
 ### Data layer
 
 Integration with Databricks services:
-
 - **SQL Warehouses**: Execute analytical queries with Arrow or JSON format
 - **Lakebase V1 (Provisioned)**: Access data from Lakebase Provisioned. Support for Lakebase Autoscaling coming soon.
 

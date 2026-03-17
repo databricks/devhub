@@ -16,15 +16,15 @@ Respects the logs enabled/disabled config.
 
 #### Parameters
 
-| Parameter   | Type        | Description            |
-| ----------- | ----------- | ---------------------- |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
 | `logRecord` | `LogRecord` | The log record to emit |
 
 #### Returns
 
 `void`
 
----
+***
 
 ### getLogger()
 
@@ -36,15 +36,15 @@ Gets a logger for emitting log records.
 
 #### Parameters
 
-| Parameter  | Type               | Description                       |
-| ---------- | ------------------ | --------------------------------- |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
 | `options?` | `InstrumentConfig` | Instrument customization options. |
 
 #### Returns
 
 `Logger`
 
----
+***
 
 ### getMeter()
 
@@ -56,15 +56,15 @@ Gets a meter for recording metrics.
 
 #### Parameters
 
-| Parameter  | Type               | Description                       |
-| ---------- | ------------------ | --------------------------------- |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
 | `options?` | `InstrumentConfig` | Instrument customization options. |
 
 #### Returns
 
 `Meter`
 
----
+***
 
 ### getTracer()
 
@@ -76,15 +76,15 @@ Gets a tracer for creating spans.
 
 #### Parameters
 
-| Parameter  | Type               | Description                       |
-| ---------- | ------------------ | --------------------------------- |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
 | `options?` | `InstrumentConfig` | Instrument customization options. |
 
 #### Returns
 
 `Tracer`
 
----
+***
 
 ### registerInstrumentations()
 
@@ -97,23 +97,23 @@ Can be called at any time, but recommended to call in plugin constructor.
 
 #### Parameters
 
-| Parameter          | Type                                           | Description                                         |
-| ------------------ | ---------------------------------------------- | --------------------------------------------------- |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
 | `instrumentations` | `Instrumentation`\<`InstrumentationConfig`\>[] | Array of OpenTelemetry instrumentations to register |
 
 #### Returns
 
 `void`
 
----
+***
 
 ### startActiveSpan()
 
 ```ts
 startActiveSpan<T>(
-   name: string,
-   options: SpanOptions,
-   fn: (span: Span) => Promise<T>,
+   name: string, 
+   options: SpanOptions, 
+   fn: (span: Span) => Promise<T>, 
 tracerOptions?: InstrumentConfig): Promise<T>;
 ```
 
@@ -124,17 +124,17 @@ When traces are disabled, executes the callback with a no-op span.
 #### Type Parameters
 
 | Type Parameter |
-| -------------- |
-| `T`            |
+| ------ |
+| `T` |
 
 #### Parameters
 
-| Parameter        | Type                                 | Description                                                   |
-| ---------------- | ------------------------------------ | ------------------------------------------------------------- |
-| `name`           | `string`                             | The name of the span                                          |
-| `options`        | `SpanOptions`                        | Span options including attributes, kind, etc.                 |
-| `fn`             | (`span`: `Span`) => `Promise`\<`T`\> | Callback function to execute within the span context          |
-| `tracerOptions?` | `InstrumentConfig`                   | Optional tracer configuration (custom name, prefix inclusion) |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `name` | `string` | The name of the span |
+| `options` | `SpanOptions` | Span options including attributes, kind, etc. |
+| `fn` | (`span`: `Span`) => `Promise`\<`T`\> | Callback function to execute within the span context |
+| `tracerOptions?` | `InstrumentConfig` | Optional tracer configuration (custom name, prefix inclusion) |
 
 #### Returns
 

@@ -1,6 +1,6 @@
 # Interface: StreamExecutionSettings
 
-Configuration for streaming execution with default and user-scoped settings
+Execution settings for streaming endpoints. Extends PluginExecutionSettings with SSE stream configuration.
 
 ## Properties
 
@@ -10,7 +10,7 @@ Configuration for streaming execution with default and user-scoped settings
 default: PluginExecuteConfig;
 ```
 
----
+***
 
 ### stream?
 
@@ -18,7 +18,7 @@ default: PluginExecuteConfig;
 optional stream: StreamConfig;
 ```
 
----
+***
 
 ### user?
 

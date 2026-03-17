@@ -36,3 +36,4 @@ since day one.
 ## 7. Layered extensibility
 
 AppKit provides high-level plugins, low-level primitives, and extension points for custom plugins. It integrates into any application architecture and never blocks your path forward.
+

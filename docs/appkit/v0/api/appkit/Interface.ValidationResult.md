@@ -12,7 +12,7 @@ all: ResourceEntry[];
 
 Complete list of all registered resources (required and optional)
 
----
+***
 
 ### missing
 
@@ -22,7 +22,7 @@ missing: ResourceEntry[];
 
 List of missing required resources
 
----
+***
 
 ### valid
 

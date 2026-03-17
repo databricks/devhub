@@ -7,7 +7,6 @@ sidebar_position: 2
 Provides HTTP server capabilities with development and production modes.
 
 **Key features:**
-
 - Express server for REST APIs
 - Vite dev server with hot module reload
 - Static file serving for production
@@ -63,10 +62,10 @@ import { createApp, server } from "@databricks/appkit";
 await createApp({
   plugins: [
     server({
-      port: 8000, // default: Number(process.env.DATABRICKS_APP_PORT) || 8000
-      host: "0.0.0.0", // default: process.env.FLASK_RUN_HOST || "0.0.0.0"
-      autoStart: true, // default: true
-      staticPath: "dist", // optional: force a specific static directory
+      port: 8000,          // default: Number(process.env.DATABRICKS_APP_PORT) || 8000
+      host: "0.0.0.0",     // default: process.env.FLASK_RUN_HOST || "0.0.0.0"
+      autoStart: true,     // default: true
+      staticPath: "dist",  // optional: force a specific static directory
     }),
   ],
 });

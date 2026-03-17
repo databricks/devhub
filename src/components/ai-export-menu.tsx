@@ -22,6 +22,7 @@ type AIExportMenuProps = {
   title: string;
   description: string;
   permalink: string;
+  disabled?: boolean;
 };
 
 export function AIExportMenu({
@@ -29,14 +30,14 @@ export function AIExportMenu({
   title,
   description,
   permalink,
+  disabled = false,
 }: AIExportMenuProps) {
   const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
   const fullUrl = baseUrl + permalink;
   const mcpUrl = baseUrl + "/api/mcp";
 
   const buildAIMarkdown = useCallback((): string => {
-    const rawContent =
-      contentRef.current?.innerText?.replace(/\s+/g, " ").trim() ?? "";
+    const rawContent = contentRef.current?.innerText?.trim() ?? "";
     const escapedTitle = title.replace(/"/g, '\\"');
     const escapedDescription = description.replace(/"/g, '\\"');
 
@@ -90,7 +91,7 @@ export function AIExportMenu({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm">
+        <Button variant="outline" size="sm" disabled={disabled}>
           Copy as
           <ChevronDownIcon />
         </Button>

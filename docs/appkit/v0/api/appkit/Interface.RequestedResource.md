@@ -4,7 +4,7 @@ Resource to request permissions for in Unity Catalog
 
 ## Properties
 
-### table_name?
+### table\_name?
 
 ```ts
 optional table_name: string;
@@ -15,12 +15,12 @@ Unity Catalog table name to request access to
 #### Example
 
 ```ts
-"catalog.schema.table";
+"catalog.schema.table"
 ```
 
----
+***
 
-### unspecified_resource_name?
+### unspecified\_resource\_name?
 
 ```ts
 optional unspecified_resource_name: string;

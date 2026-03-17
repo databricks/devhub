@@ -15,13 +15,13 @@ Extends ResourceRequirement with resolution state and plugin ownership.
 alias: string;
 ```
 
-Unique alias for this resource within the plugin (e.g., 'warehouse', 'secrets'). Used for UI/display.
+Human-readable label for UI/display only. Deduplication uses resourceKey, not alias.
 
 #### Inherited from
 
 [`ResourceRequirement`](Interface.ResourceRequirement.md).[`alias`](Interface.ResourceRequirement.md#alias)
 
----
+***
 
 ### description
 
@@ -35,7 +35,7 @@ Human-readable description of why this resource is needed
 
 [`ResourceRequirement`](Interface.ResourceRequirement.md).[`description`](Interface.ResourceRequirement.md#description)
 
----
+***
 
 ### fields
 
@@ -43,14 +43,13 @@ Human-readable description of why this resource is needed
 fields: Record<string, ResourceFieldEntry>;
 ```
 
-Map of field name to env and optional description.
-Single-value types use one key (e.g. id); multi-value (database, secret) use multiple keys.
+Map of field name to env and optional description. Single-value types use one key (e.g. id); multi-value (database, secret) use multiple (e.g. instance_name, database_name or scope, key).
 
 #### Inherited from
 
 [`ResourceRequirement`](Interface.ResourceRequirement.md).[`fields`](Interface.ResourceRequirement.md#fields)
 
----
+***
 
 ### permission
 
@@ -58,13 +57,13 @@ Single-value types use one key (e.g. id); multi-value (database, secret) use mul
 permission: ResourcePermission;
 ```
 
-Required permission level for the resource
+Required permission level for the resource (narrowed to union)
 
 #### Inherited from
 
 [`ResourceRequirement`](Interface.ResourceRequirement.md).[`permission`](Interface.ResourceRequirement.md#permission)
 
----
+***
 
 ### permissionSources?
 
@@ -76,7 +75,7 @@ Per-plugin permission tracking.
 Maps plugin name to the permission it originally requested.
 Populated when multiple plugins share the same resource.
 
----
+***
 
 ### plugin
 
@@ -86,7 +85,7 @@ plugin: string;
 
 Plugin(s) that require this resource (comma-separated if multiple)
 
----
+***
 
 ### required
 
@@ -94,13 +93,11 @@ Plugin(s) that require this resource (comma-separated if multiple)
 required: boolean;
 ```
 
-Whether this resource is required (true) or optional (false)
-
 #### Inherited from
 
 [`ResourceRequirement`](Interface.ResourceRequirement.md).[`required`](Interface.ResourceRequirement.md#required)
 
----
+***
 
 ### resolved
 
@@ -110,7 +107,7 @@ resolved: boolean;
 
 Whether the resource has been resolved (all field env vars set)
 
----
+***
 
 ### resourceKey
 
@@ -118,13 +115,13 @@ Whether the resource has been resolved (all field env vars set)
 resourceKey: string;
 ```
 
-Stable key for machine use (env naming, composite keys, app.yaml). Required.
+Stable key for machine use: deduplication, env naming, composite keys, app.yaml. Required for registry lookup.
 
 #### Inherited from
 
 [`ResourceRequirement`](Interface.ResourceRequirement.md).[`resourceKey`](Interface.ResourceRequirement.md#resourcekey)
 
----
+***
 
 ### type
 
@@ -132,13 +129,13 @@ Stable key for machine use (env naming, composite keys, app.yaml). Required.
 type: ResourceType;
 ```
 
-Type of Databricks resource required
+Type of Databricks resource required (narrowed to enum)
 
 #### Inherited from
 
 [`ResourceRequirement`](Interface.ResourceRequirement.md).[`type`](Interface.ResourceRequirement.md#type)
 
----
+***
 
 ### values?
 

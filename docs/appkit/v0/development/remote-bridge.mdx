@@ -2,7 +2,7 @@
 sidebar_position: 3
 ---
 
-import Prerequisites from "./_prerequisites_app.mdx";
+import Prerequisites from './_prerequisites_app.mdx';
 
 # Remote Bridge
 
@@ -13,7 +13,6 @@ Remote bridge allows you to develop against a deployed backend while keeping you
 ## When to use Remote Bridge
 
 Use remote bridge when:
-
 - Testing against production data
 - Debugging deployed backend code
 - Developing UI without running backend locally
@@ -31,19 +30,18 @@ The command will:
 
 1. Obtain app name from the context (either `app.yml` file or user input in the CLI)
 1. Start a local Vite development server
-1. Establish a WebSocket bridge to your deployed app
-1. Provide two URLs:
+2. Establish a WebSocket bridge to your deployed app
+3. Provide two URLs:
+
    - **App URL**: Direct link for your own use (`<app-url>?dev=true`)
    - **Shareable URL**: Link with tunnel ID for sharing with team members (`<app-url>?dev=<tunnelId>`)
 
 :::note
 
 For all available options, run:
-
 ```bash
 databricks apps dev-remote --help
 ```
-
 :::
 
 To stop the remote bridge, press `Ctrl+C` in the terminal.

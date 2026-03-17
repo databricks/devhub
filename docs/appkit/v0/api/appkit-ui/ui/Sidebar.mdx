@@ -2,473 +2,595 @@
 
 Collapsible navigation sidebar with mobile support
 
+
 ## Example
 
 import { DocExample } from "@site/src/components/DocExample";
 
 <DocExample name="sidebar" />
 
+
 ## Sidebar
 
 Collapsible navigation sidebar with mobile support
 
+
 **Source:** [`packages/appkit-ui/src/react/ui/sidebar.tsx`](https://github.com/databricks/appkit/blob/main/packages/appkit-ui/src/react/ui/sidebar.tsx)
+
 
 ### Props
 
-| Prop          | Type   | Required | Default     | Description                                                                                                                           |
-| ------------- | ------ | -------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| `side`        | `enum` |          | `left`      | Which side of the viewport the sidebar appears on                                                                                     |
-| `variant`     | `enum` |          | `sidebar`   | Visual style: `"sidebar"` (standard with border), `"floating"` (rounded with shadow), or `"inset"` (content area gets rounded margin) |
-| `collapsible` | `enum` |          | `offcanvas` | Collapse behavior: `"offcanvas"` (slides off-screen), `"icon"` (collapses to icon width), or `"none"` (always expanded)               |
+| Prop | Type | Required | Default | Description |
+|------|------|----------|---------|-------------|
+| `side` | `enum` |  | `left` | Which side of the viewport the sidebar appears on |
+| `variant` | `enum` |  | `sidebar` | Visual style: `"sidebar"` (standard with border), `"floating"` (rounded with shadow), or `"inset"` (content area gets rounded margin) |
+| `collapsible` | `enum` |  | `offcanvas` | Collapse behavior: `"offcanvas"` (slides off-screen), `"icon"` (collapses to icon width), or `"none"` (always expanded) |
+
+
 
 ### Usage
 
 ```tsx
-import { Sidebar } from "@databricks/appkit-ui";
+import { Sidebar } from '@databricks/appkit-ui';
 
-<Sidebar /* props */ />;
+<Sidebar /* props */ />
 ```
+
 
 ## SidebarContent
 
 Scrollable content area within the sidebar
 
+
 **Source:** [`packages/appkit-ui/src/react/ui/sidebar.tsx`](https://github.com/databricks/appkit/blob/main/packages/appkit-ui/src/react/ui/sidebar.tsx)
+
 
 ### Props
 
 This component extends standard HTML element attributes.
 
+
+
 ### Usage
 
 ```tsx
-import { SidebarContent } from "@databricks/appkit-ui";
+import { SidebarContent } from '@databricks/appkit-ui';
 
-<SidebarContent /* props */ />;
+<SidebarContent /* props */ />
 ```
+
 
 ## SidebarFooter
 
 Footer section at the bottom of the sidebar
 
+
 **Source:** [`packages/appkit-ui/src/react/ui/sidebar.tsx`](https://github.com/databricks/appkit/blob/main/packages/appkit-ui/src/react/ui/sidebar.tsx)
+
 
 ### Props
 
 This component extends standard HTML element attributes.
 
+
+
 ### Usage
 
 ```tsx
-import { SidebarFooter } from "@databricks/appkit-ui";
+import { SidebarFooter } from '@databricks/appkit-ui';
 
-<SidebarFooter /* props */ />;
+<SidebarFooter /* props */ />
 ```
+
 
 ## SidebarGroup
 
 Container for grouping related sidebar items
 
+
 **Source:** [`packages/appkit-ui/src/react/ui/sidebar.tsx`](https://github.com/databricks/appkit/blob/main/packages/appkit-ui/src/react/ui/sidebar.tsx)
+
 
 ### Props
 
 This component extends standard HTML element attributes.
 
+
+
 ### Usage
 
 ```tsx
-import { SidebarGroup } from "@databricks/appkit-ui";
+import { SidebarGroup } from '@databricks/appkit-ui';
 
-<SidebarGroup /* props */ />;
+<SidebarGroup /* props */ />
 ```
+
 
 ## SidebarGroupAction
 
 Action button displayed next to a sidebar group label
 
+
 **Source:** [`packages/appkit-ui/src/react/ui/sidebar.tsx`](https://github.com/databricks/appkit/blob/main/packages/appkit-ui/src/react/ui/sidebar.tsx)
+
 
 ### Props
 
-| Prop      | Type      | Required | Default | Description                                    |
-| --------- | --------- | -------- | ------- | ---------------------------------------------- |
-| `asChild` | `boolean` |          | `false` | Render as child element instead of default tag |
+| Prop | Type | Required | Default | Description |
+|------|------|----------|---------|-------------|
+| `asChild` | `boolean` |  | `false` | Render as child element instead of default tag |
+
+
 
 ### Usage
 
 ```tsx
-import { SidebarGroupAction } from "@databricks/appkit-ui";
+import { SidebarGroupAction } from '@databricks/appkit-ui';
 
-<SidebarGroupAction /* props */ />;
+<SidebarGroupAction /* props */ />
 ```
+
 
 ## SidebarGroupContent
 
 Content container for sidebar group items
 
+
 **Source:** [`packages/appkit-ui/src/react/ui/sidebar.tsx`](https://github.com/databricks/appkit/blob/main/packages/appkit-ui/src/react/ui/sidebar.tsx)
+
 
 ### Props
 
 This component extends standard HTML element attributes.
 
+
+
 ### Usage
 
 ```tsx
-import { SidebarGroupContent } from "@databricks/appkit-ui";
+import { SidebarGroupContent } from '@databricks/appkit-ui';
 
-<SidebarGroupContent /* props */ />;
+<SidebarGroupContent /* props */ />
 ```
+
 
 ## SidebarGroupLabel
 
 Label heading for a sidebar group
 
+
 **Source:** [`packages/appkit-ui/src/react/ui/sidebar.tsx`](https://github.com/databricks/appkit/blob/main/packages/appkit-ui/src/react/ui/sidebar.tsx)
+
 
 ### Props
 
-| Prop      | Type      | Required | Default | Description                                    |
-| --------- | --------- | -------- | ------- | ---------------------------------------------- |
-| `asChild` | `boolean` |          | `false` | Render as child element instead of default tag |
+| Prop | Type | Required | Default | Description |
+|------|------|----------|---------|-------------|
+| `asChild` | `boolean` |  | `false` | Render as child element instead of default tag |
+
+
 
 ### Usage
 
 ```tsx
-import { SidebarGroupLabel } from "@databricks/appkit-ui";
+import { SidebarGroupLabel } from '@databricks/appkit-ui';
 
-<SidebarGroupLabel /* props */ />;
+<SidebarGroupLabel /* props */ />
 ```
+
 
 ## SidebarHeader
 
 Header section at the top of the sidebar
 
+
 **Source:** [`packages/appkit-ui/src/react/ui/sidebar.tsx`](https://github.com/databricks/appkit/blob/main/packages/appkit-ui/src/react/ui/sidebar.tsx)
+
 
 ### Props
 
 This component extends standard HTML element attributes.
 
+
+
 ### Usage
 
 ```tsx
-import { SidebarHeader } from "@databricks/appkit-ui";
+import { SidebarHeader } from '@databricks/appkit-ui';
 
-<SidebarHeader /* props */ />;
+<SidebarHeader /* props */ />
 ```
+
 
 ## SidebarInput
 
 Input field styled for use within the sidebar
 
+
 **Source:** [`packages/appkit-ui/src/react/ui/sidebar.tsx`](https://github.com/databricks/appkit/blob/main/packages/appkit-ui/src/react/ui/sidebar.tsx)
+
 
 ### Props
 
 This component extends standard HTML element attributes.
 
+
+
 ### Usage
 
 ```tsx
-import { SidebarInput } from "@databricks/appkit-ui";
+import { SidebarInput } from '@databricks/appkit-ui';
 
-<SidebarInput /* props */ />;
+<SidebarInput /* props */ />
 ```
+
 
 ## SidebarInset
 
 Main content area that adapts to sidebar state
 
+
 **Source:** [`packages/appkit-ui/src/react/ui/sidebar.tsx`](https://github.com/databricks/appkit/blob/main/packages/appkit-ui/src/react/ui/sidebar.tsx)
+
 
 ### Props
 
 This component extends standard HTML element attributes.
 
+
+
 ### Usage
 
 ```tsx
-import { SidebarInset } from "@databricks/appkit-ui";
+import { SidebarInset } from '@databricks/appkit-ui';
 
-<SidebarInset /* props */ />;
+<SidebarInset /* props */ />
 ```
+
 
 ## SidebarMenu
 
 Navigation menu list within the sidebar
 
+
 **Source:** [`packages/appkit-ui/src/react/ui/sidebar.tsx`](https://github.com/databricks/appkit/blob/main/packages/appkit-ui/src/react/ui/sidebar.tsx)
+
 
 ### Props
 
 This component extends standard HTML element attributes.
 
+
+
 ### Usage
 
 ```tsx
-import { SidebarMenu } from "@databricks/appkit-ui";
+import { SidebarMenu } from '@databricks/appkit-ui';
 
-<SidebarMenu /* props */ />;
+<SidebarMenu /* props */ />
 ```
+
 
 ## SidebarMenuAction
 
 Action button displayed alongside a menu item
 
+
 **Source:** [`packages/appkit-ui/src/react/ui/sidebar.tsx`](https://github.com/databricks/appkit/blob/main/packages/appkit-ui/src/react/ui/sidebar.tsx)
+
 
 ### Props
 
-| Prop          | Type      | Required | Default | Description                                    |
-| ------------- | --------- | -------- | ------- | ---------------------------------------------- |
-| `asChild`     | `boolean` |          | `false` | Render as child element instead of default tag |
-| `showOnHover` | `boolean` |          | `false` | Only show when parent menu item is hovered     |
+| Prop | Type | Required | Default | Description |
+|------|------|----------|---------|-------------|
+| `asChild` | `boolean` |  | `false` | Render as child element instead of default tag |
+| `showOnHover` | `boolean` |  | `false` | Only show when parent menu item is hovered |
+
+
 
 ### Usage
 
 ```tsx
-import { SidebarMenuAction } from "@databricks/appkit-ui";
+import { SidebarMenuAction } from '@databricks/appkit-ui';
 
-<SidebarMenuAction /* props */ />;
+<SidebarMenuAction /* props */ />
 ```
+
 
 ## SidebarMenuBadge
 
 Badge for displaying counts or status on menu items
 
+
 **Source:** [`packages/appkit-ui/src/react/ui/sidebar.tsx`](https://github.com/databricks/appkit/blob/main/packages/appkit-ui/src/react/ui/sidebar.tsx)
+
 
 ### Props
 
 This component extends standard HTML element attributes.
 
+
+
 ### Usage
 
 ```tsx
-import { SidebarMenuBadge } from "@databricks/appkit-ui";
+import { SidebarMenuBadge } from '@databricks/appkit-ui';
 
-<SidebarMenuBadge /* props */ />;
+<SidebarMenuBadge /* props */ />
 ```
+
 
 ## SidebarMenuButton
 
+
 **Source:** [`packages/appkit-ui/src/react/ui/sidebar.tsx`](https://github.com/databricks/appkit/blob/main/packages/appkit-ui/src/react/ui/sidebar.tsx)
+
 
 ### Props
 
-| Prop       | Type                                                              | Required | Default   | Description                                          |
-| ---------- | ----------------------------------------------------------------- | -------- | --------- | ---------------------------------------------------- |
-| `asChild`  | `boolean`                                                         |          | `false`   | Render as child element instead of default tag       |
-| `isActive` | `boolean`                                                         |          | `false`   | Whether this item is currently active/selected       |
-| `tooltip`  | `string \| (TooltipContentProps & RefAttributes<HTMLDivElement>)` |          | -         | Tooltip shown when sidebar is collapsed to icon mode |
-| `variant`  | `"default" \| "outline" \| null`                                  |          | `default` | -                                                    |
-| `size`     | `"default" \| "sm" \| "lg" \| null`                               |          | `default` | -                                                    |
+| Prop | Type | Required | Default | Description |
+|------|------|----------|---------|-------------|
+| `asChild` | `boolean` |  | `false` | Render as child element instead of default tag |
+| `isActive` | `boolean` |  | `false` | Whether this item is currently active/selected |
+| `tooltip` | `string \| (TooltipContentProps & RefAttributes<HTMLDivElement>)` |  | - | Tooltip shown when sidebar is collapsed to icon mode |
+| `variant` | `"default" \| "outline" \| null` |  | `default` | - |
+| `size` | `"default" \| "sm" \| "lg" \| null` |  | `default` | - |
+
+
 
 ### Usage
 
 ```tsx
-import { SidebarMenuButton } from "@databricks/appkit-ui";
+import { SidebarMenuButton } from '@databricks/appkit-ui';
 
-<SidebarMenuButton /* props */ />;
+<SidebarMenuButton /* props */ />
 ```
+
 
 ## SidebarMenuItem
 
 Individual menu item within the sidebar
 
+
 **Source:** [`packages/appkit-ui/src/react/ui/sidebar.tsx`](https://github.com/databricks/appkit/blob/main/packages/appkit-ui/src/react/ui/sidebar.tsx)
+
 
 ### Props
 
 This component extends standard HTML element attributes.
 
+
+
 ### Usage
 
 ```tsx
-import { SidebarMenuItem } from "@databricks/appkit-ui";
+import { SidebarMenuItem } from '@databricks/appkit-ui';
 
-<SidebarMenuItem /* props */ />;
+<SidebarMenuItem /* props */ />
 ```
+
 
 ## SidebarMenuSkeleton
 
 Loading skeleton placeholder for menu items
 
+
 **Source:** [`packages/appkit-ui/src/react/ui/sidebar.tsx`](https://github.com/databricks/appkit/blob/main/packages/appkit-ui/src/react/ui/sidebar.tsx)
+
 
 ### Props
 
-| Prop       | Type      | Required | Default | Description                                                  |
-| ---------- | --------- | -------- | ------- | ------------------------------------------------------------ |
-| `showIcon` | `boolean` |          | `false` | Show a circular icon placeholder alongside the text skeleton |
+| Prop | Type | Required | Default | Description |
+|------|------|----------|---------|-------------|
+| `showIcon` | `boolean` |  | `false` | Show a circular icon placeholder alongside the text skeleton |
+
+
 
 ### Usage
 
 ```tsx
-import { SidebarMenuSkeleton } from "@databricks/appkit-ui";
+import { SidebarMenuSkeleton } from '@databricks/appkit-ui';
 
-<SidebarMenuSkeleton /* props */ />;
+<SidebarMenuSkeleton /* props */ />
 ```
+
 
 ## SidebarMenuSub
 
 Submenu list for nested navigation items
 
+
 **Source:** [`packages/appkit-ui/src/react/ui/sidebar.tsx`](https://github.com/databricks/appkit/blob/main/packages/appkit-ui/src/react/ui/sidebar.tsx)
+
 
 ### Props
 
 This component extends standard HTML element attributes.
 
+
+
 ### Usage
 
 ```tsx
-import { SidebarMenuSub } from "@databricks/appkit-ui";
+import { SidebarMenuSub } from '@databricks/appkit-ui';
 
-<SidebarMenuSub /* props */ />;
+<SidebarMenuSub /* props */ />
 ```
+
 
 ## SidebarMenuSubButton
 
 Button for submenu items
 
+
 **Source:** [`packages/appkit-ui/src/react/ui/sidebar.tsx`](https://github.com/databricks/appkit/blob/main/packages/appkit-ui/src/react/ui/sidebar.tsx)
+
 
 ### Props
 
-| Prop       | Type      | Required | Default | Description                                            |
-| ---------- | --------- | -------- | ------- | ------------------------------------------------------ |
-| `asChild`  | `boolean` |          | `false` | Render as child element instead of default tag         |
-| `size`     | `enum`    |          | `md`    | Text size of the submenu button                        |
-| `isActive` | `boolean` |          | `false` | Whether this submenu item is currently active/selected |
+| Prop | Type | Required | Default | Description |
+|------|------|----------|---------|-------------|
+| `asChild` | `boolean` |  | `false` | Render as child element instead of default tag |
+| `size` | `enum` |  | `md` | Text size of the submenu button |
+| `isActive` | `boolean` |  | `false` | Whether this submenu item is currently active/selected |
+
+
 
 ### Usage
 
 ```tsx
-import { SidebarMenuSubButton } from "@databricks/appkit-ui";
+import { SidebarMenuSubButton } from '@databricks/appkit-ui';
 
-<SidebarMenuSubButton /* props */ />;
+<SidebarMenuSubButton /* props */ />
 ```
+
 
 ## SidebarMenuSubItem
 
 Individual item within a sidebar submenu
 
+
 **Source:** [`packages/appkit-ui/src/react/ui/sidebar.tsx`](https://github.com/databricks/appkit/blob/main/packages/appkit-ui/src/react/ui/sidebar.tsx)
+
 
 ### Props
 
 This component extends standard HTML element attributes.
 
+
+
 ### Usage
 
 ```tsx
-import { SidebarMenuSubItem } from "@databricks/appkit-ui";
+import { SidebarMenuSubItem } from '@databricks/appkit-ui';
 
-<SidebarMenuSubItem /* props */ />;
+<SidebarMenuSubItem /* props */ />
 ```
+
 
 ## SidebarProvider
 
+
 **Source:** [`packages/appkit-ui/src/react/ui/sidebar.tsx`](https://github.com/databricks/appkit/blob/main/packages/appkit-ui/src/react/ui/sidebar.tsx)
+
 
 ### Props
 
-| Prop           | Type                        | Required | Default | Description                               |
-| -------------- | --------------------------- | -------- | ------- | ----------------------------------------- |
-| `defaultOpen`  | `boolean`                   |          | `true`  | Initial open state for uncontrolled usage |
-| `open`         | `boolean`                   |          | -       | Controlled open state                     |
-| `onOpenChange` | `((open: boolean) => void)` |          | -       | Callback when open state changes          |
+| Prop | Type | Required | Default | Description |
+|------|------|----------|---------|-------------|
+| `defaultOpen` | `boolean` |  | `true` | Initial open state for uncontrolled usage |
+| `open` | `boolean` |  | - | Controlled open state |
+| `onOpenChange` | `((open: boolean) => void)` |  | - | Callback when open state changes |
+
+
 
 ### Usage
 
 ```tsx
-import { SidebarProvider } from "@databricks/appkit-ui";
+import { SidebarProvider } from '@databricks/appkit-ui';
 
-<SidebarProvider /* props */ />;
+<SidebarProvider /* props */ />
 ```
+
 
 ## SidebarRail
 
 Clickable rail element for toggling sidebar visibility
 
+
 **Source:** [`packages/appkit-ui/src/react/ui/sidebar.tsx`](https://github.com/databricks/appkit/blob/main/packages/appkit-ui/src/react/ui/sidebar.tsx)
+
 
 ### Props
 
 This component extends standard HTML element attributes.
 
+
+
 ### Usage
 
 ```tsx
-import { SidebarRail } from "@databricks/appkit-ui";
+import { SidebarRail } from '@databricks/appkit-ui';
 
-<SidebarRail /* props */ />;
+<SidebarRail /* props */ />
 ```
+
 
 ## SidebarSeparator
 
 Visual separator between sidebar sections
 
+
 **Source:** [`packages/appkit-ui/src/react/ui/sidebar.tsx`](https://github.com/databricks/appkit/blob/main/packages/appkit-ui/src/react/ui/sidebar.tsx)
+
 
 ### Props
 
-| Prop          | Type      | Required | Default    | Description                                                                                                                                                                          |
-| ------------- | --------- | -------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `orientation` | `enum`    |          | `vertical` | Either `vertical` or `horizontal`. Defaults to `horizontal`.                                                                                                                         |
-| `decorative`  | `boolean` |          | -          | Whether or not the component is purely decorative. When true, accessibility-related attributes are updated so that that the rendered element is removed from the accessibility tree. |
-| `asChild`     | `boolean` |          | -          | -                                                                                                                                                                                    |
+| Prop | Type | Required | Default | Description |
+|------|------|----------|---------|-------------|
+| `orientation` | `enum` |  | `vertical` | Either `vertical` or `horizontal`. Defaults to `horizontal`. |
+| `decorative` | `boolean` |  | - | Whether or not the component is purely decorative. When true, accessibility-related attributes are updated so that that the rendered element is removed from the accessibility tree. |
+| `asChild` | `boolean` |  | - | - |
+
+
 
 ### Usage
 
 ```tsx
-import { SidebarSeparator } from "@databricks/appkit-ui";
+import { SidebarSeparator } from '@databricks/appkit-ui';
 
-<SidebarSeparator /* props */ />;
+<SidebarSeparator /* props */ />
 ```
+
 
 ## SidebarTrigger
 
 Button that toggles the sidebar open and closed
 
+
 **Source:** [`packages/appkit-ui/src/react/ui/sidebar.tsx`](https://github.com/databricks/appkit/blob/main/packages/appkit-ui/src/react/ui/sidebar.tsx)
+
 
 ### Props
 
-| Prop      | Type                                                                                  | Required | Default | Description |
-| --------- | ------------------------------------------------------------------------------------- | -------- | ------- | ----------- |
-| `variant` | `"link" \| "default" \| "destructive" \| "secondary" \| "outline" \| "ghost" \| null` |          | -       | -           |
-| `size`    | `"default" \| "sm" \| "lg" \| "icon" \| "icon-sm" \| "icon-lg" \| null`               |          | -       | -           |
-| `asChild` | `boolean`                                                                             |          | -       | -           |
+| Prop | Type | Required | Default | Description |
+|------|------|----------|---------|-------------|
+| `variant` | `"link" \| "default" \| "destructive" \| "secondary" \| "outline" \| "ghost" \| null` |  | - | - |
+| `size` | `"default" \| "sm" \| "lg" \| "icon" \| "icon-sm" \| "icon-lg" \| null` |  | - | - |
+| `asChild` | `boolean` |  | - | - |
+
+
 
 ### Usage
 
 ```tsx
-import { SidebarTrigger } from "@databricks/appkit-ui";
+import { SidebarTrigger } from '@databricks/appkit-ui';
 
-<SidebarTrigger /* props */ />;
+<SidebarTrigger /* props */ />
 ```
+
 
 ## useSidebar
 
 Hook to access sidebar state and controls
 
+
 **Source:** [`packages/appkit-ui/src/react/ui/sidebar.tsx`](https://github.com/databricks/appkit/blob/main/packages/appkit-ui/src/react/ui/sidebar.tsx)
+
 
 ### Props
 
 This hook takes no parameters.
 
+
+
 ### Usage
 
 ```tsx
-import { useSidebar } from "@databricks/appkit-ui";
+import { useSidebar } from '@databricks/appkit-ui';
 
 function MyComponent() {
   const sidebar = useSidebar();
 }
 ```
+

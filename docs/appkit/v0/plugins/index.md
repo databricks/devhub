@@ -16,7 +16,12 @@ Configure plugins when creating your AppKit instance:
 import { createApp, server, analytics, genie, files } from "@databricks/appkit";
 
 const AppKit = await createApp({
-  plugins: [server({ port: 8000 }), analytics(), genie(), files()],
+  plugins: [
+    server({ port: 8000 }),
+    analytics(),
+    genie(),
+    files(),
+  ],
 });
 ```
 

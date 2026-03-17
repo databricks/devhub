@@ -31,12 +31,32 @@ export const recipes: Recipe[] = [
     tags: ["Databricks CLI", "Setup", "Agent Skills"],
   },
   {
-    id: "vercel-ai-chat-app",
+    id: "ai-chat-model-serving",
     name: "AI Chat with Databricks Model Serving",
     description:
-      "Build a streaming chat app powered by Databricks AI Gateway (model serving). Uses Vercel AI SDK with an OpenAI-compatible provider pointed at your Databricks serving endpoint, plus AI Elements for the chat UI.",
+      "Build a streaming chat app in Databricks Apps powered by Databricks AI Gateway (model serving) with AI SDK and AI Elements.",
     tags: ["AI SDK", "AI Gateway", "Model Serving", "Chat"],
+    prerequisites: [
+      "databricks-local-bootstrap",
+      "lakebase-data-persistence",
+      "model-serving-endpoint-creation",
+    ],
+  },
+  {
+    id: "model-serving-endpoint-creation",
+    name: "Create a Databricks Model Serving endpoint",
+    description:
+      "Create and validate a Databricks Model Serving endpoint for AI chat inference in Databricks Apps.",
+    tags: ["Model Serving", "AI Gateway", "Endpoints", "Inference"],
     prerequisites: ["databricks-local-bootstrap"],
+  },
+  {
+    id: "lakebase-chat-persistence",
+    name: "Lakebase Chat Persistence",
+    description:
+      "Persist chat sessions and messages in Lakebase so users can resume chat history across requests and deployments.",
+    tags: ["Lakebase", "Postgres", "Chat", "Persistence"],
+    prerequisites: ["lakebase-data-persistence", "ai-chat-model-serving"],
   },
   {
     id: "lakebase-data-persistence",
@@ -67,6 +87,22 @@ export const recipes: Recipe[] = [
 const recipeIndex: Record<string, Recipe> = Object.fromEntries(
   recipes.map((recipe) => [recipe.id, recipe]),
 );
+
+export const recipesInOrder: Recipe[] = [
+  "databricks-local-bootstrap",
+  "lakebase-data-persistence",
+  "model-serving-endpoint-creation",
+  "ai-chat-model-serving",
+  "lakebase-chat-persistence",
+  "genie-conversational-analytics",
+  "sql-analytics-dashboard",
+].map((recipeId) => {
+  const recipe = recipeIndex[recipeId];
+  if (!recipe) {
+    throw new Error(`Unknown recipe id in recipesInOrder: ${recipeId}`);
+  }
+  return recipe;
+});
 
 type TemplateConfig = {
   id: string;
@@ -107,8 +143,14 @@ export const templates: Template[] = [
     id: "ai-chat-app-template",
     name: "AI Chat App Template",
     description:
-      "Databricks local bootstrap plus a streaming AI chat powered by Databricks Model Serving (AI Gateway) with AI SDK and AI Elements.",
-    recipeIds: ["databricks-local-bootstrap", "vercel-ai-chat-app"],
+      "Databricks local bootstrap with Lakebase setup, model serving endpoint creation, AI SDK chat integration, and persisted chat history.",
+    recipeIds: [
+      "databricks-local-bootstrap",
+      "lakebase-data-persistence",
+      "model-serving-endpoint-creation",
+      "ai-chat-model-serving",
+      "lakebase-chat-persistence",
+    ],
   }),
   createTemplate({
     id: "data-app-template",
@@ -136,7 +178,9 @@ export const templates: Template[] = [
     recipeIds: [
       "databricks-local-bootstrap",
       "lakebase-data-persistence",
-      "vercel-ai-chat-app",
+      "model-serving-endpoint-creation",
+      "ai-chat-model-serving",
+      "lakebase-chat-persistence",
       "genie-conversational-analytics",
     ],
   }),

@@ -9,8 +9,8 @@ Telemetry automatically uses appkit's OpenTelemetry configuration via global reg
 
 ## Parameters
 
-| Parameter | Type                                                                 | Description                 |
-| --------- | -------------------------------------------------------------------- | --------------------------- |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
 | `config?` | `Partial`\<[`LakebasePoolConfig`](Interface.LakebasePoolConfig.md)\> | Lakebase pool configuration |
 
 ## Returns

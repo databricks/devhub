@@ -1,6 +1,6 @@
 # Interface: CacheConfig
 
-Configuration for caching
+Configuration for the CacheInterceptor. Controls TTL, size limits, storage backend, and probabilistic cleanup.
 
 ## Indexable
 
@@ -18,7 +18,7 @@ optional cacheKey: (string | number | object)[];
 
 Cache key
 
----
+***
 
 ### cleanupProbability?
 
@@ -28,7 +28,7 @@ optional cleanupProbability: number;
 
 Probability (0-1) of triggering cleanup on each get operation
 
----
+***
 
 ### enabled?
 
@@ -38,7 +38,7 @@ optional enabled: boolean;
 
 Whether caching is enabled
 
----
+***
 
 ### evictionCheckProbability?
 
@@ -48,7 +48,7 @@ optional evictionCheckProbability: number;
 
 Probability (0-1) of checking total bytes on each write operation
 
----
+***
 
 ### maxBytes?
 
@@ -58,7 +58,7 @@ optional maxBytes: number;
 
 Maximum number of bytes in the cache
 
----
+***
 
 ### maxEntryBytes?
 
@@ -68,7 +68,7 @@ optional maxEntryBytes: number;
 
 Maximum number of bytes per entry in the cache
 
----
+***
 
 ### maxSize?
 
@@ -78,7 +78,7 @@ optional maxSize: number;
 
 Maximum number of entries in the cache
 
----
+***
 
 ### storage?
 
@@ -88,7 +88,7 @@ optional storage: CacheStorage;
 
 Cache Storage provider instance
 
----
+***
 
 ### strictPersistence?
 
@@ -98,7 +98,7 @@ optional strictPersistence: boolean;
 
 Whether to enforce strict persistence
 
----
+***
 
 ### telemetry?
 
@@ -108,7 +108,7 @@ optional telemetry: TelemetryOptions;
 
 Telemetry configuration
 
----
+***
 
 ### ttl?
 

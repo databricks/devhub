@@ -2,7 +2,7 @@
 sidebar_position: 2
 ---
 
-import Prerequisites from "./_prerequisites.mdx";
+import Prerequisites from './_prerequisites.mdx';
 
 # App management
 
@@ -17,7 +17,6 @@ See the [Quick start](./index.md#quick-start-options) section to create a new Da
 ## Configuration
 
 Before deploying your app, you need to configure it. See the [Configuration guide](./configuration.mdx) for details on:
-
 - `app.yaml` configuration and command specification
 - Environment variables and SQL warehouse binding
 - Local development authentication options
@@ -31,7 +30,6 @@ databricks apps deploy
 ```
 
 This command runs a complete deployment pipeline:
-
 1. Builds the frontend (`npm run build`)
 2. Deploys the bundle to the workspace
 3. Runs the app
@@ -39,38 +37,36 @@ This command runs a complete deployment pipeline:
 :::note
 
 For all available options, run:
-
 ```bash
 databricks apps deploy --help
 ```
-
 :::
 
 ### Examples
 
 - Deploy to a specific target:
 
-  ```bash
-  databricks apps deploy --target prod
-  ```
+    ```bash
+    databricks apps deploy --target prod
+    ```
 
 - Deploy with custom variables:
 
-  ```bash
-  databricks apps deploy --var="warehouse_id=abc123"
-  ```
+    ```bash
+    databricks apps deploy --var="warehouse_id=abc123"
+    ```
 
 - Skip the build step for faster iteration:
 
-  ```bash
-  databricks apps deploy --skip-build
-  ```
+    ```bash
+    databricks apps deploy --skip-build
+    ```
 
 - Force deploy (override Git branch validation):
 
-  ```bash
-  databricks apps deploy --force
-  ```
+    ```bash
+    databricks apps deploy --force
+    ```
 
 ## Start app
 
@@ -116,33 +112,33 @@ By default, this shows the most recent 200 log lines and exits.
 
 - Show the last 50 log lines:
 
-  ```bash
-  databricks apps logs my-app --tail-lines 50
-  ```
+    ```bash
+    databricks apps logs my-app --tail-lines 50
+    ```
 
 - Follow logs with a search filter:
 
-  ```bash
-  databricks apps logs my-app --follow --search ERROR
-  ```
+    ```bash
+    databricks apps logs my-app --follow --search ERROR
+    ```
 
 - Filter logs by source:
 
-  ```bash
-  databricks apps logs my-app --follow --source APP
-  ```
+    ```bash
+    databricks apps logs my-app --follow --source APP
+    ```
 
 - Save logs to a file:
 
-  ```bash
-  databricks apps logs my-app --follow --output-file app.log
-  ```
+    ```bash
+    databricks apps logs my-app --follow --output-file app.log
+    ```
 
 - Stream logs for 5 minutes:
 
-  ```bash
-  databricks apps logs my-app --follow --timeout 5m
-  ```
+    ```bash
+    databricks apps logs my-app --follow --timeout 5m
+    ```
 
 ## Delete app
 

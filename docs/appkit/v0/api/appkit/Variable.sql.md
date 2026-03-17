@@ -28,9 +28,9 @@ so this helper returns a STRING with hex encoding. Use UNHEX(:param) in your SQL
 
 #### Parameters
 
-| Parameter | Type                                      | Description                            |
-| --------- | ----------------------------------------- | -------------------------------------- |
-| `value`   | `string` \| `Uint8Array` \| `ArrayBuffer` | Uint8Array, ArrayBuffer, or hex string |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `value` | `string` \| `Uint8Array` \| `ArrayBuffer` | Uint8Array, ArrayBuffer, or hex string |
 
 #### Returns
 
@@ -42,9 +42,7 @@ Marker object with STRING type and hex-encoded value
 
 ```typescript
 // From Uint8Array:
-const params = {
-  data: sql.binary(new Uint8Array([0x53, 0x70, 0x61, 0x72, 0x6b])),
-};
+const params = { data: sql.binary(new Uint8Array([0x53, 0x70, 0x61, 0x72, 0x6b])) };
 // Returns: { __sql_type: "STRING", value: "537061726B" }
 // SQL: SELECT UNHEX(:data) as binary_value
 ```
@@ -66,9 +64,9 @@ Accepts booleans, strings, or numbers
 
 #### Parameters
 
-| Parameter | Type                              | Description                |
-| --------- | --------------------------------- | -------------------------- |
-| `value`   | `string` \| `number` \| `boolean` | Boolean, string, or number |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `value` | `string` \| `number` \| `boolean` | Boolean, string, or number |
 
 #### Returns
 
@@ -80,27 +78,27 @@ Marker object for BOOLEAN type parameter
 
 ```typescript
 const params = { isActive: sql.boolean(true) };
-params = { isActive: "true" };
+params = { isActive: "true" }
 ```
 
 ```typescript
 const params = { isActive: sql.boolean("true") };
-params = { isActive: "true" };
+params = { isActive: "true" }
 ```
 
 ```typescript
 const params = { isActive: sql.boolean(1) };
-params = { isActive: "true" };
+params = { isActive: "true" }
 ```
 
 ```typescript
 const params = { isActive: sql.boolean("false") };
-params = { isActive: "false" };
+params = { isActive: "false" }
 ```
 
 ```typescript
 const params = { isActive: sql.boolean(0) };
-params = { isActive: "false" };
+params = { isActive: "false" }
 ```
 
 ### date()
@@ -114,9 +112,9 @@ Accepts Date objects or ISO date strings (YYYY-MM-DD format)
 
 #### Parameters
 
-| Parameter | Type               | Description                    |
-| --------- | ------------------ | ------------------------------ |
-| `value`   | `string` \| `Date` | Date object or ISO date string |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `value` | `string` \| `Date` | Date object or ISO date string |
 
 #### Returns
 
@@ -128,12 +126,12 @@ Marker object for DATE type parameter
 
 ```typescript
 const params = { startDate: sql.date(new Date("2024-01-01")) };
-params = { startDate: "2024-01-01" };
+params = { startDate: "2024-01-01" }
 ```
 
 ```typescript
 const params = { startDate: sql.date("2024-01-01") };
-params = { startDate: "2024-01-01" };
+params = { startDate: "2024-01-01" }
 ```
 
 ### number()
@@ -147,9 +145,9 @@ Accepts numbers or numeric strings
 
 #### Parameters
 
-| Parameter | Type                 | Description              |
-| --------- | -------------------- | ------------------------ |
-| `value`   | `string` \| `number` | Number or numeric string |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `value` | `string` \| `number` | Number or numeric string |
 
 #### Returns
 
@@ -161,12 +159,12 @@ Marker object for NUMERIC type parameter
 
 ```typescript
 const params = { userId: sql.number(123) };
-params = { userId: "123" };
+params = { userId: "123" }
 ```
 
 ```typescript
 const params = { userId: sql.number("123") };
-params = { userId: "123" };
+params = { userId: "123" }
 ```
 
 ### string()
@@ -180,9 +178,9 @@ Accepts strings, numbers, or booleans
 
 #### Parameters
 
-| Parameter | Type                              | Description                |
-| --------- | --------------------------------- | -------------------------- |
-| `value`   | `string` \| `number` \| `boolean` | String, number, or boolean |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `value` | `string` \| `number` \| `boolean` | String, number, or boolean |
 
 #### Returns
 
@@ -194,17 +192,17 @@ Marker object for STRING type parameter
 
 ```typescript
 const params = { name: sql.string("John") };
-params = { name: "John" };
+params = { name: "John" }
 ```
 
 ```typescript
 const params = { name: sql.string(123) };
-params = { name: "123" };
+params = { name: "123" }
 ```
 
 ```typescript
 const params = { name: sql.string(true) };
-params = { name: "true" };
+params = { name: "true" }
 ```
 
 ### timestamp()
@@ -218,9 +216,9 @@ Accepts Date objects, ISO timestamp strings, or Unix timestamp numbers
 
 #### Parameters
 
-| Parameter | Type                           | Description                                                 |
-| --------- | ------------------------------ | ----------------------------------------------------------- |
-| `value`   | `string` \| `number` \| `Date` | Date object, ISO timestamp string, or Unix timestamp number |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `value` | `string` \| `number` \| `Date` | Date object, ISO timestamp string, or Unix timestamp number |
 
 #### Returns
 
@@ -232,15 +230,15 @@ Marker object for TIMESTAMP type parameter
 
 ```typescript
 const params = { createdTime: sql.timestamp(new Date("2024-01-01T12:00:00Z")) };
-params = { createdTime: "2024-01-01T12:00:00Z" };
+params = { createdTime: "2024-01-01T12:00:00Z" }
 ```
 
 ```typescript
 const params = { createdTime: sql.timestamp("2024-01-01T12:00:00Z") };
-params = { createdTime: "2024-01-01T12:00:00Z" };
+params = { createdTime: "2024-01-01T12:00:00Z" }
 ```
 
 ```typescript
 const params = { createdTime: sql.timestamp(1704110400000) };
-params = { createdTime: "2024-01-01T12:00:00Z" };
+params = { createdTime: "2024-01-01T12:00:00Z" }
 ```

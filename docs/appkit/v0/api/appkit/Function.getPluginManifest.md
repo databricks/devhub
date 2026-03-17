@@ -9,9 +9,9 @@ Normalizes string type/permission to strict ResourceType/ResourcePermission.
 
 ## Parameters
 
-| Parameter | Type                | Description                  |
-| --------- | ------------------- | ---------------------------- |
-| `plugin`  | `PluginConstructor` | The plugin constructor class |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `plugin` | `PluginConstructor` | The plugin constructor class |
 
 ## Returns
 

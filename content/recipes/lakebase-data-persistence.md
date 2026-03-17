@@ -20,9 +20,18 @@ databricks postgres list-branches \
 databricks postgres list-endpoints \
   projects/<project-name>/branches/production \
   --profile <PROFILE> -o json
+
+databricks postgres list-databases \
+  projects/<project-name>/branches/production \
+  --profile <PROFILE> -o json
 ```
 
-Note the endpoint host from the output.
+Note these values from the output:
+
+- endpoint host (`...status.hosts.host`) for `lakebase.postgres.host`
+- endpoint path (`...name`) for `lakebase.postgres.endpointPath`
+- database resource path (`...name`) for `lakebase.postgres.database`
+- PostgreSQL database name (`...status.postgres_database`) for `lakebase.postgres.databaseName` and `PGDATABASE`
 
 ### 2. New app: scaffold with the Lakebase feature
 
@@ -33,10 +42,46 @@ databricks apps init \
   --features=lakebase \
   --set 'lakebase.postgres.branch=projects/<project-name>/branches/production' \
   --set 'lakebase.postgres.database=projects/<project-name>/branches/production/databases/<db-name>' \
+  --set 'lakebase.postgres.databaseName=<postgres-database-name>' \
+  --set 'lakebase.postgres.endpointPath=projects/<project-name>/branches/production/endpoints/primary' \
+  --set 'lakebase.postgres.host=<endpoint-host>' \
+  --set 'lakebase.postgres.port=5432' \
+  --set 'lakebase.postgres.sslmode=require' \
   --run none --profile <PROFILE>
 ```
 
+Use the values returned by `list-databases` and `list-endpoints`. The generated template currently requires all postgres fields together during non-interactive scaffolding.
+
 This scaffolds a complete app with Lakebase already wired up, including a sample todo CRUD app. Skip to step 4 to configure environment variables, then step 5 to deploy.
+
+### Production naming and routing conventions
+
+The scaffolded Lakebase sample uses `lakebase` in route names and file paths to make plugin wiring obvious. For real apps, use domain names in user-facing code and keep `lakebase` only for infrastructure configuration.
+
+Use these conventions:
+
+- frontend pages and routes should use domain names (for example, `/` or `/todos`), not `/lakebase`
+- API routes should use domain names (for example, `/api/todos`), not `/api/lakebase/todos`
+- component and file names should use domain names (for example, `TodosPage.tsx`, `todo-routes.ts`)
+- keep `lakebase` naming for plugin/config only (`lakebase()` plugin, `LAKEBASE_ENDPOINT`, `postgres` app resource)
+
+For a todo app, prefer:
+
+- `client/src/pages/TodosPage.tsx`
+- route: `/` or `/todos`
+- `server/routes/todos/todo-routes.ts`
+- API endpoints:
+  - `GET /api/todos`
+  - `POST /api/todos`
+  - `PATCH /api/todos/:id`
+  - `DELETE /api/todos/:id`
+
+Agent checklist after scaffolding:
+
+- rename `LakebasePage` to your domain page component (for example, `TodosPage`)
+- rename `setupSampleLakebaseRoutes` to a domain-specific route setup function
+- rename `/lakebase` and `/api/lakebase/*` paths to domain-specific paths
+- update navigation labels to domain language (for example, `Todos`), not `Lakebase`
 
 ### 3. Existing app: add Lakebase manually
 
@@ -411,12 +456,12 @@ For local development, add the Postgres connection details to `.env`:
 ```bash
 PGHOST=<endpoint-host>
 PGPORT=5432
-PGDATABASE=<database-name>
+PGDATABASE=<postgres-database-name>
 PGSSLMODE=require
 LAKEBASE_ENDPOINT=projects/<project-name>/branches/production/endpoints/primary
 ```
 
-For deployment, the platform injects `PGHOST`, `PGDATABASE`, and `PGSSLMODE` automatically. Add the Lakebase endpoint to `app.yaml`:
+For deployment, the platform injects Postgres connection values automatically through the app resource. Keep only the Lakebase endpoint in `app.yaml`:
 
 ```yaml
 command: ["npm", "run", "start"]
@@ -435,6 +480,16 @@ variables:
     description: Lakebase Postgres branch resource name
   postgres_database:
     description: Lakebase Postgres database resource name
+  postgres_databaseName:
+    description: Postgres database name for local development
+  postgres_endpointPath:
+    description: Lakebase endpoint resource name for local development
+  postgres_host:
+    description: Postgres host for local development
+  postgres_port:
+    description: Postgres port for local development
+  postgres_sslmode:
+    description: Postgres SSL mode for local development
 
 resources:
   apps:
@@ -452,6 +507,11 @@ targets:
     variables:
       postgres_branch: projects/<project-name>/branches/production
       postgres_database: projects/<project-name>/branches/production/databases/<db-name>
+      postgres_databaseName: <postgres-database-name>
+      postgres_endpointPath: projects/<project-name>/branches/production/endpoints/primary
+      postgres_host: <endpoint-host>
+      postgres_port: 5432
+      postgres_sslmode: require
 ```
 
 ### 6. Deploy and test
@@ -460,14 +520,12 @@ targets:
 databricks apps deploy --profile <PROFILE>
 ```
 
-Verify the endpoints once the app is running:
+Verify the app once it is running by opening the app URL in your browser while signed in to Databricks, navigating to the `Lakebase` page, and creating/completing/deleting a todo item.
+
+If the app does not start, check logs:
 
 ```bash
-curl -X POST https://<app-url>/api/lakebase/todos \
-  -H 'Content-Type: application/json' \
-  -d '{"title":"My first todo"}'
-
-curl https://<app-url>/api/lakebase/todos
+databricks apps logs <app-name> --profile <PROFILE>
 ```
 
 #### References

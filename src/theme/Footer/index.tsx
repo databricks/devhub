@@ -124,12 +124,9 @@ export default function Footer(): ReactNode {
 
         <Separator className="my-4 bg-white/10" />
 
-        <div className="flex flex-col gap-2 text-[11px] text-white/55 md:flex-row md:items-center md:justify-between">
-          <p className="m-0">AI Software powered by Databricks.</p>
-          <p className="m-0">
-            Copyright © {new Date().getFullYear()} Databricks, Inc.
-          </p>
-        </div>
+        <p className="m-0 text-[11px] text-white/55">
+          Copyright © {new Date().getFullYear()} Databricks, Inc.
+        </p>
       </div>
     </footer>
   );

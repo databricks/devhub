@@ -4,7 +4,6 @@ import {
   ClipboardCopyIcon,
   CodeIcon,
   ExternalLinkIcon,
-  LinkIcon,
   ServerIcon,
   ChevronDownIcon,
 } from "lucide-react";
@@ -50,21 +49,14 @@ export function AIExportMenu({
   const handleCopyMarkdown = useCallback(() => {
     const md = buildAIMarkdown();
     navigator.clipboard.writeText(md).then(() => {
-      toast.success("AI-optimized markdown copied to clipboard");
+      toast.success("Markdown copied");
     });
   }, [buildAIMarkdown]);
 
   const handleViewRawMarkdown = useCallback(() => {
-    const md = buildAIMarkdown();
-    const win = window.open("", "_blank");
-    if (win) {
-      win.document.open();
-      win.document.write(
-        `<!DOCTYPE html><html><head><meta charset="utf-8"><title>${title || "Markdown"} — Raw</title><style>body{margin:2rem;font-family:'SF Mono',Menlo,Monaco,'Courier New',monospace;font-size:14px;line-height:1.6;white-space:pre-wrap;word-wrap:break-word;background:#1a2332;color:#e0e0e0;}::selection{background:#ff3621;color:#fff;}</style></head><body>${md.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")}</body></html>`,
-      );
-      win.document.close();
-    }
-  }, [buildAIMarkdown, title]);
+    const mdUrl = fullUrl.replace(/\/$/, "") + ".md";
+    window.open(mdUrl, "_blank");
+  }, [fullUrl]);
 
   const handleSendToChatGPT = useCallback(() => {
     const md = buildAIMarkdown();
@@ -91,17 +83,9 @@ export function AIExportMenu({
       2,
     );
     navigator.clipboard.writeText(mcpConfig).then(() => {
-      toast.success(
-        "MCP config copied. Paste into Claude Desktop, Cursor, Windsurf, etc.",
-      );
+      toast.success("MCP config copied");
     });
   }, [mcpUrl]);
-
-  const handleCopyLink = useCallback(() => {
-    navigator.clipboard.writeText(fullUrl).then(() => {
-      toast.success("Link copied to clipboard");
-    });
-  }, [fullUrl]);
 
   return (
     <DropdownMenu>
@@ -138,24 +122,6 @@ export function AIExportMenu({
           <ServerIcon />
           Connect to MCP Server
         </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuItem onSelect={handleCopyLink}>
-            <LinkIcon />
-            Copy link
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <a
-              href={permalink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="no-underline"
-            >
-              <ExternalLinkIcon />
-              Open in new tab
-            </a>
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
   );

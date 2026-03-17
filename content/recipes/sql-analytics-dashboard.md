@@ -102,7 +102,14 @@ const params = {
 databricks apps deploy --profile <PROFILE>
 ```
 
-Open the dashboard page and verify that charts render with data from your SQL Warehouse. Adjust filters to see the queries update.
+Verify app status and logs:
+
+```bash
+databricks apps list --profile <PROFILE>
+databricks apps logs <app-name> --profile <PROFILE>
+```
+
+Open the app URL in your browser while signed in to Databricks, then open the dashboard page and verify that charts render with data from your SQL Warehouse. Adjust filters to see the queries update.
 
 #### References
 

@@ -121,7 +121,14 @@ targets:
 databricks apps deploy --profile <PROFILE>
 ```
 
-Open the Genie page in your browser and ask a natural-language question about your data to verify the integration.
+Verify app status and logs:
+
+```bash
+databricks apps list --profile <PROFILE>
+databricks apps logs <app-name> --profile <PROFILE>
+```
+
+Open the app URL in your browser while signed in to Databricks, navigate to the Genie page, and ask a natural-language question about your data to verify the integration.
 
 #### References
 

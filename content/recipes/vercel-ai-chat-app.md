@@ -130,7 +130,14 @@ export function ChatPage() {
 databricks apps deploy --profile <PROFILE>
 ```
 
-Open the chat page in your browser and send a message. Responses stream from your Databricks model serving endpoint through the AI SDK.
+Verify app status and logs:
+
+```bash
+databricks apps list --profile <PROFILE>
+databricks apps logs <app-name> --profile <PROFILE>
+```
+
+Open the app URL in your browser while signed in to Databricks, then open the chat page and send a message. Responses stream from your Databricks model serving endpoint through the AI SDK.
 
 #### References
 

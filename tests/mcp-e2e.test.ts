@@ -2,22 +2,53 @@ import { describe, test, expect, beforeAll, afterAll } from "vitest";
 import { spawn, execFile, type ChildProcess } from "child_process";
 import { promisify } from "util";
 import { resolve } from "path";
+import { createServer } from "net";
 
 const execFileAsync = promisify(execFile);
 const ROOT = resolve(__dirname, "..");
-const SITE_PORT = 4174;
-const MCP_PORT = 3002;
-const MCP_URL = `http://localhost:${MCP_PORT}/api/mcp`;
+let SITE_PORT = 4174;
+let MCP_PORT = 3002;
+let MCP_URL = `http://localhost:${MCP_PORT}/api/mcp`;
 
-async function waitForServer(url: string, timeoutMs: number): Promise<void> {
+async function getFreePort(): Promise<number> {
+  return await new Promise((resolvePort, reject) => {
+    const server = createServer();
+    server.unref();
+    server.on("error", reject);
+    server.listen(0, "127.0.0.1", () => {
+      const address = server.address();
+      if (!address || typeof address === "string") {
+        server.close(() => reject(new Error("Failed to allocate free port")));
+        return;
+      }
+      const port = address.port;
+      server.close((closeErr) => {
+        if (closeErr) {
+          reject(closeErr);
+          return;
+        }
+        resolvePort(port);
+      });
+    });
+  });
+}
+
+async function waitForServer(
+  url: string,
+  timeoutMs: number,
+  requireOkResponse = false,
+): Promise<void> {
   const deadline = Date.now() + timeoutMs;
   while (Date.now() < deadline) {
     try {
-      await fetch(url);
-      return;
+      const response = await fetch(url);
+      if (!requireOkResponse || response.ok) {
+        return;
+      }
     } catch {
       await new Promise((r) => setTimeout(r, 300));
     }
+    await new Promise((r) => setTimeout(r, 300));
   }
   throw new Error(`Server at ${url} not ready within ${timeoutMs}ms`);
 }
@@ -45,9 +76,21 @@ describe("MCP server e2e (mcporter)", () => {
   let mcpServer: ChildProcess;
 
   beforeAll(async () => {
+    SITE_PORT = await getFreePort();
+    MCP_PORT = await getFreePort();
+    MCP_URL = `http://127.0.0.1:${MCP_PORT}/api/mcp`;
+
     siteServer = spawn(
       "npx",
-      ["docusaurus", "serve", "--port", String(SITE_PORT), "--no-open"],
+      [
+        "docusaurus",
+        "serve",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        String(SITE_PORT),
+        "--no-open",
+      ],
       { cwd: ROOT, stdio: "pipe" },
     );
 
@@ -56,12 +99,12 @@ describe("MCP server e2e (mcporter)", () => {
       stdio: "pipe",
       env: {
         ...process.env,
-        SITE_URL: `http://localhost:${SITE_PORT}`,
+        SITE_URL: `http://127.0.0.1:${SITE_PORT}`,
         PORT: String(MCP_PORT),
       },
     });
 
-    await waitForServer(`http://localhost:${SITE_PORT}/llms.txt`, 20_000);
+    await waitForServer(`http://127.0.0.1:${SITE_PORT}/llms.txt`, 20_000, true);
     await waitForServer(MCP_URL, 15_000);
   }, 45_000);
 

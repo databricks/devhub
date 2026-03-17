@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 
 export function DecisionMakerCta(): ReactNode {
   return (
-    <section className="bg-db-navy py-16 text-white dark:bg-black md:py-20">
+    <section className="bg-white py-16 text-black dark:bg-black dark:text-white md:py-20">
       <div className="container px-4">
         <div className="mx-auto grid max-w-6xl grid-cols-1 gap-8 lg:grid-cols-[1.05fr_1.4fr] lg:gap-10">
           <div>
@@ -24,7 +24,7 @@ export function DecisionMakerCta(): ReactNode {
                 with a database, AI model access, and auth already wired up.
               </p>
             </article>
-            <article className="border border-white/12 bg-black/80 p-6 text-white backdrop-blur-sm">
+            <article className="border border-black/12 bg-black/80 p-6 text-white backdrop-blur-sm dark:border-white/12">
               <div className="mb-4 h-10 w-10 rounded-full border border-white/18 bg-[radial-gradient(circle,rgba(255,255,255,0.95)_2px,rgba(255,255,255,0.28)_3px,transparent_9px)]" />
               <h3 className="text-2xl leading-tight font-medium tracking-tight">
                 For Your Organization
@@ -37,7 +37,7 @@ export function DecisionMakerCta(): ReactNode {
             </article>
           </div>
 
-          <div className="relative hidden min-h-[360px] overflow-hidden border border-white/10 bg-[#0d1216] sm:block md:min-h-[420px]">
+          <div className="relative hidden min-h-[360px] overflow-hidden border border-black/10 bg-[#0d1216] sm:block dark:border-white/10 md:min-h-[420px]">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_18%,rgba(255,255,255,0.2)_0,transparent_40%),radial-gradient(circle_at_82%_18%,rgba(255,197,92,0.35)_0,transparent_34%),radial-gradient(circle_at_35%_86%,rgba(120,205,255,0.33)_0,transparent_40%)]" />
             <div className="absolute inset-0 opacity-60 [background-image:radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.26)_1px,transparent_0)] [background-size:6px_6px]" />
             <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(0,0,0,0.68)_15%,rgba(0,0,0,0.2)_55%,rgba(0,0,0,0.8)_100%)]" />

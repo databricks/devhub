@@ -5,7 +5,7 @@ import { CopyButton } from "@/components/code/copy-button";
 
 export function HeroSection(): ReactNode {
   return (
-    <section className="relative bg-white text-black dark:bg-db-navy dark:text-white">
+    <section className="relative bg-db-oat-medium text-black dark:bg-db-navy dark:text-white">
       <div className="container px-4 py-10 md:py-14">
         <div className="grid min-h-0 grid-cols-1 md:min-h-[560px] md:grid-cols-2">
           <div className="flex max-w-xl flex-col justify-center gap-8 md:py-8">

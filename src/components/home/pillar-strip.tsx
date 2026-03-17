@@ -8,7 +8,7 @@ export function PillarStrip(): ReactNode {
   return (
     <section className="bg-db-oat-medium py-16 dark:bg-black md:py-20">
       <div className="container px-4">
-        <div className="mx-auto mb-10 grid max-w-5xl grid-cols-1 gap-8 md:grid-cols-[220px_1fr] md:items-start">
+        <div className="mx-auto mb-10 grid max-w-5xl grid-cols-1 gap-6 md:gap-8 lg:grid-cols-[220px_1fr] lg:items-start">
           <p className="max-w-[210px] text-xs leading-relaxed tracking-[0.01em] text-black/60 dark:text-white/60">
             Bring data, models, and deployment together on a governed platform
             designed to help teams ship agentic systems faster.
@@ -33,7 +33,7 @@ export function PillarStrip(): ReactNode {
             </Button>
           </div>
         </div>
-        <div className="mx-auto grid max-w-5xl grid-cols-1 gap-4 md:grid-cols-3">
+        <div className="mx-auto grid max-w-5xl grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {pillars.map((pillar, index) => (
             <Link key={pillar.title} to={pillar.link} className="no-underline">
               <Card className="group h-full overflow-hidden rounded-xl border border-black/12 bg-white transition-all duration-200 hover:-translate-y-0.5 hover:border-black/25 dark:border-white/12 dark:bg-[#182a32] dark:hover:border-white/25">

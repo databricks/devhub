@@ -67,7 +67,7 @@ export default function SolutionsPage(): ReactNode {
               Databricks tools fit together in production.
             </p>
 
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {solutions.map((solution, index) => {
                 const visual = CARD_VISUALS[index % CARD_VISUALS.length];
                 return (

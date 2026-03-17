@@ -844,8 +844,12 @@
     @apply border-b border-black/8 bg-black/5 px-5 py-2.5 font-mono text-xs font-semibold tracking-wide text-black/50 uppercase dark:border-white/8 dark:bg-white/5 dark:text-white/50;
   }
 
+  .prose-solution .table-wrapper {
+    @apply my-8 overflow-x-auto;
+  }
+
   .prose-solution table {
-    @apply my-8 w-full border-collapse overflow-hidden rounded-lg border border-black/10 text-sm dark:border-white/10;
+    @apply w-full border-collapse overflow-hidden rounded-lg border border-black/10 text-sm dark:border-white/10;
   }
 
   .prose-solution thead {

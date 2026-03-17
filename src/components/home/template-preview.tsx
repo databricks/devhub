@@ -38,7 +38,7 @@ export function TemplatePreview(): ReactNode {
           </div>
         </div>
 
-        <div className="mx-auto grid max-w-6xl grid-cols-1 gap-4 md:grid-cols-3 xl:grid-cols-4">
+        <div className="mx-auto grid max-w-6xl grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {displayTemplates.map((template, index) => (
             <Link key={template.id} to={template.path} className="no-underline">
               <Card className="group flex h-full flex-col overflow-hidden rounded-xl border border-black/10 bg-[#f7f6f4] shadow-none transition-all duration-200 hover:border-black/20 dark:border-white/10 dark:bg-[#182a32] dark:hover:border-white/20">

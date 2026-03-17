@@ -883,7 +883,7 @@
   }
 
   .recipe-content-card .theme-code-block pre {
-    @apply m-0 rounded-none px-5 py-4;
+    @apply m-0 overflow-x-auto rounded-none px-5 py-4;
   }
 
   .recipe-content-card [class*="codeBlockTitle"] {

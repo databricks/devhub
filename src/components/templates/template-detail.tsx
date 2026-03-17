@@ -5,9 +5,9 @@ import { MDXProvider } from "@mdx-js/react";
 import { useRef, type ReactNode } from "react";
 import { AIExportMenu } from "@/components/ai-export-menu";
 import { Badge } from "@/components/ui/badge";
-import { RecipePre } from "@/components/resources/recipe-code-block";
-import { RecipeList } from "@/components/resources/recipe-list";
-import { RecipeToc } from "@/components/resources/recipe-toc";
+import { RecipePre } from "@/components/templates/recipe-code-block";
+import { RecipeList } from "@/components/templates/recipe-list";
+import { RecipeToc } from "@/components/templates/recipe-toc";
 import type { Template } from "@/lib/recipes/recipes";
 import { recipes } from "@/lib/recipes/recipes";
 

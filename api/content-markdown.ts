@@ -5,18 +5,9 @@ import { solutions } from "../src/lib/solutions/solutions";
 
 export type MarkdownSection = "docs" | "solutions" | "templates";
 
-const RECIPE_MARKDOWN_PATH_BY_ID: Record<string, string> = {
-  "databricks-local-bootstrap":
-    "src/pages/resources/_recipes/databricks-local-bootstrap.mdx",
-  "vercel-ai-chat-app":
-    "src/pages/resources/_recipes/ai-chat-model-serving.mdx",
-  "lakebase-data-persistence":
-    "src/pages/resources/_recipes/lakebase-data-persistence.mdx",
-  "genie-conversational-analytics":
-    "src/pages/resources/_recipes/genie-conversational-analytics.mdx",
-  "sql-analytics-dashboard":
-    "src/pages/resources/_recipes/sql-analytics-dashboard.mdx",
-};
+function recipeMarkdownPath(recipeId: string): string {
+  return `content/recipes/${recipeId}.md`;
+}
 
 function validateSlug(slug: string): void {
   if (!slug || slug.trim() === "") {
@@ -102,16 +93,16 @@ function readTemplateMarkdown(rootDir: string, slug: string): string {
 
   for (const recipeId of template.recipeIds) {
     const recipe = recipes.find((entry) => entry.id === recipeId);
-    const recipePath = RECIPE_MARKDOWN_PATH_BY_ID[recipeId];
-    if (!recipe || !recipePath) {
-      throw new Error(`Template recipe mapping missing for "${recipeId}"`);
+    if (!recipe) {
+      throw new Error(`Recipe not found: "${recipeId}"`);
     }
 
+    const recipePath = recipeMarkdownPath(recipeId);
     const absoluteRecipePath = resolve(rootDir, recipePath);
     const recipeContent = readIfExists(absoluteRecipePath);
     if (!recipeContent) {
       throw new Error(
-        `Template recipe markdown missing for "${recipeId}" at ${recipePath}`,
+        `Recipe markdown missing for "${recipeId}" at ${recipePath}`,
       );
     }
 

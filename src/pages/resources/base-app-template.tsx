@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
-import { TemplateDetail } from "@/components/resources/template-detail";
+import { TemplateDetail } from "@/components/templates/template-detail";
 import { templates } from "@/lib/recipes/recipes";
-import DatabricksLocalBootstrap from "./_recipes/databricks-local-bootstrap.mdx";
+import DatabricksLocalBootstrap from "@site/content/recipes/databricks-local-bootstrap.md";
 
 const template = templates.find((t) => t.id === "base-app-template");
 

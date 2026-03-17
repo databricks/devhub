@@ -430,6 +430,10 @@
     @apply flex items-center;
   }
 
+  .db-docs-article .theme-doc-breadcrumbs .breadcrumbs__link {
+    @apply inline-flex items-center;
+  }
+
   .db-docs-article
     .theme-doc-breadcrumbs
     .breadcrumbs__item--active

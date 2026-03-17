@@ -1,9 +1,9 @@
 import type { ReactNode } from "react";
-import { TemplateDetail } from "@/components/resources/template-detail";
+import { TemplateDetail } from "@/components/templates/template-detail";
 import { templates } from "@/lib/recipes/recipes";
-import DatabricksLocalBootstrap from "./_recipes/databricks-local-bootstrap.mdx";
-import LakebaseDataPersistence from "./_recipes/lakebase-data-persistence.mdx";
-import SqlAnalyticsDashboard from "./_recipes/sql-analytics-dashboard.mdx";
+import DatabricksLocalBootstrap from "@site/content/recipes/databricks-local-bootstrap.md";
+import LakebaseDataPersistence from "@site/content/recipes/lakebase-data-persistence.md";
+import SqlAnalyticsDashboard from "@site/content/recipes/sql-analytics-dashboard.md";
 
 const template = templates.find(
   (t) => t.id === "analytics-dashboard-app-template",

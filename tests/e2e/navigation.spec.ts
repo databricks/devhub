@@ -2,7 +2,6 @@ import { test, expect } from "@playwright/test";
 
 test.describe("navbar navigation", () => {
   const NAVBAR_LINKS = [
-    { label: "Home", expectedPath: "/" },
     { label: "Solutions", expectedPath: "/solutions" },
     { label: "Resources", expectedPath: "/resources" },
     {

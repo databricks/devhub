@@ -5,8 +5,8 @@ import { MDXProvider } from "@mdx-js/react";
 import { useRef, type ReactNode } from "react";
 import { AIExportMenu } from "@/components/ai-export-menu";
 import { Badge } from "@/components/ui/badge";
-import { RecipePre } from "@/components/resources/recipe-code-block";
-import { RecipeToc } from "@/components/resources/recipe-toc";
+import { RecipePre } from "@/components/templates/recipe-code-block";
+import { RecipeToc } from "@/components/templates/recipe-toc";
 import type { Solution } from "@/lib/solutions/solutions";
 
 const recipeComponents = { pre: RecipePre };

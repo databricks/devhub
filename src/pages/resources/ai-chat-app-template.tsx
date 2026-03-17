@@ -1,8 +1,8 @@
 import type { ReactNode } from "react";
-import { TemplateDetail } from "@/components/resources/template-detail";
+import { TemplateDetail } from "@/components/templates/template-detail";
 import { templates } from "@/lib/recipes/recipes";
-import DatabricksLocalBootstrap from "./_recipes/databricks-local-bootstrap.mdx";
-import AiChatModelServing from "./_recipes/ai-chat-model-serving.mdx";
+import DatabricksLocalBootstrap from "@site/content/recipes/databricks-local-bootstrap.md";
+import AiChatModelServing from "@site/content/recipes/vercel-ai-chat-app.md";
 
 const template = templates.find((t) => t.id === "ai-chat-app-template");
 

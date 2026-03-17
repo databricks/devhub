@@ -1,6 +1,6 @@
 ## Lakebase Data Persistence
 
-Add a managed Postgres database to your Databricks app using the Lakebase plugin. Covers Lakebase project creation, schema setup, table creation, and full CRUD REST API routes.
+Add a managed Postgres database to your Databricks app using the Lakebase plugin. Covers Lakebase project creation, schema setup, and full CRUD REST API routes.
 
 ### 1. Create a Lakebase project
 
@@ -13,15 +13,18 @@ databricks postgres create-project <project-name> --profile <PROFILE>
 Verify the project, branch, and endpoint were created:
 
 ```bash
-databricks postgres list-branches projects/<project-name> --profile <PROFILE> -o json
-databricks postgres list-endpoints projects/<project-name>/branches/production --profile <PROFILE> -o json
+databricks postgres list-branches \
+  projects/<project-name> \
+  --profile <PROFILE> -o json
+
+databricks postgres list-endpoints \
+  projects/<project-name>/branches/production \
+  --profile <PROFILE> -o json
 ```
 
-Note the endpoint host from the output — you will need it for configuration.
+Note the endpoint host from the output.
 
-### 2. Scaffold with the Lakebase feature
-
-When scaffolding your app, enable the `lakebase` feature and provide the Postgres connection details:
+### 2. New app: scaffold with the Lakebase feature
 
 ```bash
 databricks apps init \
@@ -30,58 +33,66 @@ databricks apps init \
   --features=lakebase \
   --set 'lakebase.postgres.branch=projects/<project-name>/branches/production' \
   --set 'lakebase.postgres.database=projects/<project-name>/branches/production/databases/<db-name>' \
-  --set 'lakebase.postgres.host=<endpoint-host>' \
-  --set 'lakebase.postgres.databaseName=<db-name>' \
-  --set 'lakebase.postgres.endpointPath=projects/<project-name>/branches/production/endpoints/primary' \
-  --set 'lakebase.postgres.port=5432' \
-  --set 'lakebase.postgres.sslmode=require' \
   --run none --profile <PROFILE>
 ```
 
-### 3. Configure app.yaml for deployment
+This scaffolds a complete app with Lakebase already wired up, including a sample todo CRUD app. Skip to step 4 to configure environment variables, then step 5 to deploy.
 
-The Lakebase connection is configured via environment variables in `app.yaml`. Update it with your endpoint details:
+### 3. Existing app: add Lakebase manually
 
-```yaml
-command: ["npm", "run", "start"]
-env:
-  - name: PGHOST
-    value: "<endpoint-host>"
-  - name: PGPORT
-    value: "5432"
-  - name: PGDATABASE
-    value: "databricks_postgres"
-  - name: PGSSLMODE
-    value: "require"
-  - name: LAKEBASE_ENDPOINT
-    value: "projects/<project-name>/branches/production/endpoints/primary"
-```
+The following changes match what `apps init --features=lakebase` generates. Apply them to an existing scaffolded AppKit app.
 
-### 4. Enable the Lakebase plugin
+:::tip[Get the latest template code]
+The code below may be outdated. To get the latest, clone `https://github.com/databricks/appkit` and look in the `template/` directory. Search for `{{if .plugins.lakebase}}` to find all lakebase-conditional files and blocks. Files entirely wrapped in that conditional are lakebase-only; shared files like `App.tsx` and `server.ts` contain conditional blocks you can extract.
+:::
 
-The scaffolded server entry point includes the lakebase plugin. Use `autoStart: false` on the server plugin so you can run database setup before accepting requests:
+#### Update `server/server.ts`
+
+Use `autoStart: false` on the server plugin so database setup runs before accepting requests. Import and register the `lakebase` plugin, then call route setup in the `.then()` handler:
 
 ```typescript
 import { createApp, server, lakebase } from "@databricks/appkit";
+import { setupSampleLakebaseRoutes } from "./routes/lakebase/todo-routes";
 
-createApp({ plugins: [server({ autoStart: false }), lakebase()] })
+createApp({
+  plugins: [server({ autoStart: false }), lakebase()],
+})
   .then(async (appkit) => {
-    await setupSchema(appkit);
-    registerRoutes(appkit);
+    await setupSampleLakebaseRoutes(appkit);
     await appkit.server.start();
   })
   .catch(console.error);
 ```
 
-### 5. Define your database schema
+#### Create `server/routes/lakebase/todo-routes.ts`
 
-Create a schema and table using raw SQL. Lakebase provides a Postgres-compatible interface through `appkit.lakebase.query()`:
+Sample CRUD API that creates a `todos` table and exposes REST endpoints:
 
 ```typescript
-const SETUP_SCHEMA = `CREATE SCHEMA IF NOT EXISTS app`;
+import { z } from "zod";
+import { Application } from "express";
 
-const CREATE_TABLE = `
-  CREATE TABLE IF NOT EXISTS app.items (
+interface AppKitWithLakebase {
+  lakebase: {
+    query(
+      text: string,
+      params?: unknown[],
+    ): Promise<{ rows: Record<string, unknown>[] }>;
+  };
+  server: {
+    extend(fn: (app: Application) => void): void;
+  };
+}
+
+const TABLE_EXISTS_SQL = `
+  SELECT 1 FROM information_schema.tables
+  WHERE table_schema = 'app' AND table_name = 'todos'
+`;
+
+const SETUP_SCHEMA_SQL = `CREATE SCHEMA IF NOT EXISTS app`;
+
+const CREATE_TABLE_SQL = `
+  CREATE TABLE IF NOT EXISTS app.todos (
     id SERIAL PRIMARY KEY,
     title TEXT NOT NULL,
     completed BOOLEAN NOT NULL DEFAULT false,
@@ -89,62 +100,374 @@ const CREATE_TABLE = `
   )
 `;
 
-await appkit.lakebase.query(SETUP_SCHEMA);
-await appkit.lakebase.query(CREATE_TABLE);
+const CreateTodoBody = z.object({ title: z.string().min(1) });
+
+export async function setupSampleLakebaseRoutes(appkit: AppKitWithLakebase) {
+  try {
+    const { rows } = await appkit.lakebase.query(TABLE_EXISTS_SQL);
+    if (rows.length > 0) {
+      console.log("[lakebase] Table app.todos already exists, skipping setup");
+    } else {
+      await appkit.lakebase.query(SETUP_SCHEMA_SQL);
+      await appkit.lakebase.query(CREATE_TABLE_SQL);
+      console.log("[lakebase] Created schema and table app.todos");
+    }
+  } catch (err) {
+    console.warn("[lakebase] Database setup failed:", (err as Error).message);
+    console.warn("[lakebase] Routes will be registered but may return errors");
+  }
+
+  appkit.server.extend((app) => {
+    app.get("/api/lakebase/todos", async (_req, res) => {
+      try {
+        const result = await appkit.lakebase.query(
+          "SELECT id, title, completed, created_at FROM app.todos ORDER BY created_at DESC",
+        );
+        res.json(result.rows);
+      } catch (err) {
+        console.error("Failed to list todos:", err);
+        res.status(500).json({ error: "Failed to list todos" });
+      }
+    });
+
+    app.post("/api/lakebase/todos", async (req, res) => {
+      try {
+        const parsed = CreateTodoBody.safeParse(req.body);
+        if (!parsed.success) {
+          res.status(400).json({ error: "title is required" });
+          return;
+        }
+        const result = await appkit.lakebase.query(
+          "INSERT INTO app.todos (title) VALUES ($1) RETURNING id, title, completed, created_at",
+          [parsed.data.title.trim()],
+        );
+        res.status(201).json(result.rows[0]);
+      } catch (err) {
+        console.error("Failed to create todo:", err);
+        res.status(500).json({ error: "Failed to create todo" });
+      }
+    });
+
+    app.patch("/api/lakebase/todos/:id", async (req, res) => {
+      try {
+        const id = parseInt(req.params.id, 10);
+        if (isNaN(id)) {
+          res.status(400).json({ error: "Invalid id" });
+          return;
+        }
+        const result = await appkit.lakebase.query(
+          "UPDATE app.todos SET completed = NOT completed WHERE id = $1 RETURNING id, title, completed, created_at",
+          [id],
+        );
+        if (result.rows.length === 0) {
+          res.status(404).json({ error: "Todo not found" });
+          return;
+        }
+        res.json(result.rows[0]);
+      } catch (err) {
+        console.error("Failed to update todo:", err);
+        res.status(500).json({ error: "Failed to update todo" });
+      }
+    });
+
+    app.delete("/api/lakebase/todos/:id", async (req, res) => {
+      try {
+        const id = parseInt(req.params.id, 10);
+        if (isNaN(id)) {
+          res.status(400).json({ error: "Invalid id" });
+          return;
+        }
+        const result = await appkit.lakebase.query(
+          "DELETE FROM app.todos WHERE id = $1 RETURNING id",
+          [id],
+        );
+        if (result.rows.length === 0) {
+          res.status(404).json({ error: "Todo not found" });
+          return;
+        }
+        res.status(204).send();
+      } catch (err) {
+        console.error("Failed to delete todo:", err);
+        res.status(500).json({ error: "Failed to delete todo" });
+      }
+    });
+  });
+}
 ```
 
-### 6. Create CRUD API routes
+#### Create `client/src/pages/lakebase/LakebasePage.tsx`
 
-Use `appkit.server.extend()` to register Express routes that call `appkit.lakebase.query()` with parameterized SQL:
+Todo list UI with CRUD operations against the API routes:
 
-```typescript
-appkit.server.extend((app) => {
-  app.get("/api/items", async (_req, res) => {
-    const { rows } = await appkit.lakebase.query(
-      "SELECT * FROM app.items ORDER BY created_at DESC",
-    );
-    res.json(rows);
-  });
+```tsx
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  Button,
+  Input,
+  Skeleton,
+} from "@databricks/appkit-ui/react";
+import { useState, useEffect } from "react";
+import { Check, X } from "lucide-react";
 
-  app.post("/api/items", async (req, res) => {
-    const { rows } = await appkit.lakebase.query(
-      "INSERT INTO app.items (title) VALUES ($1) RETURNING *",
-      [req.body.title],
-    );
-    res.status(201).json(rows[0]);
-  });
+interface Todo {
+  id: number;
+  title: string;
+  completed: boolean;
+  created_at: string;
+}
 
-  app.patch("/api/items/:id", async (req, res) => {
-    const { rows } = await appkit.lakebase.query(
-      "UPDATE app.items SET completed = NOT completed WHERE id = $1 RETURNING *",
-      [req.params.id],
-    );
-    res.json(rows[0]);
-  });
+export function LakebasePage() {
+  const [todos, setTodos] = useState<Todo[]>([]);
+  const [newTitle, setNewTitle] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
-  app.delete("/api/items/:id", async (req, res) => {
-    await appkit.lakebase.query("DELETE FROM app.items WHERE id = $1", [
-      req.params.id,
-    ]);
-    res.status(204).send();
-  });
-});
+  useEffect(() => {
+    fetch("/api/lakebase/todos")
+      .then((res) => {
+        if (!res.ok)
+          throw new Error(`Failed to fetch todos: ${res.statusText}`);
+        return res.json() as Promise<Todo[]>;
+      })
+      .then(setTodos)
+      .catch((err) =>
+        setError(err instanceof Error ? err.message : "Failed to load todos"),
+      )
+      .finally(() => setLoading(false));
+  }, []);
+
+  const addTodo = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const title = newTitle.trim();
+    if (!title) return;
+
+    setSubmitting(true);
+    try {
+      const res = await fetch("/api/lakebase/todos", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title }),
+      });
+      if (!res.ok) throw new Error(`Failed to create todo: ${res.statusText}`);
+      const created = (await res.json()) as Todo;
+      setTodos((prev) => [created, ...prev]);
+      setNewTitle("");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to add todo");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const toggleTodo = async (id: number) => {
+    try {
+      const res = await fetch(`/api/lakebase/todos/${id}`, { method: "PATCH" });
+      if (!res.ok) throw new Error(`Failed to update todo: ${res.statusText}`);
+      const updated = (await res.json()) as Todo;
+      setTodos((prev) => prev.map((t) => (t.id === id ? updated : t)));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to update todo");
+    }
+  };
+
+  const deleteTodo = async (id: number) => {
+    try {
+      const res = await fetch(`/api/lakebase/todos/${id}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) throw new Error(`Failed to delete todo: ${res.statusText}`);
+      setTodos((prev) => prev.filter((t) => t.id !== id));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to delete todo");
+    }
+  };
+
+  const completedCount = todos.filter((t) => t.completed).length;
+
+  return (
+    <div className="space-y-6 w-full max-w-2xl mx-auto">
+      <Card className="shadow-lg">
+        <CardHeader>
+          <CardTitle>Todo List</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm text-muted-foreground mb-4">
+            A simple CRUD example powered by Databricks Lakebase (PostgreSQL).
+          </p>
+
+          <form onSubmit={addTodo} className="flex gap-2 mb-6">
+            <Input
+              placeholder="What needs to be done?"
+              value={newTitle}
+              onChange={(e) => setNewTitle(e.target.value)}
+              disabled={submitting}
+              className="flex-1"
+            />
+            <Button type="submit" disabled={submitting || !newTitle.trim()}>
+              {submitting ? "Adding..." : "Add"}
+            </Button>
+          </form>
+
+          {error && (
+            <div className="text-destructive bg-destructive/10 p-3 rounded-md mb-4">
+              {error}
+            </div>
+          )}
+
+          {loading && (
+            <div className="space-y-3">
+              {Array.from({ length: 3 }, (_, i) => (
+                <div key={`skeleton-${i}`} className="flex items-center gap-3">
+                  <Skeleton className="h-5 w-5 rounded" />
+                  <Skeleton className="h-4 flex-1" />
+                </div>
+              ))}
+            </div>
+          )}
+
+          {!loading && todos.length === 0 && (
+            <p className="text-muted-foreground text-center py-8">
+              No todos yet. Add one above to get started.
+            </p>
+          )}
+
+          {!loading && todos.length > 0 && (
+            <div className="space-y-2">
+              {todos.map((todo) => (
+                <div
+                  key={todo.id}
+                  className="flex items-center gap-3 p-3 rounded-lg border hover:bg-muted/50 transition-colors"
+                >
+                  <button
+                    type="button"
+                    onClick={() => toggleTodo(todo.id)}
+                    className={`h-5 w-5 rounded border-2 flex items-center justify-center shrink-0 transition-colors ${
+                      todo.completed
+                        ? "bg-primary border-primary text-primary-foreground"
+                        : "border-muted-foreground/30 hover:border-primary"
+                    }`}
+                    aria-label={
+                      todo.completed ? "Mark as incomplete" : "Mark as complete"
+                    }
+                  >
+                    {todo.completed && <Check className="h-3 w-3" />}
+                  </button>
+
+                  <span
+                    className={`flex-1 ${todo.completed ? "line-through text-muted-foreground" : ""}`}
+                  >
+                    {todo.title}
+                  </span>
+
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => deleteTodo(todo.id)}
+                    className="text-muted-foreground hover:text-destructive shrink-0"
+                    aria-label="Delete todo"
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
+              ))}
+
+              <p className="text-xs text-muted-foreground pt-2">
+                {completedCount} of {todos.length} completed
+              </p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
 ```
 
-### 7. Deploy and test
+#### Update `client/src/App.tsx`
+
+Add the import, nav link, and route:
+
+```tsx
+// Add import at top
+import { LakebasePage } from './pages/lakebase/LakebasePage';
+
+// Add nav link inside the <nav> element
+<NavLink to="/lakebase" className={navLinkClass}>
+  Lakebase
+</NavLink>
+
+// Add route in the router children array
+{ path: '/lakebase', element: <LakebasePage /> },
+```
+
+### 4. Configure environment variables
+
+For local development, add the Postgres connection details to `.env`:
+
+```bash
+PGHOST=<endpoint-host>
+PGPORT=5432
+PGDATABASE=<database-name>
+PGSSLMODE=require
+LAKEBASE_ENDPOINT=projects/<project-name>/branches/production/endpoints/primary
+```
+
+For deployment, the platform injects `PGHOST`, `PGDATABASE`, and `PGSSLMODE` automatically. Add the Lakebase endpoint to `app.yaml`:
+
+```yaml
+command: ["npm", "run", "start"]
+env:
+  - name: LAKEBASE_ENDPOINT
+    valueFrom: postgres
+```
+
+### 5. Update `databricks.yml`
+
+Add the postgres variables, resource, and target values:
+
+```yaml
+variables:
+  postgres_branch:
+    description: Lakebase Postgres branch resource name
+  postgres_database:
+    description: Lakebase Postgres database resource name
+
+resources:
+  apps:
+    app:
+      # Add under existing app config
+      resources:
+        - name: postgres
+          postgres:
+            branch: ${var.postgres_branch}
+            database: ${var.postgres_database}
+            permission: CAN_CONNECT_AND_CREATE
+
+targets:
+  default:
+    variables:
+      postgres_branch: projects/<project-name>/branches/production
+      postgres_database: projects/<project-name>/branches/production/databases/<db-name>
+```
+
+### 6. Deploy and test
 
 ```bash
 databricks apps deploy --profile <PROFILE>
 ```
 
-Verify the endpoints with curl once the app is running:
+Verify the endpoints once the app is running:
 
 ```bash
-curl -X POST https://<app-url>/api/items \
+curl -X POST https://<app-url>/api/lakebase/todos \
   -H 'Content-Type: application/json' \
-  -d '{"title":"My first item"}'
+  -d '{"title":"My first todo"}'
 
-curl https://<app-url>/api/items
+curl https://<app-url>/api/lakebase/todos
 ```
 
 #### References

@@ -4,11 +4,9 @@ Embed a Databricks AI/BI Genie chat interface so users can explore data through 
 
 ### 1. Create a Genie space in your Databricks workspace
 
-Open your Databricks workspace, navigate to AI/BI Genie, and create a new Genie space connected to your data tables. Copy the space ID from the URL — you will need it for configuration.
+Open your Databricks workspace, navigate to AI/BI Genie, and create a new Genie space connected to your data tables. Copy the space ID from the URL.
 
-### 2. Scaffold with the Genie feature
-
-When scaffolding your app, enable the `genie` feature and provide the space ID:
+### 2. New app: scaffold with the Genie feature
 
 ```bash
 databricks apps init \
@@ -19,54 +17,105 @@ databricks apps init \
   --run none --profile <PROFILE>
 ```
 
-### 3. Configure the Genie space environment variable
+This scaffolds a complete app with Genie already wired up. Skip to step 4 to deploy.
 
-For local development, add the space ID to `.env`:
+### 3. Existing app: add Genie manually
 
-```bash
-echo 'DATABRICKS_GENIE_SPACE_ID=<your-space-id>' >> .env
-```
+The following changes match what `apps init --features=genie` generates. Apply them to an existing scaffolded AppKit app.
 
-For deployment, add it to `app.yaml`:
+:::tip[Get the latest template code]
+The code below may be outdated. To get the latest, clone `https://github.com/databricks/appkit` and look in the `template/` directory. Search for `{{if .plugins.genie}}` to find all genie-conditional files and blocks. Files entirely wrapped in that conditional are genie-only; shared files like `App.tsx` and `server.ts` contain conditional blocks you can extract.
+:::
 
-```yaml
-env:
-  - name: DATABRICKS_GENIE_SPACE_ID
-    value: "<your-space-id>"
-```
+#### Add `genie` to server plugins
 
-### 4. Enable the Genie plugin
-
-The scaffolded server entry point includes the genie plugin. If adding to an existing app:
+In `server/server.ts`, add `genie` to the import and plugins array:
 
 ```typescript
 import { createApp, server, genie } from "@databricks/appkit";
 
 createApp({
-  plugins: [
-    server(),
-    genie({ spaces: { default: process.env.DATABRICKS_GENIE_SPACE_ID } }),
-  ],
+  plugins: [server(), genie()],
 }).catch(console.error);
 ```
 
-### 5. Add the GenieChat component to a page
+The `genie()` plugin reads `DATABRICKS_GENIE_SPACE_ID` from the environment automatically.
 
-Import `GenieChat` from `@databricks/appkit-ui` and render it in a container:
+#### Create `client/src/pages/genie/GeniePage.tsx`
 
 ```tsx
 import { GenieChat } from "@databricks/appkit-ui/react";
 
 export function GeniePage() {
   return (
-    <div className="h-[600px] border rounded-lg overflow-hidden">
-      <GenieChat alias="default" />
+    <div className="space-y-6 w-full max-w-4xl mx-auto">
+      <div>
+        <h2 className="text-2xl font-bold text-foreground">Genie</h2>
+        <p className="text-sm text-muted-foreground mt-1">
+          Ask questions about your data using Databricks AI/BI Genie.
+        </p>
+      </div>
+      <div className="h-[600px] border rounded-lg overflow-hidden">
+        <GenieChat alias="default" />
+      </div>
     </div>
   );
 }
 ```
 
-### 6. Deploy and test
+#### Update `client/src/App.tsx`
+
+Add the import, nav link, and route:
+
+```tsx
+// Add import at top
+import { GeniePage } from './pages/genie/GeniePage';
+
+// Add nav link inside the <nav> element
+<NavLink to="/genie" className={navLinkClass}>
+  Genie
+</NavLink>
+
+// Add route in the router children array
+{ path: '/genie', element: <GeniePage /> },
+```
+
+#### Add Genie environment variable
+
+Add to `.env`:
+
+```bash
+DATABRICKS_GENIE_SPACE_ID=<your-space-id>
+```
+
+#### Update `databricks.yml`
+
+Add the genie-space variable, the `user_api_scopes` and genie resource under your app, and the target variable value:
+
+```yaml
+variables:
+  genie_space_id:
+    description: Default Genie Space ID
+
+resources:
+  apps:
+    app:
+      # Add under existing app config
+      user_api_scopes:
+        - dashboards.genie
+      resources:
+        - name: genie-space
+          genie_space:
+            space_id: ${var.genie_space_id}
+            permission: CAN_RUN
+
+targets:
+  default:
+    variables:
+      genie_space_id: <your-space-id>
+```
+
+### 4. Deploy and test
 
 ```bash
 databricks apps deploy --profile <PROFILE>

@@ -7,68 +7,27 @@ Prepare a local Databricks app workspace: install CLI, authenticate, scaffold, a
 Use Databricks CLI 0.292+ before running setup and app scaffolding commands.
 
 ```bash
-databricks --version
+databricks -v
 ```
 
 ### 2. Install or upgrade Databricks CLI (if needed)
 
-If the Databricks CLI is not installed or below `0.292`, install it using the appropriate method for your OS.
+If the Databricks CLI is not installed or below `0.292`, install it using the appropriate method for your OS. If installed, upgrade it to the latest version using the install method used to install it.
+
+Recommended installation methods below. Find all the installation methods [here](https://docs.databricks.com/aws/en/dev-tools/cli/install).
 
 #### macOS
 
-**Homebrew (recommended)**
+**Homebrew**
 
 ```bash
 brew tap databricks/tap
 brew install databricks
 ```
-
-**curl installer (fallback)**
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
-```
-
-If `/usr/local/bin` is not writable, rerun with `sudo`. If macOS blocks the binary (Gatekeeper), follow Apple's "open app from unidentified developer" flow.
-
-#### Linux
-
-**Homebrew (recommended, if available)**
-
-```bash
-brew tap databricks/tap
-brew install databricks
-```
-
-**curl installer**
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
-```
-
-If `/usr/local/bin` is not writable, rerun with `sudo`.
-
-**Manual install to user directory (when sudo is unavailable)**
-
-```bash
-mkdir -p ~/.local/bin
-cd ~/.local/bin
-ARCH=$(uname -m | sed 's/x86_64/amd64/' | sed 's/aarch64/arm64/')
-URL=$(curl -s https://api.github.com/repos/databricks/cli/releases/latest \
-  | grep "browser_download_url.*linux.*${ARCH}" \
-  | head -1 | cut -d '"' -f 4)
-curl -L "$URL" -o databricks.tar.gz
-tar -xzf databricks.tar.gz
-rm databricks.tar.gz
-chmod +x databricks
-export PATH="$HOME/.local/bin:$PATH"
-```
-
-Add `export PATH="$HOME/.local/bin:$PATH"` to `~/.bashrc` or `~/.zshrc` for persistence. This method works in containers and sandboxed IDEs without sudo.
 
 #### Windows
 
-**WinGet (recommended)**
+**WinGet**
 
 ```bash
 winget search databricks
@@ -77,24 +36,12 @@ winget install Databricks.DatabricksCLI
 
 Restart your terminal session after installation.
 
-**Chocolatey (experimental)**
+#### All Systems (macOS, Windows, Linux)
 
-```bash
-choco install databricks-cli
-```
-
-**curl installer (via WSL)**
+**curl installer**
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
-```
-
-Requires WSL with `unzip` installed. Outside WSL, run as Administrator (installs to `C:\Windows\databricks.exe`).
-
-#### Verify installation
-
-```bash
-databricks -v
 ```
 
 ### 3. Authenticate to your Databricks workspace
@@ -113,7 +60,7 @@ databricks auth profiles
 
 ### 5. Scaffold a new Databricks app
 
-Use `--version latest` to get the latest AppKit template with all available plugins (lakebase, genie, analytics). Add `--features` to enable specific plugins.
+Run this from the directory where you want the project created. The CLI creates a new folder named after `--name` inside the current directory. Use `--version latest` to get the latest AppKit template. Add `--features` to enable specific plugins (e.g., `--features=genie,lakebase`).
 
 ```bash
 databricks apps init \
@@ -132,6 +79,8 @@ databricks apps init \
 npx skills add databricks/databricks-agent-skills --all
 ```
 
+Add `-y` to skip confirmation and `-a <agent-name>` to install to a specific agent like `cursor` or `claude-code`.
+
 ### 7. Verify installed skills
 
 ```bash
@@ -147,6 +96,20 @@ databricks apps deploy --profile <PROFILE>
 ```
 
 The CLI validates, builds, uploads, and starts your app. Once deployed, it prints the app URL.
+
+### 9. Verify deployed app
+
+```bash
+databricks apps list
+```
+
+### 10. Verify deployed app logs
+
+```bash
+databricks apps logs <app-name>
+```
+
+From here, edit the source and redeploy to iterate.
 
 #### References
 

@@ -13,8 +13,8 @@ Complete these recipes before adding chat:
 ### 2. Install AI SDK and AI Elements packages
 
 ```bash
-bun add ai @ai-sdk/react @ai-sdk/openai-compatible
-bunx shadcn@latest add @ai-elements/all
+npm install ai @ai-sdk/react
+npx shadcn@latest add @ai-elements/all
 ```
 
 ### 3. Install AI SDK and AI Elements agent skills
@@ -30,11 +30,10 @@ npx skills list
 
 ### 4. Configure environment variables for model serving
 
-Set your workspace URL, token, and endpoint name for local development:
+Set your workspace URL and endpoint name for local development:
 
 ```bash
 echo 'DATABRICKS_HOST=https://<workspace>.cloud.databricks.com
-DATABRICKS_TOKEN=<your-token>
 DATABRICKS_SERVING_ENDPOINT=<endpoint-name>' >> .env
 ```
 
@@ -46,41 +45,41 @@ env:
     value: "<endpoint-name>"
 ```
 
-### 5. Create the model provider module
+### 5. Use Databricks SDK auth chain in server runtime (recommended)
 
-Use the OpenAI-compatible adapter pointed at Databricks Model Serving:
+In Databricks Apps runtime, prefer the Databricks SDK auth chain (service principal/workspace auth) instead of requiring `DATABRICKS_TOKEN` in app env:
 
 ```typescript
-import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
+import { getWorkspaceClient } from "@databricks/appkit";
 
-const databricks = createOpenAICompatible({
-  name: "databricks",
-  baseURL: `${process.env.DATABRICKS_HOST}/serving-endpoints`,
-  headers: {
-    Authorization: `Bearer ${process.env.DATABRICKS_TOKEN}`,
-  },
-});
-
-export const chatModel = databricks.chatModel(
-  process.env.DATABRICKS_SERVING_ENDPOINT!,
-);
+const workspaceClient = getWorkspaceClient({});
 ```
 
-### 6. Add a streaming `/api/chat` route
+### 6. Add `/api/chat` route using serving endpoint query
 
-Create a server route that accepts chat messages and streams model output:
+Create a server route that accepts chat messages and queries the serving endpoint:
 
 ```typescript
-import { streamText } from "ai";
-import { chatModel } from "./provider";
+import { getWorkspaceClient } from "@databricks/appkit";
+
+const workspaceClient = getWorkspaceClient({});
 
 app.post("/api/chat", async (req, res) => {
   const { messages } = req.body;
-  const result = streamText({
-    model: chatModel,
+  const endpoint = process.env.DATABRICKS_SERVING_ENDPOINT;
+  if (!endpoint) {
+    res.status(500).json({ error: "DATABRICKS_SERVING_ENDPOINT is missing" });
+    return;
+  }
+
+  const result = await workspaceClient.servingEndpoints.query({
+    name: endpoint,
     messages,
   });
-  result.pipeDataStreamToResponse(res);
+
+  res.json({
+    message: result.choices?.[0]?.message ?? null,
+  });
 });
 ```
 
@@ -142,5 +141,4 @@ Open the app URL while signed in to Databricks, send a message, and verify strea
 
 - [Databricks AI Gateway](https://docs.databricks.com/en/ai-gateway/)
 - [Databricks Model Serving endpoints](https://docs.databricks.com/en/machine-learning/model-serving/create-manage-serving-endpoints.html)
-- [AI SDK OpenAI-compatible providers](https://ai-sdk.dev/providers/openai-compatible-providers)
 - [AI Elements docs](https://ui.shadcn.com/docs/registry/ai-elements)

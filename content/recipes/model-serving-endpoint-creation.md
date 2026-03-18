@@ -51,7 +51,7 @@ databricks serving-endpoints create <endpoint-name> \
 databricks serving-endpoints get <endpoint-name> --profile <PROFILE> -o json
 ```
 
-Check for readiness in the endpoint state before connecting your app.
+Check that the endpoint is in a READY state before connecting your app.
 
 ### 5. Test the endpoint directly
 
@@ -81,7 +81,7 @@ env:
     value: "<endpoint-name>"
 ```
 
-For local development, mirror this in `.env`.
+For local development, mirror this in `.env` (for example `DATABRICKS_SERVING_ENDPOINT=databricks-gpt-5-4-mini`).
 
 #### References
 

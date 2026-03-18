@@ -87,10 +87,10 @@ export function HeroSection(): ReactNode {
               <div className="flex flex-wrap items-center gap-4">
                 <div className="inline-flex h-10 items-stretch overflow-hidden rounded-full border border-black/22 bg-white pl-4 font-mono text-sm text-black dark:border-white/24 dark:bg-db-navy dark:text-white">
                   <code className="m-0 flex items-center bg-transparent p-0 pr-2 text-inherit dark:text-white">
-                    $ databricks apps create
+                    $ databricks apps init
                   </code>
                   <CopyButton
-                    text="databricks apps create"
+                    text="databricks apps init"
                     label="Copy command"
                     variant="segment"
                     className="!h-full !w-11 !rounded-none !rounded-r-full !border-l !border-black/16 !bg-transparent !text-black hover:!bg-black/10 hover:!text-black dark:!border-white/18 dark:!bg-transparent dark:!text-white dark:hover:!bg-white/16 dark:hover:!text-white"

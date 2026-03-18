@@ -44,6 +44,7 @@ const PAGES = [
   { path: "/docs/lakebase/core-concepts", title: "Core Concepts" },
   { path: "/docs/lakebase/development", title: "Development" },
   { path: "/docs/appkit", title: "AppKit" },
+  { path: "/docs/appkit/v0", title: "Getting started" },
   { path: "/docs/tools/databricks-cli", title: "Databricks CLI" },
   { path: "/docs/tools/appkit", title: "AppKit" },
   { path: "/docs/tools/ai-tools/agent-skills", title: "Agent Skills" },

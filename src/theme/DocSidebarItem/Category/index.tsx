@@ -55,6 +55,14 @@ function useAutoExpandActiveCategory({
   ]);
 }
 
+function isAppKitApiRootCategory(href: string | undefined): boolean {
+  if (!href) {
+    return false;
+  }
+
+  return /\/docs\/appkit\/v\d+\/api\/(appkit|appkit-ui)$/.test(href);
+}
+
 function useCategoryHrefWithSSRFallback(
   item: Props["item"],
 ): string | undefined {
@@ -141,6 +149,7 @@ function DocSidebarItemCategoryCollapsible({
 
   const isActive = isActiveSidebarItem(item, activePath);
   const isCurrentPage = isSamePath(href, activePath);
+  const isAppKitApiRoot = isAppKitApiRootCategory(href);
 
   const { collapsed, setCollapsed } = useCollapsible({
     initialState: () => {
@@ -172,6 +181,12 @@ function DocSidebarItemCategoryCollapsible({
       setCollapsed(true);
     }
   }, [collapsible, expandedItem, index, setCollapsed, autoCollapseCategories]);
+
+  useEffect(() => {
+    if (collapsible && isAppKitApiRoot && !isActive && !collapsed) {
+      setCollapsed(true);
+    }
+  }, [collapsible, isAppKitApiRoot, isActive, collapsed, setCollapsed]);
 
   const handleItemClick: ComponentProps<"a">["onClick"] = (e) => {
     onItemClick?.(item);

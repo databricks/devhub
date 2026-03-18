@@ -156,7 +156,6 @@ async function main() {
   const resolvedTag = resolveLatestTagForMajor(majorChannel);
 
   const docsRoot = path.join(repoRoot, "docs", "appkit");
-  const currentDir = path.join(docsRoot, "current");
   const majorDir = path.join(docsRoot, majorChannel);
 
   fs.mkdirSync(docsRoot, { recursive: true });
@@ -195,39 +194,12 @@ async function main() {
     `databricks/appkit@${resolvedTag} (${majorChannel})\n`,
     "utf-8",
   );
-
-  // Keep `current` as a lightweight pointer page to avoid duplicate docs content.
-  fs.rmSync(currentDir, { recursive: true, force: true });
-  fs.mkdirSync(currentDir, { recursive: true });
-  const currentIndexPath = path.join(currentDir, "index.md");
-  const currentDoc = [
-    "---",
-    "title: Current (Beta)",
-    "---",
-    "",
-    "# AppKit Current",
-    "",
-    "Current points to the latest AppKit major docs channel synced into DevHub.",
-    "",
-    `- Active channel: \`${majorChannel}\``,
-    `- Resolved release tag: \`${resolvedTag}\``,
-    "",
-    `Open docs: [/docs/appkit/${majorChannel}](/docs/appkit/${majorChannel})`,
-    "",
-  ].join("\n");
-  fs.writeFileSync(currentIndexPath, currentDoc, "utf-8");
-  fs.writeFileSync(
-    path.join(currentDir, ".source-ref"),
-    `pointer -> databricks/appkit@${resolvedTag} (${majorChannel})\n`,
-    "utf-8",
-  );
+  fs.rmSync(path.join(docsRoot, "current"), { recursive: true, force: true });
 
   fs.rmSync(tempDir, { recursive: true, force: true });
 
   console.log(`Updated major docs: ${path.relative(repoRoot, majorDir)}`);
-  console.log(
-    `Updated current pointer: ${path.relative(repoRoot, path.join(currentDir, "index.md"))}`,
-  );
+  console.log("Removed deprecated current channel alias.");
   console.log("Done.");
 }
 

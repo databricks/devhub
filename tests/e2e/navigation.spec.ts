@@ -264,7 +264,7 @@ test.describe("docs sidebar navigation", () => {
     { href: "/docs/tools/appkit" },
     { href: "/docs/tools/ai-tools/agent-skills" },
     { href: "/docs/tools/ai-tools/docs-mcp-server" },
-    { href: "/docs/references/appkit" },
+    { href: "/docs/appkit/v0" },
   ];
 
   for (const { href } of SIDEBAR_LINKS) {
@@ -274,4 +274,44 @@ test.describe("docs sidebar navigation", () => {
       expect(new URL(page.url()).pathname).toBe(href);
     });
   }
+
+  test("AppKit docs show AppKit-specific sidebar shell", async ({ page }) => {
+    await page.goto("/docs/appkit/v0");
+
+    const sidebar = page.getByRole("navigation", { name: "Docs sidebar" });
+    await expect(sidebar.getByText("AppKit Reference")).toBeVisible();
+    await expect(
+      sidebar.getByRole("link", { name: "Back to main docs" }),
+    ).toHaveAttribute("href", "/docs/get-started/getting-started");
+    await expect(sidebar.getByRole("combobox")).toBeVisible();
+  });
+
+  test("References AppKit link opens latest AppKit docs entry", async ({
+    page,
+  }) => {
+    await page.goto("/docs/get-started/getting-started");
+    const sidebar = page.getByRole("navigation", { name: "Docs sidebar" });
+    await sidebar.getByRole("button", { name: "References" }).click();
+    const appKitReferenceLink = page
+      .locator(
+        'nav[aria-label="Docs sidebar"] a.menu__link[href*="/docs/appkit/"]',
+      )
+      .first();
+    await appKitReferenceLink.click();
+    await expect(page).toHaveURL(/\/docs\/appkit\/v\d+/);
+  });
+
+  test("AppKit API categories collapse sibling section", async ({ page }) => {
+    await page.goto("/docs/appkit/v0/api/appkit-ui");
+
+    const appKitCategory = page.locator(
+      'a.menu__link[href^="/docs/appkit/v0/api/appkit/"]',
+    );
+    const appKitCategoryListItem = appKitCategory.locator(
+      "xpath=ancestor::li[contains(@class, 'menu__list-item')][1]",
+    );
+    await expect(appKitCategoryListItem).toHaveClass(
+      /menu__list-item--collapsed/,
+    );
+  });
 });

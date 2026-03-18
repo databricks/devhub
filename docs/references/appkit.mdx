@@ -2,39 +2,22 @@
 title: AppKit
 ---
 
-import { AppKitVersionPicker } from "@site/src/components/docs/appkit-version-picker";
-
 # AppKit Reference
 
-Use this page as the entry point to all synced AppKit docs.
+AppKit reference docs now open directly from **References > AppKit** in the docs sidebar.
 
-<AppKitVersionPicker
-  channels={[
-    {
-      id: "current",
-      label: "Current (Beta)",
-      docsPath: "/docs/appkit/current",
-      apiPath: "/docs/appkit/v0/api/appkit",
-      note: "Current points to the latest synced major channel.",
-    },
-    {
-      id: "v0",
-      label: "v0",
-      docsPath: "/docs/appkit/v0",
-      apiPath: "/docs/appkit/v0/api/appkit",
-      note: "Latest synced v0.x release channel.",
-    },
-  ]}
-/>
+If you landed on this URL directly, continue to the latest synced channel:
+
+- [Open AppKit v0 (current) channel](/docs/appkit/v0)
 
 ## How to navigate
 
-- Use **References > AppKit** in the docs sidebar to expand versions.
-- Select a major channel (`Current`, `v0`, and future majors as they are synced).
-- Expand a channel to browse full docs and API pages.
+- Open **References > AppKit** to jump into the latest docs page.
+- Use the AppKit sidebar version picker to switch channels.
+- Use **Back to main docs** in the AppKit sidebar to return to the main docs navigation.
 
 ## Why this structure
 
-- one stable AppKit entry point in `References`
-- progressive expansion for large doc trees
-- fast version switching on mobile and desktop
+- faster entry into the docs users actually need
+- a focused AppKit-only sidebar while reading AppKit docs
+- one-click return to the broader docs navigation

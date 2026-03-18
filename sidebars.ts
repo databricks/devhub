@@ -103,8 +103,10 @@ function readAppKitDocTree(relativeDir: string): AppKitDocTree {
   };
 }
 
-const appKitVersionItems = getAppKitMajorChannels()
-  .map((majorChannel) => {
+const appKitMajorChannels = getAppKitMajorChannels();
+
+const appKitVersionItems = appKitMajorChannels
+  .map((majorChannel, index) => {
     const majorTree = readAppKitDocTree(path.join("appkit", majorChannel));
 
     if (!majorTree.indexDocId && majorTree.items.length === 0) {
@@ -113,7 +115,7 @@ const appKitVersionItems = getAppKitMajorChannels()
 
     return {
       type: "category" as const,
-      label: majorChannel,
+      label: index === 0 ? `${majorChannel} (current)` : majorChannel,
       link: majorTree.indexDocId
         ? {
             type: "doc" as const,
@@ -125,6 +127,11 @@ const appKitVersionItems = getAppKitMajorChannels()
     };
   })
   .filter((item): item is Exclude<typeof item, null> => item !== null);
+
+const latestAppKitMajorChannel = appKitMajorChannels[0];
+const latestAppKitDocId = latestAppKitMajorChannel
+  ? readAppKitDocTree(path.join("appkit", latestAppKitMajorChannel)).indexDocId
+  : null;
 
 const sidebars: SidebarsConfig = {
   tutorialSidebar: [
@@ -197,10 +204,10 @@ const sidebars: SidebarsConfig = {
           label: "AppKit",
           link: {
             type: "doc",
-            id: "references/appkit",
+            id: latestAppKitDocId ?? "appkit/v0/index",
           },
           collapsed: true,
-          items: ["appkit/current/index", ...appKitVersionItems],
+          items: appKitVersionItems,
         },
       ],
     },

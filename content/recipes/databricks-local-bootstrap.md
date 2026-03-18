@@ -36,6 +36,14 @@ winget install Databricks.DatabricksCLI
 
 Restart your terminal session after installation.
 
+#### All Systems (macOS, Windows, Linux)
+
+**curl installer**
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
+```
+
 ### 3. Authenticate to your Databricks workspace
 
 ```bash
@@ -65,13 +73,13 @@ databricks apps init \
 
 ### 6. Install Databricks agent skills
 
-`--all` installs all skills to all detected agents with confirmation skipped.
+Install the agent skills for the agents and editors you actively use.
 
 ```bash
-npx skills add databricks/databricks-agent-skills --all
+npx skills add databricks/databricks-agent-skills -y -a claude-code -a cursor -a codex
 ```
 
-Add `-y` to skip confirmation and `-a <agent-name>` to install to a specific agent like `cursor` or `claude-code`.
+Use `-y` for noninteractive installs and add one or more `-a <agent-name>` flags for your specific agents.
 
 ### 7. Verify installed skills
 

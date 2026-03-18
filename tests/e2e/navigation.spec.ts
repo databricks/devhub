@@ -1,4 +1,11 @@
 import { test, expect } from "@playwright/test";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
+
+const BOOTSTRAP_PROMPT_MARKDOWN = readFileSync(
+  resolve(process.cwd(), "content/recipes/databricks-local-bootstrap.md"),
+  "utf-8",
+);
 
 test.describe("navbar navigation", () => {
   const NAVBAR_LINKS = [
@@ -47,15 +54,50 @@ test.describe("footer navigation", () => {
 });
 
 test.describe("home page link navigation", () => {
-  test('hero "Copy Bootstrap Prompt" button is interactive', async ({
+  test('hero "Copy Prompt" copies recipe markdown from API', async ({
     page,
   }) => {
+    await page.route(
+      "**/api/markdown?section=recipes&slug=databricks-local-bootstrap",
+      async (route) => {
+        await route.fulfill({
+          status: 200,
+          contentType: "text/markdown; charset=utf-8",
+          body: BOOTSTRAP_PROMPT_MARKDOWN,
+        });
+      },
+    );
+    await page.addInitScript(() => {
+      Object.defineProperty(window.navigator, "clipboard", {
+        value: {
+          writeText: async (value: string) => {
+            (window as { __copiedText?: string }).__copiedText = value;
+          },
+        },
+        configurable: true,
+      });
+    });
+
     await page.goto("/");
     const button = page
       .locator("main")
-      .getByRole("button", { name: "Copy Bootstrap Prompt" });
+      .getByRole("button", { name: "Copy Prompt" });
     await button.waitFor({ state: "visible" });
     await expect(button).toBeEnabled();
+    await button.click();
+
+    await expect
+      .poll(async () =>
+        page.evaluate(() => (window as { __copiedText?: string }).__copiedText),
+      )
+      .toBeTruthy();
+    await expect(page.getByText("Failed to copy bootstrap prompt")).toHaveCount(
+      0,
+    );
+    const finalCopiedText = await page.evaluate(
+      () => (window as { __copiedText?: string }).__copiedText,
+    );
+    expect(finalCopiedText).toBe(BOOTSTRAP_PROMPT_MARKDOWN);
   });
 
   test("pillar card Lakebase navigates to /docs/lakebase", async ({ page }) => {
@@ -166,7 +208,9 @@ test.describe("solution detail page navigation", () => {
     expect(new URL(page.url()).pathname).toBe("/solutions");
   });
 
-  test("solution content includes expected outbound links", async ({ page }) => {
+  test("solution content includes expected outbound links", async ({
+    page,
+  }) => {
     await page.goto("/solutions/from-chatbots-to-agentic-workflows");
     const outboundLinks = page.locator('article a[href^="https://"]');
     const count = await outboundLinks.count();

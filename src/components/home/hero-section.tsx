@@ -3,7 +3,7 @@ import { useCallback } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { CopyButton } from "@/components/code/copy-button";
-import { DEFAULT_BOOTSTRAP_PROMPT } from "@/lib/bootstrap-prompt";
+import { getBootstrapPromptApiPath } from "@/lib/bootstrap-prompt";
 
 function fallbackCopyTextToClipboard(text: string): boolean {
   if (typeof window === "undefined" || typeof document === "undefined") {
@@ -46,19 +46,17 @@ async function copyTextToClipboard(text: string): Promise<boolean> {
 }
 
 async function getBootstrapPrompt(): Promise<string> {
-  try {
-    const response = await fetch(
-      "/api/markdown?section=recipes&slug=databricks-local-bootstrap",
-    );
-    if (!response.ok) {
-      return DEFAULT_BOOTSTRAP_PROMPT;
-    }
-
-    const bootstrapPrompt = await response.text();
-    return bootstrapPrompt.trim() || DEFAULT_BOOTSTRAP_PROMPT;
-  } catch {
-    return DEFAULT_BOOTSTRAP_PROMPT;
+  const response = await fetch(getBootstrapPromptApiPath());
+  if (!response.ok) {
+    throw new Error(`Failed to fetch markdown: ${response.status}`);
   }
+
+  const bootstrapPrompt = await response.text();
+  if (!bootstrapPrompt.trim()) {
+    throw new Error("Bootstrap prompt markdown is empty");
+  }
+
+  return bootstrapPrompt;
 }
 
 export function HeroSection(): ReactNode {
@@ -102,7 +100,7 @@ export function HeroSection(): ReactNode {
                   className="h-10 rounded-full px-6 font-medium"
                   onClick={handleCopyBootstrapPrompt}
                 >
-                  Copy Bootstrap Prompt
+                  Copy Prompt
                 </Button>
               </div>
             </div>

@@ -21,7 +21,7 @@ Human-readable label for UI/display only. Deduplication uses resourceKey, not al
 
 [`ResourceRequirement`](Interface.ResourceRequirement.md).[`alias`](Interface.ResourceRequirement.md#alias)
 
-***
+---
 
 ### description
 
@@ -35,7 +35,7 @@ Human-readable description of why this resource is needed
 
 [`ResourceRequirement`](Interface.ResourceRequirement.md).[`description`](Interface.ResourceRequirement.md#description)
 
-***
+---
 
 ### fields
 
@@ -49,7 +49,7 @@ Map of field name to env and optional description. Single-value types use one ke
 
 [`ResourceRequirement`](Interface.ResourceRequirement.md).[`fields`](Interface.ResourceRequirement.md#fields)
 
-***
+---
 
 ### permission
 
@@ -63,7 +63,7 @@ Required permission level for the resource (narrowed to union)
 
 [`ResourceRequirement`](Interface.ResourceRequirement.md).[`permission`](Interface.ResourceRequirement.md#permission)
 
-***
+---
 
 ### permissionSources?
 
@@ -75,7 +75,7 @@ Per-plugin permission tracking.
 Maps plugin name to the permission it originally requested.
 Populated when multiple plugins share the same resource.
 
-***
+---
 
 ### plugin
 
@@ -85,7 +85,7 @@ plugin: string;
 
 Plugin(s) that require this resource (comma-separated if multiple)
 
-***
+---
 
 ### required
 
@@ -97,7 +97,7 @@ required: boolean;
 
 [`ResourceRequirement`](Interface.ResourceRequirement.md).[`required`](Interface.ResourceRequirement.md#required)
 
-***
+---
 
 ### resolved
 
@@ -107,7 +107,7 @@ resolved: boolean;
 
 Whether the resource has been resolved (all field env vars set)
 
-***
+---
 
 ### resourceKey
 
@@ -121,7 +121,7 @@ Stable key for machine use: deduplication, env naming, composite keys, app.yaml.
 
 [`ResourceRequirement`](Interface.ResourceRequirement.md).[`resourceKey`](Interface.ResourceRequirement.md#resourcekey)
 
-***
+---
 
 ### type
 
@@ -135,7 +135,7 @@ Type of Databricks resource required (narrowed to enum)
 
 [`ResourceRequirement`](Interface.ResourceRequirement.md).[`type`](Interface.ResourceRequirement.md#type)
 
-***
+---
 
 ### values?
 

@@ -7,9 +7,9 @@ sidebar_position: 8
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 
 export function LlmsTxtLink({ children = '`llms.txt`' }) {
-  const { siteConfig } = useDocusaurusContext();
-  const llmsTxtUrl = `${siteConfig.baseUrl}llms.txt`;
-  return <a href={llmsTxtUrl}>{children}</a>;
+const { siteConfig } = useDocusaurusContext();
+const llmsTxtUrl = `${siteConfig.baseUrl}llms.txt`;
+return <a href={llmsTxtUrl}>{children}</a>;
 }
 
 This document provides prescriptive guidance for AI coding assistants generating code with Databricks AppKit. It is intentionally opinionated to ensure consistent, production-ready code generation.
@@ -27,7 +27,7 @@ Build **full-stack TypeScript apps** on Databricks using:
 - **Frontend**: `@databricks/appkit-ui`
 - **Analytics**: SQL files in `config/queries/*.sql` executed via the AppKit analytics plugin
 
-This guide is designed to work even when you *do not* have access to the AppKit source repo. Prefer only public package APIs and portable project structures.
+This guide is designed to work even when you _do not_ have access to the AppKit source repo. Prefer only public package APIs and portable project structures.
 
 ## Hard rules (LLM guardrails)
 
@@ -60,6 +60,7 @@ npx @databricks/appkit docs <query>
 **IMPORTANT**: ALWAYS run `npx @databricks/appkit docs` (no query) FIRST to see the documentation index. DO NOT guess paths - use the index to find correct paths.
 
 Examples:
+
 - Documentation index: `npx @databricks/appkit docs`
 - View a section: `npx @databricks/appkit docs "appkit-ui API reference"`
 - Full index (all API entries): `npx @databricks/appkit docs --full`

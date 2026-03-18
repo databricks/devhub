@@ -16,7 +16,7 @@ Base configuration interface for AppKit plugins
 optional host: string;
 ```
 
-***
+---
 
 ### name?
 
@@ -24,7 +24,7 @@ optional host: string;
 optional name: string;
 ```
 
-***
+---
 
 ### telemetry?
 

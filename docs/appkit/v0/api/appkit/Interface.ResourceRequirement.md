@@ -6,8 +6,8 @@ Narrows the generated base: type → ResourceType enum, permission → ResourceP
 
 ## See
 
- - `packages/shared/src/schemas/plugin-manifest.generated.ts` `ResourceRequirement` — generated base
- - SharedResourceRequirement — shared re-export with runtime `fields` and `required`
+- `packages/shared/src/schemas/plugin-manifest.generated.ts` `ResourceRequirement` — generated base
+- SharedResourceRequirement — shared re-export with runtime `fields` and `required`
 
 ## Extends
 
@@ -30,10 +30,10 @@ Human-readable label for UI/display only. Deduplication uses resourceKey, not al
 #### Inherited from
 
 ```ts
-SharedResourceRequirement.alias
+SharedResourceRequirement.alias;
 ```
 
-***
+---
 
 ### description
 
@@ -46,10 +46,10 @@ Human-readable description of why this resource is needed
 #### Inherited from
 
 ```ts
-SharedResourceRequirement.description
+SharedResourceRequirement.description;
 ```
 
-***
+---
 
 ### fields
 
@@ -62,10 +62,10 @@ Map of field name to env and optional description. Single-value types use one ke
 #### Inherited from
 
 ```ts
-SharedResourceRequirement.fields
+SharedResourceRequirement.fields;
 ```
 
-***
+---
 
 ### permission
 
@@ -78,10 +78,10 @@ Required permission level for the resource (narrowed to union)
 #### Overrides
 
 ```ts
-SharedResourceRequirement.permission
+SharedResourceRequirement.permission;
 ```
 
-***
+---
 
 ### required
 
@@ -92,10 +92,10 @@ required: boolean;
 #### Inherited from
 
 ```ts
-SharedResourceRequirement.required
+SharedResourceRequirement.required;
 ```
 
-***
+---
 
 ### resourceKey
 
@@ -108,10 +108,10 @@ Stable key for machine use: deduplication, env naming, composite keys, app.yaml.
 #### Inherited from
 
 ```ts
-SharedResourceRequirement.resourceKey
+SharedResourceRequirement.resourceKey;
 ```
 
-***
+---
 
 ### type
 
@@ -124,5 +124,5 @@ Type of Databricks resource required (narrowed to enum)
 #### Overrides
 
 ```ts
-SharedResourceRequirement.type
+SharedResourceRequirement.type;
 ```

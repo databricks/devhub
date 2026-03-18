@@ -15,7 +15,7 @@ optional bundleIgnore: boolean;
 
 When true, this field is excluded from Databricks bundle configuration (databricks.yml) generation.
 
-***
+---
 
 ### description?
 
@@ -25,7 +25,7 @@ optional description: string;
 
 Human-readable description for this field
 
-***
+---
 
 ### env?
 
@@ -35,7 +35,7 @@ optional env: string;
 
 Environment variable name for this field
 
-***
+---
 
 ### examples?
 
@@ -45,7 +45,7 @@ optional examples: string[];
 
 Example values showing the expected format for this field
 
-***
+---
 
 ### localOnly?
 
@@ -55,7 +55,7 @@ optional localOnly: boolean;
 
 When true, this field is only generated for local .env files. The Databricks Apps platform auto-injects it at deploy time.
 
-***
+---
 
 ### resolve?
 
@@ -65,7 +65,7 @@ optional resolve: string;
 
 Named resolver prefixed by resource type (e.g., 'postgres:host'). The CLI resolves this value during the init prompt flow.
 
-***
+---
 
 ### value?
 

@@ -7,6 +7,7 @@ sidebar_position: 6
 File operations against Databricks Unity Catalog Volumes. Supports listing, reading, downloading, uploading, deleting, and previewing files with built-in caching, retry, and timeout handling via the execution interceptor pipeline.
 
 **Key features:**
+
 - **Multi-volume**: Define named volumes (e.g. `uploads`, `exports`) and access them independently
 - CRUD operations on Unity Catalog Volume files
 - Streaming downloads with content-type resolution
@@ -22,10 +23,7 @@ File operations against Databricks Unity Catalog Volumes. Supports listing, read
 import { createApp, files, server } from "@databricks/appkit";
 
 await createApp({
-  plugins: [
-    server(),
-    files(),
-  ],
+  plugins: [server(), files()],
 });
 ```
 
@@ -38,10 +36,10 @@ DATABRICKS_VOLUME_EXPORTS=/Volumes/catalog/schema/exports
 
 That's it — no `volumes` config needed. The env var suffix becomes the volume key (lowercased):
 
-| Environment variable         | Volume key |
-| ---------------------------- | ---------- |
-| `DATABRICKS_VOLUME_UPLOADS`  | `uploads`  |
-| `DATABRICKS_VOLUME_EXPORTS`  | `exports`  |
+| Environment variable        | Volume key |
+| --------------------------- | ---------- |
+| `DATABRICKS_VOLUME_UPLOADS` | `uploads`  |
+| `DATABRICKS_VOLUME_EXPORTS` | `exports`  |
 
 ## Auto-discovery
 
@@ -92,7 +90,7 @@ files({
   customContentTypes: { ".avro": "application/avro" },
   volumes: {
     uploads: { maxUploadSize: 100_000_000 }, // 100 MB limit for uploads only
-    exports: {},                              // uses plugin-level defaults
+    exports: {}, // uses plugin-level defaults
   },
 });
 ```
@@ -117,25 +115,26 @@ Dangerous MIME types (`text/html`, `text/javascript`, `application/javascript`, 
 
 Routes are mounted at `/api/files/*`. All routes except `/volumes` execute in user context via `asUser(req)`.
 
-| Method | Path                       | Query / Body                 | Response                                          |
-| ------ | -------------------------- | ---------------------------- | ------------------------------------------------- |
-| GET    | `/volumes`                 | —                            | `{ volumes: string[] }`                           |
-| GET    | `/:volumeKey/list`         | `?path` (optional)           | `DirectoryEntry[]`                                |
-| GET    | `/:volumeKey/read`         | `?path` (required)           | `text/plain` body                                 |
-| GET    | `/:volumeKey/download`     | `?path` (required)           | Binary stream (`Content-Disposition: attachment`)  |
-| GET    | `/:volumeKey/raw`          | `?path` (required)           | Binary stream (inline for safe types, attachment for unsafe) |
-| GET    | `/:volumeKey/exists`       | `?path` (required)           | `{ exists: boolean }`                             |
-| GET    | `/:volumeKey/metadata`     | `?path` (required)           | `FileMetadata`                                    |
-| GET    | `/:volumeKey/preview`      | `?path` (required)           | `FilePreview`                                     |
-| POST   | `/:volumeKey/upload`       | `?path` (required), raw body | `{ success: true }`                               |
-| POST   | `/:volumeKey/mkdir`        | `body.path` (required)       | `{ success: true }`                               |
-| DELETE | `/:volumeKey`              | `?path` (required)           | `{ success: true }`                               |
+| Method | Path                   | Query / Body                 | Response                                                     |
+| ------ | ---------------------- | ---------------------------- | ------------------------------------------------------------ |
+| GET    | `/volumes`             | —                            | `{ volumes: string[] }`                                      |
+| GET    | `/:volumeKey/list`     | `?path` (optional)           | `DirectoryEntry[]`                                           |
+| GET    | `/:volumeKey/read`     | `?path` (required)           | `text/plain` body                                            |
+| GET    | `/:volumeKey/download` | `?path` (required)           | Binary stream (`Content-Disposition: attachment`)            |
+| GET    | `/:volumeKey/raw`      | `?path` (required)           | Binary stream (inline for safe types, attachment for unsafe) |
+| GET    | `/:volumeKey/exists`   | `?path` (required)           | `{ exists: boolean }`                                        |
+| GET    | `/:volumeKey/metadata` | `?path` (required)           | `FileMetadata`                                               |
+| GET    | `/:volumeKey/preview`  | `?path` (required)           | `FilePreview`                                                |
+| POST   | `/:volumeKey/upload`   | `?path` (required), raw body | `{ success: true }`                                          |
+| POST   | `/:volumeKey/mkdir`    | `body.path` (required)       | `{ success: true }`                                          |
+| DELETE | `/:volumeKey`          | `?path` (required)           | `{ success: true }`                                          |
 
 The `:volumeKey` parameter must match one of the configured volume keys. Unknown volume keys return a `404` with the list of available volumes.
 
 ### Path validation
 
 All endpoints that accept a `path` parameter enforce:
+
 - Path is required (non-empty)
 - Maximum 4096 characters
 - No null bytes
@@ -143,6 +142,7 @@ All endpoints that accept a `path` parameter enforce:
 ### Raw endpoint security
 
 The `/:volumeKey/raw` endpoint serves files inline for browser display but applies security headers:
+
 - `X-Content-Type-Options: nosniff`
 - `Content-Security-Policy: sandbox`
 - Unsafe content types (HTML, JS, SVG) are forced to download via `Content-Disposition: attachment`
@@ -186,17 +186,17 @@ await vol.asUser(req).list();
 
 ### VolumeAPI methods
 
-| Method            | Signature                                                                                          | Returns            |
-| ----------------- | -------------------------------------------------------------------------------------------------- | ------------------ |
-| `list`            | `(directoryPath?: string)`                                                                         | `DirectoryEntry[]` |
-| `read`            | `(filePath: string, options?: { maxSize?: number })`                                               | `string`           |
-| `download`        | `(filePath: string)`                                                                               | `DownloadResponse` |
-| `exists`          | `(filePath: string)`                                                                               | `boolean`          |
-| `metadata`        | `(filePath: string)`                                                                               | `FileMetadata`     |
-| `upload`          | `(filePath: string, contents: ReadableStream \| Buffer \| string, options?: { overwrite?: boolean })` | `void`          |
-| `createDirectory` | `(directoryPath: string)`                                                                          | `void`             |
-| `delete`          | `(filePath: string)`                                                                               | `void`             |
-| `preview`         | `(filePath: string)`                                                                               | `FilePreview`      |
+| Method            | Signature                                                                                             | Returns            |
+| ----------------- | ----------------------------------------------------------------------------------------------------- | ------------------ |
+| `list`            | `(directoryPath?: string)`                                                                            | `DirectoryEntry[]` |
+| `read`            | `(filePath: string, options?: { maxSize?: number })`                                                  | `string`           |
+| `download`        | `(filePath: string)`                                                                                  | `DownloadResponse` |
+| `exists`          | `(filePath: string)`                                                                                  | `boolean`          |
+| `metadata`        | `(filePath: string)`                                                                                  | `FileMetadata`     |
+| `upload`          | `(filePath: string, contents: ReadableStream \| Buffer \| string, options?: { overwrite?: boolean })` | `void`             |
+| `createDirectory` | `(directoryPath: string)`                                                                             | `void`             |
+| `delete`          | `(filePath: string)`                                                                                  | `void`             |
+| `preview`         | `(filePath: string)`                                                                                  | `FilePreview`      |
 
 > `read()` loads the entire file into memory as a string. Files larger than 10 MB (default) are rejected — use `download()` for large files, or pass `{ maxSize: <bytes> }` to override.
 
@@ -249,7 +249,11 @@ interface VolumeAPI {
   download(filePath: string): Promise<DownloadResponse>;
   exists(filePath: string): Promise<boolean>;
   metadata(filePath: string): Promise<FileMetadata>;
-  upload(filePath: string, contents: ReadableStream | Buffer | string, options?: { overwrite?: boolean }): Promise<void>;
+  upload(
+    filePath: string,
+    contents: ReadableStream | Buffer | string,
+    options?: { overwrite?: boolean },
+  ): Promise<void>;
   createDirectory(directoryPath: string): Promise<void>;
   delete(filePath: string): Promise<void>;
   preview(filePath: string): Promise<FilePreview>;
@@ -294,12 +298,12 @@ All errors return JSON:
 }
 ```
 
-| Status | Description                                                    |
-| ------ | -------------------------------------------------------------- |
-| 400    | Missing or invalid `path` parameter                            |
-| 404    | Unknown volume key                                             |
-| 413    | Upload exceeds `maxUploadSize`                                 |
-| 500    | Operation failed (SDK, network, upstream, or unhandled error)  |
+| Status | Description                                                   |
+| ------ | ------------------------------------------------------------- |
+| 400    | Missing or invalid `path` parameter                           |
+| 404    | Unknown volume key                                            |
+| 413    | Upload exceeds `maxUploadSize`                                |
+| 500    | Operation failed (SDK, network, upstream, or unhandled error) |
 
 ## Frontend components
 

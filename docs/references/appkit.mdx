@@ -1,0 +1,40 @@
+---
+title: AppKit
+---
+
+import { AppKitVersionPicker } from "@site/src/components/docs/appkit-version-picker";
+
+# AppKit Reference
+
+Use this page as the entry point to all synced AppKit docs.
+
+<AppKitVersionPicker
+  channels={[
+    {
+      id: "current",
+      label: "Current (Beta)",
+      docsPath: "/docs/appkit/current",
+      apiPath: "/docs/appkit/v0/api/appkit",
+      note: "Current points to the latest synced major channel.",
+    },
+    {
+      id: "v0",
+      label: "v0",
+      docsPath: "/docs/appkit/v0",
+      apiPath: "/docs/appkit/v0/api/appkit",
+      note: "Latest synced v0.x release channel.",
+    },
+  ]}
+/>
+
+## How to navigate
+
+- Use **References > AppKit** in the docs sidebar to expand versions.
+- Select a major channel (`Current`, `v0`, and future majors as they are synced).
+- Expand a channel to browse full docs and API pages.
+
+## Why this structure
+
+- one stable AppKit entry point in `References`
+- progressive expansion for large doc trees
+- fast version switching on mobile and desktop

@@ -8,17 +8,17 @@ Factory function type returned by `toPlugin()`. Accepts optional config and retu
 
 ## Type Parameters
 
-| Type Parameter |
-| ------ |
-| `T` |
-| `U` |
-| `N` *extends* `string` |
+| Type Parameter         |
+| ---------------------- |
+| `T`                    |
+| `U`                    |
+| `N` _extends_ `string` |
 
 ## Parameters
 
 | Parameter | Type |
-| ------ | ------ |
-| `config?` | `U` |
+| --------- | ---- |
+| `config?` | `U`  |
 
 ## Returns
 

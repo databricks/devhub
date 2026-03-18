@@ -17,6 +17,7 @@ npx @databricks/appkit plugin create
 ```
 
 The wizard walks you through:
+
 - **Placement**: In your repository (e.g. `plugins/my-plugin`) or as a standalone package
 - **Metadata**: Name, display name, description
 - **Resources**: Which Databricks resources the plugin needs (SQL Warehouse, Secret, etc.) and whether each is required or optional

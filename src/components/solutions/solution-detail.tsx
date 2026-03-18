@@ -7,21 +7,25 @@ import { AIExportMenu } from "@/components/ai-export-menu";
 import { Badge } from "@/components/ui/badge";
 import { RecipePre } from "@/components/templates/recipe-code-block";
 import { RecipeToc } from "@/components/templates/recipe-toc";
-import type { Solution } from "@/lib/solutions/solutions";
+import { solutions } from "@/lib/solutions/solutions";
 
 const recipeComponents = { pre: RecipePre };
 
 type SolutionDetailProps = {
-  solution: Solution;
+  solutionId: string;
   children: ReactNode;
 };
 
 export function SolutionDetail({
-  solution,
+  solutionId,
   children,
 }: SolutionDetailProps): ReactNode {
+  const solution = solutions.find((entry) => entry.id === solutionId);
   const contentRef = useRef<HTMLDivElement>(null);
   const heroImageUrl = useBaseUrl("/img/solution-detail-hero.svg");
+  if (!solution) {
+    throw new Error(`Solution not found: ${solutionId}`);
+  }
   const permalink = `/solutions/${solution.id}`;
 
   return (

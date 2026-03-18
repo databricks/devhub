@@ -1,4 +1,130 @@
+import fs from "node:fs";
+import path from "node:path";
 import type { SidebarsConfig } from "@docusaurus/plugin-content-docs";
+
+type AppKitSidebarItem =
+  | string
+  | {
+      type: "category";
+      label: string;
+      link?: {
+        type: "doc";
+        id: string;
+      };
+      collapsed?: boolean;
+      items: AppKitSidebarItem[];
+    };
+
+type AppKitDocTree = {
+  indexDocId: string | null;
+  items: AppKitSidebarItem[];
+};
+
+function getAppKitMajorChannels(): string[] {
+  const docsAppKitRoot = path.resolve(process.cwd(), "docs", "appkit");
+
+  if (!fs.existsSync(docsAppKitRoot)) {
+    return [];
+  }
+
+  return fs
+    .readdirSync(docsAppKitRoot, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory() && /^v\d+$/.test(entry.name))
+    .map((entry) => entry.name)
+    .sort((a, b) => Number(b.slice(1)) - Number(a.slice(1)));
+}
+
+function toDocId(relativePath: string): string {
+  const ext = path.extname(relativePath);
+  return relativePath.slice(0, -ext.length).replaceAll(path.sep, "/");
+}
+
+function toLabel(value: string): string {
+  return value.replaceAll(/[-_]/g, " ").replaceAll(/\s+/g, " ").trim();
+}
+
+function readAppKitDocTree(relativeDir: string): AppKitDocTree {
+  const absoluteDir = path.resolve(process.cwd(), "docs", relativeDir);
+  if (!fs.existsSync(absoluteDir)) {
+    return { indexDocId: null, items: [] };
+  }
+
+  const entries = fs
+    .readdirSync(absoluteDir, { withFileTypes: true })
+    .filter((entry) => !entry.name.startsWith("."))
+    .sort((a, b) => a.name.localeCompare(b.name));
+
+  const files = entries.filter(
+    (entry) =>
+      entry.isFile() &&
+      [".md", ".mdx"].includes(path.extname(entry.name)) &&
+      !entry.name.startsWith("_"),
+  );
+  const directories = entries.filter((entry) => entry.isDirectory());
+
+  const indexFile = files.find((entry) =>
+    ["index.md", "index.mdx"].includes(entry.name),
+  );
+  const indexDocId = indexFile
+    ? toDocId(path.join(relativeDir, indexFile.name))
+    : null;
+
+  const fileDocItems: AppKitSidebarItem[] = files
+    .filter((entry) => !["index.md", "index.mdx"].includes(entry.name))
+    .map((entry) => toDocId(path.join(relativeDir, entry.name)));
+
+  const directoryItems: AppKitSidebarItem[] = directories
+    .map((entry) => {
+      const childRelativeDir = path.join(relativeDir, entry.name);
+      const childTree = readAppKitDocTree(childRelativeDir);
+
+      if (!childTree.indexDocId && childTree.items.length === 0) {
+        return null;
+      }
+
+      return {
+        type: "category" as const,
+        label: toLabel(entry.name),
+        link: childTree.indexDocId
+          ? {
+              type: "doc" as const,
+              id: childTree.indexDocId,
+            }
+          : undefined,
+        collapsed: true,
+        items: childTree.items,
+      };
+    })
+    .filter((item): item is Exclude<typeof item, null> => item !== null);
+
+  return {
+    indexDocId,
+    items: [...fileDocItems, ...directoryItems],
+  };
+}
+
+const appKitVersionItems = getAppKitMajorChannels()
+  .map((majorChannel) => {
+    const majorTree = readAppKitDocTree(path.join("appkit", majorChannel));
+
+    if (!majorTree.indexDocId && majorTree.items.length === 0) {
+      return null;
+    }
+
+    return {
+      type: "category" as const,
+      label: majorChannel,
+      link: majorTree.indexDocId
+        ? {
+            type: "doc" as const,
+            id: majorTree.indexDocId,
+          }
+        : undefined,
+      collapsed: true,
+      items: majorTree.items,
+    };
+  })
+  .filter((item): item is Exclude<typeof item, null> => item !== null);
 
 const sidebars: SidebarsConfig = {
   tutorialSidebar: [
@@ -66,7 +192,16 @@ const sidebars: SidebarsConfig = {
           label: "Databricks CLI",
           href: "https://docs.databricks.com/aws/en/dev-tools/cli/commands",
         },
-        "references/appkit",
+        {
+          type: "category",
+          label: "AppKit",
+          link: {
+            type: "doc",
+            id: "references/appkit",
+          },
+          collapsed: true,
+          items: ["appkit/current/index", ...appKitVersionItems],
+        },
       ],
     },
   ],

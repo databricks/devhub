@@ -7,6 +7,7 @@ sidebar_position: 5
 Integrates [Databricks AI/BI Genie](https://docs.databricks.com/en/genie/index.html) spaces into your AppKit application, enabling natural language data queries via a conversational interface.
 
 **Key features:**
+
 - Named space aliases for multiple Genie spaces
 - SSE streaming with real-time status updates
 - Conversation history replay with automatic reconnection
@@ -19,19 +20,16 @@ Integrates [Databricks AI/BI Genie](https://docs.databricks.com/en/genie/index.h
 import { createApp, genie, server } from "@databricks/appkit";
 
 await createApp({
-  plugins: [
-    server(),
-    genie(),
-  ],
+  plugins: [server(), genie()],
 });
 ```
 
 ## Configuration options
 
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `spaces` | `Record<string, string>` | `{ default: DATABRICKS_GENIE_SPACE_ID }` | Map of alias names to Genie Space IDs |
-| `timeout` | `number` | `120000` | Polling timeout in ms. Set to `0` for indefinite |
+| Option    | Type                     | Default                                  | Description                                      |
+| --------- | ------------------------ | ---------------------------------------- | ------------------------------------------------ |
+| `spaces`  | `Record<string, string>` | `{ default: DATABRICKS_GENIE_SPACE_ID }` | Map of alias names to Genie Space IDs            |
+| `timeout` | `number`                 | `120000`                                 | Polling timeout in ms. Set to `0` for indefinite |
 
 ### Space aliases
 
@@ -60,8 +58,8 @@ You can find the Space ID from the **About** tab on your Genie space page in Dat
 
 ## Environment variables
 
-| Variable | Description |
-|----------|-------------|
+| Variable                    | Description                                                   |
+| --------------------------- | ------------------------------------------------------------- |
 | `DATABRICKS_GENIE_SPACE_ID` | Default Genie Space ID (used when `spaces` config is omitted) |
 
 ## HTTP endpoints
@@ -85,13 +83,13 @@ Content-Type: application/json
 
 The response is an SSE stream that emits these event types:
 
-| Event type | Description |
-|------------|-------------|
-| `message_start` | Conversation and message IDs assigned |
-| `status` | Processing status updates (e.g. `ASKING_AI`, `EXECUTING_QUERY`) |
-| `message_result` | Final message with text and query attachments |
-| `query_result` | Tabular data for a query attachment |
-| `error` | Error details |
+| Event type       | Description                                                     |
+| ---------------- | --------------------------------------------------------------- |
+| `message_start`  | Conversation and message IDs assigned                           |
+| `status`         | Processing status updates (e.g. `ASKING_AI`, `EXECUTING_QUERY`) |
+| `message_result` | Final message with text and query attachments                   |
+| `query_result`   | Tabular data for a query attachment                             |
+| `error`          | Error details                                                   |
 
 ### Get conversation history
 
@@ -111,7 +109,10 @@ const AppKit = await createApp({
 });
 
 // Stream events
-for await (const event of AppKit.genie.sendMessage("demo", "Show revenue by region")) {
+for await (const event of AppKit.genie.sendMessage(
+  "demo",
+  "Show revenue by region",
+)) {
   console.log(event.type, event);
 }
 

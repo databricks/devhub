@@ -7,7 +7,9 @@ Use for tunnel connection issues, message parsing failures, etc.
 
 ```typescript
 throw new TunnelError("No tunnel connection available");
-throw new TunnelError("Failed to parse WebSocket message", { cause: parseError });
+throw new TunnelError("Failed to parse WebSocket message", {
+  cause: parseError,
+});
 ```
 
 ## Extends
@@ -27,12 +29,12 @@ new TunnelError(message: string, options?: {
 
 #### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `message` | `string` |
-| `options?` | \{ `cause?`: `Error`; `context?`: `Record`\<`string`, `unknown`\>; \} |
-| `options.cause?` | `Error` |
-| `options.context?` | `Record`\<`string`, `unknown`\> |
+| Parameter          | Type                                                                  |
+| ------------------ | --------------------------------------------------------------------- |
+| `message`          | `string`                                                              |
+| `options?`         | \{ `cause?`: `Error`; `context?`: `Record`\<`string`, `unknown`\>; \} |
+| `options.cause?`   | `Error`                                                               |
+| `options.context?` | `Record`\<`string`, `unknown`\>                                       |
 
 #### Returns
 
@@ -56,7 +58,7 @@ Optional cause of the error
 
 [`AppKitError`](Class.AppKitError.md).[`cause`](Class.AppKitError.md#cause)
 
-***
+---
 
 ### code
 
@@ -70,7 +72,7 @@ Error code for programmatic error handling
 
 [`AppKitError`](Class.AppKitError.md).[`code`](Class.AppKitError.md#code)
 
-***
+---
 
 ### context?
 
@@ -84,7 +86,7 @@ Additional context for the error
 
 [`AppKitError`](Class.AppKitError.md).[`context`](Class.AppKitError.md#context)
 
-***
+---
 
 ### isRetryable
 
@@ -98,7 +100,7 @@ Whether this error type is generally safe to retry
 
 [`AppKitError`](Class.AppKitError.md).[`isRetryable`](Class.AppKitError.md#isretryable)
 
-***
+---
 
 ### statusCode
 
@@ -131,7 +133,7 @@ Sensitive values in context are automatically redacted.
 
 [`AppKitError`](Class.AppKitError.md).[`toJSON`](Class.AppKitError.md#tojson)
 
-***
+---
 
 ### toString()
 
@@ -149,7 +151,7 @@ Create a human-readable string representation
 
 [`AppKitError`](Class.AppKitError.md).[`toString`](Class.AppKitError.md#tostring)
 
-***
+---
 
 ### fetchFailed()
 
@@ -161,16 +163,16 @@ Create a tunnel error for asset fetch failure
 
 #### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `path` | `string` |
-| `cause?` | `Error` |
+| Parameter | Type     |
+| --------- | -------- |
+| `path`    | `string` |
+| `cause?`  | `Error`  |
 
 #### Returns
 
 `TunnelError`
 
-***
+---
 
 ### getterNotRegistered()
 
@@ -184,7 +186,7 @@ Create a tunnel error for missing tunnel getter
 
 `TunnelError`
 
-***
+---
 
 ### noConnection()
 
@@ -198,7 +200,7 @@ Create a tunnel error for no available connection
 
 `TunnelError`
 
-***
+---
 
 ### parseError()
 
@@ -210,10 +212,10 @@ Create a tunnel error for message parsing failure
 
 #### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
+| Parameter     | Type     |
+| ------------- | -------- |
 | `messageType` | `string` |
-| `cause?` | `Error` |
+| `cause?`      | `Error`  |
 
 #### Returns
 

@@ -37,6 +37,7 @@ oklch(lightness chroma hue)
 ```
 
 Where:
+
 - **lightness**: 0-1 (0 = black, 1 = white)
 - **chroma**: 0-0.4 (saturation)
 - **hue**: 0-360 (color angle)

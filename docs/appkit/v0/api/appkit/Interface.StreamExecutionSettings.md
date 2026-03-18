@@ -10,7 +10,7 @@ Execution settings for streaming endpoints. Extends PluginExecutionSettings with
 default: PluginExecuteConfig;
 ```
 
-***
+---
 
 ### stream?
 
@@ -18,7 +18,7 @@ default: PluginExecuteConfig;
 optional stream: StreamConfig;
 ```
 
-***
+---
 
 ### user?
 

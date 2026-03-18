@@ -97,7 +97,7 @@ const { data } = useAnalyticsQuery("users_list", {
 });
 
 // TypeScript knows the shape of the result rows
-data?.forEach(row => {
+data?.forEach((row) => {
   console.log(row.email); // ✓ autocomplete works
 });
 ```

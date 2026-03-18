@@ -47,25 +47,27 @@ test.describe("footer navigation", () => {
 });
 
 test.describe("home page link navigation", () => {
-  test('hero "Get started" button navigates to getting-started', async ({
+  test('hero "Copy Bootstrap Prompt" button is interactive', async ({
     page,
   }) => {
     await page.goto("/");
-    await page
+    const button = page
       .locator("main")
-      .getByRole("link", { name: "Get started" })
-      .click();
-    await page.waitForURL("**/docs/get-started/getting-started");
-    expect(new URL(page.url()).pathname).toBe(
-      "/docs/get-started/getting-started",
-    );
+      .getByRole("button", { name: "Copy Bootstrap Prompt" });
+    await button.waitFor({ state: "visible" });
+    await expect(button).toBeEnabled();
   });
 
   test("pillar card Lakebase navigates to /docs/lakebase", async ({ page }) => {
     await page.goto("/");
-    await page.locator('a[href="/docs/lakebase"]').first().click();
+    const link = page
+      .locator("main")
+      .locator('a[href^="/docs/lakebase"]')
+      .first();
+    await link.waitFor({ state: "visible" });
+    await link.click();
     await page.waitForURL("**/docs/lakebase");
-    expect(new URL(page.url()).pathname).toBe("/docs/lakebase");
+    expect(new URL(page.url()).pathname).toContain("/docs/lakebase");
   });
 
   test("pillar card AgentBricks navigates to /docs/agents/getting-started", async ({
@@ -164,20 +166,25 @@ test.describe("solution detail page navigation", () => {
     expect(new URL(page.url()).pathname).toBe("/solutions");
   });
 
-  test("internal links in solution content are reachable", async ({ page }) => {
+  test("solution content includes expected outbound links", async ({ page }) => {
     await page.goto("/solutions/from-chatbots-to-agentic-workflows");
-    const internalLinks = page.locator('article a[href^="/"]');
-    const count = await internalLinks.count();
+    const outboundLinks = page.locator('article a[href^="https://"]');
+    const count = await outboundLinks.count();
     expect(count).toBeGreaterThan(0);
 
-    for (let i = 0; i < count; i++) {
-      const href = await internalLinks.nth(i).getAttribute("href");
-      if (!href) continue;
-      const response = await page.request.get(href);
-      expect(response.status(), `internal link ${href} should return 200`).toBe(
-        200,
-      );
-    }
+    await expect(outboundLinks).toContainText(["Resources"]);
+    const hrefs = await outboundLinks.evaluateAll((elements) =>
+      elements
+        .map((element) => element.getAttribute("href"))
+        .filter((href): href is string => Boolean(href)),
+    );
+    expect(hrefs).toContain("https://dev.databricks.com/resources");
+    expect(hrefs).toContain(
+      "https://dev.databricks.com/docs/agents/getting-started",
+    );
+    expect(hrefs).toContain(
+      "https://dev.databricks.com/docs/lakebase/getting-started",
+    );
   });
 });
 

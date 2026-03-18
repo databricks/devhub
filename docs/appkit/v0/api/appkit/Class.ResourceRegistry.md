@@ -30,7 +30,7 @@ Useful for testing or when rebuilding the registry.
 
 `void`
 
-***
+---
 
 ### collectResources()
 
@@ -43,8 +43,8 @@ For each plugin, loads its manifest (required) and runtime resource requirements
 
 #### Parameters
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
+| Parameter    | Type                                                                                  | Description                                               |
+| ------------ | ------------------------------------------------------------------------------------- | --------------------------------------------------------- |
 | `rawPlugins` | [`PluginData`](TypeAlias.PluginData.md)\<`PluginConstructor`, `unknown`, `string`\>[] | Array of plugin data entries from createApp configuration |
 
 #### Returns
@@ -55,7 +55,7 @@ For each plugin, loads its manifest (required) and runtime resource requirements
 
 If any plugin is missing a manifest or manifest is invalid
 
-***
+---
 
 ### enforceValidation()
 
@@ -80,7 +80,7 @@ ValidationResult with validity status, missing resources, and all resources
 
 In production when required resources are missing, or in dev when APPKIT_STRICT_VALIDATION=true
 
-***
+---
 
 ### get()
 
@@ -92,9 +92,9 @@ Gets a specific resource by type and resourceKey (dedup key).
 
 #### Parameters
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `type` | `string` | Resource type |
+| Parameter     | Type     | Description                                               |
+| ------------- | -------- | --------------------------------------------------------- |
+| `type`        | `string` | Resource type                                             |
 | `resourceKey` | `string` | Stable machine key (not alias; alias is for display only) |
 
 #### Returns
@@ -103,7 +103,7 @@ Gets a specific resource by type and resourceKey (dedup key).
 
 The resource entry if found, undefined otherwise
 
-***
+---
 
 ### getAll()
 
@@ -120,7 +120,7 @@ Returns a copy of the array to prevent external mutations.
 
 Array of all registered resource entries
 
-***
+---
 
 ### getByPlugin()
 
@@ -132,8 +132,8 @@ Gets all resources required by a specific plugin.
 
 #### Parameters
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
+| Parameter    | Type     | Description        |
+| ------------ | -------- | ------------------ |
 | `pluginName` | `string` | Name of the plugin |
 
 #### Returns
@@ -142,7 +142,7 @@ Gets all resources required by a specific plugin.
 
 Array of resources where the plugin is listed as a requester
 
-***
+---
 
 ### getOptional()
 
@@ -158,7 +158,7 @@ Gets all optional resources (where required=false).
 
 Array of optional resource entries
 
-***
+---
 
 ### getRequired()
 
@@ -174,7 +174,7 @@ Gets all required resources (where required=true).
 
 Array of required resource entries
 
-***
+---
 
 ### register()
 
@@ -184,6 +184,7 @@ register(plugin: string, resource: ResourceRequirement): void;
 
 Registers a resource requirement for a plugin.
 If a resource with the same type+resourceKey already exists, merges them:
+
 - Combines plugin names (comma-separated)
 - Uses the most permissive permission (per-type hierarchy)
 - Marks as required if any plugin requires it
@@ -192,16 +193,16 @@ If a resource with the same type+resourceKey already exists, merges them:
 
 #### Parameters
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `plugin` | `string` | Name of the plugin registering the resource |
-| `resource` | [`ResourceRequirement`](Interface.ResourceRequirement.md) | Resource requirement specification |
+| Parameter  | Type                                                      | Description                                 |
+| ---------- | --------------------------------------------------------- | ------------------------------------------- |
+| `plugin`   | `string`                                                  | Name of the plugin registering the resource |
+| `resource` | [`ResourceRequirement`](Interface.ResourceRequirement.md) | Resource requirement specification          |
 
 #### Returns
 
 `void`
 
-***
+---
 
 ### size()
 
@@ -215,7 +216,7 @@ Returns the number of registered resources.
 
 `number`
 
-***
+---
 
 ### validate()
 
@@ -244,11 +245,14 @@ const registry = ResourceRegistry.getInstance();
 const result = registry.validate();
 
 if (!result.valid) {
-  console.error("Missing resources:", result.missing.map(r => Object.values(r.fields).map(f => f.env)));
+  console.error(
+    "Missing resources:",
+    result.missing.map((r) => Object.values(r.fields).map((f) => f.env)),
+  );
 }
 ```
 
-***
+---
 
 ### formatDevWarningBanner()
 
@@ -261,8 +265,8 @@ Uses box drawing to ensure the message is impossible to miss in scrolling logs.
 
 #### Parameters
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
+| Parameter | Type                                            | Description                       |
+| --------- | ----------------------------------------------- | --------------------------------- |
 | `missing` | [`ResourceEntry`](Interface.ResourceEntry.md)[] | Array of missing resource entries |
 
 #### Returns
@@ -271,7 +275,7 @@ Uses box drawing to ensure the message is impossible to miss in scrolling logs.
 
 Formatted banner string
 
-***
+---
 
 ### formatMissingResources()
 
@@ -283,8 +287,8 @@ Formats missing resources into a human-readable error message.
 
 #### Parameters
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
+| Parameter | Type                                            | Description                       |
+| --------- | ----------------------------------------------- | --------------------------------- |
 | `missing` | [`ResourceEntry`](Interface.ResourceEntry.md)[] | Array of missing resource entries |
 
 #### Returns

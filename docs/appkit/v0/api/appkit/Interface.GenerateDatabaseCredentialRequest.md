@@ -17,14 +17,16 @@ When specified, the token will only grant access to the specified tables.
 
 ```typescript
 {
-  claims: [{
-    permission_set: RequestedClaimsPermissionSet.READ_ONLY,
-    resources: [{ table_name: "catalog.schema.users" }]
-  }]
+  claims: [
+    {
+      permission_set: RequestedClaimsPermissionSet.READ_ONLY,
+      resources: [{ table_name: "catalog.schema.users" }],
+    },
+  ];
 }
 ```
 
-***
+---
 
 ### endpoint
 
@@ -33,13 +35,15 @@ endpoint: string;
 ```
 
 Endpoint resource path. Retrieve using the Databricks CLI:
+
 ```
 databricks postgres list-endpoints projects/{project-id}/branches/{branch-id}
 ```
+
 Use the `name` field from the output.
 
 #### Example
 
 ```ts
-"projects/{project-id}/branches/{branch-id}/endpoints/{endpoint-identifier}"
+"projects/{project-id}/branches/{branch-id}/endpoints/{endpoint-identifier}";
 ```

@@ -4,7 +4,7 @@ Permission set for Unity Catalog table access
 
 ## Enumeration Members
 
-### READ\_ONLY
+### READ_ONLY
 
 ```ts
 READ_ONLY: "READ_ONLY";

@@ -4,7 +4,7 @@ Database credentials with OAuth token for Postgres connection
 
 ## Properties
 
-### expire\_time
+### expire_time
 
 ```ts
 expire_time: string;
@@ -16,10 +16,10 @@ Tokens expire after 1 hour from generation
 #### Example
 
 ```ts
-"2026-02-06T17:07:00Z"
+"2026-02-06T17:07:00Z";
 ```
 
-***
+---
 
 ### token
 

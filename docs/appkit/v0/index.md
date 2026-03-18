@@ -6,7 +6,7 @@ sidebar_position: 1
 
 Learn how to get started with AppKit.
 
-import Prerequisites from './_prerequisites.mdx';
+import Prerequisites from './\_prerequisites.mdx';
 
 ## Introduction
 
@@ -63,9 +63,10 @@ Run the following command to bootstrap the new Databricks app with AppKit:
 databricks apps init
 ```
 
-Follow the prompts to bootstrap the app codebase in the current working directory.  
+Follow the prompts to bootstrap the app codebase in the current working directory.
 
 The command will guide you through the process of:
+
 - creating a new Databricks app
 - scaffolding the app codebase with selected features
 - installing dependencies

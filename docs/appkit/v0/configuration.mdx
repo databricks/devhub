@@ -69,34 +69,34 @@ For advanced configuration options (authorization, networking, resource limits),
 
 These are typically **provided by Databricks Apps runtime** (exact set can vary by platform/version):
 
-| Variable | Description |
-|----------|-------------|
-| `DATABRICKS_HOST` | Workspace URL (e.g. `https://xxx.cloud.databricks.com`) |
-| `DATABRICKS_APP_PORT` | Port to bind (default: `8000`) |
-| `DATABRICKS_APP_NAME` | App name in Databricks |
+| Variable              | Description                                             |
+| --------------------- | ------------------------------------------------------- |
+| `DATABRICKS_HOST`     | Workspace URL (e.g. `https://xxx.cloud.databricks.com`) |
+| `DATABRICKS_APP_PORT` | Port to bind (default: `8000`)                          |
+| `DATABRICKS_APP_NAME` | App name in Databricks                                  |
 
 ### Required for SQL queries (analytics plugin)
 
-| Variable | Description | How to Set |
-|----------|-------------|------------|
+| Variable                  | Description      | How to Set                                |
+| ------------------------- | ---------------- | ----------------------------------------- |
 | `DATABRICKS_WAREHOUSE_ID` | SQL warehouse ID | In `app.yaml`: `valueFrom: sql-warehouse` |
 
 See the [App deployment configuration](#app-deployment-configuration) section above for details on how to bind this variable.
 
 ### Optional variables
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `DATABRICKS_WORKSPACE_ID` | Workspace ID | Auto-fetched from API |
-| `NODE_ENV` | `"development"` or `"production"` | — |
-| `FLASK_RUN_HOST` | Host to bind | `0.0.0.0` |
+| Variable                  | Description                       | Default               |
+| ------------------------- | --------------------------------- | --------------------- |
+| `DATABRICKS_WORKSPACE_ID` | Workspace ID                      | Auto-fetched from API |
+| `NODE_ENV`                | `"development"` or `"production"` | —                     |
+| `FLASK_RUN_HOST`          | Host to bind                      | `0.0.0.0`             |
 
 ### Telemetry (optional)
 
-| Variable | Description |
-|----------|-------------|
+| Variable                      | Description                      |
+| ----------------------------- | -------------------------------- |
 | `OTEL_EXPORTER_OTLP_ENDPOINT` | OpenTelemetry collector endpoint |
-| `OTEL_SERVICE_NAME` | Service name for traces |
+| `OTEL_SERVICE_NAME`           | Service name for traces          |
 
 ## Local development authentication
 

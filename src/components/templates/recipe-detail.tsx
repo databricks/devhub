@@ -6,21 +6,23 @@ import { AIExportMenu } from "@/components/ai-export-menu";
 import { Badge } from "@/components/ui/badge";
 import { RecipePre } from "@/components/templates/recipe-code-block";
 import { RecipeToc } from "@/components/templates/recipe-toc";
-import { recipeContentById } from "@/lib/recipes/recipe-content";
 import { recipes } from "@/lib/recipes/recipes";
 
 const recipeComponents = { pre: RecipePre };
 
 type RecipeDetailProps = {
   recipeId: string;
+  children: ReactNode;
 };
 
-export function RecipeDetail({ recipeId }: RecipeDetailProps): ReactNode {
+export function RecipeDetail({
+  recipeId,
+  children,
+}: RecipeDetailProps): ReactNode {
   const contentRef = useRef<HTMLDivElement>(null);
   const recipe = recipes.find((item) => item.id === recipeId);
-  const RecipeContent = recipeContentById[recipeId];
 
-  if (!recipe || !RecipeContent) {
+  if (!recipe) {
     throw new Error(`Recipe ${recipeId} not found`);
   }
 
@@ -29,8 +31,8 @@ export function RecipeDetail({ recipeId }: RecipeDetailProps): ReactNode {
       <main>
         <div className="container px-4 py-8 md:py-12">
           <div className="mx-auto max-w-5xl">
-            <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_220px]">
-              <div>
+            <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_220px]">
+              <div className="min-w-0">
                 <Link
                   to="/resources"
                   className="mb-6 inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground no-underline transition-colors hover:text-foreground"
@@ -70,9 +72,7 @@ export function RecipeDetail({ recipeId }: RecipeDetailProps): ReactNode {
 
                 <div className="recipe-content-card" ref={contentRef}>
                   <MDXProvider components={recipeComponents}>
-                    <div className="prose-solution">
-                      <RecipeContent />
-                    </div>
+                    <div className="prose-solution">{children}</div>
                   </MDXProvider>
                 </div>
               </div>

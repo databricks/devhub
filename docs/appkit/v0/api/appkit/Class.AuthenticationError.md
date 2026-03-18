@@ -7,7 +7,9 @@ Use for missing tokens, invalid credentials, or authorization failures.
 
 ```typescript
 throw new AuthenticationError("User token is required");
-throw new AuthenticationError("Failed to generate credentials", { cause: originalError });
+throw new AuthenticationError("Failed to generate credentials", {
+  cause: originalError,
+});
 ```
 
 ## Extends
@@ -27,12 +29,12 @@ new AuthenticationError(message: string, options?: {
 
 #### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `message` | `string` |
-| `options?` | \{ `cause?`: `Error`; `context?`: `Record`\<`string`, `unknown`\>; \} |
-| `options.cause?` | `Error` |
-| `options.context?` | `Record`\<`string`, `unknown`\> |
+| Parameter          | Type                                                                  |
+| ------------------ | --------------------------------------------------------------------- |
+| `message`          | `string`                                                              |
+| `options?`         | \{ `cause?`: `Error`; `context?`: `Record`\<`string`, `unknown`\>; \} |
+| `options.cause?`   | `Error`                                                               |
+| `options.context?` | `Record`\<`string`, `unknown`\>                                       |
 
 #### Returns
 
@@ -56,7 +58,7 @@ Optional cause of the error
 
 [`AppKitError`](Class.AppKitError.md).[`cause`](Class.AppKitError.md#cause)
 
-***
+---
 
 ### code
 
@@ -70,7 +72,7 @@ Error code for programmatic error handling
 
 [`AppKitError`](Class.AppKitError.md).[`code`](Class.AppKitError.md#code)
 
-***
+---
 
 ### context?
 
@@ -84,7 +86,7 @@ Additional context for the error
 
 [`AppKitError`](Class.AppKitError.md).[`context`](Class.AppKitError.md#context)
 
-***
+---
 
 ### isRetryable
 
@@ -98,7 +100,7 @@ Whether this error type is generally safe to retry
 
 [`AppKitError`](Class.AppKitError.md).[`isRetryable`](Class.AppKitError.md#isretryable)
 
-***
+---
 
 ### statusCode
 
@@ -131,7 +133,7 @@ Sensitive values in context are automatically redacted.
 
 [`AppKitError`](Class.AppKitError.md).[`toJSON`](Class.AppKitError.md#tojson)
 
-***
+---
 
 ### toString()
 
@@ -149,7 +151,7 @@ Create a human-readable string representation
 
 [`AppKitError`](Class.AppKitError.md).[`toString`](Class.AppKitError.md#tostring)
 
-***
+---
 
 ### credentialsFailed()
 
@@ -161,16 +163,16 @@ Create an authentication error for credential generation failure
 
 #### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
+| Parameter  | Type     |
+| ---------- | -------- |
 | `instance` | `string` |
-| `cause?` | `Error` |
+| `cause?`   | `Error`  |
 
 #### Returns
 
 `AuthenticationError`
 
-***
+---
 
 ### missingToken()
 
@@ -182,15 +184,15 @@ Create an authentication error for missing token
 
 #### Parameters
 
-| Parameter | Type | Default value |
-| ------ | ------ | ------ |
+| Parameter   | Type     | Default value    |
+| ----------- | -------- | ---------------- |
 | `tokenType` | `string` | `"access token"` |
 
 #### Returns
 
 `AuthenticationError`
 
-***
+---
 
 ### missingUserId()
 
@@ -204,7 +206,7 @@ Create an authentication error for missing user identity
 
 `AuthenticationError`
 
-***
+---
 
 ### userLookupFailed()
 
@@ -216,9 +218,9 @@ Create an authentication error for failed user lookup
 
 #### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `cause?` | `Error` |
+| Parameter | Type    |
+| --------- | ------- |
+| `cause?`  | `Error` |
 
 #### Returns
 

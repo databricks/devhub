@@ -1,7 +1,7 @@
 # Type Alias: ResourcePermission
 
 ```ts
-type ResourcePermission = 
+type ResourcePermission =
   | SecretPermission
   | JobPermission
   | SqlWarehousePermission

@@ -4,6 +4,7 @@ Base abstract class for creating AppKit plugins.
 
 All plugins must declare a static `manifest` property with their metadata
 and resource requirements. The manifest defines:
+
 - `required` resources: Always needed for the plugin to function
 - `optional` resources: May be needed depending on plugin configuration
 
@@ -84,9 +85,9 @@ class MyPlugin extends Plugin<MyConfig> {
 
 ## Type Parameters
 
-| Type Parameter | Default type |
-| ------ | ------ |
-| `TConfig` *extends* [`BasePluginConfig`](Interface.BasePluginConfig.md) | [`BasePluginConfig`](Interface.BasePluginConfig.md) |
+| Type Parameter                                                          | Default type                                        |
+| ----------------------------------------------------------------------- | --------------------------------------------------- |
+| `TConfig` _extends_ [`BasePluginConfig`](Interface.BasePluginConfig.md) | [`BasePluginConfig`](Interface.BasePluginConfig.md) |
 
 ## Implements
 
@@ -102,9 +103,9 @@ new Plugin<TConfig>(config: TConfig): Plugin<TConfig>;
 
 #### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `config` | `TConfig` |
+| Parameter | Type      |
+| --------- | --------- |
+| `config`  | `TConfig` |
 
 #### Returns
 
@@ -118,7 +119,7 @@ new Plugin<TConfig>(config: TConfig): Plugin<TConfig>;
 protected app: AppManager;
 ```
 
-***
+---
 
 ### cache
 
@@ -126,7 +127,7 @@ protected app: AppManager;
 protected cache: CacheManager;
 ```
 
-***
+---
 
 ### config
 
@@ -134,7 +135,7 @@ protected cache: CacheManager;
 protected config: TConfig;
 ```
 
-***
+---
 
 ### devFileReader
 
@@ -142,7 +143,7 @@ protected config: TConfig;
 protected devFileReader: DevFileReader;
 ```
 
-***
+---
 
 ### isReady
 
@@ -150,7 +151,7 @@ protected devFileReader: DevFileReader;
 protected isReady: boolean = false;
 ```
 
-***
+---
 
 ### name
 
@@ -163,10 +164,10 @@ Plugin name identifier.
 #### Implementation of
 
 ```ts
-BasePlugin.name
+BasePlugin.name;
 ```
 
-***
+---
 
 ### streamManager
 
@@ -174,7 +175,7 @@ BasePlugin.name
 protected streamManager: StreamManager;
 ```
 
-***
+---
 
 ### telemetry
 
@@ -182,7 +183,7 @@ protected streamManager: StreamManager;
 protected telemetry: ITelemetry;
 ```
 
-***
+---
 
 ### phase
 
@@ -191,6 +192,7 @@ static phase: PluginPhase = "normal";
 ```
 
 Plugin initialization phase.
+
 - 'core': Initialized first (e.g., config plugins)
 - 'normal': Initialized second (most plugins)
 - 'deferred': Initialized last (e.g., server plugin)
@@ -210,10 +212,10 @@ abortActiveOperations(): void;
 #### Implementation of
 
 ```ts
-BasePlugin.abortActiveOperations
+BasePlugin.abortActiveOperations;
 ```
 
-***
+---
 
 ### asUser()
 
@@ -227,9 +229,9 @@ with the user's Databricks credentials instead of the service principal.
 
 #### Parameters
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `req` | `Request` | The Express request containing the user token in headers |
+| Parameter | Type      | Description                                              |
+| --------- | --------- | -------------------------------------------------------- |
+| `req`     | `Request` | The Express request containing the user token in headers |
 
 #### Returns
 
@@ -240,16 +242,16 @@ A proxied plugin instance that executes as the user
 #### Throws
 
 AuthenticationError if user token is not available in request headers (production only).
-  In development mode (`NODE_ENV=development`), falls back to the service principal instead of throwing.
+In development mode (`NODE_ENV=development`), falls back to the service principal instead of throwing.
 
-***
+---
 
 ### execute()
 
 ```ts
 protected execute<T>(
-   fn: (signal?: AbortSignal) => Promise<T>, 
-   options: PluginExecutionSettings, 
+   fn: (signal?: AbortSignal) => Promise<T>,
+   options: PluginExecutionSettings,
 userKey?: string): Promise<T | undefined>;
 ```
 
@@ -262,53 +264,53 @@ appropriate error status.
 #### Type Parameters
 
 | Type Parameter |
-| ------ |
-| `T` |
+| -------------- |
+| `T`            |
 
 #### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `fn` | (`signal?`: `AbortSignal`) => `Promise`\<`T`\> |
-| `options` | `PluginExecutionSettings` |
-| `userKey?` | `string` |
+| Parameter  | Type                                           |
+| ---------- | ---------------------------------------------- |
+| `fn`       | (`signal?`: `AbortSignal`) => `Promise`\<`T`\> |
+| `options`  | `PluginExecutionSettings`                      |
+| `userKey?` | `string`                                       |
 
 #### Returns
 
 `Promise`\<`T` \| `undefined`\>
 
-***
+---
 
 ### executeStream()
 
 ```ts
 protected executeStream<T>(
-   res: IAppResponse, 
-   fn: StreamExecuteHandler<T>, 
-   options: StreamExecutionSettings, 
+   res: IAppResponse,
+   fn: StreamExecuteHandler<T>,
+   options: StreamExecutionSettings,
 userKey?: string): Promise<void>;
 ```
 
 #### Type Parameters
 
 | Type Parameter |
-| ------ |
-| `T` |
+| -------------- |
+| `T`            |
 
 #### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `res` | `IAppResponse` |
-| `fn` | `StreamExecuteHandler`\<`T`\> |
-| `options` | [`StreamExecutionSettings`](Interface.StreamExecutionSettings.md) |
-| `userKey?` | `string` |
+| Parameter  | Type                                                              |
+| ---------- | ----------------------------------------------------------------- |
+| `res`      | `IAppResponse`                                                    |
+| `fn`       | `StreamExecuteHandler`\<`T`\>                                     |
+| `options`  | [`StreamExecutionSettings`](Interface.StreamExecutionSettings.md) |
+| `userKey?` | `string`                                                          |
 
 #### Returns
 
 `Promise`\<`void`\>
 
-***
+---
 
 ### exports()
 
@@ -332,7 +334,9 @@ and adds `asUser(req)` for user-scoped execution.
 
 ```ts
 class MyPlugin extends Plugin {
-  private getData() { return []; }
+  private getData() {
+    return [];
+  }
 
   exports() {
     return { getData: this.getData };
@@ -347,10 +351,10 @@ appkit.myPlugin.getData();
 #### Implementation of
 
 ```ts
-BasePlugin.exports
+BasePlugin.exports;
 ```
 
-***
+---
 
 ### getEndpoints()
 
@@ -365,10 +369,10 @@ getEndpoints(): PluginEndpointMap;
 #### Implementation of
 
 ```ts
-BasePlugin.getEndpoints
+BasePlugin.getEndpoints;
 ```
 
-***
+---
 
 ### getSkipBodyParsingPaths()
 
@@ -383,10 +387,10 @@ getSkipBodyParsingPaths(): ReadonlySet<string>;
 #### Implementation of
 
 ```ts
-BasePlugin.getSkipBodyParsingPaths
+BasePlugin.getSkipBodyParsingPaths;
 ```
 
-***
+---
 
 ### injectRoutes()
 
@@ -396,9 +400,9 @@ injectRoutes(_: Router): void;
 
 #### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `_` | `Router` |
+| Parameter | Type     |
+| --------- | -------- |
+| `_`       | `Router` |
 
 #### Returns
 
@@ -407,10 +411,10 @@ injectRoutes(_: Router): void;
 #### Implementation of
 
 ```ts
-BasePlugin.injectRoutes
+BasePlugin.injectRoutes;
 ```
 
-***
+---
 
 ### registerEndpoint()
 
@@ -420,16 +424,16 @@ protected registerEndpoint(name: string, path: string): void;
 
 #### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `name` | `string` |
-| `path` | `string` |
+| Parameter | Type     |
+| --------- | -------- |
+| `name`    | `string` |
+| `path`    | `string` |
 
 #### Returns
 
 `void`
 
-***
+---
 
 ### resolveUserId()
 
@@ -446,9 +450,9 @@ consistent value.
 
 #### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `req` | `Request` |
+| Parameter | Type      |
+| --------- | --------- |
+| `req`     | `Request` |
 
 #### Returns
 
@@ -458,7 +462,7 @@ consistent value.
 
 AuthenticationError in production when no user header is present.
 
-***
+---
 
 ### route()
 
@@ -469,21 +473,21 @@ protected route<_TResponse>(router: Router, config: RouteConfig): void;
 #### Type Parameters
 
 | Type Parameter |
-| ------ |
-| `_TResponse` |
+| -------------- |
+| `_TResponse`   |
 
 #### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `router` | `Router` |
-| `config` | `RouteConfig` |
+| Parameter | Type          |
+| --------- | ------------- |
+| `router`  | `Router`      |
+| `config`  | `RouteConfig` |
 
 #### Returns
 
 `void`
 
-***
+---
 
 ### setup()
 
@@ -498,5 +502,5 @@ setup(): Promise<void>;
 #### Implementation of
 
 ```ts
-BasePlugin.setup
+BasePlugin.setup;
 ```

@@ -19,9 +19,9 @@ Combines required and optional resources into a single array with the
 
 ## Parameters
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `plugin` | `PluginConstructor` | The plugin constructor class |
+| Parameter | Type                | Description                  |
+| --------- | ------------------- | ---------------------------- |
+| `plugin`  | `PluginConstructor` | The plugin constructor class |
 
 ## Returns
 
@@ -36,6 +36,8 @@ If the plugin manifest is missing or invalid
 ```typescript
 const resources = getResourceRequirements(AnalyticsPlugin);
 for (const resource of resources) {
-  console.log(`${resource.type}: ${resource.description} (required: ${resource.required})`);
+  console.log(
+    `${resource.type}: ${resource.description} (required: ${resource.required})`,
+  );
 }
 ```

@@ -843,11 +843,15 @@
   }
 
   .prose-solution .theme-code-block {
-    @apply my-8 overflow-hidden rounded-xl border border-black/12 shadow-md dark:border-white/12;
+    @apply my-8 min-w-0 w-full overflow-hidden rounded-xl border border-black/12 shadow-md dark:border-white/12;
   }
 
   .prose-solution .theme-code-block pre {
-    @apply m-0 rounded-none px-5 py-4;
+    @apply m-0 overflow-x-auto rounded-none px-5 py-4;
+  }
+
+  .prose-solution .theme-code-block pre code {
+    @apply inline-block min-w-full pr-4;
   }
 
   .prose-solution [class*="codeBlockTitle"] {
@@ -879,11 +883,29 @@
   }
 
   .recipe-content-card .theme-code-block {
-    @apply my-8 overflow-hidden rounded-xl border border-black/12 shadow-md dark:border-white/12;
+    @apply my-8 min-w-0 w-full overflow-hidden rounded-xl border border-black/12 shadow-md dark:border-white/12;
   }
 
   .recipe-content-card .theme-code-block pre {
     @apply m-0 overflow-x-auto rounded-none px-5 py-4;
+  }
+
+  .recipe-content-card .theme-code-block pre code {
+    @apply inline-block min-w-full pr-4;
+  }
+
+  .recipe-content-card,
+  .recipe-content-card .prose-solution {
+    @apply min-w-0;
+  }
+
+  /* Guardrail for any markdown pre not rendered by theme-code-block. */
+  .recipe-content-card pre {
+    @apply max-w-full overflow-x-auto;
+  }
+
+  .recipe-content-card pre > code {
+    @apply inline-block min-w-full;
   }
 
   .recipe-content-card [class*="codeBlockTitle"] {

@@ -4,13 +4,14 @@ import { getDetailMarkdown, type MarkdownSection } from "./content-markdown";
 function parseSection(section: unknown): MarkdownSection {
   if (
     section === "docs" ||
+    section === "recipes" ||
     section === "solutions" ||
     section === "templates"
   ) {
     return section;
   }
   throw new Error(
-    'Invalid section. Expected one of: "docs", "solutions", "templates".',
+    'Invalid section. Expected one of: "docs", "recipes", "solutions", "templates".',
   );
 }
 

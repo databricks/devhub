@@ -7,6 +7,7 @@ sidebar_position: 4
 Provides a PostgreSQL connection pool for Databricks Lakebase Autoscaling with automatic OAuth token refresh.
 
 **Key features:**
+
 - Standard `pg.Pool` compatible with any PostgreSQL library or ORM
 - Automatic OAuth token refresh (1-hour tokens, 2-minute refresh buffer)
 - Token caching to minimize API calls
@@ -27,7 +28,7 @@ The easiest way to get started with the Lakebase plugin is to use the Databricks
 
 1. Firstly, create a new Lakebase Postgres Autoscaling project according to the [Get started documentation](https://docs.databricks.com/aws/en/oltp/projects/get-started).
 1. To add the Lakebase plugin to your project, run the `databricks apps init` command and interactively select the **Lakebase** plugin. The CLI will guide you through picking a Lakebase project, branch, and database.
-    - When asked, select **Yes** to deploy the app to Databricks Apps right after its creation.
+   - When asked, select **Yes** to deploy the app to Databricks Apps right after its creation.
 
 ## Basic usage
 
@@ -66,8 +67,8 @@ const result = await AppKit.lakebase.query(
 const pool = AppKit.lakebase.pool;
 
 // ORM-ready config objects
-const ormConfig = AppKit.lakebase.getOrmConfig();  // { host, port, database, ... }
-const pgConfig = AppKit.lakebase.getPgConfig();    // pg.PoolConfig
+const ormConfig = AppKit.lakebase.getOrmConfig(); // { host, port, database, ... }
+const pgConfig = AppKit.lakebase.getPgConfig(); // pg.PoolConfig
 ```
 
 ## Configuration
@@ -76,12 +77,12 @@ const pgConfig = AppKit.lakebase.getPgConfig();    // pg.PoolConfig
 
 The required environment variables are:
 
-| Variable | Description |
-|---|---|
-| `LAKEBASE_ENDPOINT` | Endpoint resource path (e.g. `projects/.../branches/.../endpoints/...`) |
-| `PGHOST` | Lakebase host (auto-injected in production by the `postgres` Databricks Apps resource) |
-| `PGDATABASE` | Database name (auto-injected in production by the `postgres` Databricks Apps resource) |
-| `PGSSLMODE` | TLS mode - set to `require` (auto-injected in production by the `postgres` Databricks Apps resource) |
+| Variable            | Description                                                                                          |
+| ------------------- | ---------------------------------------------------------------------------------------------------- |
+| `LAKEBASE_ENDPOINT` | Endpoint resource path (e.g. `projects/.../branches/.../endpoints/...`)                              |
+| `PGHOST`            | Lakebase host (auto-injected in production by the `postgres` Databricks Apps resource)               |
+| `PGDATABASE`        | Database name (auto-injected in production by the `postgres` Databricks Apps resource)               |
+| `PGSSLMODE`         | TLS mode - set to `require` (auto-injected in production by the `postgres` Databricks Apps resource) |
 
 When deployed to Databricks Apps with a `postgres` database resource configured, `PGHOST`, `PGDATABASE`, `PGSSLMODE`, `PGUSER`, `PGPORT`, and `PGAPPNAME` are automatically injected by the platform. Only `LAKEBASE_ENDPOINT` must be set explicitly:
 
@@ -104,9 +105,9 @@ await createApp({
   plugins: [
     lakebase({
       pool: {
-        max: 10,                      // Max pool connections (default: 10)
+        max: 10, // Max pool connections (default: 10)
         connectionTimeoutMillis: 5000, // Connection timeout ms (default: 10000)
-        idleTimeoutMillis: 30000,      // Idle connection timeout ms (default: 30000)
+        idleTimeoutMillis: 30000, // Idle connection timeout ms (default: 30000)
       },
     }),
   ],

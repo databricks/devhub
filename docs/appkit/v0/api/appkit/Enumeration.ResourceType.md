@@ -10,7 +10,7 @@ Resource types from schema $defs.resourceType.enum
 APP: "app";
 ```
 
-***
+---
 
 ### DATABASE
 
@@ -18,7 +18,7 @@ APP: "app";
 DATABASE: "database";
 ```
 
-***
+---
 
 ### EXPERIMENT
 
@@ -26,15 +26,15 @@ DATABASE: "database";
 EXPERIMENT: "experiment";
 ```
 
-***
+---
 
-### GENIE\_SPACE
+### GENIE_SPACE
 
 ```ts
 GENIE_SPACE: "genie_space";
 ```
 
-***
+---
 
 ### JOB
 
@@ -42,7 +42,7 @@ GENIE_SPACE: "genie_space";
 JOB: "job";
 ```
 
-***
+---
 
 ### POSTGRES
 
@@ -50,7 +50,7 @@ JOB: "job";
 POSTGRES: "postgres";
 ```
 
-***
+---
 
 ### SECRET
 
@@ -58,47 +58,47 @@ POSTGRES: "postgres";
 SECRET: "secret";
 ```
 
-***
+---
 
-### SERVING\_ENDPOINT
+### SERVING_ENDPOINT
 
 ```ts
 SERVING_ENDPOINT: "serving_endpoint";
 ```
 
-***
+---
 
-### SQL\_WAREHOUSE
+### SQL_WAREHOUSE
 
 ```ts
 SQL_WAREHOUSE: "sql_warehouse";
 ```
 
-***
+---
 
-### UC\_CONNECTION
+### UC_CONNECTION
 
 ```ts
 UC_CONNECTION: "uc_connection";
 ```
 
-***
+---
 
-### UC\_FUNCTION
+### UC_FUNCTION
 
 ```ts
 UC_FUNCTION: "uc_function";
 ```
 
-***
+---
 
-### VECTOR\_SEARCH\_INDEX
+### VECTOR_SEARCH_INDEX
 
 ```ts
 VECTOR_SEARCH_INDEX: "vector_search_index";
 ```
 
-***
+---
 
 ### VOLUME
 

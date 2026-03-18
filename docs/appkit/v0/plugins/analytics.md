@@ -7,6 +7,7 @@ sidebar_position: 3
 Enables SQL query execution against Databricks SQL Warehouses.
 
 **Key features:**
+
 - File-based SQL queries with automatic type generation
 - Parameterized queries with type-safe [SQL helpers](../api/appkit/Variable.sql.md)
 - JSON and Arrow format support
@@ -35,7 +36,6 @@ await createApp({
 
 The execution context is determined by the SQL file name, not by the hook call.
 
-
 ## SQL parameters
 
 Use `:paramName` placeholders and optionally annotate parameter types using SQL comments:
@@ -50,6 +50,7 @@ LIMIT :limit
 ```
 
 **Supported `-- @param` types** (case-insensitive):
+
 - `STRING`, `NUMERIC`, `BOOLEAN`, `DATE`, `TIMESTAMP`, `BINARY`
 
 ## Server-injected parameters
@@ -81,26 +82,30 @@ React hook that subscribes to an analytics query over SSE and returns its latest
 ```ts
 import { useAnalyticsQuery } from "@databricks/appkit-ui/react";
 
-const { data, loading, error } = useAnalyticsQuery(queryKey, parameters, options);
+const { data, loading, error } = useAnalyticsQuery(
+  queryKey,
+  parameters,
+  options,
+);
 ```
 
 **Return type:**
 
 ```ts
 {
-  data: T | null;      // query result (typed array for JSON, TypedArrowTable for ARROW)
-  loading: boolean;    // true while the query is executing
+  data: T | null; // query result (typed array for JSON, TypedArrowTable for ARROW)
+  loading: boolean; // true while the query is executing
   error: string | null; // error message, or null on success
 }
 ```
 
 **Options:**
 
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `format` | `"JSON" \| "ARROW"` | `"JSON"` | Response format |
-| `maxParametersSize` | `number` | `102400` | Max serialized parameters size in bytes |
-| `autoStart` | `boolean` | `true` | Start query on mount |
+| Option              | Type                | Default  | Description                             |
+| ------------------- | ------------------- | -------- | --------------------------------------- |
+| `format`            | `"JSON" \| "ARROW"` | `"JSON"` | Response format                         |
+| `maxParametersSize` | `number`            | `102400` | Max serialized parameters size in bytes |
+| `autoStart`         | `boolean`           | `true`   | Start query on mount                    |
 
 **Example with loading/error/empty handling:**
 
@@ -110,21 +115,27 @@ import { sql } from "@databricks/appkit-ui/js";
 import { Skeleton } from "@databricks/appkit-ui";
 
 function SpendTable() {
-  const params = useMemo(() => ({
-    startDate: sql.date("2025-01-01"),
-    endDate: sql.date("2025-12-31"),
-  }), []);
+  const params = useMemo(
+    () => ({
+      startDate: sql.date("2025-01-01"),
+      endDate: sql.date("2025-12-31"),
+    }),
+    [],
+  );
 
   const { data, loading, error } = useAnalyticsQuery("spend_summary", params);
 
   if (loading) return <Skeleton className="h-32 w-full" />;
   if (error) return <div className="text-destructive">{error}</div>;
-  if (!data?.length) return <div className="text-muted-foreground">No results</div>;
+  if (!data?.length)
+    return <div className="text-muted-foreground">No results</div>;
 
   return (
     <ul>
       {data.map((row) => (
-        <li key={row.id}>{row.name}: ${row.cost_usd}</li>
+        <li key={row.id}>
+          {row.name}: ${row.cost_usd}
+        </li>
       ))}
     </ul>
   );

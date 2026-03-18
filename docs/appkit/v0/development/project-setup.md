@@ -32,6 +32,7 @@ my-app/
 ### Layout rationale
 
 The AppKit `server()` plugin automatically serves:
+
 - **Dev**: Vite dev server (HMR) from `client/`
 - **Prod**: static files from `client/dist` (built by Vite)
 
@@ -181,6 +182,7 @@ npm install -D tsx tsdown vite @vitejs/plugin-react typescript
 ```
 
 If you don't already have a `client/` folder, create one and move your Vite app into it:
+
 - Move `index.html` → `client/index.html`
 - Move `vite.config.ts` → `client/vite.config.ts`
 - Move `src/` → `client/src/`

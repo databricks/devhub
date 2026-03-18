@@ -8,9 +8,9 @@ Type guard to check if a value is a SQL type marker
 
 ## Parameters
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `value` | `any` | Value to check |
+| Parameter | Type  | Description    |
+| --------- | ----- | -------------- |
+| `value`   | `any` | Value to check |
 
 ## Returns
 

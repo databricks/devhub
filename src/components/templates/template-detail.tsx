@@ -35,8 +35,8 @@ export function TemplateDetail({
       <main>
         <div className="container px-4 py-8 md:py-12">
           <div className="mx-auto max-w-5xl">
-            <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_220px]">
-              <div>
+            <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_220px]">
+              <div className="min-w-0">
                 <Link
                   to="/resources"
                   className="mb-6 inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground no-underline transition-colors hover:text-foreground"

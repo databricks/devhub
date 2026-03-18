@@ -1,9 +1,9 @@
 import { existsSync, readFileSync } from "fs";
 import { resolve } from "path";
+import { hasMarkdownSlug } from "../src/lib/content-markdown";
 import { recipes, templates } from "../src/lib/recipes/recipes";
-import { solutions } from "../src/lib/solutions/solutions";
 
-export type MarkdownSection = "docs" | "solutions" | "templates";
+export type MarkdownSection = "docs" | "recipes" | "solutions" | "templates";
 
 function recipeMarkdownPath(recipeId: string): string {
   return `content/recipes/${recipeId}.md`;
@@ -57,8 +57,7 @@ function readDocsMarkdown(rootDir: string, slug: string): string {
 }
 
 function readSolutionMarkdown(rootDir: string, slug: string): string {
-  const solutionExists = solutions.some((solution) => solution.id === slug);
-  if (!solutionExists) {
+  if (!hasMarkdownSlug(rootDir, "solutions", slug)) {
     throw new Error(`Solution page not found: "${slug}"`);
   }
 
@@ -67,6 +66,21 @@ function readSolutionMarkdown(rootDir: string, slug: string): string {
   if (!content) {
     throw new Error(
       `Solution markdown source missing for "${slug}" at content/solutions/${slug}.md`,
+    );
+  }
+  return content;
+}
+
+function readRecipeMarkdown(rootDir: string, slug: string): string {
+  if (!hasMarkdownSlug(rootDir, "recipes", slug)) {
+    throw new Error(`Recipe page not found: "${slug}"`);
+  }
+
+  const contentPath = resolve(rootDir, "content", "recipes", `${slug}.md`);
+  const content = readIfExists(contentPath);
+  if (!content) {
+    throw new Error(
+      `Recipe markdown source missing for "${slug}" at content/recipes/${slug}.md`,
     );
   }
   return content;
@@ -95,6 +109,9 @@ function readTemplateMarkdown(rootDir: string, slug: string): string {
     const recipe = recipes.find((entry) => entry.id === recipeId);
     if (!recipe) {
       throw new Error(`Recipe not found: "${recipeId}"`);
+    }
+    if (!hasMarkdownSlug(rootDir, "recipes", recipeId)) {
+      throw new Error(`Recipe page not found: "${recipeId}"`);
     }
 
     const recipePath = recipeMarkdownPath(recipeId);
@@ -126,6 +143,8 @@ export function getDetailMarkdown(
   switch (section) {
     case "docs":
       return readDocsMarkdown(rootDir, slug);
+    case "recipes":
+      return readRecipeMarkdown(rootDir, slug);
     case "solutions":
       return readSolutionMarkdown(rootDir, slug);
     case "templates":

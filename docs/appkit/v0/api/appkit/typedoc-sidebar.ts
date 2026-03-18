@@ -8,14 +8,14 @@ const typedocSidebar: SidebarsConfig = {
         {
           type: "doc",
           id: "api/appkit/Enumeration.RequestedClaimsPermissionSet",
-          label: "RequestedClaimsPermissionSet"
+          label: "RequestedClaimsPermissionSet",
         },
         {
           type: "doc",
           id: "api/appkit/Enumeration.ResourceType",
-          label: "ResourceType"
-        }
-      ]
+          label: "ResourceType",
+        },
+      ],
     },
     {
       type: "category",
@@ -24,59 +24,59 @@ const typedocSidebar: SidebarsConfig = {
         {
           type: "doc",
           id: "api/appkit/Class.AppKitError",
-          label: "AppKitError"
+          label: "AppKitError",
         },
         {
           type: "doc",
           id: "api/appkit/Class.AuthenticationError",
-          label: "AuthenticationError"
+          label: "AuthenticationError",
         },
         {
           type: "doc",
           id: "api/appkit/Class.ConfigurationError",
-          label: "ConfigurationError"
+          label: "ConfigurationError",
         },
         {
           type: "doc",
           id: "api/appkit/Class.ConnectionError",
-          label: "ConnectionError"
+          label: "ConnectionError",
         },
         {
           type: "doc",
           id: "api/appkit/Class.ExecutionError",
-          label: "ExecutionError"
+          label: "ExecutionError",
         },
         {
           type: "doc",
           id: "api/appkit/Class.InitializationError",
-          label: "InitializationError"
+          label: "InitializationError",
         },
         {
           type: "doc",
           id: "api/appkit/Class.Plugin",
-          label: "Plugin"
+          label: "Plugin",
         },
         {
           type: "doc",
           id: "api/appkit/Class.ResourceRegistry",
-          label: "ResourceRegistry"
+          label: "ResourceRegistry",
         },
         {
           type: "doc",
           id: "api/appkit/Class.ServerError",
-          label: "ServerError"
+          label: "ServerError",
         },
         {
           type: "doc",
           id: "api/appkit/Class.TunnelError",
-          label: "TunnelError"
+          label: "TunnelError",
         },
         {
           type: "doc",
           id: "api/appkit/Class.ValidationError",
-          label: "ValidationError"
-        }
-      ]
+          label: "ValidationError",
+        },
+      ],
     },
     {
       type: "category",
@@ -85,79 +85,79 @@ const typedocSidebar: SidebarsConfig = {
         {
           type: "doc",
           id: "api/appkit/Interface.BasePluginConfig",
-          label: "BasePluginConfig"
+          label: "BasePluginConfig",
         },
         {
           type: "doc",
           id: "api/appkit/Interface.CacheConfig",
-          label: "CacheConfig"
+          label: "CacheConfig",
         },
         {
           type: "doc",
           id: "api/appkit/Interface.DatabaseCredential",
-          label: "DatabaseCredential"
+          label: "DatabaseCredential",
         },
         {
           type: "doc",
           id: "api/appkit/Interface.GenerateDatabaseCredentialRequest",
-          label: "GenerateDatabaseCredentialRequest"
+          label: "GenerateDatabaseCredentialRequest",
         },
         {
           type: "doc",
           id: "api/appkit/Interface.ITelemetry",
-          label: "ITelemetry"
+          label: "ITelemetry",
         },
         {
           type: "doc",
           id: "api/appkit/Interface.LakebasePoolConfig",
-          label: "LakebasePoolConfig"
+          label: "LakebasePoolConfig",
         },
         {
           type: "doc",
           id: "api/appkit/Interface.PluginManifest",
-          label: "PluginManifest"
+          label: "PluginManifest",
         },
         {
           type: "doc",
           id: "api/appkit/Interface.RequestedClaims",
-          label: "RequestedClaims"
+          label: "RequestedClaims",
         },
         {
           type: "doc",
           id: "api/appkit/Interface.RequestedResource",
-          label: "RequestedResource"
+          label: "RequestedResource",
         },
         {
           type: "doc",
           id: "api/appkit/Interface.ResourceEntry",
-          label: "ResourceEntry"
+          label: "ResourceEntry",
         },
         {
           type: "doc",
           id: "api/appkit/Interface.ResourceFieldEntry",
-          label: "ResourceFieldEntry"
+          label: "ResourceFieldEntry",
         },
         {
           type: "doc",
           id: "api/appkit/Interface.ResourceRequirement",
-          label: "ResourceRequirement"
+          label: "ResourceRequirement",
         },
         {
           type: "doc",
           id: "api/appkit/Interface.StreamExecutionSettings",
-          label: "StreamExecutionSettings"
+          label: "StreamExecutionSettings",
         },
         {
           type: "doc",
           id: "api/appkit/Interface.TelemetryConfig",
-          label: "TelemetryConfig"
+          label: "TelemetryConfig",
         },
         {
           type: "doc",
           id: "api/appkit/Interface.ValidationResult",
-          label: "ValidationResult"
-        }
-      ]
+          label: "ValidationResult",
+        },
+      ],
     },
     {
       type: "category",
@@ -166,29 +166,29 @@ const typedocSidebar: SidebarsConfig = {
         {
           type: "doc",
           id: "api/appkit/TypeAlias.ConfigSchema",
-          label: "ConfigSchema"
+          label: "ConfigSchema",
         },
         {
           type: "doc",
           id: "api/appkit/TypeAlias.IAppRouter",
-          label: "IAppRouter"
+          label: "IAppRouter",
         },
         {
           type: "doc",
           id: "api/appkit/TypeAlias.PluginData",
-          label: "PluginData"
+          label: "PluginData",
         },
         {
           type: "doc",
           id: "api/appkit/TypeAlias.ResourcePermission",
-          label: "ResourcePermission"
+          label: "ResourcePermission",
         },
         {
           type: "doc",
           id: "api/appkit/TypeAlias.ToPlugin",
-          label: "ToPlugin"
-        }
-      ]
+          label: "ToPlugin",
+        },
+      ],
     },
     {
       type: "category",
@@ -197,9 +197,9 @@ const typedocSidebar: SidebarsConfig = {
         {
           type: "doc",
           id: "api/appkit/Variable.sql",
-          label: "sql"
-        }
-      ]
+          label: "sql",
+        },
+      ],
     },
     {
       type: "category",
@@ -208,65 +208,65 @@ const typedocSidebar: SidebarsConfig = {
         {
           type: "doc",
           id: "api/appkit/Function.appKitTypesPlugin",
-          label: "appKitTypesPlugin"
+          label: "appKitTypesPlugin",
         },
         {
           type: "doc",
           id: "api/appkit/Function.createApp",
-          label: "createApp"
+          label: "createApp",
         },
         {
           type: "doc",
           id: "api/appkit/Function.createLakebasePool",
-          label: "createLakebasePool"
+          label: "createLakebasePool",
         },
         {
           type: "doc",
           id: "api/appkit/Function.generateDatabaseCredential",
-          label: "generateDatabaseCredential"
+          label: "generateDatabaseCredential",
         },
         {
           type: "doc",
           id: "api/appkit/Function.getExecutionContext",
-          label: "getExecutionContext"
+          label: "getExecutionContext",
         },
         {
           type: "doc",
           id: "api/appkit/Function.getLakebaseOrmConfig",
-          label: "getLakebaseOrmConfig"
+          label: "getLakebaseOrmConfig",
         },
         {
           type: "doc",
           id: "api/appkit/Function.getLakebasePgConfig",
-          label: "getLakebasePgConfig"
+          label: "getLakebasePgConfig",
         },
         {
           type: "doc",
           id: "api/appkit/Function.getPluginManifest",
-          label: "getPluginManifest"
+          label: "getPluginManifest",
         },
         {
           type: "doc",
           id: "api/appkit/Function.getResourceRequirements",
-          label: "getResourceRequirements"
+          label: "getResourceRequirements",
         },
         {
           type: "doc",
           id: "api/appkit/Function.getUsernameWithApiLookup",
-          label: "getUsernameWithApiLookup"
+          label: "getUsernameWithApiLookup",
         },
         {
           type: "doc",
           id: "api/appkit/Function.getWorkspaceClient",
-          label: "getWorkspaceClient"
+          label: "getWorkspaceClient",
         },
         {
           type: "doc",
           id: "api/appkit/Function.isSQLTypeMarker",
-          label: "isSQLTypeMarker"
-        }
-      ]
-    }
-  ]
+          label: "isSQLTypeMarker",
+        },
+      ],
+    },
+  ],
 };
 export default typedocSidebar;

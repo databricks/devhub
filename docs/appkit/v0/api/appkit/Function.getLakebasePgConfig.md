@@ -2,9 +2,10 @@
 
 ```ts
 function getLakebasePgConfig(
-   config?: Partial<LakebasePoolConfig>, 
-   telemetry?: DriverTelemetry, 
-   logger?: Logger): PoolConfig;
+  config?: Partial<LakebasePoolConfig>,
+  telemetry?: DriverTelemetry,
+  logger?: Logger,
+): PoolConfig;
 ```
 
 Get Lakebase connection configuration for PostgreSQL clients.
@@ -18,11 +19,11 @@ Used internally by createLakebasePool().
 
 ## Parameters
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `config?` | `Partial`\<[`LakebasePoolConfig`](Interface.LakebasePoolConfig.md)\> | Optional configuration (reads from environment if not provided) |
-| `telemetry?` | `DriverTelemetry` | Optional pre-initialized telemetry (created internally if not provided) |
-| `logger?` | `Logger` | Optional logger (silent if not provided) |
+| Parameter    | Type                                                                 | Description                                                             |
+| ------------ | -------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| `config?`    | `Partial`\<[`LakebasePoolConfig`](Interface.LakebasePoolConfig.md)\> | Optional configuration (reads from environment if not provided)         |
+| `telemetry?` | `DriverTelemetry`                                                    | Optional pre-initialized telemetry (created internally if not provided) |
+| `logger?`    | `Logger`                                                             | Optional logger (silent if not provided)                                |
 
 ## Returns
 

@@ -6,8 +6,8 @@ Extends the shared PluginManifest with strict resource types.
 
 ## See
 
- - `packages/shared/src/schemas/plugin-manifest.generated.ts` `PluginManifest` — generated base
- - SharedPluginManifest — shared re-export with JSONSchema7 config
+- `packages/shared/src/schemas/plugin-manifest.generated.ts` `PluginManifest` — generated base
+- SharedPluginManifest — shared re-export with JSONSchema7 config
 
 ## Extends
 
@@ -15,9 +15,9 @@ Extends the shared PluginManifest with strict resource types.
 
 ## Type Parameters
 
-| Type Parameter | Default type |
-| ------ | ------ |
-| `TName` *extends* `string` | `string` |
+| Type Parameter             | Default type |
+| -------------------------- | ------------ |
+| `TName` _extends_ `string` | `string`     |
 
 ## Properties
 
@@ -32,10 +32,10 @@ Author name or organization
 #### Inherited from
 
 ```ts
-Omit.author
+Omit.author;
 ```
 
-***
+---
 
 ### config?
 
@@ -54,7 +54,7 @@ Uses JSONSchema7 instead of the generated ConfigSchema (which is too restrictive
 schema: JSONSchema7;
 ```
 
-***
+---
 
 ### description
 
@@ -67,10 +67,10 @@ Brief description of what the plugin does
 #### Inherited from
 
 ```ts
-Omit.description
+Omit.description;
 ```
 
-***
+---
 
 ### displayName
 
@@ -83,10 +83,10 @@ Human-readable display name for UI and CLI
 #### Inherited from
 
 ```ts
-Omit.displayName
+Omit.displayName;
 ```
 
-***
+---
 
 ### hidden?
 
@@ -99,10 +99,10 @@ When true, this plugin is excluded from the template plugins manifest (appkit.pl
 #### Inherited from
 
 ```ts
-Omit.hidden
+Omit.hidden;
 ```
 
-***
+---
 
 ### keywords?
 
@@ -115,10 +115,10 @@ Keywords for plugin discovery
 #### Inherited from
 
 ```ts
-Omit.keywords
+Omit.keywords;
 ```
 
-***
+---
 
 ### license?
 
@@ -131,10 +131,10 @@ SPDX license identifier
 #### Inherited from
 
 ```ts
-Omit.license
+Omit.license;
 ```
 
-***
+---
 
 ### name
 
@@ -147,10 +147,10 @@ Plugin identifier — the single source of truth for the plugin's name
 #### Overrides
 
 ```ts
-Omit.name
+Omit.name;
 ```
 
-***
+---
 
 ### onSetupMessage?
 
@@ -163,10 +163,10 @@ Message displayed to the user after project initialization. Use this to inform a
 #### Inherited from
 
 ```ts
-Omit.onSetupMessage
+Omit.onSetupMessage;
 ```
 
-***
+---
 
 ### repository?
 
@@ -179,18 +179,18 @@ URL to the plugin's source repository
 #### Inherited from
 
 ```ts
-Omit.repository
+Omit.repository;
 ```
 
-***
+---
 
 ### resources
 
 ```ts
 resources: {
-  optional: Omit<ResourceRequirement, "required">[];
-  required: Omit<ResourceRequirement, "required">[];
-};
+  optional: (Omit < ResourceRequirement, "required" > []);
+  required: (Omit < ResourceRequirement, "required" > []);
+}
 ```
 
 Resource requirements declaration (with strict ResourceRequirement types)
@@ -198,7 +198,7 @@ Resource requirements declaration (with strict ResourceRequirement types)
 #### optional
 
 ```ts
-optional: Omit<ResourceRequirement, "required">[];
+optional: (Omit < ResourceRequirement, "required" > []);
 ```
 
 Resources that enhance functionality but are not mandatory
@@ -206,12 +206,12 @@ Resources that enhance functionality but are not mandatory
 #### required
 
 ```ts
-required: Omit<ResourceRequirement, "required">[];
+required: (Omit < ResourceRequirement, "required" > []);
 ```
 
 Resources that must be available for the plugin to function
 
-***
+---
 
 ### version?
 
@@ -224,5 +224,5 @@ Plugin version (semver format)
 #### Inherited from
 
 ```ts
-Omit.version
+Omit.version;
 ```

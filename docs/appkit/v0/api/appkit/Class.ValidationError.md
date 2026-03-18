@@ -6,8 +6,12 @@ Use for invalid parameters, missing required fields, or type mismatches.
 ## Example
 
 ```typescript
-throw new ValidationError("Statement is required", { context: { field: "statement" } });
-throw new ValidationError("maxPoolSize must be at least 1", { context: { value: config.maxPoolSize } });
+throw new ValidationError("Statement is required", {
+  context: { field: "statement" },
+});
+throw new ValidationError("maxPoolSize must be at least 1", {
+  context: { value: config.maxPoolSize },
+});
 ```
 
 ## Extends
@@ -27,12 +31,12 @@ new ValidationError(message: string, options?: {
 
 #### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `message` | `string` |
-| `options?` | \{ `cause?`: `Error`; `context?`: `Record`\<`string`, `unknown`\>; \} |
-| `options.cause?` | `Error` |
-| `options.context?` | `Record`\<`string`, `unknown`\> |
+| Parameter          | Type                                                                  |
+| ------------------ | --------------------------------------------------------------------- |
+| `message`          | `string`                                                              |
+| `options?`         | \{ `cause?`: `Error`; `context?`: `Record`\<`string`, `unknown`\>; \} |
+| `options.cause?`   | `Error`                                                               |
+| `options.context?` | `Record`\<`string`, `unknown`\>                                       |
 
 #### Returns
 
@@ -56,7 +60,7 @@ Optional cause of the error
 
 [`AppKitError`](Class.AppKitError.md).[`cause`](Class.AppKitError.md#cause)
 
-***
+---
 
 ### code
 
@@ -70,7 +74,7 @@ Error code for programmatic error handling
 
 [`AppKitError`](Class.AppKitError.md).[`code`](Class.AppKitError.md#code)
 
-***
+---
 
 ### context?
 
@@ -84,7 +88,7 @@ Additional context for the error
 
 [`AppKitError`](Class.AppKitError.md).[`context`](Class.AppKitError.md#context)
 
-***
+---
 
 ### isRetryable
 
@@ -98,7 +102,7 @@ Whether this error type is generally safe to retry
 
 [`AppKitError`](Class.AppKitError.md).[`isRetryable`](Class.AppKitError.md#isretryable)
 
-***
+---
 
 ### statusCode
 
@@ -131,7 +135,7 @@ Sensitive values in context are automatically redacted.
 
 [`AppKitError`](Class.AppKitError.md).[`toJSON`](Class.AppKitError.md#tojson)
 
-***
+---
 
 ### toString()
 
@@ -149,14 +153,14 @@ Create a human-readable string representation
 
 [`AppKitError`](Class.AppKitError.md).[`toString`](Class.AppKitError.md#tostring)
 
-***
+---
 
 ### invalidValue()
 
 ```ts
 static invalidValue(
-   fieldName: string, 
-   value: unknown, 
+   fieldName: string,
+   value: unknown,
    expected?: string): ValidationError;
 ```
 
@@ -166,17 +170,17 @@ Only the value's type is recorded.
 
 #### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `fieldName` | `string` |
-| `value` | `unknown` |
-| `expected?` | `string` |
+| Parameter   | Type      |
+| ----------- | --------- |
+| `fieldName` | `string`  |
+| `value`     | `unknown` |
+| `expected?` | `string`  |
 
 #### Returns
 
 `ValidationError`
 
-***
+---
 
 ### missingEnvVars()
 
@@ -188,15 +192,15 @@ Create a validation error for missing environment variables
 
 #### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `vars` | `string`[] |
+| Parameter | Type       |
+| --------- | ---------- |
+| `vars`    | `string`[] |
 
 #### Returns
 
 `ValidationError`
 
-***
+---
 
 ### missingField()
 
@@ -208,8 +212,8 @@ Create a validation error for a missing required field
 
 #### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
+| Parameter   | Type     |
+| ----------- | -------- |
 | `fieldName` | `string` |
 
 #### Returns

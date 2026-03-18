@@ -13,7 +13,7 @@ await createApp({
   plugins: [server(), analytics({})],
   cache: {
     enabled: true,
-    ttl: 3600,              // seconds
+    ttl: 3600, // seconds
     strictPersistence: false,
   },
 });

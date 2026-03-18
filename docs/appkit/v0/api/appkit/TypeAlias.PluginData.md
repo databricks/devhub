@@ -13,10 +13,10 @@ Tuple of plugin class, config, and name. Created by `toPlugin()` and passed to `
 ## Type Parameters
 
 | Type Parameter |
-| ------ |
-| `T` |
-| `U` |
-| `N` |
+| -------------- |
+| `T`            |
+| `U`            |
+| `N`            |
 
 ## Properties
 
@@ -26,7 +26,7 @@ Tuple of plugin class, config, and name. Created by `toPlugin()` and passed to `
 config: U;
 ```
 
-***
+---
 
 ### name
 
@@ -34,7 +34,7 @@ config: U;
 name: N;
 ```
 
-***
+---
 
 ### plugin
 

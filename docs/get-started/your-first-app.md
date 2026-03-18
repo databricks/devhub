@@ -1,73 +1,111 @@
 ---
 title: Your First App
+description: Pick a template, paste it into your AI coding agent, and deploy your first app on Databricks. Step-by-step guide with templates for data apps, chat apps, dashboards, and more.
 ---
 
 # Your First App
 
-Build a minimal app and deploy it to Databricks Apps.
+The fastest way to build and deploy an app on Databricks is to pair a template from [/resources](/resources) with an AI coding agent.
 
-## Goal
+Templates are end-to-end build instructions — they tell an agent how to scaffold a project, connect to Databricks services, and wire up the right APIs. You bring the idea, the template brings the infrastructure.
 
-By the end of this guide, you can run locally, deploy, and verify a working app endpoint.
+## How it works
 
-## 1) Create an app in your workspace
+1. **Pick a template** that matches what you want to build.
+2. **Copy its markdown** into your coding agent (Cursor, Windsurf, Claude Code, ChatGPT, or any agent that can write code).
+3. **Describe what you want** alongside the template so the agent builds your specific app, not just the boilerplate.
 
-In the workspace UI, create a Databricks App from a template (recommended) or create an empty app and define your own source layout.
+That's it. The template handles Databricks CLI setup, authentication, database schemas, model serving endpoints, and deployment — your agent follows the instructions and you get a running app.
 
-Record:
+## Pick a template
 
-- app name (for CLI deploy)
-- workspace source path (for sync/deploy)
-- app URL (for runtime validation)
+Browse all templates at [dev.databricks.com/resources](/resources). Here are the starting points:
 
-## 2) Authenticate locally
+| Template                                                                        | Best for                                   | Example prompt                                                                             |
+| ------------------------------------------------------------------------------- | ------------------------------------------ | ------------------------------------------------------------------------------------------ |
+| [Base App Template](/resources/base-app-template)                               | Simple apps, static pages, getting started | "Build a hello-world landing page on Databricks Apps"                                      |
+| [Data App Template](/resources/data-app-template)                               | CRUD apps with persistent storage          | "Build a customer feedback tracker with a form and a table of submissions"                 |
+| [AI Chat App Template](/resources/ai-chat-app-template)                         | Conversational AI, chatbots, assistants    | "Build an IT support assistant that answers questions about our internal policies"         |
+| [Analytics Dashboard App Template](/resources/analytics-dashboard-app-template) | Dashboards, reporting, metrics             | "Build a sales pipeline dashboard with filters by region and quarter"                      |
+| [AI Data Explorer Template](/resources/ai-data-explorer-template)               | Full-stack AI + data exploration           | "Build an app where users can ask questions about our product catalog in natural language" |
 
-Use OAuth login:
+Not sure which one to use? Start with the **Data App Template** — it covers the most common pattern of storing and displaying data.
 
-```bash
-databricks auth login --host <workspace-url>
+## Copy the template into your agent
+
+Every template page on [/resources](/resources) has a **"Copy as"** menu in the top right. Use it to:
+
+- **Copy Markdown** — paste directly into any chat-based agent.
+- **View Raw Markdown** — open the raw content in a new tab for reference.
+- **Send to ChatGPT** or **Open in Claude** — open a new conversation with the template pre-loaded.
+- **Connect to MCP Server** — copy the MCP server config for agents that support the Model Context Protocol (like Cursor or Claude Code). This lets the agent pull documentation on demand.
+
+For Cursor, Windsurf, or Claude Code, copying the markdown and pasting it into the chat is the simplest path. For ChatGPT or Claude, use the direct send buttons.
+
+## Write your prompt
+
+Combine the template with a short description of what you want to build. The pattern is:
+
+```
+<what you paste from the template>
+
+Build me <what you actually want>.
 ```
 
-## 3) Sync local source to workspace
+Here are a few examples to get you started.
 
-Use `databricks sync` to keep your local project and workspace source path aligned during development.
+### A customer feedback tracker
 
-Example:
+> Use the Data App Template. Build a customer feedback tracker where users
+> submit feedback through a form with fields for customer name, product,
+> rating (1-5), and comments. Display all submissions in a sortable table.
 
-```bash
-databricks sync . /Workspace/Users/<user>/<project-path>
-```
+### An IT support chatbot
 
-For iterative development, run with your preferred watch options from `databricks sync --help`.
+> Use the AI Chat App Template. Build an IT support assistant that helps
+> employees troubleshoot common issues — VPN setup, password resets,
+> software installation requests. It should be conversational and remember
+> chat history.
 
-## 4) Deploy
+### A sales analytics dashboard
 
-Deploy from local source:
+> Use the Analytics Dashboard App Template. Build a sales dashboard that
+> shows total revenue, deal count, and average deal size. Add filters for
+> region and date range. Include a bar chart of revenue by product category.
 
-```bash
-databricks apps deploy <app-name> --source-code-path <workspace-source-path>
-```
+### A data exploration app
 
-## 5) Validate runtime
+> Use the AI Data Explorer Template. Build an app for our product team
+> to explore customer usage data. They should be able to ask natural
+> language questions like "which features have the highest adoption this
+> month" and see charts in the response.
 
-- open app URL from the workspace
-- inspect deployment state in the app UI
-- stream logs if needed and verify app startup command completed
+The more specific you are about the domain, the fields, and the layout, the better the result. The template handles the Databricks wiring — your prompt shapes the business logic.
 
-Quick checks:
+## What happens next
 
-- homepage or health endpoint responds as expected
-- app can access required Databricks resources
-- no startup/authentication errors in logs
+Your coding agent follows the template instructions step by step:
 
-## Common first-deploy failures
+1. Installs the Databricks CLI and authenticates against your workspace.
+2. Scaffolds the project structure with the right dependencies.
+3. Provisions Databricks resources (Lakebase databases, model serving endpoints, Genie spaces — depending on the template).
+4. Implements your business logic on top of the scaffolded app.
+5. Deploys to Databricks Apps.
 
-- authentication profile points to the wrong workspace host
-- `--source-code-path` does not match synced workspace path
-- missing runtime dependencies or startup command mismatch
-- app-level permissions do not allow expected runtime access
+If something fails during the build, the template includes troubleshooting context for each step. The agent can usually self-correct.
+
+## Build your own cookbook
+
+If none of the templates are an exact fit, you can assemble a custom cookbook from individual recipes:
+
+1. Go to [/resources](/resources) and scroll to **All Recipes**.
+2. Select the recipes you need (for example, "Databricks Local Bootstrap" + "Lakebase Data Persistence" + "Genie Conversational Analytics").
+3. Use the **"Copy as"** menu to export your custom selection.
+4. Paste it into your agent with your prompt.
+
+This is useful when you want to mix capabilities — like combining a data persistence layer with a conversational analytics interface, but without the AI chat component.
 
 ## Source of truth
 
-- [Get started with Databricks Apps](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/get-started)
-- [Deploy a Databricks app](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/deploy)
+- [All templates and recipes](/resources)
+- [Databricks Apps documentation](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/)

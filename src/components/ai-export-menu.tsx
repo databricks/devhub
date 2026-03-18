@@ -16,6 +16,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 type AIExportMenuProps = {
   contentRef: React.RefObject<HTMLDivElement | null>;
@@ -23,6 +29,7 @@ type AIExportMenuProps = {
   description: string;
   permalink: string;
   disabled?: boolean;
+  disabledTooltip?: string;
 };
 
 export function AIExportMenu({
@@ -31,6 +38,7 @@ export function AIExportMenu({
   description,
   permalink,
   disabled = false,
+  disabledTooltip = "select recipe to copy",
 }: AIExportMenuProps) {
   const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
   const fullUrl = baseUrl + permalink;
@@ -88,10 +96,28 @@ export function AIExportMenu({
     });
   }, [mcpUrl]);
 
+  if (disabled) {
+    return (
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <span className="inline-flex">
+              <Button variant="outline" size="sm" disabled>
+                Copy as
+                <ChevronDownIcon />
+              </Button>
+            </span>
+          </TooltipTrigger>
+          <TooltipContent>{disabledTooltip}</TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    );
+  }
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm" disabled={disabled}>
+        <Button variant="outline" size="sm">
           Copy as
           <ChevronDownIcon />
         </Button>

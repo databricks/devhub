@@ -81,9 +81,7 @@ const CARD_VISUALS: Array<{
 ];
 
 export default function ResourcesPage(): ReactNode {
-  const [selectedRecipeIds, setSelectedRecipeIds] = useState<string[]>(() =>
-    recipesInOrder.map((recipe) => recipe.id),
-  );
+  const [selectedRecipeIds, setSelectedRecipeIds] = useState<string[]>([]);
   const selectedRecipeSet = useMemo(
     () => new Set(selectedRecipeIds),
     [selectedRecipeIds],

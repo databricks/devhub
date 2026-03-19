@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import type { Plugin } from "@docusaurus/types";
+import type { LoadContext, Plugin } from "@docusaurus/types";
 import { solutions } from "../src/lib/solutions/solutions";
 
 type Section = {
@@ -139,74 +139,88 @@ function readDoc(
   return undefined;
 }
 
-export default function llmsTxtPlugin(): Plugin {
+function generateLlmsTxt(baseUrl: string, docsDir: string): string {
+  const sections: Section[] = SIDEBAR_SECTIONS.map((section) => ({
+    title: section.title,
+    description: section.description,
+    docs: section.slugs
+      .map((slug) => {
+        const doc = readDoc(docsDir, slug);
+        if (!doc) return undefined;
+        return { slug, title: doc.title, description: doc.description };
+      })
+      .filter(
+        (d): d is { slug: string; title: string; description: string } =>
+          d !== undefined,
+      ),
+  }));
+
+  const lines: string[] = [
+    "# Databricks Developer",
+    "",
+    "> Build intelligent data and AI applications in minutes, not months.",
+    "",
+    "Documentation for the Databricks developer platform covering application frameworks, AI agents, managed PostgreSQL (Lakebase), deployment tools, and starter templates.",
+    "",
+    "## Solutions",
+    "",
+    "Databricks use-case solutions built on Lakebase, AgentBricks, and Databricks Apps.",
+    "",
+    `- [All Solutions](${baseUrl}/solutions): Overview of Databricks developer solutions`,
+    ...solutions.map(
+      (s) => `- [${s.title}](${baseUrl}/solutions/${s.id}): ${s.description}`,
+    ),
+    "",
+    "## Resources",
+    "",
+    "Templates and starter kits for building on Databricks.",
+    "",
+    `- [All Resources](${baseUrl}/resources): Browse all templates`,
+    `- [Base App Template](${baseUrl}/resources/base-app-template): Databricks local bootstrap template for CLI, auth, app scaffolding, and agent skill setup`,
+    `- [AI Chat App Template](${baseUrl}/resources/ai-chat-app-template): Streaming AI chat powered by Databricks Model Serving (AI Gateway) with AI SDK and AI Elements`,
+    `- [Data App Template](${baseUrl}/resources/data-app-template): Bootstrap a Databricks app with Lakebase for persistent data storage, schema setup, and CRUD API routes`,
+    `- [Analytics Dashboard App Template](${baseUrl}/resources/analytics-dashboard-app-template): Interactive analytics dashboard backed by Lakebase with parameterized SQL queries and chart components`,
+    `- [AI Data Explorer Template](${baseUrl}/resources/ai-data-explorer-template): Full-stack data app with Lakebase persistence, AI chat via Model Serving, and Genie natural-language data exploration`,
+    "",
+  ];
+
+  for (const section of sections) {
+    lines.push(`## ${section.title}`);
+    lines.push("");
+    lines.push(section.description);
+    lines.push("");
+
+    for (const doc of section.docs) {
+      const desc = doc.description ? `: ${doc.description}` : "";
+      lines.push(`- [${doc.title}](${baseUrl}/docs/${doc.slug})${desc}`);
+    }
+
+    lines.push("");
+  }
+
+  return lines.join("\n");
+}
+
+export default function llmsTxtPlugin(context: LoadContext): Plugin {
+  const docsDir = path.resolve(__dirname, "..", "docs");
+  const baseUrl = context.siteConfig.url.replace(/\/$/, "");
+
+  // Write to static/ so Docusaurus serves it in both dev and build
+  const staticDir = path.resolve(__dirname, "..", "static");
+  fs.writeFileSync(
+    path.join(staticDir, "llms.txt"),
+    generateLlmsTxt(baseUrl, docsDir),
+  );
+
   return {
     name: "docusaurus-llms-txt",
 
     async postBuild({ siteConfig, outDir }) {
-      const baseUrl = siteConfig.url.replace(/\/$/, "");
-      const docsDir = path.resolve(__dirname, "..", "docs");
-
-      const sections: Section[] = SIDEBAR_SECTIONS.map((section) => ({
-        title: section.title,
-        description: section.description,
-        docs: section.slugs
-          .map((slug) => {
-            const doc = readDoc(docsDir, slug);
-            if (!doc) return undefined;
-            return { slug, title: doc.title, description: doc.description };
-          })
-          .filter(
-            (d): d is { slug: string; title: string; description: string } =>
-              d !== undefined,
-          ),
-      }));
-
-      const lines: string[] = [
-        "# Databricks Developer",
-        "",
-        "> Build intelligent data and AI applications in minutes, not months.",
-        "",
-        "Documentation for the Databricks developer platform covering application frameworks, AI agents, managed PostgreSQL (Lakebase), deployment tools, and starter templates.",
-        "",
-        "## Solutions",
-        "",
-        "Databricks use-case solutions built on Lakebase, AgentBricks, and Databricks Apps.",
-        "",
-        `- [All Solutions](${baseUrl}/solutions): Overview of Databricks developer solutions`,
-        ...solutions.map(
-          (s) =>
-            `- [${s.title}](${baseUrl}/solutions/${s.id}): ${s.description}`,
-        ),
-        "",
-        "## Resources",
-        "",
-        "Templates and starter kits for building on Databricks.",
-        "",
-        `- [All Resources](${baseUrl}/resources): Browse all templates`,
-        `- [Base App Template](${baseUrl}/resources/base-app-template): Databricks local bootstrap template for CLI, auth, app scaffolding, and agent skill setup`,
-        `- [AI Chat App Template](${baseUrl}/resources/ai-chat-app-template): Streaming AI chat powered by Databricks Model Serving (AI Gateway) with AI SDK and AI Elements`,
-        `- [Data App Template](${baseUrl}/resources/data-app-template): Bootstrap a Databricks app with Lakebase for persistent data storage, schema setup, and CRUD API routes`,
-        `- [Analytics Dashboard App Template](${baseUrl}/resources/analytics-dashboard-app-template): Interactive analytics dashboard backed by Lakebase with parameterized SQL queries and chart components`,
-        `- [AI Data Explorer Template](${baseUrl}/resources/ai-data-explorer-template): Full-stack data app with Lakebase persistence, AI chat via Model Serving, and Genie natural-language data exploration`,
-        "",
-      ];
-
-      for (const section of sections) {
-        lines.push(`## ${section.title}`);
-        lines.push("");
-        lines.push(section.description);
-        lines.push("");
-
-        for (const doc of section.docs) {
-          const desc = doc.description ? `: ${doc.description}` : "";
-          lines.push(`- [${doc.title}](${baseUrl}/docs/${doc.slug})${desc}`);
-        }
-
-        lines.push("");
-      }
-
-      fs.writeFileSync(path.join(outDir, "llms.txt"), lines.join("\n"));
+      const prodBaseUrl = siteConfig.url.replace(/\/$/, "");
+      fs.writeFileSync(
+        path.join(outDir, "llms.txt"),
+        generateLlmsTxt(prodBaseUrl, docsDir),
+      );
     },
   };
 }

@@ -201,16 +201,31 @@ function generateLlmsTxt(baseUrl: string, docsDir: string): string {
   return lines.join("\n");
 }
 
+function copyRawDocs(docsDir: string, destDir: string): void {
+  if (!fs.existsSync(destDir)) {
+    fs.mkdirSync(destDir, { recursive: true });
+  }
+  for (const entry of fs.readdirSync(docsDir, { withFileTypes: true })) {
+    const srcPath = path.join(docsDir, entry.name);
+    const dstPath = path.join(destDir, entry.name);
+    if (entry.isDirectory()) {
+      copyRawDocs(srcPath, dstPath);
+    } else if (entry.name.endsWith(".md") || entry.name.endsWith(".mdx")) {
+      fs.copyFileSync(srcPath, dstPath);
+    }
+  }
+}
+
 export default function llmsTxtPlugin(context: LoadContext): Plugin {
   const docsDir = path.resolve(__dirname, "..", "docs");
   const baseUrl = context.siteConfig.url.replace(/\/$/, "");
 
-  // Write to static/ so Docusaurus serves it in both dev and build
   const staticDir = path.resolve(__dirname, "..", "static");
   fs.writeFileSync(
     path.join(staticDir, "llms.txt"),
     generateLlmsTxt(baseUrl, docsDir),
   );
+  copyRawDocs(docsDir, path.join(staticDir, "raw-docs"));
 
   return {
     name: "docusaurus-llms-txt",
@@ -221,6 +236,7 @@ export default function llmsTxtPlugin(context: LoadContext): Plugin {
         path.join(outDir, "llms.txt"),
         generateLlmsTxt(prodBaseUrl, docsDir),
       );
+      copyRawDocs(docsDir, path.join(outDir, "raw-docs"));
     },
   };
 }

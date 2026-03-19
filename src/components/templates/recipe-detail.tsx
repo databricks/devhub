@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { RecipePre } from "@/components/templates/recipe-code-block";
 import { RecipeToc } from "@/components/templates/recipe-toc";
 import { recipes } from "@/lib/recipes/recipes";
+import { useRawRecipeMarkdown } from "@/lib/use-raw-content-markdown";
 
 const recipeComponents = { pre: RecipePre };
 
@@ -21,6 +22,7 @@ export function RecipeDetail({
 }: RecipeDetailProps): ReactNode {
   const contentRef = useRef<HTMLDivElement>(null);
   const recipe = recipes.find((item) => item.id === recipeId);
+  const rawMarkdown = useRawRecipeMarkdown(recipeId);
 
   if (!recipe) {
     throw new Error(`Recipe ${recipeId} not found`);
@@ -43,7 +45,7 @@ export function RecipeDetail({
 
                 <div className="mb-3 flex justify-end">
                   <AIExportMenu
-                    contentRef={contentRef}
+                    rawMarkdown={rawMarkdown}
                     title={recipe.name}
                     description={recipe.description}
                     permalink={`/resources/recipes/${recipe.id}`}

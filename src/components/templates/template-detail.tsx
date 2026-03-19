@@ -15,11 +15,13 @@ const recipeComponents = { pre: RecipePre };
 
 type TemplateDetailProps = {
   template: Template;
+  rawMarkdown: string;
   children: ReactNode;
 };
 
 export function TemplateDetail({
   template,
+  rawMarkdown,
   children,
 }: TemplateDetailProps): ReactNode {
   const contentRef = useRef<HTMLDivElement>(null);
@@ -47,7 +49,7 @@ export function TemplateDetail({
 
                 <div className="mb-3 flex justify-end">
                   <AIExportMenu
-                    contentRef={contentRef}
+                    rawMarkdown={rawMarkdown}
                     title={template.name}
                     description={template.description}
                     permalink={permalink}

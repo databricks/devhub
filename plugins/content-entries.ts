@@ -1,3 +1,5 @@
+import { readFileSync } from "fs";
+import { resolve } from "path";
 import type { LoadContext, Plugin } from "@docusaurus/types";
 import { getMarkdownSlugs } from "../src/lib/content-markdown";
 import { recipes } from "../src/lib/recipes/recipes";
@@ -93,10 +95,22 @@ export default function contentEntriesPlugin(
       const registrySlugs = getRegistrySlugs(options.entryType);
       assertSlugParity(options.entryType, contentSlugs, registrySlugs);
 
+      const rawMarkdownBySlug: Record<string, string> = {};
+      for (const slug of contentSlugs) {
+        const filePath = resolve(
+          context.siteDir,
+          "content",
+          options.contentSection,
+          `${slug}.md`,
+        );
+        rawMarkdownBySlug[slug] = readFileSync(filePath, "utf-8");
+      }
+
       setGlobalData({
         entryType: options.entryType,
         routeBasePath: options.routeBasePath,
         slugs: contentSlugs,
+        rawMarkdownBySlug,
       });
 
       for (const slug of contentSlugs) {

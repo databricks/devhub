@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { toast } from "sonner";
 import {
   ClipboardCopyIcon,
@@ -24,7 +24,8 @@ import {
 } from "@/components/ui/tooltip";
 
 type AIExportMenuProps = {
-  contentRef: React.RefObject<HTMLDivElement | null>;
+  rawMarkdown?: string;
+  rawMarkdownUrl?: string;
   title: string;
   description: string;
   permalink: string;
@@ -33,7 +34,8 @@ type AIExportMenuProps = {
 };
 
 export function AIExportMenu({
-  contentRef,
+  rawMarkdown,
+  rawMarkdownUrl,
   title,
   description,
   permalink,
@@ -43,9 +45,26 @@ export function AIExportMenu({
   const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
   const fullUrl = baseUrl + permalink;
   const mcpUrl = baseUrl + "/api/mcp";
+  const fetchedMarkdownRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (rawMarkdown || !rawMarkdownUrl) return;
+    fetch(rawMarkdownUrl)
+      .then((res) => (res.ok ? res.text() : null))
+      .then((text) => {
+        fetchedMarkdownRef.current = text;
+      })
+      .catch(() => {});
+  }, [rawMarkdown, rawMarkdownUrl]);
+
+  const resolveContent = useCallback((): string => {
+    if (rawMarkdown) return rawMarkdown;
+    if (fetchedMarkdownRef.current) return fetchedMarkdownRef.current;
+    return "";
+  }, [rawMarkdown]);
 
   const buildAIMarkdown = useCallback((): string => {
-    const rawContent = contentRef.current?.innerText?.trim() ?? "";
+    const rawContent = resolveContent();
     const escapedTitle = title.replace(/"/g, '\\"');
     const escapedDescription = description.replace(/"/g, '\\"');
 
@@ -53,14 +72,26 @@ export function AIExportMenu({
     if (rawContent) md += `${rawContent}\n\n`;
     md += `---\nFull documentation: ${baseUrl}/llms.txt\n`;
     return md;
-  }, [contentRef, title, description, fullUrl, baseUrl]);
+  }, [resolveContent, title, description, fullUrl, baseUrl]);
 
   const handleCopyMarkdown = useCallback(() => {
+    if (rawMarkdownUrl && !rawMarkdown && !fetchedMarkdownRef.current) {
+      fetch(rawMarkdownUrl)
+        .then((res) => (res.ok ? res.text() : ""))
+        .then((text) => {
+          fetchedMarkdownRef.current = text;
+          const md = buildAIMarkdown();
+          return navigator.clipboard.writeText(md);
+        })
+        .then(() => toast.success("Markdown copied"))
+        .catch(() => toast.error("Failed to copy markdown"));
+      return;
+    }
     const md = buildAIMarkdown();
     navigator.clipboard.writeText(md).then(() => {
       toast.success("Markdown copied");
     });
-  }, [buildAIMarkdown]);
+  }, [rawMarkdown, rawMarkdownUrl, buildAIMarkdown]);
 
   const handleViewRawMarkdown = useCallback(() => {
     const mdUrl = fullUrl.replace(/\/$/, "") + ".md";

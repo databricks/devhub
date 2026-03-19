@@ -1,6 +1,6 @@
 import Link from "@docusaurus/Link";
 import Layout from "@theme/Layout";
-import { useMemo, useRef, useState, type ReactNode } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import { AIExportMenu } from "@/components/ai-export-menu";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -11,8 +11,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { recipeContentById } from "@/lib/recipes/recipe-content";
 import { recipesInOrder, templates } from "@/lib/recipes/recipes";
+import { useAllRawRecipeMarkdown } from "@/lib/use-raw-content-markdown";
 
 const CARD_VISUALS: Array<{
   gradient: string;
@@ -82,6 +82,7 @@ const CARD_VISUALS: Array<{
 
 export default function ResourcesPage(): ReactNode {
   const [selectedRecipeIds, setSelectedRecipeIds] = useState<string[]>([]);
+  const rawBySlug = useAllRawRecipeMarkdown();
   const selectedRecipeSet = useMemo(
     () => new Set(selectedRecipeIds),
     [selectedRecipeIds],
@@ -89,7 +90,14 @@ export default function ResourcesPage(): ReactNode {
   const selectedRecipes = recipesInOrder.filter((recipe) =>
     selectedRecipeSet.has(recipe.id),
   );
-  const selectedRecipesContentRef = useRef<HTMLDivElement>(null);
+  const selectedRawMarkdown = useMemo(
+    () =>
+      selectedRecipes
+        .map((r) => rawBySlug[r.id])
+        .filter(Boolean)
+        .join("\n\n---\n\n"),
+    [selectedRecipes, rawBySlug],
+  );
   const isAllRecipesSelected =
     selectedRecipeIds.length === recipesInOrder.length;
   const isSomeRecipesSelected =
@@ -204,7 +212,7 @@ export default function ResourcesPage(): ReactNode {
                   Select all
                 </label>
                 <AIExportMenu
-                  contentRef={selectedRecipesContentRef}
+                  rawMarkdown={selectedRawMarkdown}
                   title="Custom cookbook"
                   description="Selected Databricks recipes combined into a custom cookbook."
                   permalink="/resources"
@@ -273,19 +281,6 @@ export default function ResourcesPage(): ReactNode {
                       </Link>
                     </CardFooter>
                   </Card>
-                );
-              })}
-            </div>
-
-            <div ref={selectedRecipesContentRef} className="sr-only">
-              {selectedRecipes.map((recipe, index) => {
-                const RecipeContent = recipeContentById[recipe.id];
-                if (!RecipeContent) return null;
-                return (
-                  <div key={recipe.id}>
-                    {index > 0 && <hr />}
-                    <RecipeContent />
-                  </div>
                 );
               })}
             </div>

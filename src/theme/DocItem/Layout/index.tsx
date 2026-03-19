@@ -1,4 +1,3 @@
-import { useRef } from "react";
 import clsx from "clsx";
 import { useDoc } from "@docusaurus/plugin-content-docs/client";
 import { useWindowSize } from "@docusaurus/theme-common";
@@ -37,10 +36,19 @@ function useDocToc(): DocToc {
   return { hidden, mobile, desktop };
 }
 
+function deriveRawMarkdownUrl(source: string | undefined): string | undefined {
+  if (!source) return undefined;
+  const relative = source.replace(/^@site\/docs\//, "");
+  if (relative === source) return undefined;
+  return `/raw-docs/${relative}`;
+}
+
 export default function DocItemLayout({ children }: Props): ReactNode {
   const docToc = useDocToc();
   const { metadata } = useDoc();
-  const contentRef = useRef<HTMLDivElement>(null);
+  const rawMarkdownUrl = deriveRawMarkdownUrl(
+    (metadata as { source?: string }).source,
+  );
 
   return (
     <div className="row db-docs-layout">
@@ -58,16 +66,14 @@ export default function DocItemLayout({ children }: Props): ReactNode {
 
             <div className="mt-3 flex justify-end mb-3">
               <AIExportMenu
-                contentRef={contentRef}
+                rawMarkdownUrl={rawMarkdownUrl}
                 title={metadata.title ?? ""}
                 description={metadata.description ?? ""}
                 permalink={metadata.permalink ?? ""}
               />
             </div>
 
-            <div ref={contentRef}>
-              <DocItemContent>{children}</DocItemContent>
-            </div>
+            <DocItemContent>{children}</DocItemContent>
             <DocItemFooter />
           </article>
           <div className="db-docs-paginator">

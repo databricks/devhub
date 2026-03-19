@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { RecipePre } from "@/components/templates/recipe-code-block";
 import { RecipeToc } from "@/components/templates/recipe-toc";
 import { solutions } from "@/lib/solutions/solutions";
+import { useRawSolutionMarkdown } from "@/lib/use-raw-content-markdown";
 
 const recipeComponents = { pre: RecipePre };
 
@@ -23,6 +24,7 @@ export function SolutionDetail({
   const solution = solutions.find((entry) => entry.id === solutionId);
   const contentRef = useRef<HTMLDivElement>(null);
   const heroImageUrl = useBaseUrl("/img/solution-detail-hero.svg");
+  const rawMarkdown = useRawSolutionMarkdown(solutionId);
   if (!solution) {
     throw new Error(`Solution not found: ${solutionId}`);
   }
@@ -45,7 +47,7 @@ export function SolutionDetail({
 
                 <div className="mb-3 flex justify-end">
                   <AIExportMenu
-                    contentRef={contentRef}
+                    rawMarkdown={rawMarkdown}
                     title={solution.title}
                     description={solution.description}
                     permalink={permalink}

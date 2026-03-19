@@ -32,15 +32,23 @@ export const recipes: Recipe[] = [
   },
   {
     id: "ai-chat-model-serving",
-    name: "AI Chat with Databricks Model Serving",
+    name: "Streaming AI Chat with Model Serving",
     description:
-      "Build a streaming chat app in Databricks Apps powered by Databricks AI Gateway (model serving) with AI SDK and AI Elements.",
-    tags: ["AI SDK", "AI Gateway", "Model Serving", "Chat"],
+      "Build a streaming AI chat experience using AI SDK, AI Elements, and Databricks Model Serving endpoints.",
+    tags: ["AI", "Chat", "AI SDK", "Model Serving"],
     prerequisites: [
       "databricks-local-bootstrap",
       "lakebase-data-persistence",
-      "model-serving-endpoint-creation",
+      "foundation-models-api",
     ],
+  },
+  {
+    id: "foundation-models-api",
+    name: "Query AI Gateway Endpoints",
+    description:
+      "Query AI Gateway endpoints for production-ready access to foundation models with built-in governance.",
+    tags: ["AI", "AI Gateway", "Foundation Models"],
+    prerequisites: ["databricks-local-bootstrap"],
   },
   {
     id: "model-serving-endpoint-creation",
@@ -85,12 +93,13 @@ export const recipes: Recipe[] = [
 ];
 
 const recipeIndex: Record<string, Recipe> = Object.fromEntries(
-  recipes.map((recipe) => [recipe.id, recipe]),
+  recipes.map((recipe) => [recipe.id, recipe])
 );
 
 export const recipesInOrder: Recipe[] = [
   "databricks-local-bootstrap",
   "lakebase-data-persistence",
+  "foundation-models-api",
   "model-serving-endpoint-creation",
   "ai-chat-model-serving",
   "lakebase-chat-persistence",
@@ -143,11 +152,10 @@ export const templates: Template[] = [
     id: "ai-chat-app-template",
     name: "AI Chat App Template",
     description:
-      "Databricks local bootstrap with Lakebase setup, model serving endpoint creation, AI SDK chat integration, and persisted chat history.",
+      "Databricks local bootstrap, Model Serving integration, AI SDK streaming chat, and Lakebase-persisted chat history.",
     recipeIds: [
       "databricks-local-bootstrap",
-      "lakebase-data-persistence",
-      "model-serving-endpoint-creation",
+      "foundation-models-api",
       "ai-chat-model-serving",
       "lakebase-chat-persistence",
     ],
@@ -193,5 +201,5 @@ export const templatePreviewItems: TemplatePreviewItem[] = templates.map(
     title: template.name,
     description: template.description,
     tags: template.tags,
-  }),
+  })
 );

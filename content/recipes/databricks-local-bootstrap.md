@@ -60,7 +60,7 @@ databricks auth profiles
 
 ### 5. Scaffold a new Databricks app
 
-Run this from the directory where you want the project created. The CLI creates a new folder named after `--name` inside the current directory. Use `--version latest` to get the latest AppKit template. Add `--features` to enable specific plugins (e.g., `--features=genie,lakebase`).
+Run this from the directory where you want the project created. The CLI creates a new folder named after `--name` inside the current directory. Use `--version latest` to get the latest AppKit template. Add `--features` to enable specific plugins (e.g., `--features=lakebase` for database persistence).
 
 ```bash
 databricks apps init \
@@ -71,6 +71,13 @@ databricks apps init \
   --profile <PROFILE>
 ```
 
+Then enter the project and install dependencies:
+
+```bash
+cd <app-name>
+npm install
+```
+
 ### 6. Install Databricks agent skills
 
 Install the agent skills for the agents and editors you actively use.
@@ -78,6 +85,8 @@ Install the agent skills for the agents and editors you actively use.
 ```bash
 npx skills add databricks/databricks-agent-skills -y -a claude-code -a cursor -a codex
 ```
+
+> **Alternative**: You can also use `databricks experimental aitools skills install` from the Databricks CLI. Both commands work.
 
 Use `-y` for noninteractive installs and add one or more `-a <agent-name>` flags for your specific agents.
 

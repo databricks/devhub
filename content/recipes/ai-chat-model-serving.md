@@ -1,133 +1,268 @@
-## AI Chat with Databricks Model Serving
+## Streaming AI Chat with Model Serving
 
-Build a streaming AI chat experience in a Databricks App using AI SDK, AI Elements, and a Databricks Model Serving endpoint.
+Build a streaming AI chat experience in a Databricks App using Vercel AI SDK with Databricks Model Serving and OpenAI-compatible endpoints.
 
 ### 1. Follow the prerequisite recipes first
 
 Complete these recipes before adding chat:
 
 - [`Databricks Local Bootstrap`](/resources/base-app-template#databricks-local-bootstrap)
-- [`Lakebase Data Persistence`](/resources/data-app-template#lakebase-data-persistence)
-- [`Create a Databricks Model Serving endpoint`](/resources/ai-chat-app-template#create-a-databricks-model-serving-endpoint)
+- [`Query AI Gateway Endpoints`](/resources/ai-chat-app-template#query-ai-gateway-endpoints)
 
-### 2. Install AI SDK and AI Elements packages
+:::tip[Deploy before local development]
+Lakebase tables are owned by the identity that creates them. Deploy the app first so the service principal creates and owns the schemas. Then grant yourself local dev access:
 
 ```bash
-npm install ai @ai-sdk/react
-npx shadcn@latest add @ai-elements/all
+databricks psql --project <project-name> --profile <PROFILE> -- -c "
+  CREATE EXTENSION IF NOT EXISTS databricks_auth;
+  SELECT databricks_create_role('<your-email>', 'USER');
+  GRANT databricks_superuser TO \"<your-email>\";
+"
 ```
 
-### 3. Install AI SDK and AI Elements agent skills
+> **Note**: If you are the Lakebase project owner, `databricks_create_role` may fail with `role already exists` and `GRANT databricks_superuser` may fail with `permission denied to grant role`. Both errors are safe to ignore — the project owner already has the necessary access.
 
-Install and verify the Databricks agent skills, then add AI SDK and AI Elements skills from your agent skill registry.
+If you run `npm run dev` before deploying, your user creates schemas that the deployed service principal cannot access. `CREATE SCHEMA IF NOT EXISTS` appears to succeed even on schemas you don't own, but subsequent `CREATE TABLE` fails with `permission denied`.
+:::
+
+### 2. Install AI SDK packages
 
 ```bash
+npm install ai@6 @ai-sdk/react@3 @ai-sdk/openai @databricks/sdk-experimental
+```
+
+> **Version note**: This recipe was tested with `ai@6.1`, `@ai-sdk/react@3.1`, and `@ai-sdk/openai@3.x` (the scaffold's `--version latest` installs `@ai-sdk/openai@^3`). The `TextStreamChatTransport`, `sendMessage({ text })`, and transport-based `useChat` APIs are AI SDK v6-specific. If a future minor release changes these APIs, pin to these versions.
+
+> **Note**: `@databricks/sdk-experimental` is included in the scaffolded `package.json`. It is listed here for reference if adding AI chat to an existing project.
+
+> **Optional**: For pre-built UI components, install individual AI Elements:
+> ```bash
+> # AI Elements CLI needs components.json in root directory
+> cp client/components.json .
+> npx ai-elements@latest add message
+> npx ai-elements@latest add prompt-input
+> npx ai-elements@latest add code-block
+> ```
+> This basic recipe works without AI Elements - they're optional prebuilt components.
+
+### 3. Install Databricks agent skills
+
+Install agent skills to help coding agents understand Databricks patterns:
+
+```bash
+cd <app-name>
 npx skills add databricks/databricks-agent-skills --all
-npx skills add <ai-sdk-skill-id> --all
-npx skills add <ai-elements-skill-id> --all
 npx skills list
 ```
 
-### 4. Configure environment variables for model serving
+> **Note**: This installs skills for Databricks Apps, AppKit, Lakebase, and AI Gateway patterns. Essential for agent-driven development.
 
-Set your workspace URL and endpoint name for local development:
+### 4. Configure environment variables for AI Gateway
+
+Configure your Databricks workspace ID and model endpoint:
+
+For local development (`.env`):
 
 ```bash
-echo 'DATABRICKS_HOST=https://<workspace>.cloud.databricks.com
-DATABRICKS_SERVING_ENDPOINT=<endpoint-name>' >> .env
+echo 'DATABRICKS_WORKSPACE_ID=<your-workspace-id>' >> .env
+echo 'DATABRICKS_ENDPOINT=<your-endpoint>' >> .env
+echo 'DATABRICKS_CONFIG_PROFILE=DEFAULT' >> .env
 ```
 
-For deployment, keep endpoint selection in `app.yaml`:
+For deployment in Databricks Apps (`app.yaml`):
 
 ```yaml
 env:
-  - name: DATABRICKS_SERVING_ENDPOINT
-    value: "<endpoint-name>"
+  - name: DATABRICKS_WORKSPACE_ID
+    value: '<your-workspace-id>'
+  - name: DATABRICKS_ENDPOINT
+    value: '<your-endpoint>'
 ```
 
-### 5. Use Databricks SDK auth chain in server runtime (recommended)
+> **Workspace ID**: AppKit auto-discovers this at runtime. For explicit setup, run `databricks api get /api/2.1/unity-catalog/current-metastore-assignment --profile <PROFILE>` and use the `workspace_id` field.
 
-In Databricks Apps runtime, prefer the Databricks SDK auth chain (service principal/workspace auth) instead of requiring `DATABRICKS_TOKEN` in app env:
+> **Model compatibility**: This recipe uses OpenAI-compatible models served via Databricks AI Gateway, which support the AI SDK's streaming API. The AI Gateway URL uses the `/mlflow/v1` path (not `/openai/v1`).
+
+> **Find your endpoint**: Run `databricks serving-endpoints list --profile <PROFILE>` to see available models. Common endpoints include `databricks-meta-llama-3-3-70b-instruct` and `databricks-claude-sonnet-4`, but availability varies by workspace.
+
+### 5. Configure authentication helper
+
+Create a helper function that works for both local development and deployed apps:
 
 ```typescript
-import { getWorkspaceClient } from "@databricks/appkit";
+import { Config } from '@databricks/sdk-experimental';
 
-const workspaceClient = getWorkspaceClient({});
+async function getDatabricksToken() {
+  // For deployed apps, use service principal token
+  if (process.env.DATABRICKS_TOKEN) {
+    return process.env.DATABRICKS_TOKEN;
+  }
+
+  // For local dev, use CLI profile auth via Databricks SDK
+  const config = new Config({
+    profile: process.env.DATABRICKS_CONFIG_PROFILE || 'DEFAULT',
+  });
+  await config.ensureResolved();
+  const headers = new Headers();
+  await config.authenticate(headers);
+  const authHeader = headers.get('Authorization');
+  if (!authHeader) {
+    throw new Error('Failed to get Databricks token. Check your CLI profile or set DATABRICKS_TOKEN.');
+  }
+  return authHeader.replace('Bearer ', '');
+}
 ```
 
-### 6. Add `/api/chat` route using serving endpoint query
+This function uses the Databricks SDK auth chain, which reads ~/.databrickscfg profiles and handles OAuth token refresh. For deployed apps, set DATABRICKS_TOKEN directly.
 
-Create a server route that accepts chat messages and queries the serving endpoint:
+> **User identity in deployed apps**: Databricks Apps injects user identity via request headers. Extract it with `req.header("x-forwarded-email")` or `req.header("x-forwarded-user")`. Use this for chat persistence and access control.
+
+### 6. Add `/api/chat` route with streaming
+
+Create a server route using the AI SDK's streaming support:
 
 ```typescript
-import { getWorkspaceClient } from "@databricks/appkit";
-
-const workspaceClient = getWorkspaceClient({});
+import { createOpenAI } from "@ai-sdk/openai";
+import { streamText } from "ai";
 
 app.post("/api/chat", async (req, res) => {
   const { messages } = req.body;
-  const endpoint = process.env.DATABRICKS_SERVING_ENDPOINT;
-  if (!endpoint) {
-    res.status(500).json({ error: "DATABRICKS_SERVING_ENDPOINT is missing" });
-    return;
+
+  // AI SDK v6 client sends UIMessage objects with a parts array.
+  // Convert to CoreMessage format for streamText().
+  interface UIMessage {
+    role: string;
+    parts?: Array<{ type: string; text?: string }>;
+    content?: string;
   }
 
-  const result = await workspaceClient.servingEndpoints.query({
-    name: endpoint,
-    messages,
-  });
+  const coreMessages = (messages as UIMessage[]).map((m) => ({
+    role: m.role as "user" | "assistant" | "system",
+    content:
+      m.parts
+        ?.filter((p) => p.type === "text" && p.text)
+        .map((p) => p.text)
+        .join("") ?? m.content ?? "",
+  }));
 
-  res.json({
-    message: result.choices?.[0]?.message ?? null,
-  });
+  try {
+    const token = await getDatabricksToken();
+    const endpoint =
+      process.env.DATABRICKS_ENDPOINT || '<your-endpoint>';
+
+    // Configure Databricks AI Gateway as OpenAI-compatible provider
+    const databricks = createOpenAI({
+      baseURL: `https://${process.env.DATABRICKS_WORKSPACE_ID}.ai-gateway.cloud.databricks.com/mlflow/v1`,
+      apiKey: token,
+    });
+
+    // Stream the response using AI SDK v6
+    const result = streamText({
+      model: databricks.chat(endpoint),
+      messages: coreMessages,
+      maxOutputTokens: 1000,
+    });
+
+    // v6 API: pipe the text stream to the Express response
+    result.pipeTextStreamToResponse(res);
+  } catch (err) {
+    const message = (err as Error).message;
+    console.error(`[chat] Streaming request failed:`, message);
+    res.status(502).json({
+      error: "Chat request failed",
+      detail: message,
+    });
+  }
 });
 ```
 
-### 7. Render the chat UI with `useChat`
+### 7. Render the streaming chat UI
 
-Use `useChat` for transport and AI Elements for composition. Keep your existing chat UI structure and point requests at `/api/chat`.
+Use `useChat` from the AI SDK with `TextStreamChatTransport` for streaming support:
 
 ```tsx
 import { useChat } from "@ai-sdk/react";
+import { TextStreamChatTransport } from "ai";
+import { useState, useRef, useEffect } from "react";
 
 export function ChatPage() {
-  const { messages, input, handleInputChange, handleSubmit } = useChat({
-    api: "/api/chat",
+  const [input, setInput] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // v6 API: useChat with transport, sendMessage, and status
+  const { messages, sendMessage, status } = useChat({
+    transport: new TextStreamChatTransport({ api: "/api/chat" }),
   });
 
+  // Restore focus when status returns to ready
+  useEffect(() => {
+    if (status === "ready") {
+      inputRef.current?.focus();
+    }
+  }, [status]);
+
   return (
-    <div className="flex flex-col h-[600px]">
+    <div className="flex flex-col h-[calc(100vh-4rem)] -m-6">
       <div className="flex-1 overflow-y-auto space-y-4 p-4">
         {messages.map((m) => (
           <div key={m.id} className={m.role === "user" ? "text-right" : ""}>
             <span className="text-sm font-medium">
               {m.role === "user" ? "You" : "Assistant"}
             </span>
-            <p>{m.content}</p>
+            {m.parts.map((part, i) =>
+              part.type === "text" ? (
+                <p key={`${m.id}-${i}`} className="whitespace-pre-wrap">
+                  {part.text}
+                </p>
+              ) : null
+            )}
           </div>
         ))}
+        {status === "submitted" && <div className="p-4">Loading...</div>}
       </div>
-      <form onSubmit={handleSubmit} className="border-t p-4 flex gap-2">
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (input.trim()) {
+            void sendMessage({ text: input });
+            setInput("");
+          }
+        }}
+        className="border-t p-4 flex gap-2"
+      >
         <input
+          ref={inputRef}
           value={input}
-          onChange={handleInputChange}
+          onChange={(e) => setInput(e.target.value)}
           placeholder="Ask a question..."
           className="flex-1 border rounded px-3 py-2"
+          disabled={status !== "ready"}
         />
-        <button type="submit">Send</button>
+        <button type="submit" disabled={status !== "ready"}>
+          {status === "submitted" || status === "streaming"
+            ? "Sending..."
+            : "Send"}
+        </button>
       </form>
     </div>
   );
 }
 ```
 
-### 8. Add chat persistence in Lakebase
+> **Layout tip**: The scaffold wraps page content in a `<main>` with `p-6` padding. For a full-bleed chat layout, use `h-[calc(100vh-4rem)] -m-6` on the chat container to break out of the padding and fill the viewport below the nav bar. The code above includes this pattern.
 
-Persist chat sessions and messages using this recipe:
+The AI SDK v6 `useChat` hook with `TextStreamChatTransport`:
 
-- [`Lakebase Chat Persistence`](/resources/ai-chat-app-template#lakebase-chat-persistence)
+- Uses a transport-based architecture (replaces `api` string option)
+- Streams text responses token-by-token from the server
+- Messages use `parts` arrays instead of `content` strings
+- `sendMessage({ text })` replaces `handleSubmit`
+- Input state is managed externally with `useState`
+- `status` tracks the request lifecycle: `ready`, `submitted`, `streaming`, `error`
 
-### 9. Deploy and verify
+> **ESLint note**: If you use a `useRef` inside `useMemo` to build the transport (for example, to read a dynamic `chatId`), the `react-hooks/refs` rule may warn about reading refs during render. This is a false positive when refs are only read inside callbacks. Suppress with `// eslint-disable-next-line` or use module-level state instead.
+
+### 8. Deploy and verify
 
 ```bash
 databricks apps deploy --profile <PROFILE>
@@ -135,10 +270,14 @@ databricks apps list --profile <PROFILE>
 databricks apps logs <app-name> --profile <PROFILE>
 ```
 
-Open the app URL while signed in to Databricks, send a message, and verify streamed responses plus persisted chat history.
+> **Lint on deploy**: The AppKit scaffold includes an `ast-grep` rule (`no-double-type-assertion`) that runs during `databricks apps deploy`. If your code uses `as unknown as X` double type assertions, the deploy will fail validation. Fix these individually or adjust the rule in `.ast-grep/`.
+
+Open the app URL while signed in to Databricks, send a message, and verify streaming responses appear token-by-token from the AI Gateway endpoint.
+
+> **Note**: This recipe uses AI SDK v6. Databricks AI Gateway endpoints support the Chat Completions format, which the AI SDK uses by default when the base URL includes `/mlflow/v1`.
 
 #### References
 
-- [Databricks AI Gateway](https://docs.databricks.com/en/ai-gateway/)
-- [Databricks Model Serving endpoints](https://docs.databricks.com/en/machine-learning/model-serving/create-manage-serving-endpoints.html)
+- [Model Serving Overview](https://docs.databricks.com/aws/en/machine-learning/model-serving/)
+- [Serving Endpoints](https://docs.databricks.com/aws/en/machine-learning/model-serving/create-foundation-model-endpoints)
 - [AI Elements docs](https://ui.shadcn.com/docs/registry/ai-elements)

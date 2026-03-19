@@ -121,7 +121,7 @@ interface AppKitWithLakebase {
   lakebase: {
     query(
       text: string,
-      params?: unknown[],
+      params?: unknown[]
     ): Promise<{ rows: Record<string, unknown>[] }>;
   };
   server: {
@@ -166,7 +166,7 @@ export async function setupSampleLakebaseRoutes(appkit: AppKitWithLakebase) {
     app.get("/api/lakebase/todos", async (_req, res) => {
       try {
         const result = await appkit.lakebase.query(
-          "SELECT id, title, completed, created_at FROM app.todos ORDER BY created_at DESC",
+          "SELECT id, title, completed, created_at FROM app.todos ORDER BY created_at DESC"
         );
         res.json(result.rows);
       } catch (err) {
@@ -184,7 +184,7 @@ export async function setupSampleLakebaseRoutes(appkit: AppKitWithLakebase) {
         }
         const result = await appkit.lakebase.query(
           "INSERT INTO app.todos (title) VALUES ($1) RETURNING id, title, completed, created_at",
-          [parsed.data.title.trim()],
+          [parsed.data.title.trim()]
         );
         res.status(201).json(result.rows[0]);
       } catch (err) {
@@ -202,7 +202,7 @@ export async function setupSampleLakebaseRoutes(appkit: AppKitWithLakebase) {
         }
         const result = await appkit.lakebase.query(
           "UPDATE app.todos SET completed = NOT completed WHERE id = $1 RETURNING id, title, completed, created_at",
-          [id],
+          [id]
         );
         if (result.rows.length === 0) {
           res.status(404).json({ error: "Todo not found" });
@@ -224,7 +224,7 @@ export async function setupSampleLakebaseRoutes(appkit: AppKitWithLakebase) {
         }
         const result = await appkit.lakebase.query(
           "DELETE FROM app.todos WHERE id = $1 RETURNING id",
-          [id],
+          [id]
         );
         if (result.rows.length === 0) {
           res.status(404).json({ error: "Todo not found" });
@@ -239,6 +239,24 @@ export async function setupSampleLakebaseRoutes(appkit: AppKitWithLakebase) {
   });
 }
 ```
+
+:::warning[Deploy first to avoid schema ownership errors]
+Lakebase tables are owned by the identity that creates them. If you create the `app` schema locally, your user owns it and the deployed service principal gets `permission denied for schema app`.
+
+**Recommended workflow:** Deploy the app first so the service principal creates and owns the schema. Then grant yourself access for local development:
+
+```bash
+databricks psql --project <project-name> --profile <PROFILE> -- -c "
+  CREATE EXTENSION IF NOT EXISTS databricks_auth;
+  SELECT databricks_create_role('<your-email>', 'USER');
+  GRANT databricks_superuser TO \"<your-email>\";
+"
+```
+
+This gives you DML access (read/write) but not DDL (create/alter). The service principal remains the schema owner.
+
+If you already created tables locally, drop and recreate the schema so the SP owns it, or add tables in a separate schema (the [Chat Persistence recipe](/resources/ai-chat-app-template#lakebase-chat-persistence) uses a `chat` schema for this reason).
+:::
 
 #### Create `client/src/pages/lakebase/LakebasePage.tsx`
 
@@ -280,7 +298,7 @@ export function LakebasePage() {
       })
       .then(setTodos)
       .catch((err) =>
-        setError(err instanceof Error ? err.message : "Failed to load todos"),
+        setError(err instanceof Error ? err.message : "Failed to load todos")
       )
       .finally(() => setLoading(false));
   }, []);
@@ -403,7 +421,9 @@ export function LakebasePage() {
                   </button>
 
                   <span
-                    className={`flex-1 ${todo.completed ? "line-through text-muted-foreground" : ""}`}
+                    className={`flex-1 ${
+                      todo.completed ? "line-through text-muted-foreground" : ""
+                    }`}
                   >
                     {todo.title}
                   </span>
@@ -431,6 +451,8 @@ export function LakebasePage() {
   );
 }
 ```
+
+> **Note**: The scaffolded component may trigger `@typescript-eslint/no-misused-promises` warnings on async `onSubmit` and `onClick` handlers. These are pre-existing in the AppKit template. Wrap handlers with `void` (e.g., `onClick={() => void toggleTodo(todo.id)}`) or add `// eslint-disable-next-line` comments to suppress.
 
 #### Update `client/src/App.tsx`
 

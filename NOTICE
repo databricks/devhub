@@ -1,0 +1,120 @@
+Copyright (2026) Databricks, Inc.
+
+This Software includes software developed at Databricks (https://www.databricks.com/) and its use is subject to the included LICENSE file.
+
+________________
+This Software contains code from the following open source projects, licensed under the MIT license (https://opensource.org/license/mit):
+
+@base-ui/react 1.3.0 - https://www.npmjs.com/package/@base-ui-components/react
+Copyright (c) 2019 Material-UI SAS
+
+@docusaurus/core 3.9.2 - https://www.npmjs.com/package/@docusaurus/core
+Copyright (c) Facebook, Inc. and its affiliates.
+
+@docusaurus/module-type-aliases 3.9.2 - https://www.npmjs.com/package/@docusaurus/module-type-aliases
+Copyright (c) Facebook, Inc. and its affiliates.
+
+@docusaurus/preset-classic 3.9.2 - https://www.npmjs.com/package/@docusaurus/preset-classic?activeTab=explore
+Copyright (c) Facebook, Inc. and its affiliates.
+
+@docusaurus/tsconfig 3.9.2 - https://www.npmjs.com/package/@docusaurus/tsconfig
+Copyright (c) Facebook, Inc. and its affiliates.
+
+@docusaurus/types 3.9.2 - https://www.npmjs.com/package/@docusaurus/types
+Copyright (c) Facebook, Inc. and its affiliates.
+
+@hookform/resolvers 5.2.2 - https://www.npmjs.com/package/@hookform/resolvers
+Copyright (c) 2019-present Beier(Bill) Luo
+
+@mdx-js/react 3.0.0 - https://www.npmjs.com/package/@mdx-js/mdx
+Copyright (c) 2017 Compositor, Inc. and Vercel, Inc.
+
+@modelcontextprotocol/sdk 1.25.2 - https://www.npmjs.com/package/%40modelcontextprotocol/sdk
+Copyright (c) 2024 Anthropic, PBC
+
+@tailwindcss/postcss 4.2.1 - https://www.npmjs.com/package/@tailwindcss/postcss
+Copyright (c) Tailwind Labs, Inc.
+
+clsx 2.0.0 - https://www.npmjs.com/package/clsx/v/2.0.0
+Copyright (c) Luke Edwards <luke.edwards05@gmail.com> (lukeed.com)
+
+cmdk  1.1.1 - https://www.npmjs.com/package/cmdk
+Copyright (c) 2022 Paco Coursey
+
+date-fns 4.1.0 - https://www.npmjs.com/package/date-fns
+Copyright (c) 2021 Sasha Koss and Lesha Koss https://kossnocorp.mit-license.org
+
+embla-carousel-react 8.6.0 - https://www.npmjs.com/package/embla-carousel-react
+Copyright (c) David Jerleke.
+
+input-otp 1.4.2 - https://www.npmjs.com/package/input-otp
+Copyright (c) 2024 Guilherme Rodz
+
+next-themes 0.4.6 - https://www.npmjs.com/package/next-themes
+Copyright (c) 2022 Paco Coursey
+
+postcss 8.5.8 - https://www.npmjs.com/package/postcss
+Copyright 2013 Andrey Sitnik <andrey@sitnik.ru>
+
+prism-react-renderer 2.3.0 - https://www.npmjs.com/package/prism-react-renderer
+Copyright (c) 2018 Nearform
+
+radix-ui 1.4.3 - https://www.npmjs.com/package/radix-ui
+Copyright (c) 2022 WorkOS
+
+react 19.0.0 - https://www.npmjs.com/package/react
+Copyright (c) Meta Platforms, Inc. and affiliates.
+
+react-day-picker 9.14.0 - https://www.npmjs.com/package/react-day-picker
+Copyright (c) 2014-2025 Giampaolo Bellavite <io@gpbl.dev> and contributors
+
+react-dom 19.0.0 - https://www.npmjs.com/package/react-dom
+Copyright (c) Meta Platforms, Inc. and affiliates.
+
+react-hook-form 7.71.2 - https://www.npmjs.com/package/react-hook-form
+Copyright (c) 2019-present Beier(Bill) Luo
+
+react-resizable-panels 4 - https://www.npmjs.com/package/react-resizable-panels
+Copyright (c) 2018 Brian Vaughn
+
+recharts 2.15.4 - https://www.npmjs.com/package/recharts
+Copyright (c) 2015-present recharts
+
+sonner 2.0.7 - https://www.npmjs.com/package/sonner
+Copyright (c) 2023 Emil Kowalski
+
+tailwindcss 4.2.1 - https://www.npmjs.com/package/tailwindcss
+Copyright (c) Tailwind Labs, Inc.
+
+vaul 1.1.2 - https://www.npmjs.com/package/vaul
+Copyright (c) 2023 Emil Kowalski
+
+vitest 4.1.0 - https://www.npmjs.com/package/vitest
+Copyright (c) 2021-Present VoidZero Inc. and Vitest contributors
+
+zod 4.3.6 - https://www.npmjs.com/package/zod
+Copyright (c) 2025 Colin McDonnell
+
+________________
+This Software contains code from the following open source projects, licensed under the Apache 2.0 license (https://www.apache.org/licenses/LICENSE-2.0):
+
+@playwright/test 1.58.2 - https://www.npmjs.com/package/@playwright/test
+Copyright (c) Microsoft Corporation
+
+@vercel/node 5.6.15 - https://www.npmjs.com/package/@vercel/node
+Copyright 2017 Vercel, Inc.
+
+class-variance-authority 0.7.1 - https://www.npmjs.com/package/class-variance-authority
+Copyright 2022 Joe Bell
+
+mcp-handler 1.0.7 - https://www.npmjs.com/package/mcp-handler
+Copyright mcp-handler Authors
+
+typescript 5.6.2 - https://www.npmjs.com/package/typescript
+Copyright typescript Authors
+
+________________
+This Software contains code from the following open source projects, licensed under the ISC license (https://opensource.org/license/isc):
+
+lucide-react 0.577.0 - https://www.npmjs.com/package/lucide-react
+Copyright (c) for portions of Lucide are held by Cole Bemis 2013-2026 as part of Feather (MIT). All other copyright (c) for Lucide are held by Lucide Contributors 2026.

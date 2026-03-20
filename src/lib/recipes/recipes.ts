@@ -34,7 +34,7 @@ export const recipes: Recipe[] = [
     id: "ai-chat-model-serving",
     name: "Streaming AI Chat with Model Serving",
     description:
-      "Build a streaming AI chat experience using AI SDK, AI Elements, and Databricks Model Serving endpoints.",
+      "Build a streaming AI chat experience using AI SDK and Databricks Model Serving endpoints.",
     tags: ["AI", "Chat", "AI SDK", "Model Serving"],
     prerequisites: [
       "databricks-local-bootstrap",
@@ -93,7 +93,7 @@ export const recipes: Recipe[] = [
 ];
 
 const recipeIndex: Record<string, Recipe> = Object.fromEntries(
-  recipes.map((recipe) => [recipe.id, recipe])
+  recipes.map((recipe) => [recipe.id, recipe]),
 );
 
 export const recipesInOrder: Recipe[] = [
@@ -201,5 +201,5 @@ export const templatePreviewItems: TemplatePreviewItem[] = templates.map(
     title: template.name,
     description: template.description,
     tags: template.tags,
-  })
+  }),
 );

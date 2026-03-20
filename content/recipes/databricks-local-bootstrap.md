@@ -86,8 +86,6 @@ Install the agent skills for the agents and editors you actively use.
 npx skills add databricks/databricks-agent-skills -y -a claude-code -a cursor -a codex
 ```
 
-> **Alternative**: You can also use `databricks experimental aitools skills install` from the Databricks CLI. Both commands work.
-
 Use `-y` for noninteractive installs and add one or more `-a <agent-name>` flags for your specific agents.
 
 ### 7. Verify installed skills

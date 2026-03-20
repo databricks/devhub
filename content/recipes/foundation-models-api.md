@@ -16,26 +16,6 @@ All Foundation Model API endpoints have AI Gateway built-in. To verify, check if
 databricks serving-endpoints get <your-endpoint> --profile <PROFILE> --output json | grep -q '"ai_gateway"' && echo "✓ AI Gateway available" || echo "✗ No AI Gateway"
 ```
 
-Or using Python SDK:
-
-```python
-from databricks.sdk import WorkspaceClient
-
-w = WorkspaceClient()
-
-try:
-    # Try a known FM endpoint
-    ep = w.serving_endpoints.get("<your-endpoint>")
-    if ep.ai_gateway is not None:
-        print("✓ AI Gateway available with usage tracking")
-    else:
-        print("✗ No AI Gateway config")
-except Exception as e:
-    print(f"Endpoint not found: {e}")
-```
-
-**Note**: The SDK's `list()` method does NOT include `ai_gateway` - you must use `get()` on a specific endpoint.
-
 ### 3. Choose your model
 
 List available AI Gateway endpoints in your workspace:
@@ -78,8 +58,7 @@ import { getWorkspaceClient } from "@databricks/appkit";
 // {} tells the SDK to use default auth chain (env vars / profile).
 // Do NOT omit — getWorkspaceClient() with no argument will throw.
 const workspaceClient = getWorkspaceClient({});
-const endpoint =
-  process.env.DATABRICKS_ENDPOINT || "<your-endpoint>";
+const endpoint = process.env.DATABRICKS_ENDPOINT || "<your-endpoint>";
 
 async function queryModel(messages: any[]) {
   const result = await workspaceClient.servingEndpoints.query({

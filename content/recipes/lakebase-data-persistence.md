@@ -121,7 +121,7 @@ interface AppKitWithLakebase {
   lakebase: {
     query(
       text: string,
-      params?: unknown[]
+      params?: unknown[],
     ): Promise<{ rows: Record<string, unknown>[] }>;
   };
   server: {
@@ -166,7 +166,7 @@ export async function setupSampleLakebaseRoutes(appkit: AppKitWithLakebase) {
     app.get("/api/lakebase/todos", async (_req, res) => {
       try {
         const result = await appkit.lakebase.query(
-          "SELECT id, title, completed, created_at FROM app.todos ORDER BY created_at DESC"
+          "SELECT id, title, completed, created_at FROM app.todos ORDER BY created_at DESC",
         );
         res.json(result.rows);
       } catch (err) {
@@ -184,7 +184,7 @@ export async function setupSampleLakebaseRoutes(appkit: AppKitWithLakebase) {
         }
         const result = await appkit.lakebase.query(
           "INSERT INTO app.todos (title) VALUES ($1) RETURNING id, title, completed, created_at",
-          [parsed.data.title.trim()]
+          [parsed.data.title.trim()],
         );
         res.status(201).json(result.rows[0]);
       } catch (err) {
@@ -202,7 +202,7 @@ export async function setupSampleLakebaseRoutes(appkit: AppKitWithLakebase) {
         }
         const result = await appkit.lakebase.query(
           "UPDATE app.todos SET completed = NOT completed WHERE id = $1 RETURNING id, title, completed, created_at",
-          [id]
+          [id],
         );
         if (result.rows.length === 0) {
           res.status(404).json({ error: "Todo not found" });
@@ -224,7 +224,7 @@ export async function setupSampleLakebaseRoutes(appkit: AppKitWithLakebase) {
         }
         const result = await appkit.lakebase.query(
           "DELETE FROM app.todos WHERE id = $1 RETURNING id",
-          [id]
+          [id],
         );
         if (result.rows.length === 0) {
           res.status(404).json({ error: "Todo not found" });
@@ -298,7 +298,7 @@ export function LakebasePage() {
       })
       .then(setTodos)
       .catch((err) =>
-        setError(err instanceof Error ? err.message : "Failed to load todos")
+        setError(err instanceof Error ? err.message : "Failed to load todos"),
       )
       .finally(() => setLoading(false));
   }, []);

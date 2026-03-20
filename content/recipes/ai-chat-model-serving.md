@@ -31,33 +31,19 @@ If you run `npm run dev` before deploying, your user creates schemas that the de
 npm install ai@6 @ai-sdk/react@3 @ai-sdk/openai @databricks/sdk-experimental
 ```
 
-> **Version note**: This recipe was tested with `ai@6.1`, `@ai-sdk/react@3.1`, and `@ai-sdk/openai@3.x` (the scaffold's `--version latest` installs `@ai-sdk/openai@^3`). The `TextStreamChatTransport`, `sendMessage({ text })`, and transport-based `useChat` APIs are AI SDK v6-specific. If a future minor release changes these APIs, pin to these versions.
+> **Version note**: This recipe uses AI SDK v6 APIs (`TextStreamChatTransport`, `sendMessage({ text })`, transport-based `useChat`). Tested with `ai@6.1`, `@ai-sdk/react@3.1`, and `@ai-sdk/openai@3.x`.
 
 > **Note**: `@databricks/sdk-experimental` is included in the scaffolded `package.json`. It is listed here for reference if adding AI chat to an existing project.
 
-> **Optional**: For pre-built UI components, install individual AI Elements:
+> **Optional**: For pre-built chat UI components, initialize shadcn and add AI Elements:
+>
 > ```bash
-> # AI Elements CLI needs components.json in root directory
-> cp client/components.json .
-> npx ai-elements@latest add message
-> npx ai-elements@latest add prompt-input
-> npx ai-elements@latest add code-block
+> npx shadcn@latest init
 > ```
-> This basic recipe works without AI Elements - they're optional prebuilt components.
+>
+> This basic recipe works without AI Elements — they're optional prebuilt components.
 
-### 3. Install Databricks agent skills
-
-Install agent skills to help coding agents understand Databricks patterns:
-
-```bash
-cd <app-name>
-npx skills add databricks/databricks-agent-skills --all
-npx skills list
-```
-
-> **Note**: This installs skills for Databricks Apps, AppKit, Lakebase, and AI Gateway patterns. Essential for agent-driven development.
-
-### 4. Configure environment variables for AI Gateway
+### 3. Configure environment variables for AI Gateway
 
 Configure your Databricks workspace ID and model endpoint:
 
@@ -74,9 +60,9 @@ For deployment in Databricks Apps (`app.yaml`):
 ```yaml
 env:
   - name: DATABRICKS_WORKSPACE_ID
-    value: '<your-workspace-id>'
+    value: "<your-workspace-id>"
   - name: DATABRICKS_ENDPOINT
-    value: '<your-endpoint>'
+    value: "<your-endpoint>"
 ```
 
 > **Workspace ID**: AppKit auto-discovers this at runtime. For explicit setup, run `databricks api get /api/2.1/unity-catalog/current-metastore-assignment --profile <PROFILE>` and use the `workspace_id` field.
@@ -85,12 +71,12 @@ env:
 
 > **Find your endpoint**: Run `databricks serving-endpoints list --profile <PROFILE>` to see available models. Common endpoints include `databricks-meta-llama-3-3-70b-instruct` and `databricks-claude-sonnet-4`, but availability varies by workspace.
 
-### 5. Configure authentication helper
+### 4. Configure authentication helper
 
 Create a helper function that works for both local development and deployed apps:
 
 ```typescript
-import { Config } from '@databricks/sdk-experimental';
+import { Config } from "@databricks/sdk-experimental";
 
 async function getDatabricksToken() {
   // For deployed apps, use service principal token
@@ -100,16 +86,18 @@ async function getDatabricksToken() {
 
   // For local dev, use CLI profile auth via Databricks SDK
   const config = new Config({
-    profile: process.env.DATABRICKS_CONFIG_PROFILE || 'DEFAULT',
+    profile: process.env.DATABRICKS_CONFIG_PROFILE || "DEFAULT",
   });
   await config.ensureResolved();
   const headers = new Headers();
   await config.authenticate(headers);
-  const authHeader = headers.get('Authorization');
+  const authHeader = headers.get("Authorization");
   if (!authHeader) {
-    throw new Error('Failed to get Databricks token. Check your CLI profile or set DATABRICKS_TOKEN.');
+    throw new Error(
+      "Failed to get Databricks token. Check your CLI profile or set DATABRICKS_TOKEN.",
+    );
   }
-  return authHeader.replace('Bearer ', '');
+  return authHeader.replace("Bearer ", "");
 }
 ```
 
@@ -117,38 +105,33 @@ This function uses the Databricks SDK auth chain, which reads ~/.databrickscfg p
 
 > **User identity in deployed apps**: Databricks Apps injects user identity via request headers. Extract it with `req.header("x-forwarded-email")` or `req.header("x-forwarded-user")`. Use this for chat persistence and access control.
 
-### 6. Add `/api/chat` route with streaming
+### 5. Add `/api/chat` route with streaming
 
 Create a server route using the AI SDK's streaming support:
 
 ```typescript
 import { createOpenAI } from "@ai-sdk/openai";
-import { streamText } from "ai";
+import { streamText, type UIMessage } from "ai";
 
 app.post("/api/chat", async (req, res) => {
   const { messages } = req.body;
 
   // AI SDK v6 client sends UIMessage objects with a parts array.
   // Convert to CoreMessage format for streamText().
-  interface UIMessage {
-    role: string;
-    parts?: Array<{ type: string; text?: string }>;
-    content?: string;
-  }
-
   const coreMessages = (messages as UIMessage[]).map((m) => ({
     role: m.role as "user" | "assistant" | "system",
     content:
       m.parts
         ?.filter((p) => p.type === "text" && p.text)
         .map((p) => p.text)
-        .join("") ?? m.content ?? "",
+        .join("") ??
+      m.content ??
+      "",
   }));
 
   try {
     const token = await getDatabricksToken();
-    const endpoint =
-      process.env.DATABRICKS_ENDPOINT || '<your-endpoint>';
+    const endpoint = process.env.DATABRICKS_ENDPOINT || "<your-endpoint>";
 
     // Configure Databricks AI Gateway as OpenAI-compatible provider
     const databricks = createOpenAI({
@@ -176,33 +159,24 @@ app.post("/api/chat", async (req, res) => {
 });
 ```
 
-### 7. Render the streaming chat UI
+### 6. Render the streaming chat UI
 
 Use `useChat` from the AI SDK with `TextStreamChatTransport` for streaming support:
 
 ```tsx
 import { useChat } from "@ai-sdk/react";
 import { TextStreamChatTransport } from "ai";
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 
 export function ChatPage() {
   const [input, setInput] = useState("");
-  const inputRef = useRef<HTMLInputElement>(null);
 
-  // v6 API: useChat with transport, sendMessage, and status
   const { messages, sendMessage, status } = useChat({
     transport: new TextStreamChatTransport({ api: "/api/chat" }),
   });
 
-  // Restore focus when status returns to ready
-  useEffect(() => {
-    if (status === "ready") {
-      inputRef.current?.focus();
-    }
-  }, [status]);
-
   return (
-    <div className="flex flex-col h-[calc(100vh-4rem)] -m-6">
+    <div className="flex flex-col h-full">
       <div className="flex-1 overflow-y-auto space-y-4 p-4">
         {messages.map((m) => (
           <div key={m.id} className={m.role === "user" ? "text-right" : ""}>
@@ -214,7 +188,7 @@ export function ChatPage() {
                 <p key={`${m.id}-${i}`} className="whitespace-pre-wrap">
                   {part.text}
                 </p>
-              ) : null
+              ) : null,
             )}
           </div>
         ))}
@@ -231,7 +205,6 @@ export function ChatPage() {
         className="border-t p-4 flex gap-2"
       >
         <input
-          ref={inputRef}
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Ask a question..."
@@ -249,20 +222,7 @@ export function ChatPage() {
 }
 ```
 
-> **Layout tip**: The scaffold wraps page content in a `<main>` with `p-6` padding. For a full-bleed chat layout, use `h-[calc(100vh-4rem)] -m-6` on the chat container to break out of the padding and fill the viewport below the nav bar. The code above includes this pattern.
-
-The AI SDK v6 `useChat` hook with `TextStreamChatTransport`:
-
-- Uses a transport-based architecture (replaces `api` string option)
-- Streams text responses token-by-token from the server
-- Messages use `parts` arrays instead of `content` strings
-- `sendMessage({ text })` replaces `handleSubmit`
-- Input state is managed externally with `useState`
-- `status` tracks the request lifecycle: `ready`, `submitted`, `streaming`, `error`
-
-> **ESLint note**: If you use a `useRef` inside `useMemo` to build the transport (for example, to read a dynamic `chatId`), the `react-hooks/refs` rule may warn about reading refs during render. This is a false positive when refs are only read inside callbacks. Suppress with `// eslint-disable-next-line` or use module-level state instead.
-
-### 8. Deploy and verify
+### 7. Deploy and verify
 
 ```bash
 databricks apps deploy --profile <PROFILE>
@@ -270,11 +230,7 @@ databricks apps list --profile <PROFILE>
 databricks apps logs <app-name> --profile <PROFILE>
 ```
 
-> **Lint on deploy**: The AppKit scaffold includes an `ast-grep` rule (`no-double-type-assertion`) that runs during `databricks apps deploy`. If your code uses `as unknown as X` double type assertions, the deploy will fail validation. Fix these individually or adjust the rule in `.ast-grep/`.
-
 Open the app URL while signed in to Databricks, send a message, and verify streaming responses appear token-by-token from the AI Gateway endpoint.
-
-> **Note**: This recipe uses AI SDK v6. Databricks AI Gateway endpoints support the Chat Completions format, which the AI SDK uses by default when the base URL includes `/mlflow/v1`.
 
 #### References
 

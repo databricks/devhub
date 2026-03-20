@@ -1,17 +1,16 @@
-# Reverse ETL: Sync a Unity Catalog Table to Lakebase (Autoscaling)
+## Reverse ETL: Sync a Unity Catalog Table to Lakebase (Autoscaling)
 
-Serve lakehouse data through Lakebase Autoscaling Postgres so your applications can query it with sub-10ms latency. This creates a **synced table** — a managed copy of your Unity Catalog table in Lakebase that stays up to date automatically.
+Serve lakehouse data through Lakebase Autoscaling Postgres so your applications can query it with sub-10ms latency. This creates a synced table — a managed copy of your Unity Catalog table in Lakebase that stays up to date automatically.
 
 > This recipe is for **Lakebase Autoscaling** (projects/branches/endpoints with scale-to-zero). For Lakebase Provisioned (manually scaled instances), see the Provisioned Reverse ETL recipe (coming soon).
 
-## When to use this
+### When to use this
 
 - Your app needs fast lookup-style queries against analytics data (user profiles, feature values, risk scores)
 - You want to serve gold tables, ML outputs, or enriched records through a standard Postgres connection
 - You need ACID transactions and sub-10ms reads alongside your operational state
 
-## Choose a sync mode
-
+### Choose a sync mode
 
 | Mode           | Behavior                                       | Best for                                                                              |
 | -------------- | ---------------------------------------------- | ------------------------------------------------------------------------------------- |
@@ -19,27 +18,24 @@ Serve lakehouse data through Lakebase Autoscaling Postgres so your applications 
 | **Triggered**  | Incremental updates on demand or on a schedule | Known cadence of changes, good cost/freshness balance                                 |
 | **Continuous** | Real-time streaming (seconds of latency)       | Changes must appear in Lakebase near-instantly                                        |
 
-
 > **Triggered** and **Continuous** modes require [Change Data Feed (CDF)](https://docs.databricks.com/aws/en/delta/delta-change-data-feed) enabled on the source table. If it's not enabled, run:
 >
 > ```sql
 > ALTER TABLE <catalog>.<schema>.<table> SET TBLPROPERTIES (delta.enableChangeDataFeed = true);
 > ```
 
-## Sync throughput
+### Sync throughput
 
 Autoscaling CUs are physically 8x smaller than Provisioned CUs, so per-CU throughput differs:
-
 
 | Mode                                     | Rows/sec per CU |
 | ---------------------------------------- | --------------- |
 | **Snapshot** (initial + full refresh)    | ~2,000          |
 | **Triggered / Continuous** (incremental) | ~150            |
 
-
 > A 10x speedup for large-table snapshot sync (writing Postgres pages directly, leveraging separation of storage and compute) is coming for Autoscaling only.
 
-## Create a synced table
+### 1. Create a synced table
 
 ```bash
 databricks database create-synced-database-table \
@@ -66,18 +62,16 @@ databricks database get-synced-database-table <CATALOG>.<SCHEMA>.<SYNCED_TABLE_N
 
 > **Important:** If your Autoscaling project was created via the `/postgres/` API (not `/database/`), programmatic synced table creation is not yet available via CLI — use the Databricks UI as a fallback. In **Catalog**, select the source table → **Create synced table**, then choose your Lakebase project, branch, sync mode, and pipeline. This gap is expected to close soon.
 
-## Pipeline reuse guidance
+### 2. Configure pipeline reuse
 
 How you set up pipelines depends on your sync mode:
-
 
 | Sync mode                | Recommendation                         | Why                                                                                                                  |
 | ------------------------ | -------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
 | **Continuous**           | **Reuse** a pipeline across ~10 tables | Cost-advantageous — e.g., 1 pipeline for 10 tables ≈ $204/table/month vs $2,044/table/month for individual pipelines |
 | **Snapshot / Triggered** | **Separate** pipelines per table       | Allows re-snapshotting individual tables without impacting others                                                    |
 
-
-## Schedule ongoing syncs
+### 3. Schedule ongoing syncs
 
 The initial snapshot runs automatically on creation. For **Snapshot** and **Triggered** modes, subsequent syncs need to be triggered.
 
@@ -98,7 +92,7 @@ pipeline_id = table.data_synchronization_status.pipeline_id
 w.pipelines.start_update(pipeline_id=pipeline_id)
 ```
 
-## Query the synced data in Postgres
+### 4. Query the synced data in Postgres
 
 Once synced, the table is available in Lakebase Postgres. The Unity Catalog schema becomes the Postgres schema:
 
@@ -108,14 +102,14 @@ SELECT * FROM "<schema>"."<synced_table_name>" WHERE "user_id" = 12345;
 
 Connect with any standard Postgres client (psql, DBeaver, your application's Postgres driver).
 
-## What you end up with
+### What you end up with
 
 - A **synced table** in Unity Catalog that tracks the sync pipeline
 - A **read-only Postgres table** in Lakebase that your apps can query with sub-10ms latency
 - A **managed Lakeflow pipeline** that keeps the data in sync based on your chosen mode
 - Up to **16 connections** per sync to your Lakebase database
 
-## Important constraints
+### Important constraints
 
 - **Primary key is mandatory.** Synced tables always require a primary key — it enables efficient point lookups and incremental updates. Rows with nulls in PK columns are excluded from the sync.
 - **Duplicate primary keys fail the sync** unless you configure a `timeseries_key` for deduplication (latest value wins per PK). Using a timeseries key has a performance penalty.
@@ -124,12 +118,11 @@ Connect with any standard Postgres client (psql, DBeaver, your application's Pos
 - **Connection limits**: Autoscaling supports up to 4,000 concurrent connections (varies by compute size). Each sync uses up to 16 connections.
 - **Read-only in Postgres**: Synced tables should only be read from Postgres. Writing to them interferes with the sync pipeline.
 
-## Cost guidance
+### Cost guidance
 
 Cost formula: `[Rows / (Speed × CUs × 3600)] × DLT Hourly Rate`
 
 Example costs (181M rows, 1 CU, $2.80/hr DLT rate):
-
 
 | Mode                               | Monthly cost |
 | ---------------------------------- | ------------ |
@@ -138,9 +131,7 @@ Example costs (181M rows, 1 CU, $2.80/hr DLT rate):
 | Continuous (10 tables, 1 pipeline) | ~$204/table  |
 | Continuous (1 table, 1 pipeline)   | ~$2,044      |
 
-
-## Troubleshooting
-
+### Troubleshooting
 
 | Issue                               | Fix                                                                                       |
 | ----------------------------------- | ----------------------------------------------------------------------------------------- |
@@ -151,8 +142,7 @@ Example costs (181M rows, 1 CU, $2.80/hr DLT rate):
 | FGAC table sync fails               | Create a view over the table and sync the view in Snapshot mode                           |
 | Duplicate primary key failure       | Add a `timeseries_key` to deduplicate (latest wins)                                       |
 
-
-## Learn more
+#### References
 
 - [Synced tables (Autoscaling)](https://docs.databricks.com/aws/en/oltp/projects/sync-tables)
 - [Change Data Feed](https://docs.databricks.com/aws/en/delta/delta-change-data-feed)

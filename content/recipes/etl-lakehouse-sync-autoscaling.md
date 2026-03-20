@@ -1,17 +1,17 @@
-# ETL: Sync Lakebase Tables to Unity Catalog (Autoscaling — Lakehouse Sync)
+## ETL: Sync Lakebase Tables to Unity Catalog (Autoscaling — Lakehouse Sync)
 
-Replicate your Lakebase Autoscaling Postgres tables into Unity Catalog as managed Delta tables. **Lakehouse Sync** captures every row-level change using CDC and writes them as **SCD Type 2 history** — giving you a full audit trail of how your operational data changed over time, queryable from the lakehouse.
+Replicate your Lakebase Autoscaling Postgres tables into Unity Catalog as managed Delta tables using Lakehouse Sync. CDC captures every row-level change and writes them as SCD Type 2 history, giving you a full audit trail queryable from the lakehouse.
 
 > This recipe is for **Lakebase Autoscaling** (projects/branches/endpoints with scale-to-zero). For Lakebase Provisioned, see the Provisioned ETL recipe (coming soon).
 
-## When to use this
+### When to use this
 
 - You want to analyze operational data (orders, user activity, support tickets) in the lakehouse
 - You need a historical record of every insert, update, and delete from your Postgres tables
 - You want to join operational data with analytics data in Spark, SQL, or BI tools
 - You need to feed Lakebase data into downstream pipelines or ML models
 
-## How it works
+### How it works
 
 > **Note:** Lakehouse Sync is currently in **Beta on AWS only** (all Autoscaling regions). Azure support is not yet available. It is a native Lakebase feature — no external compute, pipelines, or jobs required, and there is no incremental charge for replication beyond the underlying Lakebase compute and storage costs.
 
@@ -26,7 +26,7 @@ Each row includes metadata columns:
 - `_lsn` — Log Sequence Number for ordering changes
 - `_commit_timestamp` — When the change was captured
 
-## Step 1 — Verify table replica identity
+### 1. Verify table replica identity
 
 Lakehouse Sync requires the right replica identity for capturing changes. Connect to your Lakebase database and check:
 
@@ -52,7 +52,7 @@ If a table shows `default` or `nothing`, set it to `FULL`:
 ALTER TABLE <table_name> REPLICA IDENTITY FULL;
 ```
 
-## Step 2 — Check for unsupported data types
+### 2. Check for unsupported data types
 
 ```sql
 SELECT c.table_schema, c.table_name, c.column_name, c.udt_name AS data_type
@@ -75,13 +75,13 @@ ORDER BY c.table_schema, c.table_name, c.ordinal_position;
 
 If unsupported types appear, restructure those columns before enabling sync.
 
-## Step 3 — Enable Lakehouse Sync
+### 3. Enable Lakehouse Sync
 
 > **Note:** This step is not yet available via CLI or REST API and must be completed through the Databricks UI:
 >
 > In **Catalog**, open your Autoscaling project → branch → **Lakehouse Sync** → **Start Sync**, then select the source database/schema, destination catalog/schema, and tables.
 
-## Step 4 — Monitor sync status
+### 4. Monitor sync status
 
 Check active syncs from Postgres (the `wal2delta` schema only exists after Lakehouse Sync has been enabled in Step 3):
 
@@ -89,9 +89,9 @@ Check active syncs from Postgres (the `wal2delta` schema only exists after Lakeh
 SELECT * FROM wal2delta.tables;
 ```
 
-## Step 5 — Query the history tables
+### 5. Query the history tables
 
-### Latest state of each row
+#### Latest state of each row
 
 ```sql
 SELECT *
@@ -105,7 +105,7 @@ WHERE rn = 1
   AND _change_type != 'delete';
 ```
 
-### Full change history for a record
+#### Full change history for a record
 
 ```sql
 SELECT *
@@ -114,7 +114,7 @@ WHERE id = 12345
 ORDER BY _lsn;
 ```
 
-## Handling schema changes
+### 6. Handle schema changes
 
 If you need to change a synced table's schema in Postgres, use the rename-and-swap pattern:
 
@@ -135,14 +135,14 @@ ALTER TABLE users_v2 RENAME TO users;
 COMMIT;
 ```
 
-## What you end up with
+### What you end up with
 
 - **Delta history tables** in Unity Catalog (`lb_<table_name>_history`) with full SCD Type 2 change tracking
 - **Continuous replication** — changes stream from Postgres to Delta automatically
 - **No external compute** — Lakehouse Sync is a native Lakebase feature
 - Operational data queryable in Spark SQL, notebooks, BI tools, and downstream pipelines
 
-## Troubleshooting
+### Troubleshooting
 
 | Issue | Fix |
 |-------|-----|
@@ -151,13 +151,13 @@ COMMIT;
 | Sync lag increasing | Check Lakebase endpoint health and compute scaling |
 | Missing changes on update/delete | Verify `REPLICA IDENTITY FULL` — `default` only captures PK columns |
 
-## Limitations
+### Limitations
 
 - **AWS only** — Lakehouse Sync Beta is available in all Autoscaling regions on AWS. Azure support is not yet available.
 - **No incremental charge** — replication cost is included in your Lakebase compute and storage.
 - **Works alongside synced tables** — you can use Lakehouse Sync in a project/schema that also has Reverse ETL synced tables.
 
-## Learn more
+#### References
 
 - [Lakehouse Sync (Autoscaling)](https://docs.databricks.com/aws/en/oltp/projects/lakehouse-sync)
 - [Register Lakebase in Unity Catalog](https://docs.databricks.com/aws/en/oltp/projects/register-uc)

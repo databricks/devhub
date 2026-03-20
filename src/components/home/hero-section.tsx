@@ -109,7 +109,32 @@ export function HeroSection(): ReactNode {
               for your deployment. One platform, one command, production-ready.
             </p>
           </div>
-          <div className="hidden md:block" />
+          <div className="hidden md:flex items-center justify-center">
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="block h-full w-auto max-w-full object-contain dark:hidden"
+            >
+              <source
+                src="/videos/hero-animation-bg-light.mp4"
+                type="video/mp4"
+              />
+            </video>
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="hidden h-full w-auto max-w-full object-contain dark:block"
+            >
+              <source
+                src="/videos/hero-animation-bg-dark.mp4"
+                type="video/mp4"
+              />
+            </video>
+          </div>
         </div>
       </div>
       <div className="h-3 w-full bg-db-lava" />

@@ -28,7 +28,9 @@ async function clickCopyMarkdownAndWaitForToast(
   const menuItem = page.getByRole("menuitem", { name: "Copy Markdown" });
   await menuItem.waitFor({ state: "visible" });
   await menuItem.click();
-  await expect(page.getByText("Markdown copied")).toBeVisible({ timeout: 5000 });
+  await expect(page.getByText("Markdown copied")).toBeVisible({
+    timeout: 5000,
+  });
 }
 
 test.describe("copy markdown exports raw markdown on recipe pages", () => {

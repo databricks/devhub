@@ -22,6 +22,7 @@ lb_<table_name>_history
 ```
 
 Each row includes metadata columns:
+
 - `_change_type` — `insert`, `update_preimage`, `update_postimage`, or `delete`
 - `_lsn` — Log Sequence Number for ordering changes
 - `_commit_timestamp` — When the change was captured
@@ -144,11 +145,11 @@ COMMIT;
 
 ### Troubleshooting
 
-| Issue | Fix |
-|-------|-----|
-| Table not appearing in sync | Ensure it has a primary key or `REPLICA IDENTITY FULL` |
-| Unsupported data type error | Check column types with the query in Step 2 |
-| Sync lag increasing | Check Lakebase endpoint health and compute scaling |
+| Issue                            | Fix                                                                 |
+| -------------------------------- | ------------------------------------------------------------------- |
+| Table not appearing in sync      | Ensure it has a primary key or `REPLICA IDENTITY FULL`              |
+| Unsupported data type error      | Check column types with the query in Step 2                         |
+| Sync lag increasing              | Check Lakebase endpoint health and compute scaling                  |
 | Missing changes on update/delete | Verify `REPLICA IDENTITY FULL` — `default` only captures PK columns |
 
 ### Limitations

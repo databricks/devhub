@@ -2,6 +2,8 @@
 
 Add a managed Postgres database to your Databricks app using the Lakebase plugin. Covers Lakebase project creation, schema setup, and full CRUD REST API routes.
 
+The code examples below use a generic `items` resource as a placeholder. Replace `items` with your domain entity (products, orders, users, etc.) and adapt the schema columns to match your data model.
+
 ### 1. Create a Lakebase project
 
 Create a new Lakebase Postgres project. This provisions a managed Postgres cluster with a default branch and endpoint:
@@ -52,36 +54,15 @@ databricks apps init \
 
 Use the values returned by `list-databases` and `list-endpoints`. The generated template currently requires all postgres fields together during non-interactive scaffolding.
 
-This scaffolds a complete app with Lakebase already wired up, including a sample todo CRUD app. Skip to step 4 to configure environment variables, then step 5 to deploy.
+This scaffolds a complete app with Lakebase already wired up, including a sample CRUD app. Skip to step 4 to configure environment variables, then step 5 to deploy.
 
-### Production naming and routing conventions
+### Naming and routing conventions
 
-The scaffolded Lakebase sample uses `lakebase` in route names and file paths to make plugin wiring obvious. For real apps, use domain names in user-facing code and keep `lakebase` only for infrastructure configuration.
+The scaffolded Lakebase sample uses `lakebase` in route names and file paths to make plugin wiring obvious. For production apps, use domain names in user-facing code and keep `lakebase` only for infrastructure configuration:
 
-Use these conventions:
-
-- frontend pages and routes should use domain names (for example, `/` or `/todos`), not `/lakebase`
-- API routes should use domain names (for example, `/api/todos`), not `/api/lakebase/todos`
-- component and file names should use domain names (for example, `TodosPage.tsx`, `todo-routes.ts`)
-- keep `lakebase` naming for plugin/config only (`lakebase()` plugin, `LAKEBASE_ENDPOINT`, `postgres` app resource)
-
-For a todo app, prefer:
-
-- `client/src/pages/TodosPage.tsx`
-- route: `/` or `/todos`
-- `server/routes/todos/todo-routes.ts`
-- API endpoints:
-  - `GET /api/todos`
-  - `POST /api/todos`
-  - `PATCH /api/todos/:id`
-  - `DELETE /api/todos/:id`
-
-Agent checklist after scaffolding:
-
-- rename `LakebasePage` to your domain page component (for example, `TodosPage`)
-- rename `setupSampleLakebaseRoutes` to a domain-specific route setup function
-- rename `/lakebase` and `/api/lakebase/*` paths to domain-specific paths
-- update navigation labels to domain language (for example, `Todos`), not `Lakebase`
+- page components and files use domain names: `ItemsPage.tsx`, `item-routes.ts`
+- routes use domain names: `/items`, `/api/items`, `/api/items/:id`
+- keep `lakebase` naming for plugin/config only: `lakebase()` plugin, `LAKEBASE_ENDPOINT`, `postgres` app resource
 
 ### 3. Existing app: add Lakebase manually
 
@@ -97,21 +78,21 @@ Use `autoStart: false` on the server plugin so database setup runs before accept
 
 ```typescript
 import { createApp, server, lakebase } from "@databricks/appkit";
-import { setupSampleLakebaseRoutes } from "./routes/lakebase/todo-routes";
+import { setupRoutes } from "./routes/item-routes";
 
 createApp({
   plugins: [server({ autoStart: false }), lakebase()],
 })
   .then(async (appkit) => {
-    await setupSampleLakebaseRoutes(appkit);
+    await setupRoutes(appkit);
     await appkit.server.start();
   })
   .catch(console.error);
 ```
 
-#### Create `server/routes/lakebase/todo-routes.ts`
+#### Create `server/routes/item-routes.ts`
 
-Sample CRUD API that creates a `todos` table and exposes REST endpoints:
+CRUD API that creates an `items` table and exposes REST endpoints. Adapt the table schema and routes to your domain:
 
 ```typescript
 import { z } from "zod";
@@ -131,31 +112,31 @@ interface AppKitWithLakebase {
 
 const TABLE_EXISTS_SQL = `
   SELECT 1 FROM information_schema.tables
-  WHERE table_schema = 'app' AND table_name = 'todos'
+  WHERE table_schema = 'app' AND table_name = 'items'
 `;
 
 const SETUP_SCHEMA_SQL = `CREATE SCHEMA IF NOT EXISTS app`;
 
 const CREATE_TABLE_SQL = `
-  CREATE TABLE IF NOT EXISTS app.todos (
+  CREATE TABLE IF NOT EXISTS app.items (
     id SERIAL PRIMARY KEY,
-    title TEXT NOT NULL,
-    completed BOOLEAN NOT NULL DEFAULT false,
+    name TEXT NOT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
   )
 `;
 
-const CreateTodoBody = z.object({ title: z.string().min(1) });
+const CreateItemBody = z.object({ name: z.string().min(1) });
+const UpdateItemBody = z.object({ name: z.string().min(1) });
 
-export async function setupSampleLakebaseRoutes(appkit: AppKitWithLakebase) {
+export async function setupRoutes(appkit: AppKitWithLakebase) {
   try {
     const { rows } = await appkit.lakebase.query(TABLE_EXISTS_SQL);
     if (rows.length > 0) {
-      console.log("[lakebase] Table app.todos already exists, skipping setup");
+      console.log("[lakebase] Table app.items already exists, skipping setup");
     } else {
       await appkit.lakebase.query(SETUP_SCHEMA_SQL);
       await appkit.lakebase.query(CREATE_TABLE_SQL);
-      console.log("[lakebase] Created schema and table app.todos");
+      console.log("[lakebase] Created schema and table app.items");
     }
   } catch (err) {
     console.warn("[lakebase] Database setup failed:", (err as Error).message);
@@ -163,59 +144,64 @@ export async function setupSampleLakebaseRoutes(appkit: AppKitWithLakebase) {
   }
 
   appkit.server.extend((app) => {
-    app.get("/api/lakebase/todos", async (_req, res) => {
+    app.get("/api/items", async (_req, res) => {
       try {
         const result = await appkit.lakebase.query(
-          "SELECT id, title, completed, created_at FROM app.todos ORDER BY created_at DESC",
+          "SELECT id, name, created_at FROM app.items ORDER BY created_at DESC",
         );
         res.json(result.rows);
       } catch (err) {
-        console.error("Failed to list todos:", err);
-        res.status(500).json({ error: "Failed to list todos" });
+        console.error("Failed to list items:", err);
+        res.status(500).json({ error: "Failed to list items" });
       }
     });
 
-    app.post("/api/lakebase/todos", async (req, res) => {
+    app.post("/api/items", async (req, res) => {
       try {
-        const parsed = CreateTodoBody.safeParse(req.body);
+        const parsed = CreateItemBody.safeParse(req.body);
         if (!parsed.success) {
-          res.status(400).json({ error: "title is required" });
+          res.status(400).json({ error: "name is required" });
           return;
         }
         const result = await appkit.lakebase.query(
-          "INSERT INTO app.todos (title) VALUES ($1) RETURNING id, title, completed, created_at",
-          [parsed.data.title.trim()],
+          "INSERT INTO app.items (name) VALUES ($1) RETURNING id, name, created_at",
+          [parsed.data.name.trim()],
         );
         res.status(201).json(result.rows[0]);
       } catch (err) {
-        console.error("Failed to create todo:", err);
-        res.status(500).json({ error: "Failed to create todo" });
+        console.error("Failed to create item:", err);
+        res.status(500).json({ error: "Failed to create item" });
       }
     });
 
-    app.patch("/api/lakebase/todos/:id", async (req, res) => {
+    app.patch("/api/items/:id", async (req, res) => {
       try {
         const id = parseInt(req.params.id, 10);
         if (isNaN(id)) {
           res.status(400).json({ error: "Invalid id" });
           return;
         }
+        const parsed = UpdateItemBody.safeParse(req.body);
+        if (!parsed.success) {
+          res.status(400).json({ error: "name is required" });
+          return;
+        }
         const result = await appkit.lakebase.query(
-          "UPDATE app.todos SET completed = NOT completed WHERE id = $1 RETURNING id, title, completed, created_at",
-          [id],
+          "UPDATE app.items SET name = $1 WHERE id = $2 RETURNING id, name, created_at",
+          [parsed.data.name.trim(), id],
         );
         if (result.rows.length === 0) {
-          res.status(404).json({ error: "Todo not found" });
+          res.status(404).json({ error: "Item not found" });
           return;
         }
         res.json(result.rows[0]);
       } catch (err) {
-        console.error("Failed to update todo:", err);
-        res.status(500).json({ error: "Failed to update todo" });
+        console.error("Failed to update item:", err);
+        res.status(500).json({ error: "Failed to update item" });
       }
     });
 
-    app.delete("/api/lakebase/todos/:id", async (req, res) => {
+    app.delete("/api/items/:id", async (req, res) => {
       try {
         const id = parseInt(req.params.id, 10);
         if (isNaN(id)) {
@@ -223,17 +209,17 @@ export async function setupSampleLakebaseRoutes(appkit: AppKitWithLakebase) {
           return;
         }
         const result = await appkit.lakebase.query(
-          "DELETE FROM app.todos WHERE id = $1 RETURNING id",
+          "DELETE FROM app.items WHERE id = $1 RETURNING id",
           [id],
         );
         if (result.rows.length === 0) {
-          res.status(404).json({ error: "Todo not found" });
+          res.status(404).json({ error: "Item not found" });
           return;
         }
         res.status(204).send();
       } catch (err) {
-        console.error("Failed to delete todo:", err);
-        res.status(500).json({ error: "Failed to delete todo" });
+        console.error("Failed to delete item:", err);
+        res.status(500).json({ error: "Failed to delete item" });
       }
     });
   });
@@ -253,14 +239,16 @@ databricks psql --project <project-name> --profile <PROFILE> -- -c "
 "
 ```
 
+If you are the Lakebase project owner, `databricks_create_role` may fail with `role already exists` and `GRANT databricks_superuser` may fail with `permission denied to grant role`. Both errors are safe to ignore — the project owner already has the necessary access.
+
 This gives you DML access (read/write) but not DDL (create/alter). The service principal remains the schema owner.
 
-If you already created tables locally, drop and recreate the schema so the SP owns it, or add tables in a separate schema (the [Chat Persistence recipe](/resources/ai-chat-app-template#lakebase-chat-persistence) uses a `chat` schema for this reason).
+If you already created tables locally, drop and recreate the schema so the service principal owns it, or add tables in a separate schema (the [Chat Persistence recipe](/resources/ai-chat-app-template#lakebase-chat-persistence) uses a `chat` schema for this reason).
 :::
 
-#### Create `client/src/pages/lakebase/LakebasePage.tsx`
+#### Create `client/src/pages/ItemsPage.tsx`
 
-Todo list UI with CRUD operations against the API routes:
+List and create UI with CRUD operations against the API routes. Adapt the fields and layout to your domain:
 
 ```tsx
 import {
@@ -273,104 +261,84 @@ import {
   Skeleton,
 } from "@databricks/appkit-ui/react";
 import { useState, useEffect } from "react";
-import { Check, X } from "lucide-react";
+import { X } from "lucide-react";
 
-interface Todo {
+interface Item {
   id: number;
-  title: string;
-  completed: boolean;
+  name: string;
   created_at: string;
 }
 
-export function LakebasePage() {
-  const [todos, setTodos] = useState<Todo[]>([]);
-  const [newTitle, setNewTitle] = useState("");
+export function ItemsPage() {
+  const [items, setItems] = useState<Item[]>([]);
+  const [newName, setNewName] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    fetch("/api/lakebase/todos")
+    fetch("/api/items")
       .then((res) => {
         if (!res.ok)
-          throw new Error(`Failed to fetch todos: ${res.statusText}`);
-        return res.json() as Promise<Todo[]>;
+          throw new Error(`Failed to fetch items: ${res.statusText}`);
+        return res.json() as Promise<Item[]>;
       })
-      .then(setTodos)
+      .then(setItems)
       .catch((err) =>
-        setError(err instanceof Error ? err.message : "Failed to load todos"),
+        setError(err instanceof Error ? err.message : "Failed to load items"),
       )
       .finally(() => setLoading(false));
   }, []);
 
-  const addTodo = async (e: React.FormEvent) => {
+  const addItem = async (e: React.FormEvent) => {
     e.preventDefault();
-    const title = newTitle.trim();
-    if (!title) return;
+    const name = newName.trim();
+    if (!name) return;
 
     setSubmitting(true);
     try {
-      const res = await fetch("/api/lakebase/todos", {
+      const res = await fetch("/api/items", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title }),
+        body: JSON.stringify({ name }),
       });
-      if (!res.ok) throw new Error(`Failed to create todo: ${res.statusText}`);
-      const created = (await res.json()) as Todo;
-      setTodos((prev) => [created, ...prev]);
-      setNewTitle("");
+      if (!res.ok) throw new Error(`Failed to create item: ${res.statusText}`);
+      const created = (await res.json()) as Item;
+      setItems((prev) => [created, ...prev]);
+      setNewName("");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to add todo");
+      setError(err instanceof Error ? err.message : "Failed to add item");
     } finally {
       setSubmitting(false);
     }
   };
 
-  const toggleTodo = async (id: number) => {
+  const deleteItem = async (id: number) => {
     try {
-      const res = await fetch(`/api/lakebase/todos/${id}`, { method: "PATCH" });
-      if (!res.ok) throw new Error(`Failed to update todo: ${res.statusText}`);
-      const updated = (await res.json()) as Todo;
-      setTodos((prev) => prev.map((t) => (t.id === id ? updated : t)));
+      const res = await fetch(`/api/items/${id}`, { method: "DELETE" });
+      if (!res.ok) throw new Error(`Failed to delete item: ${res.statusText}`);
+      setItems((prev) => prev.filter((item) => item.id !== id));
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to update todo");
+      setError(err instanceof Error ? err.message : "Failed to delete item");
     }
   };
-
-  const deleteTodo = async (id: number) => {
-    try {
-      const res = await fetch(`/api/lakebase/todos/${id}`, {
-        method: "DELETE",
-      });
-      if (!res.ok) throw new Error(`Failed to delete todo: ${res.statusText}`);
-      setTodos((prev) => prev.filter((t) => t.id !== id));
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to delete todo");
-    }
-  };
-
-  const completedCount = todos.filter((t) => t.completed).length;
 
   return (
     <div className="space-y-6 w-full max-w-2xl mx-auto">
       <Card className="shadow-lg">
         <CardHeader>
-          <CardTitle>Todo List</CardTitle>
+          <CardTitle>Items</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-muted-foreground mb-4">
-            A simple CRUD example powered by Databricks Lakebase (PostgreSQL).
-          </p>
-
-          <form onSubmit={addTodo} className="flex gap-2 mb-6">
+          <form onSubmit={addItem} className="flex gap-2 mb-6">
             <Input
-              placeholder="What needs to be done?"
-              value={newTitle}
-              onChange={(e) => setNewTitle(e.target.value)}
+              placeholder="New item name"
+              value={newName}
+              onChange={(e) => setNewName(e.target.value)}
               disabled={submitting}
               className="flex-1"
             />
-            <Button type="submit" disabled={submitting || !newTitle.trim()}>
+            <Button type="submit" disabled={submitting || !newName.trim()}>
               {submitting ? "Adding..." : "Add"}
             </Button>
           </form>
@@ -385,64 +353,37 @@ export function LakebasePage() {
             <div className="space-y-3">
               {Array.from({ length: 3 }, (_, i) => (
                 <div key={`skeleton-${i}`} className="flex items-center gap-3">
-                  <Skeleton className="h-5 w-5 rounded" />
                   <Skeleton className="h-4 flex-1" />
                 </div>
               ))}
             </div>
           )}
 
-          {!loading && todos.length === 0 && (
+          {!loading && items.length === 0 && (
             <p className="text-muted-foreground text-center py-8">
-              No todos yet. Add one above to get started.
+              No items yet. Add one above to get started.
             </p>
           )}
 
-          {!loading && todos.length > 0 && (
+          {!loading && items.length > 0 && (
             <div className="space-y-2">
-              {todos.map((todo) => (
+              {items.map((item) => (
                 <div
-                  key={todo.id}
+                  key={item.id}
                   className="flex items-center gap-3 p-3 rounded-lg border hover:bg-muted/50 transition-colors"
                 >
-                  <button
-                    type="button"
-                    onClick={() => toggleTodo(todo.id)}
-                    className={`h-5 w-5 rounded border-2 flex items-center justify-center shrink-0 transition-colors ${
-                      todo.completed
-                        ? "bg-primary border-primary text-primary-foreground"
-                        : "border-muted-foreground/30 hover:border-primary"
-                    }`}
-                    aria-label={
-                      todo.completed ? "Mark as incomplete" : "Mark as complete"
-                    }
-                  >
-                    {todo.completed && <Check className="h-3 w-3" />}
-                  </button>
-
-                  <span
-                    className={`flex-1 ${
-                      todo.completed ? "line-through text-muted-foreground" : ""
-                    }`}
-                  >
-                    {todo.title}
-                  </span>
-
+                  <span className="flex-1">{item.name}</span>
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => deleteTodo(todo.id)}
+                    onClick={() => deleteItem(item.id)}
                     className="text-muted-foreground hover:text-destructive shrink-0"
-                    aria-label="Delete todo"
+                    aria-label="Delete item"
                   >
                     <X className="h-4 w-4" />
                   </Button>
                 </div>
               ))}
-
-              <p className="text-xs text-muted-foreground pt-2">
-                {completedCount} of {todos.length} completed
-              </p>
             </div>
           )}
         </CardContent>
@@ -452,23 +393,21 @@ export function LakebasePage() {
 }
 ```
 
-> **Note**: The scaffolded component may trigger `@typescript-eslint/no-misused-promises` warnings on async `onSubmit` and `onClick` handlers. These are pre-existing in the AppKit template. Wrap handlers with `void` (e.g., `onClick={() => void toggleTodo(todo.id)}`) or add `// eslint-disable-next-line` comments to suppress.
-
 #### Update `client/src/App.tsx`
 
 Add the import, nav link, and route:
 
 ```tsx
 // Add import at top
-import { LakebasePage } from './pages/lakebase/LakebasePage';
+import { ItemsPage } from './pages/ItemsPage';
 
 // Add nav link inside the <nav> element
-<NavLink to="/lakebase" className={navLinkClass}>
-  Lakebase
+<NavLink to="/items" className={navLinkClass}>
+  Items
 </NavLink>
 
 // Add route in the router children array
-{ path: '/lakebase', element: <LakebasePage /> },
+{ path: '/items', element: <ItemsPage /> },
 ```
 
 ### 4. Configure environment variables
@@ -542,7 +481,7 @@ targets:
 databricks apps deploy --profile <PROFILE>
 ```
 
-Verify the app once it is running by opening the app URL in your browser while signed in to Databricks, navigating to the `Lakebase` page, and creating/completing/deleting a todo item.
+Verify the app once it is running by opening the app URL in your browser while signed in to Databricks, navigating to the Items page, and creating, updating, and deleting an item.
 
 If the app does not start, check logs:
 

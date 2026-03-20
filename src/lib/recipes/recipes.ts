@@ -157,6 +157,7 @@ export const templates: Template[] = [
       "databricks-local-bootstrap",
       "foundation-models-api",
       "ai-chat-model-serving",
+      "lakebase-data-persistence",
       "lakebase-chat-persistence",
     ],
   }),

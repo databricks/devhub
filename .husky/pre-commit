@@ -1,0 +1,3 @@
+npx prettier -c .
+npm run typecheck
+npm run build

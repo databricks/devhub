@@ -75,6 +75,29 @@ export const recipes: Recipe[] = [
     prerequisites: ["databricks-local-bootstrap"],
   },
   {
+    id: "etl-lakehouse-sync-autoscaling",
+    name: "ETL: Sync Lakebase to Unity Catalog (Autoscaling)",
+    description:
+      "Replicate Lakebase Autoscaling Postgres tables into Unity Catalog as managed Delta tables using Lakehouse Sync, with CDC and SCD Type 2 history.",
+    tags: [
+      "Lakebase",
+      "Lakehouse Sync",
+      "Unity Catalog",
+      "ETL",
+      "CDC",
+      "Delta",
+    ],
+    prerequisites: ["databricks-local-bootstrap"],
+  },
+  {
+    id: "reverse-etl-synced-tables-autoscaling",
+    name: "Reverse ETL: Unity Catalog to Lakebase (Autoscaling)",
+    description:
+      "Sync Unity Catalog tables into Lakebase Autoscaling Postgres as synced tables for sub-10ms application queries, with snapshot, triggered, or continuous modes.",
+    tags: ["Lakebase", "Reverse ETL", "Unity Catalog", "Synced Tables", "CDF"],
+    prerequisites: ["databricks-local-bootstrap"],
+  },
+  {
     id: "genie-conversational-analytics",
     name: "Genie Conversational Analytics",
     description:
@@ -103,6 +126,8 @@ export const recipesInOrder: Recipe[] = [
   "model-serving-endpoint-creation",
   "ai-chat-model-serving",
   "lakebase-chat-persistence",
+  "etl-lakehouse-sync-autoscaling",
+  "reverse-etl-synced-tables-autoscaling",
   "genie-conversational-analytics",
   "sql-analytics-dashboard",
 ].map((recipeId) => {

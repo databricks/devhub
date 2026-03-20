@@ -2,7 +2,7 @@
 
 Replicate your Lakebase Autoscaling Postgres tables into Unity Catalog as managed Delta tables using Lakehouse Sync. CDC captures every row-level change and writes them as SCD Type 2 history, giving you a full audit trail queryable from the lakehouse.
 
-> This recipe is for **Lakebase Autoscaling** (projects/branches/endpoints with scale-to-zero). 
+> This recipe is for **Lakebase Autoscaling** (projects/branches/endpoints with scale-to-zero).
 
 ### When to use this
 

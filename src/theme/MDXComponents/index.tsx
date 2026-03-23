@@ -1,5 +1,6 @@
 import MDXComponents from "@theme-original/MDXComponents";
 import type { MDXComponentsObject } from "@theme/MDXComponents";
+import CodeBlock from "@theme/CodeBlock";
 import type { ComponentPropsWithoutRef } from "react";
 
 import { cn } from "@/lib/utils";
@@ -164,18 +165,29 @@ function Img({ className, ...props }: ComponentPropsWithoutRef<"img">) {
   );
 }
 
-function InlineCode({ className, ...props }: ComponentPropsWithoutRef<"code">) {
-  const isLikelyCodeBlock = Boolean(className?.includes("language-"));
+function InlineCode({
+  className,
+  children,
+  ...props
+}: ComponentPropsWithoutRef<"code">) {
+  const languageMatch = className?.match(/language-(\w+)/);
+
+  if (languageMatch) {
+    const code =
+      typeof children === "string" ? children.replace(/\n$/, "") : children;
+    return <CodeBlock language={languageMatch[1]}>{code}</CodeBlock>;
+  }
 
   return (
     <code
       className={cn(
-        !isLikelyCodeBlock &&
-          "rounded-md border border-db-border bg-db-bg px-1.5 py-0.5 font-mono text-[0.88em] text-db-navy dark:bg-db-navy/35 dark:text-white",
+        "rounded-md border border-db-border bg-db-bg px-1.5 py-0.5 font-mono text-[0.88em] text-db-navy dark:bg-db-navy/35 dark:text-white",
         className,
       )}
       {...props}
-    />
+    >
+      {children}
+    </code>
   );
 }
 

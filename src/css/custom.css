@@ -886,6 +886,19 @@
     @apply bg-black/2 dark:bg-white/3;
   }
 
+  .theme-code-block [class*="buttonGroup"] {
+    right: 0.5rem !important;
+    top: 0.5rem !important;
+  }
+
+  .theme-code-block [class*="buttonGroup"] button {
+    opacity: 0.5 !important;
+  }
+
+  .theme-code-block:hover [class*="buttonGroup"] button {
+    opacity: 1 !important;
+  }
+
   .recipe-content-card .theme-code-block {
     @apply my-8 min-w-0 w-full overflow-hidden rounded-xl border border-black/12 shadow-md dark:border-white/12;
   }

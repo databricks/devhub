@@ -123,8 +123,6 @@ function readTemplateMarkdown(rootDir: string, slug: string): string {
       );
     }
 
-    lines.push(`## ${recipe.name}`);
-    lines.push("");
     lines.push(recipeContent.trim());
     lines.push("");
   }

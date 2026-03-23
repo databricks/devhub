@@ -113,64 +113,44 @@ describe("MCP server e2e (mcporter)", () => {
     siteServer?.kill();
   });
 
-  test(
-    "list discovers both tools",
-    async () => {
-      const output = await mcporter("list");
-      expect(output).toContain("list_docs_resources");
-      expect(output).toContain("get_doc_resource");
-      expect(output).toContain("2 tools");
-    },
-    30_000,
-  );
+  test("list discovers both tools", async () => {
+    const output = await mcporter("list");
+    expect(output).toContain("list_docs_resources");
+    expect(output).toContain("get_doc_resource");
+    expect(output).toContain("2 tools");
+  }, 30_000);
 
-  test(
-    "list_docs_resources returns the docs index",
-    async () => {
-      const output = await mcporter("call", "list_docs_resources");
-      expect(output).toContain("# Databricks Developer");
-      expect(output).toContain("/docs/get-started/getting-started");
-    },
-    30_000,
-  );
+  test("list_docs_resources returns the docs index", async () => {
+    const output = await mcporter("call", "list_docs_resources");
+    expect(output).toContain("# Databricks Developer");
+    expect(output).toContain("/docs/get-started/getting-started");
+  }, 30_000);
 
-  test(
-    "get_doc_resource returns markdown for a valid slug",
-    async () => {
-      const output = await mcporter(
-        "call",
-        "get_doc_resource",
-        "slug:get-started/getting-started",
-      );
-      expect(output).toContain("# Getting Started");
-      expect(output).toContain("Databricks");
-    },
-    30_000,
-  );
+  test("get_doc_resource returns markdown for a valid slug", async () => {
+    const output = await mcporter(
+      "call",
+      "get_doc_resource",
+      "slug:get-started/getting-started",
+    );
+    expect(output).toContain("# Getting Started");
+    expect(output).toContain("Databricks");
+  }, 30_000);
 
-  test(
-    "get_doc_resource returns error for unknown slug",
-    async () => {
-      const output = await mcporter(
-        "call",
-        "get_doc_resource",
-        "slug:nonexistent/page",
-      );
-      expect(output).toContain("not found");
-    },
-    30_000,
-  );
+  test("get_doc_resource returns error for unknown slug", async () => {
+    const output = await mcporter(
+      "call",
+      "get_doc_resource",
+      "slug:nonexistent/page",
+    );
+    expect(output).toContain("not found");
+  }, 30_000);
 
-  test(
-    "get_doc_resource rejects path traversal",
-    async () => {
-      const output = await mcporter(
-        "call",
-        "get_doc_resource",
-        "slug:../package.json",
-      );
-      expect(output).toContain("path traversal");
-    },
-    30_000,
-  );
+  test("get_doc_resource rejects path traversal", async () => {
+    const output = await mcporter(
+      "call",
+      "get_doc_resource",
+      "slug:../package.json",
+    );
+    expect(output).toContain("path traversal");
+  }, 30_000);
 });

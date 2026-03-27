@@ -1,0 +1,4 @@
+interface:
+  display_name: "Author Recipes and Cookbooks"
+  short_description: "Write and maintain DevHub recipes and cookbooks"
+  default_prompt: "Author or update a DevHub recipe/cookbook with proper metadata, composition, and copy-pastable agent-friendly instructions."

@@ -266,6 +266,7 @@ export const templates: Template[] = [
     description:
       "Use Lakebase from apps hosted outside Databricks App Platform (for example on AWS, Vercel, or Netlify) with portable env, token, and Drizzle patterns.",
     recipeIds: [
+      "lakebase-create-instance",
       "lakebase-off-platform-env-management",
       "lakebase-token-management",
       "lakebase-drizzle-off-platform",

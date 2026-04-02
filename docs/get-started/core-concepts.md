@@ -4,36 +4,51 @@ title: Core Concepts
 
 # Core Concepts
 
-Databricks developer workflows are easier when you model the platform as four layers.
+Databricks developer workflows build on four platform layers.
 
-## 1) Runtime and hosting: Databricks Apps
+## Databricks Apps
 
-Databricks Apps hosts and operates your web application inside the Databricks workspace boundary.
+Serverless containerized web applications running inside your workspace. Apps get a fixed URL, automatic service principal auth, and access to workspace resources.
 
-## 2) Operational data: Lakebase
+- Scaffold with `databricks apps init`, deploy with `databricks apps deploy`
+- [Apps Getting Started](/docs/apps/getting-started) | [Apps Core Concepts](/docs/apps/core-concepts)
 
-Lakebase provides managed PostgreSQL for transactional application workloads and app state.
+## Lakebase Postgres
 
-## 3) AI capabilities: Agents + AI Gateway
+Managed PostgreSQL for transactional application workloads. Provides branching, autoscaling, and scale-to-zero alongside your Lakehouse data.
 
-Agents provide reasoning and tool orchestration. AI Gateway provides centralized governance, routing, and usage controls for model traffic.
+- Create a project with `databricks postgres create-project`, connect with `databricks psql`
+- [Lakebase Getting Started](/docs/lakebase/getting-started) | [Lakebase Core Concepts](/docs/lakebase/core-concepts)
 
-## 4) Developer interface: CLI and framework tooling
+## AI: Agents and AI Gateway
 
-The Databricks CLI and framework-level tooling standardize local setup, deployment, and automation.
+Agents provide reasoning and tool orchestration for conversational AI. AI Gateway provides centralized governance, routing, and usage controls for model traffic through serving endpoints.
 
-## How these fit together
+- Deploy agents to Apps, call models through AI Gateway endpoints
+- [Agents Getting Started](/docs/agents/getting-started) | [AI Gateway](/docs/agents/ai-gateway)
 
-Typical production path:
+## Developer tools: CLI and AppKit
 
-1. Build service/app logic locally.
-2. Connect analytics and operational data surfaces.
-3. Add AI features and gateway controls.
-4. Deploy and monitor in Databricks Apps.
+The Databricks CLI handles authentication, deployment, and workspace operations. AppKit is the TypeScript SDK for building Apps with a plugin-based architecture.
 
-## Choosing your first path
+- Install with `brew install databricks`, scaffold with `databricks apps init`
+- [Databricks CLI](/docs/tools/databricks-cli) | [AppKit](/docs/tools/appkit)
 
-- choose **Apps** first if your immediate task is shipping a web app
-- choose **Agents** first if your task is conversational AI with tool use
-- choose **Lakebase** first if your task is transactional app data and PostgreSQL workloads
-- choose **CLI/tooling** first if your task is automating setup, deploy, or CI workflows
+## How these layers connect
+
+A typical app uses multiple layers together:
+
+1. **CLI** authenticates and scaffolds the project
+2. **AppKit** provides the app framework with plugins for each service
+3. **Lakebase** stores application data (CRUD, chat history, user state)
+4. **AI Gateway** routes model requests for chat, search, or analysis
+5. **Apps** hosts and operates the deployed application
+
+Each layer has its own getting-started guide. Start with [Apps](/docs/apps/getting-started) if you want to ship a web application, [Lakebase](/docs/lakebase/getting-started) for database workloads, or [Agents](/docs/agents/getting-started) for conversational AI.
+
+## Source of truth
+
+- [Databricks Apps](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/)
+- [Lakebase Postgres](https://docs.databricks.com/aws/en/oltp)
+- [AI Gateway](https://docs.databricks.com/aws/en/ai-gateway/)
+- [Databricks CLI](https://docs.databricks.com/aws/en/dev-tools/cli/)

@@ -10,7 +10,7 @@ title: Getting Started
 
 - Databricks CLI `v0.295+` with an [authenticated profile](/docs/tools/databricks-cli#authenticate)
 - `psql` (PostgreSQL client) if using `databricks psql`. Alternatively, use `generate-database-credential` with any PostgreSQL client.
-- workspace with Lakebase access enabled
+- Workspace with Lakebase access enabled
 
 ## Create a project
 
@@ -137,3 +137,5 @@ To scaffold manually with the CLI, run `databricks apps init` and select the **L
 - [Lakebase Postgres](https://docs.databricks.com/aws/en/oltp)
 - [Get started with Lakebase Autoscaling](https://docs.databricks.com/aws/en/oltp/projects/get-started)
 - [CLI reference for Lakebase](https://docs.databricks.com/aws/en/oltp/projects/cli)
+- [`postgres` command reference](https://docs.databricks.com/aws/en/dev-tools/cli/reference/postgres-commands)
+- [`psql` command reference](https://docs.databricks.com/aws/en/dev-tools/cli/reference/psql-command)

@@ -2,11 +2,17 @@
 title: Plugins
 ---
 
-# Apps Plugins
+# Plugins
 
 AppKit plugins are modular extensions that add capabilities to your app. Built-in plugins cover common needs (database, analytics, files). You can also create custom plugins for your own logic.
 
 ## Built-in plugins
+
+List available plugins:
+
+```bash
+databricks apps manifest --profile <PROFILE>
+```
 
 Select plugins interactively when scaffolding a new app:
 
@@ -27,7 +33,8 @@ For non-interactive use (CI, agents), pass `--name`, `--features`, and `--set` f
 ```bash
 databricks apps init --name my-app --features=lakebase \
   --set lakebase.postgres.branch=projects/inventory/branches/production \
-  --set lakebase.postgres.database=projects/inventory/branches/production/databases/app_db
+  --set lakebase.postgres.database=projects/inventory/branches/production/databases/app_db \
+  --run none --profile <PROFILE>
 ```
 
 ## Using plugins

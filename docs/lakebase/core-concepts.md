@@ -125,5 +125,7 @@ databricks postgres get-operation projects/my-project/operations/<operation-id>
 
 - [Lakebase Autoscaling](https://docs.databricks.com/aws/en/oltp/projects/)
 - [CLI reference for Lakebase](https://docs.databricks.com/aws/en/oltp/projects/cli)
+- [`postgres` command reference](https://docs.databricks.com/aws/en/dev-tools/cli/reference/postgres-commands)
+- [`psql` command reference](https://docs.databricks.com/aws/en/dev-tools/cli/reference/psql-command)
 - [Autoscaling](https://docs.databricks.com/aws/en/oltp/projects/autoscaling)
 - [Scale to zero](https://docs.databricks.com/aws/en/oltp/projects/scale-to-zero)

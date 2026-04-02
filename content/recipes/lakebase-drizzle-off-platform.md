@@ -83,27 +83,36 @@ runMigrations().catch((error) => {
 
 ### 4. Keep `drizzle.config.ts` minimal
 
+Lakebase Postgres passwords are short-lived tokens, so there is no static `DATABASE_URL` to store in `.env`. The migration script from step 3 builds a temporary URL with a fresh credential and passes it as `DATABASE_URL` when it shells out to `drizzle-kit migrate`. Commands like `generate` only read schema files and never connect, so `dbCredentials` is optional:
+
 ```typescript
 import { defineConfig } from "drizzle-kit";
-
-if (!process.env.DATABASE_URL) {
-  throw new Error("DATABASE_URL must be set before running drizzle-kit");
-}
 
 export default defineConfig({
   schema: "./src/lib/*/schema.ts",
   out: "./src/lib/db/migrations",
   dialect: "postgresql",
-  dbCredentials: { url: process.env.DATABASE_URL },
+  ...(process.env.DATABASE_URL && {
+    dbCredentials: { url: process.env.DATABASE_URL },
+  }),
 });
 ```
 
 ### 5. Verify schema generation and migration
 
+Generate reads schema files locally (no database connection):
+
 ```bash
 npx drizzle-kit generate
-tsx scripts/db-migrate.ts
 ```
+
+Migrate fetches a fresh Lakebase credential and applies the generated SQL:
+
+```bash
+npx dotenv -e .env.local -- npx tsx scripts/db-migrate.ts
+```
+
+`tsx` does not load `.env.local` automatically (that is a Next.js-specific behavior), so use `dotenv-cli` or your framework's env-loading mechanism to inject the variables.
 
 If both commands succeed, your Drizzle schema and Lakebase connection are working.
 

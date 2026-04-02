@@ -2,23 +2,62 @@
 
 Define and validate the environment variables needed to connect to Lakebase from apps deployed outside Databricks App Platform (for example on AWS, Vercel, or Netlify).
 
-### 1. Required environment variables
+### 1. Collect connection values via the Databricks CLI
 
-Use the same set of variables for local development and production. All names follow standard Postgres conventions (`PG*`) plus Databricks-specific auth variables:
+Every value below can be obtained from the CLI. Run each command and record the result.
 
-Connection:
+**Workspace host** (`DATABRICKS_HOST`):
 
-- `DATABRICKS_HOST`
-- `LAKEBASE_ENDPOINT`
-- `PGHOST`
-- `PGPORT`
-- `PGDATABASE`
-- `PGUSER`
+```bash
+databricks auth profiles
+```
 
-Auth options:
+Use the `Host` column for your profile (e.g. `https://dbc-xxxxx.cloud.databricks.com`).
 
-- local/dev token flow: `DATABRICKS_TOKEN`
-- machine-to-machine flow: `DATABRICKS_CLIENT_ID` + `DATABRICKS_CLIENT_SECRET`
+**Lakebase endpoint and Postgres host** (`LAKEBASE_ENDPOINT`, `PGHOST`):
+
+```bash
+databricks postgres list-endpoints \
+  projects/<project-name>/branches/production \
+  --profile <PROFILE> -o json
+```
+
+- `LAKEBASE_ENDPOINT` = the `name` field (e.g. `projects/<project>/branches/production/endpoints/primary`)
+- `PGHOST` = the `status.hosts.host` field
+
+**Postgres database name** (`PGDATABASE`):
+
+```bash
+databricks postgres list-databases \
+  projects/<project-name>/branches/production \
+  --profile <PROFILE> -o json
+```
+
+Use the `status.postgres_database` field (typically `databricks_postgres`).
+
+**Postgres user** (`PGUSER`):
+
+For local development with token auth, this is your Databricks email:
+
+```bash
+databricks current-user me --profile <PROFILE> -o json
+```
+
+Use the `userName` field.
+
+For production with M2M auth, this is the service principal's application ID used for `DATABRICKS_CLIENT_ID`.
+
+**Auth credentials:**
+
+For local development, get a short-lived workspace token:
+
+```bash
+databricks auth token --profile <PROFILE> -o json
+```
+
+Use the `access_token` field for `DATABRICKS_TOKEN`. This token expires after about one hour; the [Token Management](/resources/lakebase-off-platform-template#lakebase-token-management) recipe covers automated refresh.
+
+For production, use OAuth M2M credentials (`DATABRICKS_CLIENT_ID` + `DATABRICKS_CLIENT_SECRET`) from a service principal configured in your workspace.
 
 ### 2. Validate env at startup with Zod
 
@@ -63,17 +102,17 @@ Commit this file so every developer (and CI) knows which variables are required.
 
 ```bash
 DATABRICKS_HOST=https://<workspace-host>
-LAKEBASE_ENDPOINT=projects/<project>/branches/<branch>/endpoints/<endpoint>
-PGHOST=<lakebase-host>
+LAKEBASE_ENDPOINT=projects/<project>/branches/production/endpoints/primary
+PGHOST=<status.hosts.host from list-endpoints>
 PGPORT=5432
-PGDATABASE=<database-name>
-PGUSER=<db-user-or-service-principal-id>
+PGDATABASE=<status.postgres_database from list-databases>
+PGUSER=<your Databricks email or service principal application ID>
 PGSSLMODE=require
 
-# Option A: local token auth
+# Option A: local dev — token auth (expires ~1h, use refresh script)
 DATABRICKS_TOKEN=
 
-# Option B: machine-to-machine auth
+# Option B: production — M2M auth (service principal)
 DATABRICKS_CLIENT_ID=
 DATABRICKS_CLIENT_SECRET=
 ```

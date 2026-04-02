@@ -2,7 +2,16 @@
 
 Connect Drizzle ORM to Lakebase in any Node.js server outside Databricks App Platform. Uses a `pg` Pool with a password callback for automatic credential refresh.
 
-### 1. Create a Lakebase-backed `pg` pool
+### 1. Install Drizzle and the node-postgres driver
+
+```bash
+npm install drizzle-orm pg
+npm install -D drizzle-kit @types/pg tsx
+```
+
+`drizzle-orm` and `drizzle-kit` must be on the same major version. If `drizzle-kit` errors with "This version of drizzle-kit is outdated," check that both packages share the same major (e.g. both 0.x or both 1.x).
+
+### 2. Create a Lakebase-backed `pg` pool
 
 Create `src/lib/db/pool.ts`:
 
@@ -37,7 +46,7 @@ export function createLakebasePool(): Pool {
 }
 ```
 
-### 2. Initialize Drizzle with the pool
+### 3. Initialize Drizzle with the pool
 
 Create `src/lib/db/client.ts`. Replace the example schema imports with your own domain schemas:
 
@@ -50,7 +59,7 @@ const pool = createLakebasePool();
 export const db = drizzle({ client: pool, schema: { ...itemsSchema } });
 ```
 
-### 3. Handle drizzle-kit migrations with a temporary `DATABASE_URL`
+### 4. Handle drizzle-kit migrations with a temporary `DATABASE_URL`
 
 `drizzle-kit` needs a connection string and cannot use `pg` password callbacks. Build a one-time URL with a fresh Lakebase credential in `scripts/db-migrate.ts`:
 
@@ -81,9 +90,9 @@ runMigrations().catch((error) => {
 });
 ```
 
-### 4. Keep `drizzle.config.ts` minimal
+### 5. Keep `drizzle.config.ts` minimal
 
-Lakebase Postgres passwords are short-lived tokens, so there is no static `DATABASE_URL` to store in `.env`. The migration script from step 3 builds a temporary URL with a fresh credential and passes it as `DATABASE_URL` when it shells out to `drizzle-kit migrate`. Commands like `generate` only read schema files and never connect, so `dbCredentials` is optional:
+Lakebase Postgres passwords are short-lived tokens, so there is no static `DATABASE_URL` to store in `.env`. The migration script from step 4 builds a temporary URL with a fresh credential and passes it as `DATABASE_URL` when it shells out to `drizzle-kit migrate`. Commands like `generate` only read schema files and never connect, so `dbCredentials` is optional:
 
 ```typescript
 import { defineConfig } from "drizzle-kit";
@@ -98,7 +107,7 @@ export default defineConfig({
 });
 ```
 
-### 5. Verify schema generation and migration
+### 6. Verify schema generation and migration
 
 Generate reads schema files locally (no database connection):
 

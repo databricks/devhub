@@ -24,7 +24,7 @@ export const pillars: Pillar[] = [
     subtitle: "The modern agentic database",
     description:
       "Managed Postgres that syncs with Delta Lake, branches like Git, and scales to zero.",
-    link: "/docs/lakebase",
+    link: "/docs/lakebase/getting-started",
     icon: Database,
   },
   {

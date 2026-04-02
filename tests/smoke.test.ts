@@ -60,7 +60,6 @@ describe("production build smoke tests", () => {
       "/docs/apps/core-concepts",
       "/docs/apps/plugins",
       "/docs/apps/development",
-      "/docs/lakebase",
       "/docs/lakebase/getting-started",
       "/docs/lakebase/core-concepts",
       "/docs/lakebase/development",

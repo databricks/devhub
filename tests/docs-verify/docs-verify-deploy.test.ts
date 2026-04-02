@@ -22,45 +22,39 @@ const appDir = resolve(TEST_DIR, APP_NAME);
 const SKIP_CLEANUP = Boolean(process.env.SKIP_CLEANUP);
 console.log(`[setup] temp dir: ${TEST_DIR}`);
 
-afterAll(
-  () => {
-    if (SKIP_CLEANUP) {
-      console.log(
-        `[cleanup] SKIP_CLEANUP set, keeping app ${APP_NAME} and ${TEST_DIR}`,
-      );
-      return;
-    }
+afterAll(() => {
+  if (SKIP_CLEANUP) {
+    console.log(
+      `[cleanup] SKIP_CLEANUP set, keeping app ${APP_NAME} and ${TEST_DIR}`,
+    );
+    return;
+  }
 
+  try {
+    console.log(`[cleanup] Deleting app ${APP_NAME} from workspace`);
+    cli("apps delete --auto-approve", PROFILE, {
+      cwd: appDir,
+      timeoutMs: 300_000,
+    });
+    console.log(`[cleanup] App ${APP_NAME} deleted from workspace`);
+  } catch (e) {
+    console.warn("[cleanup] workspace delete failed:", (e as Error).message);
     try {
-      console.log(`[cleanup] Deleting app ${APP_NAME} from workspace`);
-      cli("apps delete --auto-approve", PROFILE, {
-        cwd: appDir,
-        timeoutMs: 300_000,
-      });
-      console.log(`[cleanup] App ${APP_NAME} deleted from workspace`);
-    } catch (e) {
+      cli(`apps delete ${APP_NAME}`, PROFILE, { timeoutMs: 60_000 });
+      console.log(`[cleanup] App ${APP_NAME} deleted via direct API`);
+    } catch (e2) {
       console.warn(
-        "[cleanup] workspace delete failed:",
-        (e as Error).message,
+        "[cleanup] direct API delete also failed:",
+        (e2 as Error).message,
       );
-      try {
-        cli(`apps delete ${APP_NAME}`, PROFILE, { timeoutMs: 60_000 });
-        console.log(`[cleanup] App ${APP_NAME} deleted via direct API`);
-      } catch (e2) {
-        console.warn(
-          "[cleanup] direct API delete also failed:",
-          (e2 as Error).message,
-        );
-      }
     }
+  }
 
-    if (existsSync(TEST_DIR)) {
-      rmSync(TEST_DIR, { recursive: true, force: true });
-      console.log(`[cleanup] Removed ${TEST_DIR}`);
-    }
-  },
-  600_000,
-);
+  if (existsSync(TEST_DIR)) {
+    rmSync(TEST_DIR, { recursive: true, force: true });
+    console.log(`[cleanup] Removed ${TEST_DIR}`);
+  }
+}, 600_000);
 
 describe("Scaffold and build", { timeout: 180_000 }, () => {
   test("scaffold, install, and build", () => {

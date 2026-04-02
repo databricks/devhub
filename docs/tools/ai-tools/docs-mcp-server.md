@@ -8,32 +8,19 @@ The DevHub Docs MCP Server gives coding agents and IDE assistants read access to
 
 ## Install
 
-Add the server to Cursor with a single command:
+Add the server to any supported coding agent (Cursor, Claude Code, VS Code, Codex, and more) with a single command:
 
 ```bash
-cursor --add-mcp '{"name":"devhub-docs","type":"streamableHttp","url":"https://dev.databricks.com/api/mcp"}'
+npx add-mcp https://dev.databricks.com/api/mcp --name devhub-docs
 ```
 
-Or add it manually to `.cursor/mcp.json` (project-level) or `~/.cursor/mcp.json` (global):
-
-```json
-{
-  "mcpServers": {
-    "devhub-docs": {
-      "type": "streamableHttp",
-      "url": "https://dev.databricks.com/api/mcp"
-    }
-  }
-}
-```
-
-For Claude Code, add the server via the CLI:
+Use `-g` to install globally (user-level) instead of project-level, and `-a` to target a specific agent:
 
 ```bash
-claude mcp add devhub-docs --transport http https://dev.databricks.com/api/mcp
+npx add-mcp https://dev.databricks.com/api/mcp --name devhub-docs -g -a cursor
 ```
 
-Restart your editor after adding the server.
+Restart your editor after adding the server. Some editors like Cursor require you to navigate to the MCP settings page and toggle the new server as enabled.
 
 ## Tools
 

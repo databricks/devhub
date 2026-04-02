@@ -46,9 +46,27 @@ export function createLakebasePool(): Pool {
 }
 ```
 
-### 3. Initialize Drizzle with the pool
+### 3. Define a Drizzle schema
 
-Create `src/lib/db/client.ts`. Replace the example schema imports with your own domain schemas:
+Create `src/lib/items/schema.ts` with a starter table. Adapt the table name, columns, and types to your domain (e.g. `products`, `orders`, `users`):
+
+```typescript
+import { pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
+
+export const items = pgTable("items", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+});
+```
+
+Add more schema files under `src/lib/<domain>/schema.ts` as your app grows. The `drizzle.config.ts` glob (`./src/lib/*/schema.ts`) picks them all up automatically.
+
+### 4. Initialize Drizzle with the pool
+
+Create `src/lib/db/client.ts`. Import every domain schema and spread it into the `schema` option:
 
 ```typescript
 import { drizzle } from "drizzle-orm/node-postgres";
@@ -59,7 +77,7 @@ const pool = createLakebasePool();
 export const db = drizzle({ client: pool, schema: { ...itemsSchema } });
 ```
 
-### 4. Handle drizzle-kit migrations with a temporary `DATABASE_URL`
+### 5. Handle drizzle-kit migrations with a temporary `DATABASE_URL`
 
 `drizzle-kit` needs a connection string and cannot use `pg` password callbacks. Build a one-time URL with a fresh Lakebase credential in `scripts/db-migrate.ts`:
 
@@ -90,9 +108,9 @@ runMigrations().catch((error) => {
 });
 ```
 
-### 5. Keep `drizzle.config.ts` minimal
+### 6. Keep `drizzle.config.ts` minimal
 
-Lakebase Postgres passwords are short-lived tokens, so there is no static `DATABASE_URL` to store in `.env`. The migration script from step 4 builds a temporary URL with a fresh credential and passes it as `DATABASE_URL` when it shells out to `drizzle-kit migrate`. Commands like `generate` only read schema files and never connect, so `dbCredentials` is optional:
+Lakebase Postgres passwords are short-lived tokens, so there is no static `DATABASE_URL` to store in `.env`. The migration script from step 5 builds a temporary URL with a fresh credential and passes it as `DATABASE_URL` when it shells out to `drizzle-kit migrate`. Commands like `generate` only read schema files and never connect, so `dbCredentials` is optional:
 
 ```typescript
 import { defineConfig } from "drizzle-kit";
@@ -107,7 +125,7 @@ export default defineConfig({
 });
 ```
 
-### 6. Verify schema generation and migration
+### 7. Verify schema generation and migration
 
 Generate reads schema files locally (no database connection):
 

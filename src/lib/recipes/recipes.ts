@@ -113,6 +113,29 @@ export const recipes: Recipe[] = [
     tags: ["Analytics", "SQL", "Charts", "Dashboard"],
     prerequisites: ["databricks-local-bootstrap"],
   },
+  {
+    id: "lakebase-off-platform-env-management",
+    name: "Lakebase Env Management for Off-Platform Apps",
+    description:
+      "Define and validate cross-platform environment variables for Lakebase-backed apps deployed outside Databricks App Platform.",
+    tags: ["Lakebase", "Environment Variables", "AWS", "Vercel", "Netlify"],
+  },
+  {
+    id: "lakebase-token-management",
+    name: "Lakebase Token Management",
+    description:
+      "Implement cached workspace and Lakebase credential token flows for secure Postgres access in off-platform deployments.",
+    tags: ["Lakebase", "OAuth", "Tokens", "Security"],
+    prerequisites: ["lakebase-off-platform-env-management"],
+  },
+  {
+    id: "lakebase-drizzle-off-platform",
+    name: "Drizzle + Lakebase in an Off-Platform App",
+    description:
+      "Connect Drizzle ORM to Lakebase with pg password callbacks and migration-time temporary DATABASE_URL credentials.",
+    tags: ["Lakebase", "Drizzle", "Postgres", "ORM"],
+    prerequisites: ["lakebase-token-management"],
+  },
 ];
 
 const recipeIndex: Record<string, Recipe> = Object.fromEntries(
@@ -130,6 +153,9 @@ export const recipesInOrder: Recipe[] = [
   "reverse-etl-synced-tables-autoscaling",
   "genie-conversational-analytics",
   "sql-analytics-dashboard",
+  "lakebase-off-platform-env-management",
+  "lakebase-token-management",
+  "lakebase-drizzle-off-platform",
 ].map((recipeId) => {
   const recipe = recipeIndex[recipeId];
   if (!recipe) {
@@ -216,6 +242,17 @@ export const templates: Template[] = [
       "ai-chat-model-serving",
       "lakebase-chat-persistence",
       "genie-conversational-analytics",
+    ],
+  }),
+  createTemplate({
+    id: "lakebase-off-platform-template",
+    name: "Lakebase Outside Databricks App Platform",
+    description:
+      "Use Lakebase from apps hosted outside Databricks App Platform (for example on AWS, Vercel, or Netlify) with portable env, token, and Drizzle patterns.",
+    recipeIds: [
+      "lakebase-off-platform-env-management",
+      "lakebase-token-management",
+      "lakebase-drizzle-off-platform",
     ],
   }),
 ];

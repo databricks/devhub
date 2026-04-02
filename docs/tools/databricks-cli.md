@@ -137,5 +137,5 @@ databricks schemas list --help
 
 ## Source of truth
 
-- [Install or update the Databricks CLI](https://docs.databricks.com/en/dev-tools/cli/install)
-- [Authentication for the Databricks CLI](https://docs.databricks.com/en/dev-tools/cli/authentication.html)
+- [Install or update the Databricks CLI](https://docs.databricks.com/aws/en/dev-tools/cli/install)
+- [Authentication for the Databricks CLI](https://docs.databricks.com/aws/en/dev-tools/cli/authentication)

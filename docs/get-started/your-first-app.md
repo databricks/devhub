@@ -28,6 +28,7 @@ Browse all templates at [dev.databricks.com/resources](/resources). Here are the
 | [AI Chat App Template](/resources/ai-chat-app-template)                         | Conversational AI, chatbots, assistants    | "Build an IT support assistant that answers questions about our internal policies"         |
 | [Analytics Dashboard App Template](/resources/analytics-dashboard-app-template) | Dashboards, reporting, metrics             | "Build a sales pipeline dashboard with filters by region and quarter"                      |
 | [AI Data Explorer Template](/resources/ai-data-explorer-template)               | Full-stack AI + data exploration           | "Build an app where users can ask questions about our product catalog in natural language" |
+| [Lakebase Off-Platform](/resources/lakebase-off-platform-template)              | Apps hosted outside Databricks             | "Build a Next.js app on Vercel that stores data in Lakebase"                               |
 
 Not sure which one to use? Start with the **Data App Template** — it covers the most common pattern of storing and displaying data.
 
@@ -109,3 +110,4 @@ This is useful when you want to mix capabilities — like combining a data persi
 
 - [All templates and recipes](/resources)
 - [Databricks Apps documentation](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/)
+- [AppKit documentation](/docs/appkit/v0)

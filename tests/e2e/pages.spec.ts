@@ -39,7 +39,6 @@ const PAGES = [
   { path: "/docs/apps/core-concepts", title: "Core Concepts" },
   { path: "/docs/apps/plugins", title: "Plugins" },
   { path: "/docs/apps/development", title: "Development" },
-  { path: "/docs/lakebase", title: "Lakebase" },
   { path: "/docs/lakebase/getting-started", title: "Getting Started" },
   { path: "/docs/lakebase/core-concepts", title: "Core Concepts" },
   { path: "/docs/lakebase/development", title: "Development" },

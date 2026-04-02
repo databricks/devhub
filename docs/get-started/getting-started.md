@@ -10,7 +10,7 @@ Use this guide to set up your local environment and ship your first Databricks d
 
 - a Databricks workspace with required product access (Apps, AI, or Lakebase as needed)
 - workspace permissions to create/update the resources you plan to use
-- Databricks CLI v0.205+
+- Databricks CLI v0.295+
 - local runtime dependencies for your project stack (for example Node or Python)
 
 ## Setup checklist

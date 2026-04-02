@@ -38,7 +38,7 @@ test.describe("footer navigation", () => {
     },
     { href: "/docs/agents/getting-started", label: "Agents" },
     { href: "/docs/appkit", label: "AppKit" },
-    { href: "/docs/lakebase", label: "Lakebase" },
+    { href: "/docs/lakebase/getting-started", label: "Lakebase" },
     { href: "/resources", label: "Templates" },
     { href: "/solutions", label: "Solutions" },
   ];
@@ -100,7 +100,9 @@ test.describe("home page link navigation", () => {
     expect(finalCopiedText).toBe(BOOTSTRAP_PROMPT_MARKDOWN);
   });
 
-  test("pillar card Lakebase navigates to /docs/lakebase", async ({ page }) => {
+  test("pillar card Lakebase navigates to /docs/lakebase/getting-started", async ({
+    page,
+  }) => {
     await page.goto("/");
     const link = page
       .locator("main")
@@ -108,8 +110,10 @@ test.describe("home page link navigation", () => {
       .first();
     await link.waitFor({ state: "visible" });
     await link.click();
-    await page.waitForURL("**/docs/lakebase");
-    expect(new URL(page.url()).pathname).toContain("/docs/lakebase");
+    await page.waitForURL("**/docs/lakebase/getting-started");
+    expect(new URL(page.url()).pathname).toContain(
+      "/docs/lakebase/getting-started",
+    );
   });
 
   test("pillar card AgentBricks navigates to /docs/agents/getting-started", async ({

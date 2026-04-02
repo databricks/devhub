@@ -167,7 +167,7 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: "category",
-      label: "Lakebase",
+      label: "Lakebase Postgres",
       items: [
         "lakebase/getting-started",
         "lakebase/core-concepts",

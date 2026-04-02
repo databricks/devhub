@@ -19,19 +19,16 @@ const LAKEBASE_APP_NAME = `devhub-test-lkb-${TEST_RUN_ID}`;
 const SKIP_CLEANUP = Boolean(process.env.SKIP_CLEANUP);
 console.log(`[setup] temp dir: ${TEST_DIR}`);
 
-afterAll(
-  () => {
-    if (SKIP_CLEANUP) {
-      console.log(`[cleanup] SKIP_CLEANUP set, keeping ${TEST_DIR}`);
-      return;
-    }
-    if (existsSync(TEST_DIR)) {
-      rmSync(TEST_DIR, { recursive: true, force: true });
-      console.log(`[cleanup] Removed ${TEST_DIR}`);
-    }
-  },
-  30_000,
-);
+afterAll(() => {
+  if (SKIP_CLEANUP) {
+    console.log(`[cleanup] SKIP_CLEANUP set, keeping ${TEST_DIR}`);
+    return;
+  }
+  if (existsSync(TEST_DIR)) {
+    rmSync(TEST_DIR, { recursive: true, force: true });
+    console.log(`[cleanup] Removed ${TEST_DIR}`);
+  }
+}, 30_000);
 
 describe("CLI prerequisites", { timeout: 30_000 }, () => {
   test("databricks CLI is installed and meets minimum version", () => {
@@ -139,10 +136,7 @@ describe("Scaffold base app (no features)", { timeout: 120_000 }, () => {
   });
 
   test("server/server.ts imports createApp and server", () => {
-    const serverTs = readFileSync(
-      resolve(appDir, "server/server.ts"),
-      "utf-8",
-    );
+    const serverTs = readFileSync(resolve(appDir, "server/server.ts"), "utf-8");
     expect(serverTs).toContain("createApp");
     expect(serverTs).toContain("server");
     console.log("[apps] server.ts:", serverTs.trim());
@@ -191,10 +185,7 @@ describe("Scaffold app with Lakebase feature", { timeout: 120_000 }, () => {
   });
 
   test("server.ts uses autoStart: false with lakebase", () => {
-    const serverTs = readFileSync(
-      resolve(appDir, "server/server.ts"),
-      "utf-8",
-    );
+    const serverTs = readFileSync(resolve(appDir, "server/server.ts"), "utf-8");
     expect(serverTs).toContain("autoStart: false");
     expect(serverTs).toContain("lakebase");
     expect(serverTs).toContain("setupSampleLakebaseRoutes");
@@ -208,10 +199,7 @@ describe("Scaffold app with Lakebase feature", { timeout: 120_000 }, () => {
   });
 
   test("databricks.yml includes postgres resource", () => {
-    const bundleYaml = readFileSync(
-      resolve(appDir, "databricks.yml"),
-      "utf-8",
-    );
+    const bundleYaml = readFileSync(resolve(appDir, "databricks.yml"), "utf-8");
     expect(bundleYaml).toContain("postgres");
     console.log(
       "[apps+lakebase] databricks.yml (first 800 chars):",

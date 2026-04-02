@@ -8,7 +8,7 @@ Use Databricks CLI for repeatable local workflows, deployment automation, and wo
 
 ## Install
 
-This guidance applies to Databricks CLI `0.292+`.
+This guidance applies to Databricks CLI `0.295+`.
 
 ### Linux or macOS (Homebrew, recommended)
 
@@ -54,7 +54,7 @@ databricks -v
 databricks version
 ```
 
-If the CLI is missing or below `0.292`, install or upgrade before continuing.
+If the CLI is missing or below `0.295`, install or upgrade before continuing.
 
 ## Authenticate
 

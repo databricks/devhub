@@ -132,5 +132,5 @@ Open the app URL in your browser while signed in to Databricks, navigate to the 
 
 #### References
 
-- [Genie plugin docs](https://databricks.github.io/appkit/docs/plugins/genie)
+- [Genie plugin docs](/docs/appkit/v0/plugins/genie)
 - [AI/BI Genie documentation](https://docs.databricks.com/en/genie/index.html)

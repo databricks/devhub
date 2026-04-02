@@ -42,4 +42,4 @@ Record these values from the command output above. They are required by the Lake
 #### References
 
 - [What is a Lakebase?](/solutions/what-is-a-lakebase)
-- [Databricks CLI Postgres commands](https://docs.databricks.com/aws/en/dev-tools/cli/postgres-commands)
+- [CLI reference for Lakebase](https://docs.databricks.com/aws/en/oltp/projects/cli)

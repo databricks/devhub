@@ -116,5 +116,5 @@ Verification checklist:
 
 #### References
 
-- [Lakebase plugin docs](https://databricks.github.io/appkit/docs/plugins/lakebase)
+- [Lakebase plugin docs](/docs/appkit/v0/plugins/lakebase)
 - [PostgreSQL schema design](https://www.postgresql.org/docs/current/ddl.html)

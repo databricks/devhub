@@ -19,6 +19,12 @@ describe("detail markdown resolver", () => {
     expect(markdown).toContain("## Databricks Local Bootstrap");
   });
 
+  test("does not duplicate recipe headings in legacy template export", () => {
+    const markdown = getDetailMarkdown("templates", "ai-chat-app-template");
+    const matches = markdown.match(/## Databricks Local Bootstrap/g) ?? [];
+    expect(matches).toHaveLength(1);
+  });
+
   test("rejects path traversal", () => {
     expect(() => getDetailMarkdown("docs", "../package.json")).toThrow(
       "path traversal",

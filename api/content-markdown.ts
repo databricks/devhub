@@ -2,12 +2,12 @@ import { existsSync, readFileSync } from "fs";
 import { resolve } from "path";
 import { hasMarkdownSlug } from "../src/lib/content-markdown";
 import { recipes, templates } from "../src/lib/recipes/recipes";
+import {
+  buildTemplateMarkdownDocument,
+  collectTemplateRecipeIds,
+} from "../src/lib/template-content";
 
 export type MarkdownSection = "docs" | "recipes" | "solutions" | "templates";
-
-function recipeMarkdownPath(recipeId: string): string {
-  return `content/recipes/${recipeId}.md`;
-}
 
 function validateSlug(slug: string): void {
   if (!slug || slug.trim() === "") {
@@ -92,42 +92,18 @@ function readTemplateMarkdown(rootDir: string, slug: string): string {
     throw new Error(`Template page not found: "${slug}"`);
   }
 
-  const lines: string[] = [
-    "---",
-    `title: "${template.name.replace(/"/g, '\\"')}"`,
-    `url: /resources/${template.id}`,
-    `summary: "${template.description.replace(/"/g, '\\"')}"`,
-    "---",
-    "",
-    `# ${template.name}`,
-    "",
-    template.description,
-    "",
-  ];
+  const rawBySlug = Object.fromEntries(
+    collectTemplateRecipeIds(template).map((recipeId) => {
+      const recipe = recipes.find((entry) => entry.id === recipeId);
+      if (!recipe) {
+        throw new Error(`Recipe not found: "${recipeId}"`);
+      }
 
-  for (const recipeId of template.recipeIds) {
-    const recipe = recipes.find((entry) => entry.id === recipeId);
-    if (!recipe) {
-      throw new Error(`Recipe not found: "${recipeId}"`);
-    }
-    if (!hasMarkdownSlug(rootDir, "recipes", recipeId)) {
-      throw new Error(`Recipe page not found: "${recipeId}"`);
-    }
+      return [recipeId, readRecipeMarkdown(rootDir, recipeId)];
+    }),
+  );
 
-    const recipePath = recipeMarkdownPath(recipeId);
-    const absoluteRecipePath = resolve(rootDir, recipePath);
-    const recipeContent = readIfExists(absoluteRecipePath);
-    if (!recipeContent) {
-      throw new Error(
-        `Recipe markdown missing for "${recipeId}" at ${recipePath}`,
-      );
-    }
-
-    lines.push(recipeContent.trim());
-    lines.push("");
-  }
-
-  return lines.join("\n");
+  return buildTemplateMarkdownDocument(template, rawBySlug);
 }
 
 export function getDetailMarkdown(

@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { TemplateDetail } from "@/components/templates/template-detail";
 import { templates } from "@/lib/recipes/recipes";
+import { buildTemplateRawMarkdown } from "@/lib/template-content";
 import { useAllRawRecipeMarkdown } from "@/lib/use-raw-content-markdown";
 import DatabricksLocalBootstrap from "@site/content/recipes/databricks-local-bootstrap.md";
 import LakebaseDataPersistence from "@site/content/recipes/lakebase-data-persistence.md";
@@ -12,10 +13,7 @@ export default function DataAppTemplatePage(): ReactNode {
   if (!template) {
     throw new Error("Template data-app-template not found");
   }
-  const rawMarkdown = template.recipeIds
-    .map((id) => rawBySlug[id])
-    .filter(Boolean)
-    .join("\n\n---\n\n");
+  const rawMarkdown = buildTemplateRawMarkdown(template, rawBySlug);
   return (
     <TemplateDetail template={template} rawMarkdown={rawMarkdown}>
       <DatabricksLocalBootstrap />

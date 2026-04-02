@@ -113,6 +113,6 @@ Open the app URL in your browser while signed in to Databricks, then open the da
 
 #### References
 
-- [Analytics plugin docs](https://databricks.github.io/appkit/docs/plugins/analytics)
-- [AppKit chart components](https://databricks.github.io/appkit/docs/category/charts)
+- [Analytics plugin docs](/docs/appkit/v0/plugins/analytics)
+- [AppKit chart components](/docs/appkit/v0/api/appkit-ui/ui/ChartContainer)
 - [SQL Warehouses](https://docs.databricks.com/en/compute/sql-warehouse/index.html)

@@ -13,7 +13,7 @@ Complete these recipes before adding chat:
 Lakebase tables are owned by the identity that creates them. Deploy the app first so the service principal creates and owns the schemas. Then grant yourself local dev access:
 
 ```bash
-databricks psql --project <project-name> --profile <PROFILE> -- -c "
+databricks psql --project <project-name> --branch production --endpoint primary --profile <PROFILE> -- -c "
   CREATE EXTENSION IF NOT EXISTS databricks_auth;
   SELECT databricks_create_role('<your-email>', 'USER');
   GRANT databricks_superuser TO \"<your-email>\";

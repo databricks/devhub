@@ -56,7 +56,6 @@ const SIDEBAR_SECTIONS: Array<{
     description:
       "Managed PostgreSQL for operational workloads with Databricks-native governance and Delta Lake sync.",
     slugs: [
-      "lakebase",
       "lakebase/getting-started",
       "lakebase/core-concepts",
       "lakebase/development",

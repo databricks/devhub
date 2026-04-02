@@ -203,7 +203,7 @@ Lakebase tables are owned by the identity that creates them. If you create the `
 **Recommended workflow:** Deploy the app first so the service principal creates and owns the schema. Then grant yourself access for local development:
 
 ```bash
-databricks psql --project <project-name> --profile <PROFILE> -- -c "
+databricks psql --project <project-name> --branch production --endpoint primary --profile <PROFILE> -- -c "
   CREATE EXTENSION IF NOT EXISTS databricks_auth;
   SELECT databricks_create_role('<your-email>', 'USER');
   GRANT databricks_superuser TO \"<your-email>\";
@@ -462,6 +462,6 @@ databricks apps logs <app-name> --profile <PROFILE>
 
 #### References
 
-- [Lakebase plugin docs](https://databricks.github.io/appkit/docs/plugins/lakebase)
-- [Lakebase database permissions](https://databricks.github.io/appkit/docs/plugins/lakebase#database-permissions)
+- [Lakebase plugin docs](/docs/appkit/v0/plugins/lakebase)
+- [Lakebase database permissions](/docs/appkit/v0/plugins/lakebase#database-permissions)
 - [What is a Lakebase?](/solutions/what-is-a-lakebase)

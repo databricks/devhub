@@ -3,6 +3,7 @@ import { TemplateDetail } from "@/components/templates/template-detail";
 import { templates } from "@/lib/recipes/recipes";
 import { useAllRawRecipeMarkdown } from "@/lib/use-raw-content-markdown";
 import DatabricksLocalBootstrap from "@site/content/recipes/databricks-local-bootstrap.md";
+import LakebaseCreateInstance from "@site/content/recipes/lakebase-create-instance.md";
 import LakebaseDataPersistence from "@site/content/recipes/lakebase-data-persistence.md";
 import SqlAnalyticsDashboard from "@site/content/recipes/sql-analytics-dashboard.md";
 
@@ -22,6 +23,8 @@ export default function AnalyticsDashboardAppTemplatePage(): ReactNode {
   return (
     <TemplateDetail template={template} rawMarkdown={rawMarkdown}>
       <DatabricksLocalBootstrap />
+      <hr />
+      <LakebaseCreateInstance />
       <hr />
       <LakebaseDataPersistence />
       <hr />

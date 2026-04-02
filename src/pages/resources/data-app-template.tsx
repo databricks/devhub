@@ -3,6 +3,7 @@ import { TemplateDetail } from "@/components/templates/template-detail";
 import { templates } from "@/lib/recipes/recipes";
 import { useAllRawRecipeMarkdown } from "@/lib/use-raw-content-markdown";
 import DatabricksLocalBootstrap from "@site/content/recipes/databricks-local-bootstrap.md";
+import LakebaseCreateInstance from "@site/content/recipes/lakebase-create-instance.md";
 import LakebaseDataPersistence from "@site/content/recipes/lakebase-data-persistence.md";
 
 const template = templates.find((t) => t.id === "data-app-template");
@@ -19,6 +20,8 @@ export default function DataAppTemplatePage(): ReactNode {
   return (
     <TemplateDetail template={template} rawMarkdown={rawMarkdown}>
       <DatabricksLocalBootstrap />
+      <hr />
+      <LakebaseCreateInstance />
       <hr />
       <LakebaseDataPersistence />
     </TemplateDetail>

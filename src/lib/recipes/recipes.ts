@@ -67,12 +67,20 @@ export const recipes: Recipe[] = [
     prerequisites: ["lakebase-data-persistence", "ai-chat-model-serving"],
   },
   {
+    id: "lakebase-create-instance",
+    name: "Create a Lakebase Instance",
+    description:
+      "Provision a managed Lakebase Postgres project on Databricks and collect the connection values needed by downstream recipes.",
+    tags: ["Lakebase", "Postgres", "Setup"],
+    prerequisites: ["databricks-local-bootstrap"],
+  },
+  {
     id: "lakebase-data-persistence",
     name: "Lakebase Data Persistence",
     description:
       "Add a managed Postgres database to your Databricks app using the Lakebase plugin. Covers schema setup, table creation, and full CRUD REST API routes.",
     tags: ["Lakebase", "Postgres", "CRUD", "Data"],
-    prerequisites: ["databricks-local-bootstrap"],
+    prerequisites: ["databricks-local-bootstrap", "lakebase-create-instance"],
   },
   {
     id: "etl-lakehouse-sync-autoscaling",
@@ -144,6 +152,7 @@ const recipeIndex: Record<string, Recipe> = Object.fromEntries(
 
 export const recipesInOrder: Recipe[] = [
   "databricks-local-bootstrap",
+  "lakebase-create-instance",
   "lakebase-data-persistence",
   "foundation-models-api",
   "model-serving-endpoint-creation",
@@ -208,6 +217,7 @@ export const templates: Template[] = [
       "databricks-local-bootstrap",
       "foundation-models-api",
       "ai-chat-model-serving",
+      "lakebase-create-instance",
       "lakebase-data-persistence",
       "lakebase-chat-persistence",
     ],
@@ -217,7 +227,11 @@ export const templates: Template[] = [
     name: "Data App Template",
     description:
       "Bootstrap a Databricks app with Lakebase for persistent data storage. Includes schema setup and full CRUD API routes.",
-    recipeIds: ["databricks-local-bootstrap", "lakebase-data-persistence"],
+    recipeIds: [
+      "databricks-local-bootstrap",
+      "lakebase-create-instance",
+      "lakebase-data-persistence",
+    ],
   }),
   createTemplate({
     id: "analytics-dashboard-app-template",
@@ -226,6 +240,7 @@ export const templates: Template[] = [
       "Build an interactive analytics dashboard backed by Lakebase and powered by parameterized SQL queries and chart components.",
     recipeIds: [
       "databricks-local-bootstrap",
+      "lakebase-create-instance",
       "lakebase-data-persistence",
       "sql-analytics-dashboard",
     ],
@@ -237,6 +252,7 @@ export const templates: Template[] = [
       "A full-stack data application with Lakebase persistence, AI chat powered by Databricks Model Serving, and Genie natural-language data exploration.",
     recipeIds: [
       "databricks-local-bootstrap",
+      "lakebase-create-instance",
       "lakebase-data-persistence",
       "model-serving-endpoint-creation",
       "ai-chat-model-serving",

@@ -1,41 +1,12 @@
 ## Lakebase Data Persistence
 
-Add a managed Postgres database to your Databricks app using the Lakebase plugin. Covers Lakebase project creation, schema setup, and full CRUD REST API routes.
+Add a managed Postgres database to your Databricks app using the Lakebase plugin. Covers schema setup, table creation, and full CRUD REST API routes.
+
+This recipe assumes you have already completed the [Create a Lakebase Instance](/resources/data-app-template#create-a-lakebase-instance) recipe and have the connection values (endpoint host, endpoint path, database resource path, and PostgreSQL database name) ready.
 
 The code examples below use a generic `items` resource as a placeholder. Replace `items` with your domain entity (products, orders, users, etc.) and adapt the schema columns to match your data model.
 
-### 1. Create a Lakebase project
-
-Create a new Lakebase Postgres project. This provisions a managed Postgres cluster with a default branch and endpoint:
-
-```bash
-databricks postgres create-project <project-name> --profile <PROFILE>
-```
-
-Verify the project, branch, and endpoint were created:
-
-```bash
-databricks postgres list-branches \
-  projects/<project-name> \
-  --profile <PROFILE> -o json
-
-databricks postgres list-endpoints \
-  projects/<project-name>/branches/production \
-  --profile <PROFILE> -o json
-
-databricks postgres list-databases \
-  projects/<project-name>/branches/production \
-  --profile <PROFILE> -o json
-```
-
-Note these values from the output:
-
-- endpoint host (`...status.hosts.host`) for `lakebase.postgres.host`
-- endpoint path (`...name`) for `lakebase.postgres.endpointPath`
-- database resource path (`...name`) for `lakebase.postgres.database`
-- PostgreSQL database name (`...status.postgres_database`) for `lakebase.postgres.databaseName` and `PGDATABASE`
-
-### 2. New app: scaffold with the Lakebase feature
+### 1. New app: scaffold with the Lakebase feature
 
 ```bash
 databricks apps init \
@@ -54,7 +25,7 @@ databricks apps init \
 
 Use the values returned by `list-databases` and `list-endpoints`. The generated template currently requires all postgres fields together during non-interactive scaffolding.
 
-This scaffolds a complete app with Lakebase already wired up, including a sample CRUD app. Skip to step 4 to configure environment variables, then step 5 to deploy.
+This scaffolds a complete app with Lakebase already wired up, including a sample CRUD app. Skip to step 3 to configure environment variables, then step 5 to deploy.
 
 ### Naming and routing conventions
 
@@ -64,7 +35,7 @@ The scaffolded Lakebase sample uses `lakebase` in route names and file paths to 
 - routes use domain names: `/items`, `/api/items`, `/api/items/:id`
 - keep `lakebase` naming for plugin/config only: `lakebase()` plugin, `LAKEBASE_ENDPOINT`, `postgres` app resource
 
-### 3. Existing app: add Lakebase manually
+### 2. Existing app: add Lakebase manually
 
 The following changes match what `apps init --features=lakebase` generates. Apply them to an existing scaffolded AppKit app.
 
@@ -410,7 +381,7 @@ import { ItemsPage } from './pages/ItemsPage';
 { path: '/items', element: <ItemsPage /> },
 ```
 
-### 4. Configure environment variables
+### 3. Configure environment variables
 
 For local development, add the Postgres connection details to `.env`:
 
@@ -431,7 +402,7 @@ env:
     valueFrom: postgres
 ```
 
-### 5. Update `databricks.yml`
+### 4. Update `databricks.yml`
 
 Add the postgres variables, resource, and target values:
 
@@ -475,7 +446,7 @@ targets:
       postgres_sslmode: require
 ```
 
-### 6. Deploy and test
+### 5. Deploy and test
 
 ```bash
 databricks apps deploy --profile <PROFILE>

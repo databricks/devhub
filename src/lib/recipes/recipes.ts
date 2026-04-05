@@ -114,6 +114,29 @@ export const recipes: Recipe[] = [
     prerequisites: ["databricks-local-bootstrap"],
   },
   {
+    id: "unity-catalog-setup",
+    name: "Set Up Unity Catalog with External Storage",
+    description:
+      "Create a Unity Catalog catalog backed by an external S3 bucket with storage credentials, external location, and a schema ready for lakehouse tables.",
+    tags: ["Unity Catalog", "S3", "External Storage", "Setup"],
+    prerequisites: ["databricks-local-bootstrap"],
+  },
+  {
+    id: "medallion-architecture-from-cdc",
+    name: "Medallion Architecture from CDC History Tables",
+    description:
+      "Transform Lakehouse Sync CDC history tables into a medallion architecture with silver (current state) and gold (aggregations) layers using Lakeflow Declarative Pipelines.",
+    tags: [
+      "Medallion Architecture",
+      "CDC",
+      "Lakeflow Pipelines",
+      "Silver",
+      "Gold",
+      "Analytics",
+    ],
+    prerequisites: ["databricks-local-bootstrap"],
+  },
+  {
     id: "lakebase-off-platform-env-management",
     name: "Lakebase Env Management for Off-Platform Apps",
     description:
@@ -152,7 +175,9 @@ export const recipesInOrder: Recipe[] = [
   "lakebase-chat-persistence",
   "etl-lakehouse-sync-autoscaling",
   "reverse-etl-synced-tables-autoscaling",
+  "unity-catalog-setup",
   "genie-conversational-analytics",
+  "medallion-architecture-from-cdc",
   "lakebase-off-platform-env-management",
   "lakebase-token-management",
   "lakebase-drizzle-off-platform",
@@ -241,6 +266,20 @@ export const templates: Template[] = [
       "lakebase-off-platform-env-management",
       "lakebase-token-management",
       "lakebase-drizzle-off-platform",
+    ],
+  }),
+  createTemplate({
+    id: "operational-data-analytics-template",
+    name: "Operational Data Analytics",
+    description:
+      "End-to-end setup for analyzing operational database data in the lakehouse: Unity Catalog with external storage, Lakebase provisioning, Lakehouse Sync CDC replication, and a medallion architecture pipeline with silver and gold layers.",
+    recipeIds: [
+      "databricks-local-bootstrap",
+      "unity-catalog-setup",
+      "lakebase-create-instance",
+      "etl-lakehouse-sync-autoscaling",
+      "reverse-etl-synced-tables-autoscaling",
+      "medallion-architecture-from-cdc",
     ],
   }),
 ];

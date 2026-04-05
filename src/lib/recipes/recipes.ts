@@ -83,26 +83,26 @@ export const recipes: Recipe[] = [
     prerequisites: ["databricks-local-bootstrap", "lakebase-create-instance"],
   },
   {
-    id: "etl-lakehouse-sync-autoscaling",
-    name: "ETL: Sync Lakebase to Unity Catalog (Autoscaling)",
+    id: "lakebase-change-data-feed-autoscaling",
+    name: "Lakebase Change Data Feed: Sync Lakebase to Unity Catalog (Autoscaling)",
     description:
       "Replicate Lakebase Autoscaling Postgres tables into Unity Catalog as managed Delta tables using Lakehouse Sync, with CDC and SCD Type 2 history.",
     tags: [
       "Lakebase",
       "Lakehouse Sync",
       "Unity Catalog",
-      "ETL",
+      "Lakebase Change Data Feed",
       "CDC",
       "Delta",
     ],
     prerequisites: ["databricks-local-bootstrap"],
   },
   {
-    id: "reverse-etl-synced-tables-autoscaling",
-    name: "Reverse ETL: Unity Catalog to Lakebase (Autoscaling)",
+    id: "sync-tables-autoscaling",
+    name: "Sync Tables: Unity Catalog to Lakebase (Autoscaling)",
     description:
       "Sync Unity Catalog tables into Lakebase Autoscaling Postgres as synced tables for sub-10ms application queries, with snapshot, triggered, or continuous modes.",
-    tags: ["Lakebase", "Reverse ETL", "Unity Catalog", "Synced Tables", "CDF"],
+    tags: ["Lakebase", "Sync Tables", "Unity Catalog", "Synced Tables", "CDF"],
     prerequisites: ["databricks-local-bootstrap"],
   },
   {
@@ -111,6 +111,29 @@ export const recipes: Recipe[] = [
     description:
       "Embed a Databricks AI/BI Genie chat interface so users can explore data through natural language. Configure a Genie space, wire up server and client plugins, declare app resources, and deploy.",
     tags: ["Genie", "AI/BI", "Natural Language", "Analytics"],
+    prerequisites: ["databricks-local-bootstrap"],
+  },
+  {
+    id: "unity-catalog-setup",
+    name: "Set Up Unity Catalog with External Storage",
+    description:
+      "Create a Unity Catalog catalog backed by an external S3 bucket with storage credentials, external location, and a schema ready for lakehouse tables.",
+    tags: ["Unity Catalog", "S3", "External Storage", "Setup"],
+    prerequisites: ["databricks-local-bootstrap"],
+  },
+  {
+    id: "medallion-architecture-from-cdc",
+    name: "Medallion Architecture from CDC History Tables",
+    description:
+      "Transform Lakehouse Sync CDC history tables into a medallion architecture with silver (current state) and gold (aggregations) layers using Lakeflow Declarative Pipelines.",
+    tags: [
+      "Medallion Architecture",
+      "CDC",
+      "Lakeflow Pipelines",
+      "Silver",
+      "Gold",
+      "Analytics",
+    ],
     prerequisites: ["databricks-local-bootstrap"],
   },
   {
@@ -150,9 +173,11 @@ export const recipesInOrder: Recipe[] = [
   "model-serving-endpoint-creation",
   "ai-chat-model-serving",
   "lakebase-chat-persistence",
-  "etl-lakehouse-sync-autoscaling",
-  "reverse-etl-synced-tables-autoscaling",
+  "lakebase-change-data-feed-autoscaling",
+  "sync-tables-autoscaling",
+  "unity-catalog-setup",
   "genie-conversational-analytics",
+  "medallion-architecture-from-cdc",
   "lakebase-off-platform-env-management",
   "lakebase-token-management",
   "lakebase-drizzle-off-platform",
@@ -241,6 +266,20 @@ export const templates: Template[] = [
       "lakebase-off-platform-env-management",
       "lakebase-token-management",
       "lakebase-drizzle-off-platform",
+    ],
+  }),
+  createTemplate({
+    id: "operational-data-analytics-template",
+    name: "Operational Data Analytics",
+    description:
+      "End-to-end setup for analyzing operational database data in the lakehouse: Unity Catalog with external storage, Lakebase provisioning, Lakehouse Sync CDC replication, and a medallion architecture pipeline with silver and gold layers.",
+    recipeIds: [
+      "databricks-local-bootstrap",
+      "unity-catalog-setup",
+      "lakebase-create-instance",
+      "lakebase-change-data-feed-autoscaling",
+      "sync-tables-autoscaling",
+      "medallion-architecture-from-cdc",
     ],
   }),
 ];

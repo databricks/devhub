@@ -105,7 +105,7 @@ export function HeroSection(): ReactNode {
               </div>
             </div>
             <p className="max-w-md text-base leading-relaxed text-black/68 dark:text-white/72">
-              Lakebase for your data. AgentBricks for your AI. Databricks Apps
+              Lakebase for your data. Agent Bricks for your AI. Databricks Apps
               for your deployment. One platform, one command, production-ready.
             </p>
           </div>

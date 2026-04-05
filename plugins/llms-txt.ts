@@ -163,7 +163,7 @@ function generateLlmsTxt(baseUrl: string, docsDir: string): string {
     "",
     "## Solutions",
     "",
-    "Databricks use-case solutions built on Lakebase, AgentBricks, and Databricks Apps.",
+    "Databricks use-case solutions built on Lakebase, Agent Bricks, and Databricks Apps.",
     "",
     `- [All Solutions](${baseUrl}/solutions): Overview of Databricks developer solutions`,
     ...solutions.map(

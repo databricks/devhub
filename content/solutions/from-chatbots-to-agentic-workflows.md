@@ -50,5 +50,5 @@ Integrated platforms reduce this complexity and accelerate reliable deployment.
 ## Get started
 
 - [Resources](https://dev.databricks.com/resources)
-- [AgentBricks getting started](https://dev.databricks.com/docs/agents/getting-started)
+- [Agent Bricks getting started](https://dev.databricks.com/docs/agents/getting-started)
 - [Lakebase getting started](https://dev.databricks.com/docs/lakebase/getting-started)

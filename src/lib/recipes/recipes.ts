@@ -1,8 +1,22 @@
+export const SERVICES = [
+  "Agent Bricks",
+  "AI Gateway",
+  "Databricks Apps",
+  "Genie",
+  "Lakebase",
+  "Lakeflow Pipelines",
+  "Model Serving",
+  "Unity Catalog",
+] as const;
+
+export type Service = (typeof SERVICES)[number];
+
 export type Recipe = {
   id: string;
   name: string;
   description: string;
   tags: string[];
+  services: Service[];
   prerequisites?: string[];
 };
 
@@ -12,6 +26,7 @@ export type Template = {
   description: string;
   recipeIds: string[];
   tags: string[];
+  services: Service[];
 };
 
 type TemplatePreviewItem = {
@@ -20,6 +35,7 @@ type TemplatePreviewItem = {
   title: string;
   description: string;
   tags?: string[];
+  services?: Service[];
 };
 
 export const recipes: Recipe[] = [
@@ -29,6 +45,7 @@ export const recipes: Recipe[] = [
     description:
       "Prepare a local Databricks app workspace: install CLI, authenticate, scaffold, and install Databricks agent skills.",
     tags: ["Databricks CLI", "Setup", "Agent Skills"],
+    services: ["Databricks Apps"],
   },
   {
     id: "ai-chat-model-serving",
@@ -36,6 +53,7 @@ export const recipes: Recipe[] = [
     description:
       "Build a streaming AI chat experience using AI SDK and Databricks Model Serving endpoints.",
     tags: ["AI", "Chat", "AI SDK", "Model Serving"],
+    services: ["Databricks Apps", "Model Serving"],
     prerequisites: [
       "databricks-local-bootstrap",
       "lakebase-data-persistence",
@@ -48,6 +66,7 @@ export const recipes: Recipe[] = [
     description:
       "Query AI Gateway endpoints for production-ready access to foundation models with built-in governance.",
     tags: ["AI", "AI Gateway", "Foundation Models"],
+    services: ["AI Gateway"],
     prerequisites: ["databricks-local-bootstrap"],
   },
   {
@@ -56,6 +75,7 @@ export const recipes: Recipe[] = [
     description:
       "Create and validate a Databricks Model Serving endpoint for AI chat inference in Databricks Apps.",
     tags: ["Model Serving", "AI Gateway", "Endpoints", "Inference"],
+    services: ["Model Serving", "AI Gateway"],
     prerequisites: ["databricks-local-bootstrap"],
   },
   {
@@ -64,6 +84,7 @@ export const recipes: Recipe[] = [
     description:
       "Persist chat sessions and messages in Lakebase so users can resume chat history across requests and deployments.",
     tags: ["Lakebase", "Postgres", "Chat", "Persistence"],
+    services: ["Lakebase", "Databricks Apps"],
     prerequisites: ["lakebase-data-persistence", "ai-chat-model-serving"],
   },
   {
@@ -72,6 +93,7 @@ export const recipes: Recipe[] = [
     description:
       "Provision a managed Lakebase Postgres project on Databricks and collect the connection values needed by downstream recipes.",
     tags: ["Lakebase", "Postgres", "Setup"],
+    services: ["Lakebase"],
     prerequisites: ["databricks-local-bootstrap"],
   },
   {
@@ -80,6 +102,7 @@ export const recipes: Recipe[] = [
     description:
       "Add a managed Postgres database to your Databricks app using the Lakebase plugin. Covers schema setup, table creation, and full CRUD REST API routes.",
     tags: ["Lakebase", "Postgres", "CRUD", "Data"],
+    services: ["Lakebase", "Databricks Apps"],
     prerequisites: ["databricks-local-bootstrap", "lakebase-create-instance"],
   },
   {
@@ -95,6 +118,7 @@ export const recipes: Recipe[] = [
       "CDC",
       "Delta",
     ],
+    services: ["Lakebase", "Unity Catalog"],
     prerequisites: ["databricks-local-bootstrap"],
   },
   {
@@ -103,6 +127,7 @@ export const recipes: Recipe[] = [
     description:
       "Sync Unity Catalog tables into Lakebase Autoscaling Postgres as synced tables for sub-10ms application queries, with snapshot, triggered, or continuous modes.",
     tags: ["Lakebase", "Sync Tables", "Unity Catalog", "Synced Tables", "CDF"],
+    services: ["Lakebase", "Unity Catalog"],
     prerequisites: ["databricks-local-bootstrap"],
   },
   {
@@ -111,6 +136,7 @@ export const recipes: Recipe[] = [
     description:
       "Embed a Databricks AI/BI Genie chat interface so users can explore data through natural language. Configure a Genie space, wire up server and client plugins, declare app resources, and deploy.",
     tags: ["Genie", "AI/BI", "Natural Language", "Analytics"],
+    services: ["Genie", "Databricks Apps"],
     prerequisites: ["databricks-local-bootstrap"],
   },
   {
@@ -119,6 +145,7 @@ export const recipes: Recipe[] = [
     description:
       "Create a Unity Catalog catalog backed by an external S3 bucket with storage credentials, external location, and a schema ready for lakehouse tables.",
     tags: ["Unity Catalog", "S3", "External Storage", "Setup"],
+    services: ["Unity Catalog"],
     prerequisites: ["databricks-local-bootstrap"],
   },
   {
@@ -134,6 +161,7 @@ export const recipes: Recipe[] = [
       "Gold",
       "Analytics",
     ],
+    services: ["Lakeflow Pipelines"],
     prerequisites: ["databricks-local-bootstrap"],
   },
   {
@@ -142,6 +170,7 @@ export const recipes: Recipe[] = [
     description:
       "Define and validate cross-platform environment variables for Lakebase-backed apps deployed outside Databricks App Platform.",
     tags: ["Lakebase", "Environment Variables", "AWS", "Vercel", "Netlify"],
+    services: ["Lakebase"],
   },
   {
     id: "lakebase-token-management",
@@ -149,6 +178,7 @@ export const recipes: Recipe[] = [
     description:
       "Implement cached workspace and Lakebase credential token flows for secure Postgres access in off-platform deployments.",
     tags: ["Lakebase", "OAuth", "Tokens", "Security"],
+    services: ["Lakebase"],
     prerequisites: ["lakebase-off-platform-env-management"],
   },
   {
@@ -157,6 +187,7 @@ export const recipes: Recipe[] = [
     description:
       "Connect Drizzle ORM to Lakebase with pg password callbacks and migration-time temporary DATABASE_URL credentials.",
     tags: ["Lakebase", "Drizzle", "Postgres", "ORM"],
+    services: ["Lakebase"],
     prerequisites: ["lakebase-token-management"],
   },
 ];
@@ -206,6 +237,9 @@ function createTemplate(config: TemplateConfig): Template {
   });
 
   const tags = [...new Set(selectedRecipes.flatMap((recipe) => recipe.tags))];
+  const services = [
+    ...new Set(selectedRecipes.flatMap((recipe) => recipe.services)),
+  ] as Service[];
 
   return {
     id: config.id,
@@ -213,6 +247,7 @@ function createTemplate(config: TemplateConfig): Template {
     description: config.description,
     recipeIds: config.recipeIds,
     tags,
+    services,
   };
 }
 
@@ -291,5 +326,6 @@ export const templatePreviewItems: TemplatePreviewItem[] = templates.map(
     title: template.name,
     description: template.description,
     tags: template.tags,
+    services: template.services,
   }),
 );

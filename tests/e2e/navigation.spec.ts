@@ -116,7 +116,7 @@ test.describe("home page link navigation", () => {
     );
   });
 
-  test("pillar card AgentBricks navigates to /docs/agents/getting-started", async ({
+  test("pillar card Agent Bricks navigates to /docs/agents/getting-started", async ({
     page,
   }) => {
     await page.goto("/");
@@ -193,7 +193,7 @@ test.describe("resources page navigation", () => {
   for (const { path } of TEMPLATES) {
     test(`resource card navigates to ${path}`, async ({ page }) => {
       await page.goto("/resources");
-      const link = page.locator(`a[href="${path}"]`);
+      const link = page.locator(`a[href="${path}"]`).first();
       await link.waitFor({ state: "visible" });
       await link.click();
       await page.waitForURL(`**${path}`);

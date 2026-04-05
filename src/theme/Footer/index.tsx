@@ -24,7 +24,7 @@ const FOOTER_SECTIONS: FooterSection[] = [
         href: "https://www.databricks.com/product/lakebase",
       },
       {
-        label: "AgentBricks",
+        label: "Agent Bricks",
         href: "https://www.databricks.com/product/artificial-intelligence/agent-bricks",
       },
       {

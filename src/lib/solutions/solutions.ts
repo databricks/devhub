@@ -18,7 +18,7 @@ export const solutions: Solution[] = [
     title: "From chatbots to agentic workflows",
     description:
       "Simple chat-with-PDF tools are toy apps. Production AI requires multi-agent orchestration with the Lakehouse as episodic memory.",
-    tags: ["AI Agents", "AgentBricks", "Architecture"],
+    tags: ["AI Agents", "Agent Bricks", "Architecture"],
   },
   {
     id: "database-branching-for-ai-agents",

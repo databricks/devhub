@@ -28,7 +28,7 @@ export const pillars: Pillar[] = [
     icon: Database,
   },
   {
-    title: "AgentBricks",
+    title: "Agent Bricks",
     subtitle: "Production-ready AI agents",
     description:
       "Model serving, vector search, RAG, and guardrails - all governed by Unity Catalog.",

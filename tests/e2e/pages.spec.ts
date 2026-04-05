@@ -3,14 +3,9 @@ import { test, expect } from "@playwright/test";
 const PAGES = [
   { path: "/", title: "Databricks Developer" },
   { path: "/solutions", title: "Solutions" },
-  { path: "/solutions/what-is-a-lakebase", title: "What is a Lakebase?" },
   {
-    path: "/solutions/from-chatbots-to-agentic-workflows",
-    title: "From chatbots to agentic workflows",
-  },
-  {
-    path: "/solutions/database-branching-for-ai-agents",
-    title: "Database branching for AI agents",
+    path: "/solutions/devhub-launch",
+    title: "Introducing dev.databricks.com",
   },
   { path: "/resources", title: "Resources" },
   { path: "/resources/base-app-template", title: "Base App Template" },

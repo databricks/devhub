@@ -82,14 +82,14 @@ test.describe("copy markdown exports raw markdown on template pages", () => {
 test.describe("copy markdown exports raw markdown on solution pages", () => {
   test("solution detail page copies actual markdown", async ({ page }) => {
     await setupClipboardMock(page);
-    await page.goto("/solutions/what-is-a-lakebase");
+    await page.goto("/solutions/devhub-launch");
 
     await clickCopyMarkdownAndWaitForToast(page);
 
     const copied = await getCopiedText(page);
-    expect(copied).toContain("# What is a Lakebase?");
-    expect(copied).toContain("**Lakebase**");
-    expect(copied).toContain('title: "What is a Lakebase?"');
+    expect(copied).toContain("# Introducing dev.databricks.com");
+    expect(copied).toContain("**dev.databricks.com**");
+    expect(copied).toContain('title: "Introducing dev.databricks.com"');
     expect(copied).toContain("llms.txt");
   });
 });

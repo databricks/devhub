@@ -55,14 +55,14 @@ Delete when done: `databricks postgres delete-branch projects/$PROJECT_ID/branch
 
 ## All Lakebase recipes
 
-| Recipe                                                                                 | Description                                    |
-| -------------------------------------------------------------------------------------- | ---------------------------------------------- |
-| [Create a Lakebase Instance](/resources/data-app-template#create-a-lakebase-instance)  | Provision a project, collect connection values |
-| [Lakebase Data Persistence](/resources/data-app-template#lakebase-data-persistence)    | Schema setup, CRUD routes, deploy workflow     |
-| [Lakebase Chat Persistence](/resources/ai-chat-app-template#lakebase-chat-persistence) | Chat/message schema on Lakebase                |
-| [Lakehouse Sync (ETL)](/resources#etl-lakehouse-sync-autoscaling)                      | Sync Lakebase to Unity Catalog                 |
-| [Reverse ETL Synced Tables](/resources#reverse-etl-synced-tables-autoscaling)          | Unity Catalog to Lakebase                      |
-| [Lakebase Off-Platform Template](/resources/lakebase-off-platform-template)            | Env, tokens, and Drizzle for off-platform apps |
+| Recipe                                                                                         | Description                                    |
+| ---------------------------------------------------------------------------------------------- | ---------------------------------------------- |
+| [Create a Lakebase Instance](/resources/data-app-template#create-a-lakebase-instance)          | Provision a project, collect connection values |
+| [Lakebase Data Persistence](/resources/data-app-template#lakebase-data-persistence)            | Schema setup, CRUD routes, deploy workflow     |
+| [Lakebase Chat Persistence](/resources/ai-chat-app-template#lakebase-chat-persistence)         | Chat/message schema on Lakebase                |
+| [Lakehouse Sync (Lakebase Change Data Feed)](/resources#lakebase-change-data-feed-autoscaling) | Sync Lakebase to Unity Catalog                 |
+| [Sync Tables](/resources#sync-tables-autoscaling)                                              | Unity Catalog to Lakebase                      |
+| [Lakebase Off-Platform Template](/resources/lakebase-off-platform-template)                    | Env, tokens, and Drizzle for off-platform apps |
 
 ## Source of truth
 

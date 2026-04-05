@@ -5,8 +5,8 @@ import { useAllRawRecipeMarkdown } from "@/lib/use-raw-content-markdown";
 import DatabricksLocalBootstrap from "@site/content/recipes/databricks-local-bootstrap.md";
 import UnityCatalogSetup from "@site/content/recipes/unity-catalog-setup.md";
 import LakebaseCreateInstance from "@site/content/recipes/lakebase-create-instance.md";
-import EtlLakehouseSyncAutoscaling from "@site/content/recipes/etl-lakehouse-sync-autoscaling.md";
-import ReverseEtlSyncedTablesAutoscaling from "@site/content/recipes/reverse-etl-synced-tables-autoscaling.md";
+import LakebaseChangeDataFeedAutoscaling from "@site/content/recipes/lakebase-change-data-feed-autoscaling.md";
+import SyncTablesAutoscaling from "@site/content/recipes/sync-tables-autoscaling.md";
 import MedallionArchitectureFromCdc from "@site/content/recipes/medallion-architecture-from-cdc.md";
 
 const template = templates.find(
@@ -30,9 +30,9 @@ export default function OperationalDataAnalyticsTemplatePage(): ReactNode {
       <hr />
       <LakebaseCreateInstance />
       <hr />
-      <EtlLakehouseSyncAutoscaling />
+      <LakebaseChangeDataFeedAutoscaling />
       <hr />
-      <ReverseEtlSyncedTablesAutoscaling />
+      <SyncTablesAutoscaling />
       <hr />
       <MedallionArchitectureFromCdc />
     </TemplateDetail>

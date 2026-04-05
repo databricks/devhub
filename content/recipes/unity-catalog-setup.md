@@ -2,11 +2,11 @@
 
 Create a Unity Catalog catalog backed by an external S3 bucket. For most use cases, the default metastore-managed storage works fine and requires no extra setup — just `databricks catalogs create <CATALOG_NAME>`. Use this recipe when you specifically need external storage.
 
-> **Note:** Reverse ETL synced tables (syncing Unity Catalog tables to Lakebase) currently require the source catalog to use external storage. Default managed storage does not work with synced tables yet. If you plan to use Reverse ETL, follow this recipe. This requirement is expected to be removed in a future release.
+> **Note:** Sync Tables — syncing data from the lakehouse back to Lakebase — currently requires the source Unity Catalog catalog to use external storage. Default managed storage does not work with synced tables yet. If you plan to sync lakehouse data back to Lakebase, follow this recipe. This requirement is expected to be removed in a future release.
 
 ### When to use this
 
-- You plan to use Reverse ETL (synced tables) from Unity Catalog to Lakebase — external storage is currently required for this
+- You plan to use Sync Tables to sync lakehouse data back to Lakebase — external storage is currently required for this
 - You want to control the S3 bucket location, encryption, and lifecycle policies
 - You need cross-account or cross-workspace access to the underlying data
 
@@ -121,7 +121,7 @@ databricks schemas list <CATALOG_NAME> --profile <PROFILE>
 - A **storage credential** linked to your IAM role for S3 access
 - An **external location** mapping an S3 path to the credential
 - A **Unity Catalog catalog** storing managed table data in your S3 bucket
-- A **schema** ready for tables from ETL, Lakehouse Sync, or Lakeflow Pipelines
+- A **schema** ready for tables from Lakebase Change Data Feed, Lakehouse Sync, or Lakeflow Pipelines
 
 ### Troubleshooting
 

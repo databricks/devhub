@@ -178,6 +178,7 @@ function generateLlmsTxt(baseUrl: string, docsDir: string): string {
     `- [Base App Template](${baseUrl}/resources/base-app-template): Databricks local bootstrap template for CLI, auth, app scaffolding, and agent skill setup`,
     `- [AI Chat App Template](${baseUrl}/resources/ai-chat-app-template): Streaming AI chat powered by Databricks Model Serving (AI Gateway) with AI SDK and AI Elements`,
     `- [Data App Template](${baseUrl}/resources/data-app-template): Bootstrap a Databricks app with Lakebase for persistent data storage, schema setup, and CRUD API routes`,
+    `- [Genie Analytics App Template](${baseUrl}/resources/genie-analytics-app-template): Bootstrap a Databricks app with AI/BI Genie for conversational analytics. Users ask natural-language questions and get instant answers from their data.`,
     "",
   ];
 

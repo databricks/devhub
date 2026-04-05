@@ -19,22 +19,27 @@
     "databricks-apps": {
       "source": "databricks/databricks-agent-skills",
       "sourceType": "github",
-      "computedHash": "b8deb97744f4a3a4631508c7c47093af6080d753010b931547ed567e693cc40c"
+      "computedHash": "188ca8fdb8905dd0377d2a54cd100b6484dfec711b3e3decb17a66a6a3c89f36"
+    },
+    "databricks-core": {
+      "source": "databricks/databricks-agent-skills",
+      "sourceType": "github",
+      "computedHash": "a93e25550100fa703e5c4e492bc97b0a6bcb629c83f3c96fcaa4e0e5f0ebbdc4"
     },
     "databricks-jobs": {
       "source": "databricks/databricks-agent-skills",
       "sourceType": "github",
-      "computedHash": "71b4ed507d3e50ce92b30ddcb3aa52883a5f6a478d3fe1d47b16c81272afbf0b"
+      "computedHash": "2b9c20888d3587b7b46a640ae0d076d093d03a14767699ea495ed6d31900ea4f"
     },
     "databricks-lakebase": {
       "source": "databricks/databricks-agent-skills",
       "sourceType": "github",
-      "computedHash": "7f102c874c04601d8f70141011b0b09c5cf978a2f81325c5e37806b90abe79f0"
+      "computedHash": "1be99e1f852f93f8c9e3fdc4e4fc94d8851fb0008ed21231ad5d70262b163bd8"
     },
     "databricks-pipelines": {
       "source": "databricks/databricks-agent-skills",
       "sourceType": "github",
-      "computedHash": "4c88e86807666fc2e06ed4f8a0d14bd18b013154c996600a3b00fa0321ec60d8"
+      "computedHash": "6964e9845d1a97f108d240a3ca00257262444fe159a2ecae4f04b4c2a8649259"
     },
     "deploy-to-vercel": {
       "source": "vercel-labs/agent-skills",

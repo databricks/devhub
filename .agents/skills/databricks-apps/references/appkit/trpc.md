@@ -2,6 +2,8 @@
 
 **CRITICAL**: Do NOT use tRPC for SQL queries or data retrieval. Use `config/queries/` + `useAnalyticsQuery` instead.
 
+**CRITICAL**: Do NOT use tRPC for accessing Unity Catalog and File operations. Use the Files plugin instead.
+
 Use tRPC ONLY for:
 
 - **Mutations**: Creating, updating, or deleting data (INSERT, UPDATE, DELETE)
@@ -10,9 +12,53 @@ Use tRPC ONLY for:
 - **File operations**: File uploads, processing, transformations
 - **Custom computations**: Operations requiring TypeScript/Node.js logic
 
+## Before Writing New Routes
+
+**ALWAYS complete these checks before adding tRPC routes:**
+
+### 1. Check AppKit Version
+
+Read `package.json` to identify the installed `@databricks/appkit` version. Available server APIs and plugins differ across versions.
+
+```bash
+# From the project root
+cat package.json | grep @databricks/appkit
+```
+
+### 2. Review Available Plugins
+
+Check what plugins are already enabled and what server-side functionality they provide — avoid reimplementing what a plugin already handles.
+
+```bash
+# See plugin docs for the installed version
+npx @databricks/appkit docs ./docs/plugins.md
+
+# See all plugins available for a specific version
+databricks apps manifest --version <VERSION> --profile <PROFILE>
+
+# See plugins available for the default template
+databricks apps manifest --profile <PROFILE>
+```
+
+**Key plugins to check for:**
+
+- **analytics** — provides SQL warehouse query execution (do NOT reimplement with tRPC)
+- **lakebase** — provides `createLakebasePool` for PostgreSQL CRUD (use pool in tRPC routes, don't create raw connections)
+- **genie** — provides Genie AI-powered data exploration (check before building custom natural-language-to-SQL routes)
+- **files** — provides file storage and retrieval helpers (check before writing custom file upload/download routes)
+
+If a plugin already covers your use case, use the plugin's API instead of writing a custom tRPC route.
+
+If there's a newer version of `@databricks/appkit` has a plugin that fits the use-case.
+Prompt the user for updating.
+
+### 3. Check Existing Routes
+
+Read `server/server.ts` (or `server/trpc.ts`) to see what routes already exist. Extend the existing router rather than creating a parallel one.
+
 ## Server-side Pattern
 
-```typescript
+```tsx
 // server/trpc.ts
 import { initTRPC } from "@trpc/server";
 import { getExecutionContext } from "@databricks/appkit";
@@ -99,3 +145,4 @@ function MyComponent() {
 - ✅ Databricks APIs → tRPC
 - ✅ Data mutations → tRPC
 - ❌ SQL queries → tRPC (NEVER do this)
+- ❌ Files operations → tRPC (NEVER do this)

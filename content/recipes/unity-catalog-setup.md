@@ -1,13 +1,12 @@
 ## Set Up Unity Catalog with External Storage
 
-Create a Unity Catalog catalog backed by an external S3 bucket so lakehouse tables use your own cloud storage instead of the metastore default. External storage is required for features like Reverse ETL synced tables and gives you full control over data lifecycle, cross-account access, and compliance.
+Create a Unity Catalog catalog backed by an external S3 bucket. For most use cases, the default metastore-managed storage works fine and requires no extra setup — just `databricks catalogs create <CATALOG_NAME>`. Use this recipe when you specifically need external storage.
 
-> Using external storage instead of the default managed location is recommended for production workloads. It enables Reverse ETL, cross-workspace data sharing, and fine-grained storage policies.
+> **Note:** Reverse ETL synced tables (syncing Unity Catalog tables to Lakebase) currently require the source catalog to use external storage. Default managed storage does not work with synced tables yet. If you plan to use Reverse ETL, follow this recipe. This requirement is expected to be removed in a future release.
 
 ### When to use this
 
-- You are setting up a new catalog for operational or analytics data
-- You need Reverse ETL (synced tables) from Unity Catalog to Lakebase — external storage is required
+- You plan to use Reverse ETL (synced tables) from Unity Catalog to Lakebase — external storage is currently required for this
 - You want to control the S3 bucket location, encryption, and lifecycle policies
 - You need cross-account or cross-workspace access to the underlying data
 

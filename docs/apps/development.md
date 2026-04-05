@@ -190,7 +190,6 @@ databricks apps delete my-app --profile <PROFILE>
 | [Databricks Local Bootstrap](/resources/databricks-local-bootstrap)         | CLI install, auth, scaffold, and agent skill setup   |
 | [Lakebase Data Persistence](/resources/lakebase-data-persistence)           | Add Lakebase to an AppKit app with schema and routes |
 | [Lakebase Chat Persistence](/resources/lakebase-chat-persistence)           | Persist AI chat sessions to Lakebase                 |
-| [SQL Analytics Dashboard](/resources/sql-analytics-dashboard)               | Analytics dashboard with parameterized SQL queries   |
 | [Genie Conversational Analytics](/resources/genie-conversational-analytics) | Natural language data queries with Genie             |
 | [Streaming AI Chat](/resources/ai-chat-model-serving)                       | AI chat with Databricks Model Serving                |
 | [Query AI Gateway Endpoints](/resources/foundation-models-api)              | Call model serving endpoints from AppKit             |

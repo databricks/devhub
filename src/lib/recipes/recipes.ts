@@ -109,16 +109,8 @@ export const recipes: Recipe[] = [
     id: "genie-conversational-analytics",
     name: "Genie Conversational Analytics",
     description:
-      "Embed a Databricks AI/BI Genie chat interface so users can explore data through natural language. Configure a Genie space, wire up the plugin, and render the chat component.",
-    tags: ["Genie", "AI/BI", "Natural Language", "Data"],
-    prerequisites: ["databricks-local-bootstrap"],
-  },
-  {
-    id: "sql-analytics-dashboard",
-    name: "SQL Analytics Dashboard",
-    description:
-      "Build interactive dashboards with parameterized SQL queries and chart components. Uses the Analytics plugin for SQL Warehouse queries and AppKit UI for visualizations.",
-    tags: ["Analytics", "SQL", "Charts", "Dashboard"],
+      "Embed a Databricks AI/BI Genie chat interface so users can explore data through natural language. Configure a Genie space, wire up server and client plugins, declare app resources, and deploy.",
+    tags: ["Genie", "AI/BI", "Natural Language", "Analytics"],
     prerequisites: ["databricks-local-bootstrap"],
   },
   {
@@ -161,7 +153,6 @@ export const recipesInOrder: Recipe[] = [
   "etl-lakehouse-sync-autoscaling",
   "reverse-etl-synced-tables-autoscaling",
   "genie-conversational-analytics",
-  "sql-analytics-dashboard",
   "lakebase-off-platform-env-management",
   "lakebase-token-management",
   "lakebase-drizzle-off-platform",
@@ -234,31 +225,11 @@ export const templates: Template[] = [
     ],
   }),
   createTemplate({
-    id: "analytics-dashboard-app-template",
-    name: "Analytics Dashboard App Template",
+    id: "genie-analytics-app-template",
+    name: "Genie Analytics App Template",
     description:
-      "Build an interactive analytics dashboard backed by Lakebase and powered by parameterized SQL queries and chart components.",
-    recipeIds: [
-      "databricks-local-bootstrap",
-      "lakebase-create-instance",
-      "lakebase-data-persistence",
-      "sql-analytics-dashboard",
-    ],
-  }),
-  createTemplate({
-    id: "ai-data-explorer-template",
-    name: "AI Data Explorer Template",
-    description:
-      "A full-stack data application with Lakebase persistence, AI chat powered by Databricks Model Serving, and Genie natural-language data exploration.",
-    recipeIds: [
-      "databricks-local-bootstrap",
-      "lakebase-create-instance",
-      "lakebase-data-persistence",
-      "model-serving-endpoint-creation",
-      "ai-chat-model-serving",
-      "lakebase-chat-persistence",
-      "genie-conversational-analytics",
-    ],
+      "Bootstrap a Databricks app with AI/BI Genie for conversational analytics. Users ask natural-language questions and get instant answers from their data.",
+    recipeIds: ["databricks-local-bootstrap", "genie-conversational-analytics"],
   }),
   createTemplate({
     id: "lakebase-off-platform-template",

@@ -43,14 +43,12 @@ The CLI derives defaults for unset values. See [Apps Plugins](/docs/apps/plugins
 
 The fastest path is to use a [template](/resources) with an AI coding agent. Copy a template into your agent and describe what you want to build. See [Your First App](/docs/get-started/your-first-app) for the full workflow.
 
-| Template                                                                        | Best for                                           |
-| ------------------------------------------------------------------------------- | -------------------------------------------------- |
-| [Base App Template](/resources/base-app-template)                               | Simple apps, static pages, getting started         |
-| [Data App Template](/resources/data-app-template)                               | CRUD apps with persistent storage                  |
-| [AI Chat App Template](/resources/ai-chat-app-template)                         | Conversational AI with chat history                |
-| [Analytics Dashboard App Template](/resources/analytics-dashboard-app-template) | Dashboards and reporting                           |
-| [AI Data Explorer Template](/resources/ai-data-explorer-template)               | Full-stack AI + data exploration                   |
-| [Lakebase Off-Platform](/resources/lakebase-off-platform-template)              | Apps hosted outside Databricks (AWS, Vercel, etc.) |
+| Template                                                           | Best for                                           |
+| ------------------------------------------------------------------ | -------------------------------------------------- |
+| [Base App Template](/resources/base-app-template)                  | Simple apps, static pages, getting started         |
+| [Data App Template](/resources/data-app-template)                  | CRUD apps with persistent storage                  |
+| [AI Chat App Template](/resources/ai-chat-app-template)            | Conversational AI with chat history                |
+| [Lakebase Off-Platform](/resources/lakebase-off-platform-template) | Apps hosted outside Databricks (AWS, Vercel, etc.) |
 
 ## Next steps
 

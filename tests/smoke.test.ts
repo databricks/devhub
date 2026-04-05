@@ -35,8 +35,7 @@ describe("production build smoke tests", () => {
       "/resources/base-app-template",
       "/resources/ai-chat-app-template",
       "/resources/data-app-template",
-      "/resources/analytics-dashboard-app-template",
-      "/resources/ai-data-explorer-template",
+      "/resources/genie-analytics-app-template",
     ];
 
     for (const path of expectedTemplates) {

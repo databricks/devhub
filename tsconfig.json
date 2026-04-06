@@ -16,5 +16,5 @@
       "@/*": ["src/*"]
     }
   },
-  "exclude": [".docusaurus", "build", "tests", "templates"]
+  "exclude": [".docusaurus", "build", "tests"]
 }

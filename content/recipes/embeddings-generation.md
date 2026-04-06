@@ -28,12 +28,16 @@ env:
 
 ### 3. Embedding helper
 
+Create `server/lib/embeddings.ts`:
+
+`server/lib/embeddings.ts`:
+
 ```typescript
 import { getWorkspaceClient } from "@databricks/appkit";
 
 const workspaceClient = getWorkspaceClient({});
 
-async function generateEmbedding(text: string): Promise<number[]> {
+export async function generateEmbedding(text: string): Promise<number[]> {
   const endpoint =
     process.env.DATABRICKS_EMBEDDING_ENDPOINT || "databricks-gte-large-en";
   const result = await workspaceClient.servingEndpoints.query({

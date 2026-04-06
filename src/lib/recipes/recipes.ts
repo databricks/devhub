@@ -130,18 +130,16 @@ export const recipes: Recipe[] = [
     prerequisites: ["lakebase-data-persistence", "embeddings-generation"],
   },
   {
-    id: "scaffold-rag-chat",
-    name: "Scaffold RAG Chat App",
+    id: "rag-chat-integration",
+    name: "RAG Chat Integration",
     description:
-      "Scaffold a complete RAG chat app with pgvector retrieval, AI Gateway embeddings, and streaming chat using the AppKit CLI.",
-    tags: ["RAG", "Chat", "AI", "AppKit", "pgvector"],
+      "Wire pgvector retrieval, document seeding, and a sources API into a streaming chat app to build a complete RAG experience.",
+    tags: ["RAG", "Chat", "AI", "pgvector", "Embeddings"],
     prerequisites: [
-      "databricks-local-bootstrap",
-      "lakebase-data-persistence",
-      "foundation-models-api",
       "embeddings-generation",
       "lakebase-pgvector",
       "ai-chat-model-serving",
+      "lakebase-chat-persistence",
     ],
   },
 ];
@@ -159,7 +157,7 @@ export const recipesInOrder: Recipe[] = [
   "lakebase-pgvector",
   "ai-chat-model-serving",
   "lakebase-chat-persistence",
-  "scaffold-rag-chat",
+  "rag-chat-integration",
   "etl-lakehouse-sync-autoscaling",
   "reverse-etl-synced-tables-autoscaling",
   "genie-conversational-analytics",
@@ -265,7 +263,7 @@ export const templates: Template[] = [
       "lakebase-pgvector",
       "ai-chat-model-serving",
       "lakebase-chat-persistence",
-      "scaffold-rag-chat",
+      "rag-chat-integration",
     ],
   }),
 ];

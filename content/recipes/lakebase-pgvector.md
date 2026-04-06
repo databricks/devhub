@@ -26,12 +26,28 @@ CREATE TABLE IF NOT EXISTS rag.documents (
 
 > **Vector dimensions**: `VECTOR(1024)` must match your embedding model output. `databricks-gte-large-en` produces 1024 dimensions.
 
-### 3. Server-side setup
+### 3. Server-side RAG store module
 
-Run DDL on boot before `appkit.server.start()`:
+Create `server/lib/rag-store.ts` with table setup, insert, and similarity search. Call `setupRagTables(appkit)` from `server.ts` before starting the server.
+
+`server/lib/rag-store.ts`:
 
 ```typescript
-async function setupRagTables(appkit: AppKitWithLakebase) {
+import type { Application } from "express";
+
+interface AppKitWithLakebase {
+  lakebase: {
+    query(
+      text: string,
+      params?: unknown[],
+    ): Promise<{ rows: Record<string, unknown>[] }>;
+  };
+  server: {
+    extend(fn: (app: Application) => void): void;
+  };
+}
+
+export async function setupRagTables(appkit: AppKitWithLakebase) {
   try {
     await appkit.lakebase.query("CREATE EXTENSION IF NOT EXISTS vector");
   } catch (err: unknown) {
@@ -60,12 +76,8 @@ async function setupRagTables(appkit: AppKitWithLakebase) {
     )
   `);
 }
-```
 
-### 4. Insert documents
-
-```typescript
-async function insertDocument(
+export async function insertDocument(
   appkit: AppKitWithLakebase,
   input: {
     content: string;
@@ -85,12 +97,8 @@ async function insertDocument(
   );
   return result.rows[0];
 }
-```
 
-### 5. Query by cosine similarity
-
-```typescript
-async function retrieveSimilar(
+export async function retrieveSimilar(
   appkit: AppKitWithLakebase,
   queryEmbedding: number[],
   limit = 5,

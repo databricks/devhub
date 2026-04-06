@@ -28,7 +28,7 @@ If you run `npm run dev` before deploying, your user creates schemas that the de
 ### 2. Install AI SDK packages
 
 ```bash
-npm install ai@6 @ai-sdk/react@3 @ai-sdk/openai @databricks/sdk-experimental
+npm install ai@6 @ai-sdk/react@3 @ai-sdk/openai@3 @databricks/sdk-experimental
 ```
 
 > **Version note**: This recipe uses AI SDK v6 APIs (`TextStreamChatTransport`, `sendMessage({ text })`, transport-based `useChat`). Tested with `ai@6.1`, `@ai-sdk/react@3.1`, and `@ai-sdk/openai@3.x`.

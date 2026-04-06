@@ -10,14 +10,58 @@ AppKit plugins are modular extensions that add capabilities to your app. Built-i
 
 List available plugins:
 
-```bash
-databricks apps manifest --profile <PROFILE>
+```bash title="Common"
+databricks apps manifest
 ```
 
-Select plugins interactively when scaffolding a new app:
+```bash title="All Options"
+databricks apps manifest \
+  --template $TEMPLATE_URL \
+  --branch $BRANCH \
+  --version $APPKIT_VERSION \
+  --debug \
+  -o json \
+  --target $TARGET \
+  --var "key=value" \
+  --profile $DATABRICKS_PROFILE
+```
 
-```bash
-databricks apps init
+| Option       | Required | Description                                                             |
+| ------------ | -------- | ----------------------------------------------------------------------- |
+| `--template` | no       | Template path (local directory or GitHub URL). Default: AppKit template |
+| `--branch`   | no       | Git branch or tag (mutually exclusive with `--version`)                 |
+| `--version`  | no       | AppKit version for default template (default: main)                     |
+| `--debug`    | no       | Enable debug logging                                                    |
+| `-o json`    | no       | Output as JSON (default: text)                                          |
+| `--target`   | no       | Bundle target to use (if applicable)                                    |
+| `--var`      | no       | Set values for bundle config variables (e.g. `--var="key=value"`)       |
+| `--profile`  | no       | Databricks CLI profile name                                             |
+
+Use the Common tab for a typical non-interactive scaffold (`--name` suppresses prompts and applies defaults). Use the All Options tab to choose plugins and resource values with flags instead of prompts. For every `databricks apps init` flag, see the option table in [Apps getting started](/docs/apps/getting-started#scaffold-an-app).
+
+```bash title="Common"
+databricks apps init --name my-app
+```
+
+```bash title="All Options"
+databricks apps init \
+  --name $APP_NAME \
+  --features lakebase,analytics \
+  --set lakebase.postgres.branch=projects/$PROJECT_ID/branches/production \
+  --set lakebase.postgres.database=projects/$PROJECT_ID/branches/production/databases/$DB_NAME \
+  --set analytics.sql-warehouse.id=$WAREHOUSE_ID \
+  --description "My App" \
+  --output-dir $OUTPUT_DIR \
+  --template $TEMPLATE_URL \
+  --branch $BRANCH \
+  --deploy \
+  --run none \
+  --version $APPKIT_VERSION \
+  --debug \
+  -o json \
+  --target $TARGET \
+  --var "key=value" \
+  --profile $DATABRICKS_PROFILE
 ```
 
 | Plugin        | What it adds                                                                   |
@@ -27,15 +71,6 @@ databricks apps init
 | **analytics** | SQL query execution against Databricks SQL Warehouses                          |
 | **genie**     | AI/BI Genie space integration for natural language queries                     |
 | **files**     | File operations against Unity Catalog Volumes                                  |
-
-For non-interactive use (CI, agents), pass `--name`, `--features`, and `--set` flags (`databricks apps init --help` for the full reference). An example:
-
-```bash
-databricks apps init --name my-app --features=lakebase \
-  --set lakebase.postgres.branch=projects/inventory/branches/production \
-  --set lakebase.postgres.database=projects/inventory/branches/production/databases/app_db \
-  --run none --profile <PROFILE>
-```
 
 ## Using plugins
 
@@ -63,7 +98,7 @@ Scaffold a custom plugin inside an existing AppKit project:
 npx @databricks/appkit plugin create
 ```
 
-The interactive wizard generates a plugin class, manifest, and resource declarations. See the [AppKit custom plugins guide](/docs/appkit/v0/plugins/custom-plugins) for the full class API, lifecycle hooks, and route injection.
+The CLI wizard generates a plugin class, manifest, and resource declarations. See the [AppKit custom plugins guide](/docs/appkit/v0/plugins/custom-plugins) for the full class API, lifecycle hooks, and route injection.
 
 ## Related pages
 

@@ -346,7 +346,7 @@ describe("Lakebase workflow", { timeout: 600_000 }, () => {
     );
   });
 
-  test("connect with databricks psql (non-interactive)", () => {
+  test("connect with databricks psql (CI-style flags)", () => {
     const output = retry(
       () =>
         run(

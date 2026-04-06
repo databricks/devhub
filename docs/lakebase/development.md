@@ -14,12 +14,28 @@ Key points from the recipe:
 - **Connection**: AppKit's `lakebase()` plugin provides a `pg.Pool` with automatic OAuth token refresh
 - **Deploy first**: the app's Service Principal creates schemas and tables on first deploy. Grant yourself `databricks_superuser` for local development afterward:
 
-```bash
-databricks psql --project <project-name> --branch production --endpoint primary --profile <PROFILE> -- -c "
-  CREATE EXTENSION IF NOT EXISTS databricks_auth;
-  SELECT databricks_create_role('<your-email>', 'USER');
-  GRANT databricks_superuser TO \"<your-email>\";
-"
+```bash title="Common"
+databricks psql --project my-project
+# After connecting, grant yourself superuser for local development:
+# GRANT databricks_superuser TO "<your-email>";
+```
+
+```bash title="All Options"
+databricks psql \
+  --project $PROJECT_ID \
+  --branch production \
+  --endpoint primary \
+  --debug \
+  -o json \
+  --target $TARGET \
+  --autoscaling \
+  --max-retries 3 \
+  --profile $DATABRICKS_PROFILE \
+  -- -c "
+    CREATE EXTENSION IF NOT EXISTS databricks_auth;
+    SELECT databricks_create_role('$USER_EMAIL', 'USER');
+    GRANT databricks_superuser TO \"$USER_EMAIL\";
+  "
 ```
 
 - **Environment**: deployed apps get Postgres connection values injected automatically. Only `LAKEBASE_ENDPOINT` needs explicit configuration in `app.yaml`:
@@ -44,14 +60,51 @@ The [Lakebase Off-Platform Template](/resources/lakebase-off-platform-template) 
 
 Use Lakebase branches to isolate schema changes and test migrations without affecting production:
 
-```bash
-databricks postgres create-branch projects/$PROJECT_ID feature-xyz \
-  --json '{"spec": {"source_branch": "projects/$PROJECT_ID/branches/$BRANCH_ID", "no_expiry": true}}'
+```bash title="Common"
+databricks postgres create-branch projects/my-project feature-xyz
+```
+
+```bash title="All Options"
+databricks postgres create-branch \
+  projects/$PROJECT_ID \
+  $BRANCH_ID \
+  --json '{"spec": {"source_branch": "projects/$PROJECT_ID/branches/$SOURCE_BRANCH_ID", "no_expiry": true}}' \
+  --debug \
+  -o json \
+  --target $TARGET \
+  --no-wait \
+  --timeout 10m \
+  --profile $DATABRICKS_PROFILE
 ```
 
 A `primary` read-write endpoint is created automatically, inheriting the project's `default_endpoint_settings`.
 
-Delete when done: `databricks postgres delete-branch projects/$PROJECT_ID/branches/feature-xyz`
+Delete when done:
+
+```bash title="Common"
+databricks postgres delete-branch projects/my-project/branches/feature-xyz
+```
+
+```bash title="All Options"
+databricks postgres delete-branch \
+  projects/$PROJECT_ID/branches/$BRANCH_ID \
+  --no-wait \
+  --timeout 10m \
+  --debug \
+  -o json \
+  --target $TARGET \
+  --profile $DATABRICKS_PROFILE
+```
+
+| Option      | Required | Description                                                        |
+| ----------- | -------- | ------------------------------------------------------------------ |
+| `NAME`      | yes      | Branch resource path: `projects/{project_id}/branches/{branch_id}` |
+| `--no-wait` | no       | Return immediately with operation details                          |
+| `--timeout` | no       | Max time to wait for completion                                    |
+| `--debug`   | no       | Enable debug logging                                               |
+| `-o json`   | no       | Output as JSON (default: text)                                     |
+| `--target`  | no       | Bundle target to use (if applicable)                               |
+| `--profile` | no       | Databricks CLI profile name                                        |
 
 ## All Lakebase recipes
 

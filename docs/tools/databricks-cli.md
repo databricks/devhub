@@ -58,7 +58,7 @@ If the CLI is missing or below `0.295`, install or upgrade before continuing.
 
 ## Authenticate
 
-Interactive OAuth is the default for user-driven workflows:
+Browser-based OAuth (`databricks auth login`) is the default for local and ad-hoc use:
 
 ```bash
 databricks auth login --host <workspace-url>
@@ -131,8 +131,9 @@ databricks schemas list --help
 - prefer OAuth over legacy PAT flows where possible
 - keep credentials out of source control
 - standardize on named profiles per environment
-- use non-interactive auth methods for CI/CD and service automation
+- use token or OAuth client-credential flows for CI/CD and service automation (no browser step)
 - pass `--profile <PROFILE>` on every command in automation and agent workflows
+- DevHub **Common** examples assume a single default workspace profile. For CI, agents, and multi-workspace setups, pass `--profile` explicitly or set `DATABRICKS_CONFIG_PROFILE`
 - verify CLI command shape with `--help` instead of guessing flags
 
 ## Source of truth

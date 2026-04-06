@@ -131,22 +131,22 @@ The `files` plugin auto-registers HTTP routes at `/api/files/files/...` for the 
 File browser with upload, folder creation, download, delete, and file preview. Uses `AbortController` to cancel stale list and preview requests. Entries are sorted directories-first, then alphabetically. `resolveEntryPath` constructs the full path from `currentPath + entry.name` — do not use `entry.path` directly, as it may not be set by the API.
 
 ```tsx
-import type { DirectoryEntry, FilePreview } from '@databricks/appkit-ui/react';
+import type { DirectoryEntry, FilePreview } from "@databricks/appkit-ui/react";
 import {
   Button,
   DirectoryList,
   FileBreadcrumb,
   FilePreviewPanel,
   NewFolderInput,
-} from '@databricks/appkit-ui/react';
-import { FolderPlus, Loader2, Upload } from 'lucide-react';
+} from "@databricks/appkit-ui/react";
+import { FolderPlus, Loader2, Upload } from "lucide-react";
 import {
   type RefObject,
   useCallback,
   useEffect,
   useRef,
   useState,
-} from 'react';
+} from "react";
 
 function useAbortController(): RefObject<AbortController | null> {
   const ref = useRef<AbortController | null>(null);
@@ -162,9 +162,9 @@ function nextSignal(ref: RefObject<AbortController | null>): AbortSignal {
 export function FilesPage() {
   const [volumes, setVolumes] = useState<string[]>([]);
   const [volumeKey, setVolumeKey] = useState<string>(
-    () => localStorage.getItem('appkit:files:volumeKey') ?? '',
+    () => localStorage.getItem("appkit:files:volumeKey") ?? "",
   );
-  const [currentPath, setCurrentPath] = useState<string>('');
+  const [currentPath, setCurrentPath] = useState<string>("");
   const [entries, setEntries] = useState<DirectoryEntry[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -174,13 +174,13 @@ export function FilesPage() {
   const [uploading, setUploading] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [creatingDir, setCreatingDir] = useState(false);
-  const [newDirName, setNewDirName] = useState('');
+  const [newDirName, setNewDirName] = useState("");
   const [showNewDirInput, setShowNewDirInput] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const listAbort = useAbortController();
   const previewAbort = useAbortController();
 
-  const normalize = (p: string) => p.replace(/\/+$/, '');
+  const normalize = (p: string) => p.replace(/\/+$/, "");
   const isAtRoot = !currentPath;
 
   const apiUrl = useCallback(
@@ -203,7 +203,7 @@ export function FilesPage() {
 
       try {
         const signal = nextSignal(listAbort);
-        const url = path ? apiUrl('list', { path }) : apiUrl('list');
+        const url = path ? apiUrl("list", { path }) : apiUrl("list");
         const response = await fetch(url, { signal });
 
         if (!response.ok) {
@@ -217,12 +217,12 @@ export function FilesPage() {
         data.sort((a, b) => {
           if (a.is_directory && !b.is_directory) return -1;
           if (!a.is_directory && b.is_directory) return 1;
-          return (a.name ?? '').localeCompare(b.name ?? '');
+          return (a.name ?? "").localeCompare(b.name ?? "");
         });
         setEntries(data);
-        setCurrentPath(path ?? '');
+        setCurrentPath(path ?? "");
       } catch (err) {
-        if (err instanceof DOMException && err.name === 'AbortError') return;
+        if (err instanceof DOMException && err.name === "AbortError") return;
         setError(err instanceof Error ? err.message : String(err));
         setEntries([]);
       } finally {
@@ -239,7 +239,7 @@ export function FilesPage() {
 
       try {
         const signal = nextSignal(previewAbort);
-        const response = await fetch(apiUrl('preview', { path: filePath }), {
+        const response = await fetch(apiUrl("preview", { path: filePath }), {
           signal,
         });
 
@@ -251,7 +251,7 @@ export function FilesPage() {
         const data = await response.json();
         setPreview(data);
       } catch (err) {
-        if (err instanceof DOMException && err.name === 'AbortError') return;
+        if (err instanceof DOMException && err.name === "AbortError") return;
         setPreview(null);
       } finally {
         setPreviewLoading(false);
@@ -261,7 +261,7 @@ export function FilesPage() {
   );
 
   useEffect(() => {
-    fetch('/api/files/volumes')
+    fetch("/api/files/volumes")
       .then((res) => res.json())
       .then((data: { volumes: string[] }) => {
         const list = data.volumes ?? [];
@@ -270,7 +270,7 @@ export function FilesPage() {
           const first = list[0];
           if (first) {
             setVolumeKey(first);
-            localStorage.setItem('appkit:files:volumeKey', first);
+            localStorage.setItem("appkit:files:volumeKey", first);
           }
         }
       })
@@ -284,7 +284,7 @@ export function FilesPage() {
   }, [volumeKey, loadDirectory]);
 
   const resolveEntryPath = (entry: DirectoryEntry) => {
-    const name = entry.name ?? '';
+    const name = entry.name ?? "";
     return currentPath ? `${currentPath}/${name}` : name;
   };
 
@@ -300,16 +300,16 @@ export function FilesPage() {
 
   const navigateToParent = () => {
     if (isAtRoot) return;
-    const segments = currentPath.split('/').filter(Boolean);
+    const segments = currentPath.split("/").filter(Boolean);
     segments.pop();
-    const parentPath = segments.join('/');
+    const parentPath = segments.join("/");
     loadDirectory(parentPath || undefined);
   };
 
-  const allSegments = normalize(currentPath).split('/').filter(Boolean);
+  const allSegments = normalize(currentPath).split("/").filter(Boolean);
 
   const navigateToBreadcrumb = (index: number) => {
-    const targetPath = allSegments.slice(0, index + 1).join('/');
+    const targetPath = allSegments.slice(0, index + 1).join("/");
     loadDirectory(targetPath);
   };
 
@@ -323,7 +323,7 @@ export function FilesPage() {
       setError(
         `File "${file.name}" is too large (${(file.size / 1024 / 1024).toFixed(1)} MB). Maximum upload size is ${MAX_UPLOAD_SIZE / 1024 / 1024 / 1024} GB.`,
       );
-      if (fileInputRef.current) fileInputRef.current.value = '';
+      if (fileInputRef.current) fileInputRef.current.value = "";
       return;
     }
 
@@ -332,8 +332,8 @@ export function FilesPage() {
       const uploadPath = currentPath
         ? `${currentPath}/${file.name}`
         : file.name;
-      const response = await fetch(apiUrl('upload', { path: uploadPath }), {
-        method: 'POST',
+      const response = await fetch(apiUrl("upload", { path: uploadPath }), {
+        method: "POST",
         body: file,
       });
 
@@ -348,7 +348,7 @@ export function FilesPage() {
     } finally {
       setUploading(false);
       if (fileInputRef.current) {
-        fileInputRef.current.value = '';
+        fileInputRef.current.value = "";
       }
     }
   };
@@ -356,14 +356,14 @@ export function FilesPage() {
   const handleDelete = async () => {
     if (!selectedFile) return;
 
-    const fileName = selectedFile.split('/').pop();
+    const fileName = selectedFile.split("/").pop();
     if (!window.confirm(`Delete "${fileName}"?`)) return;
 
     setDeleting(true);
     try {
       const response = await fetch(
         `/api/files/${volumeKey}?path=${encodeURIComponent(selectedFile)}`,
-        { method: 'DELETE' },
+        { method: "DELETE" },
       );
 
       if (!response.ok) {
@@ -388,9 +388,9 @@ export function FilesPage() {
     setCreatingDir(true);
     try {
       const dirPath = currentPath ? `${currentPath}/${name}` : name;
-      const response = await fetch(apiUrl('mkdir'), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch(apiUrl("mkdir"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ path: dirPath }),
       });
 
@@ -402,7 +402,7 @@ export function FilesPage() {
       }
 
       setShowNewDirInput(false);
-      setNewDirName('');
+      setNewDirName("");
       await loadDirectory(currentPath || undefined);
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
@@ -428,8 +428,8 @@ export function FilesPage() {
               onChange={(e) => {
                 const v = e.target.value;
                 setVolumeKey(v);
-                localStorage.setItem('appkit:files:volumeKey', v);
-                setCurrentPath('');
+                localStorage.setItem("appkit:files:volumeKey", v);
+                setCurrentPath("");
                 setEntries([]);
                 setSelectedFile(null);
                 setPreview(null);
@@ -444,7 +444,7 @@ export function FilesPage() {
             </select>
           )}
           <FileBreadcrumb
-            rootLabel={volumeKey || 'Root'}
+            rootLabel={volumeKey || "Root"}
             segments={allSegments}
             onNavigateToRoot={() => loadDirectory()}
             onNavigateToSegment={navigateToBreadcrumb}
@@ -477,7 +477,7 @@ export function FilesPage() {
             ) : (
               <Upload className="h-4 w-4 mr-2" />
             )}
-            {uploading ? 'Uploading...' : 'Upload'}
+            {uploading ? "Uploading..." : "Upload"}
           </Button>
         </div>
       </div>
@@ -503,7 +503,7 @@ export function FilesPage() {
                 onCreate={handleCreateDirectory}
                 onCancel={() => {
                   setShowNewDirInput(false);
-                  setNewDirName('');
+                  setNewDirName("");
                 }}
                 creating={creatingDir}
               />
@@ -517,11 +517,11 @@ export function FilesPage() {
           preview={preview}
           previewLoading={previewLoading}
           onDownload={(path) =>
-            window.open(apiUrl('download', { path }), '_blank')
+            window.open(apiUrl("download", { path }), "_blank")
           }
           onDelete={handleDelete}
           deleting={deleting}
-          imagePreviewSrc={(p) => apiUrl('raw', { path: p })}
+          imagePreviewSrc={(p) => apiUrl("raw", { path: p })}
         />
       </div>
     </div>

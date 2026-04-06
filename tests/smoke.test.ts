@@ -74,4 +74,13 @@ describe("production build smoke tests", () => {
       expect(text).toContain(docPath);
     }
   });
+
+  test("raw-docs preserve CLI tab code blocks for markdown export", () => {
+    const text = readBuildFile("raw-docs/lakebase/core-concepts.md");
+    expect(text).toContain('title="Common"');
+    expect(text).toContain('title="All Options"');
+    expect(text).toContain("databricks postgres create-branch");
+    expect(text).toContain("databricks postgres update-branch");
+    expect(text).toContain("databricks postgres update-endpoint");
+  });
 });

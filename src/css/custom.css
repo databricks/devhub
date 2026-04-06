@@ -572,27 +572,37 @@
   }
 
   .db-docs-article .theme-doc-markdown .tabs-container {
-    @apply my-6 rounded-xl border border-db-border bg-db-card p-3 shadow-sm;
+    @apply my-6;
   }
 
   .db-docs-article .theme-doc-markdown .tabs {
-    @apply mb-3 flex flex-wrap gap-2 border-b border-db-border pb-2;
+    @apply mb-0 flex flex-wrap items-end gap-0 border-b border-db-border pb-0;
   }
 
   .db-docs-article .theme-doc-markdown .tabs__item {
-    @apply m-0 rounded-md border border-transparent px-3 py-1.5 text-sm font-medium text-db-navy/70 transition-colors;
+    @apply m-0 -mb-px rounded-t-md border-b-2 border-transparent px-3 py-2 text-sm font-medium text-db-navy/55 transition-colors;
   }
 
   .db-docs-article .theme-doc-markdown .tabs__item:hover {
-    @apply border-db-border bg-db-bg text-db-navy;
+    @apply bg-db-navy/4 text-db-navy/80;
+  }
+
+  .db-docs-article .theme-doc-markdown .tabs__item:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: -2px;
+    border-radius: 0.375rem;
   }
 
   .db-docs-article .theme-doc-markdown .tabs__item--active {
-    @apply border-db-lava/35 bg-db-lava/12 text-db-lava-dark;
+    @apply border-db-lava text-db-navy;
   }
 
   .db-docs-article .theme-doc-markdown .tabItem {
-    @apply rounded-md bg-db-card;
+    @apply bg-transparent;
+  }
+
+  .db-docs-article .theme-doc-markdown .tabs-container .theme-code-block {
+    @apply my-0 mt-3;
   }
 
   .db-docs-article .theme-doc-markdown .theme-code-block {
@@ -710,19 +720,19 @@
   }
 
   [data-theme="dark"] .db-docs-article .theme-doc-markdown .tabs__item {
-    @apply text-white/75;
+    @apply text-white/50;
   }
 
   [data-theme="dark"] .db-docs-article .theme-doc-markdown .tabs__item:hover {
-    @apply border-db-border bg-db-navy/40 text-white;
+    @apply bg-white/5 text-white/80;
   }
 
   [data-theme="dark"] .db-docs-article .theme-doc-markdown .tabs__item--active {
-    @apply border-db-lava/45 bg-db-lava/18 text-db-lava-light;
+    @apply border-db-lava-light text-white;
   }
 
   [data-theme="dark"] .db-docs-article .theme-doc-markdown .tabItem {
-    @apply bg-db-card;
+    @apply bg-transparent;
   }
 
   [data-theme="dark"] .db-docs-article .theme-doc-markdown dt {

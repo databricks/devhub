@@ -117,4 +117,18 @@ test.describe("copy markdown exports raw markdown on docs pages", () => {
     const text = await response.text();
     expect(text).toContain("# Getting Started");
   });
+
+  test("docs page with CLI tabs includes both code variants in copied markdown", async ({
+    page,
+  }) => {
+    await setupClipboardMock(page);
+    await page.goto("/docs/lakebase/core-concepts");
+
+    await clickCopyMarkdownAndWaitForToast(page);
+
+    const copied = await getCopiedText(page);
+    expect(copied).toContain('title="Common"');
+    expect(copied).toContain('title="All Options"');
+    expect(copied).toContain("databricks postgres create-branch");
+  });
 });

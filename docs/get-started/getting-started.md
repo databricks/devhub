@@ -4,56 +4,61 @@ title: Getting Started
 
 # Getting Started
 
-Use this guide to set up your local environment and ship your first Databricks developer workflow.
+Set up your local environment and connect to your Databricks workspace.
 
 ## Prerequisites
 
-- a Databricks workspace with required product access (Apps, AI, or Lakebase as needed)
-- workspace permissions to create/update the resources you plan to use
-- Databricks CLI v0.205+
-- local runtime dependencies for your project stack (for example Node or Python)
+- Databricks workspace with permissions to create resources
+- Databricks CLI `v0.295+` ([install guide](/docs/tools/databricks-cli#install))
 
-## Setup checklist
+## Install the CLI
 
-1. Install Databricks CLI.
-2. Authenticate with OAuth:
+Homebrew (macOS/Linux):
 
-   ```bash
-   databricks auth login --host <workspace-url>
-   ```
+```bash
+brew tap databricks/tap
+brew install databricks
+```
 
-3. Confirm your login and profile:
+Or use the curl installer (all platforms):
 
-   ```bash
-   databricks auth profiles
-   ```
+```bash
+curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
+```
 
-4. Validate that workspace calls work in your current shell:
+See the [full install guide](/docs/tools/databricks-cli#install) for WinGet, Chocolatey, and manual options.
 
-   ```bash
-   databricks workspace list /
-   ```
+## Authenticate
 
-5. Choose your path: Apps, Agents, Lakebase, or tooling integrations.
+```bash
+databricks auth login --host <workspace-url>
+```
 
-## Workspace UI checks before you start
+This opens a browser for OAuth login and saves a local profile to `~/.databrickscfg`. Profiles store workspace URL and credentials locally so you don't re-authenticate each time. Use `--profile <name>` to manage multiple workspaces.
 
-- confirm Apps is enabled if you plan to deploy web/agent applications
-- confirm AI features are enabled if you plan to use Agents or AI Gateway
-- confirm Lakebase access if you plan to run Postgres operational workloads
-- confirm you can open the target workspace and create resources in the intended folder/project
+Confirm your profiles:
 
-## Pick a first workflow
+```bash
+databricks auth profiles
+```
 
-- `get-started/your-first-app`: deploy an app to Databricks Apps.
-- `agents/getting-started`: build and run an AI agent workflow.
-- `lakebase/getting-started`: start with operational Postgres workloads.
+## Verify
 
-## Environment profile suggestion
+```bash
+databricks workspace list / --profile <PROFILE>
+```
 
-Use separate CLI profiles per environment (`dev`, `staging`, `prod`) to avoid accidental cross-environment deploys.
+The `/` lists the workspace root. If it returns results, your CLI is authenticated and ready.
+
+## Next steps
+
+- [Your First App](/docs/get-started/your-first-app): deploy an app using a template and an AI coding agent
+- [Apps](/docs/apps/getting-started): scaffold and deploy web applications with AppKit
+- [Lakebase](/docs/lakebase/getting-started): provision managed PostgreSQL for transactional workloads
+- [Agents](/docs/agents/getting-started): build and deploy AI agents
+- [Core Concepts](/docs/get-started/core-concepts): how the platform layers fit together
 
 ## Source of truth
 
-- [Databricks CLI install](https://docs.databricks.com/en/dev-tools/cli/install)
-- [Databricks CLI authentication](https://docs.databricks.com/en/dev-tools/cli/authentication.html)
+- [Install or update the Databricks CLI](https://docs.databricks.com/aws/en/dev-tools/cli/install)
+- [Authentication for the Databricks CLI](https://docs.databricks.com/aws/en/dev-tools/cli/authentication)

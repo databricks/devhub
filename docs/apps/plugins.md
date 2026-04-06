@@ -2,37 +2,107 @@
 title: Plugins
 ---
 
-# Apps Plugins
+# Plugins
 
-Use plugins to add reusable behavior to your application architecture without coupling core business logic.
+AppKit plugins are modular extensions that add capabilities to your app. Built-in plugins cover common needs (database, analytics, files). You can also create custom plugins for your own logic.
 
-## What belongs in a plugin
+## Built-in plugins
 
-- infrastructure adapters (for example data/query access layers)
-- cross-cutting concerns (telemetry, auth middleware, validation)
-- framework extension points that are shared across features
+List available plugins:
 
-## Design principles
+```bash title="Common"
+databricks apps manifest
+```
 
-- keep plugin interfaces small and explicit
-- prefer configuration over hidden runtime magic
-- isolate side effects at plugin boundaries
-- keep domain logic in app/library code, not in plugin wiring
+```bash title="All Options"
+databricks apps manifest \
+  --template $TEMPLATE_URL \
+  --branch $BRANCH \
+  --version $APPKIT_VERSION \
+  --debug \
+  -o json \
+  --target $TARGET \
+  --var "key=value" \
+  --profile $DATABRICKS_PROFILE
+```
 
-## Validation checklist
+| Option       | Required | Description                                                             |
+| ------------ | -------- | ----------------------------------------------------------------------- |
+| `--template` | no       | Template path (local directory or GitHub URL). Default: AppKit template |
+| `--branch`   | no       | Git branch or tag (mutually exclusive with `--version`)                 |
+| `--version`  | no       | AppKit version for default template (default: main)                     |
+| `--debug`    | no       | Enable debug logging                                                    |
+| `-o json`    | no       | Output as JSON (default: text)                                          |
+| `--target`   | no       | Bundle target to use (if applicable)                                    |
+| `--var`      | no       | Set values for bundle config variables (e.g. `--var="key=value"`)       |
+| `--profile`  | no       | Databricks CLI profile name                                             |
 
-- plugin startup failures are visible and actionable
-- plugin dependencies are declared and versioned
-- plugin contracts are covered by integration tests
+Use the Common tab for a typical non-interactive scaffold (`--name` suppresses prompts and applies defaults). Use the All Options tab to choose plugins and resource values with flags instead of prompts. For every `databricks apps init` flag, see the option table in [Apps getting started](/docs/apps/getting-started#scaffold-an-app).
 
-## Minimal plugin example (shape)
+```bash title="Common"
+databricks apps init --name my-app
+```
 
-A plugin should expose a small setup surface, receive explicit config, and return registered capabilities used by app features.
+```bash title="All Options"
+databricks apps init \
+  --name $APP_NAME \
+  --features lakebase,analytics \
+  --set lakebase.postgres.branch=projects/$PROJECT_ID/branches/production \
+  --set lakebase.postgres.database=projects/$PROJECT_ID/branches/production/databases/$DB_NAME \
+  --set analytics.sql-warehouse.id=$WAREHOUSE_ID \
+  --description "My App" \
+  --output-dir $OUTPUT_DIR \
+  --template $TEMPLATE_URL \
+  --branch $BRANCH \
+  --deploy \
+  --run none \
+  --version $APPKIT_VERSION \
+  --debug \
+  -o json \
+  --target $TARGET \
+  --var "key=value" \
+  --profile $DATABRICKS_PROFILE
+```
 
-Keep runtime side effects (network, DB, telemetry) inside plugin boundaries, and keep business rules in app/library modules.
+| Plugin        | What it adds                                                                   |
+| ------------- | ------------------------------------------------------------------------------ |
+| **server**    | HTTP server with Express, static file serving, Vite dev mode (always included) |
+| **lakebase**  | PostgreSQL connection pool for Lakebase with automatic OAuth refresh           |
+| **analytics** | SQL query execution against Databricks SQL Warehouses                          |
+| **genie**     | AI/BI Genie space integration for natural language queries                     |
+| **files**     | File operations against Unity Catalog Volumes                                  |
+
+## Using plugins
+
+Plugins are configured in `server/server.ts` via `createApp`:
+
+```typescript
+import { createApp, lakebase, server } from "@databricks/appkit";
+
+const appkit = await createApp({
+  plugins: [server({ autoStart: false }), lakebase()],
+});
+```
+
+Access plugin capabilities through the returned `appkit` instance (for example `appkit.lakebase.query(...)` or `appkit.server.extend(...)`).
+
+## Plugin manifest
+
+Each app has an `appkit.plugins.json` that declares which plugins are active and what Databricks resources they require. This file is auto-generated by `npx @databricks/appkit plugin sync --write` (runs automatically during `npm run dev` and `npm run build`).
+
+## Creating custom plugins
+
+Scaffold a custom plugin inside an existing AppKit project:
+
+```bash
+npx @databricks/appkit plugin create
+```
+
+The CLI wizard generates a plugin class, manifest, and resource declarations. See the [AppKit custom plugins guide](/docs/appkit/v0/plugins/custom-plugins) for the full class API, lifecycle hooks, and route injection.
 
 ## Related pages
 
-- `tools/appkit`
-- `apps/development`
-- `references/appkit`
+- [AppKit plugins overview](/docs/appkit/v0/plugins)
+- [Plugin management CLI](/docs/appkit/v0/plugins/plugin-management)
+- [AppKit overview](/docs/tools/appkit)
+- [Apps development](/docs/apps/development)

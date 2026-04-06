@@ -24,11 +24,11 @@ export const pillars: Pillar[] = [
     subtitle: "The modern agentic database",
     description:
       "Managed Postgres that syncs with Delta Lake, branches like Git, and scales to zero.",
-    link: "/docs/lakebase",
+    link: "/docs/lakebase/getting-started",
     icon: Database,
   },
   {
-    title: "AgentBricks",
+    title: "Agent Bricks",
     subtitle: "Production-ready AI agents",
     description:
       "Model serving, vector search, RAG, and guardrails - all governed by Unity Catalog.",

@@ -1,15 +1,15 @@
 ---
 name: databricks-lakebase
 description: "Manage Lakebase Postgres Autoscaling projects, branches, and endpoints via Databricks CLI. Use when asked to create, configure, or manage Lakebase Postgres databases, projects, branches, computes, or endpoints."
-compatibility: Requires databricks CLI (>= v0.292.0)
+compatibility: Requires databricks CLI (>= v0.294.0)
 metadata:
   version: "0.1.0"
-parent: databricks
+parent: databricks-core
 ---
 
 # Lakebase Postgres Autoscaling
 
-**FIRST**: Use the parent `databricks` skill for CLI basics, authentication, and profile selection.
+**FIRST**: Use the parent `databricks-core` skill for CLI basics, authentication, and profile selection.
 
 Lakebase is Databricks' serverless Postgres-compatible database (similar to Neon). It provides fully managed OLTP storage with autoscaling, branching, and scale-to-zero.
 
@@ -59,6 +59,8 @@ databricks postgres <subcommand> -h
 Run `databricks postgres -h` before constructing any command. Run `databricks postgres <subcommand> -h` to discover exact flags, positional arguments, and JSON spec fields for that subcommand.
 
 ## Create a Project
+
+> **Do NOT list projects before creating.**
 
 ```bash
 databricks postgres create-project <PROJECT_ID> \
@@ -139,7 +141,7 @@ databricks apps init --name <APP_NAME> \
   --features lakebase \
   --set "lakebase.postgres.branch=<BRANCH_NAME>" \
   --set "lakebase.postgres.database=<DATABASE_NAME>" \
-  --profile <PROFILE>
+  --run none --profile <PROFILE>
 ```
 
 Where `<BRANCH_NAME>` is the full resource name (e.g. `projects/<PROJECT_ID>/branches/<BRANCH_ID>`) and `<DATABASE_NAME>` is the full resource name (e.g. `projects/<PROJECT_ID>/branches/<BRANCH_ID>/databases/<DB_ID>`).

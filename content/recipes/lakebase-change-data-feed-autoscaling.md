@@ -1,4 +1,4 @@
-## ETL: Sync Lakebase Tables to Unity Catalog (Autoscaling — Lakehouse Sync)
+## Lakebase Change Data Feed: Sync Lakebase Tables to Unity Catalog (Autoscaling — Lakehouse Sync)
 
 Replicate your Lakebase Autoscaling Postgres tables into Unity Catalog as managed Delta tables using Lakehouse Sync. CDC captures every row-level change and writes them as SCD Type 2 history, giving you a full audit trail queryable from the lakehouse.
 
@@ -156,7 +156,7 @@ COMMIT;
 
 - **AWS only** — Lakehouse Sync Beta is available in all Autoscaling regions on AWS. Azure support is not yet available.
 - **No incremental charge** — replication cost is included in your Lakebase compute and storage.
-- **Works alongside synced tables** — you can use Lakehouse Sync in a project/schema that also has Reverse ETL synced tables.
+- **Works alongside synced tables** — you can use Lakehouse Sync in a project/schema that also has synced tables.
 
 #### References
 

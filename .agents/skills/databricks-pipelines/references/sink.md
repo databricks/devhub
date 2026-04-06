@@ -8,7 +8,7 @@ Sinks in Spark Declarative Pipelines:
 
 - Write to event streaming services (Apache Kafka, Azure Event Hubs)
 - Write to externally-managed Delta tables (Unity Catalog external/managed tables)
-- Enable reverse ETL into systems outside Databricks
+- Enable syncing data into systems outside Databricks
 - Support custom Python data sources
 - Work exclusively with streaming queries and append flows
 

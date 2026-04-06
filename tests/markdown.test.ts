@@ -9,8 +9,8 @@ describe("detail markdown resolver", () => {
   });
 
   test("resolves solution markdown", () => {
-    const markdown = getDetailMarkdown("solutions", "what-is-a-lakebase");
-    expect(markdown).toContain("# What is a Lakebase?");
+    const markdown = getDetailMarkdown("solutions", "devhub-launch");
+    expect(markdown).toContain("# Introducing dev.databricks.com");
   });
 
   test("resolves template markdown", () => {

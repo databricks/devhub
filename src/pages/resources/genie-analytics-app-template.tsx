@@ -3,18 +3,14 @@ import { TemplateDetail } from "@/components/templates/template-detail";
 import { templates } from "@/lib/recipes/recipes";
 import { useAllRawRecipeMarkdown } from "@/lib/use-raw-content-markdown";
 import DatabricksLocalBootstrap from "@site/content/recipes/databricks-local-bootstrap.md";
-import LakebaseDataPersistence from "@site/content/recipes/lakebase-data-persistence.md";
-import ModelServingEndpointCreation from "@site/content/recipes/model-serving-endpoint-creation.md";
-import AiChatModelServing from "@site/content/recipes/ai-chat-model-serving.md";
-import LakebaseChatPersistence from "@site/content/recipes/lakebase-chat-persistence.md";
 import GenieConversationalAnalytics from "@site/content/recipes/genie-conversational-analytics.md";
 
-const template = templates.find((t) => t.id === "ai-data-explorer-template");
+const template = templates.find((t) => t.id === "genie-analytics-app-template");
 
-export default function AiDataExplorerTemplatePage(): ReactNode {
+export default function GenieAnalyticsAppTemplatePage(): ReactNode {
   const rawBySlug = useAllRawRecipeMarkdown();
   if (!template) {
-    throw new Error("Template ai-data-explorer-template not found");
+    throw new Error("Template genie-analytics-app-template not found");
   }
   const rawMarkdown = template.recipeIds
     .map((id) => rawBySlug[id])
@@ -23,14 +19,6 @@ export default function AiDataExplorerTemplatePage(): ReactNode {
   return (
     <TemplateDetail template={template} rawMarkdown={rawMarkdown}>
       <DatabricksLocalBootstrap />
-      <hr />
-      <LakebaseDataPersistence />
-      <hr />
-      <ModelServingEndpointCreation />
-      <hr />
-      <AiChatModelServing />
-      <hr />
-      <LakebaseChatPersistence />
       <hr />
       <GenieConversationalAnalytics />
     </TemplateDetail>

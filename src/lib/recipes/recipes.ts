@@ -263,13 +263,6 @@ function createTemplate(config: TemplateConfig): Template {
 
 export const templates: Template[] = [
   createTemplate({
-    id: "genie-app-template",
-    name: "Genie App Template",
-    description:
-      "Build a minimal Databricks App with AI/BI Genie conversational analytics. Covers CLI setup, Genie space configuration, plugin wiring, and deploy.",
-    recipeIds: ["databricks-local-bootstrap", "genie-conversational-analytics"],
-  }),
-  createTemplate({
     id: "base-app-template",
     name: "Base App Template",
     description:
@@ -302,10 +295,10 @@ export const templates: Template[] = [
     ],
   }),
   createTemplate({
-    id: "genie-analytics-app-template",
-    name: "Genie Analytics App Template",
+    id: "genie-app-template",
+    name: "Genie App Template",
     description:
-      "Bootstrap a Databricks app with AI/BI Genie for conversational analytics. Users ask natural-language questions and get instant answers from their data.",
+      "Build a minimal Databricks App with AI/BI Genie conversational analytics. Covers CLI setup, Genie space configuration, plugin wiring, and deploy.",
     recipeIds: ["databricks-local-bootstrap", "genie-conversational-analytics"],
   }),
   createTemplate({

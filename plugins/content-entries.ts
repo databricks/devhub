@@ -76,7 +76,9 @@ function assertSlugParity(
   }
 
   throw new Error(
-    `Slug mismatch for ${entryType} entries (${sections.join(" | ")}). Keep content markdown and registry metadata in sync.`,
+    `Slug mismatch for ${entryType} entries (${sections.join(
+      " | ",
+    )}). Keep content markdown and registry metadata in sync.`,
   );
 }
 

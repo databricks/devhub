@@ -113,6 +113,37 @@ export const recipes: Recipe[] = [
     tags: ["Analytics", "SQL", "Charts", "Dashboard"],
     prerequisites: ["databricks-local-bootstrap"],
   },
+  {
+    id: "embeddings-generation",
+    name: "Generate Embeddings with AI Gateway",
+    description:
+      "Generate text embeddings from a Databricks AI Gateway endpoint using the Databricks SDK for vector similarity search and RAG applications.",
+    tags: ["AI", "Embeddings", "AI Gateway", "RAG"],
+    prerequisites: ["databricks-local-bootstrap", "foundation-models-api"],
+  },
+  {
+    id: "lakebase-pgvector",
+    name: "Lakebase pgvector",
+    description:
+      "Enable vector similarity search in Lakebase using the pgvector extension for storing and querying embeddings.",
+    tags: ["Lakebase", "Postgres", "pgvector", "Embeddings", "RAG"],
+    prerequisites: ["lakebase-data-persistence", "embeddings-generation"],
+  },
+  {
+    id: "scaffold-rag-chat",
+    name: "Scaffold RAG Chat App",
+    description:
+      "Scaffold a complete RAG chat app with pgvector retrieval, AI Gateway embeddings, and streaming chat using the AppKit CLI.",
+    tags: ["RAG", "Chat", "AI", "AppKit", "pgvector"],
+    prerequisites: [
+      "databricks-local-bootstrap",
+      "lakebase-data-persistence",
+      "foundation-models-api",
+      "embeddings-generation",
+      "lakebase-pgvector",
+      "ai-chat-model-serving",
+    ],
+  },
 ];
 
 const recipeIndex: Record<string, Recipe> = Object.fromEntries(
@@ -124,8 +155,11 @@ export const recipesInOrder: Recipe[] = [
   "lakebase-data-persistence",
   "foundation-models-api",
   "model-serving-endpoint-creation",
+  "embeddings-generation",
+  "lakebase-pgvector",
   "ai-chat-model-serving",
   "lakebase-chat-persistence",
+  "scaffold-rag-chat",
   "etl-lakehouse-sync-autoscaling",
   "reverse-etl-synced-tables-autoscaling",
   "genie-conversational-analytics",
@@ -216,6 +250,22 @@ export const templates: Template[] = [
       "ai-chat-model-serving",
       "lakebase-chat-persistence",
       "genie-conversational-analytics",
+    ],
+  }),
+  createTemplate({
+    id: "rag-chat-app-template",
+    name: "RAG Chat App Template",
+    description:
+      "Build a production-ready RAG chat application with pgvector similarity search, AI Gateway embeddings, streaming responses, and chat persistence.",
+    recipeIds: [
+      "databricks-local-bootstrap",
+      "lakebase-data-persistence",
+      "foundation-models-api",
+      "embeddings-generation",
+      "lakebase-pgvector",
+      "ai-chat-model-serving",
+      "lakebase-chat-persistence",
+      "scaffold-rag-chat",
     ],
   }),
 ];

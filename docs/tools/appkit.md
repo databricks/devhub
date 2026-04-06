@@ -19,7 +19,7 @@ AppKit provides framework-level patterns for composing app capabilities with a c
 
 ## Prerequisites
 
-- Databricks CLI `0.292+`
+- Databricks CLI `0.295+`
 - authenticated profile selected with `databricks auth profiles`
 
 ## Manifest-first scaffolding workflow
@@ -87,6 +87,6 @@ Writing UI before type generation usually causes avoidable type and integration 
 
 ## Related pages
 
-- `appkit`
-- `apps/plugins`
-- `references/appkit`
+- [AppKit reference](/docs/appkit/v0)
+- [Apps plugins](/docs/apps/plugins)
+- [Creating custom plugins](/docs/appkit/v0/plugins/custom-plugins)

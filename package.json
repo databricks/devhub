@@ -19,6 +19,7 @@
     "test": "npm run build && vitest run && npx playwright test",
     "test:smoke": "vitest run",
     "test:e2e": "npx playwright test",
+    "test:docs-verify": "vitest run --config vitest.docs-verify.config.ts",
     "prepare": "husky"
   },
   "dependencies": {

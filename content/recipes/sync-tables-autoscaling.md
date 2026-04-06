@@ -1,8 +1,8 @@
-## Reverse ETL: Sync a Unity Catalog Table to Lakebase (Autoscaling)
+## Sync Tables: Sync a Unity Catalog Table to Lakebase (Autoscaling)
 
 Serve lakehouse data through Lakebase Autoscaling Postgres so your applications can query it with sub-10ms latency. This creates a synced table — a managed copy of your Unity Catalog table in Lakebase that stays up to date automatically.
 
-> This recipe is for **Lakebase Autoscaling** (projects/branches/endpoints with scale-to-zero). For Lakebase Provisioned (manually scaled instances), see the Provisioned Reverse ETL recipe (coming soon).
+> This recipe is for **Lakebase Autoscaling** (projects/branches/endpoints with scale-to-zero). For Lakebase Provisioned (manually scaled instances), see the Provisioned Sync Tables recipe (coming soon).
 
 ### When to use this
 

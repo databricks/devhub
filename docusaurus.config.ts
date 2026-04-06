@@ -4,6 +4,7 @@ import type * as Preset from "@docusaurus/preset-classic";
 import path from "path";
 import contentEntriesPlugin from "./plugins/content-entries";
 import llmsTxtPlugin from "./plugins/llms-txt";
+import remarkCliTabs from "./plugins/remark-cli-tabs";
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
@@ -29,6 +30,7 @@ const config: Config = {
   projectName: "devhub", // Usually your repo name.
 
   onBrokenLinks: "throw",
+  onBrokenAnchors: "throw",
 
   // Even if you don't use internationalization, you can use this field to set
   // useful metadata like html lang. For example, if your site is Chinese, you
@@ -44,6 +46,7 @@ const config: Config = {
       {
         docs: {
           sidebarPath: "./sidebars.ts",
+          remarkPlugins: [remarkCliTabs],
         },
         blog: false,
         theme: {
@@ -130,7 +133,7 @@ const config: Config = {
               href: "https://www.databricks.com/product/lakebase",
             },
             {
-              label: "AgentBricks",
+              label: "Agent Bricks",
               href: "https://www.databricks.com/product/artificial-intelligence/agent-bricks",
             },
             {

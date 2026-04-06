@@ -1,8 +1,22 @@
+export const SERVICES = [
+  "Agent Bricks",
+  "AI Gateway",
+  "Databricks Apps",
+  "Genie",
+  "Lakebase",
+  "Lakeflow Pipelines",
+  "Model Serving",
+  "Unity Catalog",
+] as const;
+
+export type Service = (typeof SERVICES)[number];
+
 export type Recipe = {
   id: string;
   name: string;
   description: string;
   tags: string[];
+  services: Service[];
   prerequisites?: string[];
 };
 
@@ -12,6 +26,7 @@ export type Template = {
   description: string;
   recipeIds: string[];
   tags: string[];
+  services: Service[];
 };
 
 type TemplatePreviewItem = {
@@ -20,6 +35,7 @@ type TemplatePreviewItem = {
   title: string;
   description: string;
   tags?: string[];
+  services?: Service[];
 };
 
 export const recipes: Recipe[] = [
@@ -29,6 +45,7 @@ export const recipes: Recipe[] = [
     description:
       "Prepare a local Databricks app workspace: install CLI, authenticate, scaffold, and install Databricks agent skills.",
     tags: ["Databricks CLI", "Setup", "Agent Skills"],
+    services: ["Databricks Apps"],
   },
   {
     id: "ai-chat-model-serving",
@@ -36,6 +53,7 @@ export const recipes: Recipe[] = [
     description:
       "Build a streaming AI chat experience using AI SDK and Databricks Model Serving endpoints.",
     tags: ["AI", "Chat", "AI SDK", "Model Serving"],
+    services: ["Databricks Apps", "Model Serving"],
     prerequisites: [
       "databricks-local-bootstrap",
       "lakebase-data-persistence",
@@ -48,6 +66,7 @@ export const recipes: Recipe[] = [
     description:
       "Query AI Gateway endpoints for production-ready access to foundation models with built-in governance.",
     tags: ["AI", "AI Gateway", "Foundation Models"],
+    services: ["AI Gateway"],
     prerequisites: ["databricks-local-bootstrap"],
   },
   {
@@ -56,6 +75,7 @@ export const recipes: Recipe[] = [
     description:
       "Create and validate a Databricks Model Serving endpoint for AI chat inference in Databricks Apps.",
     tags: ["Model Serving", "AI Gateway", "Endpoints", "Inference"],
+    services: ["Model Serving", "AI Gateway"],
     prerequisites: ["databricks-local-bootstrap"],
   },
   {
@@ -64,7 +84,17 @@ export const recipes: Recipe[] = [
     description:
       "Persist chat sessions and messages in Lakebase so users can resume chat history across requests and deployments.",
     tags: ["Lakebase", "Postgres", "Chat", "Persistence"],
+    services: ["Lakebase", "Databricks Apps"],
     prerequisites: ["lakebase-data-persistence", "ai-chat-model-serving"],
+  },
+  {
+    id: "lakebase-create-instance",
+    name: "Create a Lakebase Instance",
+    description:
+      "Provision a managed Lakebase Postgres project on Databricks and collect the connection values needed by downstream recipes.",
+    tags: ["Lakebase", "Postgres", "Setup"],
+    services: ["Lakebase"],
+    prerequisites: ["databricks-local-bootstrap"],
   },
   {
     id: "lakebase-data-persistence",
@@ -72,46 +102,93 @@ export const recipes: Recipe[] = [
     description:
       "Add a managed Postgres database to your Databricks app using the Lakebase plugin. Covers schema setup, table creation, and full CRUD REST API routes.",
     tags: ["Lakebase", "Postgres", "CRUD", "Data"],
-    prerequisites: ["databricks-local-bootstrap"],
+    services: ["Lakebase", "Databricks Apps"],
+    prerequisites: ["databricks-local-bootstrap", "lakebase-create-instance"],
   },
   {
-    id: "etl-lakehouse-sync-autoscaling",
-    name: "ETL: Sync Lakebase to Unity Catalog (Autoscaling)",
+    id: "lakebase-change-data-feed-autoscaling",
+    name: "Lakebase Change Data Feed: Sync Lakebase to Unity Catalog (Autoscaling)",
     description:
       "Replicate Lakebase Autoscaling Postgres tables into Unity Catalog as managed Delta tables using Lakehouse Sync, with CDC and SCD Type 2 history.",
     tags: [
       "Lakebase",
       "Lakehouse Sync",
       "Unity Catalog",
-      "ETL",
+      "Lakebase Change Data Feed",
       "CDC",
       "Delta",
     ],
+    services: ["Lakebase", "Unity Catalog"],
     prerequisites: ["databricks-local-bootstrap"],
   },
   {
-    id: "reverse-etl-synced-tables-autoscaling",
-    name: "Reverse ETL: Unity Catalog to Lakebase (Autoscaling)",
+    id: "sync-tables-autoscaling",
+    name: "Sync Tables: Unity Catalog to Lakebase (Autoscaling)",
     description:
       "Sync Unity Catalog tables into Lakebase Autoscaling Postgres as synced tables for sub-10ms application queries, with snapshot, triggered, or continuous modes.",
-    tags: ["Lakebase", "Reverse ETL", "Unity Catalog", "Synced Tables", "CDF"],
+    tags: ["Lakebase", "Sync Tables", "Unity Catalog", "Synced Tables", "CDF"],
+    services: ["Lakebase", "Unity Catalog"],
     prerequisites: ["databricks-local-bootstrap"],
   },
   {
     id: "genie-conversational-analytics",
     name: "Genie Conversational Analytics",
     description:
-      "Embed a Databricks AI/BI Genie chat interface so users can explore data through natural language. Configure a Genie space, wire up the plugin, and render the chat component.",
-    tags: ["Genie", "AI/BI", "Natural Language", "Data"],
+      "Embed a Databricks AI/BI Genie chat interface so users can explore data through natural language. Configure a Genie space, wire up server and client plugins, declare app resources, and deploy.",
+    tags: ["Genie", "AI/BI", "Natural Language", "Analytics"],
+    services: ["Genie", "Databricks Apps"],
     prerequisites: ["databricks-local-bootstrap"],
   },
   {
-    id: "sql-analytics-dashboard",
-    name: "SQL Analytics Dashboard",
+    id: "unity-catalog-setup",
+    name: "Set Up Unity Catalog with External Storage",
     description:
-      "Build interactive dashboards with parameterized SQL queries and chart components. Uses the Analytics plugin for SQL Warehouse queries and AppKit UI for visualizations.",
-    tags: ["Analytics", "SQL", "Charts", "Dashboard"],
+      "Create a Unity Catalog catalog backed by an external S3 bucket with storage credentials, external location, and a schema ready for lakehouse tables.",
+    tags: ["Unity Catalog", "S3", "External Storage", "Setup"],
+    services: ["Unity Catalog"],
     prerequisites: ["databricks-local-bootstrap"],
+  },
+  {
+    id: "medallion-architecture-from-cdc",
+    name: "Medallion Architecture from CDC History Tables",
+    description:
+      "Transform Lakehouse Sync CDC history tables into a medallion architecture with silver (current state) and gold (aggregations) layers using Lakeflow Declarative Pipelines.",
+    tags: [
+      "Medallion Architecture",
+      "CDC",
+      "Lakeflow Pipelines",
+      "Silver",
+      "Gold",
+      "Analytics",
+    ],
+    services: ["Lakeflow Pipelines"],
+    prerequisites: ["databricks-local-bootstrap"],
+  },
+  {
+    id: "lakebase-off-platform-env-management",
+    name: "Lakebase Env Management for Off-Platform Apps",
+    description:
+      "Define and validate cross-platform environment variables for Lakebase-backed apps deployed outside Databricks App Platform.",
+    tags: ["Lakebase", "Environment Variables", "AWS", "Vercel", "Netlify"],
+    services: ["Lakebase"],
+  },
+  {
+    id: "lakebase-token-management",
+    name: "Lakebase Token Management",
+    description:
+      "Implement cached workspace and Lakebase credential token flows for secure Postgres access in off-platform deployments.",
+    tags: ["Lakebase", "OAuth", "Tokens", "Security"],
+    services: ["Lakebase"],
+    prerequisites: ["lakebase-off-platform-env-management"],
+  },
+  {
+    id: "lakebase-drizzle-off-platform",
+    name: "Drizzle + Lakebase in an Off-Platform App",
+    description:
+      "Connect Drizzle ORM to Lakebase with pg password callbacks and migration-time temporary DATABASE_URL credentials.",
+    tags: ["Lakebase", "Drizzle", "Postgres", "ORM"],
+    services: ["Lakebase"],
+    prerequisites: ["lakebase-token-management"],
   },
   {
     id: "volume-file-upload",
@@ -119,6 +196,7 @@ export const recipes: Recipe[] = [
     description:
       "Add file upload, browsing, download, delete, file type validation, and CSV row preview to your Databricks app using Unity Catalog Volumes.",
     tags: ["Volumes", "Unity Catalog", "Files", "Upload", "CSV"],
+    services: ["Unity Catalog"],
     prerequisites: ["databricks-local-bootstrap"],
   },
 ];
@@ -129,15 +207,20 @@ const recipeIndex: Record<string, Recipe> = Object.fromEntries(
 
 export const recipesInOrder: Recipe[] = [
   "databricks-local-bootstrap",
+  "lakebase-create-instance",
   "lakebase-data-persistence",
   "foundation-models-api",
   "model-serving-endpoint-creation",
   "ai-chat-model-serving",
   "lakebase-chat-persistence",
-  "etl-lakehouse-sync-autoscaling",
-  "reverse-etl-synced-tables-autoscaling",
+  "lakebase-change-data-feed-autoscaling",
+  "sync-tables-autoscaling",
+  "unity-catalog-setup",
   "genie-conversational-analytics",
-  "sql-analytics-dashboard",
+  "medallion-architecture-from-cdc",
+  "lakebase-off-platform-env-management",
+  "lakebase-token-management",
+  "lakebase-drizzle-off-platform",
   "volume-file-upload",
 ].map((recipeId) => {
   const recipe = recipeIndex[recipeId];
@@ -164,6 +247,9 @@ function createTemplate(config: TemplateConfig): Template {
   });
 
   const tags = [...new Set(selectedRecipes.flatMap((recipe) => recipe.tags))];
+  const services = [
+    ...new Set(selectedRecipes.flatMap((recipe) => recipe.services)),
+  ] as Service[];
 
   return {
     id: config.id,
@@ -171,6 +257,7 @@ function createTemplate(config: TemplateConfig): Template {
     description: config.description,
     recipeIds: config.recipeIds,
     tags,
+    services,
   };
 }
 
@@ -198,6 +285,7 @@ export const templates: Template[] = [
       "databricks-local-bootstrap",
       "foundation-models-api",
       "ai-chat-model-serving",
+      "lakebase-create-instance",
       "lakebase-data-persistence",
       "lakebase-chat-persistence",
     ],
@@ -207,31 +295,43 @@ export const templates: Template[] = [
     name: "Data App Template",
     description:
       "Bootstrap a Databricks app with Lakebase for persistent data storage. Includes schema setup and full CRUD API routes.",
-    recipeIds: ["databricks-local-bootstrap", "lakebase-data-persistence"],
-  }),
-  createTemplate({
-    id: "analytics-dashboard-app-template",
-    name: "Analytics Dashboard App Template",
-    description:
-      "Build an interactive analytics dashboard backed by Lakebase and powered by parameterized SQL queries and chart components.",
     recipeIds: [
       "databricks-local-bootstrap",
+      "lakebase-create-instance",
       "lakebase-data-persistence",
-      "sql-analytics-dashboard",
     ],
   }),
   createTemplate({
-    id: "ai-data-explorer-template",
-    name: "AI Data Explorer Template",
+    id: "genie-analytics-app-template",
+    name: "Genie Analytics App Template",
     description:
-      "A full-stack data application with Lakebase persistence, AI chat powered by Databricks Model Serving, and Genie natural-language data exploration.",
+      "Bootstrap a Databricks app with AI/BI Genie for conversational analytics. Users ask natural-language questions and get instant answers from their data.",
+    recipeIds: ["databricks-local-bootstrap", "genie-conversational-analytics"],
+  }),
+  createTemplate({
+    id: "lakebase-off-platform-template",
+    name: "Lakebase Outside Databricks App Platform",
+    description:
+      "Use Lakebase from apps hosted outside Databricks App Platform (for example on AWS, Vercel, or Netlify) with portable env, token, and Drizzle patterns.",
+    recipeIds: [
+      "lakebase-create-instance",
+      "lakebase-off-platform-env-management",
+      "lakebase-token-management",
+      "lakebase-drizzle-off-platform",
+    ],
+  }),
+  createTemplate({
+    id: "operational-data-analytics-template",
+    name: "Operational Data Analytics",
+    description:
+      "End-to-end setup for analyzing operational database data in the lakehouse: Unity Catalog with external storage, Lakebase provisioning, Lakehouse Sync CDC replication, and a medallion architecture pipeline with silver and gold layers.",
     recipeIds: [
       "databricks-local-bootstrap",
-      "lakebase-data-persistence",
-      "model-serving-endpoint-creation",
-      "ai-chat-model-serving",
-      "lakebase-chat-persistence",
-      "genie-conversational-analytics",
+      "unity-catalog-setup",
+      "lakebase-create-instance",
+      "lakebase-change-data-feed-autoscaling",
+      "sync-tables-autoscaling",
+      "medallion-architecture-from-cdc",
     ],
   }),
 ];
@@ -243,5 +343,6 @@ export const templatePreviewItems: TemplatePreviewItem[] = templates.map(
     title: template.name,
     description: template.description,
     tags: template.tags,
+    services: template.services,
   }),
 );

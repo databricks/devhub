@@ -56,7 +56,6 @@ const SIDEBAR_SECTIONS: Array<{
     description:
       "Managed PostgreSQL for operational workloads with Databricks-native governance and Delta Lake sync.",
     slugs: [
-      "lakebase",
       "lakebase/getting-started",
       "lakebase/core-concepts",
       "lakebase/development",
@@ -164,7 +163,7 @@ function generateLlmsTxt(baseUrl: string, docsDir: string): string {
     "",
     "## Solutions",
     "",
-    "Databricks use-case solutions built on Lakebase, AgentBricks, and Databricks Apps.",
+    "Databricks use-case solutions built on Lakebase, Agent Bricks, and Databricks Apps.",
     "",
     `- [All Solutions](${baseUrl}/solutions): Overview of Databricks developer solutions`,
     ...solutions.map(
@@ -179,8 +178,7 @@ function generateLlmsTxt(baseUrl: string, docsDir: string): string {
     `- [Base App Template](${baseUrl}/resources/base-app-template): Databricks local bootstrap template for CLI, auth, app scaffolding, and agent skill setup`,
     `- [AI Chat App Template](${baseUrl}/resources/ai-chat-app-template): Streaming AI chat powered by Databricks Model Serving (AI Gateway) with AI SDK and AI Elements`,
     `- [Data App Template](${baseUrl}/resources/data-app-template): Bootstrap a Databricks app with Lakebase for persistent data storage, schema setup, and CRUD API routes`,
-    `- [Analytics Dashboard App Template](${baseUrl}/resources/analytics-dashboard-app-template): Interactive analytics dashboard backed by Lakebase with parameterized SQL queries and chart components`,
-    `- [AI Data Explorer Template](${baseUrl}/resources/ai-data-explorer-template): Full-stack data app with Lakebase persistence, AI chat via Model Serving, and Genie natural-language data exploration`,
+    `- [Genie Analytics App Template](${baseUrl}/resources/genie-analytics-app-template): Bootstrap a Databricks app with AI/BI Genie for conversational analytics. Users ask natural-language questions and get instant answers from their data.`,
     "",
   ];
 

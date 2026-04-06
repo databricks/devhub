@@ -4,34 +4,59 @@ title: Docs MCP Server
 
 # Docs MCP Server
 
-Use MCP to connect agents to Databricks-managed, external, or custom tool servers with dynamic tool discovery.
+The DevHub Docs MCP Server gives coding agents and IDE assistants read access to all Databricks developer documentation on dev.databricks.com. Agents can discover available pages and fetch individual docs as markdown without leaving the editor.
 
-## What MCP gives you
+## Install
 
-- standard protocol for exposing tools/resources to LLM agents
-- dynamic tool listing instead of hardcoded integrations
-- reusable patterns across IDE assistants and runtime agents
+Add the server to any supported coding agent (Cursor, Claude Code, VS Code, Codex, and more) with a single command:
 
-## Databricks MCP modes
+```bash
+npx add-mcp https://dev.databricks.com/api/mcp --name devhub-docs
+```
 
-- **Managed MCP**: preconfigured Databricks-backed servers.
-- **External MCP**: connect servers hosted outside Databricks.
-- **Custom MCP**: host your own MCP server as a Databricks App.
+Use `-g` to install globally (user-level) instead of project-level, and `-a` to target a specific agent:
 
-## Recommended usage patterns
+```bash
+npx add-mcp https://dev.databricks.com/api/mcp --name devhub-docs -g -a cursor
+```
 
-- let the LLM choose tools based on descriptions
-- avoid hardcoding tool names in prompts or code
-- avoid strict parsing assumptions for tool output formats
+Restart your editor after adding the server. Some editors like Cursor require you to navigate to the MCP settings page and toggle the new server as enabled.
 
-## Basic validation flow
+## Tools
 
-After configuring MCP in your agent/IDE runtime:
+The server exposes two read-only tools.
 
-- confirm the server appears in tool listings
-- run one read-only tool call
-- verify the response is consumable by your prompt/application flow
-- then enable write/action tools only where needed by policy
+### `list_docs_resources`
+
+Lists all available Databricks developer documentation pages. Returns the documentation index as markdown with page URLs and titles.
+
+No parameters.
+
+```
+list_docs_resources()
+→ markdown index of all doc pages with slugs and titles
+```
+
+### `get_doc_resource`
+
+Fetches a single Databricks developer documentation page as markdown. Use `list_docs_resources` first to discover available slugs.
+
+| Parameter | Type   | Required | Description                                                                                             |
+| --------- | ------ | -------- | ------------------------------------------------------------------------------------------------------- |
+| `slug`    | string | yes      | The docs page slug (path), e.g. `get-started/getting-started`. Use `list_docs_resources` to find slugs. |
+
+```
+get_doc_resource(slug: "get-started/getting-started")
+→ full markdown content of the requested page
+```
+
+## Verify the connection
+
+After installing, confirm the server is working:
+
+1. Check that `devhub-docs` appears in your tool listings.
+2. Ask your agent to call `list_docs_resources` and verify it returns a docs index.
+3. Ask your agent to fetch a specific page with `get_doc_resource`.
 
 ## Source of truth
 

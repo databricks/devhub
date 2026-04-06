@@ -38,7 +38,7 @@ test.describe("footer navigation", () => {
     },
     { href: "/docs/agents/getting-started", label: "Agents" },
     { href: "/docs/appkit", label: "AppKit" },
-    { href: "/docs/lakebase", label: "Lakebase" },
+    { href: "/docs/lakebase/getting-started", label: "Lakebase" },
     { href: "/resources", label: "Templates" },
     { href: "/solutions", label: "Solutions" },
   ];
@@ -100,7 +100,9 @@ test.describe("home page link navigation", () => {
     expect(finalCopiedText).toBe(BOOTSTRAP_PROMPT_MARKDOWN);
   });
 
-  test("pillar card Lakebase navigates to /docs/lakebase", async ({ page }) => {
+  test("pillar card Lakebase navigates to /docs/lakebase/getting-started", async ({
+    page,
+  }) => {
     await page.goto("/");
     const link = page
       .locator("main")
@@ -108,11 +110,13 @@ test.describe("home page link navigation", () => {
       .first();
     await link.waitFor({ state: "visible" });
     await link.click();
-    await page.waitForURL("**/docs/lakebase");
-    expect(new URL(page.url()).pathname).toContain("/docs/lakebase");
+    await page.waitForURL("**/docs/lakebase/getting-started");
+    expect(new URL(page.url()).pathname).toContain(
+      "/docs/lakebase/getting-started",
+    );
   });
 
-  test("pillar card AgentBricks navigates to /docs/agents/getting-started", async ({
+  test("pillar card Agent Bricks navigates to /docs/agents/getting-started", async ({
     page,
   }) => {
     await page.goto("/");
@@ -155,16 +159,8 @@ test.describe("home page link navigation", () => {
 test.describe("solutions page navigation", () => {
   const SOLUTIONS = [
     {
-      id: "what-is-a-lakebase",
-      path: "/solutions/what-is-a-lakebase",
-    },
-    {
-      id: "from-chatbots-to-agentic-workflows",
-      path: "/solutions/from-chatbots-to-agentic-workflows",
-    },
-    {
-      id: "database-branching-for-ai-agents",
-      path: "/solutions/database-branching-for-ai-agents",
+      id: "devhub-launch",
+      path: "/solutions/devhub-launch",
     },
   ];
 
@@ -189,7 +185,7 @@ test.describe("resources page navigation", () => {
   for (const { path } of TEMPLATES) {
     test(`resource card navigates to ${path}`, async ({ page }) => {
       await page.goto("/resources");
-      const link = page.locator(`a[href="${path}"]`);
+      const link = page.locator(`a[href="${path}"]`).first();
       await link.waitFor({ state: "visible" });
       await link.click();
       await page.waitForURL(`**${path}`);
@@ -202,33 +198,27 @@ test.describe("solution detail page navigation", () => {
   test('"All solutions" back link navigates to /solutions', async ({
     page,
   }) => {
-    await page.goto("/solutions/what-is-a-lakebase");
+    await page.goto("/solutions/devhub-launch");
     await page.getByRole("link", { name: /All solutions/ }).click();
     await page.waitForURL("**/solutions");
     expect(new URL(page.url()).pathname).toBe("/solutions");
   });
 
-  test("solution content includes expected outbound links", async ({
+  test("solution content includes expected internal links", async ({
     page,
   }) => {
-    await page.goto("/solutions/from-chatbots-to-agentic-workflows");
-    const outboundLinks = page.locator('article a[href^="https://"]');
-    const count = await outboundLinks.count();
+    await page.goto("/solutions/devhub-launch");
+    const internalLinks = page.locator('article a[href^="/"]');
+    const count = await internalLinks.count();
     expect(count).toBeGreaterThan(0);
 
-    await expect(outboundLinks).toContainText(["Resources"]);
-    const hrefs = await outboundLinks.evaluateAll((elements) =>
+    const hrefs = await internalLinks.evaluateAll((elements) =>
       elements
         .map((element) => element.getAttribute("href"))
         .filter((href): href is string => Boolean(href)),
     );
-    expect(hrefs).toContain("https://dev.databricks.com/resources");
-    expect(hrefs).toContain(
-      "https://dev.databricks.com/docs/agents/getting-started",
-    );
-    expect(hrefs).toContain(
-      "https://dev.databricks.com/docs/lakebase/getting-started",
-    );
+    expect(hrefs).toContain("/docs/get-started/getting-started");
+    expect(hrefs).toContain("/resources");
   });
 });
 

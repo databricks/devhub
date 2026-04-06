@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 
 export function DecisionMakerCta(): ReactNode {
   return (
-    <section className="bg-white py-16 text-black dark:bg-black dark:text-white md:py-20">
+    <section className="bg-white py-16 text-black dark:bg-db-navy dark:text-white md:py-20">
       <div className="container px-4">
         <div className="mx-auto grid max-w-6xl grid-cols-1 gap-8 lg:grid-cols-[1.05fr_1.4fr] lg:gap-10">
           <div>

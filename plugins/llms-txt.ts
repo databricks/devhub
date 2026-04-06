@@ -178,7 +178,9 @@ function generateLlmsTxt(baseUrl: string, docsDir: string): string {
     `- [Base App Template](${baseUrl}/resources/base-app-template): Databricks local bootstrap template for CLI, auth, app scaffolding, and agent skill setup`,
     `- [AI Chat App Template](${baseUrl}/resources/ai-chat-app-template): Streaming AI chat powered by Databricks Model Serving (AI Gateway) with AI SDK and AI Elements`,
     `- [Data App Template](${baseUrl}/resources/data-app-template): Bootstrap a Databricks app with Lakebase for persistent data storage, schema setup, and CRUD API routes`,
-    `- [Genie Analytics App Template](${baseUrl}/resources/genie-analytics-app-template): Bootstrap a Databricks app with AI/BI Genie for conversational analytics. Users ask natural-language questions and get instant answers from their data.`,
+    `- [Genie App Template](${baseUrl}/resources/genie-app-template): Build a minimal Databricks App with AI/BI Genie conversational analytics. Covers CLI setup, Genie space configuration, plugin wiring, and deploy.`,
+    `- [Lakebase Outside Databricks App Platform](${baseUrl}/resources/lakebase-off-platform-template): Use Lakebase from apps hosted outside Databricks App Platform with portable env, token, and Drizzle patterns.`,
+    `- [Operational Data Analytics](${baseUrl}/resources/operational-data-analytics-template): End-to-end setup for analyzing operational database data in the lakehouse with Unity Catalog, Lakebase, Lakehouse Sync CDC, and medallion architecture.`,
     "",
   ];
 

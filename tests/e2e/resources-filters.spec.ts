@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 
-const TOTAL_RESOURCES = "21 of 21 resources";
+const TOTAL_RESOURCES = "22 of 22 resources";
 
 function setupClipboardMock(page: import("@playwright/test").Page) {
   return page.addInitScript(() => {
@@ -29,12 +29,15 @@ test.describe("resources page search", () => {
     await expect(page.getByText(TOTAL_RESOURCES)).toBeVisible();
 
     await page.getByRole("searchbox").fill("genie");
-    await expect(page.getByText("2 of 21 resources")).toBeVisible();
+    await expect(page.getByText("3 of 22 resources")).toBeVisible();
     await expect(
-      page.getByRole("link", { name: "Genie Analytics App Template" }),
+      page.getByRole("link", { name: "Genie App Template" }),
     ).toBeVisible();
     await expect(
       page.getByRole("link", { name: "Genie Conversational Analytics" }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: "Genie Multi-Space Selector" }),
     ).toBeVisible();
 
     await page.getByRole("searchbox").fill("");
@@ -51,7 +54,7 @@ test.describe("resources page service filter", () => {
 
     await page.getByRole("checkbox", { name: "Lakebase", exact: true }).check();
 
-    const count = page.getByText(/\d+ of 21 resources/);
+    const count = page.getByText(/\d+ of 22 resources/);
     await expect(count).not.toHaveText(TOTAL_RESOURCES);
 
     await expect(
@@ -97,7 +100,7 @@ test.describe("resources page tag filter", () => {
 
     await page.getByRole("button", { name: "Genie" }).first().click();
 
-    await expect(page.getByText(/\d+ of 21 resources/)).not.toHaveText(
+    await expect(page.getByText(/\d+ of 22 resources/)).not.toHaveText(
       TOTAL_RESOURCES,
     );
     await expect(page.getByRole("button", { name: "Clear all" })).toBeVisible();

@@ -12,8 +12,8 @@ const PAGES = [
   { path: "/resources/ai-chat-app-template", title: "AI Chat App Template" },
   { path: "/resources/data-app-template", title: "Data App Template" },
   {
-    path: "/resources/genie-analytics-app-template",
-    title: "Genie Analytics App Template",
+    path: "/resources/genie-app-template",
+    title: "Genie App Template",
   },
   {
     path: "/docs/get-started/getting-started",

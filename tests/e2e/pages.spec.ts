@@ -8,12 +8,12 @@ const PAGES = [
     title: "Introducing dev.databricks.com",
   },
   { path: "/resources", title: "Resources" },
-  { path: "/resources/base-app-template", title: "Base App Template" },
-  { path: "/resources/ai-chat-app-template", title: "AI Chat App Template" },
-  { path: "/resources/data-app-template", title: "Data App Template" },
+  { path: "/resources/hello-world-app", title: "Hello World App" },
+  { path: "/resources/ai-chat-app", title: "AI Chat App" },
+  { path: "/resources/app-with-lakebase", title: "App with Lakebase" },
   {
-    path: "/resources/genie-app-template",
-    title: "Genie App Template",
+    path: "/resources/genie-analytics-app",
+    title: "Genie Analytics App",
   },
   {
     path: "/docs/get-started/getting-started",

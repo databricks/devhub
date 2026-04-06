@@ -62,12 +62,12 @@ Passing `--name` suppresses prompts and uses defaults for unspecified options. A
 
 The fastest path is to use a [template](/resources) with an AI coding agent. Copy a template into your agent and describe what you want to build. See [Your First App](/docs/get-started/your-first-app) for the full workflow.
 
-| Template                                                           | Best for                                           |
-| ------------------------------------------------------------------ | -------------------------------------------------- |
-| [Base App Template](/resources/base-app-template)                  | Simple apps, static pages, getting started         |
-| [Data App Template](/resources/data-app-template)                  | CRUD apps with persistent storage                  |
-| [AI Chat App Template](/resources/ai-chat-app-template)            | Conversational AI with chat history                |
-| [Lakebase Off-Platform](/resources/lakebase-off-platform-template) | Apps hosted outside Databricks (AWS, Vercel, etc.) |
+| Template                                                  | Best for                                           |
+| --------------------------------------------------------- | -------------------------------------------------- |
+| [Hello World App](/resources/hello-world-app)             | Simple apps, static pages, getting started         |
+| [App with Lakebase](/resources/app-with-lakebase)         | CRUD apps with persistent storage                  |
+| [AI Chat App](/resources/ai-chat-app)                     | Conversational AI with chat history                |
+| [Lakebase Off-Platform](/resources/lakebase-off-platform) | Apps hosted outside Databricks (AWS, Vercel, etc.) |
 
 ## Next steps
 

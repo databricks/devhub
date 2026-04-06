@@ -52,14 +52,14 @@ There are currently **15 recipes** covering everything from initial workspace se
 
 Templates bundle multiple recipes into end-to-end project blueprints. Instead of assembling pieces yourself, pick a template and follow a guided path:
 
-| Template                                                                         | What it builds                                                                     |
-| -------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| **[Base App](/resources/base-app-template)**                                     | CLI setup, auth, app scaffolding, and agent skills                                 |
-| **[AI Chat App](/resources/ai-chat-app-template)**                               | Streaming chat with Model Serving, AI SDK, and persistent chat history in Lakebase |
-| **[Data App](/resources/data-app-template)**                                     | App with Lakebase for persistent storage, schema setup, and CRUD API               |
-| **[Genie Analytics App](/resources/genie-analytics-app-template)**               | Conversational analytics with AI/BI Genie                                          |
-| **[Lakebase Off-Platform](/resources/lakebase-off-platform-template)**           | Use Lakebase from Vercel, Netlify, or AWS with portable env and token management   |
-| **[Operational Data Analytics](/resources/operational-data-analytics-template)** | Unity Catalog, Lakehouse Sync CDC, and a medallion architecture pipeline           |
+| Template                                                                | What it builds                                                                     |
+| ----------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| **[Hello World App](/resources/hello-world-app)**                       | CLI setup, auth, app scaffolding, and agent skills                                 |
+| **[AI Chat App](/resources/ai-chat-app)**                               | Streaming chat with Model Serving, AI SDK, and persistent chat history in Lakebase |
+| **[App with Lakebase](/resources/app-with-lakebase)**                   | App with Lakebase for persistent storage, schema setup, and CRUD API               |
+| **[Genie Analytics App](/resources/genie-analytics-app-template)**      | Conversational analytics with AI/BI Genie                                          |
+| **[Lakebase Off-Platform](/resources/lakebase-off-platform)**           | Use Lakebase from Vercel, Netlify, or AWS with portable env and token management   |
+| **[Operational Data Analytics](/resources/operational-data-analytics)** | Unity Catalog, Lakehouse Sync CDC, and a medallion architecture pipeline           |
 
 Templates are particularly useful when you're starting a new project and want a proven architecture rather than assembling individual pieces.
 
@@ -69,7 +69,7 @@ Every recipe, template, and solution on this site is available as raw markdown t
 
 ```
 https://dev.databricks.com/solutions/devhub-launch.md
-https://dev.databricks.com/resources/ai-chat-app-template.md
+https://dev.databricks.com/resources/ai-chat-app.md
 https://dev.databricks.com/docs/get-started/getting-started.md
 ```
 

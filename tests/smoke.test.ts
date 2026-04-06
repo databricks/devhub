@@ -32,12 +32,12 @@ describe("production build smoke tests", () => {
     const expectedTemplates = [
       "/solutions",
       "/resources",
-      "/resources/base-app-template",
-      "/resources/ai-chat-app-template",
-      "/resources/data-app-template",
-      "/resources/genie-app-template",
-      "/resources/lakebase-off-platform-template",
-      "/resources/operational-data-analytics-template",
+      "/resources/hello-world-app",
+      "/resources/ai-chat-app",
+      "/resources/app-with-lakebase",
+      "/resources/genie-analytics-app",
+      "/resources/lakebase-off-platform",
+      "/resources/operational-data-analytics",
     ];
 
     for (const path of expectedTemplates) {

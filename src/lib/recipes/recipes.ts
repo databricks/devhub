@@ -263,15 +263,15 @@ function createTemplate(config: TemplateConfig): Template {
 
 export const templates: Template[] = [
   createTemplate({
-    id: "base-app-template",
-    name: "Base App Template",
+    id: "hello-world-app",
+    name: "Hello World App",
     description:
-      "Databricks local bootstrap template for CLI, auth, app scaffolding, and agent skill setup.",
+      "Databricks local bootstrap for CLI, auth, app scaffolding, and agent skill setup.",
     recipeIds: ["databricks-local-bootstrap"],
   }),
   createTemplate({
-    id: "ai-chat-app-template",
-    name: "AI Chat App Template",
+    id: "ai-chat-app",
+    name: "AI Chat App",
     description:
       "Databricks local bootstrap, Model Serving integration, AI SDK streaming chat, and Lakebase-persisted chat history.",
     recipeIds: [
@@ -284,8 +284,8 @@ export const templates: Template[] = [
     ],
   }),
   createTemplate({
-    id: "data-app-template",
-    name: "Data App Template",
+    id: "app-with-lakebase",
+    name: "App with Lakebase",
     description:
       "Bootstrap a Databricks app with Lakebase for persistent data storage. Includes schema setup and full CRUD API routes.",
     recipeIds: [
@@ -295,15 +295,15 @@ export const templates: Template[] = [
     ],
   }),
   createTemplate({
-    id: "genie-app-template",
-    name: "Genie App Template",
+    id: "genie-analytics-app",
+    name: "Genie Analytics App",
     description:
       "Build a minimal Databricks App with AI/BI Genie conversational analytics. Covers CLI setup, Genie space configuration, plugin wiring, and deploy.",
     recipeIds: ["databricks-local-bootstrap", "genie-conversational-analytics"],
   }),
   createTemplate({
-    id: "lakebase-off-platform-template",
-    name: "Lakebase Outside Databricks App Platform",
+    id: "lakebase-off-platform",
+    name: "Lakebase Off-Platform",
     description:
       "Use Lakebase from apps hosted outside Databricks App Platform (for example on AWS, Vercel, or Netlify) with portable env, token, and Drizzle patterns.",
     recipeIds: [
@@ -314,7 +314,7 @@ export const templates: Template[] = [
     ],
   }),
   createTemplate({
-    id: "operational-data-analytics-template",
+    id: "operational-data-analytics",
     name: "Operational Data Analytics",
     description:
       "End-to-end setup for analyzing operational database data in the lakehouse: Unity Catalog with external storage, Lakebase provisioning, Lakehouse Sync CDC replication, and a medallion architecture pipeline with silver and gold layers.",

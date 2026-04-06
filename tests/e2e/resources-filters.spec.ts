@@ -31,7 +31,7 @@ test.describe("resources page search", () => {
     await page.getByRole("searchbox").fill("genie");
     await expect(page.getByText("3 of 22 resources")).toBeVisible();
     await expect(
-      page.getByRole("link", { name: "Genie App Template" }),
+      page.getByRole("link", { name: "Genie Analytics App" }),
     ).toBeVisible();
     await expect(
       page.getByRole("link", { name: "Genie Conversational Analytics" }),
@@ -74,7 +74,7 @@ test.describe("resources page resource type filter", () => {
 
     await page.getByRole("checkbox", { name: "Cookbooks" }).check();
     await expect(
-      page.getByRole("link", { name: "Base App Template" }),
+      page.getByRole("link", { name: "Hello World App" }),
     ).toBeVisible();
     await expect(
       page.getByRole("link", { name: "Databricks Local Bootstrap" }),
@@ -86,7 +86,7 @@ test.describe("resources page resource type filter", () => {
       page.getByRole("link", { name: "Databricks Local Bootstrap" }),
     ).toBeVisible();
     await expect(
-      page.getByRole("link", { name: "Base App Template" }),
+      page.getByRole("link", { name: "Hello World App" }),
     ).toBeHidden();
   });
 });

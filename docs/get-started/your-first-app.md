@@ -21,12 +21,12 @@ That's it. The template handles Databricks CLI setup, authentication, database s
 
 Browse all templates at [dev.databricks.com/resources](/resources). Here are the starting points:
 
-| Template                                                           | Best for                                   | Example prompt                                                                     |
-| ------------------------------------------------------------------ | ------------------------------------------ | ---------------------------------------------------------------------------------- |
-| [Base App Template](/resources/base-app-template)                  | Simple apps, static pages, getting started | "Build a hello-world landing page on Databricks Apps"                              |
-| [Data App Template](/resources/data-app-template)                  | CRUD apps with persistent storage          | "Build a customer feedback tracker with a form and a table of submissions"         |
-| [AI Chat App Template](/resources/ai-chat-app-template)            | Conversational AI, chatbots, assistants    | "Build an IT support assistant that answers questions about our internal policies" |
-| [Lakebase Off-Platform](/resources/lakebase-off-platform-template) | Apps hosted outside Databricks             | "Build a Next.js app on Vercel that stores data in Lakebase"                       |
+| Template                                                  | Best for                                   | Example prompt                                                                     |
+| --------------------------------------------------------- | ------------------------------------------ | ---------------------------------------------------------------------------------- |
+| [Hello World App](/resources/hello-world-app)             | Simple apps, static pages, getting started | "Build a hello-world landing page on Databricks Apps"                              |
+| [App with Lakebase](/resources/app-with-lakebase)         | CRUD apps with persistent storage          | "Build a customer feedback tracker with a form and a table of submissions"         |
+| [AI Chat App](/resources/ai-chat-app)                     | Conversational AI, chatbots, assistants    | "Build an IT support assistant that answers questions about our internal policies" |
+| [Lakebase Off-Platform](/resources/lakebase-off-platform) | Apps hosted outside Databricks             | "Build a Next.js app on Vercel that stores data in Lakebase"                       |
 
 Not sure which one to use? Start with the **Data App Template** — it covers the most common pattern of storing and displaying data.
 

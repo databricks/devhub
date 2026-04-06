@@ -6,12 +6,12 @@ import DatabricksLocalBootstrap from "@site/content/recipes/databricks-local-boo
 import LakebaseCreateInstance from "@site/content/recipes/lakebase-create-instance.md";
 import LakebaseDataPersistence from "@site/content/recipes/lakebase-data-persistence.md";
 
-const template = templates.find((t) => t.id === "data-app-template");
+const template = templates.find((t) => t.id === "app-with-lakebase");
 
-export default function DataAppTemplatePage(): ReactNode {
+export default function AppWithLakebasePage(): ReactNode {
   const rawBySlug = useAllRawRecipeMarkdown();
   if (!template) {
-    throw new Error("Template data-app-template not found");
+    throw new Error("Template app-with-lakebase not found");
   }
   const rawMarkdown = template.recipeIds
     .map((id) => rawBySlug[id])

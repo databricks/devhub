@@ -175,12 +175,12 @@ function generateLlmsTxt(baseUrl: string, docsDir: string): string {
     "Templates and starter kits for building on Databricks.",
     "",
     `- [All Resources](${baseUrl}/resources): Browse all templates`,
-    `- [Base App Template](${baseUrl}/resources/base-app-template): Databricks local bootstrap template for CLI, auth, app scaffolding, and agent skill setup`,
-    `- [AI Chat App Template](${baseUrl}/resources/ai-chat-app-template): Streaming AI chat powered by Databricks Model Serving (AI Gateway) with AI SDK and AI Elements`,
-    `- [Data App Template](${baseUrl}/resources/data-app-template): Bootstrap a Databricks app with Lakebase for persistent data storage, schema setup, and CRUD API routes`,
-    `- [Genie App Template](${baseUrl}/resources/genie-app-template): Build a minimal Databricks App with AI/BI Genie conversational analytics. Covers CLI setup, Genie space configuration, plugin wiring, and deploy.`,
-    `- [Lakebase Outside Databricks App Platform](${baseUrl}/resources/lakebase-off-platform-template): Use Lakebase from apps hosted outside Databricks App Platform with portable env, token, and Drizzle patterns.`,
-    `- [Operational Data Analytics](${baseUrl}/resources/operational-data-analytics-template): End-to-end setup for analyzing operational database data in the lakehouse with Unity Catalog, Lakebase, Lakehouse Sync CDC, and medallion architecture.`,
+    `- [Hello World App](${baseUrl}/resources/hello-world-app): Databricks local bootstrap for CLI, auth, app scaffolding, and agent skill setup`,
+    `- [AI Chat App](${baseUrl}/resources/ai-chat-app): Streaming AI chat powered by Databricks Model Serving (AI Gateway) with AI SDK and AI Elements`,
+    `- [App with Lakebase](${baseUrl}/resources/app-with-lakebase): Bootstrap a Databricks app with Lakebase for persistent data storage, schema setup, and CRUD API routes`,
+    `- [Genie Analytics App](${baseUrl}/resources/genie-analytics-app): Build a minimal Databricks App with AI/BI Genie conversational analytics. Covers CLI setup, Genie space configuration, plugin wiring, and deploy.`,
+    `- [Lakebase Off-Platform](${baseUrl}/resources/lakebase-off-platform): Use Lakebase from apps hosted outside Databricks App Platform with portable env, token, and Drizzle patterns.`,
+    `- [Operational Data Analytics](${baseUrl}/resources/operational-data-analytics): End-to-end setup for analyzing operational database data in the lakehouse with Unity Catalog, Lakebase, Lakehouse Sync CDC, and medallion architecture.`,
     "",
   ];
 

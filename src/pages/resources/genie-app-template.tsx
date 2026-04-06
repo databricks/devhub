@@ -5,12 +5,12 @@ import { useAllRawRecipeMarkdown } from "@/lib/use-raw-content-markdown";
 import DatabricksLocalBootstrap from "@site/content/recipes/databricks-local-bootstrap.md";
 import GenieConversationalAnalytics from "@site/content/recipes/genie-conversational-analytics.md";
 
-const template = templates.find((t) => t.id === "genie-analytics-app-template");
+const template = templates.find((t) => t.id === "genie-app-template");
 
-export default function GenieAnalyticsAppTemplatePage(): ReactNode {
+export default function GenieAppTemplatePage(): ReactNode {
   const rawBySlug = useAllRawRecipeMarkdown();
   if (!template) {
-    throw new Error("Template genie-analytics-app-template not found");
+    throw new Error("Template genie-app-template not found");
   }
   const rawMarkdown = template.recipeIds
     .map((id) => rawBySlug[id])

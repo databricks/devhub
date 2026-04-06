@@ -149,6 +149,15 @@ export const recipes: Recipe[] = [
     prerequisites: ["databricks-local-bootstrap"],
   },
   {
+    id: "genie-multi-space",
+    name: "Genie Multi-Space Selector",
+    description:
+      "Add a space selector so users can switch between multiple AI/BI Genie spaces from a single page. Covers multi-alias server config, per-space bundle resources, and automatic conversation cleanup on space switch and redeployment.",
+    tags: ["Genie", "AI/BI", "Natural Language", "Data"],
+    services: ["Genie"],
+    prerequisites: ["genie-conversational-analytics"],
+  },
+  {
     id: "medallion-architecture-from-cdc",
     name: "Medallion Architecture from CDC History Tables",
     description:
@@ -208,6 +217,7 @@ export const recipesInOrder: Recipe[] = [
   "sync-tables-autoscaling",
   "unity-catalog-setup",
   "genie-conversational-analytics",
+  "genie-multi-space",
   "medallion-architecture-from-cdc",
   "lakebase-off-platform-env-management",
   "lakebase-token-management",
@@ -285,10 +295,10 @@ export const templates: Template[] = [
     ],
   }),
   createTemplate({
-    id: "genie-analytics-app-template",
-    name: "Genie Analytics App Template",
+    id: "genie-app-template",
+    name: "Genie App Template",
     description:
-      "Bootstrap a Databricks app with AI/BI Genie for conversational analytics. Users ask natural-language questions and get instant answers from their data.",
+      "Build a minimal Databricks App with AI/BI Genie conversational analytics. Covers CLI setup, Genie space configuration, plugin wiring, and deploy.",
     recipeIds: ["databricks-local-bootstrap", "genie-conversational-analytics"],
   }),
   createTemplate({

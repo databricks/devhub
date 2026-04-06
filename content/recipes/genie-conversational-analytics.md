@@ -113,6 +113,8 @@ Add the variable, scope, and resource:
 
 ```yaml
 variables:
+  genie_space_name:
+    description: Genie space display title (as shown in the Genie UI)
   genie_space_id:
     description: Genie Space ID for AI/BI natural language queries
 
@@ -132,6 +134,7 @@ resources:
 targets:
   default:
     variables:
+      genie_space_name: "<your-space-title>"
       genie_space_id: <your-space-id>
 ```
 
@@ -157,13 +160,17 @@ DATABRICKS_GENIE_SPACE_ID=<your-space-id>
 
 ### 8. Deploy and verify
 
+From the app project directory (the folder with `databricks.yml`), deploy and run in one step:
+
 ```bash
+cd <app-name>
 databricks apps deploy --profile <PROFILE>
 ```
 
 Check app status and logs:
 
 ```bash
+databricks apps get <app-name> --profile <PROFILE>
 databricks apps list --profile <PROFILE>
 databricks apps logs <app-name> --profile <PROFILE>
 ```

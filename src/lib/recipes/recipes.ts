@@ -121,6 +121,14 @@ export const recipes: Recipe[] = [
     tags: ["Volumes", "Unity Catalog", "Files", "Upload", "CSV"],
     prerequisites: ["databricks-local-bootstrap"],
   },
+  {
+    id: "genie-multi-space",
+    name: "Genie Multi-Space Selector",
+    description:
+      "Add a space selector so users can switch between multiple AI/BI Genie spaces from a single page. Covers multi-alias server config, per-space bundle resources, and automatic conversation cleanup on space switch and redeployment.",
+    tags: ["Genie", "AI/BI", "Natural Language", "Data"],
+    prerequisites: ["genie-conversational-analytics"],
+  },
 ];
 
 const recipeIndex: Record<string, Recipe> = Object.fromEntries(
@@ -139,6 +147,7 @@ export const recipesInOrder: Recipe[] = [
   "genie-conversational-analytics",
   "sql-analytics-dashboard",
   "volume-file-upload",
+  "genie-multi-space",
 ].map((recipeId) => {
   const recipe = recipeIndex[recipeId];
   if (!recipe) {

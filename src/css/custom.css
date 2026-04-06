@@ -576,7 +576,7 @@
   }
 
   .db-docs-article .theme-doc-markdown .tabs {
-    @apply mb-0 flex flex-wrap items-end gap-0 border-b border-db-border pb-0;
+    @apply mb-0 flex flex-wrap items-end gap-0 overflow-visible border-b border-db-border pb-0;
   }
 
   .db-docs-article .theme-doc-markdown .tabs__item {

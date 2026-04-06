@@ -14,18 +14,69 @@ title: Getting Started
 
 ## Create a project
 
-```bash
-databricks postgres create-project my-project \
-  --json '{"spec": {"display_name": "My Lakebase Project"}}'
+```bash title="Common"
+databricks postgres create-project my-project
 ```
+
+```bash title="All Options"
+databricks postgres create-project $PROJECT_ID \
+  --json '{"spec": {
+    "display_name": "My Lakebase Project",
+    "pg_version": 17,
+    "history_retention_duration": "172800s",
+    "default_endpoint_settings": {
+      "autoscaling_limit_min_cu": 0.5,
+      "autoscaling_limit_max_cu": 1.0,
+      "suspend_timeout_duration": "300s"
+    }
+  }}' \
+  --no-wait \
+  --timeout 10m \
+  --debug \
+  -o json \
+  --target $TARGET \
+  --profile $DATABRICKS_PROFILE
+```
+
+| Option       | Required | Description                                                                                                                                     |
+| ------------ | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `PROJECT_ID` | yes      | Unique project identifier (1-63 chars, lowercase letter start, lowercase/numbers/hyphens)                                                       |
+| `--json`     | no       | Inline JSON or `@path/to/file.json` with project spec (`display_name`, `pg_version`, `history_retention_duration`, `default_endpoint_settings`) |
+| `--no-wait`  | no       | Return immediately with operation details instead of waiting for completion                                                                     |
+| `--timeout`  | no       | Max time to wait for completion (e.g. `10m`). Ignored with `--no-wait`                                                                          |
+| `--debug`    | no       | Enable debug logging                                                                                                                            |
+| `-o json`    | no       | Output as JSON (default: text)                                                                                                                  |
+| `--target`   | no       | Bundle target to use (if applicable)                                                                                                            |
+| `--profile`  | no       | Databricks CLI profile name                                                                                                                     |
 
 The optional `display_name` sets a human-readable label. This creates a project with a default `production` branch, a `databricks_postgres` database, and a read-write endpoint.
 
 ## Get connection values
 
-```bash
+```bash title="Common"
 databricks postgres list-endpoints projects/my-project/branches/production -o json
 ```
+
+```bash title="All Options"
+databricks postgres list-endpoints \
+  projects/$PROJECT_ID/branches/$BRANCH_ID \
+  -o json \
+  --page-size 100 \
+  --page-token "$PAGE_TOKEN" \
+  --debug \
+  --target $TARGET \
+  --profile $DATABRICKS_PROFILE
+```
+
+| Option         | Required | Description                                                        |
+| -------------- | -------- | ------------------------------------------------------------------ |
+| `PARENT`       | yes      | Branch resource path: `projects/{project_id}/branches/{branch_id}` |
+| `-o json`      | no       | Output as JSON (default: text)                                     |
+| `--page-size`  | no       | Max items per page                                                 |
+| `--page-token` | no       | Pagination token for next page                                     |
+| `--debug`      | no       | Enable debug logging                                               |
+| `--target`     | no       | Bundle target to use (if applicable)                               |
+| `--profile`    | no       | Databricks CLI profile name                                        |
 
 <details>
 <summary>Example response</summary>
@@ -60,9 +111,30 @@ databricks postgres list-endpoints projects/my-project/branches/production -o js
 
 </details>
 
-```bash
+```bash title="Common"
 databricks postgres list-databases projects/my-project/branches/production -o json
 ```
+
+```bash title="All Options"
+databricks postgres list-databases \
+  projects/$PROJECT_ID/branches/$BRANCH_ID \
+  -o json \
+  --page-size 100 \
+  --page-token "$PAGE_TOKEN" \
+  --debug \
+  --target $TARGET \
+  --profile $DATABRICKS_PROFILE
+```
+
+| Option         | Required | Description                                                        |
+| -------------- | -------- | ------------------------------------------------------------------ |
+| `PARENT`       | yes      | Branch resource path: `projects/{project_id}/branches/{branch_id}` |
+| `-o json`      | no       | Output as JSON (default: text)                                     |
+| `--page-size`  | no       | Max items per page                                                 |
+| `--page-token` | no       | Pagination token for next page                                     |
+| `--debug`      | no       | Enable debug logging                                               |
+| `--target`     | no       | Bundle target to use (if applicable)                               |
+| `--profile`    | no       | Databricks CLI profile name                                        |
 
 <details>
 <summary>Example response</summary>
@@ -97,22 +169,65 @@ Key values from the output:
 
 The simplest way to connect is with `databricks psql`:
 
-```bash
+```bash title="Common"
 databricks psql --project my-project
 ```
 
-This auto-selects the branch and endpoint when only one exists. To skip selection (CI, agents), specify all three:
-
-```bash
-databricks psql --project my-project --branch production --endpoint primary
+```bash title="All Options"
+databricks psql \
+  --project $PROJECT_ID \
+  --branch $BRANCH_ID \
+  --endpoint $ENDPOINT_ID \
+  --autoscaling \
+  --max-retries 3 \
+  --debug \
+  -o json \
+  --target $TARGET \
+  --profile $DATABRICKS_PROFILE \
+  -- -c "SELECT 1"
 ```
+
+| Option          | Required | Description                                                                                       |
+| --------------- | -------- | ------------------------------------------------------------------------------------------------- |
+| `--project`     | no       | Project ID. With a TTY, omit to choose from prompts; in CI or scripts, set explicitly when needed |
+| `--branch`      | no       | Branch ID (default: auto-select when only one exists)                                             |
+| `--endpoint`    | no       | Endpoint ID (default: auto-select when only one exists)                                           |
+| `--autoscaling` | no       | Only show Lakebase Autoscaling projects                                                           |
+| `--provisioned` | no       | Only show Lakebase Provisioned instances                                                          |
+| `--max-retries` | no       | Connection retries; 0 to disable (default: 3)                                                     |
+| `--debug`       | no       | Enable debug logging                                                                              |
+| `-o json`       | no       | Output as JSON (default: text)                                                                    |
+| `--target`      | no       | Bundle target to use (if applicable)                                                              |
+| `--profile`     | no       | Databricks CLI profile name                                                                       |
+| `-- PSQL_ARGS`  | no       | Additional arguments passed through to `psql`                                                     |
+
+Without a TTY (for example in CI), the CLI auto-selects when only one branch or endpoint exists. When multiple exist, specify `--project`, `--branch`, and `--endpoint` explicitly so the command does not block on prompts.
 
 If you don't have a `psql` client installed, generate a short-lived credential and use it with any PostgreSQL client (DBeaver, pgAdmin, DataGrip, or a language driver):
 
-```bash
+```bash title="Common"
 databricks postgres generate-database-credential \
-  projects/my-project/branches/production/endpoints/<endpoint-id>
+  projects/my-project/branches/production/endpoints/primary
 ```
+
+```bash title="All Options"
+databricks postgres generate-database-credential \
+  projects/$PROJECT_ID/branches/$BRANCH_ID/endpoints/$ENDPOINT_ID \
+  --json '{}' \
+  --debug \
+  --target $TARGET \
+  -o json \
+  --profile $DATABRICKS_PROFILE
+```
+
+| Option      | Required | Description                                                                                  |
+| ----------- | -------- | -------------------------------------------------------------------------------------------- |
+| `ENDPOINT`  | yes      | Endpoint resource path: `projects/{project_id}/branches/{branch_id}/endpoints/{endpoint_id}` |
+| `--json`    | no       | Inline JSON or `@path/to/file.json` with request body                                        |
+| `--debug`   | no       | Enable debug logging                                                                         |
+| `-o json`   | no       | Output as JSON (default: text)                                                               |
+| `--target`  | no       | Bundle target to use (if applicable)                                                         |
+| `--profile` | no       | Databricks CLI profile name                                                                  |
 
 Use the returned token as the password, with your Databricks email as the username and the endpoint host from `list-endpoints` above.
 

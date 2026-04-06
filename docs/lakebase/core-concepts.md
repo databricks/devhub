@@ -26,21 +26,43 @@ IDs must be 1-63 characters, start with a lowercase letter, and contain only low
 
 Create a branch from an existing one to copy its schema and data:
 
-```bash
+```bash title="Common"
+databricks postgres create-branch projects/my-project feature
+```
+
+```bash title="All Options"
 databricks postgres create-branch \
   projects/$PROJECT_ID \
-  feature \
+  $BRANCH_ID \
   --json '{
     "spec": {
-      "source_branch": "projects/$PROJECT_ID/branches/$BRANCH_ID",
+      "source_branch": "projects/$PROJECT_ID/branches/$SOURCE_BRANCH_ID",
       "no_expiry": true
     }
-  }'
+  }' \
+  --no-wait \
+  --timeout 10m \
+  --debug \
+  -o json \
+  --target $TARGET \
+  --profile $DATABRICKS_PROFILE
 ```
+
+| Option      | Required | Description                                                                                                                                                                 |
+| ----------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `PARENT`    | yes      | Project resource path: `projects/{project_id}`                                                                                                                              |
+| `BRANCH_ID` | yes      | Unique branch identifier (1-63 chars, lowercase)                                                                                                                            |
+| `--json`    | no       | JSON spec with `source_branch` and expiration policy (`no_expiry`, `ttl`, or `expire_time`). If omitted, branches from the project's default branch with default expiration |
+| `--no-wait` | no       | Return immediately with operation details                                                                                                                                   |
+| `--timeout` | no       | Max time to wait for completion                                                                                                                                             |
+| `--debug`   | no       | Enable debug logging                                                                                                                                                        |
+| `-o json`   | no       | Output as JSON (default: text)                                                                                                                                              |
+| `--target`  | no       | Bundle target to use (if applicable)                                                                                                                                        |
+| `--profile` | no       | Databricks CLI profile name                                                                                                                                                 |
 
 Each new branch automatically gets a `primary` read-write endpoint that inherits the project's `default_endpoint_settings`. Use `create-endpoint` to add read replicas (`ENDPOINT_TYPE_READ_ONLY`).
 
-Delete when done: `databricks postgres delete-branch projects/$PROJECT_ID/branches/feature`
+Delete when done: `databricks postgres delete-branch projects/my-project/branches/feature`
 
 Branches require an expiration policy (`ttl`, `expire_time`, or `no_expiry: true`). See [branch expiration](https://docs.databricks.com/aws/en/oltp/projects/manage-branches#expiration) for details.
 
@@ -48,12 +70,37 @@ Branches require an expiration policy (`ttl`, `expire_time`, or `no_expiry: true
 
 Update commands require an update mask specifying which fields to modify. The `--json` payload contains the new values; only masked fields change.
 
-```bash
+```bash title="Common"
 databricks postgres update-branch \
-  projects/$PROJECT_ID/branches/$BRANCH_ID \
+  projects/my-project/branches/production \
   spec.is_protected \
   --json '{"spec": {"is_protected": true}}'
 ```
+
+```bash title="All Options"
+databricks postgres update-branch \
+  projects/$PROJECT_ID/branches/$BRANCH_ID \
+  $UPDATE_MASK \
+  --json '{"spec": {"is_protected": true}}' \
+  --no-wait \
+  --timeout 10m \
+  --debug \
+  -o json \
+  --target $TARGET \
+  --profile $DATABRICKS_PROFILE
+```
+
+| Option        | Required | Description                                                         |
+| ------------- | -------- | ------------------------------------------------------------------- |
+| `NAME`        | yes      | Branch resource path: `projects/{project_id}/branches/{branch_id}`  |
+| `UPDATE_MASK` | yes      | Comma-separated list of fields to update (e.g. `spec.is_protected`) |
+| `--json`      | yes      | JSON with new field values                                          |
+| `--no-wait`   | no       | Return immediately with operation details                           |
+| `--timeout`   | no       | Max time to wait for completion                                     |
+| `--debug`     | no       | Enable debug logging                                                |
+| `-o json`     | no       | Output as JSON (default: text)                                      |
+| `--target`    | no       | Bundle target to use (if applicable)                                |
+| `--profile`   | no       | Databricks CLI profile name                                         |
 
 For multiple fields, use a comma-separated mask (see autoscaling example below).
 
@@ -68,12 +115,40 @@ Endpoints autoscale between a configured min and max compute unit (CU) range. Ea
 
 The difference between max and min cannot exceed 16 CU (`max - min <= 16`).
 
-```bash
+```bash title="Common"
 databricks postgres update-endpoint \
-  projects/$PROJECT_ID/branches/$BRANCH_ID/endpoints/$ENDPOINT_ID \
+  projects/my-project/branches/production/endpoints/primary \
   "spec.autoscaling_limit_min_cu,spec.autoscaling_limit_max_cu" \
   --json '{"spec": {"autoscaling_limit_min_cu": 1.0, "autoscaling_limit_max_cu": 8.0}}'
 ```
+
+```bash title="All Options"
+databricks postgres update-endpoint \
+  projects/$PROJECT_ID/branches/$BRANCH_ID/endpoints/$ENDPOINT_ID \
+  $UPDATE_MASK \
+  --json '{"spec": {
+    "autoscaling_limit_min_cu": 1.0,
+    "autoscaling_limit_max_cu": 8.0
+  }}' \
+  --no-wait \
+  --timeout 10m \
+  --debug \
+  -o json \
+  --target $TARGET \
+  --profile $DATABRICKS_PROFILE
+```
+
+| Option        | Required | Description                                                                                  |
+| ------------- | -------- | -------------------------------------------------------------------------------------------- |
+| `NAME`        | yes      | Endpoint resource path: `projects/{project_id}/branches/{branch_id}/endpoints/{endpoint_id}` |
+| `UPDATE_MASK` | yes      | Comma-separated fields (e.g. `spec.autoscaling_limit_min_cu,spec.autoscaling_limit_max_cu`)  |
+| `--json`      | yes      | JSON with new field values                                                                   |
+| `--no-wait`   | no       | Return immediately with operation details                                                    |
+| `--timeout`   | no       | Max time to wait for completion                                                              |
+| `--debug`     | no       | Enable debug logging                                                                         |
+| `-o json`     | no       | Output as JSON (default: text)                                                               |
+| `--target`    | no       | Bundle target to use (if applicable)                                                         |
+| `--profile`   | no       | Databricks CLI profile name                                                                  |
 
 Scaling within the configured range happens without connection interruptions. Changing the min/max configuration may cause a brief interruption.
 
@@ -94,10 +169,17 @@ When a compute resumes, session context resets (temporary tables, prepared state
 
 Configure at the project level so new branches inherit the settings:
 
-```bash
+```bash title="Common"
+databricks postgres update-project \
+  projects/my-project \
+  "spec.default_endpoint_settings" \
+  --json '{"spec": {"default_endpoint_settings": {"suspend_timeout_duration": "300s"}}}'
+```
+
+```bash title="All Options"
 databricks postgres update-project \
   projects/$PROJECT_ID \
-  "spec.default_endpoint_settings" \
+  $UPDATE_MASK \
   --json '{
     "spec": {
       "default_endpoint_settings": {
@@ -106,8 +188,26 @@ databricks postgres update-project \
         "suspend_timeout_duration": "300s"
       }
     }
-  }'
+  }' \
+  --no-wait \
+  --timeout 10m \
+  --debug \
+  -o json \
+  --target $TARGET \
+  --profile $DATABRICKS_PROFILE
 ```
+
+| Option        | Required | Description                                              |
+| ------------- | -------- | -------------------------------------------------------- |
+| `NAME`        | yes      | Project resource path: `projects/{project_id}`           |
+| `UPDATE_MASK` | yes      | Fields to update (e.g. `spec.default_endpoint_settings`) |
+| `--json`      | yes      | JSON with new field values                               |
+| `--no-wait`   | no       | Return immediately with operation details                |
+| `--timeout`   | no       | Max time to wait for completion                          |
+| `--debug`     | no       | Enable debug logging                                     |
+| `-o json`     | no       | Output as JSON (default: text)                           |
+| `--target`    | no       | Bundle target to use (if applicable)                     |
+| `--profile`   | no       | Databricks CLI profile name                              |
 
 ## Long-running operations
 

@@ -10,12 +10,34 @@ Monitor, debug, and improve agents using MLflow tracing, evaluation, and Databri
 
 Create an experiment to store traces and evaluation results:
 
-```bash
-DATABRICKS_USERNAME=$(databricks current-user me --profile <PROFILE> -o json | jq -r .userName)
+```bash title="Common"
+DATABRICKS_USERNAME=$(databricks current-user me -o json | jq -r .userName)
 databricks experiments create-experiment \
-  /Users/$DATABRICKS_USERNAME/my-agent-experiment \
-  --profile <PROFILE>
+  /Users/$DATABRICKS_USERNAME/my-agent-experiment
 ```
+
+```bash title="All Options"
+DATABRICKS_USERNAME=$(databricks current-user me \
+  --profile $DATABRICKS_PROFILE -o json | jq -r .userName)
+databricks experiments create-experiment \
+  /Users/$DATABRICKS_USERNAME/$EXPERIMENT_NAME \
+  --artifact-location $ARTIFACT_LOCATION \
+  --json '{}' \
+  --debug \
+  -o json \
+  --target $TARGET \
+  --profile $DATABRICKS_PROFILE
+```
+
+| Option                | Required | Description                                           |
+| --------------------- | -------- | ----------------------------------------------------- |
+| `NAME`                | yes      | Experiment name (typically `/Users/<email>/<name>`)   |
+| `--artifact-location` | no       | Storage location for experiment artifacts             |
+| `--json`              | no       | Inline JSON or `@path/to/file.json` with request body |
+| `--debug`             | no       | Enable debug logging                                  |
+| `-o json`             | no       | Output as JSON (default: text)                        |
+| `--target`            | no       | Bundle target to use (if applicable)                  |
+| `--profile`           | no       | Databricks CLI profile name                           |
 
 Set the returned `experiment_id` in your `.env`:
 

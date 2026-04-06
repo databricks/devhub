@@ -8,9 +8,24 @@ AI Gateway is a governance and monitoring layer for model serving endpoints. It 
 
 ## List available endpoints
 
-```bash
-databricks serving-endpoints list --profile <PROFILE>
+```bash title="Common"
+databricks serving-endpoints list -o json
 ```
+
+```bash title="All Options"
+databricks serving-endpoints list \
+  --debug \
+  -o json \
+  --target $TARGET \
+  --profile $DATABRICKS_PROFILE
+```
+
+| Option      | Required | Description                          |
+| ----------- | -------- | ------------------------------------ |
+| `--debug`   | no       | Enable debug logging                 |
+| `-o json`   | no       | Output as JSON (default: text)       |
+| `--target`  | no       | Bundle target to use (if applicable) |
+| `--profile` | no       | Databricks CLI profile name          |
 
 Foundation Model API endpoints (prefixed `databricks-`) are available in most workspaces with AI Gateway built in. For example, `databricks-claude-sonnet-4-6`. Availability varies by workspace.
 
@@ -59,9 +74,25 @@ Foundation Model API endpoints (prefixed `databricks-`) are available in most wo
 
 ## Inspect an endpoint
 
-```bash
-databricks serving-endpoints get <endpoint-name> -o json --profile <PROFILE>
+```bash title="Common"
+databricks serving-endpoints get databricks-claude-sonnet-4-6 -o json
 ```
+
+```bash title="All Options"
+databricks serving-endpoints get $ENDPOINT_NAME \
+  --debug \
+  -o json \
+  --target $TARGET \
+  --profile $DATABRICKS_PROFILE
+```
+
+| Option      | Required | Description                          |
+| ----------- | -------- | ------------------------------------ |
+| `NAME`      | yes      | Serving endpoint name                |
+| `--debug`   | no       | Enable debug logging                 |
+| `-o json`   | no       | Output as JSON (default: text)       |
+| `--target`  | no       | Bundle target to use (if applicable) |
+| `--profile` | no       | Databricks CLI profile name          |
 
 Check for `ai_gateway` in the response to confirm AI Gateway is configured on the endpoint.
 
@@ -103,11 +134,38 @@ Check for `ai_gateway` in the response to confirm AI Gateway is configured on th
 
 ## Query an endpoint
 
-```bash
-databricks serving-endpoints query <endpoint-name> \
-  --json '{"messages": [{"role": "user", "content": "Hello"}], "max_tokens": 100}' \
-  --profile <PROFILE>
+```bash title="Common"
+databricks serving-endpoints query databricks-claude-sonnet-4-6 \
+  --json '{"messages": [{"role": "user", "content": "Hello"}], "max_tokens": 100}'
 ```
+
+```bash title="All Options"
+databricks serving-endpoints query $ENDPOINT_NAME \
+  --json '{"messages": [{"role": "user", "content": "Hello"}]}' \
+  --max-tokens 100 \
+  --temperature 0.7 \
+  --n 1 \
+  --stream \
+  --client-request-id $REQUEST_ID \
+  --debug \
+  -o json \
+  --target $TARGET \
+  --profile $DATABRICKS_PROFILE
+```
+
+| Option                | Required | Description                                           |
+| --------------------- | -------- | ----------------------------------------------------- |
+| `NAME`                | yes      | Serving endpoint name                                 |
+| `--json`              | no       | Inline JSON or `@path/to/file.json` with request body |
+| `--max-tokens`        | no       | Max tokens for completions and chat endpoints         |
+| `--temperature`       | no       | Sampling temperature                                  |
+| `--n`                 | no       | Number of candidates to generate                      |
+| `--stream`            | no       | Enable streaming responses                            |
+| `--client-request-id` | no       | Request identifier for inference/usage tables         |
+| `--debug`             | no       | Enable debug logging                                  |
+| `-o json`             | no       | Output as JSON (default: text)                        |
+| `--target`            | no       | Bundle target to use (if applicable)                  |
+| `--profile`           | no       | Databricks CLI profile name                           |
 
 <details>
 <summary>Example response</summary>
@@ -136,27 +194,62 @@ databricks serving-endpoints query <endpoint-name> \
 
 ## Create a serving endpoint
 
-```bash
-databricks serving-endpoints create <endpoint-name> \
+```bash title="Common"
+databricks serving-endpoints create my-model-endpoint \
   --json '{
     "config": {
       "served_entities": [
         {
-          "name": "<entity-name>",
-          "entity_name": "<foundation-model-or-registered-model>",
+          "name": "my-entity",
+          "entity_name": "my-registered-model",
           "workload_size": "Small",
           "scale_to_zero_enabled": true
         }
       ]
     }
-  }' \
-  --profile <PROFILE>
+  }'
 ```
+
+```bash title="All Options"
+databricks serving-endpoints create $ENDPOINT_NAME \
+  --json @$CONFIG_FILE \
+  --route-optimized \
+  --budget-policy-id $BUDGET_POLICY_ID \
+  --description "$DESCRIPTION" \
+  --no-wait \
+  --timeout 20m \
+  --debug \
+  -o json \
+  --target $TARGET \
+  --profile $DATABRICKS_PROFILE
+```
+
+| Option               | Required | Description                                                  |
+| -------------------- | -------- | ------------------------------------------------------------ |
+| `NAME`               | yes      | Endpoint name (alphanumeric, dashes, underscores)            |
+| `--json`             | yes      | Inline JSON or `@path/to/file.json` with endpoint config     |
+| `--route-optimized`  | no       | Enable route optimization                                    |
+| `--budget-policy-id` | no       | Budget policy to apply                                       |
+| `--description`      | no       | Endpoint description                                         |
+| `--no-wait`          | no       | Return immediately instead of waiting for NOT_UPDATING state |
+| `--timeout`          | no       | Max time to wait for completion (default: 20m)               |
+| `--debug`            | no       | Enable debug logging                                         |
+| `-o json`            | no       | Output as JSON (default: text)                               |
+| `--target`           | no       | Bundle target to use (if applicable)                         |
+| `--profile`          | no       | Databricks CLI profile name                                  |
 
 Wait for the endpoint to reach READY state:
 
-```bash
-databricks serving-endpoints get <endpoint-name> -o json --profile <PROFILE>
+```bash title="Common"
+databricks serving-endpoints get my-model-endpoint -o json
+```
+
+```bash title="All Options"
+databricks serving-endpoints get $ENDPOINT_NAME \
+  --debug \
+  -o json \
+  --target $TARGET \
+  --profile $DATABRICKS_PROFILE
 ```
 
 ## Governance features

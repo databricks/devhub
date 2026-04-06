@@ -4,6 +4,7 @@ import type * as Preset from "@docusaurus/preset-classic";
 import path from "path";
 import contentEntriesPlugin from "./plugins/content-entries";
 import llmsTxtPlugin from "./plugins/llms-txt";
+import remarkCliTabs from "./plugins/remark-cli-tabs";
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
@@ -45,6 +46,7 @@ const config: Config = {
       {
         docs: {
           sidebarPath: "./sidebars.ts",
+          remarkPlugins: [remarkCliTabs],
         },
         blog: false,
         theme: {

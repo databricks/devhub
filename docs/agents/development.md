@@ -76,12 +76,34 @@ For deployed apps, the platform injects `DATABRICKS_HOST`, `DATABRICKS_CLIENT_ID
 
 Create an experiment for agent tracing:
 
-```bash
-DATABRICKS_USERNAME=$(databricks current-user me --profile <PROFILE> -o json | jq -r .userName)
+```bash title="Common"
+DATABRICKS_USERNAME=$(databricks current-user me -o json | jq -r .userName)
 databricks experiments create-experiment \
-  /Users/$DATABRICKS_USERNAME/my-agent-experiment \
-  --profile <PROFILE>
+  /Users/$DATABRICKS_USERNAME/my-agent-experiment
 ```
+
+```bash title="All Options"
+DATABRICKS_USERNAME=$(databricks current-user me \
+  --profile $DATABRICKS_PROFILE -o json | jq -r .userName)
+databricks experiments create-experiment \
+  /Users/$DATABRICKS_USERNAME/$EXPERIMENT_NAME \
+  --artifact-location $ARTIFACT_LOCATION \
+  --json '{}' \
+  --debug \
+  -o json \
+  --target $TARGET \
+  --profile $DATABRICKS_PROFILE
+```
+
+| Option                | Required | Description                                           |
+| --------------------- | -------- | ----------------------------------------------------- |
+| `NAME`                | yes      | Experiment name (typically `/Users/<email>/<name>`)   |
+| `--artifact-location` | no       | Storage location for experiment artifacts             |
+| `--json`              | no       | Inline JSON or `@path/to/file.json` with request body |
+| `--debug`             | no       | Enable debug logging                                  |
+| `-o json`             | no       | Output as JSON (default: text)                        |
+| `--target`            | no       | Bundle target to use (if applicable)                  |
+| `--profile`           | no       | Databricks CLI profile name                           |
 
 Add the returned `experiment_id` to your `.env`:
 
@@ -118,13 +140,45 @@ Customize evaluation by editing `agent_server/evaluate_agent.py` to adjust the d
 
 The template uses [Databricks Asset Bundles](https://docs.databricks.com/aws/en/dev-tools/bundles/):
 
-```bash
-databricks bundle validate --profile <PROFILE>
-databricks bundle deploy --profile <PROFILE>
-databricks bundle run agent_openai_agents_sdk --profile <PROFILE>
+```bash title="Common"
+databricks bundle validate
+databricks bundle deploy
+databricks bundle run agent_openai_agents_sdk
 ```
 
-`bundle deploy` uploads files and configures resources. `bundle run` starts the app. Both are required for each update.
+```bash title="All Options"
+databricks bundle validate \
+  --strict \
+  --debug \
+  -o json \
+  --var "key=value" \
+  --target $TARGET \
+  --profile $DATABRICKS_PROFILE
+
+databricks bundle deploy \
+  --auto-approve \
+  --force-lock \
+  --force \
+  --fail-on-active-runs \
+  --cluster-id $CLUSTER_ID \
+  --plan $PLAN_FILE \
+  --debug \
+  -o json \
+  --var "key=value" \
+  --target $TARGET \
+  --profile $DATABRICKS_PROFILE
+
+databricks bundle run agent_openai_agents_sdk \
+  --no-wait \
+  --restart \
+  --debug \
+  -o json \
+  --var "key=value" \
+  --target $TARGET \
+  --profile $DATABRICKS_PROFILE
+```
+
+See [Deploy](/docs/agents/getting-started#deploy) for option tables for each command. `bundle deploy` uploads files and configures resources. `bundle run` starts the app. Both are required for each update.
 
 To grant access to additional resources (serving endpoints, Genie spaces, Vector Search), add them to `databricks.yml` and redeploy.
 
@@ -171,13 +225,64 @@ For streaming, add `"stream": true` to the request body.
 
 ## Managing the app
 
-```bash
-databricks apps get <app-name> -o json --profile <PROFILE>
-databricks apps logs <app-name> --profile <PROFILE>
-databricks apps stop <app-name> --profile <PROFILE>
-databricks apps start <app-name> --profile <PROFILE>
-databricks apps delete <app-name> --profile <PROFILE>
+```bash title="Common"
+databricks apps get agent-openai-agents-sdk -o json
+databricks apps logs agent-openai-agents-sdk
+databricks apps stop agent-openai-agents-sdk
+databricks apps start agent-openai-agents-sdk
+databricks apps delete agent-openai-agents-sdk
 ```
+
+```bash title="All Options"
+databricks apps get $APP_NAME \
+  --debug \
+  -o json \
+  --target $TARGET \
+  --var "key=value" \
+  --profile $DATABRICKS_PROFILE
+
+databricks apps logs $APP_NAME \
+  --follow \
+  --tail-lines 200 \
+  --timeout 5m \
+  --source APP \
+  --search "$SEARCH_TERM" \
+  --output-file $LOG_FILE \
+  --debug \
+  -o json \
+  --target $TARGET \
+  --var "key=value" \
+  --profile $DATABRICKS_PROFILE
+
+databricks apps stop $APP_NAME \
+  --no-wait \
+  --timeout 20m \
+  --debug \
+  -o json \
+  --target $TARGET \
+  --var "key=value" \
+  --profile $DATABRICKS_PROFILE
+
+databricks apps start $APP_NAME \
+  --no-wait \
+  --timeout 20m \
+  --debug \
+  -o json \
+  --target $TARGET \
+  --var "key=value" \
+  --profile $DATABRICKS_PROFILE
+
+databricks apps delete $APP_NAME \
+  --auto-approve \
+  --force-lock \
+  --debug \
+  -o json \
+  --target $TARGET \
+  --var "key=value" \
+  --profile $DATABRICKS_PROFILE
+```
+
+See [Apps development](/docs/apps/development) for option tables covering `get`, `logs`, `stop`, `start`, and `delete`. `apps delete` prompts for confirmation; pass `--auto-approve` in CI to skip the prompt.
 
 ## Related recipes
 

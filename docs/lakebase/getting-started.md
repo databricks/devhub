@@ -72,7 +72,7 @@ databricks postgres list-endpoints \
 | -------------- | -------- | ------------------------------------------------------------------ |
 | `PARENT`       | yes      | Branch resource path: `projects/{project_id}/branches/{branch_id}` |
 | `-o json`      | no       | Output as JSON (default: text)                                     |
-| `--page-size`  | no       | Max items per page                                                 |
+| `--page-size`  | no       | Max items per page; if set, must be at least `10`                  |
 | `--page-token` | no       | Pagination token for next page                                     |
 | `--debug`      | no       | Enable debug logging                                               |
 | `--target`     | no       | Bundle target to use (if applicable)                               |

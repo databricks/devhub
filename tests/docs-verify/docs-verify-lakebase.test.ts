@@ -196,31 +196,31 @@ describe("Lakebase workflow", { timeout: 600_000 }, () => {
     );
   });
 
-  test("list-branches with --page-size 1", () => {
+  test("list-branches with --page-size 10", () => {
     const output = run(
-      `databricks postgres list-branches projects/${PROJECT_ID} --page-size 1 -o json --profile ${PROFILE}`,
+      `databricks postgres list-branches projects/${PROJECT_ID} --page-size 10 -o json --profile ${PROFILE}`,
       { timeoutMs: 30_000 },
     );
     const parsed = JSON.parse(output);
-    expect(parsed.length).toBeLessThanOrEqual(1);
+    expect(parsed.length).toBeLessThanOrEqual(10);
   });
 
-  test("list-endpoints with --page-size 1", () => {
+  test("list-endpoints with --page-size 10", () => {
     const output = run(
-      `databricks postgres list-endpoints ${branchName} --page-size 1 -o json --profile ${PROFILE}`,
+      `databricks postgres list-endpoints ${branchName} --page-size 10 -o json --profile ${PROFILE}`,
       { timeoutMs: 30_000 },
     );
     const parsed = JSON.parse(output);
-    expect(parsed.length).toBeLessThanOrEqual(1);
+    expect(parsed.length).toBeLessThanOrEqual(10);
   });
 
-  test("list-databases with --page-size 1", () => {
+  test("list-databases with --page-size 10", () => {
     const output = run(
-      `databricks postgres list-databases ${branchName} --page-size 1 -o json --profile ${PROFILE}`,
+      `databricks postgres list-databases ${branchName} --page-size 10 -o json --profile ${PROFILE}`,
       { timeoutMs: 30_000 },
     );
     const parsed = JSON.parse(output);
-    expect(parsed.length).toBeLessThanOrEqual(1);
+    expect(parsed.length).toBeLessThanOrEqual(10);
   });
 
   test("update endpoint: set pg_settings (log slow queries)", () => {

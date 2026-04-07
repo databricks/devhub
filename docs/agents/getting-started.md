@@ -63,7 +63,7 @@ The agent server serves both the API (`/invocations`, `/responses`) and the chat
 
 ## Deploy
 
-The template uses [Databricks Asset Bundles](https://docs.databricks.com/aws/en/dev-tools/bundles/) for deployment. The `databricks.yml` in the template defines the app, resources, and permissions.
+The template uses [Declarative Automation Bundles](https://docs.databricks.com/aws/en/dev-tools/bundles/) for deployment. The `databricks.yml` in the template defines the app, resources, and permissions.
 
 Validate the configuration:
 
@@ -202,4 +202,4 @@ curl -X POST <app-url>/responses \
 
 - [Author an AI agent and deploy it on Databricks Apps](https://docs.databricks.com/aws/en/generative-ai/agent-framework/author-agent)
 - [Agent template repository](https://github.com/databricks/app-templates/tree/main/agent-openai-agents-sdk)
-- [Databricks Asset Bundles](https://docs.databricks.com/aws/en/dev-tools/bundles/)
+- [Declarative Automation Bundles](https://docs.databricks.com/aws/en/dev-tools/bundles/)

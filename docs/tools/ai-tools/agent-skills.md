@@ -37,7 +37,7 @@ The Databricks agent skills bundle includes:
 
 - `databricks`: core CLI/auth/profile and data exploration guidance
 - `databricks-apps`: Databricks Apps + AppKit development workflow
-- `databricks-jobs`: Lakeflow Jobs with Databricks Asset Bundles
+- `databricks-jobs`: Lakeflow Jobs with Declarative Automation Bundles
 - `databricks-pipelines`: Lakeflow Spark Declarative Pipelines patterns
 - `databricks-lakebase`: Lakebase Postgres project/branch/endpoint management
 

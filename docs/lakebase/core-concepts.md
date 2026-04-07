@@ -209,6 +209,10 @@ databricks postgres update-project \
 | `--target`    | no       | Bundle target to use (if applicable)                     |
 | `--profile`   | no       | Databricks CLI profile name                              |
 
+## Pagination
+
+`databricks postgres list-endpoints` accepts `--page-size` and `--page-token`. When you pass `--page-size`, the workspace API requires it to be **at least 10** (smaller values return an error). Omit the flag to use default paging behavior. Other `postgres list-*` commands document their own rules; see the [`postgres` command reference](https://docs.databricks.com/aws/en/dev-tools/cli/reference/postgres-commands).
+
 ## Long-running operations
 
 Create, update, and delete commands block until complete by default. Use `--no-wait` to return immediately and poll status:

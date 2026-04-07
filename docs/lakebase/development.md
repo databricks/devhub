@@ -106,6 +106,90 @@ databricks postgres delete-branch \
 | `--target`  | no       | Bundle target to use (if applicable)                               |
 | `--profile` | no       | Databricks CLI profile name                                        |
 
+## Declarative Automation Bundles
+
+Define Lakebase infrastructure as code in a `databricks.yml` file using [Databricks Declarative Automation Bundles](https://docs.databricks.com/aws/en/dev-tools/bundles/). This lets you version-control projects, branches, and endpoints alongside your application code.
+
+A bundle defines `postgres_projects`, `postgres_branches`, and `postgres_endpoints` under `resources`. Resources reference each other with `${resources.<type>.<key>.id}`, which resolves to the full resource name (e.g. `projects/my-lakebase-app`). Branches and their auto-created `primary` endpoint inherit `default_endpoint_settings` from the project.
+
+<details>
+<summary>Example <code>databricks.yml</code> with a project, dev branch, and read-only replica</summary>
+
+```yaml
+bundle:
+  name: my-lakebase-app
+
+resources:
+  postgres_projects:
+    my_app:
+      project_id: "my-lakebase-app"
+      display_name: "My Lakebase App"
+      pg_version: 17
+      history_retention_duration: "172800s"
+      default_endpoint_settings:
+        autoscaling_limit_min_cu: 0.5
+        autoscaling_limit_max_cu: 1.0
+        suspend_timeout_duration: "300s"
+        pg_settings:
+          log_min_duration_statement: "1000"
+
+  postgres_branches:
+    dev_branch:
+      parent: ${resources.postgres_projects.my_app.id}
+      branch_id: "dev"
+      no_expiry: true
+      is_protected: false
+
+  postgres_endpoints:
+    read_replica:
+      parent: ${resources.postgres_branches.dev_branch.id}
+      endpoint_id: "replica"
+      endpoint_type: "ENDPOINT_TYPE_READ_ONLY"
+      autoscaling_limit_min_cu: 0.5
+      autoscaling_limit_max_cu: 0.5
+```
+
+</details>
+
+### Validate and deploy
+
+```bash title="Common"
+databricks bundle validate
+databricks bundle deploy
+```
+
+```bash title="All Options"
+databricks bundle validate \
+  --strict \
+  --debug \
+  -o json \
+  --var "key=value" \
+  --target $TARGET \
+  --profile $DATABRICKS_PROFILE
+
+databricks bundle deploy \
+  --auto-approve \
+  --force-lock \
+  --debug \
+  -o json \
+  --var "key=value" \
+  --target $TARGET \
+  --profile $DATABRICKS_PROFILE
+```
+
+| Option           | Required | Description                                                       |
+| ---------------- | -------- | ----------------------------------------------------------------- |
+| `--strict`       | no       | Treat warnings as errors (validate only)                          |
+| `--auto-approve` | no       | Skip confirmation prompts (deploy only)                           |
+| `--force-lock`   | no       | Force acquisition of deployment lock (deploy only)                |
+| `--debug`        | no       | Enable debug logging                                              |
+| `-o json`        | no       | Output as JSON (default: text)                                    |
+| `--var`          | no       | Set values for bundle config variables (e.g. `--var="key=value"`) |
+| `--target`       | no       | Bundle target (e.g. `dev`, `prod`)                                |
+| `--profile`      | no       | Databricks CLI profile name                                       |
+
+`bundle deploy` is idempotent -- it creates new resources and updates existing ones to match the configuration. Unlike agents or apps, there is no `bundle run` step; Lakebase resources are active once deployed.
+
 ## All Lakebase recipes
 
 | Recipe                                                                                         | Description                                    |
@@ -122,3 +206,4 @@ databricks postgres delete-branch \
 - [AppKit Lakebase plugin](/docs/appkit/v0/plugins/lakebase)
 - [AppKit `@databricks/lakebase` README](https://github.com/databricks/appkit/blob/main/packages/lakebase/README.md)
 - [Lakebase Autoscaling](https://docs.databricks.com/aws/en/oltp/projects/)
+- [Declarative Automation Bundles](https://docs.databricks.com/aws/en/dev-tools/bundles/)

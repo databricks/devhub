@@ -1,7 +1,7 @@
 import { readdirSync } from "fs";
 import { resolve } from "path";
 
-export type ContentMarkdownSection = "recipes" | "solutions";
+export type ContentMarkdownSection = "recipes" | "solutions" | "cookbooks";
 
 function markdownDirectory(
   rootDir: string,

@@ -8,10 +8,10 @@ import { solutions } from "../src/lib/solutions/solutions";
 type EntryType = "recipe" | "solution";
 
 type ContentEntriesPluginOptions = {
-  id: "recipes" | "solutions";
-  entryType: EntryType;
-  routeBasePath: string;
-  contentSection: "recipes" | "solutions";
+  id: string;
+  entryType?: EntryType;
+  routeBasePath?: string;
+  contentSection: "recipes" | "solutions" | "cookbooks";
 };
 
 function createRouteModuleSource(entryType: EntryType, slug: string): string {
@@ -94,8 +94,11 @@ export default function contentEntriesPlugin(
         context.siteDir,
         options.contentSection,
       );
-      const registrySlugs = getRegistrySlugs(options.entryType);
-      assertSlugParity(options.entryType, contentSlugs, registrySlugs);
+
+      if (options.entryType && options.routeBasePath) {
+        const registrySlugs = getRegistrySlugs(options.entryType);
+        assertSlugParity(options.entryType, contentSlugs, registrySlugs);
+      }
 
       const rawMarkdownBySlug: Record<string, string> = {};
       for (const slug of contentSlugs) {
@@ -109,23 +112,23 @@ export default function contentEntriesPlugin(
       }
 
       setGlobalData({
-        entryType: options.entryType,
-        routeBasePath: options.routeBasePath,
         slugs: contentSlugs,
         rawMarkdownBySlug,
       });
 
-      for (const slug of contentSlugs) {
-        const modulePath = await createData(
-          `${options.id}-${slug}-route.tsx`,
-          createRouteModuleSource(options.entryType, slug),
-        );
+      if (options.entryType && options.routeBasePath) {
+        for (const slug of contentSlugs) {
+          const modulePath = await createData(
+            `${options.id}-${slug}-route.tsx`,
+            createRouteModuleSource(options.entryType, slug),
+          );
 
-        addRoute({
-          path: `${options.routeBasePath}/${slug}`,
-          component: modulePath,
-          exact: true,
-        });
+          addRoute({
+            path: `${options.routeBasePath}/${slug}`,
+            component: modulePath,
+            exact: true,
+          });
+        }
       }
     },
   };

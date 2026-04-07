@@ -95,6 +95,13 @@ const config: Config = {
         contentSection: "solutions",
       },
     ],
+    [
+      contentEntriesPlugin,
+      {
+        id: "cookbooks",
+        contentSection: "cookbooks",
+      },
+    ],
     llmsTxtPlugin,
   ],
 

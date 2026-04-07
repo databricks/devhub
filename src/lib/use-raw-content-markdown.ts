@@ -30,3 +30,11 @@ export function useRawSolutionMarkdown(slug: string): string | undefined {
   ) as ContentEntriesGlobalData;
   return data.rawMarkdownBySlug[slug];
 }
+
+export function useRawCookbookMarkdown(slug: string): string | undefined {
+  const data = usePluginData(
+    "docusaurus-plugin-content-entries",
+    "cookbooks",
+  ) as ContentEntriesGlobalData;
+  return data.rawMarkdownBySlug[slug];
+}

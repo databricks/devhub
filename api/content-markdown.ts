@@ -5,7 +5,8 @@ import { recipes, templates } from "../src/lib/recipes/recipes";
 import {
   buildTemplateMarkdownDocument,
   collectTemplateRecipeIds,
-} from "../src/lib/template-content";
+  parseTemplateMarkdown,
+} from "../src/lib/template-markdown";
 
 export type MarkdownSection = "docs" | "recipes" | "solutions" | "templates";
 
@@ -92,8 +93,36 @@ function readTemplateMarkdown(rootDir: string, slug: string): string {
     throw new Error(`Template page not found: "${slug}"`);
   }
 
+  if (template.id === "rag-chat-app-template") {
+    const cookbookPath = resolve(
+      rootDir,
+      "content",
+      "cookbooks",
+      "rag-chat-app-template.md",
+    );
+    const cookbookContent = readIfExists(cookbookPath);
+    if (!cookbookContent) {
+      throw new Error(
+        `Cookbook markdown not found at content/cookbooks/rag-chat-app-template.md`,
+      );
+    }
+    const blocks = parseTemplateMarkdown(cookbookContent);
+    const rawBySlug = Object.fromEntries(
+      collectTemplateRecipeIds(blocks).map((recipeId) => {
+        const recipe = recipes.find((entry) => entry.id === recipeId);
+        if (!recipe) {
+          throw new Error(`Recipe not found: "${recipeId}"`);
+        }
+
+        return [recipeId, readRecipeMarkdown(rootDir, recipeId)];
+      }),
+    );
+
+    return buildTemplateMarkdownDocument(template, rawBySlug, blocks);
+  }
+
   const rawBySlug = Object.fromEntries(
-    collectTemplateRecipeIds(template).map((recipeId) => {
+    template.recipeIds.map((recipeId) => {
       const recipe = recipes.find((entry) => entry.id === recipeId);
       if (!recipe) {
         throw new Error(`Recipe not found: "${recipeId}"`);

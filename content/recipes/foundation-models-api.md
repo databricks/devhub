@@ -98,7 +98,7 @@ result.pipeTextStreamToResponse(res);
 >
 > **Workspace ID**: AppKit auto-discovers this at runtime. For explicit setup, run `databricks api get /api/2.1/unity-catalog/current-metastore-assignment --profile <PROFILE>` and use the `workspace_id` field.
 
-See the [Streaming AI Chat recipe](/resources/ai-chat-app-template#streaming-ai-chat-with-model-serving) for a complete implementation.
+See the [Streaming AI Chat recipe](/resources/ai-chat-app#streaming-ai-chat-with-model-serving) for a complete implementation.
 
 ### 6. Test the endpoint
 

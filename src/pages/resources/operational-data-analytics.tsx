@@ -9,14 +9,12 @@ import LakebaseChangeDataFeedAutoscaling from "@site/content/recipes/lakebase-ch
 import SyncTablesAutoscaling from "@site/content/recipes/sync-tables-autoscaling.md";
 import MedallionArchitectureFromCdc from "@site/content/recipes/medallion-architecture-from-cdc.md";
 
-const template = templates.find(
-  (t) => t.id === "operational-data-analytics-template",
-);
+const template = templates.find((t) => t.id === "operational-data-analytics");
 
-export default function OperationalDataAnalyticsTemplatePage(): ReactNode {
+export default function OperationalDataAnalyticsPage(): ReactNode {
   const rawBySlug = useAllRawRecipeMarkdown();
   if (!template) {
-    throw new Error("Template operational-data-analytics-template not found");
+    throw new Error("Template operational-data-analytics not found");
   }
   const rawMarkdown = template.recipeIds
     .map((id) => rawBySlug[id])

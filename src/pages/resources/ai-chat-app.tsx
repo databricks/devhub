@@ -9,12 +9,12 @@ import LakebaseCreateInstance from "@site/content/recipes/lakebase-create-instan
 import LakebaseDataPersistence from "@site/content/recipes/lakebase-data-persistence.md";
 import LakebaseChatPersistence from "@site/content/recipes/lakebase-chat-persistence.md";
 
-const template = templates.find((t) => t.id === "ai-chat-app-template");
+const template = templates.find((t) => t.id === "ai-chat-app");
 
-export default function AiChatAppTemplatePage(): ReactNode {
+export default function AiChatAppPage(): ReactNode {
   const rawBySlug = useAllRawRecipeMarkdown();
   if (!template) {
-    throw new Error("Template ai-chat-app-template not found");
+    throw new Error("Template ai-chat-app not found");
   }
   const rawMarkdown = template.recipeIds
     .map((id) => rawBySlug[id])

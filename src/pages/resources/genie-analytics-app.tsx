@@ -3,15 +3,14 @@ import { TemplateDetail } from "@/components/templates/template-detail";
 import { templates } from "@/lib/recipes/recipes";
 import { useAllRawRecipeMarkdown } from "@/lib/use-raw-content-markdown";
 import DatabricksLocalBootstrap from "@site/content/recipes/databricks-local-bootstrap.md";
-import LakebaseCreateInstance from "@site/content/recipes/lakebase-create-instance.md";
-import LakebaseDataPersistence from "@site/content/recipes/lakebase-data-persistence.md";
+import GenieConversationalAnalytics from "@site/content/recipes/genie-conversational-analytics.md";
 
-const template = templates.find((t) => t.id === "data-app-template");
+const template = templates.find((t) => t.id === "genie-analytics-app");
 
-export default function DataAppTemplatePage(): ReactNode {
+export default function GenieAnalyticsAppPage(): ReactNode {
   const rawBySlug = useAllRawRecipeMarkdown();
   if (!template) {
-    throw new Error("Template data-app-template not found");
+    throw new Error("Template genie-analytics-app not found");
   }
   const rawMarkdown = template.recipeIds
     .map((id) => rawBySlug[id])
@@ -21,9 +20,7 @@ export default function DataAppTemplatePage(): ReactNode {
     <TemplateDetail template={template} rawMarkdown={rawMarkdown}>
       <DatabricksLocalBootstrap />
       <hr />
-      <LakebaseCreateInstance />
-      <hr />
-      <LakebaseDataPersistence />
+      <GenieConversationalAnalytics />
     </TemplateDetail>
   );
 }

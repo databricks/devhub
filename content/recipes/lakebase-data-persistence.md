@@ -2,7 +2,7 @@
 
 Add a managed Postgres database to your Databricks app using the Lakebase plugin. Covers schema setup, table creation, and full CRUD REST API routes.
 
-This recipe assumes you have already completed the [Create a Lakebase Instance](/resources/data-app-template#create-a-lakebase-instance) recipe and have the connection values (endpoint host, endpoint path, database resource path, and PostgreSQL database name) ready.
+This recipe assumes you have already completed the [Create a Lakebase Instance](/resources/app-with-lakebase#create-a-lakebase-instance) recipe and have the connection values (endpoint host, endpoint path, database resource path, and PostgreSQL database name) ready.
 
 The code examples below use a generic `items` resource as a placeholder. Replace `items` with your domain entity (products, orders, users, etc.) and adapt the schema columns to match your data model.
 
@@ -214,7 +214,7 @@ If you are the Lakebase project owner, `databricks_create_role` may fail with `r
 
 This gives you DML access (read/write) but not DDL (create/alter). The service principal remains the schema owner.
 
-If you already created tables locally, drop and recreate the schema so the service principal owns it, or add tables in a separate schema (the [Chat Persistence recipe](/resources/ai-chat-app-template#lakebase-chat-persistence) uses a `chat` schema for this reason).
+If you already created tables locally, drop and recreate the schema so the service principal owns it, or add tables in a separate schema (the [Chat Persistence recipe](/resources/ai-chat-app#lakebase-chat-persistence) uses a `chat` schema for this reason).
 :::
 
 #### Create `client/src/pages/ItemsPage.tsx`

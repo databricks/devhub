@@ -14,8 +14,8 @@ describe("detail markdown resolver", () => {
   });
 
   test("resolves template markdown", () => {
-    const markdown = getDetailMarkdown("templates", "base-app-template");
-    expect(markdown).toContain("# Base App Template");
+    const markdown = getDetailMarkdown("templates", "hello-world-app");
+    expect(markdown).toContain("# Hello World App");
     expect(markdown).toContain("## Databricks Local Bootstrap");
   });
 

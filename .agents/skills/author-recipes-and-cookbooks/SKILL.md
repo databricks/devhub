@@ -87,5 +87,5 @@ Treat each resource as both an execution prompt for agents and a learning guide 
 
 - Read `content/recipes/databricks-local-bootstrap.md` for recipe structure and tone.
 - Read `src/lib/recipes/recipes.ts` for recipe/template metadata contracts.
-- Read `src/pages/resources/data-app-template.tsx` for cookbook composition pattern.
+- Read `src/pages/resources/app-with-lakebase.tsx` for cookbook composition pattern.
 - Read `references/quality-checklist.md` before finalizing substantial additions.

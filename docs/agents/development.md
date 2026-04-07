@@ -288,9 +288,9 @@ See [Apps development](/docs/apps/development) for option tables covering `get`,
 
 | Recipe                                                                                                       | Description                                         |
 | ------------------------------------------------------------------------------------------------------------ | --------------------------------------------------- |
-| [Streaming AI Chat](/resources/ai-chat-app-template#streaming-ai-chat-with-model-serving)                    | Streaming chat with Model Serving and Vercel AI SDK |
-| [Query AI Gateway Endpoints](/resources/ai-chat-app-template#query-ai-gateway-endpoints)                     | Access foundation models through AI Gateway         |
-| [Lakebase Chat Persistence](/resources/ai-chat-app-template#lakebase-chat-persistence)                       | Persist chat sessions to Lakebase                   |
+| [Streaming AI Chat](/resources/ai-chat-app#streaming-ai-chat-with-model-serving)                             | Streaming chat with Model Serving and Vercel AI SDK |
+| [Query AI Gateway Endpoints](/resources/ai-chat-app#query-ai-gateway-endpoints)                              | Access foundation models through AI Gateway         |
+| [Lakebase Chat Persistence](/resources/ai-chat-app#lakebase-chat-persistence)                                | Persist chat sessions to Lakebase                   |
 | [Genie Conversational Analytics](/resources/analytics-dashboard-app-template#genie-conversational-analytics) | Natural language data queries with Genie            |
 
 ## Source of truth

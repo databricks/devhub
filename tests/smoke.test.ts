@@ -32,10 +32,12 @@ describe("production build smoke tests", () => {
     const expectedTemplates = [
       "/solutions",
       "/resources",
-      "/resources/base-app-template",
-      "/resources/ai-chat-app-template",
-      "/resources/data-app-template",
-      "/resources/genie-analytics-app-template",
+      "/resources/hello-world-app",
+      "/resources/ai-chat-app",
+      "/resources/app-with-lakebase",
+      "/resources/genie-analytics-app",
+      "/resources/lakebase-off-platform",
+      "/resources/operational-data-analytics",
     ];
 
     for (const path of expectedTemplates) {
@@ -73,5 +75,14 @@ describe("production build smoke tests", () => {
     for (const docPath of expectedDocPaths) {
       expect(text).toContain(docPath);
     }
+  });
+
+  test("raw-docs preserve CLI tab code blocks for markdown export", () => {
+    const text = readBuildFile("raw-docs/lakebase/core-concepts.md");
+    expect(text).toContain('title="Common"');
+    expect(text).toContain('title="All Options"');
+    expect(text).toContain("databricks postgres create-branch");
+    expect(text).toContain("databricks postgres update-branch");
+    expect(text).toContain("databricks postgres update-endpoint");
   });
 });

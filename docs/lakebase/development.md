@@ -6,7 +6,7 @@ title: Development
 
 ## On Databricks App Platform (AppKit)
 
-The [Lakebase Data Persistence](/resources/data-app-template#lakebase-data-persistence) recipe is the canonical guide for building Lakebase-backed apps with AppKit. It covers scaffolding, schema setup, CRUD routes, environment configuration, and deployment.
+The [Lakebase Data Persistence](/resources/app-with-lakebase#lakebase-data-persistence) recipe is the canonical guide for building Lakebase-backed apps with AppKit. It covers scaffolding, schema setup, CRUD routes, environment configuration, and deployment.
 
 Key points from the recipe:
 
@@ -50,11 +50,11 @@ For pool configuration, ORM access (`.pool`, `.getOrmConfig()`, `.getPgConfig()`
 
 ## Off-platform (AWS, Vercel, Netlify, etc.)
 
-The [Lakebase Off-Platform Template](/resources/lakebase-off-platform-template) is a complete cookbook for using Lakebase from apps hosted outside Databricks. It includes:
+The [Lakebase Off-Platform](/resources/lakebase-off-platform) cookbook is a complete guide for using Lakebase from apps hosted outside Databricks. It includes:
 
-- [Env Management](/resources/lakebase-off-platform-template#lakebase-env-management-for-off-platform-apps): how to obtain every connection value via CLI and validate with Zod
-- [Token Management](/resources/lakebase-off-platform-template#lakebase-token-management): cached workspace and Lakebase credential refresh (tokens expire in ~1 hour)
-- [Drizzle ORM](/resources/lakebase-off-platform-template#drizzle--lakebase-in-an-off-platform-app): connecting Drizzle to Lakebase with `pg` password callbacks and migration-time credentials
+- [Env Management](/resources/lakebase-off-platform#lakebase-env-management-for-off-platform-apps): how to obtain every connection value via CLI and validate with Zod
+- [Token Management](/resources/lakebase-off-platform#lakebase-token-management): cached workspace and Lakebase credential refresh (tokens expire in ~1 hour)
+- [Drizzle ORM](/resources/lakebase-off-platform#drizzle--lakebase-in-an-off-platform-app): connecting Drizzle to Lakebase with `pg` password callbacks and migration-time credentials
 
 ## Feature branches
 
@@ -110,12 +110,12 @@ databricks postgres delete-branch \
 
 | Recipe                                                                                         | Description                                    |
 | ---------------------------------------------------------------------------------------------- | ---------------------------------------------- |
-| [Create a Lakebase Instance](/resources/data-app-template#create-a-lakebase-instance)          | Provision a project, collect connection values |
-| [Lakebase Data Persistence](/resources/data-app-template#lakebase-data-persistence)            | Schema setup, CRUD routes, deploy workflow     |
-| [Lakebase Chat Persistence](/resources/ai-chat-app-template#lakebase-chat-persistence)         | Chat/message schema on Lakebase                |
+| [Create a Lakebase Instance](/resources/app-with-lakebase#create-a-lakebase-instance)          | Provision a project, collect connection values |
+| [Lakebase Data Persistence](/resources/app-with-lakebase#lakebase-data-persistence)            | Schema setup, CRUD routes, deploy workflow     |
+| [Lakebase Chat Persistence](/resources/ai-chat-app#lakebase-chat-persistence)                  | Chat/message schema on Lakebase                |
 | [Lakehouse Sync (Lakebase Change Data Feed)](/resources#lakebase-change-data-feed-autoscaling) | Sync Lakebase to Unity Catalog                 |
 | [Sync Tables](/resources#sync-tables-autoscaling)                                              | Unity Catalog to Lakebase                      |
-| [Lakebase Off-Platform Template](/resources/lakebase-off-platform-template)                    | Env, tokens, and Drizzle for off-platform apps |
+| [Lakebase Off-Platform](/resources/lakebase-off-platform)                                      | Env, tokens, and Drizzle for off-platform apps |
 
 ## Source of truth
 

@@ -55,7 +55,7 @@ For local development, get a short-lived workspace token:
 databricks auth token --profile <PROFILE> -o json
 ```
 
-Use the `access_token` field for `DATABRICKS_TOKEN`. This token expires after about one hour; the [Token Management](/resources/lakebase-off-platform-template#lakebase-token-management) recipe covers automated refresh.
+Use the `access_token` field for `DATABRICKS_TOKEN`. This token expires after about one hour; the [Token Management](/resources/lakebase-off-platform#lakebase-token-management) recipe covers automated refresh.
 
 For production, use OAuth M2M credentials (`DATABRICKS_CLIENT_ID` + `DATABRICKS_CLIENT_SECRET`) from a service principal configured in your workspace.
 

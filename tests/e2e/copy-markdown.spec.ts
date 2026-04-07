@@ -55,20 +55,20 @@ test.describe("copy markdown exports raw markdown on template pages", () => {
     page,
   }) => {
     await setupClipboardMock(page);
-    await page.goto("/resources/base-app-template");
+    await page.goto("/resources/hello-world-app");
 
     await clickCopyMarkdownAndWaitForToast(page);
 
     const copied = await getCopiedText(page);
     expect(copied).toContain("## Databricks Local Bootstrap");
     expect(copied).toContain("```bash");
-    expect(copied).toContain('title: "Base App Template"');
+    expect(copied).toContain('title: "Hello World App"');
     expect(copied).toContain("llms.txt");
   });
 
   test("multi-recipe template includes all recipes", async ({ page }) => {
     await setupClipboardMock(page);
-    await page.goto("/resources/data-app-template");
+    await page.goto("/resources/app-with-lakebase");
 
     await clickCopyMarkdownAndWaitForToast(page);
 
@@ -116,5 +116,19 @@ test.describe("copy markdown exports raw markdown on docs pages", () => {
     expect(response.status()).toBe(200);
     const text = await response.text();
     expect(text).toContain("# Getting Started");
+  });
+
+  test("docs page with CLI tabs includes both code variants in copied markdown", async ({
+    page,
+  }) => {
+    await setupClipboardMock(page);
+    await page.goto("/docs/lakebase/core-concepts");
+
+    await clickCopyMarkdownAndWaitForToast(page);
+
+    const copied = await getCopiedText(page);
+    expect(copied).toContain('title="Common"');
+    expect(copied).toContain('title="All Options"');
+    expect(copied).toContain("databricks postgres create-branch");
   });
 });

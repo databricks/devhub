@@ -300,7 +300,7 @@ const result = streamText({
 });
 ```
 
-See the [Streaming AI Chat recipe](/resources/ai-chat-app-template#streaming-ai-chat-with-model-serving) for the full implementation with auth helpers.
+See the [Streaming AI Chat recipe](/resources/ai-chat-app#streaming-ai-chat-with-model-serving) for the full implementation with auth helpers.
 
 ## Coding agent integrations (Beta)
 
@@ -312,11 +312,11 @@ See [Integrate with coding agents](https://docs.databricks.com/aws/en/ai-gateway
 
 ## Related recipes
 
-| Recipe                                                                                                        | Description                              |
-| ------------------------------------------------------------------------------------------------------------- | ---------------------------------------- |
-| [Query AI Gateway Endpoints](/resources/ai-chat-app-template#query-ai-gateway-endpoints)                      | Access foundation models with AppKit SDK |
-| [Streaming AI Chat](/resources/ai-chat-app-template#streaming-ai-chat-with-model-serving)                     | Streaming chat with Vercel AI SDK        |
-| [Create a Model Serving Endpoint](/resources/ai-chat-app-template#create-a-databricks-model-serving-endpoint) | Provision and test a new endpoint        |
+| Recipe                                                                                               | Description                              |
+| ---------------------------------------------------------------------------------------------------- | ---------------------------------------- |
+| [Query AI Gateway Endpoints](/resources/ai-chat-app#query-ai-gateway-endpoints)                      | Access foundation models with AppKit SDK |
+| [Streaming AI Chat](/resources/ai-chat-app#streaming-ai-chat-with-model-serving)                     | Streaming chat with Vercel AI SDK        |
+| [Create a Model Serving Endpoint](/resources/ai-chat-app#create-a-databricks-model-serving-endpoint) | Provision and test a new endpoint        |
 
 ## Source of truth
 

@@ -7,14 +7,12 @@ import LakebaseOffPlatformEnvManagement from "@site/content/recipes/lakebase-off
 import LakebaseTokenManagement from "@site/content/recipes/lakebase-token-management.md";
 import LakebaseDrizzleOffPlatform from "@site/content/recipes/lakebase-drizzle-off-platform.md";
 
-const template = templates.find(
-  (t) => t.id === "lakebase-off-platform-template",
-);
+const template = templates.find((t) => t.id === "lakebase-off-platform");
 
-export default function LakebaseOffPlatformTemplatePage(): ReactNode {
+export default function LakebaseOffPlatformPage(): ReactNode {
   const rawBySlug = useAllRawRecipeMarkdown();
   if (!template) {
-    throw new Error("Template lakebase-off-platform-template not found");
+    throw new Error("Template lakebase-off-platform not found");
   }
   const rawMarkdown = template.recipeIds
     .map((id) => rawBySlug[id])

@@ -1,0 +1,9 @@
+# Exclude local build output so Vercel always runs a fresh build
+build
+.docusaurus
+.cache-loader
+
+# Dev/test artifacts
+test-results
+playwright-report
+screenshots

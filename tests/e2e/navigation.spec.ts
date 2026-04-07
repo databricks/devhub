@@ -144,15 +144,15 @@ test.describe("home page link navigation", () => {
     expect(new URL(page.url()).pathname).toBe("/resources");
   });
 
-  test("template preview card navigates to /resources/base-app-template", async ({
+  test("template preview card navigates to /resources/hello-world-app", async ({
     page,
   }) => {
     await page.goto("/");
-    const link = page.locator('a[href="/resources/base-app-template"]');
+    const link = page.locator('a[href="/resources/hello-world-app"]');
     await link.waitFor({ state: "visible" });
     await link.click();
-    await page.waitForURL("**/resources/base-app-template");
-    expect(new URL(page.url()).pathname).toBe("/resources/base-app-template");
+    await page.waitForURL("**/resources/hello-world-app");
+    expect(new URL(page.url()).pathname).toBe("/resources/hello-world-app");
   });
 });
 
@@ -178,8 +178,8 @@ test.describe("solutions page navigation", () => {
 
 test.describe("resources page navigation", () => {
   const TEMPLATES = [
-    { path: "/resources/base-app-template" },
-    { path: "/resources/ai-chat-app-template" },
+    { path: "/resources/hello-world-app" },
+    { path: "/resources/ai-chat-app" },
   ];
 
   for (const { path } of TEMPLATES) {
@@ -226,7 +226,7 @@ test.describe("resource detail page navigation", () => {
   test('"All resources" back link navigates to /resources', async ({
     page,
   }) => {
-    await page.goto("/resources/base-app-template");
+    await page.goto("/resources/hello-world-app");
     await page.getByRole("link", { name: /All resources/ }).click();
     await page.waitForURL("**/resources");
     expect(new URL(page.url()).pathname).toBe("/resources");

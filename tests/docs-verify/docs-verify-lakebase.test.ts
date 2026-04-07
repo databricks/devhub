@@ -5,7 +5,7 @@ import { run, cli, cliJson } from "../helpers/scaffold-app";
 const sleepSync = (ms: number) =>
   Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
 
-const PROFILE = process.env.DATABRICKS_PROFILE;
+const PROFILE = process.env.DATABRICKS_PROFILE as string;
 if (!PROFILE) {
   throw new Error(
     "DATABRICKS_PROFILE env var is required. Set it to a configured CLI profile name.",
@@ -194,6 +194,33 @@ describe("Lakebase workflow", { timeout: 600_000 }, () => {
       "[lakebase] postgres database name:",
       databases[0].status.postgres_database,
     );
+  });
+
+  test("list-branches with --page-size 1", () => {
+    const output = run(
+      `databricks postgres list-branches projects/${PROJECT_ID} --page-size 1 -o json --profile ${PROFILE}`,
+      { timeoutMs: 30_000 },
+    );
+    const parsed = JSON.parse(output);
+    expect(parsed.length).toBeLessThanOrEqual(1);
+  });
+
+  test("list-endpoints with --page-size 1", () => {
+    const output = run(
+      `databricks postgres list-endpoints ${branchName} --page-size 1 -o json --profile ${PROFILE}`,
+      { timeoutMs: 30_000 },
+    );
+    const parsed = JSON.parse(output);
+    expect(parsed.length).toBeLessThanOrEqual(1);
+  });
+
+  test("list-databases with --page-size 1", () => {
+    const output = run(
+      `databricks postgres list-databases ${branchName} --page-size 1 -o json --profile ${PROFILE}`,
+      { timeoutMs: 30_000 },
+    );
+    const parsed = JSON.parse(output);
+    expect(parsed.length).toBeLessThanOrEqual(1);
   });
 
   test("update endpoint: set pg_settings (log slow queries)", () => {

@@ -138,7 +138,7 @@ Customize evaluation by editing `agent_server/evaluate_agent.py` to adjust the d
 
 ## Deploy
 
-The template uses [Databricks Asset Bundles](https://docs.databricks.com/aws/en/dev-tools/bundles/):
+The template uses [Declarative Automation Bundles](https://docs.databricks.com/aws/en/dev-tools/bundles/):
 
 ```bash title="Common"
 databricks bundle validate
@@ -299,4 +299,4 @@ See [Apps development](/docs/apps/development) for option tables covering `get`,
 - [Deploy an agent (Model Serving)](https://docs.databricks.com/aws/en/generative-ai/agent-framework/deploy-agent)
 - [Query an agent](https://docs.databricks.com/aws/en/generative-ai/agent-framework/query-agent)
 - [Agent template README](https://github.com/databricks/app-templates/tree/main/agent-openai-agents-sdk)
-- [Databricks Asset Bundles](https://docs.databricks.com/aws/en/dev-tools/bundles/)
+- [Declarative Automation Bundles](https://docs.databricks.com/aws/en/dev-tools/bundles/)

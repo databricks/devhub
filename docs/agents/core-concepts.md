@@ -55,7 +55,7 @@ The [`agent-openai-agents-sdk`](https://github.com/databricks/app-templates/tree
 
 ## Deployment targets
 
-**Databricks Apps** (recommended): full control over code, server, and deployment. Uses Databricks Asset Bundles (`databricks bundle deploy` + `databricks bundle run`). The `agent-openai-agents-sdk` template targets this path.
+**Databricks Apps** (recommended): full control over code, server, and deployment. Uses Declarative Automation Bundles (`databricks bundle deploy` + `databricks bundle run`). The `agent-openai-agents-sdk` template targets this path.
 
 **Model Serving** (alternate): register your agent in Unity Catalog and deploy with the Python API (`from databricks.agents import deploy`). Creates a managed serving endpoint. For new use cases, Databricks recommends Apps instead. See [Deploy an agent for generative AI](https://docs.databricks.com/aws/en/generative-ai/agent-framework/deploy-agent) for the Model Serving workflow.
 

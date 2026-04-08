@@ -199,6 +199,15 @@ export const recipes: Recipe[] = [
     services: ["Lakebase"],
     prerequisites: ["lakebase-token-management"],
   },
+  {
+    id: "volume-file-upload",
+    name: "Volume File Manager",
+    description:
+      "Add file upload, browsing, download, delete, file type validation, and CSV row preview to your Databricks app using Unity Catalog Volumes.",
+    tags: ["Volumes", "Unity Catalog", "Files", "Upload", "CSV"],
+    services: ["Unity Catalog"],
+    prerequisites: ["databricks-local-bootstrap"],
+  },
 ];
 
 const recipeIndex: Record<string, Recipe> = Object.fromEntries(
@@ -222,6 +231,7 @@ export const recipesInOrder: Recipe[] = [
   "lakebase-off-platform-env-management",
   "lakebase-token-management",
   "lakebase-drizzle-off-platform",
+  "volume-file-upload",
 ].map((recipeId) => {
   const recipe = recipeIndex[recipeId];
   if (!recipe) {

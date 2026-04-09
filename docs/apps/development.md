@@ -65,7 +65,7 @@ databricks apps deploy $APP_NAME \
 | `--var`              | no       | Set values for bundle config variables (e.g. `--var="key=value"`)                          |
 | `--profile`          | no       | Databricks CLI profile name                                                                |
 
-The CLI validates configuration, builds the project, uploads it, and starts the app. No `--source-code-path` is needed when deploying from a scaffolded AppKit project.
+The CLI validates configuration, builds the project, uploads it, and starts the app. By default it runs the same project validation as `databricks apps validate` (build, typecheck, lint); pass `--skip-validation` to skip that step. No `--source-code-path` is needed when deploying from a scaffolded AppKit project.
 
 ### Verify the deployment
 
@@ -229,6 +229,7 @@ Before deploying to production:
 - No files larger than 10 MB in the project
 - Secrets use `valueFrom` (never `value`)
 - `databricks.yml` declares all required resources
+- `databricks apps validate` succeeds (`--skip-tests` skips tests for a faster run)
 - `npm run build` succeeds locally
 
 ## CI/CD
@@ -301,6 +302,16 @@ databricks apps delete $APP_NAME \
 
 `apps delete` prompts for confirmation. Pass `--auto-approve` in CI to skip the prompt.
 
+## Troubleshooting
+
+For additional troubleshooting, see [Deploy apps](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/deploy#troubleshoot) and [Connect from local](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/connect-local).
+
+- **App fails to deploy**: Check logs for error messages, validate `app.yaml` syntax, and verify that secrets and environment variables in the `env` section resolve properly. Confirm all dependencies are included or installed.
+- **401 errors (authentication)**: Verify your token is valid (`databricks auth token --profile <PROFILE>`), hasn't expired, and includes the required OAuth scopes. Your token's scopes must be a superset of the scopes configured for the app's [user authorization](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/auth#user-authorization).
+- **403 errors (permission denied)**: Verify you have `CAN USE` permission on the app. Insufficient OAuth scopes can also cause 403s even with valid permissions.
+- **404 errors (app not found)**: Verify the app name and workspace URL are correct, the app is deployed and running, and the endpoint path exists.
+- **Git deployment fails**: For private repositories, verify the app's service principal has a Git credential configured. If deploying through CLI/API/DABs, create the app first, then add the Git credential.
+
 ## All app recipes
 
 | Recipe                                                                      | Description                                          |
@@ -312,7 +323,7 @@ databricks apps delete $APP_NAME \
 | [Streaming AI Chat](/resources/ai-chat-model-serving)                       | AI chat with Databricks Model Serving                |
 | [Query AI Gateway Endpoints](/resources/foundation-models-api)              | Call model serving endpoints from AppKit             |
 
-## Source of truth
+## Further reading
 
 - [Deploy a Databricks App](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/deploy)
 - [App runtime (app.yaml)](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/app-runtime)

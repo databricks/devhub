@@ -190,6 +190,15 @@ databricks bundle deploy \
 
 `bundle deploy` is idempotent -- it creates new resources and updates existing ones to match the configuration. Unlike agents or apps, there is no `bundle run` step; Lakebase resources are active once deployed.
 
+## Troubleshooting
+
+These issues usually involve **Databricks Apps configuration** (resources in `databricks.yml` and `app.yaml`) or **Postgres connectivity** to Lakebase. For how Lakebase is wired as an app resource and which environment variables are set, see [Add a Lakebase resource to a Databricks app](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/lakebase). For connection problems (including idle wake-up and endpoint format), see [Troubleshooting](https://docs.databricks.com/aws/en/oltp/projects/external-apps-connect#troubleshooting) in Connect external apps to Lakebase.
+
+- **`relation 'store' does not exist`**: Memory tables haven't been initialized. Run `await store.setup()` locally before deploying to create the required tables. For the stateful agent memory pattern, see [Debug a deployed AI agent: Memory storage](https://docs.databricks.com/aws/en/generative-ai/agent-framework/debug-agent#memory-storage).
+- **`Unable to resolve Lakebase instance`**: Verify `LAKEBASE_INSTANCE_NAME` uses `value` (not `valueFrom`) in `app.yaml` and matches the `instance_name` in `databricks.yml`.
+- **`permission denied for table`**: Add a `database` resource in `databricks.yml` with `permission: 'CAN_CONNECT_AND_CREATE'` and redeploy.
+- **Connection refused after period of inactivity**: Lakebase Autoscaling scales to zero when idle. The first connection after inactivity triggers a wake-up and may take a few seconds. If your connection library doesn't retry automatically, add a short retry loop.
+
 ## All Lakebase recipes
 
 | Recipe                                                                                         | Description                                    |
@@ -201,7 +210,7 @@ databricks bundle deploy \
 | [Sync Tables](/resources#sync-tables-autoscaling)                                              | Unity Catalog to Lakebase                      |
 | [Lakebase Off-Platform](/resources/lakebase-off-platform)                                      | Env, tokens, and Drizzle for off-platform apps |
 
-## Source of truth
+## Further reading
 
 - [AppKit Lakebase plugin](/docs/appkit/v0/plugins/lakebase)
 - [AppKit `@databricks/lakebase` README](https://github.com/databricks/appkit/blob/main/packages/lakebase/README.md)

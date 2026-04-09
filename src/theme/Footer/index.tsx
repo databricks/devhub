@@ -38,7 +38,7 @@ const FOOTER_SECTIONS: FooterSection[] = [
     items: [
       { label: "Get Started", to: "/docs/get-started/getting-started" },
       { label: "Agents", to: "/docs/agents/getting-started" },
-      { label: "AppKit", to: "/docs/appkit" },
+      { label: "AppKit", to: "/docs/apps/appkit" },
       { label: "Lakebase", to: "/docs/lakebase/getting-started" },
     ],
   },

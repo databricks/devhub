@@ -120,7 +120,16 @@ Medium is the default. Compute size is configured in the workspace UI (not avail
 | Crashed   | App failed to start or exited      |
 | Stopped   | App was manually stopped           |
 
-## Source of truth
+## Related cookbooks
+
+| Cookbook                                                  | Description                         |
+| --------------------------------------------------------- | ----------------------------------- |
+| [Hello World App](/resources/hello-world-app)             | Minimal AppKit app with CLI setup   |
+| [App with Lakebase](/resources/app-with-lakebase)         | CRUD app with Lakebase persistence  |
+| [AI Chat App](/resources/ai-chat-app)                     | Conversational AI with chat history |
+| [Lakebase Off-Platform](/resources/lakebase-off-platform) | Apps hosted outside Databricks      |
+
+## Further reading
 
 - [App key concepts](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/key-concepts)
 - [App runtime (app.yaml)](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/app-runtime)

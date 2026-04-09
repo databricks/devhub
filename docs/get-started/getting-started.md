@@ -58,7 +58,7 @@ The `/` lists the workspace root. If it returns results, your CLI is authenticat
 - [Agents](/docs/agents/getting-started): build and deploy AI agents
 - [Core Concepts](/docs/get-started/core-concepts): how the platform layers fit together
 
-## Source of truth
+## Further reading
 
 - [Install or update the Databricks CLI](https://docs.databricks.com/aws/en/dev-tools/cli/install)
 - [Authentication for the Databricks CLI](https://docs.databricks.com/aws/en/dev-tools/cli/authentication)

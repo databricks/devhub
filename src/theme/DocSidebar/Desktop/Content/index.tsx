@@ -71,10 +71,7 @@ function findCategoryByLabel(
 
 function isAppKitDocsPath(path: string): boolean {
   const normalizedPath = normalizePath(path);
-  return (
-    normalizedPath === "/docs/appkit" ||
-    normalizedPath.startsWith("/docs/appkit/")
-  );
+  return normalizedPath.startsWith("/docs/appkit/");
 }
 
 function getAppKitSidebarItems(sidebar: SidebarLikeItem[]): SidebarLikeItem[] {

@@ -40,7 +40,7 @@ export const pillars: Pillar[] = [
     subtitle: "Your code, deployed. No DevOps.",
     description:
       "Ship React, Python, or any framework as a managed app with built-in auth and serverless compute.",
-    link: "/docs/appkit",
+    link: "/docs/apps/appkit",
     icon: Server,
   },
 ];

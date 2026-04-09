@@ -104,7 +104,7 @@ If none of the templates are an exact fit, you can assemble a custom cookbook fr
 
 This is useful when you want to mix capabilities — like combining a data persistence layer with a conversational analytics interface, but without the AI chat component.
 
-## Source of truth
+## Further reading
 
 - [All templates and recipes](/resources)
 - [Databricks Apps documentation](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/)

@@ -156,7 +156,7 @@ For the full error reference, see [Debug a deployed AI agent](https://docs.datab
 - **`The provided MLFLOW_EXPERIMENT_ID does not exist`**: Verify `MLFLOW_TRACKING_URI` in `.env` uses the `databricks://PROFILE_NAME` format with your CLI profile name, not a raw URL.
 - **`Port already in use`**: Another process is using port 8000. Use `uv run start-app --port 8001` or stop the existing process.
 - **`Module not found`**: Dependencies aren't installed. Run `uv sync` to install.
-- **"An app with the same name already exists"**: The app was created outside of DABs. Bind it to your bundle:
+- **`An app with the same name already exists`**: The app was created outside of DABs. Bind it to your bundle:
 
   ```bash
   databricks bundle deployment bind agent_openai_agents_sdk <app-name> --auto-approve --profile <PROFILE>

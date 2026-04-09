@@ -65,7 +65,7 @@ databricks apps deploy $APP_NAME \
 | `--var`              | no       | Set values for bundle config variables (e.g. `--var="key=value"`)                          |
 | `--profile`          | no       | Databricks CLI profile name                                                                |
 
-The CLI validates configuration, builds the project, uploads it, and starts the app. No `--source-code-path` is needed when deploying from a scaffolded AppKit project.
+The CLI validates configuration, builds the project, uploads it, and starts the app. By default it runs the same project validation as `databricks apps validate` (build, typecheck, lint); pass `--skip-validation` to skip that step. No `--source-code-path` is needed when deploying from a scaffolded AppKit project.
 
 ### Verify the deployment
 
@@ -229,6 +229,7 @@ Before deploying to production:
 - No files larger than 10 MB in the project
 - Secrets use `valueFrom` (never `value`)
 - `databricks.yml` declares all required resources
+- `databricks apps validate` succeeds (`--skip-tests` skips tests for a faster run)
 - `npm run build` succeeds locally
 
 ## CI/CD

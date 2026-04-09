@@ -15,7 +15,11 @@ Choose AppKit when your app benefits from the following:
 - **Built-in authentication**: OAuth and service principal handling for both local development and deployed apps.
 - **Pre-built UI components**: Data tables, charts, dialogs, and layout components from `@databricks/appkit-ui`.
 
-Skip AppKit if you're building a Python app, using your own framework, or don't need plugin composition.
+:::tip[Building with Python?]
+
+AppKit targets TypeScript on Node.js. It does not apply to Python. Databricks Apps supports Python with frameworks such as Gradio, Streamlit, and Dash. Start from a [workspace template](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/create-app-template) or the [get-started tutorial](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/get-started).
+
+:::
 
 ## Scaffold an AppKit app
 
@@ -26,6 +30,16 @@ databricks apps init --name my-app --features lakebase,analytics
 Pass `--features` for the plugins your app needs. Use `databricks apps manifest` to inspect available plugins and their required resource fields before scaffolding.
 
 For the full `databricks apps init` option table, see [Apps Getting Started](/docs/apps/getting-started#scaffold-an-app).
+
+## Validate before deploy
+
+From your app project directory:
+
+```bash
+databricks apps validate --profile $DATABRICKS_PROFILE
+```
+
+See [Pre-deploy checklist](/docs/apps/development#pre-deploy-checklist) for options such as `--skip-tests` and how validation fits with `databricks apps deploy`.
 
 ## Docs CLI
 

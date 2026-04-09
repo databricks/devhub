@@ -53,6 +53,10 @@ agent-openai-agents-sdk/
   .env                  # Local config (not committed)
 ```
 
+:::tip[Not using the template?]
+The `uv run start-app` and `uv run start-server` commands are template convenience scripts. Under the hood, they start an [MLflow AgentServer](/docs/agents/core-concepts#agentserver). Any Python runner that starts AgentServer works. The project structure above is a convention, not a requirement.
+:::
+
 ## Environment variables
 
 Copy `.env.example` to `.env` and fill in your values:
@@ -74,44 +78,13 @@ For deployed apps, the platform injects `DATABRICKS_HOST`, `DATABRICKS_CLIENT_ID
 
 ## MLflow experiment
 
-Create an experiment for agent tracing:
-
-```bash title="Common"
-DATABRICKS_USERNAME=$(databricks current-user me -o json | jq -r .userName)
-databricks experiments create-experiment \
-  /Users/$DATABRICKS_USERNAME/my-agent-experiment
-```
-
-```bash title="All Options"
-DATABRICKS_USERNAME=$(databricks current-user me \
-  --profile $DATABRICKS_PROFILE -o json | jq -r .userName)
-databricks experiments create-experiment \
-  /Users/$DATABRICKS_USERNAME/$EXPERIMENT_NAME \
-  --artifact-location $ARTIFACT_LOCATION \
-  --json '{}' \
-  --debug \
-  -o json \
-  --target $TARGET \
-  --profile $DATABRICKS_PROFILE
-```
-
-| Option                | Required | Description                                           |
-| --------------------- | -------- | ----------------------------------------------------- |
-| `NAME`                | yes      | Experiment name (typically `/Users/<email>/<name>`)   |
-| `--artifact-location` | no       | Storage location for experiment artifacts             |
-| `--json`              | no       | Inline JSON or `@path/to/file.json` with request body |
-| `--debug`             | no       | Enable debug logging                                  |
-| `-o json`             | no       | Output as JSON (default: text)                        |
-| `--target`            | no       | Bundle target to use (if applicable)                  |
-| `--profile`           | no       | Databricks CLI profile name                           |
+Tracing requires an MLflow experiment. The `uv run quickstart` script creates one automatically. To create one manually or see all CLI options, see [Observability: MLflow experiment setup](/docs/agents/observability#mlflow-experiment-setup).
 
 Add the returned `experiment_id` to your `.env`:
 
 ```text
 MLFLOW_EXPERIMENT_ID=<experiment-id>
 ```
-
-The `uv run quickstart` script in [agent templates](/docs/agents/getting-started) creates this automatically.
 
 ## Adding tools
 
@@ -126,15 +99,9 @@ See [Agent Framework tools](https://docs.databricks.com/aws/en/generative-ai/age
 
 ## Evaluation
 
-Agent templates include a built-in evaluation suite:
+Run the built-in evaluation suite with `uv run agent-evaluate`. This executes `agent_server/evaluate_agent.py`, which simulates conversations and scores them with LLM judges. Customize test cases and scorers by editing that file.
 
-```bash
-uv run agent-evaluate
-```
-
-This executes `agent_server/evaluate_agent.py`, which uses a `ConversationSimulator` to generate multi-turn conversations from test cases, then scores each with LLM judges for relevance, safety, and other metrics. After completion, open the MLflow UI link to inspect results.
-
-Customize evaluation by editing `agent_server/evaluate_agent.py` to adjust the dataset and scorers.
+See [Observability: Evaluation](/docs/agents/observability#evaluation) for details about scorers, example output, and the full evaluation framework.
 
 ## Deploy
 
@@ -182,16 +149,23 @@ See [Deploy](/docs/agents/getting-started#deploy) for option tables for each com
 
 To grant access to additional resources (serving endpoints, Genie spaces, Vector Search), add them to `databricks.yml` and redeploy.
 
-### Common issues
+## Troubleshooting
 
-**"An app with the same name already exists"**: the app was created outside of DABs. Bind it to your bundle:
+For the full error reference, see [Debug a deployed AI agent](https://docs.databricks.com/aws/en/generative-ai/agent-framework/debug-agent).
 
-```bash
-databricks bundle deployment bind agent_openai_agents_sdk <app-name> --auto-approve --profile <PROFILE>
-databricks bundle deploy --profile <PROFILE>
-```
+- **`The provided MLFLOW_EXPERIMENT_ID does not exist`**: Verify `MLFLOW_TRACKING_URI` in `.env` uses the `databricks://PROFILE_NAME` format with your CLI profile name, not a raw URL.
+- **`Port already in use`**: Another process is using port 8000. Use `uv run start-app --port 8001` or stop the existing process.
+- **`Module not found`**: Dependencies aren't installed. Run `uv sync` to install.
+- **"An app with the same name already exists"**: The app was created outside of DABs. Bind it to your bundle:
 
-**App is running old code after deploy**: `bundle deploy` only uploads files. Run `databricks bundle run agent_openai_agents_sdk` to restart with the new code.
+  ```bash
+  databricks bundle deployment bind agent_openai_agents_sdk <app-name> --auto-approve --profile <PROFILE>
+  databricks bundle deploy --profile <PROFILE>
+  ```
+
+- **App is running old code after deploy**: `bundle deploy` only uploads files. Run `databricks bundle run agent_openai_agents_sdk` to restart with the new code.
+- **302 redirect when querying deployed app**: You're using a Personal Access Token (PAT). Apps require OAuth. Get a token with `databricks auth token --profile <PROFILE>`.
+- **Resource permission errors** (Genie, Vector Search, UC functions, serving endpoints): Add the resource to `databricks.yml` under `resources.apps.<name>.resources` with the appropriate permission, then redeploy.
 
 ## Querying deployed agents
 
@@ -286,14 +260,14 @@ See [Apps development](/docs/apps/development) for option tables covering `get`,
 
 ## Related recipes
 
-| Recipe                                                                                                       | Description                                         |
-| ------------------------------------------------------------------------------------------------------------ | --------------------------------------------------- |
-| [Streaming AI Chat](/resources/ai-chat-app#streaming-ai-chat-with-model-serving)                             | Streaming chat with Model Serving and Vercel AI SDK |
-| [Query AI Gateway Endpoints](/resources/ai-chat-app#query-ai-gateway-endpoints)                              | Access foundation models through AI Gateway         |
-| [Lakebase Chat Persistence](/resources/ai-chat-app#lakebase-chat-persistence)                                | Persist chat sessions to Lakebase                   |
-| [Genie Conversational Analytics](/resources/analytics-dashboard-app-template#genie-conversational-analytics) | Natural language data queries with Genie            |
+| Recipe                                                                                          | Description                                         |
+| ----------------------------------------------------------------------------------------------- | --------------------------------------------------- |
+| [Streaming AI Chat](/resources/ai-chat-app#streaming-ai-chat-with-model-serving)                | Streaming chat with Model Serving and Vercel AI SDK |
+| [Query AI Gateway Endpoints](/resources/ai-chat-app#query-ai-gateway-endpoints)                 | Access foundation models through AI Gateway         |
+| [Lakebase Chat Persistence](/resources/ai-chat-app#lakebase-chat-persistence)                   | Persist chat sessions to Lakebase                   |
+| [Genie Conversational Analytics](/resources/genie-analytics-app#genie-conversational-analytics) | Natural language data queries with Genie            |
 
-## Source of truth
+## Further reading
 
 - [Author an AI agent](https://docs.databricks.com/aws/en/generative-ai/agent-framework/author-agent)
 - [Deploy an agent (Model Serving)](https://docs.databricks.com/aws/en/generative-ai/agent-framework/deploy-agent)

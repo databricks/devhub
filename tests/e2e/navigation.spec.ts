@@ -37,7 +37,7 @@ test.describe("footer navigation", () => {
       label: "Get Started",
     },
     { href: "/docs/agents/getting-started", label: "Agents" },
-    { href: "/docs/appkit", label: "AppKit" },
+    { href: "/docs/apps/appkit", label: "AppKit" },
     { href: "/docs/lakebase/getting-started", label: "Lakebase" },
     { href: "/resources", label: "Templates" },
     { href: "/solutions", label: "Solutions" },
@@ -128,13 +128,13 @@ test.describe("home page link navigation", () => {
     expect(new URL(page.url()).pathname).toBe("/docs/agents/getting-started");
   });
 
-  test("pillar card Databricks Apps navigates to /docs/appkit", async ({
+  test("pillar card Databricks Apps navigates to /docs/apps/appkit", async ({
     page,
   }) => {
     await page.goto("/");
-    await page.locator('a[href="/docs/appkit"]').first().click();
-    await page.waitForURL("**/docs/appkit");
-    expect(new URL(page.url()).pathname).toBe("/docs/appkit");
+    await page.locator('a[href="/docs/apps/appkit"]').first().click();
+    await page.waitForURL("**/docs/apps/appkit");
+    expect(new URL(page.url()).pathname).toBe("/docs/apps/appkit");
   });
 
   test('"See all templates" navigates to /resources', async ({ page }) => {
@@ -251,7 +251,7 @@ test.describe("docs sidebar navigation", () => {
     { href: "/docs/lakebase/core-concepts" },
     { href: "/docs/lakebase/development" },
     { href: "/docs/tools/databricks-cli" },
-    { href: "/docs/tools/appkit" },
+    { href: "/docs/apps/appkit" },
     { href: "/docs/tools/ai-tools/agent-skills" },
     { href: "/docs/tools/ai-tools/docs-mcp-server" },
     { href: "/docs/appkit/v0" },

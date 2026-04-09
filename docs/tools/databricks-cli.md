@@ -136,7 +136,7 @@ databricks schemas list --help
 - DevHub **Common** examples assume a single default workspace profile. For CI, agents, and multi-workspace setups, pass `--profile` explicitly or set `DATABRICKS_CONFIG_PROFILE`
 - verify CLI command shape with `--help` instead of guessing flags
 
-## Source of truth
+## Further reading
 
 - [Install or update the Databricks CLI](https://docs.databricks.com/aws/en/dev-tools/cli/install)
 - [Authentication for the Databricks CLI](https://docs.databricks.com/aws/en/dev-tools/cli/authentication)

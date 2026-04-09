@@ -4,7 +4,7 @@ title: Getting Started
 
 # Getting Started
 
-Databricks agents are LLM-driven applications that can plan, call tools, and return structured output. This guide uses the [OpenAI Agents SDK](https://platform.openai.com/docs/guides/agents-sdk) with [MLflow ResponsesAgent](https://mlflow.org/docs/latest/genai/flavors/responses-agent-intro/) as its primary example, deployed to [Databricks Apps](/docs/apps/getting-started).
+Databricks agents are LLM-driven applications that can plan, call tools, and return structured output. Agents are deployed as [Databricks Apps](/docs/apps/getting-started) (see [how agents and apps relate](/docs/get-started/core-concepts#how-agents-and-apps-relate)). This guide uses the [OpenAI Agents SDK](https://platform.openai.com/docs/guides/agents-sdk) with [MLflow ResponsesAgent](/docs/agents/core-concepts#responsesagent) as its primary example.
 
 ## Prerequisites
 
@@ -23,6 +23,10 @@ cd app-templates/agent-openai-agents-sdk
 Or from the workspace UI: **+ New > App > Agents > Agent - OpenAI Agents SDK**.
 
 The template includes an agent with a code interpreter tool, a chat UI, MLflow tracing, and evaluation scaffolding.
+
+:::tip[Not using this template?]
+Use any framework (OpenAI Agents SDK, LangGraph, custom). The platform requirements are: implement [`ResponsesAgent`](/docs/agents/core-concepts#responsesagent), serve it with [`AgentServer`](/docs/agents/core-concepts#agentserver), and deploy with a [DAB bundle](https://docs.databricks.com/aws/en/dev-tools/bundles/). See [Core Concepts](/docs/agents/core-concepts) for the full contract.
+:::
 
 ## Run locally
 
@@ -191,6 +195,16 @@ curl -X POST <app-url>/responses \
   -d '{"input": [{"role": "user", "content": "hello"}]}'
 ```
 
+## Customize the template
+
+After verifying the deploy works, consider the following customizations:
+
+- **Change the system prompt**: Edit the `instructions` field in `agent_server/agent.py`.
+- **Swap the model**: Change the `model` parameter (for example, `databricks-claude-sonnet-4-5`, `databricks-meta-llama-4-maverick`).
+- **Add a tool**: Define a function with `@function_tool` in `agent_server/agent.py`, or connect an [MCP server](https://docs.databricks.com/aws/en/generative-ai/mcp/) for workspace tools. See [Development: Adding tools](/docs/agents/development#adding-tools).
+- **Add Lakebase memory**: Use the [stateful agents template](https://github.com/databricks/app-templates/tree/main/agent-openai-agents-sdk-short-term-memory) for persistent chat history.
+- **Grant resource access**: Add serving endpoints, Genie spaces, or Vector Search indexes to `databricks.yml` and redeploy.
+
 ## Next steps
 
 - [Core Concepts](/docs/agents/core-concepts): ResponsesAgent, tools, auth model, deployment targets
@@ -198,7 +212,14 @@ curl -X POST <app-url>/responses \
 - [AI Gateway](/docs/agents/ai-gateway): model endpoint governance, rate limits, usage tracking
 - [Observability](/docs/agents/observability): MLflow tracing, evaluation, production monitoring
 
-## Source of truth
+## Related recipes
+
+| Recipe                                                                              | Description                           |
+| ----------------------------------------------------------------------------------- | ------------------------------------- |
+| [Databricks Local Bootstrap](/resources/hello-world-app#databricks-local-bootstrap) | CLI install, auth, and scaffold setup |
+| [Streaming AI Chat](/resources/ai-chat-app#streaming-ai-chat-with-model-serving)    | Streaming chat with Model Serving     |
+
+## Further reading
 
 - [Author an AI agent and deploy it on Databricks Apps](https://docs.databricks.com/aws/en/generative-ai/agent-framework/author-agent)
 - [Agent template repository](https://github.com/databricks/app-templates/tree/main/agent-openai-agents-sdk)

@@ -104,5 +104,5 @@ The CLI wizard generates a plugin class, manifest, and resource declarations. Se
 
 - [AppKit plugins overview](/docs/appkit/v0/plugins)
 - [Plugin management CLI](/docs/appkit/v0/plugins/plugin-management)
-- [AppKit overview](/docs/tools/appkit)
+- [AppKit overview](/docs/apps/appkit)
 - [Apps development](/docs/apps/development)

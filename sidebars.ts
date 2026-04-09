@@ -161,6 +161,7 @@ const sidebars: SidebarsConfig = {
       items: [
         "apps/getting-started",
         "apps/core-concepts",
+        "apps/appkit",
         "apps/plugins",
         "apps/development",
       ],
@@ -179,7 +180,6 @@ const sidebars: SidebarsConfig = {
       label: "Tools",
       items: [
         "tools/databricks-cli",
-        "tools/appkit",
         {
           type: "category",
           label: "AI Tools",

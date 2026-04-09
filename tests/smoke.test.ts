@@ -64,12 +64,12 @@ describe("production build smoke tests", () => {
       "/docs/lakebase/getting-started",
       "/docs/lakebase/core-concepts",
       "/docs/lakebase/development",
-      "/docs/appkit",
+      "/docs/apps/appkit",
+      "/docs/appkit/v0",
+      "/docs/appkit/v0/plugins",
       "/docs/tools/databricks-cli",
-      "/docs/tools/appkit",
       "/docs/tools/ai-tools/agent-skills",
       "/docs/tools/ai-tools/docs-mcp-server",
-      "/docs/references/appkit",
     ];
 
     for (const docPath of expectedDocPaths) {

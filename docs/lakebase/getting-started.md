@@ -245,7 +245,24 @@ Each cookbook includes the [Create a Lakebase Instance](/resources/app-with-lake
 
 To scaffold manually with the CLI, run `databricks apps init` and select the **Lakebase** plugin when prompted. See [Apps Plugins](/docs/apps/plugins) for details.
 
-## Source of truth
+## Customize the template
+
+After deploying a Lakebase-backed app, consider the following customizations:
+
+- **Add tables**: Follow the [Lakebase Data Persistence](/resources/app-with-lakebase#lakebase-data-persistence) recipe to define schemas, generate types, and create CRUD routes.
+- **Add chat persistence**: Use the [Lakebase Chat Persistence](/resources/ai-chat-app#lakebase-chat-persistence) recipe to store conversations.
+- **Use feature branches**: Create isolated branches for development and testing. See [Development: Feature branches](/docs/lakebase/development#feature-branches).
+- **Sync data to/from Unity Catalog**: Use [Lakehouse Sync](/resources/app-with-lakebase#lakehouse-sync-change-data-feed-from-lakebase-autoscaling) or [Sync Tables](/resources/app-with-lakebase#sync-tables-to-lakebase-autoscaling).
+
+## Related cookbooks
+
+| Cookbook                                                  | Description                         |
+| --------------------------------------------------------- | ----------------------------------- |
+| [App with Lakebase](/resources/app-with-lakebase)         | CRUD app with Lakebase persistence  |
+| [AI Chat App](/resources/ai-chat-app)                     | Conversational AI with chat history |
+| [Lakebase Off-Platform](/resources/lakebase-off-platform) | Apps hosted outside Databricks      |
+
+## Further reading
 
 - [Lakebase Postgres](https://docs.databricks.com/aws/en/oltp)
 - [Get started with Lakebase Autoscaling](https://docs.databricks.com/aws/en/oltp/projects/get-started)

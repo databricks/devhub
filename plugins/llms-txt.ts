@@ -47,6 +47,7 @@ const SIDEBAR_SECTIONS: Array<{
     slugs: [
       "apps/getting-started",
       "apps/core-concepts",
+      "apps/appkit",
       "apps/plugins",
       "apps/development",
     ],
@@ -64,8 +65,8 @@ const SIDEBAR_SECTIONS: Array<{
   {
     title: "AppKit",
     description:
-      "TypeScript SDK and developer framework for building full-stack Databricks applications.",
-    slugs: ["appkit"],
+      "TypeScript SDK for building full-stack Databricks Apps with plugin-based architecture, type-safe data access, and pre-built UI components.",
+    slugs: ["apps/appkit", "appkit/v0/index", "appkit/v0/plugins/index"],
   },
   {
     title: "Tools",
@@ -73,15 +74,9 @@ const SIDEBAR_SECTIONS: Array<{
       "CLI, SDKs, agent skills, and MCP integrations for Databricks developer workflows.",
     slugs: [
       "tools/databricks-cli",
-      "tools/appkit",
       "tools/ai-tools/agent-skills",
       "tools/ai-tools/docs-mcp-server",
     ],
-  },
-  {
-    title: "References",
-    description: "API references and SDK documentation.",
-    slugs: ["references/appkit"],
   },
 ];
 

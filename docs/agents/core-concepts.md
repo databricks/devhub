@@ -59,7 +59,7 @@ The [`agent-openai-agents-sdk`](https://github.com/databricks/app-templates/tree
 
 **Model Serving** (alternate): register your agent in Unity Catalog and deploy with the Python API (`from databricks.agents import deploy`). Creates a managed serving endpoint. For new use cases, Databricks recommends Apps instead. See [Deploy an agent for generative AI](https://docs.databricks.com/aws/en/generative-ai/agent-framework/deploy-agent) for the Model Serving workflow.
 
-## Source of truth
+## Further reading
 
 - [Author an AI agent](https://docs.databricks.com/aws/en/generative-ai/agent-framework/author-agent)
 - [MLflow ResponsesAgent](https://mlflow.org/docs/latest/genai/flavors/responses-agent-intro/)

@@ -32,7 +32,7 @@ Agents provide reasoning and tool orchestration for conversational AI. AI Gatewa
 The Databricks CLI handles authentication, deployment, and workspace operations. AppKit is the TypeScript SDK for building Apps with a plugin-based architecture.
 
 - Install with `brew install databricks`, scaffold with `databricks apps init`
-- [Databricks CLI](/docs/tools/databricks-cli) | [AppKit](/docs/tools/appkit)
+- [Databricks CLI](/docs/tools/databricks-cli) | [AppKit](/docs/apps/appkit)
 
 ## How these layers connect
 
@@ -46,7 +46,15 @@ A typical app uses multiple layers together:
 
 Each layer has its own getting-started guide. Start with [Apps](/docs/apps/getting-started) if you want to ship a web application, [Lakebase](/docs/lakebase/getting-started) for database workloads, or [Agents](/docs/agents/getting-started) for conversational AI.
 
-## Source of truth
+## How agents and apps relate
+
+Agents are deployed **as** Apps. Databricks Apps is the hosting platform, and any web app (dashboards, data tools, custom UIs) can run there. An agent is a specific kind of app that wraps LLM-driven logic in an [MLflow ResponsesAgent](/docs/agents/core-concepts#responsesagent) served by [AgentServer](/docs/agents/core-concepts#agentserver), providing `/invocations` and `/responses` endpoints alongside an optional chat UI.
+
+Both agents and apps use the same deployment pipeline: `databricks bundle deploy` uploads code and configures resources, then `databricks bundle run` starts the app. Agent templates define the app in `databricks.yml`. There is no separate "agent deploy" command.
+
+The **Agents** docs cover authoring, tools, evaluation, and observability. The **Apps** docs cover the hosting platform: configuration, resources, environment variables, and compute. Use any framework (OpenAI Agents SDK, LangGraph, custom) as long as you implement the `ResponsesAgent` interface.
+
+## Further reading
 
 - [Databricks Apps](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/)
 - [Lakebase Postgres](https://docs.databricks.com/aws/en/oltp)

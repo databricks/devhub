@@ -86,6 +86,10 @@ uv run agent-evaluate
 
 This executes `agent_server/evaluate_agent.py`, which uses a `ConversationSimulator` to generate multi-turn conversations from test cases, then scores each conversation with LLM judges.
 
+:::tip[Not using the template?]
+`uv run agent-evaluate` is a template script that wraps `evaluate_agent.py`. Run evaluation directly with [`mlflow.evaluate()`](https://docs.databricks.com/aws/en/mlflow3/genai/eval-monitor/) against any `ResponsesAgent`.
+:::
+
 <details>
 <summary>Example output</summary>
 
@@ -135,7 +139,7 @@ These tables enable:
 
 See [AI Gateway](/docs/agents/ai-gateway) for enabling payload logging and usage tracking.
 
-## Source of truth
+## Further reading
 
 - [MLflow 3 for GenAI](https://docs.databricks.com/aws/en/mlflow3/genai/)
 - [App instrumentation (custom tracing)](https://docs.databricks.com/aws/en/mlflow3/genai/tracing/app-instrumentation/)

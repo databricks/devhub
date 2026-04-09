@@ -225,7 +225,15 @@ databricks postgres create-project my-project \
 databricks postgres get-operation projects/my-project/operations/<operation-id>
 ```
 
-## Source of truth
+## Related recipes
+
+| Recipe                                                                                                         | Description                                             |
+| -------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
+| [Sync Tables to Lakebase](/resources/app-with-lakebase#sync-tables-to-lakebase-autoscaling)                    | Sync Unity Catalog tables into Lakebase Autoscaling     |
+| [Lakehouse Sync (CDC)](/resources/app-with-lakebase#lakehouse-sync-change-data-feed-from-lakebase-autoscaling) | Change data feed from Lakebase to Unity Catalog         |
+| [Medallion Architecture from CDC](/resources/operational-data-analytics#medallion-architecture-from-cdc)       | Bronze/silver/gold pipeline from Lakehouse Sync history |
+
+## Further reading
 
 - [Lakebase Autoscaling](https://docs.databricks.com/aws/en/oltp/projects/)
 - [CLI reference for Lakebase](https://docs.databricks.com/aws/en/oltp/projects/cli)

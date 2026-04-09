@@ -318,7 +318,7 @@ See [Integrate with coding agents](https://docs.databricks.com/aws/en/ai-gateway
 | [Streaming AI Chat](/resources/ai-chat-app#streaming-ai-chat-with-model-serving)                     | Streaming chat with Vercel AI SDK        |
 | [Create a Model Serving Endpoint](/resources/ai-chat-app#create-a-databricks-model-serving-endpoint) | Provision and test a new endpoint        |
 
-## Source of truth
+## Further reading
 
 - [AI Gateway](https://docs.databricks.com/aws/en/ai-gateway/)
 - [AI Gateway for serving endpoints](https://docs.databricks.com/aws/en/ai-gateway/overview-serving-endpoints)

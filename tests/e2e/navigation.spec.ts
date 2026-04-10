@@ -181,6 +181,7 @@ test.describe("resources page navigation", () => {
     { path: "/resources/hello-world-app", kind: "guide" },
     { path: "/resources/ai-chat-app", kind: "guide" },
     { path: "/resources/agentic-support-console", kind: "example" },
+    { path: "/resources/saas-tracker", kind: "example" },
     { path: "/resources/databricks-local-bootstrap", kind: "guide" },
   ];
 

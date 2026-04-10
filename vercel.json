@@ -6,7 +6,7 @@
       "maxDuration": 30
     },
     "api/markdown.ts": {
-      "includeFiles": "{docs/**,content/solutions/**,content/recipes/**}",
+      "includeFiles": "{docs/**,content/solutions/**,content/recipes/**,content/examples/**}",
       "maxDuration": 30
     }
   },
@@ -21,7 +21,7 @@
     },
     {
       "source": "/resources/(.+)\\.md",
-      "destination": "/api/markdown?section=templates&slug=$1"
+      "destination": "/api/markdown?section=resources&slug=$1"
     },
     {
       "source": "/templates/(.+)\\.md",

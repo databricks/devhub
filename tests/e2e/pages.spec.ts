@@ -20,6 +20,10 @@ const PAGES = [
     title: "Agentic Support Console",
   },
   {
+    path: "/resources/saas-tracker",
+    title: "SaaS Subscription Tracker",
+  },
+  {
     path: "/resources/databricks-local-bootstrap",
     title: "Databricks Local Bootstrap",
   },

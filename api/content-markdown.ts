@@ -2,9 +2,15 @@ import { existsSync, readFileSync } from "fs";
 import { resolve } from "path";
 import { hasMarkdownSlug } from "../src/lib/content-markdown";
 import { expandMdxImports } from "../src/lib/expand-mdx";
-import { recipes, templates } from "../src/lib/recipes/recipes";
+import { examples, recipes, templates } from "../src/lib/recipes/recipes";
 
-export type MarkdownSection = "docs" | "recipes" | "solutions" | "templates";
+export type MarkdownSection =
+  | "docs"
+  | "recipes"
+  | "solutions"
+  | "examples"
+  | "templates"
+  | "resources";
 
 function recipeMarkdownPath(recipeId: string): string {
   return `content/recipes/${recipeId}.md`;
@@ -87,6 +93,53 @@ function readRecipeMarkdown(rootDir: string, slug: string): string {
   return content;
 }
 
+function readExampleMarkdown(rootDir: string, slug: string): string {
+  if (!hasMarkdownSlug(rootDir, "examples", slug)) {
+    throw new Error(`Example page not found: "${slug}"`);
+  }
+
+  const contentPath = resolve(rootDir, "content", "examples", `${slug}.md`);
+  const content = readIfExists(contentPath);
+  if (!content) {
+    throw new Error(
+      `Example markdown source missing for "${slug}" at content/examples/${slug}.md`,
+    );
+  }
+
+  const example = examples.find((e) => e.id === slug);
+  const lines: string[] = [];
+  if (example) {
+    lines.push(content.trim(), "");
+    if (example.initCommand) {
+      lines.push(
+        "## Quick start",
+        "",
+        "```bash",
+        example.initCommand,
+        "```",
+        "",
+      );
+    }
+    if (example.githubPath) {
+      lines.push(
+        `[View source on GitHub](https://github.com/databricks/devhub/tree/main/${example.githubPath})`,
+        "",
+      );
+    }
+    for (const recipeId of example.recipeIds) {
+      lines.push(`- [${recipeId}](/resources/${recipeId})`);
+    }
+    for (const templateId of example.templateIds) {
+      lines.push(`- [${templateId}](/resources/${templateId})`);
+    }
+    if (example.recipeIds.length > 0 || example.templateIds.length > 0) {
+      lines.push("");
+    }
+    return lines.join("\n");
+  }
+  return content;
+}
+
 function readTemplateMarkdown(rootDir: string, slug: string): string {
   const template = templates.find((entry) => entry.id === slug);
   if (!template) {
@@ -131,6 +184,20 @@ function readTemplateMarkdown(rootDir: string, slug: string): string {
   return lines.join("\n");
 }
 
+function readResourceMarkdown(rootDir: string, slug: string): string {
+  if (hasMarkdownSlug(rootDir, "recipes", slug)) {
+    return readRecipeMarkdown(rootDir, slug);
+  }
+  if (hasMarkdownSlug(rootDir, "examples", slug)) {
+    return readExampleMarkdown(rootDir, slug);
+  }
+  const template = templates.find((t) => t.id === slug);
+  if (template) {
+    return readTemplateMarkdown(rootDir, slug);
+  }
+  throw new Error(`Resource page not found: "${slug}"`);
+}
+
 export function getDetailMarkdown(
   section: MarkdownSection,
   rawSlug: string,
@@ -146,8 +213,12 @@ export function getDetailMarkdown(
       return readRecipeMarkdown(rootDir, slug);
     case "solutions":
       return readSolutionMarkdown(rootDir, slug);
+    case "examples":
+      return readExampleMarkdown(rootDir, slug);
     case "templates":
       return readTemplateMarkdown(rootDir, slug);
+    case "resources":
+      return readResourceMarkdown(rootDir, slug);
     default:
       throw new Error(`Unsupported section: "${section}"`);
   }

@@ -6,12 +6,14 @@ function parseSection(section: unknown): MarkdownSection {
     section === "docs" ||
     section === "recipes" ||
     section === "solutions" ||
-    section === "templates"
+    section === "examples" ||
+    section === "templates" ||
+    section === "resources"
   ) {
     return section;
   }
   throw new Error(
-    'Invalid section. Expected one of: "docs", "recipes", "solutions", "templates".',
+    'Invalid section. Expected one of: "docs", "recipes", "solutions", "examples", "templates", "resources".',
   );
 }
 

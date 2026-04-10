@@ -91,6 +91,17 @@ test.describe("copy markdown exports raw markdown on example pages", () => {
     expect(copied).toContain("Data Flow");
     expect(copied).toContain("Lakehouse Sync");
   });
+
+  test("saas-tracker example copies markdown content", async ({ page }) => {
+    await setupClipboardMock(page);
+    await page.goto("/resources/saas-tracker");
+
+    await clickCopyMarkdownAndWaitForToast(page);
+
+    const copied = await getCopiedText(page);
+    expect(copied).toContain("## SaaS Subscription Tracker");
+    expect(copied).toContain("Data Flow");
+  });
 });
 
 test.describe("copy markdown exports raw markdown on solution pages", () => {

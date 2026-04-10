@@ -4,36 +4,40 @@ title: Agent skills
 
 # Agent skills
 
-Agent skills are task-specific instruction files that AI coding assistants load to perform Databricks development tasks. They follow the open [Agent Skills](https://agentskills.io/) standard and package Databricks CLI workflows and platform knowledge for AI assistants.
-
-The Databricks skills live in [databricks/databricks-agent-skills](https://github.com/databricks/databricks-agent-skills).
+Agent skills are task-specific instruction files that AI coding assistants load to perform Databricks development tasks. The Databricks skills live in [databricks/databricks-agent-skills](https://github.com/databricks/databricks-agent-skills) and follow the open [agent skills standard](https://agentskills.io/).
 
 ## Install
 
-Install skills using the [Skills CLI](https://github.com/vercel-labs/skills):
+```bash
+databricks experimental aitools install
+```
+
+The CLI auto-detects installed coding agents (Claude Code, Cursor, Codex CLI, etc.) and symlinks skills into each agent's config directory from a shared canonical location (`~/.databricks/aitools/skills/`). By default skills install globally. Pass `--project` to scope them to the current project instead.
+
+| Option           | Description                                    |
+| ---------------- | ---------------------------------------------- |
+| `--global`       | Install globally (default)                     |
+| `--project`      | Install to project directory                   |
+| `--agents`       | Target specific agents (comma-separated)       |
+| `--skills`       | Install specific skills only (comma-separated) |
+| `--experimental` | Include experimental skills                    |
+
+## Manage
+
+```bash
+databricks experimental aitools update
+databricks experimental aitools list
+databricks experimental aitools uninstall
+```
+
+`update` fetches the latest release and auto-installs new skills from the manifest. Pass `--check` for a dry run, `--no-new` to skip new skills, or `--force` to re-download even if versions match. `uninstall` removes all skills, or pass `--skills` to remove specific ones. All three commands accept `--global` (default) and `--project` to control scope.
+
+## Other install methods
+
+The [Skills CLI](https://github.com/vercel-labs/skills) provides an alternative with interactive prompts:
 
 ```bash
 npx skills add databricks/databricks-agent-skills
-```
-
-The CLI prompts you to pick skills and agents interactively. Use `-y` to install all skills without prompts, and `-a` to target a specific agent:
-
-```bash
-npx skills add databricks/databricks-agent-skills -a claude-code -y
-```
-
-Verify installed skills with `npx skills list` and remove with `npx skills remove`.
-
-### Project vs global scope
-
-By default, skills install to the **project** (`./.agents/skills/`) and are committed with your code, with symlinks for each agent. Use `-g` for a **global** install (`~/.agents/skills/`) that applies across all projects.
-
-### Other install methods
-
-The Databricks CLI can also install skills globally across all detected agents:
-
-```bash
-databricks experimental aitools skills install
 ```
 
 Cursor also supports `/add-plugin databricks-skills` in chat.

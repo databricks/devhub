@@ -10,7 +10,7 @@ DevHub centers on [templates and recipes](/resources). These companion docs expl
 
 ## Prerequisites
 
-- Databricks CLI `v0.295+` with an [authenticated profile](/docs/tools/databricks-cli#authenticate)
+- Databricks CLI `v0.296+` with an [authenticated profile](/docs/tools/databricks-cli#authenticate)
 - [uv](https://docs.astral.sh/uv/getting-started/installation/) (Python package manager, requires Python 3.11+)
 - [jq](https://jqlang.org/) (optional, used in some examples)
 - Workspace with [Apps enabled](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/)

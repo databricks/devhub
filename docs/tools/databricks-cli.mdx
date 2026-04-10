@@ -1,0 +1,92 @@
+---
+title: Databricks CLI
+---
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+# Databricks CLI
+
+Command-line tool for workspace operations, app deployment, and automation. For the full command reference, see the [official CLI docs](https://docs.databricks.com/aws/en/dev-tools/cli/). If you start from a [template](/resources), the CLI is already part of that workflow.
+
+## Install
+
+DevHub guides assume version `0.296+`.
+
+<Tabs groupId="os">
+<TabItem value="mac-linux" label="macOS / Linux">
+
+```bash
+brew tap databricks/tap
+brew install databricks
+```
+
+</TabItem>
+<TabItem value="windows" label="Windows">
+
+```bash
+winget install Databricks.DatabricksCLI
+```
+
+</TabItem>
+<TabItem value="curl" label="curl (all platforms)">
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
+```
+
+On Windows, use WSL. If `/usr/local/bin` is not writable, rerun with `sudo`.
+
+</TabItem>
+</Tabs>
+
+## Authenticate
+
+Browser-based OAuth is the default for local use:
+
+```bash
+databricks auth login
+```
+
+Prompts for a profile name (defaults to DEFAULT), then opens a browser to authenticate and select a workspace. Credentials save to `~/.databrickscfg`.
+
+To target a specific workspace and name the profile:
+
+```bash
+databricks auth login --host <workspace-url> --profile <PROFILE>
+```
+
+Pass `--profile <PROFILE>` on subsequent commands when using named profiles.
+
+List saved profiles:
+
+```bash
+databricks auth profiles
+```
+
+For CI/CD, use OAuth client credentials or token-based auth (no browser step). See [CLI authentication](https://docs.databricks.com/aws/en/dev-tools/cli/authentication).
+
+## Data exploration
+
+The `experimental aitools` commands provide table discovery and ad-hoc SQL without manually wiring warehouse execution. Some subcommands use positional arguments instead of flags. Check `--help` for the exact syntax.
+
+```bash
+# Schema discovery
+databricks experimental aitools tools discover-schema <CATALOG>.<SCHEMA>.<TABLE> --profile <PROFILE>
+
+# Ad-hoc SQL
+databricks experimental aitools tools query "SELECT * FROM <CATALOG>.<SCHEMA>.<TABLE> LIMIT 10" --profile <PROFILE>
+
+# Warehouse lookup
+databricks experimental aitools tools get-default-warehouse --profile <PROFILE>
+```
+
+## Agent skills
+
+Install [agent skills](/docs/tools/ai-tools/agent-skills) to give AI coding assistants Databricks platform knowledge:
+
+```bash
+databricks experimental aitools install
+```
+
+By default, skills install globally. Pass `--project` to install into the current project instead. See the [agent skills page](/docs/tools/ai-tools/agent-skills) for all options.

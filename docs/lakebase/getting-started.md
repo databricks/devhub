@@ -10,7 +10,7 @@ DevHub centers on [templates and recipes](/resources). These companion docs expl
 
 ## Prerequisites
 
-- Databricks CLI `v0.295+` with an [authenticated profile](/docs/tools/databricks-cli#authenticate)
+- Databricks CLI `v0.296+` with an [authenticated profile](/docs/tools/databricks-cli#authenticate)
 - `psql` (PostgreSQL client) if using `databricks psql`. Alternatively, use `generate-database-credential` with any PostgreSQL client.
 - Workspace with Lakebase access enabled
 

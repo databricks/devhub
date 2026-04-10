@@ -82,6 +82,11 @@ export function expandMdxImports(content: string, filePath: string): string {
   }
 
   result = result.replace(/^[ \t]*<[A-Z]\w*(?:\s[^>]*)?\/>\s*$/gm, "");
+  result = result.replace(/^[ \t]*<[A-Z]\w*(?:\s[^>]*)?>[ \t]*$/gm, (match) => {
+    const label = match.match(/label="([^"]*)"/);
+    return label ? `### ${label[1]}` : "";
+  });
+  result = result.replace(/^[ \t]*<\/[A-Z]\w*>[ \t]*$/gm, "");
 
   result = result.replace(/\n{3,}/g, "\n\n");
 

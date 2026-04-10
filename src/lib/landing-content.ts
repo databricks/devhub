@@ -45,4 +45,6 @@ export const pillars: Pillar[] = [
   },
 ];
 
-export const landingTemplates: TemplatePreviewItem[] = templatePreviewItems;
+export const landingTemplates: TemplatePreviewItem[] = [
+  ...templatePreviewItems,
+].reverse();

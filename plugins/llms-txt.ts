@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import type { LoadContext, Plugin } from "@docusaurus/types";
 import { solutions } from "../src/lib/solutions/solutions";
+import { expandMdxImports } from "../src/lib/expand-mdx";
 
 type Section = {
   title: string;
@@ -202,7 +203,8 @@ function copyRawDocs(docsDir: string, destDir: string): void {
     if (entry.isDirectory()) {
       copyRawDocs(srcPath, dstPath);
     } else if (entry.name.endsWith(".md") || entry.name.endsWith(".mdx")) {
-      fs.copyFileSync(srcPath, dstPath);
+      const raw = fs.readFileSync(srcPath, "utf-8");
+      fs.writeFileSync(dstPath, expandMdxImports(raw, srcPath));
     }
   }
 }

@@ -1,6 +1,7 @@
 import { existsSync, readFileSync } from "fs";
 import { resolve } from "path";
 import { hasMarkdownSlug } from "../src/lib/content-markdown";
+import { expandMdxImports } from "../src/lib/expand-mdx";
 import { recipes, templates } from "../src/lib/recipes/recipes";
 
 export type MarkdownSection = "docs" | "recipes" | "solutions" | "templates";
@@ -43,13 +44,13 @@ function readDocsMarkdown(rootDir: string, slug: string): string {
     const directPath = resolve(docsDir, `${slug}${extension}`);
     const directContent = readIfExists(directPath);
     if (directContent) {
-      return directContent;
+      return expandMdxImports(directContent, directPath);
     }
 
     const indexPath = resolve(docsDir, slug, `index${extension}`);
     const indexContent = readIfExists(indexPath);
     if (indexContent) {
-      return indexContent;
+      return expandMdxImports(indexContent, indexPath);
     }
   }
 

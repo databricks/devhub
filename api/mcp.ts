@@ -2,6 +2,7 @@ import { createMcpHandler } from "mcp-handler";
 import { z } from "zod";
 import { readFileSync, existsSync } from "fs";
 import { resolve } from "path";
+import { expandMdxImports } from "../src/lib/expand-mdx";
 
 function getSiteUrl(): string {
   if (process.env.SITE_URL) return process.env.SITE_URL;
@@ -26,9 +27,13 @@ function validateDocSlug(slug: string): void {
 function readDocFile(slug: string): string | undefined {
   for (const ext of [".md", ".mdx"]) {
     const filePath = resolve(DOCS_DIR, slug + ext);
-    if (existsSync(filePath)) return readFileSync(filePath, "utf-8");
+    if (existsSync(filePath)) {
+      return expandMdxImports(readFileSync(filePath, "utf-8"), filePath);
+    }
     const indexPath = resolve(DOCS_DIR, slug, "index" + ext);
-    if (existsSync(indexPath)) return readFileSync(indexPath, "utf-8");
+    if (existsSync(indexPath)) {
+      return expandMdxImports(readFileSync(indexPath, "utf-8"), indexPath);
+    }
   }
   return undefined;
 }

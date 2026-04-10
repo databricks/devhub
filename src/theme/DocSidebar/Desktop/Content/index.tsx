@@ -183,7 +183,7 @@ export default function DocSidebarDesktopContent({
                   className="justify-start px-2"
                   asChild
                 >
-                  <Link to="/docs/get-started/getting-started">
+                  <Link to="/docs/start-here">
                     <ChevronLeft className="size-4" />
                     Back to main docs
                   </Link>

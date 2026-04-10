@@ -66,7 +66,7 @@ const handler = createMcpHandler(
           slug: z
             .string()
             .describe(
-              "The docs page slug (path) to fetch, e.g. 'get-started/getting-started'. Use list_docs_resources first to discover available slugs.",
+              "The docs page slug (path) to fetch, e.g. 'start-here'. Use list_docs_resources first to discover available slugs.",
             ),
         },
       },

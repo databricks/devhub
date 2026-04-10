@@ -116,7 +116,7 @@ const config: Config = {
         { to: "/solutions", label: "Solutions", position: "left" },
         { to: "/resources", label: "Resources", position: "left" },
         {
-          to: "/docs/get-started/getting-started",
+          to: "/docs/start-here",
           label: "Docs",
           position: "left",
         },
@@ -145,7 +145,7 @@ const config: Config = {
         {
           title: "Docs",
           items: [
-            { label: "Get Started", to: "/docs/get-started/getting-started" },
+            { label: "Start Here", to: "/docs/start-here" },
             { label: "Resources", to: "/resources" },
           ],
         },

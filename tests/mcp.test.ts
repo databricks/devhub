@@ -62,7 +62,7 @@ describe("MCP server handler", () => {
     const result = (await callMcp(
       rpc("tools/call", {
         name: "get_doc_resource",
-        arguments: { slug: "get-started/getting-started" },
+        arguments: { slug: "start-here" },
       }),
     )) as { result: { content: Array<{ text: string }>; isError: boolean } };
     expect(result.result.isError).toBeFalsy();

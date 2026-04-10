@@ -3,7 +3,7 @@ import { getDetailMarkdown } from "../api/content-markdown";
 
 describe("detail markdown resolver", () => {
   test("resolves docs markdown", () => {
-    const markdown = getDetailMarkdown("docs", "get-started/getting-started");
+    const markdown = getDetailMarkdown("docs", "start-here");
     expect(markdown).toContain("---");
     expect(markdown).toContain("title:");
   });

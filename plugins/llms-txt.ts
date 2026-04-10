@@ -19,14 +19,10 @@ const SIDEBAR_SECTIONS: Array<{
   slugs: string[];
 }> = [
   {
-    title: "Get Started",
+    title: "Start Here",
     description:
-      "First-time setup: local environment, first app deployment, and platform concepts.",
-    slugs: [
-      "get-started/getting-started",
-      "get-started/your-first-app",
-      "get-started/core-concepts",
-    ],
+      "Site orientation: what DevHub is, how to use templates, and where to find companion docs.",
+    slugs: ["start-here"],
   },
   {
     title: "Agents",

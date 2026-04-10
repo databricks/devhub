@@ -99,23 +99,20 @@ test.describe("copy markdown exports raw markdown on docs pages", () => {
     page,
   }) => {
     await setupClipboardMock(page);
-    await page.goto("/docs/get-started/getting-started");
+    await page.goto("/docs/start-here");
 
     await clickCopyMarkdownAndWaitForToast(page);
 
     const copied = await getCopiedText(page);
-    expect(copied).toContain("# Getting Started");
-    expect(copied).toContain("## Prerequisites");
-    expect(copied).toContain("llms.txt");
+    expect(copied).toContain("# Start here");
+    expect(copied).toContain("## Pick a template");
   });
 
   test("raw-docs static files are served", async ({ request }) => {
-    const response = await request.get(
-      "/raw-docs/get-started/getting-started.md",
-    );
+    const response = await request.get("/raw-docs/start-here.md");
     expect(response.status()).toBe(200);
     const text = await response.text();
-    expect(text).toContain("# Getting Started");
+    expect(text).toContain("# Start here");
   });
 
   test("docs page with CLI tabs includes both code variants in copied markdown", async ({

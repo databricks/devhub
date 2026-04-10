@@ -4,7 +4,7 @@ title: Getting Started
 
 # Getting Started
 
-Databricks agents are LLM-driven applications that can plan, call tools, and return structured output. Agents are deployed as [Databricks Apps](/docs/apps/getting-started) (see [how agents and apps relate](/docs/get-started/core-concepts#how-agents-and-apps-relate)). This guide uses the [OpenAI Agents SDK](https://platform.openai.com/docs/guides/agents-sdk) with [MLflow ResponsesAgent](/docs/agents/core-concepts#responsesagent) as its primary example.
+Databricks agents are LLM-driven applications that can plan, call tools, and return structured output. Agents are deployed as [Databricks Apps](/docs/apps/getting-started). This guide uses the [OpenAI Agents SDK](https://platform.openai.com/docs/guides/agents-sdk) with [MLflow ResponsesAgent](/docs/agents/core-concepts#responsesagent) as its primary example.
 
 ## Prerequisites
 

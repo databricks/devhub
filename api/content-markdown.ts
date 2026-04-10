@@ -223,3 +223,9 @@ export function getDetailMarkdown(
       throw new Error(`Unsupported section: "${section}"`);
   }
 }
+
+export function appendLlmsFooter(markdown: string, host: string): string {
+  const protocol = host.startsWith("localhost") ? "http" : "https";
+  const llmsUrl = `${protocol}://${host}/llms.txt`;
+  return `${markdown.trimEnd()}\n\n---\nFull documentation: ${llmsUrl}\n`;
+}

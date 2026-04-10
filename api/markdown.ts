@@ -1,5 +1,9 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { getDetailMarkdown, type MarkdownSection } from "./content-markdown";
+import {
+  appendLlmsFooter,
+  getDetailMarkdown,
+  type MarkdownSection,
+} from "./content-markdown";
 
 function parseSection(section: unknown): MarkdownSection {
   if (
@@ -29,9 +33,7 @@ export default function handler(req: VercelRequest, res: VercelResponse): void {
     const slug = String(req.query.slug || "");
     const markdown = getDetailMarkdown(section, slug);
     const host = req.headers.host ?? "dev.databricks.com";
-    const protocol = host.startsWith("localhost") ? "http" : "https";
-    const llmsUrl = `${protocol}://${host}/llms.txt`;
-    const withFooter = `${markdown.trimEnd()}\n\n---\nFull documentation: ${llmsUrl}\n`;
+    const withFooter = appendLlmsFooter(markdown, host);
 
     res.setHeader("Content-Type", "text/markdown; charset=utf-8");
     res.setHeader("Cache-Control", "public, max-age=0, s-maxage=600");

@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { getDetailMarkdown } from "../api/content-markdown";
+import { appendLlmsFooter, getDetailMarkdown } from "../api/content-markdown";
 
 describe("detail markdown resolver", () => {
   test("resolves docs markdown", () => {
@@ -82,6 +82,73 @@ describe("example markdown includes metadata", () => {
     const markdown = getDetailMarkdown("examples", "agentic-support-console");
     expect(markdown).toContain("/resources/operational-data-analytics");
     expect(markdown).toContain("/resources/genie-conversational-analytics");
+  });
+});
+
+describe("appendLlmsFooter appends llms.txt reference", () => {
+  test("appends footer with https for production host", () => {
+    const result = appendLlmsFooter("# Hello", "dev.databricks.com");
+    expect(result).toBe(
+      "# Hello\n\n---\nFull documentation: https://dev.databricks.com/llms.txt\n",
+    );
+  });
+
+  test("appends footer with http for localhost", () => {
+    const result = appendLlmsFooter("# Hello", "localhost:3001");
+    expect(result).toBe(
+      "# Hello\n\n---\nFull documentation: http://localhost:3001/llms.txt\n",
+    );
+  });
+
+  test("trims trailing whitespace from markdown before appending", () => {
+    const result = appendLlmsFooter("content\n\n\n", "dev.databricks.com");
+    expect(result).toMatch(/^content\n\n---\n/);
+    expect(result).not.toMatch(/content\n\n\n\n/);
+  });
+
+  const LLMS_FOOTER =
+    "---\nFull documentation: https://dev.databricks.com/llms.txt\n";
+
+  test("docs markdown with footer ends with llms.txt link", () => {
+    const markdown = getDetailMarkdown("docs", "start-here");
+    const withFooter = appendLlmsFooter(markdown, "dev.databricks.com");
+    expect(withFooter).toContain("title:");
+    expect(withFooter.endsWith(LLMS_FOOTER)).toBe(true);
+  });
+
+  test("recipe markdown with footer ends with llms.txt link", () => {
+    const markdown = getDetailMarkdown("recipes", "databricks-local-bootstrap");
+    const withFooter = appendLlmsFooter(markdown, "dev.databricks.com");
+    expect(withFooter).toContain("## Databricks Local Bootstrap");
+    expect(withFooter.endsWith(LLMS_FOOTER)).toBe(true);
+  });
+
+  test("example markdown with footer ends with llms.txt link", () => {
+    const markdown = getDetailMarkdown("examples", "agentic-support-console");
+    const withFooter = appendLlmsFooter(markdown, "dev.databricks.com");
+    expect(withFooter).toContain("## Agentic Support Console");
+    expect(withFooter.endsWith(LLMS_FOOTER)).toBe(true);
+  });
+
+  test("template markdown with footer ends with llms.txt link", () => {
+    const markdown = getDetailMarkdown("templates", "hello-world-app");
+    const withFooter = appendLlmsFooter(markdown, "dev.databricks.com");
+    expect(withFooter).toContain("# Hello World App");
+    expect(withFooter.endsWith(LLMS_FOOTER)).toBe(true);
+  });
+
+  test("solution markdown with footer ends with llms.txt link", () => {
+    const markdown = getDetailMarkdown("solutions", "devhub-launch");
+    const withFooter = appendLlmsFooter(markdown, "dev.databricks.com");
+    expect(withFooter).toContain("# Introducing dev.databricks.com");
+    expect(withFooter.endsWith(LLMS_FOOTER)).toBe(true);
+  });
+
+  test("resources meta-section with footer ends with llms.txt link", () => {
+    const markdown = getDetailMarkdown("resources", "agentic-support-console");
+    const withFooter = appendLlmsFooter(markdown, "dev.databricks.com");
+    expect(withFooter).toContain("## Agentic Support Console");
+    expect(withFooter.endsWith(LLMS_FOOTER)).toBe(true);
   });
 });
 

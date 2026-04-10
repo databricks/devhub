@@ -6,6 +6,8 @@ title: Getting started
 
 [Lakebase Postgres](https://docs.databricks.com/aws/en/oltp) is Databricks managed PostgreSQL for OLTP workloads that need low-latency, transactional access alongside your Lakehouse data.
 
+DevHub centers on [templates and recipes](/resources). These companion docs explain Lakebase when you need platform detail beyond a template. For how the site fits together, see [Start here](/docs/start-here).
+
 ## Prerequisites
 
 - Databricks CLI `v0.295+` with an [authenticated profile](/docs/tools/databricks-cli#authenticate)

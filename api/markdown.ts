@@ -28,10 +28,14 @@ export default function handler(req: VercelRequest, res: VercelResponse): void {
     const section = parseSection(req.query.section);
     const slug = String(req.query.slug || "");
     const markdown = getDetailMarkdown(section, slug);
+    const host = req.headers.host ?? "dev.databricks.com";
+    const protocol = host.startsWith("localhost") ? "http" : "https";
+    const llmsUrl = `${protocol}://${host}/llms.txt`;
+    const withFooter = `${markdown.trimEnd()}\n\n---\nFull documentation: ${llmsUrl}\n`;
 
     res.setHeader("Content-Type", "text/markdown; charset=utf-8");
     res.setHeader("Cache-Control", "public, max-age=0, s-maxage=600");
-    res.status(200).send(markdown);
+    res.status(200).send(withFooter);
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     res.status(404).json({ error: message });

@@ -1,5 +1,7 @@
 # Dependencies
-/node_modules
+node_modules
+bun.lockb
+bun.lock
 
 # Production
 /build
@@ -28,6 +30,3 @@ yarn-error.log*
 # Screenshots
 /screenshots
 .vercel
-
-# Dry run test folder
-/dry-run

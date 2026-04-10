@@ -19,7 +19,11 @@ For every change to DevHub, do the following:
 - use the `seo-audit` skill to verify all changes are SEO-friendly
 - use the `frontend-design` skill to verify all changes adhere to the design principles
 - run `npm run build` to verify build is successful
-- run `bun run test` to run smoke tests (builds, serves, verifies sitemap.xml, robots.txt, and llms.txt)
+- run `npm run test` to run smoke tests (builds, serves, verifies sitemap.xml, robots.txt, and llms.txt)
+
+## Package Manager
+
+This repository uses **npm** exclusively. Do not use bun, yarn, or pnpm. All scripts, CI, and documentation assume npm/npx.
 
 ## DevHub Coding Guidelines
 

@@ -38,7 +38,7 @@ npm run typecheck
 5. Run smoke tests (builds production site, serves it, verifies sitemap, robots.txt, and llms.txt):
 
 ```bash
-bun run test
+npm run test
 ```
 
 ## Useful Scripts

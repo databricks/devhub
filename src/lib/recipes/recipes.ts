@@ -419,4 +419,16 @@ export const examples: Example[] = [
     templateIds: ["operational-data-analytics", "app-with-lakebase"],
     recipeIds: ["genie-conversational-analytics", "foundation-models-api"],
   }),
+  createExample({
+    id: "saas-tracker",
+    name: "SaaS Subscription Tracker",
+    description:
+      "Internal tool for tracking team SaaS subscriptions, owners, costs, and renewals with Lakebase persistence and Genie spend analytics.",
+    image: "/img/examples/saas-tracker.svg",
+    githubPath: "examples/saas-tracker",
+    initCommand:
+      "databricks apps init --template https://github.com/databricks/devhub/tree/main/examples/saas-tracker --name saas-tracker",
+    templateIds: ["app-with-lakebase"],
+    recipeIds: ["genie-conversational-analytics"],
+  }),
 ];

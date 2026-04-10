@@ -26,6 +26,9 @@ All three live at `/resources/:id` (flat URL hierarchy). In the UI, cookbooks an
 - The user-facing filter on `/resources` is "Examples" vs "Guides" (no cookbook/recipe distinction shown to users).
 - All resource slugs must be globally unique across examples, templates, and recipes. The content-entries plugin validates this at build time.
 
+One word for all: Resources
+Two words for all: Guides and Examples
+
 ## Choose The Authoring Path
 
 1. Determine whether the request is a recipe, a cookbook, an example, or a combination.
@@ -108,6 +111,7 @@ Key conventions:
 - Never commit workspace-specific values, `.databricks/`, `node_modules/`, or `.env` files.
 - Pipeline SQL files should use schema-qualified names (e.g., `silver.users`) and rely on the pipeline YAML `catalog` setting for catalog resolution.
 - Include an `.npmrc` pointing to `https://npm-proxy.dev.databricks.com/` if the app uses `@databricks/appkit`.
+- SQL files in `config/queries/` run against the **Databricks SQL Warehouse** (Spark SQL dialect), NOT Lakebase Postgres. Use `CURRENT_DATE()` not `NOW()`, `DATE_ADD(d, n)` not `d + INTERVAL`, `SUM(CASE WHEN ... THEN 1 ELSE 0 END)` not `COUNT(*) FILTER (WHERE ...)`. Reference Unity Catalog three-part names (e.g., `catalog.schema.table`).
 
 ### 2. Create The Example Markdown
 
@@ -137,15 +141,63 @@ Update `src/lib/recipes/recipes.ts`:
 Place a hero image at `static/img/examples/<example-id>.svg` (or `.png`).
 This is shown at the top of the example detail page.
 
-### 5. Verify
+### 5. Verify DevHub Build
 
-The content-entries plugin handles routing automatically:
+Run `npm run fmt && npm run typecheck && npm run build && npm run test` from the repo root. The content-entries plugin validates slug uniqueness and generates routes automatically. No manual page file is needed in `src/pages/resources/` (unlike cookbooks).
 
-- A route at `/resources/<example-id>` is generated from the markdown file.
-- The `ExampleDetail` component renders the page with hero image, GitHub link, init command, MDX content, and included resource cards.
-- Slug uniqueness is validated at build time across all examples, templates, and recipes.
+### 6. Test With A Dry Run
 
-No manual page file is needed in `src/pages/resources/` (unlike cookbooks).
+**Two directories, two purposes.** `examples/` is committed source code with `REPLACE_ME` placeholders. `../../demos/<example-id>/` (outside the repo) is the scratch workspace for installing, configuring, and deploying.
+
+NEVER `npm install`, deploy, or write workspace-specific values inside `examples/`. ALWAYS work from the demos folder outside the repo.
+
+NEVER reuse existing workspace resources (Lakebase projects, Genie spaces, apps, UC catalogs) unless the developer explicitly says to. Always create fresh resources for the dry run to avoid corrupting or overwriting existing data.
+
+The demos folder must be **outside the git repo** because `databricks bundle deploy` respects `.gitignore` and will skip files in gitignored directories.
+
+#### Dry-run workflow
+
+```bash
+# 1. Copy the template into demos (outside the repo)
+mkdir -p ../../demos/<example-id>
+cp -r examples/<example-id>/template/* ../../demos/<example-id>/
+
+# 2. Fill in workspace-specific values
+#    Edit ../../demos/<example-id>/databricks.yml — replace REPLACE_ME with real IDs
+
+# 3. Install and build
+cd ../../demos/<example-id>
+npm install
+npm run build
+
+# 4. Create required Databricks resources (use databricks-core and databricks-lakebase skills)
+#    - Lakebase project, branch, database
+#    - SQL Warehouse (or use default)
+#    - Genie Space (if the example uses genie)
+#    - Unity Catalog table (if analytics queries need warehouse-accessible data)
+
+# 5. Seed data (if the example has a seed script)
+cd <devhub-repo>/examples/<example-id>/seed
+npm install
+DATABASE_URL="postgresql://..." npm run seed
+
+# 6. Deploy from demos
+cd ../../demos/<example-id>
+databricks apps deploy --profile <PROFILE>
+
+# 7. Get the app URL
+databricks apps get <app-name> --profile <PROFILE>
+```
+
+#### Fixing issues found during dry run
+
+- **Code bug** (build fails, runtime error, wrong SQL dialect) -- fix in `examples/<example-id>/` in the repo, then re-copy to `../../demos/<example-id>/` and retry.
+- **Instruction gap** (missing step, unclear placeholder) -- fix in `content/examples/<example-id>.md` or the relevant recipe in `content/recipes/`.
+- **Seed data issue** -- fix in `examples/<example-id>/seed/seed.ts`.
+
+#### Cleanup
+
+After verifying the deployed app works, delete `../../demos/<example-id>/`. Optionally tear down test resources (Lakebase project, Genie space, UC catalog) if they were created just for testing.
 
 ## URL Structure
 
@@ -181,7 +233,9 @@ Slugs must be globally unique. The plugin throws at build time if any collision 
 8. Verify output is usable as:
    - a prompt for an AI coding agent
    - a human step-by-step guide
-9. Run `npm run fmt && npm run typecheck && npm run build && bun run test` to confirm everything passes.
+9. Run `npm run fmt && npm run typecheck && npm run build && npm run test` to confirm everything passes.
+10. For examples: verify `examples/<id>/` contains only `REPLACE_ME` placeholders -- no real workspace hosts, warehouse IDs, Lakebase project names, or Genie space IDs.
+11. For examples: verify the dry-run deploy succeeded and the app is functional before considering the example complete.
 
 ## References
 

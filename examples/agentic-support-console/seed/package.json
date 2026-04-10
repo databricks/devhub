@@ -3,12 +3,13 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "seed": "bun run seed.ts"
+    "seed": "tsx seed.ts"
   },
   "dependencies": {
     "pg": "^8.13.0"
   },
   "devDependencies": {
-    "@types/pg": "^8.11.0"
+    "@types/pg": "^8.11.0",
+    "tsx": "^4.19.0"
   }
 }

@@ -3,7 +3,8 @@ import useBaseUrl from "@docusaurus/useBaseUrl";
 import Layout from "@theme/Layout";
 import { MDXProvider } from "@mdx-js/react";
 import { useRef, type ReactNode } from "react";
-import { Copy, ExternalLink } from "lucide-react";
+import { toast } from "sonner";
+import { ClipboardCopy, Copy, ExternalLink } from "lucide-react";
 import { AIExportMenu } from "@/components/ai-export-menu";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -16,6 +17,10 @@ import {
 } from "@/components/ui/card";
 import { RecipePre } from "@/components/templates/recipe-code-block";
 import { RecipeToc } from "@/components/templates/recipe-toc";
+import {
+  buildFullPrompt,
+  buildAdditionalMarkdown,
+} from "@/lib/examples/build-example-markdown";
 import type { Example } from "@/lib/recipes/recipes";
 import { templates, recipes } from "@/lib/recipes/recipes";
 
@@ -88,30 +93,73 @@ function IncludedResourceCard({
   );
 }
 
-function buildAdditionalMarkdown(
-  example: Example,
-  githubUrl: string,
-  includedTemplates: { id: string; name: string }[],
-  includedRecipes: { id: string; name: string }[],
-): string {
-  const sections: string[] = [];
-
-  sections.push(`## Get Started\n\n\`\`\`bash\n${example.initCommand}\n\`\`\``);
-  sections.push(`## Source Code\n\nGitHub: ${githubUrl}`);
-
-  const links = [
-    ...includedTemplates.map(
-      (t) => `- [${t.name}](https://dev.databricks.com/resources/${t.id})`,
-    ),
-    ...includedRecipes.map(
-      (r) => `- [${r.name}](https://dev.databricks.com/resources/${r.id})`,
-    ),
-  ];
-  if (links.length > 0) {
-    sections.push(`## Included Resources\n\n${links.join("\n")}`);
+function GetStartedSteps({
+  example,
+  fullPrompt,
+}: {
+  example: Example;
+  fullPrompt: string;
+}) {
+  function handleCopyFullPrompt() {
+    navigator.clipboard.writeText(fullPrompt).then(() => {
+      toast.success("Full prompt copied");
+    });
   }
 
-  return sections.join("\n\n");
+  return (
+    <div className="mb-8 rounded-xl border border-black/10 bg-[#f7f6f4] p-6 dark:border-white/10 dark:bg-[#182a32]">
+      <h2 className="mt-0 mb-5 text-lg font-semibold tracking-tight">
+        Get started
+      </h2>
+      <ol className="m-0 list-none space-y-5 p-0">
+        <li className="flex gap-3">
+          <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-black/8 text-xs font-semibold text-foreground dark:bg-white/10">
+            1
+          </span>
+          <div className="min-w-0 flex-1">
+            <p className="m-0 mb-2 text-sm font-medium text-foreground">
+              Clone the template
+            </p>
+            <CopyCommand command={example.initCommand} />
+          </div>
+        </li>
+        <li className="flex gap-3">
+          <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-black/8 text-xs font-semibold text-foreground dark:bg-white/10">
+            2
+          </span>
+          <div className="min-w-0 flex-1">
+            <p className="m-0 mb-1 text-sm font-medium text-foreground">
+              Provision or link existing Databricks resources
+            </p>
+            <p className="m-0 text-[13px] leading-relaxed text-muted-foreground">
+              Update your app&apos;s{" "}
+              <code className="rounded bg-black/6 px-1.5 py-0.5 text-xs dark:bg-white/8">
+                databricks.yml
+              </code>{" "}
+              file with your resource IDs.
+            </p>
+          </div>
+        </li>
+        <li className="flex gap-3">
+          <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-black/8 text-xs font-semibold text-foreground dark:bg-white/10">
+            3
+          </span>
+          <div className="min-w-0 flex-1">
+            <p className="m-0 mb-2 text-sm font-medium text-foreground">
+              Deploy the application
+            </p>
+            <CopyCommand command="databricks bundle deploy" />
+          </div>
+        </li>
+      </ol>
+      <div className="mt-5 flex justify-end">
+        <Button variant="outline" size="sm" onClick={handleCopyFullPrompt}>
+          <ClipboardCopy className="size-3.5" />
+          Copy Full Prompt
+        </Button>
+      </div>
+    </div>
+  );
 }
 
 export function ExampleDetail({
@@ -135,6 +183,14 @@ export function ExampleDetail({
   const additionalMarkdown = buildAdditionalMarkdown(
     example,
     githubUrl,
+    includedTemplates,
+    includedRecipes,
+  );
+
+  const fullPrompt = buildFullPrompt(
+    example,
+    githubUrl,
+    rawMarkdown,
     includedTemplates,
     includedRecipes,
   );
@@ -213,12 +269,7 @@ export function ExampleDetail({
                   </Button>
                 </div>
 
-                <div className="mb-8">
-                  <p className="mb-2 text-xs font-medium text-muted-foreground">
-                    Get started
-                  </p>
-                  <CopyCommand command={example.initCommand} />
-                </div>
+                <GetStartedSteps example={example} fullPrompt={fullPrompt} />
 
                 <div className="recipe-content-card" ref={contentRef}>
                   <MDXProvider components={mdxComponents}>

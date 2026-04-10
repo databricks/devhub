@@ -54,7 +54,7 @@ Lakeflow Job that runs every minute:
 
 ### `seed/` — Local Seed Script
 
-Standalone Bun/TypeScript script to populate Lakebase with demo data (users, orders, support cases, messages).
+Standalone TypeScript script to populate Lakebase with demo data (users, orders, support cases, messages).
 
 ## Setup
 
@@ -70,8 +70,8 @@ Standalone Bun/TypeScript script to populate Lakebase with demo data (users, ord
 
 ```bash
 cd seed
-bun install
-DATABASE_URL="postgresql://..." bun run seed
+npm install
+DATABASE_URL="postgresql://..." npm run seed
 ```
 
 ### 2. Set Up Lakehouse Sync

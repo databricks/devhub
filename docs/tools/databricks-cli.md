@@ -6,6 +6,8 @@ title: Databricks CLI
 
 Use Databricks CLI for repeatable local workflows, deployment automation, and workspace operations.
 
+If you start from a [template](/resources) or recipe, the CLI is part of that workflow—for how DevHub fits together, see [Start here](/docs/start-here).
+
 ## Install
 
 This guidance applies to Databricks CLI `0.295+`.

@@ -6,6 +6,8 @@ title: Getting started
 
 Databricks Apps hosts and operates web applications inside your Databricks workspace. AppKit is the TypeScript SDK for building these apps with a plugin-based architecture. Building an AI agent? [Agents are deployed as Apps](/docs/agents/getting-started).
 
+DevHub centers on [templates and recipes](/resources). These companion docs explain Databricks Apps and AppKit when you need platform detail beyond a template. For how the site fits together, see [Start here](/docs/start-here).
+
 ## Prerequisites
 
 - Databricks CLI `v0.295+` with an [authenticated profile](/docs/tools/databricks-cli#authenticate)

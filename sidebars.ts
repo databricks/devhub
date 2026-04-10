@@ -138,7 +138,7 @@ const sidebars: SidebarsConfig = {
     "start-here",
     {
       type: "category",
-      label: "Agents",
+      label: "AI agents",
       items: [
         "agents/getting-started",
         "agents/core-concepts",
@@ -149,7 +149,7 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: "category",
-      label: "Apps",
+      label: "Databricks Apps",
       items: [
         "apps/getting-started",
         "apps/core-concepts",
@@ -169,7 +169,7 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: "category",
-      label: "Tools",
+      label: "CLI and AI tools",
       items: [
         "tools/databricks-cli",
         "tools/ai-tools/agent-skills",
@@ -178,7 +178,7 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: "category",
-      label: "References",
+      label: "Reference",
       items: [
         {
           type: "link",

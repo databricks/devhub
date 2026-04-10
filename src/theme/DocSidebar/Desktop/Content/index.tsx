@@ -75,7 +75,7 @@ function isAppKitDocsPath(path: string): boolean {
 }
 
 function getAppKitSidebarItems(sidebar: SidebarLikeItem[]): SidebarLikeItem[] {
-  const referencesCategory = findCategoryByLabel(sidebar, "references");
+  const referencesCategory = findCategoryByLabel(sidebar, "reference");
   if (!referencesCategory || !isSidebarCategory(referencesCategory)) {
     return [];
   }

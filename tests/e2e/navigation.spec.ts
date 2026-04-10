@@ -264,6 +264,7 @@ test.describe("docs sidebar navigation", () => {
   }
 
   test("AppKit docs show AppKit-specific sidebar shell", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto("/docs/appkit/v0");
 
     const sidebar = page.getByRole("navigation", { name: "Docs sidebar" });
@@ -274,12 +275,12 @@ test.describe("docs sidebar navigation", () => {
     await expect(sidebar.getByRole("combobox")).toBeVisible();
   });
 
-  test("References AppKit link opens latest AppKit docs entry", async ({
+  test("Reference AppKit link opens latest AppKit docs entry", async ({
     page,
   }) => {
     await page.goto("/docs/start-here");
     const sidebar = page.getByRole("navigation", { name: "Docs sidebar" });
-    await sidebar.getByRole("button", { name: "References" }).click();
+    await sidebar.getByRole("button", { name: "Reference" }).click();
     const appKitReferenceLink = page
       .locator(
         'nav[aria-label="Docs sidebar"] a.menu__link[href*="/docs/appkit/"]',

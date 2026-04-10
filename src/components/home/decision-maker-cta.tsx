@@ -1,4 +1,49 @@
+import Link from "@docusaurus/Link";
 import type { ReactNode } from "react";
+
+function DevCard(): ReactNode {
+  return (
+    <article className="bg-db-lava p-5 text-white shadow-[0_14px_40px_rgba(0,0,0,0.35)] md:p-6">
+      <div className="mb-4 h-10 w-10 rounded-full border border-white/35 bg-[radial-gradient(circle,rgba(255,255,255,0.95)_2px,rgba(255,255,255,0.28)_3px,transparent_9px)]" />
+      <h3 className="text-2xl leading-tight font-medium tracking-tight md:text-3xl">
+        For Developers
+      </h3>
+      <p className="mt-3 text-sm leading-relaxed text-white/90 md:mt-4">
+        Pick a{" "}
+        <Link
+          to="/resources"
+          className="underline decoration-white/40 underline-offset-2 hover:decoration-white/70"
+        >
+          guide
+        </Link>
+        , paste it into your coding agent, and describe what you want. Database,
+        AI models, and deployment are handled. You focus on your app.
+      </p>
+    </article>
+  );
+}
+
+function OrgCard(): ReactNode {
+  return (
+    <article className="border border-white/12 bg-black/80 p-5 text-white backdrop-blur-sm md:p-6">
+      <div className="mb-4 h-10 w-10 rounded-full border border-white/18 bg-[radial-gradient(circle,rgba(255,255,255,0.95)_2px,rgba(255,255,255,0.28)_3px,transparent_9px)]" />
+      <h3 className="text-2xl leading-tight font-medium tracking-tight md:text-3xl">
+        For Your Organization
+      </h3>
+      <p className="mt-3 text-sm leading-relaxed text-white/78 md:mt-4">
+        Every app and agent runs inside your Databricks environment. Unity
+        Catalog governs access to data, models, and endpoints.{" "}
+        <Link
+          to="/docs/start-here"
+          className="underline decoration-white/30 underline-offset-2 hover:decoration-white/60"
+        >
+          Read the docs
+        </Link>{" "}
+        to learn more.
+      </p>
+    </article>
+  );
+}
 
 export function DecisionMakerCta(): ReactNode {
   return (
@@ -14,27 +59,8 @@ export function DecisionMakerCta(): ReactNode {
           </div>
 
           <div className="flex flex-col gap-4 sm:hidden">
-            <article className="bg-db-lava p-6 text-white">
-              <div className="mb-4 h-10 w-10 rounded-full border border-white/35 bg-[radial-gradient(circle,rgba(255,255,255,0.95)_2px,rgba(255,255,255,0.28)_3px,transparent_9px)]" />
-              <h3 className="text-2xl leading-tight font-medium tracking-tight">
-                For Developers
-              </h3>
-              <p className="mt-3 text-sm leading-relaxed text-white/90">
-                Pick a template, run one command, and your agentic app is live -
-                with a database, AI model access, and auth already wired up.
-              </p>
-            </article>
-            <article className="border border-black/12 bg-black/80 p-6 text-white backdrop-blur-sm dark:border-white/12">
-              <div className="mb-4 h-10 w-10 rounded-full border border-white/18 bg-[radial-gradient(circle,rgba(255,255,255,0.95)_2px,rgba(255,255,255,0.28)_3px,transparent_9px)]" />
-              <h3 className="text-2xl leading-tight font-medium tracking-tight">
-                For Your Organization
-              </h3>
-              <p className="mt-3 text-sm leading-relaxed text-white/78">
-                Every app and agent runs inside your Databricks environment.
-                Unity Catalog governs access to data, models, and endpoints.
-                Your developers ship faster without adding risk.
-              </p>
-            </article>
+            <DevCard />
+            <OrgCard />
           </div>
 
           <div className="relative hidden min-h-[360px] overflow-hidden border border-black/10 bg-[#0d1216] sm:block dark:border-white/10 md:min-h-[420px]">
@@ -42,28 +68,13 @@ export function DecisionMakerCta(): ReactNode {
             <div className="absolute inset-0 opacity-60 [background-image:radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.26)_1px,transparent_0)] [background-size:6px_6px]" />
             <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(0,0,0,0.68)_15%,rgba(0,0,0,0.2)_55%,rgba(0,0,0,0.8)_100%)]" />
 
-            <article className="absolute right-5 top-5 max-w-[280px] border border-white/12 bg-black/80 p-5 text-white backdrop-blur-sm md:right-7 md:top-7 md:max-w-[300px] md:p-6">
-              <div className="mb-4 h-10 w-10 rounded-full border border-white/18 bg-[radial-gradient(circle,rgba(255,255,255,0.95)_2px,rgba(255,255,255,0.28)_3px,transparent_9px)]" />
-              <h3 className="text-2xl leading-tight font-medium tracking-tight md:text-3xl">
-                For Your Organization
-              </h3>
-              <p className="mt-3 text-sm leading-relaxed text-white/78 md:mt-4">
-                Every app and agent runs inside your Databricks environment.
-                Unity Catalog governs access to data, models, and endpoints.
-                Your developers ship faster without adding risk.
-              </p>
-            </article>
+            <div className="absolute right-5 top-5 max-w-[280px] md:right-7 md:top-7 md:max-w-[300px]">
+              <OrgCard />
+            </div>
 
-            <article className="absolute bottom-0 left-5 max-w-[280px] bg-db-lava p-5 text-white shadow-[0_14px_40px_rgba(0,0,0,0.35)] md:bottom-6 md:left-7 md:max-w-[300px] md:p-6">
-              <div className="mb-4 h-10 w-10 rounded-full border border-white/35 bg-[radial-gradient(circle,rgba(255,255,255,0.95)_2px,rgba(255,255,255,0.28)_3px,transparent_9px)]" />
-              <h3 className="text-2xl leading-tight font-medium tracking-tight md:text-3xl">
-                For Developers
-              </h3>
-              <p className="mt-3 text-sm leading-relaxed text-white/90 md:mt-4">
-                Pick a template, run one command, and your agentic app is live -
-                with a database, AI model access, and auth already wired up.
-              </p>
-            </article>
+            <div className="absolute bottom-0 left-5 max-w-[280px] md:bottom-6 md:left-7 md:max-w-[300px]">
+              <DevCard />
+            </div>
           </div>
         </div>
       </div>

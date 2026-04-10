@@ -26,6 +26,8 @@ import {
 type AIExportMenuProps = {
   rawMarkdown?: string;
   rawMarkdownUrl?: string;
+  /** Extra markdown appended after the main content (e.g. code snippets, links). */
+  additionalMarkdown?: string;
   title: string;
   description: string;
   permalink: string;
@@ -36,6 +38,7 @@ type AIExportMenuProps = {
 export function AIExportMenu({
   rawMarkdown,
   rawMarkdownUrl,
+  additionalMarkdown,
   title,
   description,
   permalink,
@@ -70,9 +73,17 @@ export function AIExportMenu({
 
     let md = `---\ntitle: "${escapedTitle}"\nurl: ${fullUrl}\nsummary: "${escapedDescription}"\n---\n\n`;
     if (rawContent) md += `${rawContent}\n\n`;
+    if (additionalMarkdown) md += `${additionalMarkdown}\n\n`;
     md += `---\nFull documentation: ${baseUrl}/llms.txt\n`;
     return md;
-  }, [resolveContent, title, description, fullUrl, baseUrl]);
+  }, [
+    resolveContent,
+    additionalMarkdown,
+    title,
+    description,
+    fullUrl,
+    baseUrl,
+  ]);
 
   const handleCopyMarkdown = useCallback(() => {
     if (rawMarkdownUrl && !rawMarkdown && !fetchedMarkdownRef.current) {

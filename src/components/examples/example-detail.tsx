@@ -88,6 +88,32 @@ function IncludedResourceCard({
   );
 }
 
+function buildAdditionalMarkdown(
+  example: Example,
+  githubUrl: string,
+  includedTemplates: { id: string; name: string }[],
+  includedRecipes: { id: string; name: string }[],
+): string {
+  const sections: string[] = [];
+
+  sections.push(`## Get Started\n\n\`\`\`bash\n${example.initCommand}\n\`\`\``);
+  sections.push(`## Source Code\n\nGitHub: ${githubUrl}`);
+
+  const links = [
+    ...includedTemplates.map(
+      (t) => `- [${t.name}](https://dev.databricks.com/resources/${t.id})`,
+    ),
+    ...includedRecipes.map(
+      (r) => `- [${r.name}](https://dev.databricks.com/resources/${r.id})`,
+    ),
+  ];
+  if (links.length > 0) {
+    sections.push(`## Included Resources\n\n${links.join("\n")}`);
+  }
+
+  return sections.join("\n\n");
+}
+
 export function ExampleDetail({
   example,
   rawMarkdown,
@@ -105,6 +131,13 @@ export function ExampleDetail({
   const includedRecipes = example.recipeIds
     .map((id) => recipes.find((r) => r.id === id))
     .filter(Boolean);
+
+  const additionalMarkdown = buildAdditionalMarkdown(
+    example,
+    githubUrl,
+    includedTemplates,
+    includedRecipes,
+  );
 
   return (
     <Layout title={example.name} description={example.description}>
@@ -124,6 +157,7 @@ export function ExampleDetail({
                 <div className="mb-3 flex justify-end">
                   <AIExportMenu
                     rawMarkdown={rawMarkdown}
+                    additionalMarkdown={additionalMarkdown}
                     title={example.name}
                     description={example.description}
                     permalink={permalink}

@@ -5,6 +5,12 @@ import { Button } from "@/components/ui/button";
 import { CopyButton } from "@/components/code/copy-button";
 import { getBootstrapPromptApiPath } from "@/lib/bootstrap-prompt";
 
+function setHalfSpeed(video: HTMLVideoElement | null) {
+  if (video) {
+    video.playbackRate = 0.5;
+  }
+}
+
 function fallbackCopyTextToClipboard(text: string): boolean {
   if (typeof window === "undefined" || typeof document === "undefined") {
     return false;
@@ -111,6 +117,7 @@ export function HeroSection(): ReactNode {
           </div>
           <div className="hidden md:flex items-center justify-center">
             <video
+              ref={setHalfSpeed}
               autoPlay
               muted
               loop
@@ -123,6 +130,7 @@ export function HeroSection(): ReactNode {
               />
             </video>
             <video
+              ref={setHalfSpeed}
               autoPlay
               muted
               loop

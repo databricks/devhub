@@ -37,13 +37,16 @@ test.describe("resources page search", () => {
 
     await page.getByRole("searchbox").fill("genie");
     await expect(
-      page.getByText(`5 of ${RESOURCE_COUNT} resources`),
+      page.getByText(`6 of ${RESOURCE_COUNT} resources`),
     ).toBeVisible();
     await expect(
       page.getByRole("link", { name: "Agentic Support Console" }),
     ).toBeVisible();
     await expect(
       page.getByRole("link", { name: "SaaS Subscription Tracker" }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: "Content Moderator" }),
     ).toBeVisible();
     await expect(
       page.getByRole("link", { name: "Genie Analytics App" }),

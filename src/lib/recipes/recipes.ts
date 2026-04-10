@@ -431,4 +431,16 @@ export const examples: Example[] = [
     templateIds: ["app-with-lakebase"],
     recipeIds: ["genie-conversational-analytics"],
   }),
+  createExample({
+    id: "content-moderator",
+    name: "Content Moderator",
+    description:
+      "Internal content moderation tool with per-channel guidelines, AI-powered compliance scoring via Model Serving, and a moderator review workflow backed by Lakebase and Genie analytics.",
+    image: "/img/examples/content-moderator.svg",
+    githubPath: "examples/content-moderator",
+    initCommand:
+      "databricks apps init --template https://github.com/databricks/devhub/tree/main/examples/content-moderator --name content-moderator",
+    templateIds: ["app-with-lakebase"],
+    recipeIds: ["genie-conversational-analytics", "foundation-models-api"],
+  }),
 ];

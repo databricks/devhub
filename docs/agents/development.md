@@ -274,3 +274,4 @@ See [Apps development](/docs/apps/development) for option tables covering `get`,
 - [Query an agent](https://docs.databricks.com/aws/en/generative-ai/agent-framework/query-agent)
 - [Agent template README](https://github.com/databricks/app-templates/tree/main/agent-openai-agents-sdk)
 - [Declarative Automation Bundles](https://docs.databricks.com/aws/en/dev-tools/bundles/)
+- [Agent skills](/docs/tools/ai-tools/agent-skills)

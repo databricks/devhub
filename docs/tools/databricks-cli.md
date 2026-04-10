@@ -109,6 +109,14 @@ databricks experimental aitools tools query "SELECT * FROM <CATALOG>.<SCHEMA>.<T
 databricks experimental aitools tools get-default-warehouse --profile <PROFILE>
 ```
 
+## Agent skills
+
+Install [agent skills](/docs/tools/ai-tools/agent-skills) to give AI coding assistants Databricks platform knowledge:
+
+```bash
+databricks experimental aitools skills install
+```
+
 ## Command gotchas
 
 - some command groups use positional arguments, not flags
@@ -140,3 +148,4 @@ databricks schemas list --help
 
 - [Install or update the Databricks CLI](https://docs.databricks.com/aws/en/dev-tools/cli/install)
 - [Authentication for the Databricks CLI](https://docs.databricks.com/aws/en/dev-tools/cli/authentication)
+- [Agent skills](/docs/tools/ai-tools/agent-skills)

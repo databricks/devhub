@@ -202,6 +202,7 @@ After verifying the deploy works, consider the following customizations:
 - **Change the system prompt**: Edit the `instructions` field in `agent_server/agent.py`.
 - **Swap the model**: Change the `model` parameter (for example, `databricks-claude-sonnet-4-5`, `databricks-meta-llama-4-maverick`).
 - **Add a tool**: Define a function with `@function_tool` in `agent_server/agent.py`, or connect an [MCP server](https://docs.databricks.com/aws/en/generative-ai/mcp/) for workspace tools. See [Development: Adding tools](/docs/agents/development#adding-tools).
+- **Install additional agent skills**: Install Databricks [agent skills](/docs/tools/ai-tools/agent-skills) for platform-aware AI assistance.
 - **Add Lakebase memory**: Use the [stateful agents template](https://github.com/databricks/app-templates/tree/main/agent-openai-agents-sdk-short-term-memory) for persistent chat history.
 - **Grant resource access**: Add serving endpoints, Genie spaces, or Vector Search indexes to `databricks.yml` and redeploy.
 

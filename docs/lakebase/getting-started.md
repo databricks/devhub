@@ -233,7 +233,7 @@ Use the returned token as the password, with your Databricks email as the userna
 
 ## Build an app with Lakebase
 
-The fastest path is to use a [template](/resources) with an AI coding agent. Copy a template into your agent and describe what you want to build. See [Your First App](/docs/get-started/your-first-app) for the full workflow.
+The fastest path is to use a [template](/resources) with an AI coding agent. Copy a template into your agent and describe what you want to build. [Start here](/docs/start-here) for the full workflow.
 
 | Template                                                  | Best for                                           |
 | --------------------------------------------------------- | -------------------------------------------------- |

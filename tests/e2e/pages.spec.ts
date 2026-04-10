@@ -15,12 +15,7 @@ const PAGES = [
     path: "/resources/genie-analytics-app",
     title: "Genie Analytics App",
   },
-  {
-    path: "/docs/get-started/getting-started",
-    title: "Getting Started",
-  },
-  { path: "/docs/get-started/your-first-app", title: "Your First App" },
-  { path: "/docs/get-started/core-concepts", title: "Core Concepts" },
+  { path: "/docs/start-here", title: "Start here" },
   { path: "/docs/agents/getting-started", title: "Getting Started" },
   { path: "/docs/agents/core-concepts", title: "Core Concepts" },
   { path: "/docs/agents/development", title: "Development" },

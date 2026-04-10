@@ -135,15 +135,7 @@ const latestAppKitDocId = latestAppKitMajorChannel
 
 const sidebars: SidebarsConfig = {
   tutorialSidebar: [
-    {
-      type: "category",
-      label: "Get Started",
-      items: [
-        "get-started/getting-started",
-        "get-started/your-first-app",
-        "get-started/core-concepts",
-      ],
-    },
+    "start-here",
     {
       type: "category",
       label: "Agents",
@@ -180,14 +172,8 @@ const sidebars: SidebarsConfig = {
       label: "Tools",
       items: [
         "tools/databricks-cli",
-        {
-          type: "category",
-          label: "AI Tools",
-          items: [
-            "tools/ai-tools/agent-skills",
-            "tools/ai-tools/docs-mcp-server",
-          ],
-        },
+        "tools/ai-tools/agent-skills",
+        "tools/ai-tools/docs-mcp-server",
       ],
     },
     {

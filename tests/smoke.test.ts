@@ -49,9 +49,7 @@ describe("production build smoke tests", () => {
     const text = readBuildFile("llms.txt");
 
     const expectedDocPaths = [
-      "/docs/get-started/getting-started",
-      "/docs/get-started/your-first-app",
-      "/docs/get-started/core-concepts",
+      "/docs/start-here",
       "/docs/agents/getting-started",
       "/docs/agents/core-concepts",
       "/docs/agents/development",

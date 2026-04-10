@@ -13,7 +13,7 @@ test.describe("navbar navigation", () => {
     { label: "Resources", expectedPath: "/resources" },
     {
       label: "Docs",
-      expectedPath: "/docs/get-started/getting-started",
+      expectedPath: "/docs/start-here",
     },
   ];
 
@@ -33,8 +33,8 @@ test.describe("navbar navigation", () => {
 test.describe("footer navigation", () => {
   const FOOTER_INTERNAL_LINKS = [
     {
-      href: "/docs/get-started/getting-started",
-      label: "Get Started",
+      href: "/docs/start-here",
+      label: "Start Here",
     },
     { href: "/docs/agents/getting-started", label: "Agents" },
     { href: "/docs/apps/appkit", label: "AppKit" },
@@ -217,7 +217,7 @@ test.describe("solution detail page navigation", () => {
         .map((element) => element.getAttribute("href"))
         .filter((href): href is string => Boolean(href)),
     );
-    expect(hrefs).toContain("/docs/get-started/getting-started");
+    expect(hrefs).toContain("/docs/start-here");
     expect(hrefs).toContain("/resources");
   });
 });
@@ -235,9 +235,7 @@ test.describe("resource detail page navigation", () => {
 
 test.describe("docs sidebar navigation", () => {
   const SIDEBAR_LINKS = [
-    { href: "/docs/get-started/getting-started" },
-    { href: "/docs/get-started/your-first-app" },
-    { href: "/docs/get-started/core-concepts" },
+    { href: "/docs/start-here" },
     { href: "/docs/agents/getting-started" },
     { href: "/docs/agents/core-concepts" },
     { href: "/docs/agents/development" },
@@ -272,14 +270,14 @@ test.describe("docs sidebar navigation", () => {
     await expect(sidebar.getByText("AppKit Reference")).toBeVisible();
     await expect(
       sidebar.getByRole("link", { name: "Back to main docs" }),
-    ).toHaveAttribute("href", "/docs/get-started/getting-started");
+    ).toHaveAttribute("href", "/docs/start-here");
     await expect(sidebar.getByRole("combobox")).toBeVisible();
   });
 
   test("References AppKit link opens latest AppKit docs entry", async ({
     page,
   }) => {
-    await page.goto("/docs/get-started/getting-started");
+    await page.goto("/docs/start-here");
     const sidebar = page.getByRole("navigation", { name: "Docs sidebar" });
     await sidebar.getByRole("button", { name: "References" }).click();
     const appKitReferenceLink = page

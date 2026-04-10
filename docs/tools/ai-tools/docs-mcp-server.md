@@ -41,12 +41,12 @@ list_docs_resources()
 
 Fetches a single Databricks developer documentation page as markdown. Use `list_docs_resources` first to discover available slugs.
 
-| Parameter | Type   | Required | Description                                                                                             |
-| --------- | ------ | -------- | ------------------------------------------------------------------------------------------------------- |
-| `slug`    | string | yes      | The docs page slug (path), e.g. `get-started/getting-started`. Use `list_docs_resources` to find slugs. |
+| Parameter | Type   | Required | Description                                                                            |
+| --------- | ------ | -------- | -------------------------------------------------------------------------------------- |
+| `slug`    | string | yes      | The docs page slug (path), e.g. `start-here`. Use `list_docs_resources` to find slugs. |
 
 ```
-get_doc_resource(slug: "get-started/getting-started")
+get_doc_resource(slug: "start-here")
 → full markdown content of the requested page
 ```
 

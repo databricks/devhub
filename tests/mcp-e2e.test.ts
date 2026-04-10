@@ -123,16 +123,16 @@ describe("MCP server e2e (mcporter)", () => {
   test("list_docs_resources returns the docs index", async () => {
     const output = await mcporter("call", "list_docs_resources");
     expect(output).toContain("# Databricks Developer");
-    expect(output).toContain("/docs/get-started/getting-started");
+    expect(output).toContain("/docs/start-here");
   }, 30_000);
 
   test("get_doc_resource returns markdown for a valid slug", async () => {
     const output = await mcporter(
       "call",
       "get_doc_resource",
-      "slug:get-started/getting-started",
+      "slug:start-here",
     );
-    expect(output).toContain("# Getting Started");
+    expect(output).toContain("# Start here");
     expect(output).toContain("Databricks");
   }, 30_000);
 

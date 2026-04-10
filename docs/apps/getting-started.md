@@ -4,7 +4,7 @@ title: Getting Started
 
 # Getting Started
 
-Databricks Apps hosts and operates web applications inside your Databricks workspace. AppKit is the TypeScript SDK for building these apps with a plugin-based architecture. Building an AI agent? Agents are deployed as Apps (see [how agents and apps relate](/docs/get-started/core-concepts#how-agents-and-apps-relate)).
+Databricks Apps hosts and operates web applications inside your Databricks workspace. AppKit is the TypeScript SDK for building these apps with a plugin-based architecture. Building an AI agent? [Agents are deployed as Apps](/docs/agents/getting-started).
 
 ## Prerequisites
 
@@ -60,7 +60,7 @@ Passing `--name` suppresses prompts and uses defaults for unspecified options. A
 
 ## Build an app from a template
 
-The fastest path is to use a [template](/resources) with an AI coding agent. Copy a template into your agent and describe what you want to build. See [Your First App](/docs/get-started/your-first-app) for the full workflow.
+The fastest path is to use a [template](/resources) with an AI coding agent. Copy a template into your agent and describe what you want to build. [Start here](/docs/start-here) for the full workflow.
 
 | Template                                                  | Best for                                           |
 | --------------------------------------------------------- | -------------------------------------------------- |
@@ -68,6 +68,18 @@ The fastest path is to use a [template](/resources) with an AI coding agent. Cop
 | [App with Lakebase](/resources/app-with-lakebase)         | CRUD apps with persistent storage                  |
 | [AI Chat App](/resources/ai-chat-app)                     | Conversational AI with chat history                |
 | [Lakebase Off-Platform](/resources/lakebase-off-platform) | Apps hosted outside Databricks (AWS, Vercel, etc.) |
+
+## What happens next
+
+Whether you scaffold with `databricks apps init` or paste a template into a coding agent, the flow is the same:
+
+1. The Databricks CLI authenticates against your workspace.
+2. The project is scaffolded with the right dependencies.
+3. Databricks resources are provisioned (Lakebase databases, model serving endpoints, or Genie spaces, depending on the template).
+4. The coding agent implements your business logic on top of the scaffold.
+5. `databricks bundle deploy` pushes the app to Databricks Apps.
+
+If something fails during the build, templates include troubleshooting context for each step. Coding agents can usually self-correct.
 
 ## Customize the template
 

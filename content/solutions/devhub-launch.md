@@ -22,9 +22,8 @@ That's what dev.databricks.com is.
 
 ### Documentation for developers
 
-The [docs](/docs/get-started/getting-started) section covers the core building blocks of the Databricks developer stack:
+The [docs](/docs/start-here) section covers the core building blocks of the Databricks developer stack:
 
-- **[Get Started](/docs/get-started/getting-started)** — Install the Databricks CLI, authenticate, and verify your local setup in minutes.
 - **[Agents](/docs/agents/getting-started)** — Design, develop, and deploy AI agents using Databricks model serving, with built-in guardrails, AI Gateway, and observability.
 - **[Apps](/docs/apps/getting-started)** — Build and deploy full-stack web applications as managed Databricks workspace resources using AppKit.
 - **[Lakebase](/docs/lakebase/getting-started)** — Use managed PostgreSQL that separates compute from storage, with instant branching, serverless scale, and Unity Catalog integration.
@@ -70,7 +69,7 @@ Every recipe, template, and solution on this site is available as raw markdown t
 ```
 https://dev.databricks.com/solutions/devhub-launch.md
 https://dev.databricks.com/resources/ai-chat-app.md
-https://dev.databricks.com/docs/get-started/getting-started.md
+https://dev.databricks.com/docs/start-here.md
 ```
 
 This makes it straightforward to feed documentation directly into LLMs, build tooling on top of our content, or integrate it into your own workflows.
@@ -111,9 +110,9 @@ If you're building on Databricks and have ideas for what would help, we want to 
 
 The fastest way to start building:
 
-1. [Install the Databricks CLI](/docs/get-started/getting-started) and authenticate with your workspace
+1. Install the [Databricks CLI](/docs/tools/databricks-cli) and authenticate with your workspace
 2. Browse the [resources](/resources) to find a template that matches your use case
 3. Copy a template into your AI coding agent and let it scaffold your project
-4. Read the [docs](/docs/get-started/getting-started) when you need to go deeper on any topic
+4. Read the [docs](/docs/start-here) when you need to go deeper on any topic
 
 Welcome to dev.databricks.com.

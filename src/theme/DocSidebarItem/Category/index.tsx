@@ -267,7 +267,7 @@ function DocSidebarItemCategoryCollapsible({
       <Collapsible
         lazy
         as="ul"
-        className="menu__list !ml-0 !mt-0.5 !space-y-0.5 !border-l-0 !pl-0"
+        className="menu__list !ml-0 !mt-0.5 !space-y-0.5 !border-l-0 !pl-3"
         collapsed={collapsed}
       >
         <DocSidebarItems

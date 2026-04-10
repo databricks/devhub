@@ -1,4 +1,4 @@
-# Recipe And Cookbook Quality Checklist
+# Resource Quality Checklist
 
 Use this checklist after drafting and before final handoff.
 
@@ -6,19 +6,23 @@ Use this checklist after drafting and before final handoff.
 
 - Confirm a recipe solves exactly one outcome.
 - Confirm a cookbook covers an end-to-end use case.
+- Confirm an example ships a full working codebase with deployable artifacts.
 - Confirm cookbook content does not depend on cookbook-level prerequisites.
+- Confirm example markdown focuses on what makes it unique (architecture, data flow, adaptation points).
 
 ## Metadata Correctness
 
-- Confirm each recipe has `id`, `name`, `description`, and `tags`.
+- Confirm each recipe has `id`, `name`, `description`, `tags`, and `services`.
 - Confirm prerequisite recipe ids exist and are minimal.
 - Confirm each template uses valid `recipeIds` in intended order.
+- Confirm each example uses valid `templateIds` and `recipeIds` without redundancy.
 - Confirm names and descriptions are specific enough to scan quickly on `/resources`.
+- Confirm no slug collisions exist across recipes, templates, and examples.
 
 ## Execution Quality
 
 - Confirm every command block is copy-pastable.
-- Confirm user-specific values are placeholders (`<...>`), not guessed values.
+- Confirm user-specific values are placeholders (`<...>` in recipes, `REPLACE_ME` in example bundle configs).
 - Confirm auth/profile requirements appear before commands that depend on them.
 - Confirm there are no hidden assumptions between steps.
 
@@ -34,3 +38,13 @@ Use this checklist after drafting and before final handoff.
 - Confirm `rawMarkdown` concatenation uses `\n\n---\n\n`.
 - Confirm JSX render order matches `template.recipeIds`.
 - Confirm every imported markdown component is rendered exactly once unless intentional.
+
+## Example Quality
+
+- Confirm example app directory is named `template/` (for `databricks apps init --template` compatibility).
+- Confirm all workspace-specific values use `REPLACE_ME` placeholders.
+- Confirm `.databricks/`, `node_modules/`, and `.env` are not committed.
+- Confirm pipeline SQL uses schema-qualified names (not hardcoded catalog names).
+- Confirm `initCommand` uses the GitHub URL format: `https://github.com/databricks/devhub/tree/main/examples/<id>`.
+- Confirm hero image exists at `static/img/examples/<id>.svg` (or `.png`).
+- Confirm `content/examples/<id>.md` exists and matches the example's `id`.

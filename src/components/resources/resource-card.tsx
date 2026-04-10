@@ -9,9 +9,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import type { Recipe, Template } from "@/lib/recipes/recipes";
+import type { Example, Recipe, Template } from "@/lib/recipes/recipes";
 
 export type ResourceItem =
+  | { kind: "example"; data: Example }
   | { kind: "template"; data: Template }
   | { kind: "recipe"; data: Recipe };
 
@@ -81,6 +82,15 @@ const CARD_VISUALS: Array<{
   },
 ];
 
+function getResourceHref(item: ResourceItem): string {
+  return `/resources/${item.data.id}`;
+}
+
+function getResourceBadge(item: ResourceItem): string {
+  if (item.kind === "example") return "Example";
+  return "Guide";
+}
+
 export function ResourceCard({
   item,
   index,
@@ -95,13 +105,11 @@ export function ResourceCard({
   onTagClick: (tag: string) => void;
 }) {
   const visual = CARD_VISUALS[index % CARD_VISUALS.length];
-  const isTemplate = item.kind === "template";
+  const isExample = item.kind === "example";
   const name = item.data.name;
   const description = item.data.description;
   const tags = item.data.tags;
-  const href = isTemplate
-    ? `/resources/${item.data.id}`
-    : `/resources/recipes/${item.data.id}`;
+  const href = getResourceHref(item);
 
   return (
     <Card
@@ -120,15 +128,21 @@ export function ResourceCard({
         <div className="mb-2 flex items-center justify-between gap-2">
           <Badge
             variant="secondary"
-            className="rounded-md border border-black/10 bg-black/5 px-2 py-0.5 text-[10px] font-semibold tracking-wide text-black/60 uppercase dark:border-white/10 dark:bg-white/8 dark:text-white/60"
+            className={`rounded-md border px-2 py-0.5 text-[10px] font-semibold tracking-wide uppercase ${
+              isExample
+                ? "border-db-lava/20 bg-db-lava/8 text-db-lava"
+                : "border-black/10 bg-black/5 text-black/60 dark:border-white/10 dark:bg-white/8 dark:text-white/60"
+            }`}
           >
-            {isTemplate ? "Cookbook" : "Recipe"}
+            {getResourceBadge(item)}
           </Badge>
-          <Checkbox
-            checked={selected}
-            onCheckedChange={onToggleSelect}
-            aria-label={`Select ${name}`}
-          />
+          {!isExample && (
+            <Checkbox
+              checked={selected}
+              onCheckedChange={onToggleSelect}
+              aria-label={`Select ${name}`}
+            />
+          )}
         </div>
         <CardTitle className="text-lg leading-tight font-medium text-black dark:text-white">
           <Link to={href} className="text-inherit no-underline hover:underline">

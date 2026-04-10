@@ -21,10 +21,19 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { recipesInOrder, templates, type Service } from "@/lib/recipes/recipes";
+import {
+  examples,
+  recipesInOrder,
+  templates,
+  type Service,
+} from "@/lib/recipes/recipes";
 import { useAllRawRecipeMarkdown } from "@/lib/use-raw-content-markdown";
 
 function buildResourceItems(): ResourceItem[] {
+  const exampleItems: ResourceItem[] = examples.map((e) => ({
+    kind: "example",
+    data: e,
+  }));
   const templateItems: ResourceItem[] = templates.map((t) => ({
     kind: "template",
     data: t,
@@ -33,7 +42,7 @@ function buildResourceItems(): ResourceItem[] {
     kind: "recipe",
     data: r,
   }));
-  return [...templateItems, ...recipeItems];
+  return [...exampleItems, ...templateItems, ...recipeItems];
 }
 
 const ALL_ITEMS = buildResourceItems();
@@ -56,10 +65,9 @@ export default function ResourcesPage(): ReactNode {
     const query = searchQuery.toLowerCase().trim();
     return ALL_ITEMS.filter((item) => {
       if (selectedResourceTypes.size > 0 && selectedResourceTypes.size < 2) {
-        if (selectedResourceTypes.has("templates") && item.kind !== "template")
-          return false;
-        if (selectedResourceTypes.has("recipes") && item.kind !== "recipe")
-          return false;
+        const isExample = item.kind === "example";
+        if (selectedResourceTypes.has("examples") && !isExample) return false;
+        if (selectedResourceTypes.has("guides") && isExample) return false;
       }
 
       if (selectedServices.size > 0) {
@@ -94,16 +102,19 @@ export default function ResourcesPage(): ReactNode {
       .join("\n\n---\n\n");
   }, [selectedItems, rawBySlug]);
 
+  const selectableFiltered = filteredItems.filter(
+    (item) => item.kind !== "example",
+  );
   const isAllFilteredSelected =
-    filteredItems.length > 0 &&
-    filteredItems.every((item) => selectedIds.has(item.data.id));
+    selectableFiltered.length > 0 &&
+    selectableFiltered.every((item) => selectedIds.has(item.data.id));
   const isSomeFilteredSelected =
     !isAllFilteredSelected &&
-    filteredItems.some((item) => selectedIds.has(item.data.id));
+    selectableFiltered.some((item) => selectedIds.has(item.data.id));
 
   const handleToggleAll = useCallback(() => {
     if (isAllFilteredSelected) {
-      const filteredSet = new Set(filteredItems.map((i) => i.data.id));
+      const filteredSet = new Set(selectableFiltered.map((i) => i.data.id));
       setSelectedIds((prev) => {
         const next = new Set(prev);
         for (const id of filteredSet) next.delete(id);
@@ -112,11 +123,11 @@ export default function ResourcesPage(): ReactNode {
     } else {
       setSelectedIds((prev) => {
         const next = new Set(prev);
-        for (const item of filteredItems) next.add(item.data.id);
+        for (const item of selectableFiltered) next.add(item.data.id);
         return next;
       });
     }
-  }, [isAllFilteredSelected, filteredItems]);
+  }, [isAllFilteredSelected, selectableFiltered]);
 
   const handleToggleSelect = useCallback((id: string) => {
     setSelectedIds((prev) => {
@@ -202,13 +213,12 @@ export default function ResourcesPage(): ReactNode {
               Resources
             </p>
             <h1 className="mb-4 max-w-3xl text-4xl leading-[1.06] font-medium tracking-tight text-black dark:text-white md:text-5xl">
-              <span className="text-db-lava">Cookbooks &amp; Recipes</span> for
+              <span className="text-db-lava">Examples &amp; Guides</span> for
               building on Databricks.
             </h1>
             <p className="mb-10 max-w-2xl text-lg text-black/68 dark:text-white/68">
-              Step-by-step recipes to follow along or copy-paste into your
-              coding agent. Combine recipes into cookbooks for end-to-end
-              guides.
+              Step-by-step guides to follow along or copy-paste into your coding
+              agent. Explore end-to-end examples for inspiration.
             </p>
 
             {/* Toolbar: search + actions */}
@@ -250,8 +260,8 @@ export default function ResourcesPage(): ReactNode {
                 </label>
                 <AIExportMenu
                   rawMarkdown={selectedRawMarkdown}
-                  title="Custom cookbook"
-                  description="Selected Databricks recipes combined into a custom cookbook."
+                  title="Custom guide"
+                  description="Selected Databricks guides combined into a single export."
                   permalink="/resources"
                   disabled={selectedItems.length === 0}
                 />

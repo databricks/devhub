@@ -85,7 +85,7 @@ const config: Config = {
       {
         id: "recipes",
         entryType: "recipe",
-        routeBasePath: "/resources/recipes",
+        routeBasePath: "/resources",
         contentSection: "recipes",
       },
     ],
@@ -96,6 +96,15 @@ const config: Config = {
         entryType: "solution",
         routeBasePath: "/solutions",
         contentSection: "solutions",
+      },
+    ],
+    [
+      contentEntriesPlugin,
+      {
+        id: "examples",
+        entryType: "example",
+        routeBasePath: "/resources",
+        contentSection: "examples",
       },
     ],
     llmsTxtPlugin,

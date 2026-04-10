@@ -177,13 +177,15 @@ test.describe("solutions page navigation", () => {
 });
 
 test.describe("resources page navigation", () => {
-  const TEMPLATES = [
-    { path: "/resources/hello-world-app" },
-    { path: "/resources/ai-chat-app" },
+  const RESOURCES = [
+    { path: "/resources/hello-world-app", kind: "guide" },
+    { path: "/resources/ai-chat-app", kind: "guide" },
+    { path: "/resources/agentic-support-console", kind: "example" },
+    { path: "/resources/databricks-local-bootstrap", kind: "guide" },
   ];
 
-  for (const { path } of TEMPLATES) {
-    test(`resource card navigates to ${path}`, async ({ page }) => {
+  for (const { path, kind } of RESOURCES) {
+    test(`${kind} card navigates to ${path}`, async ({ page }) => {
       await page.goto("/resources");
       const link = page.locator(`a[href="${path}"]`).first();
       await link.waitFor({ state: "visible" });
@@ -223,13 +225,62 @@ test.describe("solution detail page navigation", () => {
 });
 
 test.describe("resource detail page navigation", () => {
-  test('"All resources" back link navigates to /resources', async ({
+  test('"All resources" back link navigates to /resources from guide', async ({
     page,
   }) => {
     await page.goto("/resources/hello-world-app");
     await page.getByRole("link", { name: /All resources/ }).click();
     await page.waitForURL("**/resources");
     expect(new URL(page.url()).pathname).toBe("/resources");
+  });
+
+  test('"All resources" back link navigates to /resources from example', async ({
+    page,
+  }) => {
+    await page.goto("/resources/agentic-support-console");
+    await page.getByRole("link", { name: /All resources/ }).click();
+    await page.waitForURL("**/resources");
+    expect(new URL(page.url()).pathname).toBe("/resources");
+  });
+});
+
+test.describe("example detail page", () => {
+  test("shows example badge, GitHub link, and init command", async ({
+    page,
+  }) => {
+    const response = await page.goto("/resources/agentic-support-console");
+    expect(response?.status()).toBe(200);
+    await expect(
+      page.locator("main").getByText("Example", { exact: true }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Agentic Support Console", level: 1 }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: "View on GitHub" }),
+    ).toBeVisible();
+    await expect(
+      page.getByText("databricks apps init --template"),
+    ).toBeVisible();
+  });
+
+  test("shows included guide resources", async ({ page }) => {
+    await page.goto("/resources/agentic-support-console");
+    await expect(
+      page.getByRole("heading", { name: "Included Resources" }),
+    ).toBeVisible();
+    await expect(
+      page.getByText("Operational Data Analytics", { exact: true }),
+    ).toBeVisible();
+    await expect(
+      page.getByText("App with Lakebase", { exact: true }),
+    ).toBeVisible();
+    await expect(
+      page.getByText("Genie Conversational Analytics", { exact: true }),
+    ).toBeVisible();
+    await expect(
+      page.getByText("Query AI Gateway Endpoints", { exact: true }),
+    ).toBeVisible();
   });
 });
 

@@ -378,6 +378,55 @@
     background-color: rgb(255 255 255 / 0.1);
   }
 
+  .navbar-sidebar__items .menu__list-item-collapsible .menu__link--sublist,
+  .navbar-sidebar__items
+    .menu__list-item-collapsible
+    .menu__link--sublist-caret,
+  .navbar-sidebar__items .menu__list-item-collapsible .menu__caret {
+    color: rgb(255 255 255 / 0.5) !important;
+    font-weight: 600;
+  }
+
+  .navbar-sidebar__items
+    .menu__list-item-collapsible:hover
+    .menu__link--sublist,
+  .navbar-sidebar__items
+    .menu__list-item-collapsible:hover
+    .menu__link--sublist-caret,
+  .navbar-sidebar__items .menu__list-item-collapsible:hover .menu__caret {
+    color: rgb(255 255 255 / 0.88) !important;
+    background-color: transparent !important;
+  }
+
+  .navbar-sidebar__items
+    .menu__list-item-collapsible
+    .menu__link--sublist-caret::after,
+  .navbar-sidebar__items .menu__caret::before {
+    filter: invert(1) !important;
+  }
+
+  .navbar-sidebar__item--back .menu__link {
+    color: rgb(255 255 255 / 0.6) !important;
+  }
+
+  .navbar-sidebar__item--back .menu__link:hover {
+    color: #fff !important;
+  }
+
+  .navbar-sidebar__items .menu__list-item .menu__link {
+    color: rgb(255 255 255 / 0.78) !important;
+  }
+
+  .navbar-sidebar__items .menu__list-item .menu__link:hover {
+    color: #fff !important;
+    background-color: rgb(255 255 255 / 0.08) !important;
+  }
+
+  .navbar-sidebar__items .menu__link--active {
+    color: #fff !important;
+    background-color: rgb(255 255 255 / 0.1) !important;
+  }
+
   .navbar-sidebar--show .navbar__items--right > :not(.navbar__toggle) {
     display: none;
   }

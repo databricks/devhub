@@ -28,3 +28,6 @@ yarn-error.log*
 # Screenshots
 /screenshots
 .vercel
+
+# Dry run test folder
+/dry-run

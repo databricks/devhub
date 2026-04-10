@@ -349,3 +349,74 @@ export const templatePreviewItems: TemplatePreviewItem[] = templates.map(
     services: template.services,
   }),
 );
+
+export type Example = {
+  id: string;
+  name: string;
+  description: string;
+  image: string;
+  githubPath: string;
+  initCommand: string;
+  templateIds: string[];
+  recipeIds: string[];
+  tags: string[];
+  services: Service[];
+};
+
+const templateIndex: Record<string, Template> = Object.fromEntries(
+  templates.map((t) => [t.id, t]),
+);
+
+type ExampleConfig = {
+  id: string;
+  name: string;
+  description: string;
+  image: string;
+  githubPath: string;
+  initCommand: string;
+  templateIds: string[];
+  recipeIds: string[];
+};
+
+function createExample(config: ExampleConfig): Example {
+  const referencedTemplates = config.templateIds.map((id) => {
+    const t = templateIndex[id];
+    if (!t) throw new Error(`Unknown template id in example: ${id}`);
+    return t;
+  });
+  const referencedRecipes = config.recipeIds.map((id) => {
+    const r = recipeIndex[id];
+    if (!r) throw new Error(`Unknown recipe id in example: ${id}`);
+    return r;
+  });
+
+  const tags = [
+    ...new Set([
+      ...referencedTemplates.flatMap((t) => t.tags),
+      ...referencedRecipes.flatMap((r) => r.tags),
+    ]),
+  ];
+  const services = [
+    ...new Set([
+      ...referencedTemplates.flatMap((t) => t.services),
+      ...referencedRecipes.flatMap((r) => r.services),
+    ]),
+  ] as Service[];
+
+  return { ...config, tags, services };
+}
+
+export const examples: Example[] = [
+  createExample({
+    id: "agentic-support-console",
+    name: "Agentic Support Console",
+    description:
+      "End-to-end AI-powered support console combining Lakebase, Lakehouse Sync, a medallion pipeline, an LLM agent job, reverse sync, and a Databricks App with Genie analytics.",
+    image: "/img/examples/agentic-support-console.svg",
+    githubPath: "examples/agentic-support-console",
+    initCommand:
+      "databricks apps init --template https://github.com/databricks/devhub/tree/main/examples/agentic-support-console --name support-console",
+    templateIds: ["operational-data-analytics", "app-with-lakebase"],
+    recipeIds: ["genie-conversational-analytics", "foundation-models-api"],
+  }),
+];

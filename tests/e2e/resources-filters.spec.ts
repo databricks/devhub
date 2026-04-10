@@ -1,7 +1,12 @@
 import { test, expect } from "@playwright/test";
-import { recipesInOrder, templates } from "../../src/lib/recipes/recipes";
+import {
+  examples,
+  recipesInOrder,
+  templates,
+} from "../../src/lib/recipes/recipes";
 
-const RESOURCE_COUNT = templates.length + recipesInOrder.length;
+const RESOURCE_COUNT =
+  examples.length + templates.length + recipesInOrder.length;
 const TOTAL_RESOURCES = `${RESOURCE_COUNT} of ${RESOURCE_COUNT} resources`;
 
 function setupClipboardMock(page: import("@playwright/test").Page) {
@@ -32,7 +37,10 @@ test.describe("resources page search", () => {
 
     await page.getByRole("searchbox").fill("genie");
     await expect(
-      page.getByText(`3 of ${RESOURCE_COUNT} resources`),
+      page.getByText(`4 of ${RESOURCE_COUNT} resources`),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: "Agentic Support Console" }),
     ).toBeVisible();
     await expect(
       page.getByRole("link", { name: "Genie Analytics App" }),
@@ -73,26 +81,26 @@ test.describe("resources page service filter", () => {
 });
 
 test.describe("resources page resource type filter", () => {
-  test("Cookbooks filter shows only templates, Recipes shows only recipes", async ({
+  test("Examples filter shows only examples, Guides shows only guides", async ({
     page,
   }) => {
     await page.goto("/resources");
 
-    await page.getByRole("checkbox", { name: "Cookbooks" }).check();
+    await page.getByRole("checkbox", { name: "Examples" }).check();
     await expect(
-      page.getByRole("link", { name: "Hello World App" }),
+      page.getByRole("link", { name: "Agentic Support Console" }),
     ).toBeVisible();
     await expect(
-      page.getByRole("link", { name: "Databricks Local Bootstrap" }),
+      page.getByRole("link", { name: "Hello World App" }),
     ).toBeHidden();
 
-    await page.getByRole("checkbox", { name: "Cookbooks" }).uncheck();
-    await page.getByRole("checkbox", { name: "Recipes" }).check();
+    await page.getByRole("checkbox", { name: "Examples" }).uncheck();
+    await page.getByRole("checkbox", { name: "Guides" }).check();
     await expect(
       page.getByRole("link", { name: "Databricks Local Bootstrap" }),
     ).toBeVisible();
     await expect(
-      page.getByRole("link", { name: "Hello World App" }),
+      page.getByRole("link", { name: "Agentic Support Console" }),
     ).toBeHidden();
   });
 });
@@ -128,6 +136,20 @@ test.describe("resources page clear all filters", () => {
     await expect(page.getByRole("searchbox")).toHaveValue("");
     await expect(page.getByText(TOTAL_RESOURCES)).toBeVisible();
     await expect(page.getByRole("button", { name: "Clear all" })).toBeHidden();
+  });
+});
+
+test.describe("example cards are not selectable", () => {
+  test("example card has no checkbox", async ({ page }) => {
+    await page.goto("/resources");
+    const exampleCard = page.getByRole("link", {
+      name: "Agentic Support Console",
+    });
+    await expect(exampleCard).toBeVisible();
+    const card = exampleCard.locator(
+      "xpath=ancestor::div[contains(@class, 'rounded-xl')]",
+    );
+    await expect(card.getByRole("checkbox")).toBeHidden();
   });
 });
 

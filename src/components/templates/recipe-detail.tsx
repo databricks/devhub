@@ -48,7 +48,7 @@ export function RecipeDetail({
                     rawMarkdown={rawMarkdown}
                     title={recipe.name}
                     description={recipe.description}
-                    permalink={`/resources/recipes/${recipe.id}`}
+                    permalink={`/resources/${recipe.id}`}
                   />
                 </div>
 

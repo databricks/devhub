@@ -30,3 +30,11 @@ export function useRawSolutionMarkdown(slug: string): string | undefined {
   ) as ContentEntriesGlobalData;
   return data.rawMarkdownBySlug[slug];
 }
+
+export function useRawExampleMarkdown(slug: string): string {
+  const data = usePluginData(
+    "docusaurus-plugin-content-entries",
+    "examples",
+  ) as ContentEntriesGlobalData;
+  return data.rawMarkdownBySlug[slug] ?? "";
+}

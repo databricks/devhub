@@ -1,7 +1,7 @@
 import { Checkbox } from "@/components/ui/checkbox";
 import { SERVICES, type Service } from "@/lib/recipes/recipes";
 
-export type ResourceType = "templates" | "recipes";
+export type ResourceType = "examples" | "guides";
 
 export function ResourceFilters({
   selectedServices,
@@ -39,13 +39,13 @@ export function ResourceFilters({
 
       <div className="border-t border-black/8 pt-6 dark:border-white/8">
         <h3 className="mb-3 text-xs font-semibold tracking-wider text-black/50 uppercase dark:text-white/50">
-          Resources
+          Type
         </h3>
         <div className="space-y-2">
           {(
             [
-              { type: "templates" as const, label: "Cookbooks" },
-              { type: "recipes" as const, label: "Recipes" },
+              { type: "examples" as const, label: "Examples" },
+              { type: "guides" as const, label: "Guides" },
             ] as const
           ).map(({ type, label }) => (
             <label

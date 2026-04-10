@@ -56,7 +56,7 @@ export function ActiveFilters({
             variant="outline"
             className="gap-1 rounded-md border-db-cyan/30 bg-db-cyan/8 pr-1.5 text-[11px] font-medium text-db-navy dark:border-db-cyan/25 dark:bg-db-cyan/10 dark:text-db-cyan"
           >
-            {type === "templates" ? "Cookbooks" : "Recipes"}
+            {type === "examples" ? "Examples" : "Guides"}
             <XIcon className="size-3 opacity-50 group-hover/pill:opacity-100" />
           </Badge>
         </button>

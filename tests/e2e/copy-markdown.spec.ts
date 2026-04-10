@@ -38,7 +38,7 @@ test.describe("copy markdown exports raw markdown on recipe pages", () => {
     page,
   }) => {
     await setupClipboardMock(page);
-    await page.goto("/resources/recipes/databricks-local-bootstrap");
+    await page.goto("/resources/databricks-local-bootstrap");
 
     await clickCopyMarkdownAndWaitForToast(page);
 
@@ -76,6 +76,20 @@ test.describe("copy markdown exports raw markdown on template pages", () => {
     expect(copied).toContain("## Databricks Local Bootstrap");
     expect(copied).toContain("## Lakebase Data Persistence");
     expect(copied).toContain("---");
+  });
+});
+
+test.describe("copy markdown exports raw markdown on example pages", () => {
+  test("example detail page copies markdown content", async ({ page }) => {
+    await setupClipboardMock(page);
+    await page.goto("/resources/agentic-support-console");
+
+    await clickCopyMarkdownAndWaitForToast(page);
+
+    const copied = await getCopiedText(page);
+    expect(copied).toContain("## Agentic Support Console");
+    expect(copied).toContain("Data Flow");
+    expect(copied).toContain("Lakehouse Sync");
   });
 });
 

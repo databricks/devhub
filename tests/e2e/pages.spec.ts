@@ -15,6 +15,18 @@ const PAGES = [
     path: "/resources/genie-analytics-app",
     title: "Genie Analytics App",
   },
+  {
+    path: "/resources/agentic-support-console",
+    title: "Agentic Support Console",
+  },
+  {
+    path: "/resources/databricks-local-bootstrap",
+    title: "Databricks Local Bootstrap",
+  },
+  {
+    path: "/resources/medallion-architecture-from-cdc",
+    title: "Medallion Architecture from CDC History Tables",
+  },
   { path: "/docs/start-here", title: "Start here" },
   { path: "/docs/agents/getting-started", title: "Getting started" },
   { path: "/docs/agents/core-concepts", title: "Core concepts" },

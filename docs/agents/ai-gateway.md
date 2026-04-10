@@ -254,7 +254,7 @@ databricks serving-endpoints get $ENDPOINT_NAME \
 
 ## Governance features
 
-AI Gateway features vary by endpoint type. Configure them in the Serving UI or via the REST API (`PUT /api/2.0/serving-endpoints/{name}/ai-gateway`).
+AI Gateway features vary by endpoint type. Configure them in the Serving UI or through the REST API (`PUT /api/2.0/serving-endpoints/{name}/ai-gateway`).
 
 | Feature               | What it does                                                     |
 | --------------------- | ---------------------------------------------------------------- |

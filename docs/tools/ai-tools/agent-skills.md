@@ -1,8 +1,8 @@
 ---
-title: Agent Skills
+title: Agent skills
 ---
 
-# Agent Skills
+# Agent skills
 
 Agent skills codify instructions, conventions, and workflows so coding agents produce consistent Databricks outcomes.
 

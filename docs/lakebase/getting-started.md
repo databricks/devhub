@@ -1,8 +1,8 @@
 ---
-title: Getting Started
+title: Getting started
 ---
 
-# Getting Started
+# Getting started
 
 [Lakebase Postgres](https://docs.databricks.com/aws/en/oltp) is Databricks managed PostgreSQL for OLTP workloads that need low-latency, transactional access alongside your Lakehouse data.
 
@@ -43,7 +43,7 @@ databricks postgres create-project $PROJECT_ID \
 | `PROJECT_ID` | yes      | Unique project identifier (1-63 chars, lowercase letter start, lowercase/numbers/hyphens)                                                       |
 | `--json`     | no       | Inline JSON or `@path/to/file.json` with project spec (`display_name`, `pg_version`, `history_retention_duration`, `default_endpoint_settings`) |
 | `--no-wait`  | no       | Return immediately with operation details instead of waiting for completion                                                                     |
-| `--timeout`  | no       | Max time to wait for completion (e.g. `10m`). Ignored with `--no-wait`                                                                          |
+| `--timeout`  | no       | Max time to wait for completion (for example, `10m`). Ignored with `--no-wait`                                                                  |
 | `--debug`    | no       | Enable debug logging                                                                                                                            |
 | `-o json`    | no       | Output as JSON (default: text)                                                                                                                  |
 | `--target`   | no       | Bundle target to use (if applicable)                                                                                                            |
@@ -72,7 +72,7 @@ databricks postgres list-endpoints \
 | -------------- | -------- | ------------------------------------------------------------------ |
 | `PARENT`       | yes      | Branch resource path: `projects/{project_id}/branches/{branch_id}` |
 | `-o json`      | no       | Output as JSON (default: text)                                     |
-| `--page-size`  | no       | Max items per page; if set, must be at least `10`                  |
+| `--page-size`  | no       | Max items per page (must be at least `10` if set)                  |
 | `--page-token` | no       | Pagination token for next page                                     |
 | `--debug`      | no       | Enable debug logging                                               |
 | `--target`     | no       | Bundle target to use (if applicable)                               |
@@ -189,12 +189,12 @@ databricks psql \
 
 | Option          | Required | Description                                                                                       |
 | --------------- | -------- | ------------------------------------------------------------------------------------------------- |
-| `--project`     | no       | Project ID. With a TTY, omit to choose from prompts; in CI or scripts, set explicitly when needed |
+| `--project`     | no       | Project ID. With a TTY, omit to choose from prompts. In CI or scripts, set explicitly when needed |
 | `--branch`      | no       | Branch ID (default: auto-select when only one exists)                                             |
 | `--endpoint`    | no       | Endpoint ID (default: auto-select when only one exists)                                           |
 | `--autoscaling` | no       | Only show Lakebase Autoscaling projects                                                           |
 | `--provisioned` | no       | Only show Lakebase Provisioned instances                                                          |
-| `--max-retries` | no       | Connection retries; 0 to disable (default: 3)                                                     |
+| `--max-retries` | no       | Connection retries, 0 to disable (default: 3)                                                     |
 | `--debug`       | no       | Enable debug logging                                                                              |
 | `-o json`       | no       | Output as JSON (default: text)                                                                    |
 | `--target`      | no       | Bundle target to use (if applicable)                                                              |
@@ -235,11 +235,11 @@ Use the returned token as the password, with your Databricks email as the userna
 
 The fastest path is to use a [template](/resources) with an AI coding agent. Copy a template into your agent and describe what you want to build. [Start here](/docs/start-here) for the full workflow.
 
-| Template                                                  | Best for                                           |
-| --------------------------------------------------------- | -------------------------------------------------- |
-| [App with Lakebase](/resources/app-with-lakebase)         | CRUD apps with persistent storage                  |
-| [AI Chat App](/resources/ai-chat-app)                     | Conversational AI with chat history                |
-| [Lakebase Off-Platform](/resources/lakebase-off-platform) | Apps hosted outside Databricks (AWS, Vercel, etc.) |
+| Template                                                  | Best for                                                 |
+| --------------------------------------------------------- | -------------------------------------------------------- |
+| [App with Lakebase](/resources/app-with-lakebase)         | CRUD apps with persistent storage                        |
+| [AI Chat App](/resources/ai-chat-app)                     | Conversational AI with chat history                      |
+| [Lakebase Off-Platform](/resources/lakebase-off-platform) | Apps hosted outside Databricks (AWS, Vercel, and others) |
 
 Each cookbook includes the [Create a Lakebase Instance](/resources/app-with-lakebase#create-a-lakebase-instance) recipe, which walks through project creation and connection value collection in detail.
 

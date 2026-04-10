@@ -1,8 +1,8 @@
 ---
-title: Getting Started
+title: Getting started
 ---
 
-# Getting Started
+# Getting started
 
 Databricks agents are LLM-driven applications that can plan, call tools, and return structured output. Agents are deployed as [Databricks Apps](/docs/apps/getting-started). This guide uses the [OpenAI Agents SDK](https://platform.openai.com/docs/guides/agents-sdk) with [MLflow ResponsesAgent](/docs/agents/core-concepts#responsesagent) as its primary example.
 
@@ -85,14 +85,14 @@ databricks bundle validate \
   --profile $DATABRICKS_PROFILE
 ```
 
-| Option      | Required | Description                                                       |
-| ----------- | -------- | ----------------------------------------------------------------- |
-| `--strict`  | no       | Treat warnings as errors                                          |
-| `--debug`   | no       | Enable debug logging                                              |
-| `-o json`   | no       | Output as JSON (default: text)                                    |
-| `--var`     | no       | Set values for bundle config variables (e.g. `--var="key=value"`) |
-| `--target`  | no       | Bundle target (e.g. `dev`, `prod`)                                |
-| `--profile` | no       | Databricks CLI profile name                                       |
+| Option      | Required | Description                                                               |
+| ----------- | -------- | ------------------------------------------------------------------------- |
+| `--strict`  | no       | Treat warnings as errors                                                  |
+| `--debug`   | no       | Enable debug logging                                                      |
+| `-o json`   | no       | Output as JSON (default: text)                                            |
+| `--var`     | no       | Set values for bundle config variables (for example, `--var="key=value"`) |
+| `--target`  | no       | Bundle target (for example, `dev`, `prod`)                                |
+| `--profile` | no       | Databricks CLI profile name                                               |
 
 Deploy and start the app:
 
@@ -127,36 +127,36 @@ databricks bundle run agent_openai_agents_sdk \
 
 ### `databricks bundle deploy`
 
-| Option                  | Required | Description                                                       |
-| ----------------------- | -------- | ----------------------------------------------------------------- |
-| `--auto-approve`        | no       | Skip confirmation prompts                                         |
-| `--force-lock`          | no       | Force acquisition of deployment lock                              |
-| `--force`               | no       | Force-override Git branch validation                              |
-| `--fail-on-active-runs` | no       | Fail if jobs or pipelines are running                             |
-| `--cluster-id`          | no       | Override cluster in deployment                                    |
-| `--plan`                | no       | Path to JSON plan file                                            |
-| `--debug`               | no       | Enable debug logging                                              |
-| `-o json`               | no       | Output as JSON (default: text)                                    |
-| `--var`                 | no       | Set values for bundle config variables (e.g. `--var="key=value"`) |
-| `--target`              | no       | Bundle target (e.g. `dev`, `prod`)                                |
-| `--profile`             | no       | Databricks CLI profile name                                       |
+| Option                  | Required | Description                                                               |
+| ----------------------- | -------- | ------------------------------------------------------------------------- |
+| `--auto-approve`        | no       | Skip confirmation prompts                                                 |
+| `--force-lock`          | no       | Force acquisition of deployment lock                                      |
+| `--force`               | no       | Force-override Git branch validation                                      |
+| `--fail-on-active-runs` | no       | Fail if jobs or pipelines are running                                     |
+| `--cluster-id`          | no       | Override cluster in deployment                                            |
+| `--plan`                | no       | Path to JSON plan file                                                    |
+| `--debug`               | no       | Enable debug logging                                                      |
+| `-o json`               | no       | Output as JSON (default: text)                                            |
+| `--var`                 | no       | Set values for bundle config variables (for example, `--var="key=value"`) |
+| `--target`              | no       | Bundle target (for example, `dev`, `prod`)                                |
+| `--profile`             | no       | Databricks CLI profile name                                               |
 
 ### `databricks bundle run`
 
-| Option      | Required | Description                                                                |
-| ----------- | -------- | -------------------------------------------------------------------------- |
-| `KEY`       | yes      | Bundle resource key from `databricks.yml` (e.g. `agent_openai_agents_sdk`) |
-| `--no-wait` | no       | Return immediately instead of waiting for completion                       |
-| `--restart` | no       | Restart if already running                                                 |
-| `--debug`   | no       | Enable debug logging                                                       |
-| `-o json`   | no       | Output as JSON (default: text)                                             |
-| `--var`     | no       | Set values for bundle config variables (e.g. `--var="key=value"`)          |
-| `--target`  | no       | Bundle target (e.g. `dev`, `prod`)                                         |
-| `--profile` | no       | Databricks CLI profile name                                                |
+| Option      | Required | Description                                                                        |
+| ----------- | -------- | ---------------------------------------------------------------------------------- |
+| `KEY`       | yes      | Bundle resource key from `databricks.yml` (for example, `agent_openai_agents_sdk`) |
+| `--no-wait` | no       | Return immediately instead of waiting for completion                               |
+| `--restart` | no       | Restart if already running                                                         |
+| `--debug`   | no       | Enable debug logging                                                               |
+| `-o json`   | no       | Output as JSON (default: text)                                                     |
+| `--var`     | no       | Set values for bundle config variables (for example, `--var="key=value"`)          |
+| `--target`  | no       | Bundle target (for example, `dev`, `prod`)                                         |
+| `--profile` | no       | Databricks CLI profile name                                                        |
 
 `bundle deploy` uploads code and configures resources. `bundle run` starts (or restarts) the app with the new code. Both are required for each update. The resource key (`agent_openai_agents_sdk`) is defined in `databricks.yml`. The app name (`agent-openai-agents-sdk`) is what appears in the workspace.
 
-In CI, pass `--auto-approve` to `bundle deploy` to skip confirmation prompts that occur when the plan includes destructive actions (e.g., recreating a UC schema or pipeline).
+In CI, pass `--auto-approve` to `bundle deploy` to skip confirmation prompts that occur when the plan includes destructive actions (for example, recreating a UC schema or pipeline).
 
 ## Verify
 
@@ -175,14 +175,14 @@ databricks apps get $APP_NAME \
   --profile $DATABRICKS_PROFILE
 ```
 
-| Option      | Required | Description                                                       |
-| ----------- | -------- | ----------------------------------------------------------------- |
-| `NAME`      | yes      | App name                                                          |
-| `--debug`   | no       | Enable debug logging                                              |
-| `-o json`   | no       | Output as JSON (default: text)                                    |
-| `--target`  | no       | Bundle target to use (if applicable)                              |
-| `--var`     | no       | Set values for bundle config variables (e.g. `--var="key=value"`) |
-| `--profile` | no       | Databricks CLI profile name                                       |
+| Option      | Required | Description                                                               |
+| ----------- | -------- | ------------------------------------------------------------------------- |
+| `NAME`      | yes      | App name                                                                  |
+| `--debug`   | no       | Enable debug logging                                                      |
+| `-o json`   | no       | Output as JSON (default: text)                                            |
+| `--target`  | no       | Bundle target to use (if applicable)                                      |
+| `--var`     | no       | Set values for bundle config variables (for example, `--var="key=value"`) |
+| `--profile` | no       | Databricks CLI profile name                                               |
 
 Query the deployed agent using the `url` field from the `apps get` output (OAuth required, PATs are not supported):
 

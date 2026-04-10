@@ -62,10 +62,10 @@ databricks apps deploy $APP_NAME \
 | `--debug`            | no       | Enable debug logging                                                                       |
 | `-o json`            | no       | Output as JSON (default: text)                                                             |
 | `--target`           | no       | Bundle target to use (if applicable)                                                       |
-| `--var`              | no       | Set values for bundle config variables (e.g. `--var="key=value"`)                          |
+| `--var`              | no       | Set values for bundle config variables (for example, `--var="key=value"`)                  |
 | `--profile`          | no       | Databricks CLI profile name                                                                |
 
-The CLI validates configuration, builds the project, uploads it, and starts the app. By default it runs the same project validation as `databricks apps validate` (build, typecheck, lint); pass `--skip-validation` to skip that step. No `--source-code-path` is needed when deploying from a scaffolded AppKit project.
+The CLI validates configuration, builds the project, uploads it, and starts the app. By default it runs the same project validation as `databricks apps validate` (build, typecheck, lint). Pass `--skip-validation` to skip that step. No `--source-code-path` is needed when deploying from a scaffolded AppKit project.
 
 ### Verify the deployment
 
@@ -84,14 +84,14 @@ databricks apps get $APP_NAME \
   --profile $DATABRICKS_PROFILE
 ```
 
-| Option      | Required | Description                                                       |
-| ----------- | -------- | ----------------------------------------------------------------- |
-| `NAME`      | yes      | App name                                                          |
-| `-o json`   | no       | Output as JSON                                                    |
-| `--debug`   | no       | Enable debug logging                                              |
-| `--target`  | no       | Bundle target to use (if applicable)                              |
-| `--var`     | no       | Set values for bundle config variables (e.g. `--var="key=value"`) |
-| `--profile` | no       | Databricks CLI profile name                                       |
+| Option      | Required | Description                                                               |
+| ----------- | -------- | ------------------------------------------------------------------------- |
+| `NAME`      | yes      | App name                                                                  |
+| `-o json`   | no       | Output as JSON                                                            |
+| `--debug`   | no       | Enable debug logging                                                      |
+| `--target`  | no       | Bundle target to use (if applicable)                                      |
+| `--var`     | no       | Set values for bundle config variables (for example, `--var="key=value"`) |
+| `--profile` | no       | Databricks CLI profile name                                               |
 
 <details>
 <summary>Example output</summary>
@@ -155,20 +155,20 @@ databricks apps logs $APP_NAME \
   --profile $DATABRICKS_PROFILE
 ```
 
-| Option            | Required | Description                                                         |
-| ----------------- | -------- | ------------------------------------------------------------------- |
-| `NAME`            | no       | App name. Omit from project directory (auto-detected)               |
-| `-f` / `--follow` | no       | Stream logs until interrupted                                       |
-| `--tail-lines`    | no       | Recent log lines to show before streaming (default: 200, 0 for all) |
-| `--timeout`       | no       | Max streaming time with `--follow` (0 disables)                     |
-| `--search`        | no       | Search term to filter logs                                          |
-| `--source`        | no       | Filter by source: `APP`, `SYSTEM`, or both                          |
-| `--output-file`   | no       | File path to write logs (in addition to stdout)                     |
-| `--debug`         | no       | Enable debug logging                                                |
-| `-o json`         | no       | Output as JSON (default: text)                                      |
-| `--target`        | no       | Bundle target to use (if applicable)                                |
-| `--var`           | no       | Set values for bundle config variables (e.g. `--var="key=value"`)   |
-| `--profile`       | no       | Databricks CLI profile name                                         |
+| Option            | Required | Description                                                               |
+| ----------------- | -------- | ------------------------------------------------------------------------- |
+| `NAME`            | no       | App name. Omit from project directory (auto-detected)                     |
+| `-f` / `--follow` | no       | Stream logs until interrupted                                             |
+| `--tail-lines`    | no       | Recent log lines to show before streaming (default: 200, 0 for all)       |
+| `--timeout`       | no       | Max streaming time with `--follow` (0 disables)                           |
+| `--search`        | no       | Search term to filter logs                                                |
+| `--source`        | no       | Filter by source: `APP`, `SYSTEM`, or both                                |
+| `--output-file`   | no       | File path to write logs (in addition to stdout)                           |
+| `--debug`         | no       | Enable debug logging                                                      |
+| `-o json`         | no       | Output as JSON (default: text)                                            |
+| `--target`        | no       | Bundle target to use (if applicable)                                      |
+| `--var`           | no       | Set values for bundle config variables (for example, `--var="key=value"`) |
+| `--profile`       | no       | Databricks CLI profile name                                               |
 
 <details>
 <summary>Example log output</summary>
@@ -287,18 +287,18 @@ databricks apps delete $APP_NAME \
   --profile $DATABRICKS_PROFILE
 ```
 
-| Option           | Required | Description                                                       |
-| ---------------- | -------- | ----------------------------------------------------------------- |
-| `NAME`           | no       | App name. Omit from project directory (auto-detected)             |
-| `--no-wait`      | no       | Return immediately (stop/start only)                              |
-| `--timeout`      | no       | Max time to wait for completion (default: 20m, stop/start only)   |
-| `--auto-approve` | no       | Skip confirmation prompts (delete only)                           |
-| `--force-lock`   | no       | Force acquisition of deployment lock (delete only)                |
-| `--debug`        | no       | Enable debug logging                                              |
-| `-o json`        | no       | Output as JSON (default: text)                                    |
-| `--target`       | no       | Bundle target to use (if applicable)                              |
-| `--var`          | no       | Set values for bundle config variables (e.g. `--var="key=value"`) |
-| `--profile`      | no       | Databricks CLI profile name                                       |
+| Option           | Required | Description                                                               |
+| ---------------- | -------- | ------------------------------------------------------------------------- |
+| `NAME`           | no       | App name. Omit from project directory (auto-detected)                     |
+| `--no-wait`      | no       | Return immediately (stop/start only)                                      |
+| `--timeout`      | no       | Max time to wait for completion (default: 20m, stop/start only)           |
+| `--auto-approve` | no       | Skip confirmation prompts (delete only)                                   |
+| `--force-lock`   | no       | Force acquisition of deployment lock (delete only)                        |
+| `--debug`        | no       | Enable debug logging                                                      |
+| `-o json`        | no       | Output as JSON (default: text)                                            |
+| `--target`       | no       | Bundle target to use (if applicable)                                      |
+| `--var`          | no       | Set values for bundle config variables (for example, `--var="key=value"`) |
+| `--profile`      | no       | Databricks CLI profile name                                               |
 
 `apps delete` prompts for confirmation. Pass `--auto-approve` in CI to skip the prompt.
 

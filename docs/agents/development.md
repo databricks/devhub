@@ -4,7 +4,7 @@ title: Development
 
 # Development
 
-This guide continues from [Getting Started](/docs/agents/getting-started), where you cloned the `agent-openai-agents-sdk` template and ran the quickstart. Here you'll find the full local dev workflow, project structure, evaluation, deployment pipeline, and app management commands.
+This guide continues from [Getting Started](/docs/agents/getting-started), where you cloned the `agent-openai-agents-sdk` template and ran the quickstart. This page covers the full local dev workflow, project structure, evaluation, deployment pipeline, and app management commands.
 
 ## Local dev loop
 
@@ -15,7 +15,7 @@ cd agent-openai-agents-sdk
 uv run start-app
 ```
 
-This starts the FastAPI agent server and a chat UI frontend process at `http://localhost:8000`. The server also serves a built-in chat UI at the root (`/`), so you can alternatively run just the server:
+This starts the FastAPI agent server and a chat UI frontend process at `http://localhost:8000`. The server also serves a built-in chat UI at the root (`/`), so alternatively run the server alone:
 
 ```bash
 uv run start-server
@@ -67,12 +67,12 @@ cp .env.example .env
 
 Key variables:
 
-| Variable                    | Purpose                                      |
-| --------------------------- | -------------------------------------------- |
-| `DATABRICKS_CONFIG_PROFILE` | CLI profile for local auth (e.g., `DEFAULT`) |
-| `DATABRICKS_HOST`           | Workspace URL (alternative to profile)       |
-| `DATABRICKS_TOKEN`          | PAT for local dev (alternative to profile)   |
-| `MLFLOW_EXPERIMENT_ID`      | MLflow experiment for tracing                |
+| Variable                    | Purpose                                             |
+| --------------------------- | --------------------------------------------------- |
+| `DATABRICKS_CONFIG_PROFILE` | CLI profile for local auth (for example, `DEFAULT`) |
+| `DATABRICKS_HOST`           | Workspace URL (alternative to profile)              |
+| `DATABRICKS_TOKEN`          | PAT for local dev (alternative to profile)          |
+| `MLFLOW_EXPERIMENT_ID`      | MLflow experiment for tracing                       |
 
 For deployed apps, the platform injects `DATABRICKS_HOST`, `DATABRICKS_CLIENT_ID`, and `DATABRICKS_CLIENT_SECRET` automatically.
 
@@ -256,7 +256,7 @@ databricks apps delete $APP_NAME \
   --profile $DATABRICKS_PROFILE
 ```
 
-See [Apps development](/docs/apps/development) for option tables covering `get`, `logs`, `stop`, `start`, and `delete`. `apps delete` prompts for confirmation; pass `--auto-approve` in CI to skip the prompt.
+See [Apps development](/docs/apps/development) for option tables covering `get`, `logs`, `stop`, `start`, and `delete`. `apps delete` prompts for confirmation. Pass `--auto-approve` in CI to skip the prompt.
 
 ## Related recipes
 

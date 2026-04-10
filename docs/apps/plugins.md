@@ -4,7 +4,7 @@ title: Plugins
 
 # Plugins
 
-AppKit plugins are modular extensions that add capabilities to your app. Built-in plugins cover common needs (database, analytics, files). You can also create custom plugins for your own logic.
+AppKit plugins are modular extensions that add capabilities to your app. Built-in plugins cover common needs (database, analytics, files). Create custom plugins for your own logic as needed.
 
 ## Built-in plugins
 
@@ -26,16 +26,16 @@ databricks apps manifest \
   --profile $DATABRICKS_PROFILE
 ```
 
-| Option       | Required | Description                                                             |
-| ------------ | -------- | ----------------------------------------------------------------------- |
-| `--template` | no       | Template path (local directory or GitHub URL). Default: AppKit template |
-| `--branch`   | no       | Git branch or tag (mutually exclusive with `--version`)                 |
-| `--version`  | no       | AppKit version for default template (default: main)                     |
-| `--debug`    | no       | Enable debug logging                                                    |
-| `-o json`    | no       | Output as JSON (default: text)                                          |
-| `--target`   | no       | Bundle target to use (if applicable)                                    |
-| `--var`      | no       | Set values for bundle config variables (e.g. `--var="key=value"`)       |
-| `--profile`  | no       | Databricks CLI profile name                                             |
+| Option       | Required | Description                                                               |
+| ------------ | -------- | ------------------------------------------------------------------------- |
+| `--template` | no       | Template path (local directory or GitHub URL). Default: AppKit template   |
+| `--branch`   | no       | Git branch or tag (mutually exclusive with `--version`)                   |
+| `--version`  | no       | AppKit version for default template (default: main)                       |
+| `--debug`    | no       | Enable debug logging                                                      |
+| `-o json`    | no       | Output as JSON (default: text)                                            |
+| `--target`   | no       | Bundle target to use (if applicable)                                      |
+| `--var`      | no       | Set values for bundle config variables (for example, `--var="key=value"`) |
+| `--profile`  | no       | Databricks CLI profile name                                               |
 
 Use the Common tab for a typical non-interactive scaffold (`--name` suppresses prompts and applies defaults). Use the All Options tab to choose plugins and resource values with flags instead of prompts. For every `databricks apps init` flag, see the option table in [Apps getting started](/docs/apps/getting-started#scaffold-an-app).
 
@@ -74,7 +74,7 @@ databricks apps init \
 
 ## Using plugins
 
-Plugins are configured in `server/server.ts` via `createApp`:
+Plugins are configured in `server/server.ts` using `createApp`:
 
 ```typescript
 import { createApp, lakebase, server } from "@databricks/appkit";

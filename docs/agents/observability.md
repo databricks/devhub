@@ -52,7 +52,7 @@ The `uv run quickstart` script in [agent templates](/docs/agents/getting-started
 MLflow AgentServer provides automatic tracing with no additional code:
 
 - Methods decorated with `@invoke()` and `@stream()` are traced automatically
-- LLM calls are captured via [MLflow autologging](https://mlflow.org/docs/latest/genai/tracing/#one-line-auto-tracing-integrations)
+- LLM calls are captured through [MLflow autologging](https://mlflow.org/docs/latest/genai/tracing/#one-line-auto-tracing-integrations)
 - Streaming responses are aggregated into complete traces
 
 Traces appear in the MLflow experiment UI and include inputs, outputs, intermediate tool calls, and latency per step.
@@ -65,9 +65,9 @@ See [App instrumentation](https://docs.databricks.com/aws/en/mlflow3/genai/traci
 
 ## Production tracing
 
-For agents deployed via `databricks bundle deploy` to Apps, tracing is automatic. Traces are logged to the MLflow experiment linked to the app.
+For agents deployed using `databricks bundle deploy` to Apps, tracing is automatic. Traces are logged to the MLflow experiment linked to the app.
 
-For agents on Model Serving (via `agents.deploy()`), tracing is also automatic. If using a custom CPU serving endpoint, enable tracing with environment variables:
+For agents on Model Serving (using `agents.deploy()`), tracing is also automatic. If using a custom CPU serving endpoint, enable tracing with environment variables:
 
 ```text
 ENABLE_MLFLOW_TRACING=true

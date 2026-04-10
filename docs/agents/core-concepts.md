@@ -1,8 +1,8 @@
 ---
-title: Core Concepts
+title: Core concepts
 ---
 
-# Core Concepts
+# Core concepts
 
 ## ResponsesAgent
 
@@ -13,7 +13,7 @@ title: Core Concepts
 - Tool-calling message history
 - Compatibility with AI Playground, Agent Evaluation, and Agent Monitoring
 
-You can use any framework (OpenAI Agents SDK, LangGraph, custom) as long as you implement the ResponsesAgent interface. The [`agent-openai-agents-sdk`](https://github.com/databricks/app-templates/tree/main/agent-openai-agents-sdk) template, used throughout these docs as the primary example, uses the OpenAI Agents SDK.
+Any framework works (OpenAI Agents SDK, LangGraph, custom) as long as it implements the ResponsesAgent interface. The [`agent-openai-agents-sdk`](https://github.com/databricks/app-templates/tree/main/agent-openai-agents-sdk) template, used throughout these docs as the primary example, uses the OpenAI Agents SDK.
 
 ## AgentServer
 

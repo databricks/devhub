@@ -1,8 +1,8 @@
 ---
-title: Core Concepts
+title: Core concepts
 ---
 
-# Core Concepts
+# Core concepts
 
 ## App model
 
@@ -12,7 +12,7 @@ A Databricks App is a serverless containerized web application running inside yo
 https://<app-name>-<workspace-id>.<region>.databricksapps.com
 ```
 
-The URL is assigned at creation and cannot be changed.
+The platform assigns the URL at creation. It cannot change.
 
 ## Configuration files
 
@@ -80,16 +80,16 @@ Custom variables go in `app.yaml` under `env`. Use `value` for plain values, `va
 
 ## Auth model
 
-Each app gets a dedicated **service principal** with `DATABRICKS_CLIENT_ID` and `DATABRICKS_CLIENT_SECRET` injected at runtime. The service principal is created automatically and deleted when the app is deleted.
+Each app gets a dedicated **service principal** with `DATABRICKS_CLIENT_ID` and `DATABRICKS_CLIENT_SECRET` injected at runtime. The platform creates the service principal automatically and deletes it when the app is deleted.
 
-**User authorization** (Public Preview) forwards the signed-in user's token via the `x-forwarded-access-token` HTTP header. Scopes (e.g., `sql`, `dashboards.genie`, `files.files`) are configured in the workspace UI. See [app authorization](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/auth) for details.
+**User authorization** (Public Preview) forwards the signed-in user's token through the `x-forwarded-access-token` HTTP header. Scopes (for example, `sql`, `dashboards.genie`, `files.files`) are configured in the workspace UI. See [app authorization](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/auth) for details.
 
 ## Deploy pipeline
 
 When you run `databricks apps deploy`, the platform:
 
 1. Detects `package.json` and runs `npm install`
-2. Installs Python dependencies via `pip` if `requirements.txt` exists, or via `uv sync` if both `pyproject.toml` and `uv.lock` exist
+2. Installs Python dependencies using `pip` if `requirements.txt` exists, or using `uv sync` if both `pyproject.toml` and `uv.lock` exist
 3. Runs `npm run build` if a `build` script is defined
 4. Starts the app using the `command` from `app.yaml` (defaults to `npm run start` for Node apps)
 
@@ -102,7 +102,7 @@ Your app must bind to `0.0.0.0` on the port specified by `DATABRICKS_APP_PORT`.
 | Medium | Up to 2 | 6 GB  | 0.5   |
 | Large  | Up to 4 | 12 GB | 1.0   |
 
-Medium is the default. Compute size is configured in the workspace UI (not available via CLI).
+Medium is the default. Compute size is configured in the workspace UI (not available through the CLI).
 
 ## Constraints
 

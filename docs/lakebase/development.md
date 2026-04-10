@@ -48,11 +48,11 @@ env:
 
 For pool configuration, ORM access (`.pool`, `.getOrmConfig()`, `.getPgConfig()`), and the full plugin API, see the [AppKit Lakebase plugin docs](/docs/appkit/v0/plugins/lakebase).
 
-## Off-platform (AWS, Vercel, Netlify, etc.)
+## Off-platform (AWS, Vercel, Netlify, and others)
 
 The [Lakebase Off-Platform](/resources/lakebase-off-platform) cookbook is a complete guide for using Lakebase from apps hosted outside Databricks. It includes:
 
-- [Env Management](/resources/lakebase-off-platform#lakebase-env-management-for-off-platform-apps): how to obtain every connection value via CLI and validate with Zod
+- [Env Management](/resources/lakebase-off-platform#lakebase-env-management-for-off-platform-apps): how to obtain every connection value using the CLI and validate with Zod
 - [Token Management](/resources/lakebase-off-platform#lakebase-token-management): cached workspace and Lakebase credential refresh (tokens expire in ~1 hour)
 - [Drizzle ORM](/resources/lakebase-off-platform#drizzle--lakebase-in-an-off-platform-app): connecting Drizzle to Lakebase with `pg` password callbacks and migration-time credentials
 
@@ -110,7 +110,7 @@ databricks postgres delete-branch \
 
 Define Lakebase infrastructure as code in a `databricks.yml` file using [Databricks Declarative Automation Bundles](https://docs.databricks.com/aws/en/dev-tools/bundles/). This lets you version-control projects, branches, and endpoints alongside your application code.
 
-A bundle defines `postgres_projects`, `postgres_branches`, and `postgres_endpoints` under `resources`. Resources reference each other with `${resources.<type>.<key>.id}`, which resolves to the full resource name (e.g. `projects/my-lakebase-app`). Branches and their auto-created `primary` endpoint inherit `default_endpoint_settings` from the project.
+A bundle defines `postgres_projects`, `postgres_branches`, and `postgres_endpoints` under `resources`. Resources reference each other with `${resources.<type>.<key>.id}`, which resolves to the full resource name (for example, `projects/my-lakebase-app`). Branches and their auto-created `primary` endpoint inherit `default_endpoint_settings` from the project.
 
 <details>
 <summary>Example <code>databricks.yml</code> with a project, dev branch, and read-only replica</summary>
@@ -177,16 +177,16 @@ databricks bundle deploy \
   --profile $DATABRICKS_PROFILE
 ```
 
-| Option           | Required | Description                                                       |
-| ---------------- | -------- | ----------------------------------------------------------------- |
-| `--strict`       | no       | Treat warnings as errors (validate only)                          |
-| `--auto-approve` | no       | Skip confirmation prompts (deploy only)                           |
-| `--force-lock`   | no       | Force acquisition of deployment lock (deploy only)                |
-| `--debug`        | no       | Enable debug logging                                              |
-| `-o json`        | no       | Output as JSON (default: text)                                    |
-| `--var`          | no       | Set values for bundle config variables (e.g. `--var="key=value"`) |
-| `--target`       | no       | Bundle target (e.g. `dev`, `prod`)                                |
-| `--profile`      | no       | Databricks CLI profile name                                       |
+| Option           | Required | Description                                                               |
+| ---------------- | -------- | ------------------------------------------------------------------------- |
+| `--strict`       | no       | Treat warnings as errors (validate only)                                  |
+| `--auto-approve` | no       | Skip confirmation prompts (deploy only)                                   |
+| `--force-lock`   | no       | Force acquisition of deployment lock (deploy only)                        |
+| `--debug`        | no       | Enable debug logging                                                      |
+| `-o json`        | no       | Output as JSON (default: text)                                            |
+| `--var`          | no       | Set values for bundle config variables (for example, `--var="key=value"`) |
+| `--target`       | no       | Bundle target (for example, `dev`, `prod`)                                |
+| `--profile`      | no       | Databricks CLI profile name                                               |
 
 `bundle deploy` is idempotent -- it creates new resources and updates existing ones to match the configuration. Unlike agents or apps, there is no `bundle run` step; Lakebase resources are active once deployed.
 

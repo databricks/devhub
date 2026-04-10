@@ -1,8 +1,8 @@
 ---
-title: Core Concepts
+title: Core concepts
 ---
 
-# Core Concepts
+# Core concepts
 
 ## Resource hierarchy
 
@@ -68,7 +68,7 @@ Branches require an expiration policy (`ttl`, `expire_time`, or `no_expiry: true
 
 ## Update masks
 
-Update commands require an update mask specifying which fields to modify. The `--json` payload contains the new values; only masked fields change.
+Update commands require an update mask specifying which fields to modify. The `--json` payload contains the new values. Only masked fields change.
 
 ```bash title="Common"
 databricks postgres update-branch \
@@ -90,17 +90,17 @@ databricks postgres update-branch \
   --profile $DATABRICKS_PROFILE
 ```
 
-| Option        | Required | Description                                                         |
-| ------------- | -------- | ------------------------------------------------------------------- |
-| `NAME`        | yes      | Branch resource path: `projects/{project_id}/branches/{branch_id}`  |
-| `UPDATE_MASK` | yes      | Comma-separated list of fields to update (e.g. `spec.is_protected`) |
-| `--json`      | yes      | JSON with new field values                                          |
-| `--no-wait`   | no       | Return immediately with operation details                           |
-| `--timeout`   | no       | Max time to wait for completion                                     |
-| `--debug`     | no       | Enable debug logging                                                |
-| `-o json`     | no       | Output as JSON (default: text)                                      |
-| `--target`    | no       | Bundle target to use (if applicable)                                |
-| `--profile`   | no       | Databricks CLI profile name                                         |
+| Option        | Required | Description                                                                 |
+| ------------- | -------- | --------------------------------------------------------------------------- |
+| `NAME`        | yes      | Branch resource path: `projects/{project_id}/branches/{branch_id}`          |
+| `UPDATE_MASK` | yes      | Comma-separated list of fields to update (for example, `spec.is_protected`) |
+| `--json`      | yes      | JSON with new field values                                                  |
+| `--no-wait`   | no       | Return immediately with operation details                                   |
+| `--timeout`   | no       | Max time to wait for completion                                             |
+| `--debug`     | no       | Enable debug logging                                                        |
+| `-o json`     | no       | Output as JSON (default: text)                                              |
+| `--target`    | no       | Bundle target to use (if applicable)                                        |
+| `--profile`   | no       | Databricks CLI profile name                                                 |
 
 For multiple fields, use a comma-separated mask (see autoscaling example below).
 
@@ -138,17 +138,17 @@ databricks postgres update-endpoint \
   --profile $DATABRICKS_PROFILE
 ```
 
-| Option        | Required | Description                                                                                  |
-| ------------- | -------- | -------------------------------------------------------------------------------------------- |
-| `NAME`        | yes      | Endpoint resource path: `projects/{project_id}/branches/{branch_id}/endpoints/{endpoint_id}` |
-| `UPDATE_MASK` | yes      | Comma-separated fields (e.g. `spec.autoscaling_limit_min_cu,spec.autoscaling_limit_max_cu`)  |
-| `--json`      | yes      | JSON with new field values                                                                   |
-| `--no-wait`   | no       | Return immediately with operation details                                                    |
-| `--timeout`   | no       | Max time to wait for completion                                                              |
-| `--debug`     | no       | Enable debug logging                                                                         |
-| `-o json`     | no       | Output as JSON (default: text)                                                               |
-| `--target`    | no       | Bundle target to use (if applicable)                                                         |
-| `--profile`   | no       | Databricks CLI profile name                                                                  |
+| Option        | Required | Description                                                                                         |
+| ------------- | -------- | --------------------------------------------------------------------------------------------------- |
+| `NAME`        | yes      | Endpoint resource path: `projects/{project_id}/branches/{branch_id}/endpoints/{endpoint_id}`        |
+| `UPDATE_MASK` | yes      | Comma-separated fields (for example, `spec.autoscaling_limit_min_cu,spec.autoscaling_limit_max_cu`) |
+| `--json`      | yes      | JSON with new field values                                                                          |
+| `--no-wait`   | no       | Return immediately with operation details                                                           |
+| `--timeout`   | no       | Max time to wait for completion                                                                     |
+| `--debug`     | no       | Enable debug logging                                                                                |
+| `-o json`     | no       | Output as JSON (default: text)                                                                      |
+| `--target`    | no       | Bundle target to use (if applicable)                                                                |
+| `--profile`   | no       | Databricks CLI profile name                                                                         |
 
 Scaling within the configured range happens without connection interruptions. Changing the min/max configuration may cause a brief interruption.
 
@@ -197,21 +197,21 @@ databricks postgres update-project \
   --profile $DATABRICKS_PROFILE
 ```
 
-| Option        | Required | Description                                              |
-| ------------- | -------- | -------------------------------------------------------- |
-| `NAME`        | yes      | Project resource path: `projects/{project_id}`           |
-| `UPDATE_MASK` | yes      | Fields to update (e.g. `spec.default_endpoint_settings`) |
-| `--json`      | yes      | JSON with new field values                               |
-| `--no-wait`   | no       | Return immediately with operation details                |
-| `--timeout`   | no       | Max time to wait for completion                          |
-| `--debug`     | no       | Enable debug logging                                     |
-| `-o json`     | no       | Output as JSON (default: text)                           |
-| `--target`    | no       | Bundle target to use (if applicable)                     |
-| `--profile`   | no       | Databricks CLI profile name                              |
+| Option        | Required | Description                                                      |
+| ------------- | -------- | ---------------------------------------------------------------- |
+| `NAME`        | yes      | Project resource path: `projects/{project_id}`                   |
+| `UPDATE_MASK` | yes      | Fields to update (for example, `spec.default_endpoint_settings`) |
+| `--json`      | yes      | JSON with new field values                                       |
+| `--no-wait`   | no       | Return immediately with operation details                        |
+| `--timeout`   | no       | Max time to wait for completion                                  |
+| `--debug`     | no       | Enable debug logging                                             |
+| `-o json`     | no       | Output as JSON (default: text)                                   |
+| `--target`    | no       | Bundle target to use (if applicable)                             |
+| `--profile`   | no       | Databricks CLI profile name                                      |
 
 ## Pagination
 
-`databricks postgres list-endpoints` accepts `--page-size` and `--page-token`. When you pass `--page-size`, the workspace API requires it to be **at least 10** (smaller values return an error). Omit the flag to use default paging behavior. Other `postgres list-*` commands document their own rules; see the [`postgres` command reference](https://docs.databricks.com/aws/en/dev-tools/cli/reference/postgres-commands).
+`databricks postgres list-endpoints` accepts `--page-size` and `--page-token`. When you pass `--page-size`, the workspace API requires it to be **at least 10** (smaller values return an error). Omit the flag to use default paging behavior. Other `postgres list-*` commands document their own rules. See the [`postgres` command reference](https://docs.databricks.com/aws/en/dev-tools/cli/reference/postgres-commands).
 
 ## Long-running operations
 

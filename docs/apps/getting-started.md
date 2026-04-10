@@ -1,8 +1,8 @@
 ---
-title: Getting Started
+title: Getting started
 ---
 
-# Getting Started
+# Getting started
 
 Databricks Apps hosts and operates web applications inside your Databricks workspace. AppKit is the TypeScript SDK for building these apps with a plugin-based architecture. Building an AI agent? [Agents are deployed as Apps](/docs/agents/getting-started).
 
@@ -41,7 +41,7 @@ databricks apps init \
 | Option          | Required | Description                                                                                             |
 | --------------- | -------- | ------------------------------------------------------------------------------------------------------- |
 | `--name`        | no       | App name (lowercase, hyphenated, 26 chars max). Suppresses prompts and applies defaults for other flags |
-| `--features`    | no       | Comma-separated plugins to enable (e.g. `lakebase`, `analytics`, `genie`)                               |
+| `--features`    | no       | Comma-separated plugins to enable (for example, `lakebase`, `analytics`, `genie`)                       |
 | `--set`         | no       | Resource values: `plugin.resourceKey.field=value`. Multi-field resources require all fields together    |
 | `--description` | no       | App description                                                                                         |
 | `--output-dir`  | no       | Directory to write the project to                                                                       |
@@ -53,7 +53,7 @@ databricks apps init \
 | `--debug`       | no       | Enable debug logging                                                                                    |
 | `-o json`       | no       | Output as JSON (default: text)                                                                          |
 | `--target`      | no       | Bundle target to use (if applicable)                                                                    |
-| `--var`         | no       | Set values for bundle config variables (e.g. `--var="key=value"`)                                       |
+| `--var`         | no       | Set values for bundle config variables (for example, `--var="key=value"`)                               |
 | `--profile`     | no       | Databricks CLI profile name                                                                             |
 
 Passing `--name` suppresses prompts and uses defaults for unspecified options. App names must be lowercase, hyphenated, and 26 characters or fewer. See [Apps Plugins](/docs/apps/plugins) for the full list of built-in plugins and `databricks apps init --help` for all `--set` keys.
@@ -62,12 +62,12 @@ Passing `--name` suppresses prompts and uses defaults for unspecified options. A
 
 The fastest path is to use a [template](/resources) with an AI coding agent. Copy a template into your agent and describe what you want to build. [Start here](/docs/start-here) for the full workflow.
 
-| Template                                                  | Best for                                           |
-| --------------------------------------------------------- | -------------------------------------------------- |
-| [Hello World App](/resources/hello-world-app)             | Simple apps, static pages, getting started         |
-| [App with Lakebase](/resources/app-with-lakebase)         | CRUD apps with persistent storage                  |
-| [AI Chat App](/resources/ai-chat-app)                     | Conversational AI with chat history                |
-| [Lakebase Off-Platform](/resources/lakebase-off-platform) | Apps hosted outside Databricks (AWS, Vercel, etc.) |
+| Template                                                  | Best for                                                 |
+| --------------------------------------------------------- | -------------------------------------------------------- |
+| [Hello World App](/resources/hello-world-app)             | Simple apps, static pages, getting started               |
+| [App with Lakebase](/resources/app-with-lakebase)         | CRUD apps with persistent storage                        |
+| [AI Chat App](/resources/ai-chat-app)                     | Conversational AI with chat history                      |
+| [Lakebase Off-Platform](/resources/lakebase-off-platform) | Apps hosted outside Databricks (AWS, Vercel, and others) |
 
 ## What happens next
 

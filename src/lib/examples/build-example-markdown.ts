@@ -91,10 +91,12 @@ export function buildAdditionalMarkdown(opts: ExampleMarkdownOptions): string {
 
   const links = [
     ...includedTemplates.map(
-      (t) => `- [${t.name}](${baseUrl}/resources/${t.id}.md)`,
+      (t) =>
+        `- [${t.name}](${baseUrl}/resources/${t.id}.md) - ${t.description}`,
     ),
     ...includedRecipes.map(
-      (r) => `- [${r.name}](${baseUrl}/resources/${r.id}.md)`,
+      (r) =>
+        `- [${r.name}](${baseUrl}/resources/${r.id}.md) - ${r.description}`,
     ),
   ];
   if (links.length > 0) {

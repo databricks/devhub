@@ -21,23 +21,48 @@ describe("production build smoke tests", () => {
     expect(text).toContain("Sitemap:");
   });
 
-  test("llms.txt exists", () => {
+  test("llms.txt has correct H1 and description", () => {
     const text = readBuildFile("llms.txt");
-    expect(text).toContain("# Databricks Developer");
+    expect(text).toContain("# Databricks Developer Hub");
+    expect(text).toContain("> Documentation, starter templates, and recipes");
+  });
+
+  test("llms.txt links use .md suffix", () => {
+    const text = readBuildFile("llms.txt");
+    expect(text).toContain("/docs/start-here.md");
+    expect(text).toContain("/resources/hello-world-app.md");
+    expect(text).toContain("/solutions.md");
+  });
+
+  test("llms.txt section order: Start Here before Resources before Solutions", () => {
+    const text = readBuildFile("llms.txt");
+    const startHereIdx = text.indexOf("## Start Here");
+    const resourcesIdx = text.indexOf("## Resources");
+    const solutionsIdx = text.indexOf("## Solutions");
+    expect(startHereIdx).toBeGreaterThan(-1);
+    expect(resourcesIdx).toBeGreaterThan(startHereIdx);
+    expect(solutionsIdx).toBeGreaterThan(resourcesIdx);
+  });
+
+  test("llms.txt resources have subheadings", () => {
+    const text = readBuildFile("llms.txt");
+    expect(text).toContain("### Templates");
+    expect(text).toContain("### Recipes");
+    expect(text).toContain("### Examples");
   });
 
   test("llms.txt links to all resource templates", () => {
     const text = readBuildFile("llms.txt");
 
     const expectedTemplates = [
-      "/solutions",
-      "/resources",
-      "/resources/hello-world-app",
-      "/resources/ai-chat-app",
-      "/resources/app-with-lakebase",
-      "/resources/genie-analytics-app",
-      "/resources/lakebase-off-platform",
-      "/resources/operational-data-analytics",
+      "/solutions.md",
+      "/resources.md",
+      "/resources/hello-world-app.md",
+      "/resources/ai-chat-app.md",
+      "/resources/app-with-lakebase.md",
+      "/resources/genie-analytics-app.md",
+      "/resources/lakebase-off-platform.md",
+      "/resources/operational-data-analytics.md",
     ];
 
     for (const path of expectedTemplates) {
@@ -49,25 +74,25 @@ describe("production build smoke tests", () => {
     const text = readBuildFile("llms.txt");
 
     const expectedDocPaths = [
-      "/docs/start-here",
-      "/docs/agents/getting-started",
-      "/docs/agents/core-concepts",
-      "/docs/agents/development",
-      "/docs/agents/ai-gateway",
-      "/docs/agents/observability",
-      "/docs/apps/getting-started",
-      "/docs/apps/core-concepts",
-      "/docs/apps/plugins",
-      "/docs/apps/development",
-      "/docs/lakebase/getting-started",
-      "/docs/lakebase/core-concepts",
-      "/docs/lakebase/development",
-      "/docs/apps/appkit",
-      "/docs/appkit/v0",
-      "/docs/appkit/v0/plugins",
-      "/docs/tools/databricks-cli",
-      "/docs/tools/ai-tools/agent-skills",
-      "/docs/tools/ai-tools/docs-mcp-server",
+      "/docs/start-here.md",
+      "/docs/agents/getting-started.md",
+      "/docs/agents/core-concepts.md",
+      "/docs/agents/development.md",
+      "/docs/agents/ai-gateway.md",
+      "/docs/agents/observability.md",
+      "/docs/apps/getting-started.md",
+      "/docs/apps/core-concepts.md",
+      "/docs/apps/plugins.md",
+      "/docs/apps/development.md",
+      "/docs/lakebase/getting-started.md",
+      "/docs/lakebase/core-concepts.md",
+      "/docs/lakebase/development.md",
+      "/docs/apps/appkit.md",
+      "/docs/appkit/v0.md",
+      "/docs/appkit/v0/plugins.md",
+      "/docs/tools/databricks-cli.md",
+      "/docs/tools/ai-tools/agent-skills.md",
+      "/docs/tools/ai-tools/docs-mcp-server.md",
     ];
 
     for (const docPath of expectedDocPaths) {

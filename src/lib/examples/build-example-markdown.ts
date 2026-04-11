@@ -2,6 +2,14 @@ import type { Example } from "@/lib/recipes/recipes";
 
 type ResourceRef = { id: string; name: string; description: string };
 
+export type ExampleMarkdownOptions = {
+  example: Example;
+  githubUrl: string;
+  includedTemplates: ResourceRef[];
+  includedRecipes: ResourceRef[];
+  baseUrl: string;
+};
+
 /** Outcome bullets shown in the Get started card (agent-first copy). */
 export const EXAMPLE_AGENT_OUTCOME_BULLETS = [
   "Prompt the agent to clone the DevHub repo and open this example's template/README.md",
@@ -17,12 +25,16 @@ export function buildExportGetStartedOutline(): string {
 }
 
 export function buildFullPrompt(
-  example: Example,
-  githubUrl: string,
-  rawMarkdown: string,
-  includedTemplates: ResourceRef[],
-  includedRecipes: ResourceRef[],
+  opts: ExampleMarkdownOptions & { rawMarkdown: string },
 ): string {
+  const {
+    example,
+    githubUrl,
+    rawMarkdown,
+    includedTemplates,
+    includedRecipes,
+    baseUrl,
+  } = opts;
   const cliTemplateUrl = `https://github.com/databricks/devhub/tree/main/${example.githubPath}`;
   const lines: string[] = [
     `# ${example.name}`,
@@ -56,11 +68,11 @@ export function buildFullPrompt(
   const guides = [
     ...includedTemplates.map(
       (t) =>
-        `- [${t.name}](https://dev.databricks.com/resources/${t.id}) - ${t.description}`,
+        `- [${t.name}](${baseUrl}/resources/${t.id}.md) - ${t.description}`,
     ),
     ...includedRecipes.map(
       (r) =>
-        `- [${r.name}](https://dev.databricks.com/resources/${r.id}) - ${r.description}`,
+        `- [${r.name}](${baseUrl}/resources/${r.id}.md) - ${r.description}`,
     ),
   ];
   if (guides.length > 0) {
@@ -70,12 +82,8 @@ export function buildFullPrompt(
   return lines.join("\n");
 }
 
-export function buildAdditionalMarkdown(
-  example: Example,
-  githubUrl: string,
-  includedTemplates: ResourceRef[],
-  includedRecipes: ResourceRef[],
-): string {
+export function buildAdditionalMarkdown(opts: ExampleMarkdownOptions): string {
+  const { githubUrl, includedTemplates, includedRecipes, baseUrl } = opts;
   const sections: string[] = [];
 
   sections.push(`## Get started\n\n${buildExportGetStartedOutline()}`);
@@ -83,10 +91,10 @@ export function buildAdditionalMarkdown(
 
   const links = [
     ...includedTemplates.map(
-      (t) => `- [${t.name}](https://dev.databricks.com/resources/${t.id})`,
+      (t) => `- [${t.name}](${baseUrl}/resources/${t.id}.md)`,
     ),
     ...includedRecipes.map(
-      (r) => `- [${r.name}](https://dev.databricks.com/resources/${r.id})`,
+      (r) => `- [${r.name}](${baseUrl}/resources/${r.id}.md)`,
     ),
   ];
   if (links.length > 0) {

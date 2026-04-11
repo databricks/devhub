@@ -2,7 +2,13 @@ import { existsSync, readFileSync } from "fs";
 import { resolve } from "path";
 import { hasMarkdownSlug } from "../src/lib/content-markdown";
 import { expandMdxImports } from "../src/lib/expand-mdx";
-import { examples, recipes, templates } from "../src/lib/recipes/recipes";
+import {
+  examples,
+  recipes,
+  recipesInOrder,
+  templates,
+} from "../src/lib/recipes/recipes";
+import { solutions } from "../src/lib/solutions/solutions";
 
 export type MarkdownSection =
   | "docs"
@@ -198,12 +204,73 @@ function readResourceMarkdown(rootDir: string, slug: string): string {
   throw new Error(`Resource page not found: "${slug}"`);
 }
 
+/** Markdown index served at /resources.md — lists all templates, recipes, and examples. */
+function readResourcesIndex(): string {
+  const lines: string[] = [
+    "# Resources",
+    "",
+    "Templates and starter kits for building on Databricks.",
+    "",
+  ];
+
+  if (templates.length > 0) {
+    lines.push("## Templates", "");
+    for (const t of templates) {
+      lines.push(`- [${t.name}](/resources/${t.id}.md): ${t.description}`);
+    }
+    lines.push("");
+  }
+
+  if (recipesInOrder.length > 0) {
+    lines.push("## Recipes", "");
+    for (const r of recipesInOrder) {
+      lines.push(`- [${r.name}](/resources/${r.id}.md): ${r.description}`);
+    }
+    lines.push("");
+  }
+
+  if (examples.length > 0) {
+    lines.push("## Examples", "");
+    for (const e of examples) {
+      lines.push(`- [${e.name}](/resources/${e.id}.md): ${e.description}`);
+    }
+    lines.push("");
+  }
+
+  return lines.join("\n");
+}
+
+/** Markdown index served at /solutions.md — lists all solutions. */
+function readSolutionsIndex(): string {
+  const lines: string[] = [
+    "# Solutions",
+    "",
+    "Databricks use-case solutions built on Lakebase, Agent Bricks, and Databricks Apps.",
+    "",
+  ];
+
+  for (const s of solutions) {
+    lines.push(`- [${s.title}](/solutions/${s.id}.md): ${s.description}`);
+  }
+  lines.push("");
+
+  return lines.join("\n");
+}
+
 export function getDetailMarkdown(
   section: MarkdownSection,
   rawSlug: string,
   rootDir = process.cwd(),
 ): string {
   const slug = normalizeSlug(rawSlug);
+
+  // Empty slug → serve the section index page (e.g., /resources.md, /solutions.md)
+  if (!slug || slug.trim() === "") {
+    if (section === "resources") return readResourcesIndex();
+    if (section === "solutions") return readSolutionsIndex();
+    throw new Error("Missing slug");
+  }
+
   validateSlug(slug);
 
   switch (section) {

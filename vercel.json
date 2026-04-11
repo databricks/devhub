@@ -12,23 +12,46 @@
   },
   "rewrites": [
     {
+      "source": "/docs/llms.txt",
+      "destination": "/llms.txt"
+    },
+    {
       "source": "/docs/(.+)\\.md",
       "destination": "/api/markdown?section=docs&slug=$1"
     },
     {
-      "source": "/solutions/(.+)\\.md",
-      "destination": "/api/markdown?section=solutions&slug=$1"
+      "source": "/resources.md",
+      "destination": "/api/markdown?section=resources&slug="
     },
     {
       "source": "/resources/(.+)\\.md",
       "destination": "/api/markdown?section=resources&slug=$1"
     },
     {
+      "source": "/solutions.md",
+      "destination": "/api/markdown?section=solutions&slug="
+    },
+    {
+      "source": "/solutions/(.+)\\.md",
+      "destination": "/api/markdown?section=solutions&slug=$1"
+    },
+    {
       "source": "/templates/(.+)\\.md",
       "destination": "/api/markdown?section=templates&slug=$1"
+    },
+    {
+      "source": "/(.+)\\.md",
+      "destination": "/api/markdown?section=docs&slug=$1"
     }
   ],
   "headers": [
+    {
+      "source": "/(docs|resources|solutions|templates)(.*)",
+      "headers": [
+        { "key": "Link", "value": "</llms.txt>; rel=\"llms-txt\"" },
+        { "key": "X-LLMs-Txt", "value": "/llms.txt" }
+      ]
+    },
     {
       "source": "/api/(.*)",
       "headers": [

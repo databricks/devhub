@@ -2,6 +2,11 @@ import fs from "fs";
 import path from "path";
 import type { LoadContext, Plugin } from "@docusaurus/types";
 import { solutions } from "../src/lib/solutions/solutions";
+import {
+  templates,
+  recipesInOrder,
+  examples,
+} from "../src/lib/recipes/recipes";
 import { expandMdxImports } from "../src/lib/expand-mdx";
 
 type Section = {
@@ -63,7 +68,7 @@ const SIDEBAR_SECTIONS: Array<{
     title: "AppKit",
     description:
       "TypeScript SDK for building full-stack Databricks Apps with plugin-based architecture, type-safe data access, and pre-built UI components.",
-    slugs: ["apps/appkit", "appkit/v0/index", "appkit/v0/plugins/index"],
+    slugs: ["appkit/v0", "appkit/v0/plugins"],
   },
   {
     title: "Tools",
@@ -131,7 +136,7 @@ function readDoc(
 }
 
 function generateLlmsTxt(baseUrl: string, docsDir: string): string {
-  const sections: Section[] = SIDEBAR_SECTIONS.map((section) => ({
+  const allSections: Section[] = SIDEBAR_SECTIONS.map((section) => ({
     title: section.title,
     description: section.description,
     docs: section.slugs
@@ -146,49 +151,95 @@ function generateLlmsTxt(baseUrl: string, docsDir: string): string {
       ),
   }));
 
+  const startHere = allSections.find((s) => s.title === "Start Here");
+  const refSections = allSections.filter((s) => s.title !== "Start Here");
+
   const lines: string[] = [
-    "# Databricks Developer",
+    "# Databricks Developer Hub",
     "",
-    "> Build intelligent data and AI applications in minutes, not months.",
+    "> Documentation, starter templates, and recipes for building apps and AI agents on Databricks using Lakebase (managed Postgres), Model Serving, and Databricks Apps.",
     "",
-    "Documentation for the Databricks developer platform covering application frameworks, AI agents, managed PostgreSQL (Lakebase), deployment tools, and starter templates.",
+  ];
+
+  // Start Here first — orientation for agents
+  if (startHere) {
+    lines.push(`## ${startHere.title}`, "", startHere.description, "");
+    for (const doc of startHere.docs) {
+      const desc = doc.description ? `: ${doc.description}` : "";
+      lines.push(`- [${doc.title}](${baseUrl}/docs/${doc.slug}.md)${desc}`);
+    }
+    lines.push("");
+  }
+
+  // Reference docs (Agents, Apps, Lakebase, AppKit, Tools)
+  for (const section of refSections) {
+    lines.push(`## ${section.title}`, "", section.description, "");
+    for (const doc of section.docs) {
+      const desc = doc.description ? `: ${doc.description}` : "";
+      lines.push(`- [${doc.title}](${baseUrl}/docs/${doc.slug}.md)${desc}`);
+    }
+    lines.push("");
+  }
+
+  // Resources — grouped by type
+  lines.push(
+    "## Resources",
     "",
+    "Templates, recipes, and examples for building on Databricks.",
+    "",
+    `- [All Resources](${baseUrl}/resources.md): Browse all resources`,
+    "",
+  );
+
+  if (templates.length > 0) {
+    lines.push(
+      "### Templates",
+      "",
+      ...templates.map(
+        (t) =>
+          `- [${t.name}](${baseUrl}/resources/${t.id}.md): ${t.description}`,
+      ),
+      "",
+    );
+  }
+
+  if (recipesInOrder.length > 0) {
+    lines.push(
+      "### Recipes",
+      "",
+      ...recipesInOrder.map(
+        (r) =>
+          `- [${r.name}](${baseUrl}/resources/${r.id}.md): ${r.description}`,
+      ),
+      "",
+    );
+  }
+
+  if (examples.length > 0) {
+    lines.push(
+      "### Examples",
+      "",
+      ...examples.map(
+        (e) =>
+          `- [${e.name}](${baseUrl}/resources/${e.id}.md): ${e.description}`,
+      ),
+      "",
+    );
+  }
+
+  // Solutions last — least actionable
+  lines.push(
     "## Solutions",
     "",
     "Databricks use-case solutions built on Lakebase, Agent Bricks, and Databricks Apps.",
     "",
-    `- [All Solutions](${baseUrl}/solutions): Overview of Databricks developer solutions`,
+    `- [All Solutions](${baseUrl}/solutions.md): Overview of Databricks developer solutions`,
     ...solutions.map(
-      (s) => `- [${s.title}](${baseUrl}/solutions/${s.id}): ${s.description}`,
+      (s) =>
+        `- [${s.title}](${baseUrl}/solutions/${s.id}.md): ${s.description}`,
     ),
     "",
-    "## Resources",
-    "",
-    "Templates and starter kits for building on Databricks.",
-    "",
-    `- [All Resources](${baseUrl}/resources): Browse all templates`,
-    `- [Hello World App](${baseUrl}/resources/hello-world-app): Databricks local bootstrap for CLI, auth, app scaffolding, and agent skill setup`,
-    `- [AI Chat App](${baseUrl}/resources/ai-chat-app): Streaming AI chat powered by Databricks Model Serving (AI Gateway) with AI SDK and AI Elements`,
-    `- [App with Lakebase](${baseUrl}/resources/app-with-lakebase): Bootstrap a Databricks app with Lakebase for persistent data storage, schema setup, and CRUD API routes`,
-    `- [Genie Analytics App](${baseUrl}/resources/genie-analytics-app): Build a minimal Databricks App with AI/BI Genie conversational analytics. Covers CLI setup, Genie space configuration, plugin wiring, and deploy.`,
-    `- [Lakebase Off-Platform](${baseUrl}/resources/lakebase-off-platform): Use Lakebase from apps hosted outside Databricks App Platform with portable env, token, and Drizzle patterns.`,
-    `- [Operational Data Analytics](${baseUrl}/resources/operational-data-analytics): End-to-end setup for analyzing operational database data in the lakehouse with Unity Catalog, Lakebase, Lakehouse Sync CDC, and medallion architecture.`,
-    "",
-  ];
-
-  for (const section of sections) {
-    lines.push(`## ${section.title}`);
-    lines.push("");
-    lines.push(section.description);
-    lines.push("");
-
-    for (const doc of section.docs) {
-      const desc = doc.description ? `: ${doc.description}` : "";
-      lines.push(`- [${doc.title}](${baseUrl}/docs/${doc.slug})${desc}`);
-    }
-
-    lines.push("");
-  }
+  );
 
   return lines.join("\n");
 }
@@ -209,9 +260,17 @@ function copyRawDocs(docsDir: string, destDir: string): void {
   }
 }
 
+/** Use the Vercel preview URL for non-production builds, otherwise the configured site URL. */
+function getBaseUrl(configUrl: string): string {
+  if (process.env.VERCEL_ENV !== "production" && process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}`;
+  }
+  return configUrl.replace(/\/$/, "");
+}
+
 export default function llmsTxtPlugin(context: LoadContext): Plugin {
   const docsDir = path.resolve(__dirname, "..", "docs");
-  const baseUrl = context.siteConfig.url.replace(/\/$/, "");
+  const baseUrl = getBaseUrl(context.siteConfig.url);
 
   const staticDir = path.resolve(__dirname, "..", "static");
   fs.writeFileSync(
@@ -224,10 +283,10 @@ export default function llmsTxtPlugin(context: LoadContext): Plugin {
     name: "docusaurus-llms-txt",
 
     async postBuild({ siteConfig, outDir }) {
-      const prodBaseUrl = siteConfig.url.replace(/\/$/, "");
+      const buildBaseUrl = getBaseUrl(siteConfig.url);
       fs.writeFileSync(
         path.join(outDir, "llms.txt"),
-        generateLlmsTxt(prodBaseUrl, docsDir),
+        generateLlmsTxt(buildBaseUrl, docsDir),
       );
       copyRawDocs(docsDir, path.join(outDir, "raw-docs"));
     },

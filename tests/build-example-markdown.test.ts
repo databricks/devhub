@@ -60,14 +60,18 @@ describe("buildFullPrompt", () => {
   test("includes get started steps", () => {
     const prompt = buildFullPrompt(minimalExample, githubUrl, "", [], []);
     expect(prompt).toContain("## Get started");
-    expect(prompt).toContain("### 1. Clone the template");
-    expect(prompt).toContain(minimalExample.initCommand);
     expect(prompt).toContain(
+      "### 1. Clone locally and follow `template/README.md`",
+    );
+    expect(prompt).toContain(minimalExample.initCommand);
+    expect(prompt).toContain("template/README.md");
+    expect(prompt).toContain(
+      "databricks apps init --template https://github.com/databricks/devhub/tree/main/examples/test-example",
+    );
+    expect(prompt).not.toContain(
       "### 2. Provision or link existing Databricks resources",
     );
-    expect(prompt).toContain("databricks.yml");
-    expect(prompt).toContain("### 3. Deploy the application");
-    expect(prompt).toContain("databricks bundle deploy");
+    expect(prompt).not.toContain("### 3. Deploy the application");
   });
 
   test("includes rawMarkdown content", () => {
@@ -83,7 +87,7 @@ describe("buildFullPrompt", () => {
     expect(prompt).toContain("1. Step one");
   });
 
-  test("rawMarkdown appears between deploy step and source code", () => {
+  test("rawMarkdown appears after get started and before source code", () => {
     const prompt = buildFullPrompt(
       minimalExample,
       githubUrl,
@@ -91,10 +95,10 @@ describe("buildFullPrompt", () => {
       [],
       [],
     );
-    const deployIdx = prompt.indexOf("databricks bundle deploy");
+    const getStartedIdx = prompt.indexOf("### 1. Clone locally");
     const rawIdx = prompt.indexOf("This is the example overview");
     const sourceIdx = prompt.indexOf("## Source Code");
-    expect(deployIdx).toBeLessThan(rawIdx);
+    expect(getStartedIdx).toBeLessThan(rawIdx);
     expect(rawIdx).toBeLessThan(sourceIdx);
   });
 
@@ -128,13 +132,8 @@ describe("buildFullPrompt", () => {
 
   test("omits rawMarkdown section when empty string", () => {
     const prompt = buildFullPrompt(minimalExample, githubUrl, "", [], []);
-    const deployIdx = prompt.indexOf("databricks bundle deploy");
-    const sourceIdx = prompt.indexOf("## Source Code");
-    const between = prompt.slice(
-      deployIdx + "databricks bundle deploy".length,
-      sourceIdx,
-    );
-    expect(between.trim()).toBe("```");
+    expect(prompt).not.toContain("This is the example overview");
+    expect(prompt).toContain("## Source Code");
   });
 });
 
@@ -142,9 +141,12 @@ describe("buildAdditionalMarkdown", () => {
   test("includes compact get started outline for exports", () => {
     const md = buildAdditionalMarkdown(minimalExample, githubUrl, [], []);
     expect(md).toContain("## Get started");
-    expect(md).toContain("1) Clone the template");
-    expect(md).toContain("2) Provision or link existing Databricks resources");
-    expect(md).toContain("3) Deploy the application");
+    expect(md).toContain(
+      "1) Clone the repository locally and open examples/<example-id>/template/README.md",
+    );
+    expect(md).toContain(
+      "2) Follow that README for all manual steps, SQL, seeding, and deployment",
+    );
     expect(md).not.toContain("```bash");
     expect(md).not.toContain(minimalExample.initCommand);
   });
@@ -197,13 +199,15 @@ describe("example Get started: full prompt (Copy prompt) vs export markdown (Cop
     const full = buildFullPrompt(minimalExample, githubUrl, "", [], []);
     const exportMd = buildAdditionalMarkdown(minimalExample, githubUrl, [], []);
 
-    expect(full).toContain("### 1. Clone the template");
+    expect(full).toContain(
+      "### 1. Clone locally and follow `template/README.md`",
+    );
     expect(full).toContain("```bash");
     expect(full).toContain(minimalExample.initCommand);
-    expect(full).not.toContain("1) Clone the template");
+    expect(full).not.toContain("1) Clone the repository locally");
 
     expect(exportMd).toContain(buildExportGetStartedOutline());
-    expect(exportMd).not.toContain("### 1. Clone the template");
+    expect(exportMd).not.toContain("### 1. Clone locally");
     expect(exportMd).not.toContain("```bash");
     expect(exportMd).not.toContain(minimalExample.initCommand);
   });
@@ -215,7 +219,6 @@ describe("example Get started: full prompt (Copy prompt) vs export markdown (Cop
       sampleTemplates,
       sampleRecipes,
     );
-    expect(exportMd).not.toContain("### 2. Provision or link");
-    expect(exportMd).not.toContain("### 3. Deploy");
+    expect(exportMd).not.toContain("### 2.");
   });
 });

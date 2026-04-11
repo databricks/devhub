@@ -85,8 +85,9 @@ Create a directory under `examples/<example-id>/` with this structure:
 
 ```
 examples/<example-id>/
-  README.md                    # setup instructions, architecture overview
-  template/                    # the Databricks App (AppKit template format)
+  README.md                    # short pointer to template/README.md
+  template/                    # full runnable tree (AppKit app + optional pipelines/seed/provisioning)
+    README.md                  # canonical provisioning, SQL, seed, and deploy instructions
     databricks.yml             # bundle config with REPLACE_ME placeholders
     app.yaml                   # runtime env from bundle resources
     package.json               # app dependencies
@@ -94,14 +95,15 @@ examples/<example-id>/
     server/                    # Express backend
     client/                    # React frontend
     config/queries/            # SQL query files
-  pipelines/                   # Lakeflow pipelines (optional)
-    <pipeline-name>/
-      databricks.yml
-      resources/*.yml
-      src/**/*.sql or *.py
-  seed/                        # seed script for demo data (optional)
-    seed.ts
-    package.json
+    provisioning/sql/          # optional baseline SQL (Unity Catalog, Postgres, etc.)
+    pipelines/                   # Lakeflow pipelines (optional)
+      <pipeline-name>/
+        databricks.yml
+        resources/*.yml
+        src/**/*.sql or *.py
+    seed/                        # seed script for demo data (optional)
+      seed.ts
+      package.json
 ```
 
 Key conventions:
@@ -133,7 +135,7 @@ Update `src/lib/recipes/recipes.ts`:
 - `recipeIds` references standalone recipes not already included in a referenced cookbook.
 - `createExample()` derives `tags` and `services` from the referenced cookbooks and recipes.
 - `image` points to a static SVG/PNG in `static/img/examples/`.
-- `initCommand` uses the format: `databricks apps init --template https://github.com/databricks/devhub/tree/main/examples/<example-id> --name <app-name>`.
+- `initCommand` uses the format: `git clone --depth 1 https://github.com/databricks/devhub.git` then `cd devhub/examples/<example-id>/template` (shown on the example detail page; users follow `template/README.md` for provisioning and deploy). Optional CLI scaffold: `databricks apps init --template https://github.com/databricks/devhub/tree/main/examples/<example-id>`.
 - `githubPath` is `examples/<example-id>`.
 
 ### 4. Add A Hero Image

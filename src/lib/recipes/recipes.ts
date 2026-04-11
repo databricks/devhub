@@ -415,7 +415,7 @@ export const examples: Example[] = [
     image: "/img/examples/agentic-support-console.svg",
     githubPath: "examples/agentic-support-console",
     initCommand:
-      "databricks apps init --template https://github.com/databricks/devhub/tree/main/examples/agentic-support-console --name support-console",
+      "git clone --depth 1 https://github.com/databricks/devhub.git\ncd devhub/examples/agentic-support-console/template",
     templateIds: ["operational-data-analytics", "app-with-lakebase"],
     recipeIds: ["genie-conversational-analytics", "foundation-models-api"],
   }),
@@ -427,7 +427,7 @@ export const examples: Example[] = [
     image: "/img/examples/saas-tracker.svg",
     githubPath: "examples/saas-tracker",
     initCommand:
-      "databricks apps init --template https://github.com/databricks/devhub/tree/main/examples/saas-tracker --name saas-tracker",
+      "git clone --depth 1 https://github.com/databricks/devhub.git\ncd devhub/examples/saas-tracker/template",
     templateIds: ["app-with-lakebase"],
     recipeIds: ["genie-conversational-analytics"],
   }),
@@ -439,7 +439,7 @@ export const examples: Example[] = [
     image: "/img/examples/content-moderator.svg",
     githubPath: "examples/content-moderator",
     initCommand:
-      "databricks apps init --template https://github.com/databricks/devhub/tree/main/examples/content-moderator --name content-moderator",
+      "git clone --depth 1 https://github.com/databricks/devhub.git\ncd devhub/examples/content-moderator/template",
     templateIds: ["app-with-lakebase"],
     recipeIds: ["genie-conversational-analytics", "foundation-models-api"],
   }),

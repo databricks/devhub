@@ -4,17 +4,15 @@ type ResourceRef = { id: string; name: string; description: string };
 
 /** Outcome bullets shown in the Get started card (agent-first copy). */
 export const EXAMPLE_AGENT_OUTCOME_BULLETS = [
-  "Prompt the agent to clone the template",
-  "Prompt the agent to provision or link Databricks resources",
-  "Prompt the agent to deploy the application",
+  "Prompt the agent to clone the DevHub repo and open this example's template/README.md",
+  "Prompt the agent to follow that README for provisioning, seeding, pipelines, and deploy",
 ] as const;
 
 /** Compact outline for Copy as Markdown and other exports (user-first summary). */
 export function buildExportGetStartedOutline(): string {
   return [
-    "1) Clone the template",
-    "2) Provision or link existing Databricks resources",
-    "3) Deploy the application",
+    "1) Clone the repository locally and open examples/<example-id>/template/README.md",
+    "2) Follow that README for all manual steps, SQL, seeding, and deployment",
   ].join("\n");
 }
 
@@ -25,6 +23,7 @@ export function buildFullPrompt(
   includedTemplates: ResourceRef[],
   includedRecipes: ResourceRef[],
 ): string {
+  const cliTemplateUrl = `https://github.com/databricks/devhub/tree/main/${example.githubPath}`;
   const lines: string[] = [
     `# ${example.name}`,
     "",
@@ -32,21 +31,20 @@ export function buildFullPrompt(
     "",
     "## Get started",
     "",
-    "### 1. Clone the template",
+    "### 1. Clone locally and follow `template/README.md`",
     "",
     "```bash",
     example.initCommand,
     "```",
     "",
-    "### 2. Provision or link existing Databricks resources",
+    "Use **`README.md`** in that `template/` folder as the single guide: manual provisioning, SQL (where applicable), seed data, pipeline bundles, and `databricks bundle deploy` for the app.",
     "",
-    "Update your app's `databricks.yml` file with your Databricks resource IDs (Lakebase project, warehouses, Genie spaces, etc.).",
-    "",
-    "### 3. Deploy the application",
+    "**Optional:** scaffold a standalone project with the CLI instead of cloning the full DevHub repo:",
     "",
     "```bash",
-    "databricks bundle deploy",
+    `databricks apps init --template ${cliTemplateUrl} --name <app-name>`,
     "```",
+    "",
   ];
 
   if (rawMarkdown) {

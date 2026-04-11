@@ -13,6 +13,8 @@ All subscription data lives in a single Lakebase Postgres table and is served di
 
 ### What to Adapt
 
+Setup and provisioning are documented in the repository’s **`template/README.md`**.
+
 To make this example your own:
 
 - **Lakebase**: Point the app's `databricks.yml` at your own Lakebase project, branch, and database.

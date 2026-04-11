@@ -15,6 +15,8 @@ Customer interactions flow from your application's OLTP database (Lakebase Postg
 
 ### What to Adapt
 
+Provisioning (manual steps and SQL), seeding, pipeline deploys, reverse sync, and app deploy are documented in the repository’s **`template/README.md`** alongside the code.
+
 To make this example your own:
 
 - **Catalog**: Set the `catalog` variable in each pipeline's `databricks.yml` to your Unity Catalog catalog name.

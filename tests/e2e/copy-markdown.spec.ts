@@ -118,7 +118,9 @@ test.describe("copy markdown exports raw markdown on example pages", () => {
     ).toBeVisible();
     await expect(page.getByText("Paste into your coding agent")).toBeVisible();
     await expect(
-      page.getByText("Prompt the agent to clone the template"),
+      page.getByText(
+        "Prompt the agent to clone the DevHub repo and open this example's template/README.md",
+      ),
     ).toBeVisible();
     await expect(
       page.locator("section.example-get-started").getByText("CLI", {
@@ -127,7 +129,7 @@ test.describe("copy markdown exports raw markdown on example pages", () => {
     ).toBeVisible();
     await expect(
       page.getByText(
-        /databricks apps init --template https:\/\/github\.com\/databricks\/devhub\/tree\/main\/examples\/agentic-support-console/,
+        /git clone --depth 1 https:\/\/github\.com\/databricks\/devhub\.git/,
       ),
     ).toBeVisible();
   });
@@ -141,13 +143,14 @@ test.describe("copy markdown exports raw markdown on example pages", () => {
     await clickCopyMarkdownAndWaitForToast(page);
 
     const copied = await getCopiedText(page);
-    expect(copied).toContain("1) Clone the template");
     expect(copied).toContain(
-      "2) Provision or link existing Databricks resources",
+      "1) Clone the repository locally and open examples/<example-id>/template/README.md",
     );
-    expect(copied).toContain("3) Deploy the application");
-    expect(copied).not.toContain("### 1. Clone the template");
-    expect(copied).not.toContain("### 2. Provision or link");
+    expect(copied).toContain(
+      "2) Follow that README for all manual steps, SQL, seeding, and deployment",
+    );
+    expect(copied).not.toContain("### 1. Clone locally");
+    expect(copied).not.toContain("### 2.");
   });
 
   test("Get started: Copy prompt copies full prompt with bash and ### substeps", async ({
@@ -162,17 +165,21 @@ test.describe("copy markdown exports raw markdown on example pages", () => {
     });
 
     const copied = await getCopiedText(page);
-    expect(copied).toContain("### 1. Clone the template");
+    expect(copied).toContain(
+      "### 1. Clone locally and follow `template/README.md`",
+    );
     expect(copied).toContain("```bash");
+    expect(copied).toContain(
+      "git clone --depth 1 https://github.com/databricks/devhub.git",
+    );
     expect(copied).toContain(
       "databricks apps init --template https://github.com/databricks/devhub/tree/main/examples/agentic-support-console",
     );
-    expect(copied).toContain(
+    expect(copied).toContain("template/README.md");
+    expect(copied).not.toContain(
       "### 2. Provision or link existing Databricks resources",
     );
-    expect(copied).toContain("### 3. Deploy the application");
-    expect(copied).toContain("databricks bundle deploy");
-    expect(copied).not.toContain("1) Clone the template");
+    expect(copied).not.toContain("1) Clone the repository locally");
   });
 });
 

@@ -69,7 +69,7 @@ describe("example markdown includes metadata", () => {
   test("includes init command for examples with one", () => {
     const markdown = getDetailMarkdown("examples", "agentic-support-console");
     expect(markdown).toContain("## Quick start");
-    expect(markdown).toContain("databricks apps init --template");
+    expect(markdown).toContain("git clone --depth 1");
   });
 
   test("includes GitHub link for examples with one", () => {

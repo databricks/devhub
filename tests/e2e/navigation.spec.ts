@@ -260,9 +260,7 @@ test.describe("example detail page", () => {
     await expect(
       page.getByRole("link", { name: "View on GitHub" }),
     ).toBeVisible();
-    await expect(
-      page.getByText("databricks apps init --template"),
-    ).toBeVisible();
+    await expect(page.getByText("git clone --depth 1")).toBeVisible();
   });
 
   test("shows included guide resources", async ({ page }) => {

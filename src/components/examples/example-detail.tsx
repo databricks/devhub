@@ -128,8 +128,12 @@ function GetStartedSteps({
               ))}
             </ul>
             <p className="mt-5 font-mono text-[11px] leading-relaxed text-muted-foreground">
-              Or run the commands below. See this page and the repo README for
-              context.
+              Use the CLI block below to clone locally, then follow{" "}
+              <code className="rounded border border-border/80 bg-muted/80 px-1.5 py-px font-mono text-[12px] text-card-foreground">
+                template/README.md
+              </code>{" "}
+              in the repo for provisioning, seeding, pipelines, and deploy. This
+              page summarizes the example; the README is the runbook.
             </p>
           </div>
 
@@ -147,43 +151,17 @@ function GetStartedSteps({
                 </span>
                 <div className="min-w-0 space-y-3">
                   <p className="m-0 text-sm font-medium text-card-foreground">
-                    Clone the template
+                    Clone locally, then follow{" "}
+                    <code className="rounded border border-border/80 bg-muted/80 px-1.5 py-px font-mono text-[12px] text-card-foreground">
+                      template/README.md
+                    </code>
                   </p>
                   <RecipeCodeBlock>{example.initCommand}</RecipeCodeBlock>
-                </div>
-              </li>
-              <li className="grid grid-cols-[2.25rem_minmax(0,1fr)] gap-x-3 sm:grid-cols-[2.5rem_minmax(0,1fr)] sm:gap-x-4">
-                <span
-                  className="pt-0.5 font-mono text-xs tabular-nums text-muted-foreground/90"
-                  aria-hidden
-                >
-                  02
-                </span>
-                <div className="min-w-0 space-y-2">
-                  <p className="m-0 text-sm font-medium text-card-foreground">
-                    Provision or link Databricks resources
-                  </p>
                   <p className="m-0 text-[13px] leading-relaxed text-muted-foreground">
-                    Set resource IDs in{" "}
-                    <code className="rounded border border-border/80 bg-muted/80 px-1.5 py-px font-mono text-[12px] text-card-foreground">
-                      databricks.yml
-                    </code>
-                    .
+                    Provisioning (including manual steps and SQL), seeding, and
+                    deployment commands live in that README alongside the app
+                    and bundle code.
                   </p>
-                </div>
-              </li>
-              <li className="grid grid-cols-[2.25rem_minmax(0,1fr)] gap-x-3 sm:grid-cols-[2.5rem_minmax(0,1fr)] sm:gap-x-4">
-                <span
-                  className="pt-0.5 font-mono text-xs tabular-nums text-muted-foreground/90"
-                  aria-hidden
-                >
-                  03
-                </span>
-                <div className="min-w-0 space-y-3">
-                  <p className="m-0 text-sm font-medium text-card-foreground">
-                    Deploy
-                  </p>
-                  <RecipeCodeBlock>databricks bundle deploy</RecipeCodeBlock>
                 </div>
               </li>
             </ol>

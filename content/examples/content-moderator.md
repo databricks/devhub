@@ -15,6 +15,8 @@ Content moves through a review pipeline backed by Lakebase and AI Gateway:
 
 ### What to Adapt
 
+Setup and provisioning are documented in the repository’s **`template/README.md`**.
+
 To make this example your own:
 
 - **Lakebase**: Point the app's `databricks.yml` at your own Lakebase project, branch, and database.

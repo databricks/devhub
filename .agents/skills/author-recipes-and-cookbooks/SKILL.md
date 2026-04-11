@@ -109,11 +109,44 @@ examples/<example-id>/
 Key conventions:
 
 - The app directory MUST be named `template/` (not `app/`) so that `databricks apps init --template` works.
+- **All runnable assets for the example** (app, optional `pipelines/`, `seed/`, `provisioning/sql/`) live **under** `template/`. Do not leave `pipelines/` or `seed/` only at `examples/<example-id>/` root; the template subtree is what users clone into or scaffold, and `template/README.md` must describe the full path from zero to deployed app.
 - Use `REPLACE_ME` placeholders for all workspace-specific values (host, warehouse ID, catalog name, Lakebase project, etc.).
 - Never commit workspace-specific values, `.databricks/`, `node_modules/`, or `.env` files.
 - Pipeline SQL files should use schema-qualified names (e.g., `silver.users`) and rely on the pipeline YAML `catalog` setting for catalog resolution.
 - Include an `.npmrc` pointing to `https://npm-proxy.dev.databricks.com/` if the app uses `@databricks/appkit`.
 - SQL files in `config/queries/` run against the **Databricks SQL Warehouse** (Spark SQL dialect), NOT Lakebase Postgres. Use `CURRENT_DATE()` not `NOW()`, `DATE_ADD(d, n)` not `d + INTERVAL`, `SUM(CASE WHEN ... THEN 1 ELSE 0 END)` not `COUNT(*) FILTER (WHERE ...)`. Reference Unity Catalog three-part names (e.g., `catalog.schema.table`).
+
+### `template/README.md` (canonical runbook)
+
+This file is the **single source of truth** for operators and coding agents. The example detail page on DevHub points users here via clone + `cd` into `template/`; keep it complete enough to deploy without guessing.
+
+Include, as appropriate for the example:
+
+1. **Architecture** — Short diagram or bullet flow (OLTP → sync → pipelines → app, etc.).
+2. **Components** — What lives in `client/`, `server/`, `pipelines/`, `seed/`, and `provisioning/sql/`.
+3. **Provisioning** — **Order of operations** (numbered). For each step, state clearly what is:
+   - **Runnable SQL** — point to files under `template/provisioning/sql/` (with placeholder names like `__CATALOG_NAME__` documented).
+   - **Manual / UI only** — Lakehouse Sync, Sync Tables, Genie space, catalog creation with storage root, etc. (no fake one-size-fits-all SQL).
+   - **CLI / bundles** — which directory to `cd` into, `databricks bundle deploy` targets, and dependencies between pipelines and app.
+4. **Seeding** — Exact commands from `template/seed/` (`cd seed`, `npm install`, `DATABASE_URL=... npm run seed`). Note any Postgres prerequisites (e.g. `REPLICA IDENTITY FULL`) and whether the seed script applies them or SQL does.
+5. **Deploy** — From `template/` (app): install, build, `databricks bundle deploy`. Link pipeline deploys before or after as required.
+6. **Optional** — `databricks apps init --template https://github.com/databricks/devhub/tree/main/examples/<example-id>` for users who scaffold instead of cloning the monorepo.
+
+Do **not** maintain a separate long-form `provisioning/README.md` beside the SQL — duplicate instructions drift. Put narrative in `template/README.md` only; keep `provisioning/sql/*.sql` as executable artifacts with brief header comments.
+
+For examples with **no** Unity Catalog DDL (Lakebase-only apps), still add `template/provisioning/sql/` with a short comment-only file (e.g. `00_no_unity_catalog_ddl.sql`) that explains nothing is required and points back to the README — so every example has a predictable place for SQL.
+
+### `examples/<example-id>/README.md` (repo root pointer)
+
+Keep this **short**: one paragraph + link to **`template/README.md`**, plus an optional fenced block with `databricks apps init --template ...`. Do not duplicate the full provisioning guide at the example root.
+
+### `examples/README.md` (examples index)
+
+Optional but recommended: describe that each example ships a `template/` folder and that **`template/README.md`** is the runbook; link to the richest example (e.g. agentic support console) for a full-stack pattern.
+
+### Agent skills in templates (optional)
+
+To bundle Databricks agent skills with an example, install into `template/` (e.g. `npx skills add databricks/databricks-agent-skills -a cursor -y`). Commit `.agents/skills/` and `skills-lock.json` under `template/` when present.
 
 ### 2. Create The Example Markdown
 
@@ -123,6 +156,7 @@ Create `content/examples/<example-id>.md`:
 - Brief motivation (1-2 paragraphs): what it demonstrates and why.
 - Data flow or architecture description.
 - What the user needs to adapt: which resources to create, which placeholders to fill in, manual steps (like configuring Lakehouse Sync or Sync Tables).
+- Add a sentence under **What to Adapt** (or equivalent) that **provisioning, seeding, and deployment** are documented in the repository’s **`template/README.md`** — do not duplicate the full runbook in this markdown; the site example page + GitHub runbook stay in sync that way.
 - Keep it short and actionable.
 
 ### 3. Register The Example
@@ -179,7 +213,7 @@ npm run build
 #    - Unity Catalog table (if analytics queries need warehouse-accessible data)
 
 # 5. Seed data (if the example has a seed script)
-cd <devhub-repo>/examples/<example-id>/seed
+cd <devhub-repo>/examples/<example-id>/template/seed
 npm install
 DATABASE_URL="postgresql://..." npm run seed
 
@@ -195,7 +229,7 @@ databricks apps get <app-name> --profile <PROFILE>
 
 - **Code bug** (build fails, runtime error, wrong SQL dialect) -- fix in `examples/<example-id>/` in the repo, then re-copy to `../../demos/<example-id>/` and retry.
 - **Instruction gap** (missing step, unclear placeholder) -- fix in `content/examples/<example-id>.md` or the relevant recipe in `content/recipes/`.
-- **Seed data issue** -- fix in `examples/<example-id>/seed/seed.ts`.
+- **Seed data issue** -- fix in `examples/<example-id>/template/seed/seed.ts`.
 
 #### Cleanup
 
@@ -237,7 +271,8 @@ Slugs must be globally unique. The plugin throws at build time if any collision 
    - a human step-by-step guide
 9. Run `npm run fmt && npm run typecheck && npm run build && npm run test` to confirm everything passes.
 10. For examples: verify `examples/<id>/` contains only `REPLACE_ME` placeholders -- no real workspace hosts, warehouse IDs, Lakebase project names, or Genie space IDs.
-11. For examples: verify the dry-run deploy succeeded and the app is functional before considering the example complete.
+11. For examples: verify `examples/<id>/template/README.md` covers provisioning (manual vs SQL), seeding, pipeline deploys (if any), and app deploy end-to-end.
+12. For examples: verify the dry-run deploy succeeded and the app is functional before considering the example complete.
 
 ## References
 
@@ -246,5 +281,6 @@ Slugs must be globally unique. The plugin throws at build time if any collision 
 - Read `src/lib/recipes/recipes.ts` for all type contracts (`Recipe`, `Template`, `Example`).
 - Read `src/pages/resources/app-with-lakebase.tsx` for cookbook composition pattern.
 - Read `src/components/examples/example-detail.tsx` for example detail rendering.
-- Read `examples/agentic-support-console/` for full example directory structure.
+- Read `examples/agentic-support-console/template/README.md` for a full template runbook (provisioning, SQL, seed, pipelines, deploy).
+- Read `examples/README.md` for the examples index pattern.
 - Read `plugins/content-entries.ts` for slug parity and uniqueness validation.

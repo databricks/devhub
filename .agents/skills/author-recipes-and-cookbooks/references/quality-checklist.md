@@ -42,9 +42,12 @@ Use this checklist after drafting and before final handoff.
 ## Example Quality
 
 - Confirm example app directory is named `template/` (for `databricks apps init --template` compatibility).
+- Confirm optional `pipelines/`, `seed/`, and `provisioning/sql/` live under `template/` (not only at `examples/<id>/` root).
+- Confirm **`template/README.md`** is the full runbook: provisioning order (SQL vs manual vs bundles), seeding commands, pipeline and app deploy, and optional `databricks apps init` scaffold URL.
+- Confirm `examples/<id>/README.md` is a short pointer to `template/README.md`, not a duplicate runbook.
 - Confirm all workspace-specific values use `REPLACE_ME` placeholders.
 - Confirm `.databricks/`, `node_modules/`, and `.env` are not committed.
 - Confirm pipeline SQL uses schema-qualified names (not hardcoded catalog names).
-- Confirm `initCommand` uses the GitHub URL format: `https://github.com/databricks/devhub/tree/main/examples/<id>`.
+- Confirm `initCommand` in `recipes.ts` uses clone + `cd` into `devhub/examples/<id>/template` (see `createExample()` / example detail page); optional CLI scaffold uses `https://github.com/databricks/devhub/tree/main/examples/<id>`.
 - Confirm hero image exists at `static/img/examples/<id>.svg` (or `.png`).
-- Confirm `content/examples/<id>.md` exists and matches the example's `id`.
+- Confirm `content/examples/<id>.md` exists and matches the example's `id`, and points readers at `template/README.md` for setup.

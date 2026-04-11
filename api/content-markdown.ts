@@ -132,13 +132,17 @@ function readExampleMarkdown(rootDir: string, slug: string): string {
         "",
       );
     }
-    for (const recipeId of example.recipeIds) {
-      lines.push(`- [${recipeId}](/resources/${recipeId})`);
-    }
-    for (const templateId of example.templateIds) {
-      lines.push(`- [${templateId}](/resources/${templateId})`);
-    }
-    if (example.recipeIds.length > 0 || example.templateIds.length > 0) {
+    const includedResources = [
+      ...example.templateIds.map((id) => templates.find((t) => t.id === id)),
+      ...example.recipeIds.map((id) => recipes.find((r) => r.id === id)),
+    ].filter(Boolean);
+    if (includedResources.length > 0) {
+      lines.push("## Included Resources", "");
+      for (const resource of includedResources) {
+        lines.push(
+          `- [${resource.name}](/resources/${resource.id}.md): ${resource.description}`,
+        );
+      }
       lines.push("");
     }
     return lines.join("\n");

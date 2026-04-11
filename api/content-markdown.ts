@@ -291,8 +291,8 @@ export function getDetailMarkdown(
   }
 }
 
-export function appendLlmsFooter(markdown: string, host: string): string {
+export function prependLlmsReference(markdown: string, host: string): string {
   const protocol = host.startsWith("localhost") ? "http" : "https";
   const llmsUrl = `${protocol}://${host}/llms.txt`;
-  return `${markdown.trimEnd()}\n\n---\nFull documentation: ${llmsUrl}\n`;
+  return `> Full DevHub resource index: ${llmsUrl}\n\n${markdown.trimEnd()}\n`;
 }

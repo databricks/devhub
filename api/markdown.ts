@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import {
-  appendLlmsFooter,
+  prependLlmsReference,
   getDetailMarkdown,
   type MarkdownSection,
 } from "./content-markdown";
@@ -40,7 +40,7 @@ export default function handler(req: VercelRequest, res: VercelResponse): void {
     const parsed = parseSection(req.query.section);
     const markdown = getDetailMarkdown(parsed, slug);
     const host = req.headers.host ?? "dev.databricks.com";
-    const withFooter = appendLlmsFooter(markdown, host);
+    const withRef = prependLlmsReference(markdown, host);
 
     const filename = slug ? `${slug.replace(/\//g, "-")}.md` : `${parsed}.md`;
     res.setHeader("Content-Type", "text/markdown; charset=utf-8");
@@ -48,7 +48,7 @@ export default function handler(req: VercelRequest, res: VercelResponse): void {
     res.setHeader("Vary", "Accept");
     res.setHeader("X-Robots-Tag", "noindex");
     res.setHeader("Content-Disposition", `inline; filename="${filename}"`);
-    res.status(200).send(withFooter);
+    res.status(200).send(withRef);
   } catch {
     res.setHeader("Content-Type", "text/markdown; charset=utf-8");
     res.setHeader("Vary", "Accept");

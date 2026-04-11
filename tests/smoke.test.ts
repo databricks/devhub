@@ -100,6 +100,12 @@ describe("production build smoke tests", () => {
     }
   });
 
+  test("raw-docs strip Docusaurus frontmatter", () => {
+    const text = readBuildFile("raw-docs/start-here.md");
+    expect(text).not.toMatch(/^---\n/);
+    expect(text).toMatch(/^# Start here/);
+  });
+
   test("raw-docs preserve CLI tab code blocks for markdown export", () => {
     const text = readBuildFile("raw-docs/lakebase/core-concepts.md");
     expect(text).toContain('title="Common"');

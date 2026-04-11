@@ -71,10 +71,10 @@ export function AIExportMenu({
     const escapedTitle = title.replace(/"/g, '\\"');
     const escapedDescription = description.replace(/"/g, '\\"');
 
-    let md = `---\ntitle: "${escapedTitle}"\nurl: ${fullUrl}\nsummary: "${escapedDescription}"\n---\n\n`;
+    let md = `> Full DevHub resource index: ${baseUrl}/llms.txt\n\n`;
+    md += `---\ntitle: "${escapedTitle}"\nurl: ${fullUrl}\nsummary: "${escapedDescription}"\n---\n\n`;
     if (rawContent) md += `${rawContent}\n\n`;
     if (additionalMarkdown) md += `${additionalMarkdown}\n\n`;
-    md += `---\nFull documentation: ${baseUrl}/llms.txt\n`;
     return md;
   }, [
     resolveContent,

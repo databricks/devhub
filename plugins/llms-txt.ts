@@ -255,7 +255,9 @@ function copyRawDocs(docsDir: string, destDir: string): void {
       copyRawDocs(srcPath, dstPath);
     } else if (entry.name.endsWith(".md") || entry.name.endsWith(".mdx")) {
       const raw = fs.readFileSync(srcPath, "utf-8");
-      fs.writeFileSync(dstPath, expandMdxImports(raw, srcPath));
+      const expanded = expandMdxImports(raw, srcPath);
+      const stripped = expanded.replace(/^---\n[\s\S]*?\n---\n*/, "");
+      fs.writeFileSync(dstPath, stripped);
     }
   }
 }

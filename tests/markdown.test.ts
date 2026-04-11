@@ -1,5 +1,8 @@
 import { describe, expect, test } from "vitest";
-import { appendLlmsFooter, getDetailMarkdown } from "../api/content-markdown";
+import {
+  prependLlmsReference,
+  getDetailMarkdown,
+} from "../api/content-markdown";
 
 describe("detail markdown resolver", () => {
   test("resolves docs markdown", () => {
@@ -106,70 +109,69 @@ describe("example markdown includes metadata", () => {
   });
 });
 
-describe("appendLlmsFooter appends llms.txt reference", () => {
-  test("appends footer with https for production host", () => {
-    const result = appendLlmsFooter("# Hello", "dev.databricks.com");
+describe("prependLlmsReference prepends llms.txt reference", () => {
+  const LLMS_REF =
+    "> Full DevHub resource index: https://dev.databricks.com/llms.txt";
+
+  test("prepends reference with https for production host", () => {
+    const result = prependLlmsReference("# Hello", "dev.databricks.com");
+    expect(result).toBe(`${LLMS_REF}\n\n# Hello\n`);
+  });
+
+  test("prepends reference with http for localhost", () => {
+    const result = prependLlmsReference("# Hello", "localhost:3001");
     expect(result).toBe(
-      "# Hello\n\n---\nFull documentation: https://dev.databricks.com/llms.txt\n",
+      "> Full DevHub resource index: http://localhost:3001/llms.txt\n\n# Hello\n",
     );
   });
 
-  test("appends footer with http for localhost", () => {
-    const result = appendLlmsFooter("# Hello", "localhost:3001");
-    expect(result).toBe(
-      "# Hello\n\n---\nFull documentation: http://localhost:3001/llms.txt\n",
-    );
+  test("trims trailing whitespace from markdown", () => {
+    const result = prependLlmsReference("content\n\n\n", "dev.databricks.com");
+    expect(result).toMatch(/^> Full DevHub/);
+    expect(result).toMatch(/content\n$/);
+    expect(result).not.toMatch(/\n\n\n$/);
   });
 
-  test("trims trailing whitespace from markdown before appending", () => {
-    const result = appendLlmsFooter("content\n\n\n", "dev.databricks.com");
-    expect(result).toMatch(/^content\n\n---\n/);
-    expect(result).not.toMatch(/content\n\n\n\n/);
-  });
-
-  const LLMS_FOOTER =
-    "---\nFull documentation: https://dev.databricks.com/llms.txt\n";
-
-  test("docs markdown with footer ends with llms.txt link", () => {
+  test("docs markdown starts with llms.txt reference", () => {
     const markdown = getDetailMarkdown("docs", "start-here");
-    const withFooter = appendLlmsFooter(markdown, "dev.databricks.com");
-    expect(withFooter).toContain("title:");
-    expect(withFooter.endsWith(LLMS_FOOTER)).toBe(true);
+    const result = prependLlmsReference(markdown, "dev.databricks.com");
+    expect(result.startsWith(LLMS_REF)).toBe(true);
+    expect(result).toContain("title:");
   });
 
-  test("recipe markdown with footer ends with llms.txt link", () => {
+  test("recipe markdown starts with llms.txt reference", () => {
     const markdown = getDetailMarkdown("recipes", "databricks-local-bootstrap");
-    const withFooter = appendLlmsFooter(markdown, "dev.databricks.com");
-    expect(withFooter).toContain("## Databricks Local Bootstrap");
-    expect(withFooter.endsWith(LLMS_FOOTER)).toBe(true);
+    const result = prependLlmsReference(markdown, "dev.databricks.com");
+    expect(result.startsWith(LLMS_REF)).toBe(true);
+    expect(result).toContain("## Databricks Local Bootstrap");
   });
 
-  test("example markdown with footer ends with llms.txt link", () => {
+  test("example markdown starts with llms.txt reference", () => {
     const markdown = getDetailMarkdown("examples", "agentic-support-console");
-    const withFooter = appendLlmsFooter(markdown, "dev.databricks.com");
-    expect(withFooter).toContain("## Agentic Support Console");
-    expect(withFooter.endsWith(LLMS_FOOTER)).toBe(true);
+    const result = prependLlmsReference(markdown, "dev.databricks.com");
+    expect(result.startsWith(LLMS_REF)).toBe(true);
+    expect(result).toContain("## Agentic Support Console");
   });
 
-  test("template markdown with footer ends with llms.txt link", () => {
+  test("template markdown starts with llms.txt reference", () => {
     const markdown = getDetailMarkdown("templates", "hello-world-app");
-    const withFooter = appendLlmsFooter(markdown, "dev.databricks.com");
-    expect(withFooter).toContain("# Hello World App");
-    expect(withFooter.endsWith(LLMS_FOOTER)).toBe(true);
+    const result = prependLlmsReference(markdown, "dev.databricks.com");
+    expect(result.startsWith(LLMS_REF)).toBe(true);
+    expect(result).toContain("# Hello World App");
   });
 
-  test("solution markdown with footer ends with llms.txt link", () => {
+  test("solution markdown starts with llms.txt reference", () => {
     const markdown = getDetailMarkdown("solutions", "devhub-launch");
-    const withFooter = appendLlmsFooter(markdown, "dev.databricks.com");
-    expect(withFooter).toContain("# Introducing dev.databricks.com");
-    expect(withFooter.endsWith(LLMS_FOOTER)).toBe(true);
+    const result = prependLlmsReference(markdown, "dev.databricks.com");
+    expect(result.startsWith(LLMS_REF)).toBe(true);
+    expect(result).toContain("# Introducing dev.databricks.com");
   });
 
-  test("resources meta-section with footer ends with llms.txt link", () => {
+  test("resources meta-section starts with llms.txt reference", () => {
     const markdown = getDetailMarkdown("resources", "agentic-support-console");
-    const withFooter = appendLlmsFooter(markdown, "dev.databricks.com");
-    expect(withFooter).toContain("## Agentic Support Console");
-    expect(withFooter.endsWith(LLMS_FOOTER)).toBe(true);
+    const result = prependLlmsReference(markdown, "dev.databricks.com");
+    expect(result.startsWith(LLMS_REF)).toBe(true);
+    expect(result).toContain("## Agentic Support Console");
   });
 });
 

@@ -65,6 +65,27 @@ describe("resources meta-section resolves recipes, examples, and templates", () 
   });
 });
 
+describe("empty-slug index pages", () => {
+  test("resources index contains headings and .md links", () => {
+    const markdown = getDetailMarkdown("resources", "");
+    expect(markdown).toContain("# Resources");
+    expect(markdown).toContain("## Templates");
+    expect(markdown).toContain("## Recipes");
+    expect(markdown).toContain("## Examples");
+    expect(markdown).toMatch(/\(\/resources\/[\w-]+\.md\)/);
+  });
+
+  test("solutions index contains heading and .md links", () => {
+    const markdown = getDetailMarkdown("solutions", "");
+    expect(markdown).toContain("# Solutions");
+    expect(markdown).toMatch(/\(\/solutions\/[\w-]+\.md\)/);
+  });
+
+  test("docs with empty slug throws", () => {
+    expect(() => getDetailMarkdown("docs", "")).toThrow("Missing slug");
+  });
+});
+
 describe("example markdown includes metadata", () => {
   test("includes init command for examples with one", () => {
     const markdown = getDetailMarkdown("examples", "agentic-support-console");

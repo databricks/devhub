@@ -1,5 +1,6 @@
 import Link from "@docusaurus/Link";
 import useBaseUrl from "@docusaurus/useBaseUrl";
+import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import Layout from "@theme/Layout";
 import { MDXProvider } from "@mdx-js/react";
 import { useRef, type ReactNode } from "react";
@@ -177,6 +178,7 @@ export function ExampleDetail({
   rawMarkdown,
   children,
 }: ExampleDetailProps): ReactNode {
+  const { siteConfig } = useDocusaurusContext();
   const contentRef = useRef<HTMLDivElement>(null);
   const heroImageUrl = useBaseUrl(example.image);
   const permalink = `/resources/${example.id}`;
@@ -190,20 +192,15 @@ export function ExampleDetail({
     .map((id) => recipes.find((r) => r.id === id))
     .filter(Boolean);
 
-  const additionalMarkdown = buildAdditionalMarkdown(
+  const mdOpts = {
     example,
     githubUrl,
     includedTemplates,
     includedRecipes,
-  );
-
-  const fullPrompt = buildFullPrompt(
-    example,
-    githubUrl,
-    rawMarkdown,
-    includedTemplates,
-    includedRecipes,
-  );
+    baseUrl: siteConfig.url,
+  };
+  const additionalMarkdown = buildAdditionalMarkdown(mdOpts);
+  const fullPrompt = buildFullPrompt({ ...mdOpts, rawMarkdown });
 
   return (
     <Layout title={example.name} description={example.description}>

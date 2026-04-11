@@ -988,6 +988,10 @@
     @apply border-b border-black/8 bg-black/5 px-5 py-2.5 font-mono text-xs font-semibold tracking-wide text-black/50 uppercase dark:border-white/8 dark:bg-white/5 dark:text-white/50;
   }
 
+  .example-get-started .recipe-content-card .theme-code-block {
+    @apply my-0;
+  }
+
   .recipe-toc {
     @apply mt-0;
   }

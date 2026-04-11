@@ -4,7 +4,7 @@ import Layout from "@theme/Layout";
 import { MDXProvider } from "@mdx-js/react";
 import { useRef, type ReactNode } from "react";
 import { toast } from "sonner";
-import { ClipboardCopy, Copy, ExternalLink } from "lucide-react";
+import { ClipboardCopy, ExternalLink } from "lucide-react";
 import { AIExportMenu } from "@/components/ai-export-menu";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -15,7 +15,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { RecipePre } from "@/components/templates/recipe-code-block";
+import {
+  RecipePre,
+  RecipeCodeBlock,
+} from "@/components/templates/recipe-code-block";
 import { RecipeToc } from "@/components/templates/recipe-toc";
 import {
   buildFullPrompt,
@@ -33,26 +36,6 @@ type ExampleDetailProps = {
   rawMarkdown: string;
   children: ReactNode;
 };
-
-function CopyCommand({ command }: { command: string }) {
-  function handleCopy() {
-    navigator.clipboard.writeText(command);
-  }
-
-  return (
-    <div className="flex items-center gap-2 rounded-lg border border-black/10 bg-black/4 px-4 py-3 font-mono text-sm dark:border-white/10 dark:bg-white/4">
-      <code className="flex-1 overflow-x-auto">{command}</code>
-      <button
-        type="button"
-        onClick={handleCopy}
-        className="shrink-0 rounded p-1 text-muted-foreground transition-colors hover:bg-black/8 hover:text-foreground dark:hover:bg-white/8"
-        aria-label="Copy command"
-      >
-        <Copy className="size-4" />
-      </button>
-    </div>
-  );
-}
 
 function IncludedResourceCard({
   name,
@@ -107,7 +90,7 @@ function GetStartedSteps({
   }
 
   return (
-    <div className="mb-8 rounded-xl border border-black/10 bg-[#f7f6f4] p-6 dark:border-white/10 dark:bg-[#182a32]">
+    <div className="example-get-started mb-8 rounded-xl border border-black/10 bg-[#f7f6f4] p-6 dark:border-white/10 dark:bg-[#182a32]">
       <h2 className="mt-0 mb-5 text-lg font-semibold tracking-tight">
         Get started
       </h2>
@@ -120,7 +103,7 @@ function GetStartedSteps({
             <p className="m-0 mb-2 text-sm font-medium text-foreground">
               Clone the template
             </p>
-            <CopyCommand command={example.initCommand} />
+            <RecipeCodeBlock>{example.initCommand}</RecipeCodeBlock>
           </div>
         </li>
         <li className="flex gap-3">
@@ -148,7 +131,7 @@ function GetStartedSteps({
             <p className="m-0 mb-2 text-sm font-medium text-foreground">
               Deploy the application
             </p>
-            <CopyCommand command="databricks bundle deploy" />
+            <RecipeCodeBlock>databricks bundle deploy</RecipeCodeBlock>
           </div>
         </li>
       </ol>

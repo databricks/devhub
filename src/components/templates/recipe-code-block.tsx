@@ -44,3 +44,18 @@ export function RecipePre({ children }: RecipePreProps): ReactNode {
     </CodeBlock>
   );
 }
+
+/** Bash snippet with the same theme CodeBlock + copy UX as MDX fenced blocks. */
+export function RecipeCodeBlock({
+  children,
+  language = "bash",
+}: {
+  children: string;
+  language?: string;
+}): ReactNode {
+  return (
+    <div className="recipe-content-card min-w-0">
+      <CodeBlock language={language}>{children}</CodeBlock>
+    </div>
+  );
+}

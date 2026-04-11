@@ -2,6 +2,22 @@ import type { Example } from "@/lib/recipes/recipes";
 
 type ResourceRef = { id: string; name: string; description: string };
 
+/** Outcome bullets shown in the Get started card (agent-first copy). */
+export const EXAMPLE_AGENT_OUTCOME_BULLETS = [
+  "Prompt the agent to clone the template",
+  "Prompt the agent to provision or link Databricks resources",
+  "Prompt the agent to deploy the application",
+] as const;
+
+/** Compact outline for Copy as Markdown and other exports (user-first summary). */
+export function buildExportGetStartedOutline(): string {
+  return [
+    "1) Clone the template",
+    "2) Provision or link existing Databricks resources",
+    "3) Deploy the application",
+  ].join("\n");
+}
+
 export function buildFullPrompt(
   example: Example,
   githubUrl: string,
@@ -14,7 +30,7 @@ export function buildFullPrompt(
     "",
     example.description,
     "",
-    "## Getting Started",
+    "## Get started",
     "",
     "### 1. Clone the template",
     "",
@@ -64,7 +80,7 @@ export function buildAdditionalMarkdown(
 ): string {
   const sections: string[] = [];
 
-  sections.push(`## Get Started\n\n\`\`\`bash\n${example.initCommand}\n\`\`\``);
+  sections.push(`## Get started\n\n${buildExportGetStartedOutline()}`);
   sections.push(`## Source Code\n\nGitHub: ${githubUrl}`);
 
   const links = [

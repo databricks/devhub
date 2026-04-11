@@ -23,6 +23,7 @@ import { RecipeToc } from "@/components/templates/recipe-toc";
 import {
   buildFullPrompt,
   buildAdditionalMarkdown,
+  EXAMPLE_AGENT_OUTCOME_BULLETS,
 } from "@/lib/examples/build-example-markdown";
 import type { Example } from "@/lib/recipes/recipes";
 import { templates, recipes } from "@/lib/recipes/recipes";
@@ -83,65 +84,113 @@ function GetStartedSteps({
   example: Example;
   fullPrompt: string;
 }) {
-  function handleCopyFullPrompt() {
+  function handleCopyPrompt() {
     navigator.clipboard.writeText(fullPrompt).then(() => {
-      toast.success("Full prompt copied");
+      toast.success("Prompt copied");
     });
   }
 
   return (
-    <div className="example-get-started mb-8 rounded-xl border border-black/10 bg-[#f7f6f4] p-6 dark:border-white/10 dark:bg-[#182a32]">
-      <h2 className="mt-0 mb-5 text-lg font-semibold tracking-tight">
-        Get started
-      </h2>
-      <ol className="m-0 list-none space-y-5 p-0">
-        <li className="flex gap-3">
-          <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-black/8 text-xs font-semibold text-foreground dark:bg-white/10">
-            1
-          </span>
-          <div className="min-w-0 flex-1">
-            <p className="m-0 mb-2 text-sm font-medium text-foreground">
-              Clone the template
+    <section className="example-get-started mb-10 rounded-lg border border-border/80 bg-card">
+      <div className="px-6 py-8 sm:px-8 sm:py-9">
+        <h2 className="mt-0 text-lg font-semibold tracking-tight text-card-foreground">
+          Get started
+        </h2>
+
+        <div className="mt-8 flex flex-col gap-10">
+          <div>
+            <div className="mb-4 font-mono text-[11px] leading-none font-medium tracking-[0.14em] text-muted-foreground uppercase">
+              Agent
+            </div>
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-5">
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-8 w-fit gap-2 rounded-md border-border px-3 font-mono text-xs shadow-none"
+                onClick={handleCopyPrompt}
+                title="Copies the full prompt for Cursor, Claude Code, Codex, or similar tools"
+              >
+                <ClipboardCopy className="size-3.5" />
+                Copy prompt
+              </Button>
+              <span className="font-mono text-[11px] text-muted-foreground">
+                Paste into your coding agent
+              </span>
+            </div>
+            <ul className="mt-5 space-y-2.5 border-l border-border/70 pl-4">
+              {EXAMPLE_AGENT_OUTCOME_BULLETS.map((line) => (
+                <li
+                  key={line}
+                  className="text-[13px] leading-snug text-muted-foreground"
+                >
+                  {line}
+                </li>
+              ))}
+            </ul>
+            <p className="mt-5 font-mono text-[11px] leading-relaxed text-muted-foreground">
+              Or run the commands below. See this page and the repo README for
+              context.
             </p>
-            <RecipeCodeBlock>{example.initCommand}</RecipeCodeBlock>
           </div>
-        </li>
-        <li className="flex gap-3">
-          <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-black/8 text-xs font-semibold text-foreground dark:bg-white/10">
-            2
-          </span>
-          <div className="min-w-0 flex-1">
-            <p className="m-0 mb-1 text-sm font-medium text-foreground">
-              Provision or link existing Databricks resources
-            </p>
-            <p className="m-0 text-[13px] leading-relaxed text-muted-foreground">
-              Update your app&apos;s{" "}
-              <code className="rounded bg-black/6 px-1.5 py-0.5 text-xs dark:bg-white/8">
-                databricks.yml
-              </code>{" "}
-              file with your resource IDs.
-            </p>
+
+          <div className="border-t border-border/60 pt-10">
+            <div className="mb-6 font-mono text-[11px] leading-none font-medium tracking-[0.14em] text-muted-foreground uppercase">
+              CLI
+            </div>
+            <ol className="m-0 list-none space-y-10 p-0">
+              <li className="grid grid-cols-[2.25rem_minmax(0,1fr)] gap-x-3 sm:grid-cols-[2.5rem_minmax(0,1fr)] sm:gap-x-4">
+                <span
+                  className="pt-0.5 font-mono text-xs tabular-nums text-muted-foreground/90"
+                  aria-hidden
+                >
+                  01
+                </span>
+                <div className="min-w-0 space-y-3">
+                  <p className="m-0 text-sm font-medium text-card-foreground">
+                    Clone the template
+                  </p>
+                  <RecipeCodeBlock>{example.initCommand}</RecipeCodeBlock>
+                </div>
+              </li>
+              <li className="grid grid-cols-[2.25rem_minmax(0,1fr)] gap-x-3 sm:grid-cols-[2.5rem_minmax(0,1fr)] sm:gap-x-4">
+                <span
+                  className="pt-0.5 font-mono text-xs tabular-nums text-muted-foreground/90"
+                  aria-hidden
+                >
+                  02
+                </span>
+                <div className="min-w-0 space-y-2">
+                  <p className="m-0 text-sm font-medium text-card-foreground">
+                    Provision or link Databricks resources
+                  </p>
+                  <p className="m-0 text-[13px] leading-relaxed text-muted-foreground">
+                    Set resource IDs in{" "}
+                    <code className="rounded border border-border/80 bg-muted/80 px-1.5 py-px font-mono text-[12px] text-card-foreground">
+                      databricks.yml
+                    </code>
+                    .
+                  </p>
+                </div>
+              </li>
+              <li className="grid grid-cols-[2.25rem_minmax(0,1fr)] gap-x-3 sm:grid-cols-[2.5rem_minmax(0,1fr)] sm:gap-x-4">
+                <span
+                  className="pt-0.5 font-mono text-xs tabular-nums text-muted-foreground/90"
+                  aria-hidden
+                >
+                  03
+                </span>
+                <div className="min-w-0 space-y-3">
+                  <p className="m-0 text-sm font-medium text-card-foreground">
+                    Deploy
+                  </p>
+                  <RecipeCodeBlock>databricks bundle deploy</RecipeCodeBlock>
+                </div>
+              </li>
+            </ol>
           </div>
-        </li>
-        <li className="flex gap-3">
-          <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-black/8 text-xs font-semibold text-foreground dark:bg-white/10">
-            3
-          </span>
-          <div className="min-w-0 flex-1">
-            <p className="m-0 mb-2 text-sm font-medium text-foreground">
-              Deploy the application
-            </p>
-            <RecipeCodeBlock>databricks bundle deploy</RecipeCodeBlock>
-          </div>
-        </li>
-      </ol>
-      <div className="mt-5 flex justify-end">
-        <Button variant="outline" size="sm" onClick={handleCopyFullPrompt}>
-          <ClipboardCopy className="size-3.5" />
-          Copy Full Prompt
-        </Button>
+        </div>
       </div>
-    </div>
+    </section>
   );
 }
 

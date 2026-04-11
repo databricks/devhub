@@ -102,6 +102,78 @@ test.describe("copy markdown exports raw markdown on example pages", () => {
     expect(copied).toContain("## SaaS Subscription Tracker");
     expect(copied).toContain("Data Flow");
   });
+
+  // Full `npm run test` runs `build` before Playwright; if you run `test:e2e`
+  // alone, run `npm run build` first so `docusaurus serve` is not stale.
+  test("Get started: page shows agent-first copy and manual steps", async ({
+    page,
+  }) => {
+    await page.goto("/resources/agentic-support-console");
+
+    await expect(
+      page.getByRole("heading", { name: "Get started", exact: true }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: "Copy prompt" }),
+    ).toBeVisible();
+    await expect(page.getByText("Paste into your coding agent")).toBeVisible();
+    await expect(
+      page.getByText("Prompt the agent to clone the template"),
+    ).toBeVisible();
+    await expect(
+      page.locator("section.example-get-started").getByText("CLI", {
+        exact: true,
+      }),
+    ).toBeVisible();
+    await expect(
+      page.getByText(
+        /databricks apps init --template https:\/\/github\.com\/databricks\/devhub\/tree\/main\/examples\/agentic-support-console/,
+      ),
+    ).toBeVisible();
+  });
+
+  test("Get started: Copy Markdown uses compact outline, not full prompt substeps", async ({
+    page,
+  }) => {
+    await setupClipboardMock(page);
+    await page.goto("/resources/agentic-support-console");
+
+    await clickCopyMarkdownAndWaitForToast(page);
+
+    const copied = await getCopiedText(page);
+    expect(copied).toContain("1) Clone the template");
+    expect(copied).toContain(
+      "2) Provision or link existing Databricks resources",
+    );
+    expect(copied).toContain("3) Deploy the application");
+    expect(copied).not.toContain("### 1. Clone the template");
+    expect(copied).not.toContain("### 2. Provision or link");
+  });
+
+  test("Get started: Copy prompt copies full prompt with bash and ### substeps", async ({
+    page,
+  }) => {
+    await setupClipboardMock(page);
+    await page.goto("/resources/agentic-support-console");
+
+    await page.getByRole("button", { name: "Copy prompt" }).click();
+    await expect(page.getByText("Prompt copied")).toBeVisible({
+      timeout: 5000,
+    });
+
+    const copied = await getCopiedText(page);
+    expect(copied).toContain("### 1. Clone the template");
+    expect(copied).toContain("```bash");
+    expect(copied).toContain(
+      "databricks apps init --template https://github.com/databricks/devhub/tree/main/examples/agentic-support-console",
+    );
+    expect(copied).toContain(
+      "### 2. Provision or link existing Databricks resources",
+    );
+    expect(copied).toContain("### 3. Deploy the application");
+    expect(copied).toContain("databricks bundle deploy");
+    expect(copied).not.toContain("1) Clone the template");
+  });
 });
 
 test.describe("copy markdown exports raw markdown on solution pages", () => {

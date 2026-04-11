@@ -2,6 +2,7 @@ import { describe, expect, test } from "vitest";
 import {
   buildFullPrompt,
   buildAdditionalMarkdown,
+  buildExportGetStartedOutline,
 } from "../src/lib/examples/build-example-markdown";
 import type { Example } from "../src/lib/recipes/recipes";
 
@@ -56,8 +57,9 @@ describe("buildFullPrompt", () => {
     expect(prompt).toContain("A test example for unit tests.");
   });
 
-  test("includes getting started steps", () => {
+  test("includes get started steps", () => {
     const prompt = buildFullPrompt(minimalExample, githubUrl, "", [], []);
+    expect(prompt).toContain("## Get started");
     expect(prompt).toContain("### 1. Clone the template");
     expect(prompt).toContain(minimalExample.initCommand);
     expect(prompt).toContain(
@@ -137,10 +139,14 @@ describe("buildFullPrompt", () => {
 });
 
 describe("buildAdditionalMarkdown", () => {
-  test("includes init command", () => {
+  test("includes compact get started outline for exports", () => {
     const md = buildAdditionalMarkdown(minimalExample, githubUrl, [], []);
-    expect(md).toContain("## Get Started");
-    expect(md).toContain(minimalExample.initCommand);
+    expect(md).toContain("## Get started");
+    expect(md).toContain("1) Clone the template");
+    expect(md).toContain("2) Provision or link existing Databricks resources");
+    expect(md).toContain("3) Deploy the application");
+    expect(md).not.toContain("```bash");
+    expect(md).not.toContain(minimalExample.initCommand);
   });
 
   test("includes source code link", () => {
@@ -183,5 +189,33 @@ describe("buildFullPrompt matches Copy as Markdown content", () => {
     for (const line of sampleRawMarkdown.split("\n").filter(Boolean)) {
       expect(prompt).toContain(line);
     }
+  });
+});
+
+describe("example Get started: full prompt (Copy prompt) vs export markdown (Copy as Markdown)", () => {
+  test("full prompt uses ### substeps and bash fences; export uses compact 1) outline only", () => {
+    const full = buildFullPrompt(minimalExample, githubUrl, "", [], []);
+    const exportMd = buildAdditionalMarkdown(minimalExample, githubUrl, [], []);
+
+    expect(full).toContain("### 1. Clone the template");
+    expect(full).toContain("```bash");
+    expect(full).toContain(minimalExample.initCommand);
+    expect(full).not.toContain("1) Clone the template");
+
+    expect(exportMd).toContain(buildExportGetStartedOutline());
+    expect(exportMd).not.toContain("### 1. Clone the template");
+    expect(exportMd).not.toContain("```bash");
+    expect(exportMd).not.toContain(minimalExample.initCommand);
+  });
+
+  test("export markdown never embeds full-prompt subheadings in the appended section", () => {
+    const exportMd = buildAdditionalMarkdown(
+      minimalExample,
+      githubUrl,
+      sampleTemplates,
+      sampleRecipes,
+    );
+    expect(exportMd).not.toContain("### 2. Provision or link");
+    expect(exportMd).not.toContain("### 3. Deploy");
   });
 });

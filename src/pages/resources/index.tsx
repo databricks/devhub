@@ -220,8 +220,8 @@ export default function ResourcesPage(): ReactNode {
               building on Databricks.
             </h1>
             <p className="mb-10 max-w-2xl text-lg text-black/68 dark:text-white/68">
-              Step-by-step guides to follow along or copy-paste into your coding
-              agent. Explore end-to-end examples for inspiration.
+              Step-by-step guides to copy into your coding agent. Explore
+              end-to-end examples as reference implementations.
             </p>
 
             {/* Toolbar: search + actions */}

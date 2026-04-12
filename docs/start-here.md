@@ -1,24 +1,11 @@
 ---
 title: Start here
-description: DevHub is the developer platform for Databricks. Browse guides and examples at /resources, copy them into your AI coding agent, and start building.
+description: DevHub is a catalog of guides for the Databricks developer stack. Browse /resources, copy a guide into your coding agent, and start building.
 ---
 
 # Start here
 
-Everything you need to build and deploy data apps and AI agents on Databricks. The site is organized around [guides and examples](/resources). Copy one into your AI coding agent and describe what you want to build. These docs cover the underlying platform when you need to go deeper.
-
-## How the platform fits together
-
-DevHub covers four layers of the Databricks developer stack:
-
-| Layer        | What it is                                                                                                             |
-| ------------ | ---------------------------------------------------------------------------------------------------------------------- |
-| **Apps**     | The hosting layer. Your Node.js or Python app runs as a managed workspace resource with a fixed URL and built-in auth. |
-| **AppKit**   | The TypeScript SDK. Provides auth, plugins, and UI components for building on top of Apps.                             |
-| **Lakebase** | The database layer. Managed Postgres for your app's transactional data, co-located with your Lakehouse.                |
-| **Agents**   | The LLM orchestration layer. Deployed as Apps using any framework that implements the ResponsesAgent interface.        |
-
-Guides wire these layers together. Docs explain each layer when you need to go deeper.
+DevHub is a catalog of guides for the Databricks developer stack. The site is organized around [guides and examples](/resources). These docs are the reference layer for you and your agent.
 
 ## Pick a guide
 
@@ -32,15 +19,20 @@ Three common starting points. Browse [/resources](/resources) for the full catal
 
 ## Use a guide
 
-Copy any guide from [/resources](/resources) into your coding agent and describe what you want to build. The guide handles setup, auth, schemas, and deployment. Your prompt shapes the business logic.
+Copy any guide from [/resources](/resources) into your coding agent and describe what you want to build. The guide handles setup, auth, schemas, and deployment. Your prompt shapes the business logic. A machine-readable index of all guides is at [/llms.txt](/llms.txt).
 
-### Example prompts
+## How the platform fits together
 
-Pair a guide with a short description of what you want. The more specific you are about the domain, fields, and layout, the better the result.
+DevHub covers four layers of the Databricks developer stack:
 
-> Use the App with Lakebase guide. Build a customer feedback tracker where users submit feedback through a form with fields for customer name, product, rating (1-5), and comments. Display all submissions in a sortable table.
+| Layer        | What it is                                                                                                             |
+| ------------ | ---------------------------------------------------------------------------------------------------------------------- |
+| **Apps**     | The hosting layer. Your Node.js or Python app runs as a managed workspace resource with a fixed URL and built-in auth. |
+| **AppKit**   | The TypeScript SDK. Provides auth, plugins, and UI components for building on top of Apps.                             |
+| **Lakebase** | The database layer. Managed Postgres for your app's transactional data, co-located with your Lakehouse.                |
+| **Agents**   | The LLM orchestration layer. Deployed as Apps using any framework that implements the ResponsesAgent interface.        |
 
-> Use the AI Chat App guide. Build an IT support assistant that helps employees troubleshoot common issues like VPN setup, password resets, and software installation requests. It should be conversational and remember chat history.
+Guides wire these layers together. Docs explain each layer when you or your agent need more context.
 
 ## Prerequisites
 

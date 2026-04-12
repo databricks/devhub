@@ -134,7 +134,7 @@ test.describe("copy markdown exports raw markdown on example pages", () => {
     ).toBeVisible();
   });
 
-  test("Get started: Copy Markdown uses compact outline, not full prompt substeps", async ({
+  test("Get started: Copy Markdown includes clone bash block and included guides preamble", async ({
     page,
   }) => {
     await setupClipboardMock(page);
@@ -143,11 +143,16 @@ test.describe("copy markdown exports raw markdown on example pages", () => {
     await clickCopyMarkdownAndWaitForToast(page);
 
     const copied = await getCopiedText(page);
+    expect(copied).toContain("## Get started");
+    expect(copied).toContain("Run the command below");
+    expect(copied).toContain("```bash");
     expect(copied).toContain(
-      "1) Clone the repository locally and open examples/<example-id>/template/README.md",
+      "git clone --depth 1 https://github.com/databricks/devhub.git",
     );
+    expect(copied).toContain("**`template/README.md`**");
+    expect(copied).toContain("## Included guides");
     expect(copied).toContain(
-      "2) Follow that README for all manual steps, SQL, seeding, and deployment",
+      "These **guides** (multi-step cookbooks) and **recipes** informed how this example was built",
     );
     expect(copied).not.toContain("### 1. Clone locally");
     expect(copied).not.toContain("### 2.");

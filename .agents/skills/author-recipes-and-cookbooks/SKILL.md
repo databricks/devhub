@@ -85,7 +85,6 @@ Create a directory under `examples/<example-id>/` with this structure:
 
 ```
 examples/<example-id>/
-  README.md                    # short pointer to template/README.md
   template/                    # full runnable tree (AppKit app + optional pipelines/seed/provisioning)
     README.md                  # canonical provisioning, SQL, seed, and deploy instructions
     databricks.yml             # bundle config with REPLACE_ME placeholders
@@ -135,10 +134,6 @@ Include, as appropriate for the example:
 Do **not** maintain a separate long-form `provisioning/README.md` beside the SQL — duplicate instructions drift. Put narrative in `template/README.md` only; keep `provisioning/sql/*.sql` as executable artifacts with brief header comments.
 
 For examples with **no** Unity Catalog DDL (Lakebase-only apps), still add `template/provisioning/sql/` with a short comment-only file (e.g. `00_no_unity_catalog_ddl.sql`) that explains nothing is required and points back to the README — so every example has a predictable place for SQL.
-
-### `examples/<example-id>/README.md` (repo root pointer)
-
-Keep this **short**: one paragraph + link to **`template/README.md`**, plus an optional fenced block with `databricks apps init --template ...`. Do not duplicate the full provisioning guide at the example root.
 
 ### `examples/README.md` (examples index)
 

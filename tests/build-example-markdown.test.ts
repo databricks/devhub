@@ -2,7 +2,8 @@ import { describe, expect, test } from "vitest";
 import {
   buildFullPrompt,
   buildAdditionalMarkdown,
-  buildExportGetStartedOutline,
+  buildExportGetStartedSection,
+  buildIncludedGuidesPreamble,
 } from "../src/lib/examples/build-example-markdown";
 import type { ExampleMarkdownOptions } from "../src/lib/examples/build-example-markdown";
 import type { Example } from "../src/lib/recipes/recipes";
@@ -14,7 +15,7 @@ const minimalExample: Example = {
   image: "/img/examples/test.svg",
   githubPath: "examples/test-example",
   initCommand:
-    "databricks apps init --template https://example.com --name test",
+    "git clone --depth 1 https://github.com/databricks/devhub.git\ncd devhub/examples/test-example/template",
   templateIds: [],
   recipeIds: [],
   tags: [],
@@ -52,6 +53,30 @@ const baseOpts: ExampleMarkdownOptions = {
   includedRecipes: [],
   baseUrl,
 };
+
+describe("buildIncludedGuidesPreamble", () => {
+  test("explains guides mirror the template and points to DevHub for extra context", () => {
+    const text = buildIncludedGuidesPreamble();
+    expect(text).toContain("**guides**");
+    expect(text).toContain("cookbooks");
+    expect(text).toContain("**recipes**");
+    expect(text).toContain("template code");
+    expect(text).toContain("`template/README.md`");
+    expect(text).toContain("DevHub");
+  });
+});
+
+describe("buildExportGetStartedSection", () => {
+  test("includes bash init command and README runbook with source-of-truth line", () => {
+    const section = buildExportGetStartedSection(minimalExample);
+    expect(section.startsWith("## Get started\n")).toBe(true);
+    expect(section).toContain("Run the command below");
+    expect(section).toContain("```bash");
+    expect(section).toContain(minimalExample.initCommand);
+    expect(section).toContain("**`template/README.md`**");
+    expect(section).toContain("source of truth");
+  });
+});
 
 describe("buildFullPrompt", () => {
   test("includes example name and description", () => {
@@ -112,7 +137,8 @@ describe("buildFullPrompt", () => {
       includedTemplates: sampleTemplates,
       includedRecipes: sampleRecipes,
     });
-    expect(prompt).toContain("## Included Guides");
+    expect(prompt).toContain("## Included guides");
+    expect(prompt).toContain(buildIncludedGuidesPreamble());
     expect(prompt).toContain(
       "[Template A](https://example.com/resources/tmpl-a.md) - First template.",
     );
@@ -123,7 +149,7 @@ describe("buildFullPrompt", () => {
 
   test("omits guides section when no templates or recipes", () => {
     const prompt = buildFullPrompt({ ...baseOpts, rawMarkdown: "" });
-    expect(prompt).not.toContain("## Included Guides");
+    expect(prompt).not.toContain("## Included guides");
   });
 
   test("omits rawMarkdown section when empty string", () => {
@@ -134,17 +160,14 @@ describe("buildFullPrompt", () => {
 });
 
 describe("buildAdditionalMarkdown", () => {
-  test("includes compact get started outline for exports", () => {
+  test("includes get started with clone command and template README pointer", () => {
     const md = buildAdditionalMarkdown(baseOpts);
     expect(md).toContain("## Get started");
-    expect(md).toContain(
-      "1) Clone the repository locally and open examples/<example-id>/template/README.md",
-    );
-    expect(md).toContain(
-      "2) Follow that README for all manual steps, SQL, seeding, and deployment",
-    );
-    expect(md).not.toContain("```bash");
-    expect(md).not.toContain(minimalExample.initCommand);
+    expect(md).toContain("Run the command below");
+    expect(md).toContain("```bash");
+    expect(md).toContain(minimalExample.initCommand);
+    expect(md).toContain("**`template/README.md`**");
+    expect(md).not.toContain("### 1. Clone locally");
   });
 
   test("includes source code link", () => {
@@ -159,7 +182,8 @@ describe("buildAdditionalMarkdown", () => {
       includedTemplates: sampleTemplates,
       includedRecipes: sampleRecipes,
     });
-    expect(md).toContain("## Included Resources");
+    expect(md).toContain("## Included guides");
+    expect(md).toContain(buildIncludedGuidesPreamble());
     expect(md).toContain(
       "[Template A](https://example.com/resources/tmpl-a.md)",
     );
@@ -168,9 +192,9 @@ describe("buildAdditionalMarkdown", () => {
     );
   });
 
-  test("omits resources section when no templates or recipes", () => {
+  test("omits guides section when no templates or recipes", () => {
     const md = buildAdditionalMarkdown(baseOpts);
-    expect(md).not.toContain("## Included Resources");
+    expect(md).not.toContain("## Included guides");
   });
 });
 
@@ -189,7 +213,7 @@ describe("buildFullPrompt matches Copy as Markdown content", () => {
 });
 
 describe("example Get started: full prompt (Copy prompt) vs export markdown (Copy as Markdown)", () => {
-  test("full prompt uses ### substeps and bash fences; export uses compact 1) outline only", () => {
+  test("full prompt uses ### substeps; export uses ## Get started without ### clone substep", () => {
     const full = buildFullPrompt({ ...baseOpts, rawMarkdown: "" });
     const exportMd = buildAdditionalMarkdown(baseOpts);
 
@@ -198,12 +222,11 @@ describe("example Get started: full prompt (Copy prompt) vs export markdown (Cop
     );
     expect(full).toContain("```bash");
     expect(full).toContain(minimalExample.initCommand);
-    expect(full).not.toContain("1) Clone the repository locally");
 
-    expect(exportMd).toContain(buildExportGetStartedOutline());
+    expect(exportMd).toContain(buildExportGetStartedSection(minimalExample));
     expect(exportMd).not.toContain("### 1. Clone locally");
-    expect(exportMd).not.toContain("```bash");
-    expect(exportMd).not.toContain(minimalExample.initCommand);
+    expect(exportMd).toContain("```bash");
+    expect(exportMd).toContain(minimalExample.initCommand);
   });
 
   test("export markdown never embeds full-prompt subheadings in the appended section", () => {

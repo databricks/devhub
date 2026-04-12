@@ -16,11 +16,27 @@ export const EXAMPLE_AGENT_OUTCOME_BULLETS = [
   "Prompt the agent to follow that README for provisioning, seeding, pipelines, and deploy",
 ] as const;
 
-/** Compact outline for Copy as Markdown and other exports (user-first summary). */
-export function buildExportGetStartedOutline(): string {
+/** Intro copy for the included guides / recipes list (Copy as Markdown and Copy prompt). */
+export function buildIncludedGuidesPreamble(): string {
   return [
-    "1) Clone the repository locally and open examples/<example-id>/template/README.md",
-    "2) Follow that README for all manual steps, SQL, seeding, and deployment",
+    "These **guides** (multi-step cookbooks) and **recipes** informed how this example was built; their patterns are reflected in the template code, bundles, and workflows.",
+    "",
+    "Review them on DevHub when you need more context on a technique than `template/README.md` alone provides.",
+  ].join("\n");
+}
+
+/** Get started body for Copy as Markdown exports (includes clone command + README pointer). */
+export function buildExportGetStartedSection(example: Example): string {
+  return [
+    "## Get started",
+    "",
+    "Run the command below to clone the DevHub repository locally and `cd` into this example's **`template/`** folder. That directory is the runnable template (AppKit app, Databricks Asset Bundles, and any `pipelines/`, `seed/`, or `provisioning/sql/` shipped with the example).",
+    "",
+    "```bash",
+    example.initCommand,
+    "```",
+    "",
+    "**`template/README.md`** is included in that folder when you clone. Open it for step-by-step instructions: provision the right infrastructure (catalogs, Lakehouse Sync, Lakebase, warehouses, AI endpoints, and so on), run seeds and pipeline bundles as needed, and deploy the app. Follow that README end to end—it is the source of truth for this example.",
   ].join("\n");
 }
 
@@ -45,11 +61,13 @@ export function buildFullPrompt(
     "",
     "### 1. Clone locally and follow `template/README.md`",
     "",
+    "Run the command below to clone the DevHub repository locally and enter this example's **`template/`** directory.",
+    "",
     "```bash",
     example.initCommand,
     "```",
     "",
-    "Use **`README.md`** in that `template/` folder as the single guide: manual provisioning, SQL (where applicable), seed data, pipeline bundles, and `databricks bundle deploy` for the app.",
+    "**`template/README.md`** ships with that template when you clone. Use it as the runbook: follow the instructions there to provision the right infrastructure pieces, seed data, run pipelines if applicable, and deploy the app.",
     "",
     "**Optional:** scaffold a standalone project with the CLI instead of cloning the full DevHub repo:",
     "",
@@ -76,17 +94,25 @@ export function buildFullPrompt(
     ),
   ];
   if (guides.length > 0) {
-    lines.push("", "## Included Guides", "", ...guides);
+    lines.push(
+      "",
+      "## Included guides",
+      "",
+      buildIncludedGuidesPreamble(),
+      "",
+      ...guides,
+    );
   }
 
   return lines.join("\n");
 }
 
 export function buildAdditionalMarkdown(opts: ExampleMarkdownOptions): string {
-  const { githubUrl, includedTemplates, includedRecipes, baseUrl } = opts;
+  const { example, githubUrl, includedTemplates, includedRecipes, baseUrl } =
+    opts;
   const sections: string[] = [];
 
-  sections.push(`## Get started\n\n${buildExportGetStartedOutline()}`);
+  sections.push(buildExportGetStartedSection(example));
   sections.push(`## Source Code\n\nGitHub: ${githubUrl}`);
 
   const links = [
@@ -100,7 +126,13 @@ export function buildAdditionalMarkdown(opts: ExampleMarkdownOptions): string {
     ),
   ];
   if (links.length > 0) {
-    sections.push(`## Included Resources\n\n${links.join("\n")}`);
+    sections.push(
+      "## Included guides",
+      "",
+      buildIncludedGuidesPreamble(),
+      "",
+      links.join("\n"),
+    );
   }
 
   return sections.join("\n\n");

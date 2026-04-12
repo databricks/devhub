@@ -88,14 +88,9 @@ test.describe("home page link navigation", () => {
     await expect(button).toBeEnabled();
     await button.click();
 
-    await expect
-      .poll(async () =>
-        page.evaluate(() => (window as { __copiedText?: string }).__copiedText),
-      )
-      .toBeTruthy();
-    await expect(page.getByText("Failed to copy bootstrap prompt")).toHaveCount(
-      0,
-    );
+    await expect(
+      page.locator("main").getByRole("button").filter({ hasText: "Copied" }),
+    ).toBeVisible({ timeout: 5000 });
     const finalCopiedText = await page.evaluate(
       () => (window as { __copiedText?: string }).__copiedText,
     );

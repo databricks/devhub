@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
-import { useCallback } from "react";
-import { toast } from "sonner";
+import { useCallback, useRef, useState } from "react";
+import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CopyButton } from "@/components/code/copy-button";
 import { getBootstrapPromptApiPath } from "@/lib/bootstrap-prompt";
@@ -60,6 +60,11 @@ async function getBootstrapPrompt(): Promise<string> {
 }
 
 export function HeroSection(): ReactNode {
+  const [copyState, setCopyState] = useState<"idle" | "copied" | "error">(
+    "idle",
+  );
+  const resetTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+
   const handleCopyBootstrapPrompt = useCallback(async () => {
     try {
       const bootstrapPrompt = await getBootstrapPrompt();
@@ -69,9 +74,12 @@ export function HeroSection(): ReactNode {
         throw new Error("Clipboard copy failed");
       }
 
-      toast.success("Bootstrap prompt copied to clipboard");
+      setCopyState("copied");
     } catch {
-      toast.error("Failed to copy bootstrap prompt");
+      setCopyState("error");
+    } finally {
+      clearTimeout(resetTimerRef.current);
+      resetTimerRef.current = setTimeout(() => setCopyState("idle"), 2500);
     }
   }, []);
 
@@ -104,7 +112,16 @@ export function HeroSection(): ReactNode {
               onClick={handleCopyBootstrapPrompt}
               title="Copies a setup guide you can paste into Cursor, Claude Code, or Codex"
             >
-              Copy Prompt
+              {copyState === "copied" ? (
+                <span className="inline-flex items-center gap-1.5">
+                  <Check className="h-4 w-4" />
+                  Copied
+                </span>
+              ) : copyState === "error" ? (
+                "Failed to copy"
+              ) : (
+                "Copy Prompt"
+              )}
             </Button>
           </div>
           <p className="mt-4 text-xs text-black/40 dark:text-white/40">

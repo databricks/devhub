@@ -203,7 +203,10 @@ export default function ResourcesPage(): ReactNode {
   );
 
   return (
-    <Layout title="Resources" description="Templates and starter resources">
+    <Layout
+      title="Resources"
+      description="Guides and examples for building on Databricks"
+    >
       <main className="border-t border-db-cyan/30 bg-db-bg dark:border-db-cyan/25 dark:bg-[#0d1a1f]">
         <div className="container px-4 py-12 md:py-16">
           <div className="mx-auto max-w-7xl">

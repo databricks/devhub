@@ -27,7 +27,7 @@ const SIDEBAR_SECTIONS: Array<{
   {
     title: "Start Here",
     description:
-      "Site orientation: what DevHub is, how to use templates, and where to find companion docs.",
+      "Site orientation: what DevHub is, how to use guides and examples, and where to find companion docs.",
     slugs: ["start-here"],
   },
   {
@@ -157,7 +157,7 @@ function generateLlmsTxt(baseUrl: string, docsDir: string): string {
   const lines: string[] = [
     "# Databricks Developer Hub",
     "",
-    "> Documentation, starter templates, and recipes for building apps and AI agents on Databricks using Lakebase (managed Postgres), Model Serving, and Databricks Apps.",
+    "> Documentation, guides, and examples for building apps and AI agents on Databricks using Lakebase (managed Postgres), Model Serving, and Databricks Apps.",
     "",
   ];
 
@@ -185,7 +185,7 @@ function generateLlmsTxt(baseUrl: string, docsDir: string): string {
   lines.push(
     "## Resources",
     "",
-    "Templates, recipes, and examples for building on Databricks.",
+    "Guides and examples for building on Databricks.",
     "",
     `- [All Resources](${baseUrl}/resources.md): Browse all resources`,
     "",
@@ -193,7 +193,7 @@ function generateLlmsTxt(baseUrl: string, docsDir: string): string {
 
   if (templates.length > 0) {
     lines.push(
-      "### Templates",
+      "### Guides",
       "",
       ...templates.map(
         (t) =>

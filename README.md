@@ -1,6 +1,6 @@
 # DevHub
 
-**[dev.databricks.com](https://dev.databricks.com)** is the home for developers building data and AI applications on Databricks. It is opinionated documentation, runnable guides and examples, and copy-paste-friendly content so you—and your coding agents—can go from idea to deployed app in minutes not months.
+**[dev.databricks.com](https://dev.databricks.com)** is the home for developers building data and AI applications on Databricks. It is opinionated documentation, runnable guides and examples, and copy-paste-friendly resources so you—and your coding agents—can go from idea to deployed app in minutes not months.
 
 ## Why build on Databricks?
 

@@ -213,12 +213,12 @@ function readResourcesIndex(): string {
   const lines: string[] = [
     "# Resources",
     "",
-    "Templates and starter kits for building on Databricks.",
+    "Guides and examples for building on Databricks.",
     "",
   ];
 
   if (templates.length > 0) {
-    lines.push("## Templates", "");
+    lines.push("## Guides", "");
     for (const t of templates) {
       lines.push(`- [${t.name}](/resources/${t.id}.md): ${t.description}`);
     }

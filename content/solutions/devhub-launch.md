@@ -47,24 +47,24 @@ Here are some examples:
 
 There are currently **15 recipes** covering everything from initial workspace setup to production data pipelines.
 
-### Templates that compose recipes
+### Guides that compose recipes
 
-Templates bundle multiple recipes into end-to-end project blueprints. Instead of assembling pieces yourself, pick a template and follow a guided path:
+Guides bundle multiple recipes into end-to-end project blueprints. Instead of assembling pieces yourself, pick a guide and follow a guided path:
 
-| Template                                                                | What it builds                                                                     |
+| Guide                                                                   | What it builds                                                                     |
 | ----------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
 | **[Hello World App](/resources/hello-world-app)**                       | CLI setup, auth, app scaffolding, and agent skills                                 |
 | **[AI Chat App](/resources/ai-chat-app)**                               | Streaming chat with Model Serving, AI SDK, and persistent chat history in Lakebase |
 | **[App with Lakebase](/resources/app-with-lakebase)**                   | App with Lakebase for persistent storage, schema setup, and CRUD API               |
-| **[Genie Analytics App](/resources/genie-analytics-app-template)**      | Conversational analytics with AI/BI Genie                                          |
+| **[Genie Analytics App](/resources/genie-analytics-app)**               | Conversational analytics with AI/BI Genie                                          |
 | **[Lakebase Off-Platform](/resources/lakebase-off-platform)**           | Use Lakebase from Vercel, Netlify, or AWS with portable env and token management   |
 | **[Operational Data Analytics](/resources/operational-data-analytics)** | Unity Catalog, Lakehouse Sync CDC, and a medallion architecture pipeline           |
 
-Templates are particularly useful when you're starting a new project and want a proven architecture rather than assembling individual pieces.
+Guides are particularly useful when you're starting a new project and want a proven architecture rather than assembling individual pieces.
 
 ### Raw markdown API
 
-Every recipe, template, and solution on this site is available as raw markdown through a simple API. Append `.md` to any content URL:
+Every recipe, guide, and solution on this site is available as raw markdown through a simple API. Append `.md` to any content URL:
 
 ```
 https://dev.databricks.com/solutions/devhub-launch.md
@@ -91,7 +91,7 @@ Every piece of content on dev.databricks.com is written with this in mind:
 - **Recipes are self-contained markdown** — no dependencies on rendered UI or interactive elements. They work in a browser and in an agent's context window.
 - **Prerequisites are explicit** — each recipe declares what it needs, so agents can chain them correctly.
 - **Code blocks are complete and runnable** — no pseudo-code or "fill in the blanks" placeholders.
-- **Templates compose recipes deterministically** — agents can follow a template like a script, executing each recipe in order.
+- **Guides compose recipes deterministically** — agents can follow a guide like a script, executing each recipe in order.
 
 This isn't documentation that happens to work with AI tools. It's documentation designed from the ground up for a world where developers and agents collaborate.
 
@@ -102,7 +102,7 @@ This is a starting point. We're actively expanding the content and would love fe
 - More recipes covering MLflow, feature engineering, and Unity Catalog governance
 - End-to-end tutorials for common patterns like RAG applications and real-time dashboards
 - Deeper AppKit documentation with plugin development guides
-- Community-contributed recipes and templates
+- Community-contributed recipes and guides
 
 If you're building on Databricks and have ideas for what would help, we want to hear from you.
 
@@ -111,8 +111,8 @@ If you're building on Databricks and have ideas for what would help, we want to 
 The fastest way to start building:
 
 1. Install the [Databricks CLI](/docs/tools/databricks-cli) and authenticate with your workspace
-2. Browse the [resources](/resources) to find a template that matches your use case
-3. Copy a template into your AI coding agent and let it scaffold your project
+2. Browse the [resources](/resources) to find a guide that matches your use case
+3. Copy a guide into your AI coding agent and let it scaffold your project
 4. Read the [docs](/docs/start-here) when you need to go deeper on any topic
 
 Welcome to dev.databricks.com.

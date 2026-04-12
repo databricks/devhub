@@ -133,14 +133,14 @@ test.describe("home page link navigation", () => {
     expect(new URL(page.url()).pathname).toBe("/docs/apps/appkit");
   });
 
-  test('"See all templates" navigates to /resources', async ({ page }) => {
+  test('"See all resources" navigates to /resources', async ({ page }) => {
     await page.goto("/");
     await page.locator('a[href="/resources"]').first().click();
     await page.waitForURL("**/resources");
     expect(new URL(page.url()).pathname).toBe("/resources");
   });
 
-  test("template preview card navigates to /resources/hello-world-app", async ({
+  test("resource preview card navigates to /resources/hello-world-app", async ({
     page,
   }) => {
     await page.goto("/");

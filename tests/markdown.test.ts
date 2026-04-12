@@ -72,7 +72,7 @@ describe("empty-slug index pages", () => {
   test("resources index contains headings and .md links", () => {
     const markdown = getDetailMarkdown("resources", "");
     expect(markdown).toContain("# Resources");
-    expect(markdown).toContain("## Templates");
+    expect(markdown).toContain("## Guides");
     expect(markdown).toContain("## Recipes");
     expect(markdown).toContain("## Examples");
     expect(markdown).toMatch(/\(\/resources\/[\w-]+\.md\)/);

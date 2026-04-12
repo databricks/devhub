@@ -24,7 +24,7 @@ describe("production build smoke tests", () => {
   test("llms.txt has correct H1 and description", () => {
     const text = readBuildFile("llms.txt");
     expect(text).toContain("# Databricks Developer Hub");
-    expect(text).toContain("> Documentation, starter templates, and recipes");
+    expect(text).toContain("> Documentation, guides, and examples");
   });
 
   test("llms.txt links use .md suffix", () => {
@@ -46,12 +46,12 @@ describe("production build smoke tests", () => {
 
   test("llms.txt resources have subheadings", () => {
     const text = readBuildFile("llms.txt");
-    expect(text).toContain("### Templates");
+    expect(text).toContain("### Guides");
     expect(text).toContain("### Recipes");
     expect(text).toContain("### Examples");
   });
 
-  test("llms.txt links to all resource templates", () => {
+  test("llms.txt links to all resource guides", () => {
     const text = readBuildFile("llms.txt");
 
     const expectedTemplates = [

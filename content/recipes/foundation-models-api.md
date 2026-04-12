@@ -30,7 +30,7 @@ Common AI Gateway endpoint names:
 - `databricks-gemini-3-1-flash-lite`
 - `databricks-dbrx-instruct`
 
-> **Note**: When using this template with a coding agent, specify which endpoint to use based on what's available in your workspace. Endpoint names may vary.
+> **Note**: When using this recipe with a coding agent, specify which endpoint to use based on what's available in your workspace. Endpoint names may vary.
 
 > **Important**: Endpoint availability varies by workspace. Always run `databricks serving-endpoints list` to check what's available before configuring your app.
 

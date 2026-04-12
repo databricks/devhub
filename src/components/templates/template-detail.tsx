@@ -87,7 +87,7 @@ export function TemplateDetail({
                 <div className="mb-12 overflow-hidden rounded-xl bg-gradient-to-br from-[#0f172a] to-[#1e293b]">
                   <img
                     src={heroImageUrl}
-                    alt="Template architecture preview"
+                    alt="Guide architecture preview"
                     className="h-auto w-full object-cover"
                     loading="lazy"
                   />

@@ -174,17 +174,6 @@ const sidebars: SidebarsConfig = {
     "start-here",
     {
       type: "category",
-      label: "AI agents",
-      items: [
-        "agents/quickstart",
-        "agents/core-concepts",
-        "agents/development",
-        "agents/ai-gateway",
-        "agents/observability",
-      ],
-    },
-    {
-      type: "category",
       label: "Databricks Apps",
       items: [
         "apps/quickstart",
@@ -201,6 +190,17 @@ const sidebars: SidebarsConfig = {
         "lakebase/quickstart",
         "lakebase/core-concepts",
         "lakebase/development",
+      ],
+    },
+    {
+      type: "category",
+      label: "AI agents",
+      items: [
+        "agents/quickstart",
+        "agents/core-concepts",
+        "agents/development",
+        "agents/ai-gateway",
+        "agents/observability",
       ],
     },
     {

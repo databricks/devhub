@@ -7,7 +7,7 @@ sidebar_label: Provision & connect
 
 [Lakebase Postgres](https://docs.databricks.com/aws/en/oltp) is Databricks managed PostgreSQL for OLTP workloads that need low-latency, transactional access alongside your Lakehouse data.
 
-DevHub centers on [guides and examples](/resources). These companion docs explain Lakebase when you need platform detail beyond a guide. For how the site fits together, see [Start here](/docs/start-here).
+DevHub is organized around [guides and examples](/resources). These companion docs explain Lakebase when you or your agent need platform detail beyond a guide. For how the site fits together, see [Start here](/docs/start-here).
 
 ## Prerequisites
 

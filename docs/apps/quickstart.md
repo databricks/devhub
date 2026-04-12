@@ -6,7 +6,7 @@ title: Quickstart
 
 Databricks Apps hosts and operates web applications inside your Databricks workspace. AppKit is the TypeScript SDK for building these apps with a plugin-based architecture. Building an AI agent? [Agents are deployed as Apps](/docs/agents/quickstart).
 
-DevHub centers on [guides and examples](/resources). These companion docs explain Databricks Apps and AppKit when you need platform detail beyond a guide. For how the site fits together, see [Start here](/docs/start-here).
+DevHub is organized around [guides and examples](/resources). These companion docs explain Databricks Apps and AppKit when you or your agent need platform detail beyond a guide. For how the site fits together, see [Start here](/docs/start-here).
 
 ## Prerequisites
 

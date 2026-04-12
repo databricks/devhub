@@ -6,7 +6,7 @@ title: Quickstart
 
 Databricks agents are LLM-driven applications that can plan, call tools, and return structured output. Agents are deployed as [Databricks Apps](/docs/apps/quickstart).
 
-DevHub centers on [guides and examples](/resources). These companion docs explain how AI agents work on Databricks when you need platform detail beyond a guide. For how the site fits together, see [Start here](/docs/start-here).
+DevHub is organized around [guides and examples](/resources). These companion docs explain how AI agents work on Databricks when you or your agent need platform detail beyond a guide. For how the site fits together, see [Start here](/docs/start-here).
 
 ## Choose your framework
 

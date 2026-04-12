@@ -1,10 +1,10 @@
 ---
-title: AppKit
+title: AppKit SDK
 ---
 
-# AppKit
+# AppKit SDK
 
-AppKit is the TypeScript SDK for building full-stack Databricks Apps with a plugin-based architecture. It provides built-in Databricks authentication, type-safe database queries, and pre-built UI components. For full control over your stack, or if you already have an app framework, deploy any Python or Node.js app directly to Apps without AppKit. See [Apps Getting Started](/docs/apps/getting-started).
+AppKit is the TypeScript SDK for building full-stack Databricks Apps with a plugin-based architecture. It provides built-in Databricks authentication, type-safe database queries, and pre-built UI components. For full control over your stack, or if you already have an app framework, deploy any Python or Node.js app directly to Apps without AppKit. See [Apps quickstart](/docs/apps/quickstart).
 
 ## When to use AppKit
 
@@ -29,7 +29,7 @@ databricks apps init --name my-app --features lakebase,analytics
 
 Pass `--features` for the plugins your app needs. Use `databricks apps manifest` to inspect available plugins and their required resource fields before scaffolding.
 
-For the full `databricks apps init` option table, see [Apps Getting Started](/docs/apps/getting-started#scaffold-an-app).
+For the full `databricks apps init` option table, see [Apps quickstart](/docs/apps/quickstart#scaffold-an-app).
 
 ## Validate before deploy
 
@@ -53,9 +53,46 @@ npx @databricks/appkit docs "<query-or-doc-path>"
 
 Run without arguments to browse the index.
 
+## How it works
+
+AppKit uses a three-layer architecture with plugins that register capabilities at each layer:
+
+- **Client**: React frontend served by Vite. The `@databricks/appkit-ui` package provides data tables, charts, dialogs, and layout components.
+- **Server**: Express HTTP server with Databricks OAuth baked in. Plugins attach routes and middleware at this layer.
+- **Data**: Plugin-based access to Databricks resources. Each plugin wraps a resource type (Lakebase, SQL Warehouse, Genie, UC Volumes) and exposes a typed API.
+
+A minimal app with a Lakebase plugin looks like this:
+
+```typescript
+import { createApp, server, lakebase } from "@databricks/appkit";
+
+const appkit = await createApp({
+  plugins: [server(), lakebase()],
+});
+
+appkit.server.extend((app) => {
+  app.get("/api/items", async (_req, res) => {
+    const { rows } = await appkit.lakebase.query("SELECT * FROM items");
+    res.json(rows);
+  });
+});
+```
+
+## Built-in plugins
+
+| Plugin        | What it adds                                                              |
+| ------------- | ------------------------------------------------------------------------- |
+| **server**    | Express HTTP server, static file serving, Vite dev mode (always included) |
+| **lakebase**  | Postgres connection pool for Lakebase with automatic OAuth token refresh  |
+| **analytics** | SQL query execution against Databricks SQL Warehouses                     |
+| **genie**     | AI/BI Genie space integration for natural language queries                |
+| **files**     | File operations against Unity Catalog Volumes                             |
+
+See [Built-in plugins](/docs/apps/plugins) for setup and configuration for each plugin, or [AppKit plugins](/docs/appkit/v0/plugins) for the full API reference.
+
 ## Architecture and plugins
 
-AppKit uses a three-layer architecture (client, server, data) with plugins that register capabilities at each layer. The following guides cover the design in detail:
+The following guides cover the design in detail:
 
 - [Architecture](/docs/appkit/v0/architecture): Plugin-based model, client/server/data layers.
 - [Core Principles](/docs/appkit/v0/core-principles): The design principles behind AppKit.

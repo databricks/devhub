@@ -1,12 +1,24 @@
 ---
-title: Getting started
+title: Quickstart
 ---
 
-# Getting started
+# Quickstart
 
-Databricks agents are LLM-driven applications that can plan, call tools, and return structured output. Agents are deployed as [Databricks Apps](/docs/apps/getting-started). This guide uses the [OpenAI Agents SDK](https://platform.openai.com/docs/guides/agents-sdk) with [MLflow ResponsesAgent](/docs/agents/core-concepts#responsesagent) as its primary example.
+Databricks agents are LLM-driven applications that can plan, call tools, and return structured output. Agents are deployed as [Databricks Apps](/docs/apps/quickstart).
 
-DevHub centers on [templates and recipes](/resources). These companion docs explain how AI agents work on Databricks when you need platform detail beyond a template. For how the site fits together, see [Start here](/docs/start-here).
+DevHub centers on [guides and examples](/resources). These companion docs explain how AI agents work on Databricks when you need platform detail beyond a guide. For how the site fits together, see [Start here](/docs/start-here).
+
+## Choose your framework
+
+You can build agents with any Python framework. The platform requires two things: your agent must implement the [`ResponsesAgent`](/docs/agents/core-concepts#responsesagent) interface, and it must be served with [`AgentServer`](/docs/agents/core-concepts#agentserver).
+
+| Framework                                                               | Notes                                                                               |
+| ----------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| [OpenAI Agents SDK](https://platform.openai.com/docs/guides/agents-sdk) | Used in this guide and the agent template. Supports tools, handoffs, and streaming. |
+| [LangGraph](https://langchain-ai.github.io/langgraph/)                  | Graph-based orchestration for complex multi-step workflows.                         |
+| Custom                                                                  | Any Python HTTP server that implements the ResponsesAgent contract.                 |
+
+This guide uses the OpenAI Agents SDK. See [How agents work](/docs/agents/core-concepts) for the full platform contract if you're bringing your own framework.
 
 ## Prerequisites
 
@@ -25,10 +37,6 @@ cd app-templates/agent-openai-agents-sdk
 Or from the workspace UI: **+ New > App > Agents > Agent - OpenAI Agents SDK**.
 
 The template includes an agent with a code interpreter tool, a chat UI, MLflow tracing, and evaluation scaffolding.
-
-:::tip[Not using this template?]
-Use any framework (OpenAI Agents SDK, LangGraph, custom). The platform requirements are: implement [`ResponsesAgent`](/docs/agents/core-concepts#responsesagent), serve it with [`AgentServer`](/docs/agents/core-concepts#agentserver), and deploy with a [DAB bundle](https://docs.databricks.com/aws/en/dev-tools/bundles/). See [Core Concepts](/docs/agents/core-concepts) for the full contract.
-:::
 
 ## Run locally
 
@@ -51,7 +59,7 @@ uv run quickstart --skip-lakebase
 
 The quickstart script verifies your environment, configures Databricks authentication, creates an MLflow experiment for tracing, and starts the agent server with a built-in chat UI at `http://localhost:8000` (override with `--port`). If port 3000 is in use, set `CHAT_APP_PORT` in `.env` to a free port.
 
-See [Lakebase Getting Started](/docs/lakebase/getting-started) for creating or finding projects when you use Lakebase-backed templates.
+See [Lakebase quickstart](/docs/lakebase/quickstart) for creating or finding projects when you use Lakebase-backed templates.
 
 For subsequent runs:
 
@@ -87,6 +95,9 @@ databricks bundle validate \
   --profile $DATABRICKS_PROFILE
 ```
 
+<details>
+<summary>Options</summary>
+
 | Option      | Required | Description                                                               |
 | ----------- | -------- | ------------------------------------------------------------------------- |
 | `--strict`  | no       | Treat warnings as errors                                                  |
@@ -95,6 +106,8 @@ databricks bundle validate \
 | `--var`     | no       | Set values for bundle config variables (for example, `--var="key=value"`) |
 | `--target`  | no       | Bundle target (for example, `dev`, `prod`)                                |
 | `--profile` | no       | Databricks CLI profile name                                               |
+
+</details>
 
 Deploy and start the app:
 
@@ -129,6 +142,9 @@ databricks bundle run agent_openai_agents_sdk \
 
 ### `databricks bundle deploy`
 
+<details>
+<summary>Options</summary>
+
 | Option                  | Required | Description                                                               |
 | ----------------------- | -------- | ------------------------------------------------------------------------- |
 | `--auto-approve`        | no       | Skip confirmation prompts                                                 |
@@ -143,7 +159,12 @@ databricks bundle run agent_openai_agents_sdk \
 | `--target`              | no       | Bundle target (for example, `dev`, `prod`)                                |
 | `--profile`             | no       | Databricks CLI profile name                                               |
 
+</details>
+
 ### `databricks bundle run`
+
+<details>
+<summary>Options</summary>
 
 | Option      | Required | Description                                                                        |
 | ----------- | -------- | ---------------------------------------------------------------------------------- |
@@ -155,6 +176,8 @@ databricks bundle run agent_openai_agents_sdk \
 | `--var`     | no       | Set values for bundle config variables (for example, `--var="key=value"`)          |
 | `--target`  | no       | Bundle target (for example, `dev`, `prod`)                                         |
 | `--profile` | no       | Databricks CLI profile name                                                        |
+
+</details>
 
 `bundle deploy` uploads code and configures resources. `bundle run` starts (or restarts) the app with the new code. Both are required for each update. The resource key (`agent_openai_agents_sdk`) is defined in `databricks.yml`. The app name (`agent-openai-agents-sdk`) is what appears in the workspace.
 
@@ -215,12 +238,13 @@ After verifying the deploy works, consider the following customizations:
 - [AI Gateway](/docs/agents/ai-gateway): model endpoint governance, rate limits, usage tracking
 - [Observability](/docs/agents/observability): MLflow tracing, evaluation, production monitoring
 
-## Related recipes
+## Related guides and examples
 
-| Recipe                                                                              | Description                           |
-| ----------------------------------------------------------------------------------- | ------------------------------------- |
-| [Databricks Local Bootstrap](/resources/hello-world-app#databricks-local-bootstrap) | CLI install, auth, and scaffold setup |
-| [Streaming AI Chat](/resources/ai-chat-app#streaming-ai-chat-with-model-serving)    | Streaming chat with Model Serving     |
+| Guide or example                                                    | Description                                              |
+| ------------------------------------------------------------------- | -------------------------------------------------------- |
+| [Databricks Local Bootstrap](/resources/databricks-local-bootstrap) | CLI install, auth, and scaffold setup                    |
+| [Streaming AI Chat](/resources/ai-chat-model-serving)               | Streaming chat with Model Serving                        |
+| [Agentic Support Console](/resources/agentic-support-console)       | Example: full AI support console with Lakebase and Genie |
 
 ## Further reading
 

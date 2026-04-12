@@ -1,8 +1,9 @@
 ---
-title: Development
+title: Local development and deployment
+sidebar_label: Local dev & deploy
 ---
 
-# Development
+# Local development and deployment
 
 ## Local development
 
@@ -47,6 +48,9 @@ databricks apps deploy $APP_NAME \
   --profile $DATABRICKS_PROFILE
 ```
 
+<details>
+<summary>Options</summary>
+
 | Option               | Required | Description                                                                                |
 | -------------------- | -------- | ------------------------------------------------------------------------------------------ |
 | `APP_NAME`           | no       | App name. Omit when running from a project directory (auto-detected from `databricks.yml`) |
@@ -64,6 +68,8 @@ databricks apps deploy $APP_NAME \
 | `--target`           | no       | Bundle target to use (if applicable)                                                       |
 | `--var`              | no       | Set values for bundle config variables (for example, `--var="key=value"`)                  |
 | `--profile`          | no       | Databricks CLI profile name                                                                |
+
+</details>
 
 The CLI validates configuration, builds the project, uploads it, and starts the app. By default it runs the same project validation as `databricks apps validate` (build, typecheck, lint). Pass `--skip-validation` to skip that step. No `--source-code-path` is needed when deploying from a scaffolded AppKit project.
 
@@ -84,6 +90,9 @@ databricks apps get $APP_NAME \
   --profile $DATABRICKS_PROFILE
 ```
 
+<details>
+<summary>Options</summary>
+
 | Option      | Required | Description                                                               |
 | ----------- | -------- | ------------------------------------------------------------------------- |
 | `NAME`      | yes      | App name                                                                  |
@@ -92,6 +101,8 @@ databricks apps get $APP_NAME \
 | `--target`  | no       | Bundle target to use (if applicable)                                      |
 | `--var`     | no       | Set values for bundle config variables (for example, `--var="key=value"`) |
 | `--profile` | no       | Databricks CLI profile name                                               |
+
+</details>
 
 <details>
 <summary>Example output</summary>
@@ -155,6 +166,9 @@ databricks apps logs $APP_NAME \
   --profile $DATABRICKS_PROFILE
 ```
 
+<details>
+<summary>Options</summary>
+
 | Option            | Required | Description                                                               |
 | ----------------- | -------- | ------------------------------------------------------------------------- |
 | `NAME`            | no       | App name. Omit from project directory (auto-detected)                     |
@@ -169,6 +183,8 @@ databricks apps logs $APP_NAME \
 | `--target`        | no       | Bundle target to use (if applicable)                                      |
 | `--var`           | no       | Set values for bundle config variables (for example, `--var="key=value"`) |
 | `--profile`       | no       | Databricks CLI profile name                                               |
+
+</details>
 
 <details>
 <summary>Example log output</summary>
@@ -287,6 +303,9 @@ databricks apps delete $APP_NAME \
   --profile $DATABRICKS_PROFILE
 ```
 
+<details>
+<summary>Options</summary>
+
 | Option           | Required | Description                                                               |
 | ---------------- | -------- | ------------------------------------------------------------------------- |
 | `NAME`           | no       | App name. Omit from project directory (auto-detected)                     |
@@ -300,6 +319,8 @@ databricks apps delete $APP_NAME \
 | `--var`          | no       | Set values for bundle config variables (for example, `--var="key=value"`) |
 | `--profile`      | no       | Databricks CLI profile name                                               |
 
+</details>
+
 `apps delete` prompts for confirmation. Pass `--auto-approve` in CI to skip the prompt.
 
 ## Troubleshooting
@@ -312,9 +333,9 @@ For additional troubleshooting, see [Deploy apps](https://docs.databricks.com/aw
 - **404 errors (app not found)**: Verify the app name and workspace URL are correct, the app is deployed and running, and the endpoint path exists.
 - **Git deployment fails**: For private repositories, verify the app's service principal has a Git credential configured. If deploying through CLI/API/DABs, create the app first, then add the Git credential.
 
-## All app recipes
+## Related guides and examples
 
-| Recipe                                                                      | Description                                          |
+| Guide or example                                                            | Description                                          |
 | --------------------------------------------------------------------------- | ---------------------------------------------------- |
 | [Databricks Local Bootstrap](/resources/databricks-local-bootstrap)         | CLI install, auth, scaffold, and agent skill setup   |
 | [Lakebase Data Persistence](/resources/lakebase-data-persistence)           | Add Lakebase to an AppKit app with schema and routes |
@@ -322,6 +343,8 @@ For additional troubleshooting, see [Deploy apps](https://docs.databricks.com/aw
 | [Genie Conversational Analytics](/resources/genie-conversational-analytics) | Natural language data queries with Genie             |
 | [Streaming AI Chat](/resources/ai-chat-model-serving)                       | AI chat with Databricks Model Serving                |
 | [Query AI Gateway Endpoints](/resources/foundation-models-api)              | Call model serving endpoints from AppKit             |
+| [SaaS Subscription Tracker](/resources/saas-tracker)                        | Example: internal CRUD tool with Lakebase and Genie  |
+| [Agentic Support Console](/resources/agentic-support-console)               | Example: full AI support console with agent job      |
 
 ## Further reading
 

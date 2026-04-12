@@ -1,8 +1,8 @@
 ---
-title: Plugins
+title: Built-in plugins
 ---
 
-# Plugins
+# Built-in plugins
 
 AppKit plugins are modular extensions that add capabilities to your app. Built-in plugins cover common needs (database, analytics, files). Create custom plugins for your own logic as needed.
 
@@ -26,6 +26,9 @@ databricks apps manifest \
   --profile $DATABRICKS_PROFILE
 ```
 
+<details>
+<summary>Options</summary>
+
 | Option       | Required | Description                                                               |
 | ------------ | -------- | ------------------------------------------------------------------------- |
 | `--template` | no       | Template path (local directory or GitHub URL). Default: AppKit template   |
@@ -37,7 +40,9 @@ databricks apps manifest \
 | `--var`      | no       | Set values for bundle config variables (for example, `--var="key=value"`) |
 | `--profile`  | no       | Databricks CLI profile name                                               |
 
-Use the Common tab for a typical non-interactive scaffold (`--name` suppresses prompts and applies defaults). Use the All Options tab to choose plugins and resource values with flags instead of prompts. For every `databricks apps init` flag, see the option table in [Apps getting started](/docs/apps/getting-started#scaffold-an-app).
+</details>
+
+Use the Common tab for a typical non-interactive scaffold (`--name` suppresses prompts and applies defaults). Use the All Options tab to choose plugins and resource values with flags instead of prompts. For every `databricks apps init` flag, see the option table in [Apps quickstart](/docs/apps/quickstart#scaffold-an-app).
 
 ```bash title="Common"
 databricks apps init --name my-app

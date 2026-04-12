@@ -1,10 +1,11 @@
 ---
-title: Development
+title: Local development and deployment
+sidebar_label: Local dev & deploy
 ---
 
-# Development
+# Local development and deployment
 
-This guide continues from [Getting Started](/docs/agents/getting-started), where you cloned the `agent-openai-agents-sdk` template and ran the quickstart. This page covers the full local dev workflow, project structure, evaluation, deployment pipeline, and app management commands.
+This guide continues from [Quickstart](/docs/agents/quickstart), where you cloned the `agent-openai-agents-sdk` template and ran the quickstart. This page covers the full local dev workflow, project structure, evaluation, deployment pipeline, and app management commands.
 
 ## Local dev loop
 
@@ -145,7 +146,7 @@ databricks bundle run agent_openai_agents_sdk \
   --profile $DATABRICKS_PROFILE
 ```
 
-See [Deploy](/docs/agents/getting-started#deploy) for option tables for each command. `bundle deploy` uploads files and configures resources. `bundle run` starts the app. Both are required for each update.
+See [Deploy](/docs/agents/quickstart#deploy) for option tables for each command. `bundle deploy` uploads files and configures resources. `bundle run` starts the app. Both are required for each update.
 
 To grant access to additional resources (serving endpoints, Genie spaces, Vector Search), add them to `databricks.yml` and redeploy.
 
@@ -258,14 +259,15 @@ databricks apps delete $APP_NAME \
 
 See [Apps development](/docs/apps/development) for option tables covering `get`, `logs`, `stop`, `start`, and `delete`. `apps delete` prompts for confirmation. Pass `--auto-approve` in CI to skip the prompt.
 
-## Related recipes
+## Related guides and examples
 
-| Recipe                                                                                          | Description                                         |
-| ----------------------------------------------------------------------------------------------- | --------------------------------------------------- |
-| [Streaming AI Chat](/resources/ai-chat-app#streaming-ai-chat-with-model-serving)                | Streaming chat with Model Serving and Vercel AI SDK |
-| [Query AI Gateway Endpoints](/resources/ai-chat-app#query-ai-gateway-endpoints)                 | Access foundation models through AI Gateway         |
-| [Lakebase Chat Persistence](/resources/ai-chat-app#lakebase-chat-persistence)                   | Persist chat sessions to Lakebase                   |
-| [Genie Conversational Analytics](/resources/genie-analytics-app#genie-conversational-analytics) | Natural language data queries with Genie            |
+| Guide or example                                                            | Description                                              |
+| --------------------------------------------------------------------------- | -------------------------------------------------------- |
+| [Streaming AI Chat](/resources/ai-chat-model-serving)                       | Streaming chat with Model Serving and Vercel AI SDK      |
+| [Query AI Gateway Endpoints](/resources/foundation-models-api)              | Access foundation models through AI Gateway              |
+| [Lakebase Chat Persistence](/resources/lakebase-chat-persistence)           | Persist chat sessions to Lakebase                        |
+| [Genie Conversational Analytics](/resources/genie-conversational-analytics) | Natural language data queries with Genie                 |
+| [Agentic Support Console](/resources/agentic-support-console)               | Example: full AI support console with Lakebase and Genie |
 
 ## Further reading
 

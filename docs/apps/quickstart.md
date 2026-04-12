@@ -1,12 +1,12 @@
 ---
-title: Getting started
+title: Quickstart
 ---
 
-# Getting started
+# Quickstart
 
-Databricks Apps hosts and operates web applications inside your Databricks workspace. AppKit is the TypeScript SDK for building these apps with a plugin-based architecture. Building an AI agent? [Agents are deployed as Apps](/docs/agents/getting-started).
+Databricks Apps hosts and operates web applications inside your Databricks workspace. AppKit is the TypeScript SDK for building these apps with a plugin-based architecture. Building an AI agent? [Agents are deployed as Apps](/docs/agents/quickstart).
 
-DevHub centers on [templates and recipes](/resources). These companion docs explain Databricks Apps and AppKit when you need platform detail beyond a template. For how the site fits together, see [Start here](/docs/start-here).
+DevHub centers on [guides and examples](/resources). These companion docs explain Databricks Apps and AppKit when you need platform detail beyond a guide. For how the site fits together, see [Start here](/docs/start-here).
 
 ## Prerequisites
 
@@ -40,6 +40,9 @@ databricks apps init \
   --profile $DATABRICKS_PROFILE
 ```
 
+<details>
+<summary>Options</summary>
+
 | Option          | Required | Description                                                                                             |
 | --------------- | -------- | ------------------------------------------------------------------------------------------------------- |
 | `--name`        | no       | App name (lowercase, hyphenated, 26 chars max). Suppresses prompts and applies defaults for other flags |
@@ -58,40 +61,35 @@ databricks apps init \
 | `--var`         | no       | Set values for bundle config variables (for example, `--var="key=value"`)                               |
 | `--profile`     | no       | Databricks CLI profile name                                                                             |
 
+</details>
+
 Passing `--name` suppresses prompts and uses defaults for unspecified options. App names must be lowercase, hyphenated, and 26 characters or fewer. See [Apps Plugins](/docs/apps/plugins) for the full list of built-in plugins and `databricks apps init --help` for all `--set` keys.
 
-## Build an app from a template
+## Build an app from a guide
 
-The fastest path is to use a [template](/resources) with an AI coding agent. Copy a template into your agent and describe what you want to build. [Start here](/docs/start-here) for the full workflow.
-
-| Template                                                  | Best for                                                 |
-| --------------------------------------------------------- | -------------------------------------------------------- |
-| [Hello World App](/resources/hello-world-app)             | Simple apps, static pages, getting started               |
-| [App with Lakebase](/resources/app-with-lakebase)         | CRUD apps with persistent storage                        |
-| [AI Chat App](/resources/ai-chat-app)                     | Conversational AI with chat history                      |
-| [Lakebase Off-Platform](/resources/lakebase-off-platform) | Apps hosted outside Databricks (AWS, Vercel, and others) |
+The fastest path is to copy a [guide from /resources](/resources) into your coding agent and describe what you want to build. [Start here](/docs/start-here) for the full workflow.
 
 ## What happens next
 
-Whether you scaffold with `databricks apps init` or paste a template into a coding agent, the flow is the same:
+Whether you scaffold with `databricks apps init` or paste a guide into a coding agent, the flow is the same:
 
 1. The Databricks CLI authenticates against your workspace.
 2. The project is scaffolded with the right dependencies.
-3. Databricks resources are provisioned (Lakebase databases, model serving endpoints, or Genie spaces, depending on the template).
+3. Databricks resources are provisioned (Lakebase databases, model serving endpoints, or Genie spaces, depending on the guide).
 4. The coding agent implements your business logic on top of the scaffold.
 5. `databricks bundle deploy` pushes the app to Databricks Apps.
 
-If something fails during the build, templates include troubleshooting context for each step. Coding agents can usually self-correct.
+If something fails during the build, guides include troubleshooting context for each step. Coding agents can usually self-correct.
 
-## Customize the template
+## Customize your app
 
-After scaffolding or copying a template, consider the following customizations:
+After scaffolding or copying a guide, consider the following customizations:
 
 - **Add a plugin**: When you scaffold, pass `--features` with comma-separated plugin names (for example, `lakebase,analytics`). Use `--set` only for resource field values (`plugin.resourceKey.field=value`), not to name plugins. For an existing app, register plugins in `createApp` in `server/server.ts` and run `npx @databricks/appkit plugin sync --write` so `appkit.plugins.json` stays in sync. See [Plugins](/docs/apps/plugins).
 - **Add a new route**: Create a route handler in your app's server code and register it in the router.
 - **Customize the UI theme**: Use [AppKit styling](/docs/appkit/v0/api/appkit-ui/styling) to adjust colors, fonts, and component appearance.
-- **Connect to Lakebase**: Add the Lakebase plugin for persistent storage. See the [Lakebase Data Persistence](/resources/app-with-lakebase#lakebase-data-persistence) recipe.
-- **Add AI features**: Add the [Foundation Models API](/resources/ai-chat-app#query-ai-gateway-endpoints) recipe for model serving, or the [Genie](/resources/genie-analytics-app#genie-conversational-analytics) recipe for conversational analytics.
+- **Connect to Lakebase**: Add the Lakebase plugin for persistent storage. See the [Lakebase Data Persistence](/resources/app-with-lakebase#lakebase-data-persistence) guide.
+- **Add AI features**: Add the [Foundation Models API](/resources/ai-chat-app#query-ai-gateway-endpoints) guide for model serving, or the [Genie](/resources/genie-analytics-app#genie-conversational-analytics) guide for conversational analytics.
 
 ## Next steps
 

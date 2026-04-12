@@ -1,8 +1,9 @@
 ---
-title: Core concepts
+title: Projects, branches, and endpoints
+sidebar_label: Projects, branches & endpoints
 ---
 
-# Core concepts
+# Projects, branches, and endpoints
 
 ## Resource hierarchy
 
@@ -18,7 +19,7 @@ projects/{project_id}
 - **Project**: top-level container. Created with `databricks postgres create-project`.
 - **Branch**: isolated database environment. New projects get a default `production` branch with a `databricks_postgres` database.
 - **Endpoint**: compute attached to a branch. Each branch has a `primary` read-write endpoint (`ENDPOINT_TYPE_READ_WRITE`) created automatically. Read-only replicas (`ENDPOINT_TYPE_READ_ONLY`) can be added for read scaling.
-- **Database**: a PostgreSQL database within a branch. List with `databricks postgres list-databases <branch>`. See [Getting Started](/docs/lakebase/getting-started#get-connection-values) for example output.
+- **Database**: a PostgreSQL database within a branch. List with `databricks postgres list-databases <branch>`. See [Provision and connect](/docs/lakebase/quickstart#get-connection-values) for example output.
 
 IDs must be 1-63 characters, start with a lowercase letter, and contain only lowercase letters, numbers, and hyphens.
 
@@ -48,6 +49,9 @@ databricks postgres create-branch \
   --profile $DATABRICKS_PROFILE
 ```
 
+<details>
+<summary>Options</summary>
+
 | Option      | Required | Description                                                                                                                                                                 |
 | ----------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `PARENT`    | yes      | Project resource path: `projects/{project_id}`                                                                                                                              |
@@ -59,6 +63,8 @@ databricks postgres create-branch \
 | `-o json`   | no       | Output as JSON (default: text)                                                                                                                                              |
 | `--target`  | no       | Bundle target to use (if applicable)                                                                                                                                        |
 | `--profile` | no       | Databricks CLI profile name                                                                                                                                                 |
+
+</details>
 
 Each new branch automatically gets a `primary` read-write endpoint that inherits the project's `default_endpoint_settings`. Use `create-endpoint` to add read replicas (`ENDPOINT_TYPE_READ_ONLY`).
 
@@ -90,6 +96,9 @@ databricks postgres update-branch \
   --profile $DATABRICKS_PROFILE
 ```
 
+<details>
+<summary>Options</summary>
+
 | Option        | Required | Description                                                                 |
 | ------------- | -------- | --------------------------------------------------------------------------- |
 | `NAME`        | yes      | Branch resource path: `projects/{project_id}/branches/{branch_id}`          |
@@ -101,6 +110,8 @@ databricks postgres update-branch \
 | `-o json`     | no       | Output as JSON (default: text)                                              |
 | `--target`    | no       | Bundle target to use (if applicable)                                        |
 | `--profile`   | no       | Databricks CLI profile name                                                 |
+
+</details>
 
 For multiple fields, use a comma-separated mask (see autoscaling example below).
 
@@ -138,6 +149,9 @@ databricks postgres update-endpoint \
   --profile $DATABRICKS_PROFILE
 ```
 
+<details>
+<summary>Options</summary>
+
 | Option        | Required | Description                                                                                         |
 | ------------- | -------- | --------------------------------------------------------------------------------------------------- |
 | `NAME`        | yes      | Endpoint resource path: `projects/{project_id}/branches/{branch_id}/endpoints/{endpoint_id}`        |
@@ -149,6 +163,8 @@ databricks postgres update-endpoint \
 | `-o json`     | no       | Output as JSON (default: text)                                                                      |
 | `--target`    | no       | Bundle target to use (if applicable)                                                                |
 | `--profile`   | no       | Databricks CLI profile name                                                                         |
+
+</details>
 
 Scaling within the configured range happens without connection interruptions. Changing the min/max configuration may cause a brief interruption.
 
@@ -197,6 +213,9 @@ databricks postgres update-project \
   --profile $DATABRICKS_PROFILE
 ```
 
+<details>
+<summary>Options</summary>
+
 | Option        | Required | Description                                                      |
 | ------------- | -------- | ---------------------------------------------------------------- |
 | `NAME`        | yes      | Project resource path: `projects/{project_id}`                   |
@@ -208,6 +227,8 @@ databricks postgres update-project \
 | `-o json`     | no       | Output as JSON (default: text)                                   |
 | `--target`    | no       | Bundle target to use (if applicable)                             |
 | `--profile`   | no       | Databricks CLI profile name                                      |
+
+</details>
 
 ## Pagination
 
@@ -225,13 +246,13 @@ databricks postgres create-project my-project \
 databricks postgres get-operation projects/my-project/operations/<operation-id>
 ```
 
-## Related recipes
+## Related guides
 
-| Recipe                                                                                                         | Description                                             |
-| -------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
-| [Sync Tables to Lakebase](/resources/app-with-lakebase#sync-tables-to-lakebase-autoscaling)                    | Sync Unity Catalog tables into Lakebase Autoscaling     |
-| [Lakehouse Sync (CDC)](/resources/app-with-lakebase#lakehouse-sync-change-data-feed-from-lakebase-autoscaling) | Change data feed from Lakebase to Unity Catalog         |
-| [Medallion Architecture from CDC](/resources/operational-data-analytics#medallion-architecture-from-cdc)       | Bronze/silver/gold pipeline from Lakehouse Sync history |
+| Guide                                                                         | Description                                             |
+| ----------------------------------------------------------------------------- | ------------------------------------------------------- |
+| [Sync Tables to Lakebase](/resources/sync-tables-autoscaling)                 | Sync Unity Catalog tables into Lakebase Autoscaling     |
+| [Lakehouse Sync (CDC)](/resources/lakebase-change-data-feed-autoscaling)      | Change data feed from Lakebase to Unity Catalog         |
+| [Medallion Architecture from CDC](/resources/medallion-architecture-from-cdc) | Bronze/silver/gold pipeline from Lakehouse Sync history |
 
 ## Further reading
 

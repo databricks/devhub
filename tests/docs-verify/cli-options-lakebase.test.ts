@@ -39,23 +39,23 @@ const CLI_COMMANDS: CommandSpec[] = [
   // Lakebase
   {
     command: "postgres create-project",
-    doc: "docs/lakebase/getting-started.md",
+    doc: "docs/lakebase/quickstart.md",
   },
   {
     command: "postgres list-endpoints",
-    doc: "docs/lakebase/getting-started.md",
+    doc: "docs/lakebase/quickstart.md",
   },
   {
     command: "postgres list-databases",
-    doc: "docs/lakebase/getting-started.md",
+    doc: "docs/lakebase/quickstart.md",
   },
   {
     command: "postgres generate-database-credential",
-    doc: "docs/lakebase/getting-started.md",
+    doc: "docs/lakebase/quickstart.md",
   },
   {
     command: "psql",
-    doc: "docs/lakebase/getting-started.md",
+    doc: "docs/lakebase/quickstart.md",
   },
   {
     command: "postgres create-branch",
@@ -80,7 +80,7 @@ const CLI_COMMANDS: CommandSpec[] = [
   // Apps
   {
     command: "apps init",
-    doc: "docs/apps/getting-started.md",
+    doc: "docs/apps/quickstart.md",
   },
   {
     command: "apps deploy",
@@ -101,11 +101,11 @@ const CLI_COMMANDS: CommandSpec[] = [
   // Agents
   {
     command: "bundle validate",
-    doc: "docs/agents/getting-started.md",
+    doc: "docs/agents/quickstart.md",
   },
   {
     command: "apps get",
-    doc: "docs/agents/getting-started.md",
+    doc: "docs/agents/quickstart.md",
   },
   {
     command: "serving-endpoints list",

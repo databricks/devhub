@@ -1,8 +1,9 @@
 ---
-title: AI Gateway
+title: Model serving and AI Gateway
+sidebar_label: Model serving & AI Gateway
 ---
 
-# AI Gateway
+# Model serving and AI Gateway
 
 AI Gateway is a governance and monitoring layer for model serving endpoints. It provides centralized control over permissions, rate limits, usage tracking, payload logging, and AI guardrails.
 
@@ -20,12 +21,17 @@ databricks serving-endpoints list \
   --profile $DATABRICKS_PROFILE
 ```
 
+<details>
+<summary>Options</summary>
+
 | Option      | Required | Description                          |
 | ----------- | -------- | ------------------------------------ |
 | `--debug`   | no       | Enable debug logging                 |
 | `-o json`   | no       | Output as JSON (default: text)       |
 | `--target`  | no       | Bundle target to use (if applicable) |
 | `--profile` | no       | Databricks CLI profile name          |
+
+</details>
 
 Foundation Model API endpoints (prefixed `databricks-`) are available in most workspaces with AI Gateway built in. For example, `databricks-claude-sonnet-4-6`. Availability varies by workspace.
 
@@ -86,6 +92,9 @@ databricks serving-endpoints get $ENDPOINT_NAME \
   --profile $DATABRICKS_PROFILE
 ```
 
+<details>
+<summary>Options</summary>
+
 | Option      | Required | Description                          |
 | ----------- | -------- | ------------------------------------ |
 | `NAME`      | yes      | Serving endpoint name                |
@@ -93,6 +102,8 @@ databricks serving-endpoints get $ENDPOINT_NAME \
 | `-o json`   | no       | Output as JSON (default: text)       |
 | `--target`  | no       | Bundle target to use (if applicable) |
 | `--profile` | no       | Databricks CLI profile name          |
+
+</details>
 
 Check for `ai_gateway` in the response to confirm AI Gateway is configured on the endpoint.
 
@@ -153,6 +164,9 @@ databricks serving-endpoints query $ENDPOINT_NAME \
   --profile $DATABRICKS_PROFILE
 ```
 
+<details>
+<summary>Options</summary>
+
 | Option                | Required | Description                                           |
 | --------------------- | -------- | ----------------------------------------------------- |
 | `NAME`                | yes      | Serving endpoint name                                 |
@@ -166,6 +180,8 @@ databricks serving-endpoints query $ENDPOINT_NAME \
 | `-o json`             | no       | Output as JSON (default: text)                        |
 | `--target`            | no       | Bundle target to use (if applicable)                  |
 | `--profile`           | no       | Databricks CLI profile name                           |
+
+</details>
 
 <details>
 <summary>Example response</summary>
@@ -224,6 +240,9 @@ databricks serving-endpoints create $ENDPOINT_NAME \
   --profile $DATABRICKS_PROFILE
 ```
 
+<details>
+<summary>Options</summary>
+
 | Option               | Required | Description                                                  |
 | -------------------- | -------- | ------------------------------------------------------------ |
 | `NAME`               | yes      | Endpoint name (alphanumeric, dashes, underscores)            |
@@ -237,6 +256,8 @@ databricks serving-endpoints create $ENDPOINT_NAME \
 | `-o json`            | no       | Output as JSON (default: text)                               |
 | `--target`           | no       | Bundle target to use (if applicable)                         |
 | `--profile`          | no       | Databricks CLI profile name                                  |
+
+</details>
 
 Wait for the endpoint to reach READY state:
 
@@ -310,13 +331,13 @@ To set up an integration, go to **AI Gateway** in your workspace sidebar and ope
 
 See [Integrate with coding agents](https://docs.databricks.com/aws/en/ai-gateway/coding-agent-integration-beta) for additional details.
 
-## Related recipes
+## Related guides
 
-| Recipe                                                                                               | Description                              |
-| ---------------------------------------------------------------------------------------------------- | ---------------------------------------- |
-| [Query AI Gateway Endpoints](/resources/ai-chat-app#query-ai-gateway-endpoints)                      | Access foundation models with AppKit SDK |
-| [Streaming AI Chat](/resources/ai-chat-app#streaming-ai-chat-with-model-serving)                     | Streaming chat with Vercel AI SDK        |
-| [Create a Model Serving Endpoint](/resources/ai-chat-app#create-a-databricks-model-serving-endpoint) | Provision and test a new endpoint        |
+| Guide                                                                         | Description                              |
+| ----------------------------------------------------------------------------- | ---------------------------------------- |
+| [Query AI Gateway Endpoints](/resources/foundation-models-api)                | Access foundation models with AppKit SDK |
+| [Streaming AI Chat](/resources/ai-chat-model-serving)                         | Streaming chat with Vercel AI SDK        |
+| [Create a Model Serving Endpoint](/resources/model-serving-endpoint-creation) | Provision and test a new endpoint        |
 
 ## Further reading
 

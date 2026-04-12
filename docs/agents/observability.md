@@ -1,8 +1,9 @@
 ---
-title: Observability
+title: Tracing and evaluation
+sidebar_label: Tracing & evaluation
 ---
 
-# Observability
+# Tracing and evaluation
 
 Monitor, debug, and improve agents using MLflow tracing, evaluation, and Databricks monitoring surfaces.
 
@@ -29,6 +30,9 @@ databricks experiments create-experiment \
   --profile $DATABRICKS_PROFILE
 ```
 
+<details>
+<summary>Options</summary>
+
 | Option                | Required | Description                                           |
 | --------------------- | -------- | ----------------------------------------------------- |
 | `NAME`                | yes      | Experiment name (typically `/Users/<email>/<name>`)   |
@@ -39,13 +43,15 @@ databricks experiments create-experiment \
 | `--target`            | no       | Bundle target to use (if applicable)                  |
 | `--profile`           | no       | Databricks CLI profile name                           |
 
+</details>
+
 Set the returned `experiment_id` in your `.env`:
 
 ```text
 MLFLOW_EXPERIMENT_ID=<experiment-id>
 ```
 
-The `uv run quickstart` script in [agent templates](/docs/agents/getting-started) creates this automatically.
+The `uv run quickstart` script in [agent templates](/docs/agents/quickstart) creates this automatically.
 
 ## Auto-tracing
 

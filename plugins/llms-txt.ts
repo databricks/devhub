@@ -35,7 +35,7 @@ const SIDEBAR_SECTIONS: Array<{
     description:
       "Design, develop, and monitor AI agents with Databricks model serving, guardrails, and observability.",
     slugs: [
-      "agents/getting-started",
+      "agents/quickstart",
       "agents/core-concepts",
       "agents/development",
       "agents/ai-gateway",
@@ -47,7 +47,7 @@ const SIDEBAR_SECTIONS: Array<{
     description:
       "Host and operate web applications as managed Databricks workspace resources.",
     slugs: [
-      "apps/getting-started",
+      "apps/quickstart",
       "apps/core-concepts",
       "apps/appkit",
       "apps/plugins",
@@ -59,7 +59,7 @@ const SIDEBAR_SECTIONS: Array<{
     description:
       "Managed PostgreSQL for operational workloads with Databricks-native governance and Delta Lake sync.",
     slugs: [
-      "lakebase/getting-started",
+      "lakebase/quickstart",
       "lakebase/core-concepts",
       "lakebase/development",
     ],

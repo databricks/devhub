@@ -1,4 +1,5 @@
 {
+  "installCommand": "npm install --registry https://registry.npmjs.org/",
   "devCommand": "docusaurus start --port $PORT --no-open",
   "functions": {
     "api/mcp.ts": {

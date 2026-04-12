@@ -22,6 +22,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { buildCopyPreamble } from "@/lib/copy-preamble";
 
 type AIExportMenuProps = {
   rawMarkdown?: string;
@@ -71,7 +72,7 @@ export function AIExportMenu({
     const escapedTitle = title.replace(/"/g, '\\"');
     const escapedDescription = description.replace(/"/g, '\\"');
 
-    let md = `> Full DevHub resource index: ${baseUrl}/llms.txt\n\n`;
+    let md = `${buildCopyPreamble(`${baseUrl}/llms.txt`)}\n\n`;
     md += `---\ntitle: "${escapedTitle}"\nurl: ${fullUrl}\nsummary: "${escapedDescription}"\n---\n\n`;
     if (rawContent) md += `${rawContent}\n\n`;
     if (additionalMarkdown) md += `${additionalMarkdown}\n\n`;

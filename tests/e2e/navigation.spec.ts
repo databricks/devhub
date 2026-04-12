@@ -1,6 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { buildCopyPreamble } from "../../src/lib/copy-preamble";
 
 const ABOUT_DEVHUB_MARKDOWN = readFileSync(
   resolve(process.cwd(), "content/about-devhub.md"),
@@ -10,7 +11,7 @@ const LOCAL_BOOTSTRAP_MARKDOWN = readFileSync(
   resolve(process.cwd(), "content/recipes/databricks-local-bootstrap.md"),
   "utf-8",
 );
-const BOOTSTRAP_PROMPT_MARKDOWN = `> Full DevHub resource index: https://dev.databricks.com/llms.txt\n\n${ABOUT_DEVHUB_MARKDOWN.trimEnd()}\n\n---\n\n${LOCAL_BOOTSTRAP_MARKDOWN.trimEnd()}\n`;
+const BOOTSTRAP_PROMPT_MARKDOWN = `${buildCopyPreamble("https://dev.databricks.com/llms.txt")}\n\n${ABOUT_DEVHUB_MARKDOWN.trimEnd()}\n\n---\n\n${LOCAL_BOOTSTRAP_MARKDOWN.trimEnd()}\n`;
 
 test.describe("navbar navigation", () => {
   const NAVBAR_LINKS = [

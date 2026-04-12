@@ -109,68 +109,76 @@ describe("example markdown includes metadata", () => {
   });
 });
 
-describe("prependLlmsReference prepends llms.txt reference", () => {
-  const LLMS_REF =
-    "> Full DevHub resource index: https://dev.databricks.com/llms.txt";
+describe("prependLlmsReference prepends copy preamble", () => {
+  const PREAMBLE_START = "> Source: [dev.databricks.com]";
 
-  test("prepends reference with https for production host", () => {
+  test("prepends preamble with https llms.txt URL for production host", () => {
     const result = prependLlmsReference("# Hello", "dev.databricks.com");
-    expect(result).toBe(`${LLMS_REF}\n\n# Hello\n`);
+    expect(result).toContain(
+      "> Full resource index: https://dev.databricks.com/llms.txt",
+    );
+    expect(result).toContain("# Hello");
+    expect(result.startsWith(PREAMBLE_START)).toBe(true);
   });
 
-  test("prepends reference with http for localhost", () => {
+  test("prepends preamble with http llms.txt URL for localhost", () => {
     const result = prependLlmsReference("# Hello", "localhost:3001");
-    expect(result).toBe(
-      "> Full DevHub resource index: http://localhost:3001/llms.txt\n\n# Hello\n",
+    expect(result).toContain(
+      "> Full resource index: http://localhost:3001/llms.txt",
     );
+  });
+
+  test("includes usage guidelines in preamble", () => {
+    const result = prependLlmsReference("content", "dev.databricks.com");
+    expect(result).toContain("How to use this guide");
+    expect(result).toContain("Read through the entire content");
   });
 
   test("trims trailing whitespace from markdown", () => {
     const result = prependLlmsReference("content\n\n\n", "dev.databricks.com");
-    expect(result).toMatch(/^> Full DevHub/);
     expect(result).toMatch(/content\n$/);
     expect(result).not.toMatch(/\n\n\n$/);
   });
 
-  test("docs markdown starts with llms.txt reference", () => {
+  test("docs markdown starts with preamble", () => {
     const markdown = getDetailMarkdown("docs", "start-here");
     const result = prependLlmsReference(markdown, "dev.databricks.com");
-    expect(result.startsWith(LLMS_REF)).toBe(true);
+    expect(result.startsWith(PREAMBLE_START)).toBe(true);
     expect(result).toContain("title:");
   });
 
-  test("recipe markdown starts with llms.txt reference", () => {
+  test("recipe markdown starts with preamble", () => {
     const markdown = getDetailMarkdown("recipes", "databricks-local-bootstrap");
     const result = prependLlmsReference(markdown, "dev.databricks.com");
-    expect(result.startsWith(LLMS_REF)).toBe(true);
+    expect(result.startsWith(PREAMBLE_START)).toBe(true);
     expect(result).toContain("## Databricks Local Bootstrap");
   });
 
-  test("example markdown starts with llms.txt reference", () => {
+  test("example markdown starts with preamble", () => {
     const markdown = getDetailMarkdown("examples", "agentic-support-console");
     const result = prependLlmsReference(markdown, "dev.databricks.com");
-    expect(result.startsWith(LLMS_REF)).toBe(true);
+    expect(result.startsWith(PREAMBLE_START)).toBe(true);
     expect(result).toContain("## Agentic Support Console");
   });
 
-  test("template markdown starts with llms.txt reference", () => {
+  test("template markdown starts with preamble", () => {
     const markdown = getDetailMarkdown("templates", "hello-world-app");
     const result = prependLlmsReference(markdown, "dev.databricks.com");
-    expect(result.startsWith(LLMS_REF)).toBe(true);
+    expect(result.startsWith(PREAMBLE_START)).toBe(true);
     expect(result).toContain("# Hello World App");
   });
 
-  test("solution markdown starts with llms.txt reference", () => {
+  test("solution markdown starts with preamble", () => {
     const markdown = getDetailMarkdown("solutions", "devhub-launch");
     const result = prependLlmsReference(markdown, "dev.databricks.com");
-    expect(result.startsWith(LLMS_REF)).toBe(true);
+    expect(result.startsWith(PREAMBLE_START)).toBe(true);
     expect(result).toContain("# Introducing dev.databricks.com");
   });
 
-  test("resources meta-section starts with llms.txt reference", () => {
+  test("resources meta-section starts with preamble", () => {
     const markdown = getDetailMarkdown("resources", "agentic-support-console");
     const result = prependLlmsReference(markdown, "dev.databricks.com");
-    expect(result.startsWith(LLMS_REF)).toBe(true);
+    expect(result.startsWith(PREAMBLE_START)).toBe(true);
     expect(result).toContain("## Agentic Support Console");
   });
 });

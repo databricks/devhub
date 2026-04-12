@@ -1,6 +1,7 @@
 import { existsSync, readFileSync } from "fs";
 import { resolve } from "path";
 import { hasMarkdownSlug } from "../src/lib/content-markdown";
+import { buildCopyPreamble } from "../src/lib/copy-preamble";
 import { expandMdxImports } from "../src/lib/expand-mdx";
 import {
   examples,
@@ -298,5 +299,5 @@ export function getDetailMarkdown(
 export function prependLlmsReference(markdown: string, host: string): string {
   const protocol = host.startsWith("localhost") ? "http" : "https";
   const llmsUrl = `${protocol}://${host}/llms.txt`;
-  return `> Full DevHub resource index: ${llmsUrl}\n\n${markdown.trimEnd()}\n`;
+  return `${buildCopyPreamble(llmsUrl)}\n\n${markdown.trimEnd()}\n`;
 }

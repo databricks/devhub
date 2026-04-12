@@ -2,10 +2,15 @@ import { test, expect } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
-const BOOTSTRAP_PROMPT_MARKDOWN = readFileSync(
+const ABOUT_DEVHUB_MARKDOWN = readFileSync(
+  resolve(process.cwd(), "content/about-devhub.md"),
+  "utf-8",
+);
+const LOCAL_BOOTSTRAP_MARKDOWN = readFileSync(
   resolve(process.cwd(), "content/recipes/databricks-local-bootstrap.md"),
   "utf-8",
 );
+const BOOTSTRAP_PROMPT_MARKDOWN = `> Full DevHub resource index: https://dev.databricks.com/llms.txt\n\n${ABOUT_DEVHUB_MARKDOWN.trimEnd()}\n\n---\n\n${LOCAL_BOOTSTRAP_MARKDOWN.trimEnd()}\n`;
 
 test.describe("navbar navigation", () => {
   const NAVBAR_LINKS = [
@@ -54,19 +59,16 @@ test.describe("footer navigation", () => {
 });
 
 test.describe("home page link navigation", () => {
-  test('hero "Copy Prompt" copies recipe markdown from API', async ({
+  test('hero "Copy Prompt" copies about-devhub preamble + bootstrap recipe from API', async ({
     page,
   }) => {
-    await page.route(
-      "**/api/markdown?section=recipes&slug=databricks-local-bootstrap",
-      async (route) => {
-        await route.fulfill({
-          status: 200,
-          contentType: "text/markdown; charset=utf-8",
-          body: BOOTSTRAP_PROMPT_MARKDOWN,
-        });
-      },
-    );
+    await page.route("**/api/bootstrap-prompt", async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: "text/markdown; charset=utf-8",
+        body: BOOTSTRAP_PROMPT_MARKDOWN,
+      });
+    });
     await page.addInitScript(() => {
       Object.defineProperty(window.navigator, "clipboard", {
         value: {
@@ -98,6 +100,10 @@ test.describe("home page link navigation", () => {
       () => (window as { __copiedText?: string }).__copiedText,
     );
     expect(finalCopiedText).toBe(BOOTSTRAP_PROMPT_MARKDOWN);
+    expect(finalCopiedText).toContain("# About DevHub");
+    expect(finalCopiedText).toContain("## Databricks Local Bootstrap");
+    expect(finalCopiedText).toContain("dev.databricks.com");
+    expect(finalCopiedText).toContain("llms.txt");
   });
 
   test("pillar card Lakebase navigates to /docs/lakebase/quickstart", async ({

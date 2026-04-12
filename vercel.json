@@ -8,6 +8,10 @@
     "api/markdown.ts": {
       "includeFiles": "{docs/**,content/solutions/**,content/recipes/**,content/examples/**}",
       "maxDuration": 30
+    },
+    "api/bootstrap-prompt.ts": {
+      "includeFiles": "{content/about-devhub.md,content/recipes/**}",
+      "maxDuration": 10
     }
   },
   "rewrites": [

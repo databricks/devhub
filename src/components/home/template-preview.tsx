@@ -154,7 +154,7 @@ function ResourceCard({
         </CardContent>
         <CardFooter className="pt-0">
           <div className="flex flex-wrap gap-1.5">
-            {item.tags?.slice(0, 2).map((tag) => (
+            {item.tags?.slice(-2).map((tag) => (
               <Badge
                 key={tag}
                 variant="secondary"

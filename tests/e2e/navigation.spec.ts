@@ -36,10 +36,10 @@ test.describe("footer navigation", () => {
       href: "/docs/start-here",
       label: "Start Here",
     },
-    { href: "/docs/agents/getting-started", label: "Agents" },
+    { href: "/docs/agents/quickstart", label: "Agents" },
     { href: "/docs/apps/appkit", label: "AppKit" },
-    { href: "/docs/lakebase/getting-started", label: "Lakebase" },
-    { href: "/resources", label: "Templates" },
+    { href: "/docs/lakebase/quickstart", label: "Lakebase" },
+    { href: "/resources", label: "Guides" },
     { href: "/solutions", label: "Solutions" },
   ];
 
@@ -100,7 +100,7 @@ test.describe("home page link navigation", () => {
     expect(finalCopiedText).toBe(BOOTSTRAP_PROMPT_MARKDOWN);
   });
 
-  test("pillar card Lakebase navigates to /docs/lakebase/getting-started", async ({
+  test("pillar card Lakebase navigates to /docs/lakebase/quickstart", async ({
     page,
   }) => {
     await page.goto("/");
@@ -110,22 +110,17 @@ test.describe("home page link navigation", () => {
       .first();
     await link.waitFor({ state: "visible" });
     await link.click();
-    await page.waitForURL("**/docs/lakebase/getting-started");
-    expect(new URL(page.url()).pathname).toContain(
-      "/docs/lakebase/getting-started",
-    );
+    await page.waitForURL("**/docs/lakebase/quickstart");
+    expect(new URL(page.url()).pathname).toContain("/docs/lakebase/quickstart");
   });
 
-  test("pillar card Agent Bricks navigates to /docs/agents/getting-started", async ({
+  test("pillar card Agent Bricks navigates to /docs/agents/quickstart", async ({
     page,
   }) => {
     await page.goto("/");
-    await page
-      .locator('a[href="/docs/agents/getting-started"]')
-      .first()
-      .click();
-    await page.waitForURL("**/docs/agents/getting-started");
-    expect(new URL(page.url()).pathname).toBe("/docs/agents/getting-started");
+    await page.locator('a[href="/docs/agents/quickstart"]').first().click();
+    await page.waitForURL("**/docs/agents/quickstart");
+    expect(new URL(page.url()).pathname).toBe("/docs/agents/quickstart");
   });
 
   test("pillar card Databricks Apps navigates to /docs/apps/appkit", async ({
@@ -286,16 +281,16 @@ test.describe("example detail page", () => {
 test.describe("docs sidebar navigation", () => {
   const SIDEBAR_LINKS = [
     { href: "/docs/start-here" },
-    { href: "/docs/agents/getting-started" },
+    { href: "/docs/agents/quickstart" },
     { href: "/docs/agents/core-concepts" },
     { href: "/docs/agents/development" },
     { href: "/docs/agents/ai-gateway" },
     { href: "/docs/agents/observability" },
-    { href: "/docs/apps/getting-started" },
+    { href: "/docs/apps/quickstart" },
     { href: "/docs/apps/core-concepts" },
     { href: "/docs/apps/plugins" },
     { href: "/docs/apps/development" },
-    { href: "/docs/lakebase/getting-started" },
+    { href: "/docs/lakebase/quickstart" },
     { href: "/docs/lakebase/core-concepts" },
     { href: "/docs/lakebase/development" },
     { href: "/docs/tools/databricks-cli" },

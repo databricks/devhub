@@ -1,8 +1,9 @@
 ---
-title: Core concepts
+title: App runtime and configuration
+sidebar_label: App runtime & config
 ---
 
-# Core concepts
+# App runtime and configuration
 
 ## App model
 
@@ -120,9 +121,9 @@ Medium is the default. Compute size is configured in the workspace UI (not avail
 | Crashed   | App failed to start or exited      |
 | Stopped   | App was manually stopped           |
 
-## Related cookbooks
+## Related guides
 
-| Cookbook                                                  | Description                         |
+| Guide                                                     | Description                         |
 | --------------------------------------------------------- | ----------------------------------- |
 | [Hello World App](/resources/hello-world-app)             | Minimal AppKit app with CLI setup   |
 | [App with Lakebase](/resources/app-with-lakebase)         | CRUD app with Lakebase persistence  |

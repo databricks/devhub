@@ -24,9 +24,9 @@ That's what dev.databricks.com is.
 
 The [docs](/docs/start-here) section covers the core building blocks of the Databricks developer stack:
 
-- **[Agents](/docs/agents/getting-started)** — Design, develop, and deploy AI agents using Databricks model serving, with built-in guardrails, AI Gateway, and observability.
-- **[Apps](/docs/apps/getting-started)** — Build and deploy full-stack web applications as managed Databricks workspace resources using AppKit.
-- **[Lakebase](/docs/lakebase/getting-started)** — Use managed PostgreSQL that separates compute from storage, with instant branching, serverless scale, and Unity Catalog integration.
+- **[Agents](/docs/agents/quickstart)** — Design, develop, and deploy AI agents using Databricks model serving, with built-in guardrails, AI Gateway, and observability.
+- **[Apps](/docs/apps/quickstart)** — Build and deploy full-stack web applications as managed Databricks workspace resources using AppKit.
+- **[Lakebase](/docs/lakebase/quickstart)** — Use managed PostgreSQL that separates compute from storage, with instant branching, serverless scale, and Unity Catalog integration.
 - **[Tools](/docs/tools/databricks-cli)** — The Databricks CLI, AppKit SDK, agent skills for AI coding assistants, and an MCP server for documentation access.
 
 Every guide is written to be practical. Less theory, more working code.

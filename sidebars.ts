@@ -176,7 +176,7 @@ const sidebars: SidebarsConfig = {
       type: "category",
       label: "AI agents",
       items: [
-        "agents/getting-started",
+        "agents/quickstart",
         "agents/core-concepts",
         "agents/development",
         "agents/ai-gateway",
@@ -187,7 +187,7 @@ const sidebars: SidebarsConfig = {
       type: "category",
       label: "Databricks Apps",
       items: [
-        "apps/getting-started",
+        "apps/quickstart",
         "apps/core-concepts",
         "apps/appkit",
         "apps/plugins",
@@ -198,14 +198,14 @@ const sidebars: SidebarsConfig = {
       type: "category",
       label: "Lakebase Postgres",
       items: [
-        "lakebase/getting-started",
+        "lakebase/quickstart",
         "lakebase/core-concepts",
         "lakebase/development",
       ],
     },
     {
       type: "category",
-      label: "CLI and AI tools",
+      label: "Developer tools",
       items: [
         "tools/databricks-cli",
         "tools/ai-tools/agent-skills",

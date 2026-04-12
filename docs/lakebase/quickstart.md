@@ -1,12 +1,13 @@
 ---
-title: Getting started
+title: Provision and connect
+sidebar_label: Provision & connect
 ---
 
-# Getting started
+# Provision and connect
 
 [Lakebase Postgres](https://docs.databricks.com/aws/en/oltp) is Databricks managed PostgreSQL for OLTP workloads that need low-latency, transactional access alongside your Lakehouse data.
 
-DevHub centers on [templates and recipes](/resources). These companion docs explain Lakebase when you need platform detail beyond a template. For how the site fits together, see [Start here](/docs/start-here).
+DevHub centers on [guides and examples](/resources). These companion docs explain Lakebase when you need platform detail beyond a guide. For how the site fits together, see [Start here](/docs/start-here).
 
 ## Prerequisites
 
@@ -40,6 +41,9 @@ databricks postgres create-project $PROJECT_ID \
   --profile $DATABRICKS_PROFILE
 ```
 
+<details>
+<summary>Options</summary>
+
 | Option       | Required | Description                                                                                                                                     |
 | ------------ | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
 | `PROJECT_ID` | yes      | Unique project identifier (1-63 chars, lowercase letter start, lowercase/numbers/hyphens)                                                       |
@@ -50,6 +54,8 @@ databricks postgres create-project $PROJECT_ID \
 | `-o json`    | no       | Output as JSON (default: text)                                                                                                                  |
 | `--target`   | no       | Bundle target to use (if applicable)                                                                                                            |
 | `--profile`  | no       | Databricks CLI profile name                                                                                                                     |
+
+</details>
 
 The optional `display_name` sets a human-readable label. This creates a project with a default `production` branch, a `databricks_postgres` database, and a read-write endpoint.
 
@@ -70,6 +76,9 @@ databricks postgres list-endpoints \
   --profile $DATABRICKS_PROFILE
 ```
 
+<details>
+<summary>Options</summary>
+
 | Option         | Required | Description                                                        |
 | -------------- | -------- | ------------------------------------------------------------------ |
 | `PARENT`       | yes      | Branch resource path: `projects/{project_id}/branches/{branch_id}` |
@@ -79,6 +88,8 @@ databricks postgres list-endpoints \
 | `--debug`      | no       | Enable debug logging                                               |
 | `--target`     | no       | Bundle target to use (if applicable)                               |
 | `--profile`    | no       | Databricks CLI profile name                                        |
+
+</details>
 
 <details>
 <summary>Example response</summary>
@@ -128,6 +139,9 @@ databricks postgres list-databases \
   --profile $DATABRICKS_PROFILE
 ```
 
+<details>
+<summary>Options</summary>
+
 | Option         | Required | Description                                                        |
 | -------------- | -------- | ------------------------------------------------------------------ |
 | `PARENT`       | yes      | Branch resource path: `projects/{project_id}/branches/{branch_id}` |
@@ -137,6 +151,8 @@ databricks postgres list-databases \
 | `--debug`      | no       | Enable debug logging                                               |
 | `--target`     | no       | Bundle target to use (if applicable)                               |
 | `--profile`    | no       | Databricks CLI profile name                                        |
+
+</details>
 
 <details>
 <summary>Example response</summary>
@@ -189,6 +205,9 @@ databricks psql \
   -- -c "SELECT 1"
 ```
 
+<details>
+<summary>Options</summary>
+
 | Option          | Required | Description                                                                                       |
 | --------------- | -------- | ------------------------------------------------------------------------------------------------- |
 | `--project`     | no       | Project ID. With a TTY, omit to choose from prompts. In CI or scripts, set explicitly when needed |
@@ -202,6 +221,8 @@ databricks psql \
 | `--target`      | no       | Bundle target to use (if applicable)                                                              |
 | `--profile`     | no       | Databricks CLI profile name                                                                       |
 | `-- PSQL_ARGS`  | no       | Additional arguments passed through to `psql`                                                     |
+
+</details>
 
 Without a TTY (for example in CI), the CLI auto-selects when only one branch or endpoint exists. When multiple exist, specify `--project`, `--branch`, and `--endpoint` explicitly so the command does not block on prompts.
 
@@ -222,6 +243,9 @@ databricks postgres generate-database-credential \
   --profile $DATABRICKS_PROFILE
 ```
 
+<details>
+<summary>Options</summary>
+
 | Option      | Required | Description                                                                                  |
 | ----------- | -------- | -------------------------------------------------------------------------------------------- |
 | `ENDPOINT`  | yes      | Endpoint resource path: `projects/{project_id}/branches/{branch_id}/endpoints/{endpoint_id}` |
@@ -231,34 +255,36 @@ databricks postgres generate-database-credential \
 | `--target`  | no       | Bundle target to use (if applicable)                                                         |
 | `--profile` | no       | Databricks CLI profile name                                                                  |
 
+</details>
+
 Use the returned token as the password, with your Databricks email as the username and the endpoint host from `list-endpoints` above.
 
 ## Build an app with Lakebase
 
-The fastest path is to use a [template](/resources) with an AI coding agent. Copy a template into your agent and describe what you want to build. [Start here](/docs/start-here) for the full workflow.
+The fastest path is to copy a [guide from /resources](/resources) into your coding agent and describe what you want to build. [Start here](/docs/start-here) for the full workflow.
 
-| Template                                                  | Best for                                                 |
+| Guide                                                     | Best for                                                 |
 | --------------------------------------------------------- | -------------------------------------------------------- |
 | [App with Lakebase](/resources/app-with-lakebase)         | CRUD apps with persistent storage                        |
 | [AI Chat App](/resources/ai-chat-app)                     | Conversational AI with chat history                      |
 | [Lakebase Off-Platform](/resources/lakebase-off-platform) | Apps hosted outside Databricks (AWS, Vercel, and others) |
 
-Each cookbook includes the [Create a Lakebase Instance](/resources/app-with-lakebase#create-a-lakebase-instance) recipe, which walks through project creation and connection value collection in detail.
+Each guide includes the [Create a Lakebase Instance](/resources/lakebase-create-instance) guide, which walks through project creation and connection value collection in detail.
 
 To scaffold manually with the CLI, run `databricks apps init` and select the **Lakebase** plugin when prompted. See [Apps Plugins](/docs/apps/plugins) for details.
 
-## Customize the template
+## Customize your app
 
 After deploying a Lakebase-backed app, consider the following customizations:
 
-- **Add tables**: Follow the [Lakebase Data Persistence](/resources/app-with-lakebase#lakebase-data-persistence) recipe to define schemas, generate types, and create CRUD routes.
-- **Add chat persistence**: Use the [Lakebase Chat Persistence](/resources/ai-chat-app#lakebase-chat-persistence) recipe to store conversations.
+- **Add tables**: Follow the [Lakebase Data Persistence](/resources/lakebase-data-persistence) guide to define schemas, generate types, and create CRUD routes.
+- **Add chat persistence**: Use the [Lakebase Chat Persistence](/resources/lakebase-chat-persistence) guide to store conversations.
 - **Use feature branches**: Create isolated branches for development and testing. See [Development: Feature branches](/docs/lakebase/development#feature-branches).
 - **Sync data to/from Unity Catalog**: Use [Lakehouse Sync](/resources/app-with-lakebase#lakehouse-sync-change-data-feed-from-lakebase-autoscaling) or [Sync Tables](/resources/app-with-lakebase#sync-tables-to-lakebase-autoscaling).
 
-## Related cookbooks
+## Related guides
 
-| Cookbook                                                  | Description                         |
+| Guide                                                     | Description                         |
 | --------------------------------------------------------- | ----------------------------------- |
 | [App with Lakebase](/resources/app-with-lakebase)         | CRUD app with Lakebase persistence  |
 | [AI Chat App](/resources/ai-chat-app)                     | Conversational AI with chat history |

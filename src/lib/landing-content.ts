@@ -31,7 +31,7 @@ export const pillars: Pillar[] = [
     subtitle: "The operational data layer for AI agents and apps.",
     description:
       "Postgres integrated with the lakehouse, built for modern operational workloads.",
-    link: "/docs/lakebase/getting-started",
+    link: "/docs/lakebase/quickstart",
     icon: Database,
   },
   {
@@ -39,7 +39,7 @@ export const pillars: Pillar[] = [
     subtitle: "Production AI agents that continuously improve.",
     description:
       "A unified platform to build, deploy, and govern AI agents on your data.",
-    link: "/docs/agents/getting-started",
+    link: "/docs/agents/quickstart",
     icon: Bot,
   },
   {

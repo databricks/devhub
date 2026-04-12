@@ -1,8 +1,8 @@
 ---
-title: Core concepts
+title: How agents work
 ---
 
-# Core concepts
+# How agents work
 
 ## ResponsesAgent
 

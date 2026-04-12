@@ -1,8 +1,9 @@
 ---
-title: Development
+title: App integration and development
+sidebar_label: App integration & dev
 ---
 
-# Development
+# App integration and development
 
 ## On Databricks App Platform (AppKit)
 
@@ -48,13 +49,9 @@ env:
 
 For pool configuration, ORM access (`.pool`, `.getOrmConfig()`, `.getPgConfig()`), and the full plugin API, see the [AppKit Lakebase plugin docs](/docs/appkit/v0/plugins/lakebase).
 
-## Off-platform (AWS, Vercel, Netlify, and others)
+## Off-platform apps
 
-The [Lakebase Off-Platform](/resources/lakebase-off-platform) cookbook is a complete guide for using Lakebase from apps hosted outside Databricks. It includes:
-
-- [Env Management](/resources/lakebase-off-platform#lakebase-env-management-for-off-platform-apps): how to obtain every connection value using the CLI and validate with Zod
-- [Token Management](/resources/lakebase-off-platform#lakebase-token-management): cached workspace and Lakebase credential refresh (tokens expire in ~1 hour)
-- [Drizzle ORM](/resources/lakebase-off-platform#drizzle--lakebase-in-an-off-platform-app): connecting Drizzle to Lakebase with `pg` password callbacks and migration-time credentials
+For apps hosted outside Databricks (AWS, Vercel, Netlify, and others), see the [Lakebase Off-Platform](/resources/lakebase-off-platform) guide. It covers environment setup, token management, and Drizzle ORM integration.
 
 ## Feature branches
 
@@ -96,6 +93,9 @@ databricks postgres delete-branch \
   --profile $DATABRICKS_PROFILE
 ```
 
+<details>
+<summary>Options</summary>
+
 | Option      | Required | Description                                                        |
 | ----------- | -------- | ------------------------------------------------------------------ |
 | `NAME`      | yes      | Branch resource path: `projects/{project_id}/branches/{branch_id}` |
@@ -106,11 +106,11 @@ databricks postgres delete-branch \
 | `--target`  | no       | Bundle target to use (if applicable)                               |
 | `--profile` | no       | Databricks CLI profile name                                        |
 
+</details>
+
 ## Declarative Automation Bundles
 
-Define Lakebase infrastructure as code in a `databricks.yml` file using [Databricks Declarative Automation Bundles](https://docs.databricks.com/aws/en/dev-tools/bundles/). This lets you version-control projects, branches, and endpoints alongside your application code.
-
-A bundle defines `postgres_projects`, `postgres_branches`, and `postgres_endpoints` under `resources`. Resources reference each other with `${resources.<type>.<key>.id}`, which resolves to the full resource name (for example, `projects/my-lakebase-app`). Branches and their auto-created `primary` endpoint inherit `default_endpoint_settings` from the project.
+Define Lakebase infrastructure as code in a `databricks.yml` file using [Databricks Declarative Automation Bundles](https://docs.databricks.com/aws/en/dev-tools/bundles/). A bundle specifies `postgres_projects`, `postgres_branches`, and `postgres_endpoints` under `resources`, letting you version-control your Lakebase setup alongside your application code.
 
 <details>
 <summary>Example <code>databricks.yml</code> with a project, dev branch, and read-only replica</summary>
@@ -153,42 +153,12 @@ resources:
 
 ### Validate and deploy
 
-```bash title="Common"
+```bash
 databricks bundle validate
 databricks bundle deploy
 ```
 
-```bash title="All Options"
-databricks bundle validate \
-  --strict \
-  --debug \
-  -o json \
-  --var "key=value" \
-  --target $TARGET \
-  --profile $DATABRICKS_PROFILE
-
-databricks bundle deploy \
-  --auto-approve \
-  --force-lock \
-  --debug \
-  -o json \
-  --var "key=value" \
-  --target $TARGET \
-  --profile $DATABRICKS_PROFILE
-```
-
-| Option           | Required | Description                                                               |
-| ---------------- | -------- | ------------------------------------------------------------------------- |
-| `--strict`       | no       | Treat warnings as errors (validate only)                                  |
-| `--auto-approve` | no       | Skip confirmation prompts (deploy only)                                   |
-| `--force-lock`   | no       | Force acquisition of deployment lock (deploy only)                        |
-| `--debug`        | no       | Enable debug logging                                                      |
-| `-o json`        | no       | Output as JSON (default: text)                                            |
-| `--var`          | no       | Set values for bundle config variables (for example, `--var="key=value"`) |
-| `--target`       | no       | Bundle target (for example, `dev`, `prod`)                                |
-| `--profile`      | no       | Databricks CLI profile name                                               |
-
-`bundle deploy` is idempotent -- it creates new resources and updates existing ones to match the configuration. Unlike agents or apps, there is no `bundle run` step; Lakebase resources are active once deployed.
+`bundle deploy` is idempotent — it creates new resources and updates existing ones to match the configuration. Unlike agents or apps, there is no `bundle run` step; Lakebase resources are active once deployed. See the [Declarative Automation Bundles documentation](https://docs.databricks.com/aws/en/dev-tools/bundles/) for all options.
 
 ## Troubleshooting
 
@@ -199,16 +169,16 @@ These issues usually involve **Databricks Apps configuration** (resources in `da
 - **`permission denied for table`**: Add a `database` resource in `databricks.yml` with `permission: 'CAN_CONNECT_AND_CREATE'` and redeploy.
 - **Connection refused after period of inactivity**: Lakebase Autoscaling scales to zero when idle. The first connection after inactivity triggers a wake-up and may take a few seconds. If your connection library doesn't retry automatically, add a short retry loop.
 
-## All Lakebase recipes
+## Related guides
 
-| Recipe                                                                                         | Description                                    |
-| ---------------------------------------------------------------------------------------------- | ---------------------------------------------- |
-| [Create a Lakebase Instance](/resources/app-with-lakebase#create-a-lakebase-instance)          | Provision a project, collect connection values |
-| [Lakebase Data Persistence](/resources/app-with-lakebase#lakebase-data-persistence)            | Schema setup, CRUD routes, deploy workflow     |
-| [Lakebase Chat Persistence](/resources/ai-chat-app#lakebase-chat-persistence)                  | Chat/message schema on Lakebase                |
-| [Lakehouse Sync (Lakebase Change Data Feed)](/resources#lakebase-change-data-feed-autoscaling) | Sync Lakebase to Unity Catalog                 |
-| [Sync Tables](/resources#sync-tables-autoscaling)                                              | Unity Catalog to Lakebase                      |
-| [Lakebase Off-Platform](/resources/lakebase-off-platform)                                      | Env, tokens, and Drizzle for off-platform apps |
+| Guide                                                                         | Description                                    |
+| ----------------------------------------------------------------------------- | ---------------------------------------------- |
+| [Create a Lakebase Instance](/resources/lakebase-create-instance)             | Provision a project, collect connection values |
+| [Lakebase Data Persistence](/resources/lakebase-data-persistence)             | Schema setup, CRUD routes, deploy workflow     |
+| [Lakebase Chat Persistence](/resources/lakebase-chat-persistence)             | Chat/message schema on Lakebase                |
+| [Lakebase Change Data Feed](/resources/lakebase-change-data-feed-autoscaling) | Sync Lakebase to Unity Catalog                 |
+| [Sync Tables](/resources/sync-tables-autoscaling)                             | Unity Catalog to Lakebase                      |
+| [Lakebase Off-Platform](/resources/lakebase-off-platform)                     | Env, tokens, and Drizzle for off-platform apps |
 
 ## Further reading
 

@@ -288,6 +288,10 @@ databricks postgres generate-database-credential \
 
 Use the returned token as the password, with your Databricks email as the username and the endpoint host from `list-endpoints` above.
 
+## Next steps
+
+See [App integration and development](/docs/lakebase/development) for integrating Lakebase into your app, local development, infrastructure-as-code with Bundles, and troubleshooting.
+
 ## Further reading
 
 - [Lakebase Postgres](https://docs.databricks.com/aws/en/oltp)

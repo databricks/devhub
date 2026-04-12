@@ -1,6 +1,6 @@
 ## Volume File Manager
 
-Add file upload, browsing, download, delete, file type validation, and CSV row preview to your Databricks app using Unity Catalog Volumes. The `files` plugin registers all file management HTTP routes automatically — no custom server routes needed.
+Add file upload, browsing, download, delete, file type validation, and CSV row preview to your Databricks app using Unity Catalog Volumes. The `files` plugin registers all file management HTTP routes automatically. No custom server routes needed.
 
 ### 1. Create a Unity Catalog Volume
 
@@ -24,7 +24,7 @@ databricks apps init \
   --run none --profile <PROFILE>
 ```
 
-The CLI maps `files.files.path` to `DATABRICKS_VOLUME_FILES` and configures a volume named `files`. It also scaffolds `client/src/pages/files/FilesPage.tsx` and wires the route in `App.tsx` automatically — no manual page creation needed.
+The CLI maps `files.files.path` to `DATABRICKS_VOLUME_FILES` and configures a volume named `files`. It also scaffolds `client/src/pages/files/FilesPage.tsx` and wires the route in `App.tsx` automatically. No manual page creation needed.
 
 After init, install dependencies:
 
@@ -73,7 +73,7 @@ DATABRICKS_VOLUME_FILES=/Volumes/<catalog>/<schema>/<volume-name>
 
 #### Update `databricks.yml`
 
-Add the volume variables, resource, and target values. The resource uses `uc_securable` — note that `securable_full_name` is the Unity Catalog three-part name (`<catalog>.<schema>.<volume-name>`), not the `/Volumes/...` path. `user_api_scopes` is required for on-behalf-of (OBO) token access to work in production.
+Add the volume variables, resource, and target values. The resource uses `uc_securable`. Note that `securable_full_name` is the Unity Catalog three-part name (`<catalog>.<schema>.<volume-name>`), not the `/Volumes/...` path. `user_api_scopes` is required for on-behalf-of (OBO) token access to work in production.
 
 ```yaml
 variables:
@@ -128,7 +128,7 @@ The `files` plugin auto-registers HTTP routes at `/api/files/files/...` for the 
 
 #### Create `client/src/pages/files/FilesPage.tsx`
 
-File browser with upload, folder creation, download, delete, and file preview. Uses `AbortController` to cancel stale list and preview requests. Entries are sorted directories-first, then alphabetically. `resolveEntryPath` constructs the full path from `currentPath + entry.name` — do not use `entry.path` directly, as it may not be set by the API.
+File browser with upload, folder creation, download, delete, and file preview. Uses `AbortController` to cancel stale list and preview requests. Entries are sorted directories-first, then alphabetically. `resolveEntryPath` constructs the full path from `currentPath + entry.name`. Do not use `entry.path` directly, as it may not be set by the API.
 
 ```tsx
 import type { DirectoryEntry, FilePreview } from "@databricks/appkit-ui/react";
@@ -557,10 +557,10 @@ databricks apps deploy --profile <PROFILE>
 
 Open the app URL while signed in to Databricks, navigate to the Files page, and verify:
 
-1. Upload a `.csv` file — it appears in the directory list
-2. Click the file — the preview panel shows metadata and the CSV row table renders below it
-3. Upload a file with a disallowed extension — the error message appears without uploading
-4. Download and delete a file — the list refreshes correctly
+1. Upload a `.csv` file. It appears in the directory list.
+2. Click the file. The preview panel shows metadata and the CSV row table renders below it.
+3. Upload a file with a disallowed extension. The error message appears without uploading.
+4. Download and delete a file. The list refreshes correctly.
 
 Check status and logs if the app does not start:
 

@@ -109,10 +109,10 @@ PGDATABASE=<status.postgres_database from list-databases>
 PGUSER=<your Databricks email or service principal application ID>
 PGSSLMODE=require
 
-# Option A: local dev — token auth (expires ~1h, use refresh script)
+# Option A: local dev, token auth (expires ~1h, use refresh script)
 DATABRICKS_TOKEN=
 
-# Option B: production — M2M auth (service principal)
+# Option B: production, M2M auth (service principal)
 DATABRICKS_CLIENT_ID=
 DATABRICKS_CLIENT_SECRET=
 ```

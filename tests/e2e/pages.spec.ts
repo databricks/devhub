@@ -62,7 +62,6 @@ const PAGES = [
     path: "/docs/tools/ai-tools/docs-mcp-server",
     title: "Docs MCP Server",
   },
-  { path: "/docs/references/appkit", title: "AppKit" },
 ];
 
 test.describe("all pages load without errors", () => {

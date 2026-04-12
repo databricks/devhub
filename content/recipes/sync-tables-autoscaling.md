@@ -1,6 +1,6 @@
 ## Sync Tables: Sync a Unity Catalog Table to Lakebase (Autoscaling)
 
-Serve lakehouse data through Lakebase Autoscaling Postgres so your applications can query it with sub-10ms latency. This creates a synced table — a managed copy of your Unity Catalog table in Lakebase that stays up to date automatically.
+Serve lakehouse data through Lakebase Autoscaling Postgres so your applications can query it with sub-10ms latency. This creates a synced table, a managed copy of your Unity Catalog table in Lakebase that stays up to date automatically.
 
 > This recipe is for **Lakebase Autoscaling** (projects/branches/endpoints with scale-to-zero). For Lakebase Provisioned (manually scaled instances), see the Provisioned Sync Tables recipe (coming soon).
 
@@ -60,7 +60,7 @@ Verify:
 databricks database get-synced-database-table <CATALOG>.<SCHEMA>.<SYNCED_TABLE_NAME> --profile <PROFILE>
 ```
 
-> **Important:** If your Autoscaling project was created via the `/postgres/` API (not `/database/`), programmatic synced table creation is not yet available via CLI — use the Databricks UI as a fallback. In **Catalog**, select the source table → **Create synced table**, then choose your Lakebase project, branch, sync mode, and pipeline. This gap is expected to close soon.
+> **Important:** If your Autoscaling project was created via the `/postgres/` API (not `/database/`), programmatic synced table creation is not yet available via CLI. Use the Databricks UI as a fallback. In **Catalog**, select the source table → **Create synced table**, then choose your Lakebase project, branch, sync mode, and pipeline. This gap is expected to close soon.
 
 ### 2. Configure pipeline reuse
 
@@ -68,7 +68,7 @@ How you set up pipelines depends on your sync mode:
 
 | Sync mode                | Recommendation                         | Why                                                                                                                  |
 | ------------------------ | -------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| **Continuous**           | **Reuse** a pipeline across ~10 tables | Cost-advantageous — e.g., 1 pipeline for 10 tables ≈ $204/table/month vs $2,044/table/month for individual pipelines |
+| **Continuous**           | **Reuse** a pipeline across ~10 tables | Cost-advantageous (e.g., 1 pipeline for 10 tables ≈ $204/table/month vs $2,044/table/month for individual pipelines) |
 | **Snapshot / Triggered** | **Separate** pipelines per table       | Allows re-snapshotting individual tables without impacting others                                                    |
 
 ### 3. Schedule ongoing syncs
@@ -111,7 +111,7 @@ Connect with any standard Postgres client (psql, DBeaver, your application's Pos
 
 ### Important constraints
 
-- **Primary key is mandatory.** Synced tables always require a primary key — it enables efficient point lookups and incremental updates. Rows with nulls in PK columns are excluded from the sync.
+- **Primary key is mandatory.** Synced tables always require a primary key. It enables efficient point lookups and incremental updates. Rows with nulls in PK columns are excluded from the sync.
 - **Duplicate primary keys fail the sync** unless you configure a `timeseries_key` for deduplication (latest value wins per PK). Using a timeseries key has a performance penalty.
 - **Schema changes**: For Triggered/Continuous mode, only **additive** changes (e.g., adding a column) propagate. Dropping or renaming columns requires recreating the synced table.
 - **FGAC tables**: Direct sync of Fine-Grained Access Control tables fails. **Workaround**: create a view (`SELECT * FROM table`), then sync the view in Snapshot mode. Caveat: runs as the sync creator and only sees their visible rows.

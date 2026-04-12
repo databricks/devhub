@@ -1,12 +1,12 @@
 ## Set Up Unity Catalog with External Storage
 
-Create a Unity Catalog catalog backed by an external S3 bucket. For most use cases, the default metastore-managed storage works fine and requires no extra setup — just `databricks catalogs create <CATALOG_NAME>`. Use this recipe when you specifically need external storage.
+Create a Unity Catalog catalog backed by an external S3 bucket. For most use cases, the default metastore-managed storage works fine and requires no extra setup (just `databricks catalogs create <CATALOG_NAME>`). Use this recipe when you specifically need external storage.
 
-> **Note:** Sync Tables — syncing data from the lakehouse back to Lakebase — currently requires the source Unity Catalog catalog to use external storage. Default managed storage does not work with synced tables yet. If you plan to sync lakehouse data back to Lakebase, follow this recipe. This requirement is expected to be removed in a future release.
+> **Note:** Sync Tables (syncing data from the lakehouse back to Lakebase) currently requires the source Unity Catalog catalog to use external storage. Default managed storage does not work with synced tables yet. If you plan to sync lakehouse data back to Lakebase, follow this recipe. This requirement is expected to be removed in a future release.
 
 ### When to use this
 
-- You plan to use Sync Tables to sync lakehouse data back to Lakebase — external storage is currently required for this
+- You plan to use Sync Tables to sync lakehouse data back to Lakebase (external storage is currently required for this)
 - You want to control the S3 bucket location, encryption, and lifecycle policies
 - You need cross-account or cross-workspace access to the underlying data
 

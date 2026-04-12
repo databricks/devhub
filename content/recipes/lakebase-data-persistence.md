@@ -210,7 +210,7 @@ databricks psql --project <project-name> --branch production --endpoint primary 
 "
 ```
 
-If you are the Lakebase project owner, `databricks_create_role` may fail with `role already exists` and `GRANT databricks_superuser` may fail with `permission denied to grant role`. Both errors are safe to ignore — the project owner already has the necessary access.
+If you are the Lakebase project owner, `databricks_create_role` may fail with `role already exists` and `GRANT databricks_superuser` may fail with `permission denied to grant role`. Both errors are safe to ignore; the project owner already has the necessary access.
 
 This gives you DML access (read/write) but not DDL (create/alter). The service principal remains the schema owner.
 

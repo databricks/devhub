@@ -8,7 +8,7 @@ Upgrade a single-space Genie app (from the [Genie Conversational Analytics](/res
 databricks genie list-spaces -o json --profile <PROFILE>
 ```
 
-Note the `space_id` and `title` for each space. Decide on a short lowercase alias for each (e.g. `sales`, `support`) — these become the keys in the server `spaces` map and in the `SPACES` array on the client. They must match exactly.
+Note the `space_id` and `title` for each space. Decide on a short lowercase alias for each (e.g. `sales`, `support`). These become the keys in the server `spaces` map and in the `SPACES` array on the client. They must match exactly.
 
 ### 2. Update the server plugin
 
@@ -36,7 +36,7 @@ Each key becomes the alias for all API routes (`/api/genie/<alias>/messages`) an
 
 #### `.env` (local development)
 
-Keep `DATABRICKS_GENIE_SPACE_ID` — the platform validator still requires it even when you supply a custom `spaces` map. Point it at whichever space you treat as the default. Add one new variable per additional space:
+Keep `DATABRICKS_GENIE_SPACE_ID`. The platform validator still requires it even when you supply a custom `spaces` map. Point it at whichever space you treat as the default. Add one new variable per additional space:
 
 ```bash
 DATABRICKS_GENIE_SPACE_ID=<first-space-id>
@@ -61,11 +61,11 @@ env:
 
 #### `databricks.yml`
 
-Keep the existing `genie_space_name` / `genie_space_id` variable pair and `genie-space` resource — they satisfy the platform validator and can continue pointing to your first/default space. Add a new variable pair and `genie_space` resource for each additional space:
+Keep the existing `genie_space_name` / `genie_space_id` variable pair and `genie-space` resource. They satisfy the platform validator and can continue pointing to your first/default space. Add a new variable pair and `genie_space` resource for each additional space:
 
 ```yaml
 variables:
-  # existing from single-space setup — keep as-is, used for platform validation
+  # existing from single-space setup, keep as-is, used for platform validation
   genie_space_name:
     description: Default Genie space display title
   genie_space_id:
@@ -86,7 +86,7 @@ resources:
       user_api_scopes:
         - dashboards.genie
       resources:
-        # existing — keep as-is
+        # existing, keep as-is
         - name: genie-space
           genie_space:
             name: ${var.genie_space_name}
@@ -121,8 +121,8 @@ Repeat the variable pair and resource block for every additional space beyond th
 
 `GenieChat` stores the active conversation ID in two places that can become stale across space switches or redeployments:
 
-- **URL** — as `?conversationId=<id>`, read on every mount to replay history. When the user switches spaces, the new `GenieChat` instance reads this param and tries to fetch the old conversation through the new space's alias → `NOT_FOUND`.
-- **localStorage** — `appkit:genie:*` keys for related state. After a redeployment, stored IDs may no longer exist in the Genie backend → `NOT_FOUND`.
+- **URL**: stored as `?conversationId=<id>`, read on every mount to replay history. When the user switches spaces, the new `GenieChat` instance reads this param and tries to fetch the old conversation through the new space's alias, resulting in `NOT_FOUND`.
+- **localStorage**: `appkit:genie:*` keys for related state. After a redeployment, stored IDs may no longer exist in the Genie backend, resulting in `NOT_FOUND`.
 
 Stamping every build with a timestamp lets the page detect a new deployment and clean up before `GenieChat` mounts.
 
@@ -228,7 +228,7 @@ export function GeniePage() {
 }
 ```
 
-No changes are needed in `client/src/App.tsx` — the import, nav link, and route from the single-space setup carry over unchanged.
+No changes are needed in `client/src/App.tsx`. The import, nav link, and route from the single-space setup carry over unchanged.
 
 ### 6. Deploy and test
 

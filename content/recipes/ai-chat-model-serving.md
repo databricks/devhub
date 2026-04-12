@@ -20,7 +20,7 @@ databricks psql --project <project-name> --branch production --endpoint primary 
 "
 ```
 
-> **Note**: If you are the Lakebase project owner, `databricks_create_role` may fail with `role already exists` and `GRANT databricks_superuser` may fail with `permission denied to grant role`. Both errors are safe to ignore — the project owner already has the necessary access.
+> **Note**: If you are the Lakebase project owner, `databricks_create_role` may fail with `role already exists` and `GRANT databricks_superuser` may fail with `permission denied to grant role`. Both errors are safe to ignore; the project owner already has the necessary access.
 
 If you run `npm run dev` before deploying, your user creates schemas that the deployed service principal cannot access. `CREATE SCHEMA IF NOT EXISTS` appears to succeed even on schemas you don't own, but subsequent `CREATE TABLE` fails with `permission denied`.
 :::
@@ -41,7 +41,7 @@ npm install ai@6 @ai-sdk/react@3 @ai-sdk/openai @databricks/sdk-experimental
 > npx shadcn@latest init
 > ```
 >
-> This basic recipe works without AI Elements — they're optional prebuilt components.
+> This basic recipe works without AI Elements. They are optional prebuilt components.
 
 ### 3. Configure environment variables for AI Gateway
 

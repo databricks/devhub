@@ -42,7 +42,7 @@ You need the [Databricks CLI](/docs/tools/databricks-cli) installed and [authent
 
 These docs explain the platform layers that guides build on:
 
-- **[Agents](/docs/agents/quickstart)**: Build AI agents with tool orchestration, guardrails, and observability.
 - **[Apps](/docs/apps/quickstart)**: Host web applications as managed Databricks workspace resources.
 - **[Lakebase](/docs/lakebase/quickstart)**: Managed PostgreSQL for application data.
+- **[Agents](/docs/agents/quickstart)**: Build AI agents with tool orchestration, guardrails, and observability.
 - **[Tools](/docs/tools/databricks-cli)**: Databricks CLI, agent skills, and MCP server.

@@ -56,7 +56,7 @@ env:
 import { getWorkspaceClient } from "@databricks/appkit";
 
 // {} tells the SDK to use default auth chain (env vars / profile).
-// Do NOT omit — getWorkspaceClient() with no argument will throw.
+// Do NOT omit. getWorkspaceClient() with no argument will throw.
 const workspaceClient = getWorkspaceClient({});
 const endpoint = process.env.DATABRICKS_ENDPOINT || "<your-endpoint>";
 

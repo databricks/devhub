@@ -26,16 +26,16 @@ describe("about-devhub.md content", () => {
     expect(about).toContain("https://dev.databricks.com/llms.txt");
   });
 
-  test("instructs agent to ask the user what to build", () => {
+  test("instructs agent to understand developer intent", () => {
     const about = readAboutDevhub();
-    expect(about).toContain("What do you want to build?");
+    expect(about).toContain("bootstrapping a new project");
+    expect(about).toContain("existing codebase");
   });
 
   test("instructs agent to ask about reuse vs provision", () => {
     const about = readAboutDevhub();
-    expect(about).toContain("Reuse or provision?");
+    expect(about).toContain("create new resources");
     expect(about).toContain("reuse existing");
-    expect(about).toContain("provision new");
   });
 });
 
@@ -66,7 +66,7 @@ describe("bootstrap prompt composition", () => {
 
     expect(combined).toContain("dev.databricks.com");
     expect(combined).toContain("llms.txt");
-    expect(combined).toContain("What do you want to build?");
+    expect(combined).toContain("bootstrapping a new project");
     expect(combined).toContain("databricks -v");
     expect(combined).toContain("databricks apps init");
   });

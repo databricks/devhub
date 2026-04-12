@@ -228,7 +228,7 @@ test.describe("copy markdown exports raw markdown on docs pages", () => {
     page,
   }) => {
     await setupClipboardMock(page);
-    await page.goto("/docs/lakebase/core-concepts");
+    await page.goto("/docs/lakebase/development");
 
     await clickCopyMarkdownAndWaitForToast(page);
 

@@ -19,7 +19,7 @@ Three common starting points. Browse [/resources](/resources) for the full catal
 
 ## Use a guide
 
-Copy any guide from [/resources](/resources) into your coding agent and describe what you want to build. The guide handles setup, auth, schemas, and deployment. Your prompt shapes the business logic. A machine-readable index of all guides is at [/llms.txt](/llms.txt).
+Copy any guide from [/resources](/resources) into your coding agent and describe what you want to build. The guide handles setup, auth, schemas, and deployment. Your prompt shapes the business logic. A machine-readable index of all guides is at <a href="/llms.txt">/llms.txt</a>.
 
 ## How the platform fits together
 

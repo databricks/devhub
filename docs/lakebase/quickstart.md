@@ -1,11 +1,10 @@
 ---
-title: Provision and connect
-sidebar_label: Provision & connect
+title: Quickstart
 ---
 
-# Provision and connect
+# Quickstart
 
-[Lakebase Postgres](https://docs.databricks.com/aws/en/oltp) is Databricks managed PostgreSQL for OLTP workloads that need low-latency, transactional access alongside your Lakehouse data.
+[Lakebase Postgres](https://docs.databricks.com/aws/en/oltp) is Databricks managed PostgreSQL for OLTP workloads that need low-latency, transactional access alongside your Lakehouse data. It supports instant branching for isolated database environments that share storage via copy-on-write, and runs co-located with your Databricks workspace.
 
 DevHub is organized around [guides and examples](/resources). These companion docs explain Lakebase when you or your agent need platform detail beyond a guide. For how the site fits together, see [Start here](/docs/start-here).
 
@@ -15,7 +14,37 @@ DevHub is organized around [guides and examples](/resources). These companion do
 - `psql` (PostgreSQL client) if using `databricks psql`. Alternatively, use `generate-database-credential` with any PostgreSQL client.
 - Workspace with Lakebase access enabled
 
-## Create a project
+## Build an app with Lakebase
+
+The fastest path is to copy a [resource guide](/resources) into your coding agent and describe what you want to build. [Start here](/docs/start-here) for the full workflow.
+
+| Guide                                                               | Best for                                              |
+| ------------------------------------------------------------------- | ----------------------------------------------------- |
+| [App with Lakebase](/resources/app-with-lakebase)                   | CRUD apps with persistent storage                     |
+| [AI Chat App](/resources/ai-chat-app)                               | Conversational AI with chat history                   |
+| [Operational Data Analytics](/resources/operational-data-analytics) | Bidirectional sync between Lakebase and Unity Catalog |
+
+Each guide includes the [Create a Lakebase Instance](/resources/lakebase-create-instance) resource, which walks through project creation and connection value collection.
+
+To scaffold manually with the CLI, run `databricks apps init` and select the **Lakebase** plugin when prompted. See [Apps Plugins](/docs/apps/plugins) for details.
+
+## Customize your app
+
+After deploying a Lakebase-backed app, consider the following customizations:
+
+- **Add tables**: Follow the [Lakebase Data Persistence](/resources/lakebase-data-persistence) guide to define schemas, generate types, and create CRUD routes.
+- **Add chat persistence**: Use the [Lakebase Chat Persistence](/resources/lakebase-chat-persistence) guide to store conversations.
+- **Use feature branches**: Create isolated branches for development and testing. See [Development: Feature branches](/docs/lakebase/development#feature-branches).
+- **Sync data to/from Unity Catalog**: Use [Lakehouse Sync (CDC)](/resources/lakebase-change-data-feed-autoscaling) to replicate Lakebase tables into Delta, or [Sync Tables](/resources/sync-tables-autoscaling) to serve Unity Catalog data through Lakebase.
+- **Deploy outside Databricks**: Use the [Lakebase Off-Platform](/resources/lakebase-off-platform) guide for apps hosted on AWS, Vercel, Netlify, and others.
+
+To wire Lakebase into an app, see [App integration and development](/docs/lakebase/development).
+
+## Manual provisioning
+
+Use the following commands to provision Lakebase without a guide.
+
+### Create a project
 
 ```bash title="Common"
 databricks postgres create-project my-project
@@ -59,7 +88,7 @@ databricks postgres create-project $PROJECT_ID \
 
 The optional `display_name` sets a human-readable label. This creates a project with a default `production` branch, a `databricks_postgres` database, and a read-write endpoint.
 
-## Get connection values
+### Get connection values
 
 ```bash title="Common"
 databricks postgres list-endpoints projects/my-project/branches/production -o json
@@ -183,7 +212,7 @@ Key values from the output:
 | Database resource path   | `name` (from list-databases) | `lakebase.postgres.database` |
 | PostgreSQL database name | `status.postgres_database`   | `PGDATABASE`                 |
 
-## Connect
+### Connect
 
 The simplest way to connect is with `databricks psql`:
 
@@ -258,37 +287,6 @@ databricks postgres generate-database-credential \
 </details>
 
 Use the returned token as the password, with your Databricks email as the username and the endpoint host from `list-endpoints` above.
-
-## Build an app with Lakebase
-
-The fastest path is to copy a [guide from /resources](/resources) into your coding agent and describe what you want to build. [Start here](/docs/start-here) for the full workflow.
-
-| Guide                                                     | Best for                                                 |
-| --------------------------------------------------------- | -------------------------------------------------------- |
-| [App with Lakebase](/resources/app-with-lakebase)         | CRUD apps with persistent storage                        |
-| [AI Chat App](/resources/ai-chat-app)                     | Conversational AI with chat history                      |
-| [Lakebase Off-Platform](/resources/lakebase-off-platform) | Apps hosted outside Databricks (AWS, Vercel, and others) |
-
-Each guide includes the [Create a Lakebase Instance](/resources/lakebase-create-instance) guide, which walks through project creation and connection value collection in detail.
-
-To scaffold manually with the CLI, run `databricks apps init` and select the **Lakebase** plugin when prompted. See [Apps Plugins](/docs/apps/plugins) for details.
-
-## Customize your app
-
-After deploying a Lakebase-backed app, consider the following customizations:
-
-- **Add tables**: Follow the [Lakebase Data Persistence](/resources/lakebase-data-persistence) guide to define schemas, generate types, and create CRUD routes.
-- **Add chat persistence**: Use the [Lakebase Chat Persistence](/resources/lakebase-chat-persistence) guide to store conversations.
-- **Use feature branches**: Create isolated branches for development and testing. See [Development: Feature branches](/docs/lakebase/development#feature-branches).
-- **Sync data to/from Unity Catalog**: Use [Lakehouse Sync](/resources/app-with-lakebase#lakehouse-sync-change-data-feed-from-lakebase-autoscaling) or [Sync Tables](/resources/app-with-lakebase#sync-tables-to-lakebase-autoscaling).
-
-## Related guides
-
-| Guide                                                     | Description                         |
-| --------------------------------------------------------- | ----------------------------------- |
-| [App with Lakebase](/resources/app-with-lakebase)         | CRUD app with Lakebase persistence  |
-| [AI Chat App](/resources/ai-chat-app)                     | Conversational AI with chat history |
-| [Lakebase Off-Platform](/resources/lakebase-off-platform) | Apps hosted outside Databricks      |
 
 ## Further reading
 

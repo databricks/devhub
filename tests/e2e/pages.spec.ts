@@ -45,10 +45,10 @@ const PAGES = [
   { path: "/docs/apps/core-concepts", title: "App runtime and configuration" },
   { path: "/docs/apps/plugins", title: "Built-in plugins" },
   { path: "/docs/apps/development", title: "Local development and deployment" },
-  { path: "/docs/lakebase/quickstart", title: "Provision and connect" },
+  { path: "/docs/lakebase/quickstart", title: "Quickstart" },
   {
     path: "/docs/lakebase/core-concepts",
-    title: "Projects, branches, and endpoints",
+    title: "Projects, branches, and computes",
   },
   {
     path: "/docs/lakebase/development",

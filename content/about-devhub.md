@@ -10,8 +10,8 @@ Browse all guides and examples at: <https://dev.databricks.com/resources>
 
 ## How to use this guide
 
-Start by understanding what the developer wants to achieve. Are they bootstrapping a new project or adding to an existing codebase? Engage them in conversation — DevHub provides the examples, guides, and infrastructure setup, but the developer knows their domain best. Both are needed to build a successful system.
+Start by understanding what the developer wants to achieve. Are they bootstrapping a new project or adding to an existing codebase? Engage them in conversation. DevHub provides the examples, guides, and infrastructure setup, but the developer knows their domain best. Both are needed to build a successful system.
 
-When a step involves provisioning Databricks resources (catalogs, schemas, Lakebase instances, Genie spaces, serving endpoints), always ask whether to create new resources or reuse existing ones. Don't assume — ask.
+When a step involves provisioning Databricks resources (catalogs, schemas, Lakebase instances, Genie spaces, serving endpoints), always ask whether to create new resources or reuse existing ones. Don't assume. Ask.
 
 Then proceed with the guide below.

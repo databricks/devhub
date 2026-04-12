@@ -5,7 +5,7 @@ sidebar_label: App integration & dev
 
 # App integration and development
 
-This page covers integrating Lakebase into an app, local development, infrastructure-as-code, and troubleshooting.
+This page continues from [Quickstart](/docs/lakebase/quickstart). It covers integrating Lakebase into an app, local development, infrastructure-as-code, and troubleshooting.
 
 ## AppKit integration
 
@@ -202,7 +202,7 @@ databricks bundle validate
 databricks bundle deploy
 ```
 
-`bundle deploy` is idempotent — it creates new resources and updates existing ones to match the configuration. Unlike agents or apps, there is no `bundle run` step; Lakebase resources are active once deployed. See the [Declarative Automation Bundles documentation](https://docs.databricks.com/aws/en/dev-tools/bundles/) for all options.
+`bundle deploy` is idempotent. It creates new resources and updates existing ones to match the configuration. Unlike agents or apps, there is no `bundle run` step; Lakebase resources are active once deployed. See the [Declarative Automation Bundles documentation](https://docs.databricks.com/aws/en/dev-tools/bundles/) for all options.
 
 ## Troubleshooting
 

@@ -125,8 +125,8 @@ export function HeroSection(): ReactNode {
             </Button>
           </div>
           <p className="mt-4 text-xs text-black/40 dark:text-white/40">
-            Run the CLI command yourself, or copy a step-by-step guide for your
-            AI coding agent.
+            Scaffold an app with the CLI command, or copy a step-by-step guide
+            for your AI coding agent.
           </p>
         </div>
       </div>

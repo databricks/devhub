@@ -13,7 +13,7 @@ Transform CDC history tables produced by Lakehouse Sync into a medallion archite
 
 | Layer      | Purpose                                                | Source                                     | Output                                                |
 | ---------- | ------------------------------------------------------ | ------------------------------------------ | ----------------------------------------------------- |
-| **Bronze** | Raw CDC records with full history                      | Lakehouse Sync `lb_<table>_history` tables | No transformation needed — these tables already exist |
+| **Bronze** | Raw CDC records with full history                      | Lakehouse Sync `lb_<table>_history` tables | No transformation needed; these tables already exist  |
 | **Silver** | Current state of each record, deduplicated and cleaned | Bronze history tables                      | One streaming table per entity with latest state only |
 | **Gold**   | Business aggregations and domain-specific metrics      | Silver tables                              | Materialized views with aggregations, joins, and KPIs |
 
@@ -53,7 +53,7 @@ resources:
 
 The pipeline publishes all datasets to `<CATALOG_NAME>.<SCHEMA_NAME>` by default.
 
-### 3. Build the silver layer — current state from CDC
+### 3. Build the silver layer: current state from CDC
 
 For each entity, create a SQL file in `src/` that extracts the latest state from the bronze CDC history table. The silver layer deduplicates by primary key and excludes deleted records.
 
@@ -81,7 +81,7 @@ Replace `<primary_key>` with the entity's primary key column(s), `<CATALOG_NAME>
 
 Repeat for each entity you want in the silver layer.
 
-### 4. Build the gold layer — business aggregations
+### 4. Build the gold layer: business aggregations
 
 Gold layer tables are materialized views that aggregate, join, or reshape silver tables for specific analytics use cases.
 
@@ -170,11 +170,11 @@ Use these tables as sources for Genie spaces, dashboards, notebooks, or ML pipel
 
 ### What you end up with
 
-- **Bronze layer** — Lakehouse Sync CDC history tables (already exist, no pipeline needed)
-- **Silver layer** — Deduplicated current-state materialized views per entity
-- **Gold layer** — Business aggregations and metrics as materialized views
-- **Scheduled pipeline** — Lakeflow Declarative Pipeline refreshing silver and gold layers incrementally
-- **Unity Catalog tables** — All layers queryable via SQL, Spark, BI tools, and Genie
+- **Bronze layer.** Lakehouse Sync CDC history tables (already exist, no pipeline needed).
+- **Silver layer.** Deduplicated current-state materialized views per entity.
+- **Gold layer.** Business aggregations and metrics as materialized views.
+- **Scheduled pipeline.** Lakeflow Declarative Pipeline refreshing silver and gold layers incrementally.
+- **Unity Catalog tables.** All layers queryable via SQL, Spark, BI tools, and Genie.
 
 ### Agent skill recommendations
 

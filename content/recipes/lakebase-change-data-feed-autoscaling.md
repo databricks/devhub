@@ -1,4 +1,4 @@
-## Lakebase Change Data Feed: Sync Lakebase Tables to Unity Catalog (Autoscaling — Lakehouse Sync)
+## Lakebase Change Data Feed: Sync Lakebase Tables to Unity Catalog (Autoscaling, Lakehouse Sync)
 
 Replicate your Lakebase Autoscaling Postgres tables into Unity Catalog as managed Delta tables using Lakehouse Sync. CDC captures every row-level change and writes them as SCD Type 2 history, giving you a full audit trail queryable from the lakehouse.
 
@@ -13,7 +13,7 @@ Replicate your Lakebase Autoscaling Postgres tables into Unity Catalog as manage
 
 ### How it works
 
-> **Note:** Lakehouse Sync is currently in **Beta on AWS only** (all Autoscaling regions). Azure support is not yet available. It is a native Lakebase feature — no external compute, pipelines, or jobs required, and there is no incremental charge for replication beyond the underlying Lakebase compute and storage costs.
+> **Note:** Lakehouse Sync is currently in **Beta on AWS only** (all Autoscaling regions). Azure support is not yet available. It is a native Lakebase feature with no external compute, pipelines, or jobs required, and there is no incremental charge for replication beyond the underlying Lakebase compute and storage costs.
 
 Lakehouse Sync uses Change Data Capture (CDC) to stream changes from Lakebase Postgres into Unity Catalog. For each synced table, a Delta history table is created:
 
@@ -23,9 +23,9 @@ lb_<table_name>_history
 
 Each row includes metadata columns:
 
-- `_change_type` — `insert`, `update_preimage`, `update_postimage`, or `delete`
-- `_lsn` — Log Sequence Number for ordering changes
-- `_commit_timestamp` — When the change was captured
+- `_change_type`: `insert`, `update_preimage`, `update_postimage`, or `delete`
+- `_lsn`: Log Sequence Number for ordering changes
+- `_commit_timestamp`: When the change was captured
 
 ### 1. Verify table replica identity
 
@@ -139,24 +139,24 @@ COMMIT;
 ### What you end up with
 
 - **Delta history tables** in Unity Catalog (`lb_<table_name>_history`) with full SCD Type 2 change tracking
-- **Continuous replication** — changes stream from Postgres to Delta automatically
-- **No external compute** — Lakehouse Sync is a native Lakebase feature
+- **Continuous replication.** Changes stream from Postgres to Delta automatically.
+- **No external compute.** Lakehouse Sync is a native Lakebase feature.
 - Operational data queryable in Spark SQL, notebooks, BI tools, and downstream pipelines
 
 ### Troubleshooting
 
-| Issue                            | Fix                                                                 |
-| -------------------------------- | ------------------------------------------------------------------- |
-| Table not appearing in sync      | Ensure it has a primary key or `REPLICA IDENTITY FULL`              |
-| Unsupported data type error      | Check column types with the query in Step 2                         |
-| Sync lag increasing              | Check Lakebase endpoint health and compute scaling                  |
-| Missing changes on update/delete | Verify `REPLICA IDENTITY FULL` — `default` only captures PK columns |
+| Issue                            | Fix                                                                |
+| -------------------------------- | ------------------------------------------------------------------ |
+| Table not appearing in sync      | Ensure it has a primary key or `REPLICA IDENTITY FULL`             |
+| Unsupported data type error      | Check column types with the query in Step 2                        |
+| Sync lag increasing              | Check Lakebase endpoint health and compute scaling                 |
+| Missing changes on update/delete | Verify `REPLICA IDENTITY FULL`. `default` only captures PK columns |
 
 ### Limitations
 
-- **AWS only** — Lakehouse Sync Beta is available in all Autoscaling regions on AWS. Azure support is not yet available.
-- **No incremental charge** — replication cost is included in your Lakebase compute and storage.
-- **Works alongside synced tables** — you can use Lakehouse Sync in a project/schema that also has synced tables.
+- **AWS only.** Lakehouse Sync Beta is available in all Autoscaling regions on AWS. Azure support is not yet available.
+- **No incremental charge.** Replication cost is included in your Lakebase compute and storage.
+- **Works alongside synced tables.** You can use Lakehouse Sync in a project/schema that also has synced tables.
 
 #### References
 

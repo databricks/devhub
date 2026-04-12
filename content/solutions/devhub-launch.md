@@ -6,13 +6,13 @@ summary: "A developer hub for building on Databricks: opinionated guides, full e
 
 # Introducing dev.databricks.com
 
-We're launching **dev.databricks.com** — a developer-first resource for building data applications and AI agents on Databricks.
+We're launching **dev.databricks.com**, a developer-first resource for building data applications and AI agents on Databricks.
 
 If you're a software engineer evaluating Databricks, getting started with your first project, or looking for practical patterns to accelerate your work, this site is for you.
 
 ## Why we built this
 
-Databricks has powerful infrastructure for data, AI, and application development. But finding the right starting point as a software engineer — especially one who thinks in code, not slide decks — has been harder than it should be.
+Databricks has powerful infrastructure for data, AI, and application development. But finding the right starting point as a software engineer (especially one who thinks in code, not slide decks) has been harder than it should be.
 
 The official Databricks documentation is comprehensive, but it's written for a broad audience. What was missing was an opinionated, code-forward resource aimed squarely at developers who want to build, ship, and iterate fast.
 
@@ -24,16 +24,16 @@ That's what dev.databricks.com is.
 
 The [docs](/docs/start-here) section covers the core building blocks of the Databricks developer stack:
 
-- **[Agents](/docs/agents/quickstart)** — Design, develop, and deploy AI agents using Databricks model serving, with built-in guardrails, AI Gateway, and observability.
-- **[Apps](/docs/apps/quickstart)** — Build and deploy full-stack web applications as managed Databricks workspace resources using AppKit.
-- **[Lakebase](/docs/lakebase/quickstart)** — Use managed PostgreSQL that separates compute from storage, with instant branching, serverless scale, and Unity Catalog integration.
-- **[Tools](/docs/tools/databricks-cli)** — The Databricks CLI, AppKit SDK, agent skills for AI coding assistants, and an MCP server for documentation access.
+- **[Agents](/docs/agents/quickstart)**: Design, develop, and deploy AI agents using Databricks model serving, with built-in guardrails, AI Gateway, and observability.
+- **[Apps](/docs/apps/quickstart)**: Build and deploy full-stack web applications as managed Databricks workspace resources using AppKit.
+- **[Lakebase](/docs/lakebase/quickstart)**: Use managed PostgreSQL that separates compute from storage, with instant branching, serverless scale, and Unity Catalog integration.
+- **[Tools](/docs/tools/databricks-cli)**: The Databricks CLI, AppKit SDK, agent skills for AI coding assistants, and an MCP server for documentation access.
 
 Every guide is written to be practical. Less theory, more working code.
 
 ### Full example apps
 
-The [resources](/resources) page now includes **three production-grade example applications** you can clone, provision, and deploy end to end. Each comes with a `template/README.md` runbook that covers infrastructure provisioning, data seeding, pipeline deploys, and app deployment — everything from zero to running app.
+The [resources](/resources) page now includes **three production-grade example applications** you can clone, provision, and deploy end to end. Each comes with a `template/README.md` runbook that covers infrastructure provisioning, data seeding, pipeline deploys, and app deployment, taking you from zero to running app.
 
 | Example                                                           | What it demonstrates                                                                                               |
 | ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
@@ -45,16 +45,16 @@ Each example builds on one or more guides and recipes. Clone the repo, follow th
 
 ### Copy-pasteable recipes
 
-Recipes are self-contained, copy-pasteable markdown documents that walk you through a specific task from start to finish. Each recipe is designed to work with AI coding agents — copy the raw markdown and paste it into Cursor, Windsurf, Claude Code, or any agent-powered IDE, and it will guide the agent through the implementation step by step.
+Recipes are self-contained, copy-pasteable markdown documents that walk you through a specific task from start to finish. Each recipe is designed to work with AI coding agents. Copy the raw markdown and paste it into Cursor, Windsurf, Claude Code, or any agent-powered IDE, and it will guide the agent through the implementation step by step.
 
 Here are some highlights:
 
-- **[Databricks Local Bootstrap](/resources/databricks-local-bootstrap)** — Set up a local development environment with CLI, auth, and agent skills in one pass.
-- **[Streaming AI Chat with Model Serving](/resources/ai-chat-model-serving)** — Wire up AI SDK with Databricks Model Serving for streaming chat responses.
-- **[Lakebase Data Persistence](/resources/lakebase-data-persistence)** — Add a managed Postgres database to your app with schema setup and full CRUD API routes.
-- **[Genie Conversational Analytics](/resources/genie-conversational-analytics)** — Embed a natural-language analytics chat interface powered by Databricks AI/BI Genie.
-- **[Lakehouse Sync CDC Replication](/resources/lakebase-change-data-feed-autoscaling)** — Replicate Lakebase tables into Unity Catalog as Delta tables with change data capture.
-- **[Medallion Architecture from CDC](/resources/medallion-architecture-from-cdc)** — Transform CDC history tables into silver/gold layers using Lakeflow Declarative Pipelines.
+- **[Databricks Local Bootstrap](/resources/databricks-local-bootstrap)**: Set up a local development environment with CLI, auth, and agent skills in one pass.
+- **[Streaming AI Chat with Model Serving](/resources/ai-chat-model-serving)**: Wire up AI SDK with Databricks Model Serving for streaming chat responses.
+- **[Lakebase Data Persistence](/resources/lakebase-data-persistence)**: Add a managed Postgres database to your app with schema setup and full CRUD API routes.
+- **[Genie Conversational Analytics](/resources/genie-conversational-analytics)**: Embed a natural-language analytics chat interface powered by Databricks AI/BI Genie.
+- **[Lakehouse Sync CDC Replication](/resources/lakebase-change-data-feed-autoscaling)**: Replicate Lakebase tables into Unity Catalog as Delta tables with change data capture.
+- **[Medallion Architecture from CDC](/resources/medallion-architecture-from-cdc)**: Transform CDC history tables into silver/gold layers using Lakeflow Declarative Pipelines.
 
 There are currently **17 recipes** covering everything from initial workspace setup to production data pipelines.
 
@@ -92,7 +92,7 @@ We also provide an [MCP server](/docs/tools/ai-tools/docs-mcp-server) that expos
 
 ### Agent skills
 
-The [agent skills](/docs/tools/ai-tools/agent-skills) are specialized instruction sets that teach AI coding agents how to work with Databricks products. Install them in Cursor, Windsurf, or Claude Code, and your agent will know how to authenticate, provision resources, deploy apps, and more — without you having to explain the platform from scratch each time.
+The [agent skills](/docs/tools/ai-tools/agent-skills) are specialized instruction sets that teach AI coding agents how to work with Databricks products. Install them in Cursor, Windsurf, or Claude Code, and your agent will know how to authenticate, provision resources, deploy apps, and more, without you having to explain the platform from scratch each time.
 
 ## Built for agent-led development
 
@@ -100,11 +100,11 @@ The way developers build software is changing. AI coding agents are becoming a c
 
 Every piece of content on dev.databricks.com is written with this in mind:
 
-- **Recipes are self-contained markdown** — no dependencies on rendered UI or interactive elements. They work in a browser and in an agent's context window.
-- **Examples ship complete codebases** — clone the repo, follow `template/README.md`, and you have a deployed app. Every example includes the full stack: AppKit app, Databricks Asset Bundles, optional pipelines, seed scripts, and provisioning SQL.
-- **Prerequisites are explicit** — each recipe declares what it needs, so agents can chain them correctly.
-- **Code blocks are complete and runnable** — no pseudo-code or "fill in the blanks" placeholders.
-- **Guides compose recipes deterministically** — agents can follow a guide like a script, executing each recipe in order.
+- **Recipes are self-contained markdown.** No dependencies on rendered UI or interactive elements. They work in a browser and in an agent's context window.
+- **Examples ship complete codebases.** Clone the repo, follow `template/README.md`, and you have a deployed app. Every example includes the full stack: AppKit app, Databricks Asset Bundles, optional pipelines, seed scripts, and provisioning SQL.
+- **Prerequisites are explicit.** Each recipe declares what it needs, so agents can chain them correctly.
+- **Code blocks are complete and runnable.** No pseudo-code or "fill in the blanks" placeholders.
+- **Guides compose recipes deterministically.** Agents can follow a guide like a script, executing each recipe in order.
 
 This isn't documentation that happens to work with AI tools. It's documentation designed from the ground up for a world where developers and agents collaborate.
 

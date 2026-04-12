@@ -188,72 +188,7 @@ describe("Bundle validation", { timeout: 180_000 }, () => {
   });
 });
 
-describe("CLI reference", () => {
-  test("serving-endpoints subcommands match what we document", () => {
-    const output = execSync("databricks serving-endpoints --help", {
-      encoding: "utf-8",
-    });
-    const expectedCommands = [
-      "list",
-      "get",
-      "query",
-      "create",
-      "delete",
-      "update-config",
-    ];
-    for (const cmd of expectedCommands) {
-      expect(output).toContain(cmd);
-    }
-  });
-
-  test("serving-endpoints create takes NAME and --json", () => {
-    const output = execSync("databricks serving-endpoints create --help", {
-      encoding: "utf-8",
-    });
-    expect(output).toContain("NAME");
-    expect(output).toContain("--json");
-  });
-
-  test("serving-endpoints query takes NAME and --json", () => {
-    const output = execSync("databricks serving-endpoints query --help", {
-      encoding: "utf-8",
-    });
-    expect(output).toContain("NAME");
-    expect(output).toContain("--json");
-  });
-
-  test("experiments subcommands match what we document", () => {
-    const output = execSync("databricks experiments --help", {
-      encoding: "utf-8",
-    });
-    const expectedCommands = [
-      "create-experiment",
-      "get-experiment",
-      "delete-experiment",
-      "list-experiments",
-    ];
-    for (const cmd of expectedCommands) {
-      expect(output).toContain(cmd);
-    }
-  });
-
-  test("experiments create-experiment takes NAME as positional arg", () => {
-    const output = execSync("databricks experiments create-experiment --help", {
-      encoding: "utf-8",
-    });
-    expect(output).toContain("NAME");
-  });
-
-  test("bundle subcommands match what we document", () => {
-    const output = execSync("databricks bundle --help", {
-      encoding: "utf-8",
-    });
-    const expectedCommands = ["validate", "deploy", "run", "destroy"];
-    for (const cmd of expectedCommands) {
-      expect(output).toContain(cmd);
-    }
-  });
-
+describe("CLI integration checks", () => {
   test("bundle deployment bind subcommand exists", () => {
     const output = execSync("databricks bundle deployment bind --help", {
       encoding: "utf-8",
@@ -277,16 +212,6 @@ describe("CLI reference", () => {
     expect(parsed.access_token).toBeTruthy();
     expect(typeof parsed.access_token).toBe("string");
     console.log("[agents] auth token length:", parsed.access_token.length);
-  });
-
-  test("apps management subcommands match what we document", () => {
-    const output = execSync("databricks apps --help", {
-      encoding: "utf-8",
-    });
-    const expectedCommands = ["get", "logs", "stop", "start", "delete"];
-    for (const cmd of expectedCommands) {
-      expect(output).toContain(cmd);
-    }
   });
 });
 

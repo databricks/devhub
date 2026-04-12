@@ -116,6 +116,12 @@ databricks bundle deploy
 databricks bundle run agent_openai_agents_sdk
 ```
 
+### Upload and configure
+
+```bash title="Common"
+databricks bundle deploy
+```
+
 ```bash title="All Options"
 databricks bundle deploy \
   --auto-approve \
@@ -129,18 +135,7 @@ databricks bundle deploy \
   --var "key=value" \
   --target $TARGET \
   --profile $DATABRICKS_PROFILE
-
-databricks bundle run agent_openai_agents_sdk \
-  --no-wait \
-  --restart \
-  --debug \
-  -o json \
-  --var "key=value" \
-  --target $TARGET \
-  --profile $DATABRICKS_PROFILE
 ```
-
-### `databricks bundle deploy`
 
 <details>
 <summary>Options</summary>
@@ -161,7 +156,22 @@ databricks bundle run agent_openai_agents_sdk \
 
 </details>
 
-### `databricks bundle run`
+### Start the app
+
+```bash title="Common"
+databricks bundle run agent_openai_agents_sdk
+```
+
+```bash title="All Options"
+databricks bundle run agent_openai_agents_sdk \
+  --no-wait \
+  --restart \
+  --debug \
+  -o json \
+  --var "key=value" \
+  --target $TARGET \
+  --profile $DATABRICKS_PROFILE
+```
 
 <details>
 <summary>Options</summary>
@@ -176,6 +186,8 @@ databricks bundle run agent_openai_agents_sdk \
 | `--var`     | no       | Set values for bundle config variables (for example, `--var="key=value"`)          |
 | `--target`  | no       | Bundle target (for example, `dev`, `prod`)                                         |
 | `--profile` | no       | Databricks CLI profile name                                                        |
+
+Job, pipeline, and task-specific flags are omitted. Run `databricks bundle run --help` for the full list.
 
 </details>
 
@@ -200,6 +212,9 @@ databricks apps get $APP_NAME \
   --profile $DATABRICKS_PROFILE
 ```
 
+<details>
+<summary>Options</summary>
+
 | Option      | Required | Description                                                               |
 | ----------- | -------- | ------------------------------------------------------------------------- |
 | `NAME`      | yes      | App name                                                                  |
@@ -208,6 +223,8 @@ databricks apps get $APP_NAME \
 | `--target`  | no       | Bundle target to use (if applicable)                                      |
 | `--var`     | no       | Set values for bundle config variables (for example, `--var="key=value"`) |
 | `--profile` | no       | Databricks CLI profile name                                               |
+
+</details>
 
 Query the deployed agent using the `url` field from the `apps get` output (OAuth required, PATs are not supported):
 

@@ -45,7 +45,7 @@ describe("bootstrap prompt composition", () => {
     const recipe = getDetailMarkdown("recipes", "databricks-local-bootstrap");
 
     expect(about).toContain("# About DevHub");
-    expect(recipe).toContain("## Databricks Local Bootstrap");
+    expect(recipe).toContain("## Databricks Local App Development Bootstrap");
   });
 
   test("combined prompt has about section then recipe", () => {
@@ -54,7 +54,9 @@ describe("bootstrap prompt composition", () => {
     const combined = `${about.trimEnd()}\n\n---\n\n${recipe.trimEnd()}`;
 
     const aboutIdx = combined.indexOf("# About DevHub");
-    const recipeIdx = combined.indexOf("## Databricks Local Bootstrap");
+    const recipeIdx = combined.indexOf(
+      "## Databricks Local App Development Bootstrap",
+    );
     expect(aboutIdx).toBeLessThan(recipeIdx);
     expect(combined).toContain("---");
   });

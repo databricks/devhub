@@ -1,37 +1,37 @@
 import { describe, expect, test } from "vitest";
-import { buildCopyPreamble } from "../src/lib/copy-preamble";
+import {
+  ABOUT_DEVHUB_CANONICAL_LLMS_TXT_URL,
+  substituteAboutDevhubLlmsUrl,
+} from "../src/lib/copy-preamble";
 
-describe("buildCopyPreamble", () => {
-  test("includes dev.databricks.com site reference", () => {
-    const preamble = buildCopyPreamble("https://dev.databricks.com/llms.txt");
-    expect(preamble).toContain("dev.databricks.com");
+describe("substituteAboutDevhubLlmsUrl", () => {
+  test("replaces canonical llms.txt URL with the requested URL", () => {
+    const body = `See <${ABOUT_DEVHUB_CANONICAL_LLMS_TXT_URL}> for the index.`;
+    const out = substituteAboutDevhubLlmsUrl(
+      body,
+      "http://localhost:3000/llms.txt",
+    );
+    expect(out).toContain("http://localhost:3000/llms.txt");
+    expect(out).not.toContain(ABOUT_DEVHUB_CANONICAL_LLMS_TXT_URL);
   });
 
-  test("includes llms.txt URL", () => {
-    const preamble = buildCopyPreamble("https://dev.databricks.com/llms.txt");
-    expect(preamble).toContain("https://dev.databricks.com/llms.txt");
+  test("supports localhost llms.txt for local copies", () => {
+    const body = ABOUT_DEVHUB_CANONICAL_LLMS_TXT_URL;
+    const out = substituteAboutDevhubLlmsUrl(
+      body,
+      "http://localhost:4173/llms.txt",
+    );
+    expect(out).toBe("http://localhost:4173/llms.txt");
   });
 
-  test("includes usage guidelines about reading before executing", () => {
-    const preamble = buildCopyPreamble("https://dev.databricks.com/llms.txt");
-    expect(preamble).toContain("Read through the entire content");
-    expect(preamble).toContain("overlapping setup commands");
-  });
-
-  test("includes guidance on provisioning vs reuse", () => {
-    const preamble = buildCopyPreamble("https://dev.databricks.com/llms.txt");
-    expect(preamble).toContain("create new ones or reuse existing");
-  });
-
-  test("is a single blockquote block", () => {
-    const preamble = buildCopyPreamble("https://dev.databricks.com/llms.txt");
-    for (const line of preamble.split("\n")) {
-      expect(line.startsWith(">")).toBe(true);
-    }
-  });
-
-  test("works with localhost URLs", () => {
-    const preamble = buildCopyPreamble("http://localhost:3001/llms.txt");
-    expect(preamble).toContain("http://localhost:3001/llms.txt");
+  test("replaces every occurrence", () => {
+    const body = `${ABOUT_DEVHUB_CANONICAL_LLMS_TXT_URL} and again ${ABOUT_DEVHUB_CANONICAL_LLMS_TXT_URL}`;
+    const out = substituteAboutDevhubLlmsUrl(
+      body,
+      "http://example.com/llms.txt",
+    );
+    expect(out).toBe(
+      "http://example.com/llms.txt and again http://example.com/llms.txt",
+    );
   });
 });

@@ -22,7 +22,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { buildCopyPreamble } from "@/lib/copy-preamble";
+import { buildAboutDevhubForBrowserCopy } from "@/lib/copy-about-devhub";
 
 type AIExportMenuProps = {
   rawMarkdown?: string;
@@ -72,7 +72,9 @@ export function AIExportMenu({
     const escapedTitle = title.replace(/"/g, '\\"');
     const escapedDescription = description.replace(/"/g, '\\"');
 
-    let md = `${buildCopyPreamble(`${baseUrl}/llms.txt`)}\n\n`;
+    const originForCopy = baseUrl || "https://dev.databricks.com";
+    const about = buildAboutDevhubForBrowserCopy(`${originForCopy}/llms.txt`);
+    let md = `${about}\n\n`;
     md += `---\ntitle: "${escapedTitle}"\nurl: ${fullUrl}\nsummary: "${escapedDescription}"\n---\n\n`;
     if (rawContent) md += `${rawContent}\n\n`;
     if (additionalMarkdown) md += `${additionalMarkdown}\n\n`;

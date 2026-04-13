@@ -18,7 +18,7 @@ describe("detail markdown resolver", () => {
 
   test("resolves recipe markdown", () => {
     const markdown = getDetailMarkdown("recipes", "databricks-local-bootstrap");
-    expect(markdown).toContain("## Databricks Local Bootstrap");
+    expect(markdown).toContain("## Databricks Local App Development Bootstrap");
     expect(markdown).toContain("databricks -v");
   });
 
@@ -31,7 +31,7 @@ describe("detail markdown resolver", () => {
   test("resolves template markdown", () => {
     const markdown = getDetailMarkdown("templates", "hello-world-app");
     expect(markdown).toContain("# Hello World App");
-    expect(markdown).toContain("## Databricks Local Bootstrap");
+    expect(markdown).toContain("## Databricks Local App Development Bootstrap");
   });
 
   test("rejects path traversal", () => {
@@ -47,7 +47,7 @@ describe("resources meta-section resolves recipes, examples, and templates", () 
       "resources",
       "databricks-local-bootstrap",
     );
-    expect(markdown).toContain("## Databricks Local Bootstrap");
+    expect(markdown).toContain("## Databricks Local App Development Bootstrap");
   });
 
   test("resolves an example slug via resources", () => {
@@ -58,7 +58,7 @@ describe("resources meta-section resolves recipes, examples, and templates", () 
   test("resolves a template slug via resources", () => {
     const markdown = getDetailMarkdown("resources", "hello-world-app");
     expect(markdown).toContain("# Hello World App");
-    expect(markdown).toContain("## Databricks Local Bootstrap");
+    expect(markdown).toContain("## Databricks Local App Development Bootstrap");
   });
 
   test("throws for unknown resource slug", () => {
@@ -109,28 +109,25 @@ describe("example markdown includes metadata", () => {
   });
 });
 
-describe("prependLlmsReference prepends copy preamble", () => {
-  const PREAMBLE_START = "> Source: [dev.databricks.com]";
+describe("prependLlmsReference prepends about-devhub body", () => {
+  const ABOUT_START = "# About DevHub";
 
-  test("prepends preamble with https llms.txt URL for production host", () => {
+  test("prepends about with https llms.txt URL for production host", () => {
     const result = prependLlmsReference("# Hello", "dev.databricks.com");
-    expect(result).toContain(
-      "> Full resource index: https://dev.databricks.com/llms.txt",
-    );
+    expect(result).toContain("https://dev.databricks.com/llms.txt");
     expect(result).toContain("# Hello");
-    expect(result.startsWith(PREAMBLE_START)).toBe(true);
+    expect(result.startsWith(ABOUT_START)).toBe(true);
   });
 
-  test("prepends preamble with http llms.txt URL for localhost", () => {
+  test("prepends about with http llms.txt URL for localhost", () => {
     const result = prependLlmsReference("# Hello", "localhost:3001");
-    expect(result).toContain(
-      "> Full resource index: http://localhost:3001/llms.txt",
-    );
+    expect(result).toContain("http://localhost:3001/llms.txt");
+    expect(result.startsWith(ABOUT_START)).toBe(true);
   });
 
-  test("includes usage guidelines in preamble", () => {
+  test("includes working-with-content guidance from about-devhub", () => {
     const result = prependLlmsReference("content", "dev.databricks.com");
-    expect(result).toContain("How to use this guide");
+    expect(result).toContain("Working with DevHub content");
     expect(result).toContain("Read through the entire content");
   });
 
@@ -140,45 +137,45 @@ describe("prependLlmsReference prepends copy preamble", () => {
     expect(result).not.toMatch(/\n\n\n$/);
   });
 
-  test("docs markdown starts with preamble", () => {
+  test("docs markdown starts with about devhub", () => {
     const markdown = getDetailMarkdown("docs", "start-here");
     const result = prependLlmsReference(markdown, "dev.databricks.com");
-    expect(result.startsWith(PREAMBLE_START)).toBe(true);
+    expect(result.startsWith(ABOUT_START)).toBe(true);
     expect(result).toContain("title:");
   });
 
-  test("recipe markdown starts with preamble", () => {
+  test("recipe markdown starts with about devhub", () => {
     const markdown = getDetailMarkdown("recipes", "databricks-local-bootstrap");
     const result = prependLlmsReference(markdown, "dev.databricks.com");
-    expect(result.startsWith(PREAMBLE_START)).toBe(true);
-    expect(result).toContain("## Databricks Local Bootstrap");
+    expect(result.startsWith(ABOUT_START)).toBe(true);
+    expect(result).toContain("## Databricks Local App Development Bootstrap");
   });
 
-  test("example markdown starts with preamble", () => {
+  test("example markdown starts with about devhub", () => {
     const markdown = getDetailMarkdown("examples", "agentic-support-console");
     const result = prependLlmsReference(markdown, "dev.databricks.com");
-    expect(result.startsWith(PREAMBLE_START)).toBe(true);
+    expect(result.startsWith(ABOUT_START)).toBe(true);
     expect(result).toContain("## Agentic Support Console");
   });
 
-  test("template markdown starts with preamble", () => {
+  test("template markdown starts with about devhub", () => {
     const markdown = getDetailMarkdown("templates", "hello-world-app");
     const result = prependLlmsReference(markdown, "dev.databricks.com");
-    expect(result.startsWith(PREAMBLE_START)).toBe(true);
+    expect(result.startsWith(ABOUT_START)).toBe(true);
     expect(result).toContain("# Hello World App");
   });
 
-  test("solution markdown starts with preamble", () => {
+  test("solution markdown starts with about devhub", () => {
     const markdown = getDetailMarkdown("solutions", "devhub-launch");
     const result = prependLlmsReference(markdown, "dev.databricks.com");
-    expect(result.startsWith(PREAMBLE_START)).toBe(true);
+    expect(result.startsWith(ABOUT_START)).toBe(true);
     expect(result).toContain("# Introducing dev.databricks.com");
   });
 
-  test("resources meta-section starts with preamble", () => {
+  test("resources meta-section starts with about devhub", () => {
     const markdown = getDetailMarkdown("resources", "agentic-support-console");
     const result = prependLlmsReference(markdown, "dev.databricks.com");
-    expect(result.startsWith(PREAMBLE_START)).toBe(true);
+    expect(result.startsWith(ABOUT_START)).toBe(true);
     expect(result).toContain("## Agentic Support Console");
   });
 });
@@ -194,7 +191,7 @@ describe("slug normalization strips .md extension", () => {
       "recipes",
       "databricks-local-bootstrap.md",
     );
-    expect(markdown).toContain("## Databricks Local Bootstrap");
+    expect(markdown).toContain("## Databricks Local App Development Bootstrap");
   });
 
   test("resources slug with .md extension resolves", () => {

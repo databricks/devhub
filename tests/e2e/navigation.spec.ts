@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { buildCopyPreamble } from "../../src/lib/copy-preamble";
+import { substituteAboutDevhubLlmsUrl } from "../../src/lib/copy-preamble";
 
 const ABOUT_DEVHUB_MARKDOWN = readFileSync(
   resolve(process.cwd(), "content/about-devhub.md"),
@@ -11,7 +11,7 @@ const LOCAL_BOOTSTRAP_MARKDOWN = readFileSync(
   resolve(process.cwd(), "content/recipes/databricks-local-bootstrap.md"),
   "utf-8",
 );
-const BOOTSTRAP_PROMPT_MARKDOWN = `${buildCopyPreamble("https://dev.databricks.com/llms.txt")}\n\n${ABOUT_DEVHUB_MARKDOWN.trimEnd()}\n\n---\n\n${LOCAL_BOOTSTRAP_MARKDOWN.trimEnd()}\n`;
+const BOOTSTRAP_PROMPT_MARKDOWN = `${substituteAboutDevhubLlmsUrl(ABOUT_DEVHUB_MARKDOWN, "https://dev.databricks.com/llms.txt").trimEnd()}\n\n---\n\n${LOCAL_BOOTSTRAP_MARKDOWN.trimEnd()}\n`;
 
 test.describe("navbar navigation", () => {
   const NAVBAR_LINKS = [
@@ -97,7 +97,9 @@ test.describe("home page link navigation", () => {
     );
     expect(finalCopiedText).toBe(BOOTSTRAP_PROMPT_MARKDOWN);
     expect(finalCopiedText).toContain("# About DevHub");
-    expect(finalCopiedText).toContain("## Databricks Local Bootstrap");
+    expect(finalCopiedText).toContain(
+      "## Databricks Local App Development Bootstrap",
+    );
     expect(finalCopiedText).toContain("dev.databricks.com");
     expect(finalCopiedText).toContain("llms.txt");
   });

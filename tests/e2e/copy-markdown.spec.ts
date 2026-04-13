@@ -43,7 +43,8 @@ test.describe("copy markdown exports raw markdown on recipe pages", () => {
     await clickCopyMarkdownAndWaitForToast(page);
 
     const copied = await getCopiedText(page);
-    expect(copied).toContain("## Databricks Local Bootstrap");
+    expect(copied).toContain("# About DevHub");
+    expect(copied).toContain("## Databricks Local App Development Bootstrap");
     expect(copied).toContain("```bash");
     expect(copied).toContain("databricks -v");
     expect(copied).toContain("llms.txt");
@@ -60,7 +61,8 @@ test.describe("copy markdown exports raw markdown on template pages", () => {
     await clickCopyMarkdownAndWaitForToast(page);
 
     const copied = await getCopiedText(page);
-    expect(copied).toContain("## Databricks Local Bootstrap");
+    expect(copied).toContain("# About DevHub");
+    expect(copied).toContain("## Databricks Local App Development Bootstrap");
     expect(copied).toContain("```bash");
     expect(copied).toContain('title: "Hello World App"');
     expect(copied).toContain("llms.txt");
@@ -73,7 +75,8 @@ test.describe("copy markdown exports raw markdown on template pages", () => {
     await clickCopyMarkdownAndWaitForToast(page);
 
     const copied = await getCopiedText(page);
-    expect(copied).toContain("## Databricks Local Bootstrap");
+    expect(copied).toContain("# About DevHub");
+    expect(copied).toContain("## Databricks Local App Development Bootstrap");
     expect(copied).toContain("## Lakebase Data Persistence");
     expect(copied).toContain("---");
   });
@@ -87,6 +90,7 @@ test.describe("copy markdown exports raw markdown on example pages", () => {
     await clickCopyMarkdownAndWaitForToast(page);
 
     const copied = await getCopiedText(page);
+    expect(copied).toContain("# About DevHub");
     expect(copied).toContain("## Agentic Support Console");
     expect(copied).toContain("Data Flow");
     expect(copied).toContain("Lakehouse Sync");
@@ -99,6 +103,7 @@ test.describe("copy markdown exports raw markdown on example pages", () => {
     await clickCopyMarkdownAndWaitForToast(page);
 
     const copied = await getCopiedText(page);
+    expect(copied).toContain("# About DevHub");
     expect(copied).toContain("## SaaS Subscription Tracker");
     expect(copied).toContain("Data Flow");
   });
@@ -143,6 +148,7 @@ test.describe("copy markdown exports raw markdown on example pages", () => {
     await clickCopyMarkdownAndWaitForToast(page);
 
     const copied = await getCopiedText(page);
+    expect(copied).toContain("# About DevHub");
     expect(copied).toContain("## Get started");
     expect(copied).toContain("Run the command below");
     expect(copied).toContain("```bash");
@@ -196,6 +202,7 @@ test.describe("copy markdown exports raw markdown on solution pages", () => {
     await clickCopyMarkdownAndWaitForToast(page);
 
     const copied = await getCopiedText(page);
+    expect(copied).toContain("# About DevHub");
     expect(copied).toContain("# Introducing dev.databricks.com");
     expect(copied).toContain("**dev.databricks.com**");
     expect(copied).toContain('title: "Introducing dev.databricks.com"');
@@ -213,6 +220,7 @@ test.describe("copy markdown exports raw markdown on docs pages", () => {
     await clickCopyMarkdownAndWaitForToast(page);
 
     const copied = await getCopiedText(page);
+    expect(copied).toContain("# About DevHub");
     expect(copied).toContain("# Start here");
     expect(copied).toContain("## Pick a guide");
   });
@@ -233,6 +241,7 @@ test.describe("copy markdown exports raw markdown on docs pages", () => {
     await clickCopyMarkdownAndWaitForToast(page);
 
     const copied = await getCopiedText(page);
+    expect(copied).toContain("# About DevHub");
     expect(copied).toContain('title="Common"');
     expect(copied).toContain('title="All Options"');
     expect(copied).toContain("databricks postgres create-branch");

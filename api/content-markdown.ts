@@ -1,7 +1,8 @@
 import { existsSync, readFileSync } from "fs";
 import { resolve } from "path";
+import { substituteAboutDevhubLlmsUrl } from "../src/lib/copy-preamble";
+import { ABOUT_DEVHUB_SLUG } from "../src/lib/bootstrap-prompt";
 import { hasMarkdownSlug } from "../src/lib/content-markdown";
-import { buildCopyPreamble } from "../src/lib/copy-preamble";
 import { expandMdxImports } from "../src/lib/expand-mdx";
 import {
   examples,
@@ -296,8 +297,17 @@ export function getDetailMarkdown(
   }
 }
 
+export function readAboutDevhubBody(rootDir: string = process.cwd()): string {
+  const filePath = resolve(rootDir, "content", `${ABOUT_DEVHUB_SLUG}.md`);
+  return readFileSync(filePath, "utf-8");
+}
+
 export function prependLlmsReference(markdown: string, host: string): string {
   const protocol = host.startsWith("localhost") ? "http" : "https";
   const llmsUrl = `${protocol}://${host}/llms.txt`;
-  return `${buildCopyPreamble(llmsUrl)}\n\n${markdown.trimEnd()}\n`;
+  const about = substituteAboutDevhubLlmsUrl(
+    readAboutDevhubBody(process.cwd()),
+    llmsUrl,
+  );
+  return `${about.trimEnd()}\n\n${markdown.trimEnd()}\n`;
 }

@@ -6,7 +6,7 @@
       "maxDuration": 30
     },
     "api/markdown.ts": {
-      "includeFiles": "{docs/**,content/solutions/**,content/recipes/**,content/examples/**}",
+      "includeFiles": "{docs/**,content/about-devhub.md,content/solutions/**,content/recipes/**,content/examples/**}",
       "maxDuration": 30
     },
     "api/bootstrap-prompt.ts": {

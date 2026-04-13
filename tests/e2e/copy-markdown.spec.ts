@@ -160,8 +160,27 @@ test.describe("copy markdown exports raw markdown on example pages", () => {
     expect(copied).toContain(
       "These **guides** (multi-step cookbooks) and **recipes** informed how this example was built",
     );
-    expect(copied).not.toContain("### 1. Clone locally");
-    expect(copied).not.toContain("### 2.");
+    expect(copied).toContain(
+      "### 1. Clone locally and follow `template/README.md`",
+    );
+  });
+
+  test("Get started: Copy Markdown and Copy prompt produce identical markdown", async ({
+    page,
+  }) => {
+    await setupClipboardMock(page);
+    await page.goto("/resources/agentic-support-console");
+
+    await clickCopyMarkdownAndWaitForToast(page);
+    const fromCopyAsMarkdown = await getCopiedText(page);
+
+    await page.getByRole("button", { name: "Copy prompt" }).click();
+    await expect(page.getByText("Prompt copied")).toBeVisible({
+      timeout: 5000,
+    });
+    const fromCopyPrompt = await getCopiedText(page);
+
+    expect(fromCopyAsMarkdown).toBe(fromCopyPrompt);
   });
 
   test("Get started: Copy prompt copies full prompt with bash and ### substeps", async ({
@@ -176,6 +195,8 @@ test.describe("copy markdown exports raw markdown on example pages", () => {
     });
 
     const copied = await getCopiedText(page);
+    expect(copied).toContain("# About DevHub");
+    expect(copied).toContain("\n---\n\n# ");
     expect(copied).toContain(
       "### 1. Clone locally and follow `template/README.md`",
     );

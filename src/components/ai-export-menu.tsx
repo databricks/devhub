@@ -22,13 +22,22 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { buildAboutDevhubForBrowserCopy } from "@/lib/copy-about-devhub";
+import {
+  buildAboutDevhubForBrowserCopy,
+  buildMarkdownWithAboutDevhubLeadIn,
+} from "@/lib/copy-about-devhub";
 
 type AIExportMenuProps = {
   rawMarkdown?: string;
   rawMarkdownUrl?: string;
   /** Extra markdown appended after the main content (e.g. code snippets, links). */
   additionalMarkdown?: string;
+  /**
+   * When set, Copy Markdown / Send to ChatGPT / Open in Claude use exactly
+   * `about-devhub + --- + this string`, ignoring frontmatter and raw/additional
+   * markdown (e.g. example pages align with the Get started "Copy prompt" button).
+   */
+  agentBodyAfterAbout?: string;
   title: string;
   description: string;
   permalink: string;
@@ -40,6 +49,7 @@ export function AIExportMenu({
   rawMarkdown,
   rawMarkdownUrl,
   additionalMarkdown,
+  agentBodyAfterAbout,
   title,
   description,
   permalink,
@@ -68,18 +78,25 @@ export function AIExportMenu({
   }, [rawMarkdown]);
 
   const buildAIMarkdown = useCallback((): string => {
+    const originForCopy = baseUrl || "https://dev.databricks.com";
+    const llmsUrl = `${originForCopy}/llms.txt`;
+
+    if (agentBodyAfterAbout !== undefined) {
+      return buildMarkdownWithAboutDevhubLeadIn(llmsUrl, agentBodyAfterAbout);
+    }
+
     const rawContent = resolveContent();
     const escapedTitle = title.replace(/"/g, '\\"');
     const escapedDescription = description.replace(/"/g, '\\"');
 
-    const originForCopy = baseUrl || "https://dev.databricks.com";
-    const about = buildAboutDevhubForBrowserCopy(`${originForCopy}/llms.txt`);
+    const about = buildAboutDevhubForBrowserCopy(llmsUrl);
     let md = `${about}\n\n`;
     md += `---\ntitle: "${escapedTitle}"\nurl: ${fullUrl}\nsummary: "${escapedDescription}"\n---\n\n`;
     if (rawContent) md += `${rawContent}\n\n`;
     if (additionalMarkdown) md += `${additionalMarkdown}\n\n`;
     return md;
   }, [
+    agentBodyAfterAbout,
     resolveContent,
     additionalMarkdown,
     title,

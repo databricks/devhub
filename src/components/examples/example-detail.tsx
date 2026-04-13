@@ -21,6 +21,7 @@ import {
   RecipeCodeBlock,
 } from "@/components/templates/recipe-code-block";
 import { RecipeToc } from "@/components/templates/recipe-toc";
+import { buildMarkdownWithAboutDevhubLeadIn } from "@/lib/copy-about-devhub";
 import {
   buildFullPrompt,
   buildAdditionalMarkdown,
@@ -81,12 +82,21 @@ function IncludedResourceCard({
 function GetStartedSteps({
   example,
   fullPrompt,
+  siteUrl,
 }: {
   example: Example;
   fullPrompt: string;
+  siteUrl: string;
 }) {
   function handleCopyPrompt() {
-    navigator.clipboard.writeText(fullPrompt).then(() => {
+    const base = siteUrl.replace(/\/$/, "");
+    const originForCopy =
+      typeof window !== "undefined" ? window.location.origin : base;
+    const text = buildMarkdownWithAboutDevhubLeadIn(
+      `${originForCopy}/llms.txt`,
+      fullPrompt,
+    );
+    navigator.clipboard.writeText(text).then(() => {
       toast.success("Prompt copied");
     });
   }
@@ -221,6 +231,7 @@ export function ExampleDetail({
                   <AIExportMenu
                     rawMarkdown={rawMarkdown}
                     additionalMarkdown={additionalMarkdown}
+                    agentBodyAfterAbout={fullPrompt}
                     title={example.name}
                     description={example.description}
                     permalink={permalink}
@@ -276,7 +287,11 @@ export function ExampleDetail({
                   </Button>
                 </div>
 
-                <GetStartedSteps example={example} fullPrompt={fullPrompt} />
+                <GetStartedSteps
+                  example={example}
+                  fullPrompt={fullPrompt}
+                  siteUrl={siteConfig.url}
+                />
 
                 <div className="recipe-content-card" ref={contentRef}>
                   <MDXProvider components={mdxComponents}>

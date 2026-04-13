@@ -33,4 +33,13 @@ Unless instructed otherwise, use Shadcn UI, Tailwind CSS and modern design princ
 
 Important Note: The default templates that appkit provide are very basic. Do not stop there. Use them as a starting point but change the UI routes/pages, hierachy, and design from first principles using the feature requests of the user.
 
+If there is no existing code base with design principles and the user didn't specify a design preference, use the following design principles:
+
+- Clean hierarchy with modern spacing between elements
+- Not too many stacked cards
+- Modern design principles
+- Clean UI
+- Follow the user's design preferences if known or user provided design preferences
+- Databricks branding (#FF3621, #0B2026, #EEEDE9, #F9F7F4)
+
 Proceed with the prompt after reading through the instructions above.

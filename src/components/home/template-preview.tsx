@@ -181,7 +181,7 @@ export function TemplatePreview(): ReactNode {
           </p>
           <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
             <h2 className="max-w-xl text-3xl leading-tight font-medium tracking-tight text-black dark:text-white md:text-4xl">
-              Guides and examples to{" "}
+              Start with a guide and example to{" "}
               <span className="text-db-lava">build agentic applications</span>.
             </h2>
             <Link

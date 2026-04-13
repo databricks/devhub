@@ -14,4 +14,6 @@ Start by understanding what the developer wants to achieve. Are they bootstrappi
 
 When a step involves provisioning Databricks resources (catalogs, schemas, Lakebase instances, Genie spaces, serving endpoints), always ask whether to create new resources or reuse existing ones. Do not infer or assume, ask.
 
+Fetch additional guides and examples from **dev.databricks.com** based on the feature request or problem the user is trying to solve.
+
 Then proceed with the guide below.

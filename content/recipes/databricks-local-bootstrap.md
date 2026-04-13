@@ -43,7 +43,19 @@ curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.s
 
 ### 3. Authenticate to your Databricks workspace
 
+```bash
+databricks auth login
+```
+
 This opens a browser window for OAuth. The user must complete authentication in the browser before the CLI returns.
+
+If you already know the workspace URL, you can authenticate the user directly:
+
+```bash
+databricks auth login --host <workspace-url>
+```
+
+If the user specified a profile name, use it:
 
 ```bash
 databricks auth login --host <workspace-url> --profile <PROFILE>

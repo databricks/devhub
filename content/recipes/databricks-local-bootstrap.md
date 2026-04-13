@@ -1,4 +1,4 @@
-## Databricks Local Bootstrap
+## Databricks Local App Development Bootstrap
 
 Prepare a local Databricks app workspace: install CLI, authenticate, scaffold, and install Databricks agent skills.
 
@@ -101,7 +101,26 @@ Verify by listing installed and available skills:
 databricks experimental aitools list
 ```
 
-### 6. Deploy your app
+### 6. UI & UX
+
+Use Shadcn UI components for the app's UI. Focus on making things look and feel modern, clean, and professional. Iterate on the UI and route hierarchy first before sharing the first version with the user. It must look great before we run it locally.
+
+### 7. Local Development Workflow
+
+Always ensure features are working locally before deploying to production.
+
+Ask the user to confirm the installation of `agent-browser` for testing locally. Explain that agent browser is a tool for automating browser actions for local development.
+
+If approved, run:
+
+```bash
+npm i -g agent-browser && agent-browser install
+agent-browser skills get agent-browser
+```
+
+Use `agent-browser` (if approved) or otherwise verify the app is working locally before deploying to production. Also share the localhost URL with the user for testing and iterating.
+
+### 8. Deploy your app
 
 Deploy the scaffolded app to your Databricks workspace:
 
@@ -111,13 +130,13 @@ databricks apps deploy --profile <PROFILE>
 
 The CLI validates, builds, uploads, and starts your app. Once deployed, it prints the app URL.
 
-### 7. Verify deployed app
+### 9. Verify deployed app
 
 ```bash
 databricks apps list --profile <PROFILE>
 ```
 
-### 8. Verify deployed app logs
+### 10. Verify deployed app logs
 
 ```bash
 databricks apps logs <app-name> --profile <PROFILE>

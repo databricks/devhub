@@ -34,8 +34,8 @@ export default function Home(): ReactNode {
       </Head>
       <main>
         <HeroSection />
-        <PillarStrip />
         <TemplatePreview />
+        <PillarStrip />
         <DecisionMakerCta />
       </main>
     </Layout>

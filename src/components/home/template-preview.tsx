@@ -172,7 +172,7 @@ function ResourceCard({
 
 export function TemplatePreview(): ReactNode {
   return (
-    <section className="bg-db-oat-medium py-16 dark:bg-black md:py-20">
+    <section className="bg-white py-16 dark:bg-db-navy md:py-20">
       <div className="container px-4">
         <div className="mx-auto mb-8 max-w-6xl">
           <p className="mb-3 inline-flex items-center gap-2 text-[10px] font-semibold tracking-[0.12em] text-black/50 uppercase dark:text-white/50">
@@ -181,7 +181,7 @@ export function TemplatePreview(): ReactNode {
           </p>
           <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
             <h2 className="max-w-xl text-3xl leading-tight font-medium tracking-tight text-black dark:text-white md:text-4xl">
-              Start from working guides to{" "}
+              Guides and examples to{" "}
               <span className="text-db-lava">build agentic applications</span>.
             </h2>
             <Link

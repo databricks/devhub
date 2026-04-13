@@ -105,7 +105,7 @@ function PillarRow({
 
 export function PillarStrip(): ReactNode {
   return (
-    <section className="bg-white py-16 dark:bg-db-navy md:py-24">
+    <section className="bg-db-oat-medium py-16 dark:bg-black md:py-24">
       <div className="container px-4">
         <div className="mx-auto flex max-w-5xl flex-col gap-16 md:gap-24">
           {pillars.map((pillar, index) => (

@@ -439,6 +439,12 @@
 }
 
 @layer utilities {
+  /* Resources filters sidebar: custom dark variant uses :where() (zero specificity), so dark:bg-* can tie bg-white/60 and lose cascade order in prod. */
+  [data-theme="dark"] .resources-filter-surface {
+    background-color: var(--db-dark-card);
+    border-color: rgb(255 255 255 / 0.12);
+  }
+
   /* Tailwind slash-opacity classes need explicit dark overrides */
   [data-theme="dark"] .text-db-navy {
     color: rgb(245 247 248) !important;

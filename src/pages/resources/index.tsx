@@ -300,7 +300,7 @@ export default function ResourcesPage(): ReactNode {
             <div className="flex gap-8">
               {/* Sidebar (desktop) */}
               <aside className="hidden w-52 shrink-0 md:block">
-                <div className="sticky top-24 rounded-xl border border-black/8 bg-white/60 p-4 dark:border-white/12 dark:bg-[#15232c]">
+                <div className="resources-filter-surface sticky top-24 rounded-xl border border-black/8 bg-white/60 p-4">
                   {filtersSidebar}
                 </div>
               </aside>

@@ -1,0 +1,62 @@
+<svg viewBox="0 0 800 460" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="460" fill="#0f172a"/>
+
+  <!-- Developer entry point -->
+  <rect x="30" y="80" width="130" height="110" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+  <text x="95" y="120" text-anchor="middle" fill="#94a3b8" font-family="monospace" font-size="13">Developer</text>
+  <text x="95" y="142" text-anchor="middle" fill="#64748b" font-family="monospace" font-size="10">coding agent</text>
+  <text x="95" y="162" text-anchor="middle" fill="#64748b" font-family="monospace" font-size="10">+ CLI</text>
+
+  <!-- Arrow from developer to Apps -->
+  <line x1="160" y1="135" x2="195" y2="135" stroke="#475569" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <polygon points="195,130 205,135 195,140" fill="#475569"/>
+
+  <!-- Apps: the hosting layer -->
+  <rect x="205" y="20" width="565" height="280" rx="12" fill="#1e293b" stroke="#60a5fa" stroke-width="1.5"/>
+  <text x="488" y="50" text-anchor="middle" fill="#60a5fa" font-family="monospace" font-size="16">Apps</text>
+  <text x="488" y="70" text-anchor="middle" fill="#64748b" font-family="monospace" font-size="10">managed compute with built-in auth</text>
+
+  <!-- AppKit: SDK layer inside Apps -->
+  <rect x="230" y="85" width="515" height="80" rx="8" fill="#0f172a" stroke="#00B6CB" stroke-width="1.5"/>
+  <text x="488" y="110" text-anchor="middle" fill="#00B6CB" font-family="monospace" font-size="14">AppKit</text>
+  <text x="488" y="130" text-anchor="middle" fill="#94a3b8" font-family="monospace" font-size="10">TypeScript SDK: auth, plugins, UI components</text>
+  <rect x="250" y="140" width="70" height="18" rx="4" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+  <text x="285" y="153" text-anchor="middle" fill="#64748b" font-family="monospace" font-size="8">server</text>
+  <rect x="328" y="140" width="70" height="18" rx="4" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+  <text x="363" y="153" text-anchor="middle" fill="#64748b" font-family="monospace" font-size="8">lakebase</text>
+  <rect x="406" y="140" width="70" height="18" rx="4" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+  <text x="441" y="153" text-anchor="middle" fill="#64748b" font-family="monospace" font-size="8">analytics</text>
+  <rect x="484" y="140" width="70" height="18" rx="4" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+  <text x="519" y="153" text-anchor="middle" fill="#64748b" font-family="monospace" font-size="8">genie</text>
+  <rect x="562" y="140" width="70" height="18" rx="4" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+  <text x="597" y="153" text-anchor="middle" fill="#64748b" font-family="monospace" font-size="8">files</text>
+  <rect x="640" y="140" width="85" height="18" rx="4" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+  <text x="683" y="153" text-anchor="middle" fill="#64748b" font-family="monospace" font-size="8">+more</text>
+
+  <!-- Lakebase: inside Apps (left) -->
+  <rect x="230" y="182" width="250" height="95" rx="8" fill="#0f172a" stroke="#94a3b8" stroke-width="1.5"/>
+  <text x="355" y="212" text-anchor="middle" fill="#94a3b8" font-family="monospace" font-size="14">Lakebase</text>
+  <text x="355" y="232" text-anchor="middle" fill="#94a3b8" font-family="monospace" font-size="10">managed Postgres for OLTP</text>
+  <text x="355" y="252" text-anchor="middle" fill="#64748b" font-family="monospace" font-size="10">autoscaling | scale to zero | branching</text>
+
+  <!-- Agents: inside Apps (right) -->
+  <rect x="495" y="182" width="250" height="95" rx="8" fill="#0f172a" stroke="#f97316" stroke-width="1.5"/>
+  <text x="620" y="212" text-anchor="middle" fill="#f97316" font-family="monospace" font-size="14">Agents</text>
+  <text x="620" y="232" text-anchor="middle" fill="#94a3b8" font-family="monospace" font-size="10">LLM orchestration</text>
+  <text x="620" y="252" text-anchor="middle" fill="#64748b" font-family="monospace" font-size="10">ResponsesAgent + AgentServer</text>
+
+  <!-- Connector: AppKit plugin to Lakebase -->
+  <line x1="363" y1="165" x2="363" y2="182" stroke="#475569" stroke-width="1.5" stroke-dasharray="4,3"/>
+
+  <!-- Unity Catalog (below left) -->
+  <rect x="205" y="350" width="280" height="80" rx="8" fill="#1e293b" stroke="#42BA91" stroke-width="1.5"/>
+  <text x="345" y="380" text-anchor="middle" fill="#42BA91" font-family="monospace" font-size="13">Unity Catalog</text>
+  <text x="345" y="400" text-anchor="middle" fill="#64748b" font-family="monospace" font-size="10">Lakehouse tables, volumes, models</text>
+  <text x="345" y="418" text-anchor="middle" fill="#475569" font-family="monospace" font-size="10">data governance for your workspace</text>
+
+  <!-- AI Gateway (below right) -->
+  <rect x="500" y="350" width="270" height="80" rx="8" fill="#1e293b" stroke="#a78bfa" stroke-width="1.5"/>
+  <text x="635" y="380" text-anchor="middle" fill="#a78bfa" font-family="monospace" font-size="13">AI Gateway</text>
+  <text x="635" y="400" text-anchor="middle" fill="#94a3b8" font-family="monospace" font-size="10">Model Serving endpoints</text>
+  <text x="635" y="418" text-anchor="middle" fill="#475569" font-family="monospace" font-size="10">governance for LLM calls</text>
+</svg>

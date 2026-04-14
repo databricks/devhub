@@ -1,8 +1,9 @@
 import { rewrite } from "@vercel/functions";
 
 /**
- * Content negotiation: when a client sends Accept: text/markdown,
- * transparently rewrite to /api/markdown so it gets markdown instead of HTML.
+ * Content negotiation: when a client sends Accept: text/markdown or
+ * Accept: text/plain, transparently rewrite to /api/markdown so it gets
+ * markdown instead of HTML.
  *
  * Keep in sync with Root.tsx MD_PREFIXES and vercel.json headers/rewrites.
  * TODO: centralize content section definitions into a shared module.
@@ -22,7 +23,8 @@ const BARE_SECTIONS: Record<string, string> = {
 
 export default function middleware(request: Request): Response | undefined {
   const accept = request.headers.get("accept") ?? "";
-  if (!accept.includes("text/markdown")) return undefined;
+  if (!accept.includes("text/markdown") && !accept.includes("text/plain"))
+    return undefined;
 
   const url = new URL(request.url);
   const path = url.pathname;

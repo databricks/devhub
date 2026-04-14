@@ -67,23 +67,19 @@ export const CLI_COMMANDS: CommandSpec[] = [
   // Lakebase
   {
     command: "postgres create-project",
-    doc: "docs/lakebase/quickstart.md",
+    doc: "docs/lakebase/development.md",
   },
   {
     command: "postgres list-endpoints",
-    doc: "docs/lakebase/quickstart.md",
+    doc: "docs/lakebase/development.md",
   },
   {
     command: "postgres list-databases",
-    doc: "docs/lakebase/quickstart.md",
+    doc: "docs/lakebase/development.md",
   },
   {
     command: "postgres generate-database-credential",
-    doc: "docs/lakebase/quickstart.md",
-  },
-  {
-    command: "psql",
-    doc: "docs/lakebase/quickstart.md",
+    doc: "docs/lakebase/development.md",
   },
   {
     command: "postgres create-branch",
@@ -147,20 +143,8 @@ export const CLI_COMMANDS: CommandSpec[] = [
     doc: "docs/apps/development.md",
   },
   // Agents
-  {
-    command: "bundle validate",
-    doc: "docs/agents/quickstart.md",
-  },
-  {
-    command: "bundle deploy",
-    doc: "docs/agents/quickstart.md",
-  },
-  {
-    command: "bundle run",
-    doc: "docs/agents/quickstart.md",
-  },
-  // agents/development.md cross-documents the same deploy and app management
-  // commands; testing them here catches drift in that page independently.
+  // agents/development.md is the canonical reference for deploy commands;
+  // testing them here catches drift in that page independently.
   {
     command: "bundle validate",
     doc: "docs/agents/development.md",
@@ -171,26 +155,6 @@ export const CLI_COMMANDS: CommandSpec[] = [
   },
   {
     command: "bundle run",
-    doc: "docs/agents/development.md",
-  },
-  {
-    command: "apps get",
-    doc: "docs/agents/development.md",
-  },
-  {
-    command: "apps logs",
-    doc: "docs/agents/development.md",
-  },
-  {
-    command: "apps stop",
-    doc: "docs/agents/development.md",
-  },
-  {
-    command: "apps start",
-    doc: "docs/agents/development.md",
-  },
-  {
-    command: "apps delete",
     doc: "docs/agents/development.md",
   },
   {

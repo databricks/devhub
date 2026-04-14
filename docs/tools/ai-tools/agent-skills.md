@@ -6,6 +6,8 @@ title: Agent skills
 
 Agent skills are task-specific instruction files that AI coding assistants load to perform Databricks development tasks. The Databricks skills live in [databricks/databricks-agent-skills](https://github.com/databricks/databricks-agent-skills) and follow the open [agent skills standard](https://agentskills.io/).
 
+Skills tell your coding agent how Databricks works, including CLI conventions, auth patterns, and resource names, so it generates correct code instead of guessing.
+
 ## Install
 
 ```bash

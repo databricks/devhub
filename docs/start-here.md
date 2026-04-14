@@ -9,16 +9,22 @@ DevHub is a catalog of guides and examples for the Databricks developer stack. P
 
 ## How the platform fits together
 
-| Layer        | What it is                                                                                                             |
-| ------------ | ---------------------------------------------------------------------------------------------------------------------- |
-| **Apps**     | The hosting layer. Your Node.js or Python app runs as a managed workspace resource with a fixed URL and built-in auth. |
-| **AppKit**   | The TypeScript SDK. Provides auth, plugins, and UI components for building on top of Apps.                             |
-| **Lakebase** | The database layer. Managed Postgres for your app's transactional data, co-located with your Lakehouse.                |
-| **Agents**   | The LLM orchestration layer. Deployed as Apps using any framework that implements the ResponsesAgent interface.        |
+<img src="/img/docs/platform-overview.svg" alt="Architecture diagram showing Apps containing AppKit, Lakebase, and Agents, with Unity Catalog and AI Gateway as workspace services" width="100%" />
+
+| Layer        | What it is                                                                                                                                                                          |
+| ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Apps**     | The hosting layer. Your Node.js or Python app runs as a managed workspace resource with a fixed URL, built-in auth, and managed compute. Deploy with `databricks apps deploy`.      |
+| **AppKit**   | The TypeScript SDK. Provides auth, UI components, and a plugin system (server, lakebase, analytics, genie, files, caching, and more) with support for custom plugins.               |
+| **Lakebase** | The database layer. Managed Postgres for OLTP, co-located with your Lakehouse. Autoscales on demand, scales to zero when idle, and supports branching for development environments. |
+| **Agents**   | The LLM orchestration layer. Deployed as Apps using any framework that implements the ResponsesAgent interface. Supports tool use, MCP servers, and built-in tracing.               |
+
+**[Unity Catalog](https://docs.databricks.com/aws/en/data-governance/)** and **[AI Gateway](/docs/agents/ai-gateway)** are workspace-level services your app connects to for data governance and model serving.
 
 ## Pick a guide or example
 
 Guides are step-by-step instructions for your coding agent. Examples are working apps built on top of guides, with source code. A few common starting points are below. Browse the full [resources catalog](/resources) for more.
+
+All guides assume the [Databricks CLI](/docs/tools/databricks-cli) is installed and [authenticated](/docs/tools/databricks-cli#authenticate) against your workspace.
 
 | Resource                                                      | Type    | Best for                                        |
 | ------------------------------------------------------------- | ------- | ----------------------------------------------- |
@@ -26,10 +32,6 @@ Guides are step-by-step instructions for your coding agent. Examples are working
 | [AI Chat App](/resources/ai-chat-app)                         | Guide   | Conversational AI, chatbots, assistants         |
 | [App with Lakebase](/resources/app-with-lakebase)             | Guide   | CRUD apps with persistent storage               |
 | [Agentic Support Console](/resources/agentic-support-console) | Example | Full AI support console with Lakebase and Genie |
-
-## Prerequisites
-
-You need the [Databricks CLI](/docs/tools/databricks-cli) installed and [authenticated](/docs/tools/databricks-cli#authenticate) against your workspace.
 
 ## Create your app
 

@@ -1,29 +1,13 @@
 ---
 title: Start here
-description: DevHub is a catalog of guides for the Databricks developer stack. Browse /resources, copy a guide into your coding agent, and start building.
+description: DevHub is a catalog of guides and examples for the Databricks developer stack. Pick a guide, copy it into your coding agent, and start building.
 ---
 
 # Start here
 
-DevHub is a catalog of guides for the Databricks developer stack. The site is organized around [guides and examples](/resources). These docs are the reference layer for you and your agent.
-
-## Pick a guide
-
-Three common starting points. Browse [/resources](/resources) for the full catalog of guides and examples.
-
-| Guide                                             | Best for                                   |
-| ------------------------------------------------- | ------------------------------------------ |
-| [Hello World App](/resources/hello-world-app)     | Simple apps, static pages, getting started |
-| [AI Chat App](/resources/ai-chat-app)             | Conversational AI, chatbots, assistants    |
-| [App with Lakebase](/resources/app-with-lakebase) | CRUD apps with persistent storage          |
-
-## Use a guide
-
-Copy any guide from [/resources](/resources) into your coding agent and describe what you want to build. The guide handles setup, auth, schemas, and deployment. Your prompt shapes the business logic. A machine-readable index of all guides is at <a href="/llms.txt">/llms.txt</a>.
+DevHub is a catalog of guides and examples for the Databricks developer stack. Pick a guide, copy it into your coding agent, and you get a working app deployed to Databricks with auth, database, and deployment handled.
 
 ## How the platform fits together
-
-DevHub covers four layers of the Databricks developer stack:
 
 | Layer        | What it is                                                                                                             |
 | ------------ | ---------------------------------------------------------------------------------------------------------------------- |
@@ -32,11 +16,24 @@ DevHub covers four layers of the Databricks developer stack:
 | **Lakebase** | The database layer. Managed Postgres for your app's transactional data, co-located with your Lakehouse.                |
 | **Agents**   | The LLM orchestration layer. Deployed as Apps using any framework that implements the ResponsesAgent interface.        |
 
-Guides wire these layers together. Docs explain each layer when you or your agent need more context.
+## Pick a guide or example
+
+Guides are step-by-step instructions for your coding agent. Examples are working apps built on top of guides, with source code. A few common starting points are below. Browse the full [resources catalog](/resources) for more.
+
+| Resource                                                      | Type    | Best for                                        |
+| ------------------------------------------------------------- | ------- | ----------------------------------------------- |
+| [Hello World App](/resources/hello-world-app)                 | Guide   | Simple apps, static pages, getting started      |
+| [AI Chat App](/resources/ai-chat-app)                         | Guide   | Conversational AI, chatbots, assistants         |
+| [App with Lakebase](/resources/app-with-lakebase)             | Guide   | CRUD apps with persistent storage               |
+| [Agentic Support Console](/resources/agentic-support-console) | Example | Full AI support console with Lakebase and Genie |
 
 ## Prerequisites
 
 You need the [Databricks CLI](/docs/tools/databricks-cli) installed and [authenticated](/docs/tools/databricks-cli#authenticate) against your workspace.
+
+## Create your app
+
+Copy the guide into your coding agent and describe what you want to build. The guide handles setup, auth, schemas, and deployment. Your prompt shapes the business logic. A machine-readable index of all guides is at <a href="/llms.txt">llms.txt</a>.
 
 ## Companion docs
 
@@ -46,3 +43,4 @@ These docs explain the platform layers that guides build on:
 - **[Lakebase](/docs/lakebase/quickstart)**: Managed PostgreSQL for application data.
 - **[Agents](/docs/agents/quickstart)**: Build AI agents with tool orchestration, guardrails, and observability.
 - **[Tools](/docs/tools/databricks-cli)**: Databricks CLI, agent skills, and MCP server.
+- **[AppKit Reference](/docs/appkit/v0)**: Component library, plugin API, and TypeScript SDK reference.

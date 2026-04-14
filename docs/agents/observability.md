@@ -5,9 +5,21 @@ sidebar_label: Tracing & evaluation
 
 # Tracing and evaluation
 
-Monitor, debug, and improve agents using MLflow tracing, evaluation, and Databricks monitoring surfaces.
+Databricks uses MLflow 3 for agent observability. Deploy your agent and AgentServer handles tracing. Inputs, outputs, tool calls, and latency per step are all captured automatically in MLflow. Evaluation runs LLM judges against your agent offline; production monitoring applies the same judges to live traffic.
+
+## Auto-tracing
+
+MLflow AgentServer provides automatic tracing with no additional code:
+
+- Methods decorated with `@invoke()` and `@stream()` are traced automatically
+- LLM calls are captured through [MLflow autologging](https://mlflow.org/docs/latest/genai/tracing/#one-line-auto-tracing-integrations)
+- Streaming responses are aggregated into complete traces
+
+Traces appear in the MLflow experiment UI and include inputs, outputs, intermediate tool calls, and latency per step.
 
 ## MLflow experiment setup
+
+An MLflow experiment is a container for traces, evaluation results, and runs. You need one before traces have anywhere to go. If you ran `uv run quickstart`, this was created automatically.
 
 Create an experiment to store traces and evaluation results:
 
@@ -51,36 +63,11 @@ Set the returned `experiment_id` in your `.env`:
 MLFLOW_EXPERIMENT_ID=<experiment-id>
 ```
 
-The `uv run quickstart` script in [agent templates](/docs/agents/quickstart) creates this automatically.
-
-## Auto-tracing
-
-MLflow AgentServer provides automatic tracing with no additional code:
-
-- Methods decorated with `@invoke()` and `@stream()` are traced automatically
-- LLM calls are captured through [MLflow autologging](https://mlflow.org/docs/latest/genai/tracing/#one-line-auto-tracing-integrations)
-- Streaming responses are aggregated into complete traces
-
-Traces appear in the MLflow experiment UI and include inputs, outputs, intermediate tool calls, and latency per step.
-
 ## Custom tracing
 
 For more granular instrumentation beyond auto-tracing, use the MLflow tracing API directly. This is useful for tracing custom tool calls, data lookups, or pre/post-processing steps that auto-tracing does not capture.
 
 See [App instrumentation](https://docs.databricks.com/aws/en/mlflow3/genai/tracing/app-instrumentation/) for the API reference.
-
-## Production tracing
-
-For agents deployed using `databricks bundle deploy` to Apps, tracing is automatic. Traces are logged to the MLflow experiment linked to the app.
-
-For agents on Model Serving (using `agents.deploy()`), tracing is also automatic. If using a custom CPU serving endpoint, enable tracing with environment variables:
-
-```text
-ENABLE_MLFLOW_TRACING=true
-MLFLOW_EXPERIMENT_ID=<experiment-id>
-```
-
-See [Production tracing](https://docs.databricks.com/aws/en/mlflow3/genai/tracing/prod-tracing) for configuration details.
 
 ## Evaluation
 
@@ -120,6 +107,19 @@ Agent templates typically include scorers for `Completeness`, `ConversationCompl
 Customize the test cases and scorers in `agent_server/evaluate_agent.py`. For retriever-based agents, MLflow RETRIEVER spans enable additional groundedness and relevance judges.
 
 See [MLflow evaluation](https://docs.databricks.com/aws/en/mlflow3/genai/eval-monitor/) for the full evaluation framework.
+
+## Production tracing
+
+For agents deployed using `databricks bundle deploy` to Apps, tracing is automatic. Traces are logged to the MLflow experiment linked to the app.
+
+For agents on Model Serving (using `agents.deploy()`), tracing is also automatic. If using a custom CPU serving endpoint, enable tracing with environment variables:
+
+```text
+ENABLE_MLFLOW_TRACING=true
+MLFLOW_EXPERIMENT_ID=<experiment-id>
+```
+
+See [Production tracing](https://docs.databricks.com/aws/en/mlflow3/genai/tracing/prod-tracing) for configuration details.
 
 ## Production monitoring
 

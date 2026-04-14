@@ -7,6 +7,10 @@ sidebar_label: Local dev & deploy
 
 This page continues from [Quickstart](/docs/apps/quickstart). It covers local development, deployment, logs, and environment configuration.
 
+## Development workflow
+
+Local dev → validate → deploy → check logs. The sections below cover each step.
+
 ## Local development
 
 After scaffolding an app with `databricks apps init`, start the dev server:

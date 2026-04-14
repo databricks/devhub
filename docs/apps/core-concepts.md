@@ -5,6 +5,12 @@ sidebar_label: App runtime & config
 
 # App runtime and configuration
 
+Databricks Apps runs your code as a managed service inside your workspace. No separate hosting. Authentication is built into the platform via OAuth. Two files control everything: `app.yaml` (how your app starts and what env vars it gets) and `databricks.yml` (what Databricks resources it needs). This page is the reference for both.
+
+:::tip[Three things that matter]
+The app URL is permanent and assigned at creation. The service principal is created and managed automatically. Two config files control everything: `app.yaml` (runtime) and `databricks.yml` (resources).
+:::
+
 ## App model
 
 A Databricks App is a serverless containerized web application running inside your workspace. Each app gets a fixed URL:

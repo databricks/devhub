@@ -5,6 +5,8 @@ sidebar_label: Projects, branches & computes
 
 # Projects, branches, and computes
 
+Lakebase is managed Postgres inside Databricks. It organizes resources into projects, branches, and computes. Think git branches, but for your database: branches are instant, isolated copies. Computes are the processing power attached to each one, and they can scale to zero when idle.
+
 ## Resource hierarchy
 
 Lakebase organizes resources as **projects** containing **branches**, with branches containing **computes** and **databases**.
@@ -35,7 +37,7 @@ Branches require an expiration policy (`ttl`, `expire_time`, or `no_expiry: true
 
 ## Autoscaling
 
-Computes autoscale between a configured min and max compute unit (CU) range. Each CU provides approximately 2 GB of RAM. Default settings by branch type when created via API or CLI:
+Computes autoscale between a configured min and max compute unit (CU) range. Default settings by branch type when created via API or CLI:
 
 - **Production branch**: 1 CU (min and max), scale to zero disabled.
 - **Child branches**: 1 CU (min and max), scale to zero enabled (5-minute default).
@@ -43,6 +45,8 @@ Computes autoscale between a configured min and max compute unit (CU) range. Eac
 The Lakebase UI sets higher defaults: 8–16 CU for production and 2–4 CU for child branches.
 
 Autoscaling is supported from 0.5 to 32 CU; computes from 36 to 112 CU are fixed size. The difference between max and min cannot exceed 16 CU (`max - min <= 16`).
+
+Compute units (CU) are the capacity measure for Lakebase. Each CU provides approximately 2 GB of RAM.
 
 ```bash title="Common"
 databricks postgres update-endpoint \
@@ -95,7 +99,9 @@ Scale to zero suspends idle computes to eliminate costs. When a new query arrive
 | Timeout         | 5 minutes  |
 | Minimum timeout | 60 seconds |
 
-When a compute resumes, session context resets (temporary tables, prepared statements, session settings, connection pools). Applications should implement connection retry logic.
+Apps connecting to a scaled-down compute will see a brief pause on the first query. Implement connection retry logic in your app.
+
+When a compute resumes, session context resets (temporary tables, prepared statements, session settings, connection pools).
 
 Configure at the project level so new branches inherit the settings:
 
@@ -143,18 +149,6 @@ databricks postgres update-project \
 | `--profile`   | no       | Databricks CLI profile name                                      |
 
 </details>
-
-## Long-running operations
-
-Create, update, and delete commands block until complete by default. Use `--no-wait` to return immediately and poll status:
-
-```bash
-databricks postgres create-project my-project \
-  --json '{"spec": {"display_name": "My Project"}}' \
-  --no-wait
-
-databricks postgres get-operation projects/my-project/operations/<operation-id>
-```
 
 ## Related guides
 

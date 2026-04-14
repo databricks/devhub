@@ -6,26 +6,24 @@ title: Quickstart
 
 Databricks agents are LLM-driven applications that can plan, call tools, and return structured output. Agents are deployed as [Databricks Apps](/docs/apps/quickstart).
 
-DevHub is organized around [guides and examples](/resources). These companion docs explain how AI agents work on Databricks when you or your agent need platform detail beyond a guide. For how the site fits together, see [Start here](/docs/start-here).
-
-## Choose your framework
-
-You can build agents with any Python framework. The platform requires two things: your agent must implement the [`ResponsesAgent`](/docs/agents/core-concepts#responsesagent) interface, and it must be served with [`AgentServer`](/docs/agents/core-concepts#agentserver).
-
-| Framework                                                               | Notes                                                                               |
-| ----------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| [OpenAI Agents SDK](https://platform.openai.com/docs/guides/agents-sdk) | Used in this guide and the agent template. Supports tools, handoffs, and streaming. |
-| [LangGraph](https://langchain-ai.github.io/langgraph/)                  | Graph-based orchestration for complex multi-step workflows.                         |
-| Custom                                                                  | Any Python HTTP server that implements the ResponsesAgent contract.                 |
-
-This guide uses the OpenAI Agents SDK. See [How agents work](/docs/agents/core-concepts) for the full platform contract if you're bringing your own framework.
-
 ## Prerequisites
 
 - Databricks CLI `v0.296+` with an [authenticated profile](/docs/tools/databricks-cli#authenticate)
 - [uv](https://docs.astral.sh/uv/getting-started/installation/) (Python package manager, requires Python 3.11+)
 - [jq](https://jqlang.org/) (optional, used in some examples)
 - Workspace with [Apps enabled](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/)
+
+## Choose your framework
+
+The platform works with any Python framework. The steps below use the OpenAI Agents SDK template.
+
+| Framework                                                               | Best for                                                         |
+| ----------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| [OpenAI Agents SDK](https://platform.openai.com/docs/guides/agents-sdk) | Most agents. Used in this guide. Tools, handoffs, streaming.     |
+| [LangGraph](https://langchain-ai.github.io/langgraph/)                  | Complex workflows with explicit state and branching logic.       |
+| Custom                                                                  | Bring your own framework. Implement the ResponsesAgent contract. |
+
+See [How agents work](/docs/agents/core-concepts) for the full platform contract.
 
 ## Clone the agent template
 
@@ -81,119 +79,20 @@ The template uses [Declarative Automation Bundles](https://docs.databricks.com/a
 
 Validate the configuration:
 
-```bash title="Common"
+```bash
 databricks bundle validate
 ```
 
-```bash title="All Options"
-databricks bundle validate \
-  --strict \
-  --debug \
-  -o json \
-  --var "key=value" \
-  --target $TARGET \
-  --profile $DATABRICKS_PROFILE
-```
-
-<details>
-<summary>Options</summary>
-
-| Option      | Required | Description                                                               |
-| ----------- | -------- | ------------------------------------------------------------------------- |
-| `--strict`  | no       | Treat warnings as errors                                                  |
-| `--debug`   | no       | Enable debug logging                                                      |
-| `-o json`   | no       | Output as JSON (default: text)                                            |
-| `--var`     | no       | Set values for bundle config variables (for example, `--var="key=value"`) |
-| `--target`  | no       | Bundle target (for example, `dev`, `prod`)                                |
-| `--profile` | no       | Databricks CLI profile name                                               |
-
-</details>
-
 Deploy and start the app:
 
-```bash title="Common"
+```bash
 databricks bundle deploy
 databricks bundle run agent_openai_agents_sdk
 ```
-
-### Upload and configure
-
-```bash title="Common"
-databricks bundle deploy
-```
-
-```bash title="All Options"
-databricks bundle deploy \
-  --auto-approve \
-  --force-lock \
-  --force \
-  --fail-on-active-runs \
-  --cluster-id $CLUSTER_ID \
-  --plan $PLAN_FILE \
-  --debug \
-  -o json \
-  --var "key=value" \
-  --target $TARGET \
-  --profile $DATABRICKS_PROFILE
-```
-
-<details>
-<summary>Options</summary>
-
-| Option                  | Required | Description                                                               |
-| ----------------------- | -------- | ------------------------------------------------------------------------- |
-| `--auto-approve`        | no       | Skip confirmation prompts                                                 |
-| `--force-lock`          | no       | Force acquisition of deployment lock                                      |
-| `--force`               | no       | Force-override Git branch validation                                      |
-| `--fail-on-active-runs` | no       | Fail if jobs or pipelines are running                                     |
-| `--cluster-id`          | no       | Override cluster in deployment                                            |
-| `--plan`                | no       | Path to JSON plan file                                                    |
-| `--debug`               | no       | Enable debug logging                                                      |
-| `-o json`               | no       | Output as JSON (default: text)                                            |
-| `--var`                 | no       | Set values for bundle config variables (for example, `--var="key=value"`) |
-| `--target`              | no       | Bundle target (for example, `dev`, `prod`)                                |
-| `--profile`             | no       | Databricks CLI profile name                                               |
-
-</details>
-
-### Start the app
-
-```bash title="Common"
-databricks bundle run agent_openai_agents_sdk
-```
-
-```bash title="All Options"
-databricks bundle run agent_openai_agents_sdk \
-  --no-wait \
-  --restart \
-  --debug \
-  -o json \
-  --var "key=value" \
-  --target $TARGET \
-  --profile $DATABRICKS_PROFILE
-```
-
-<details>
-<summary>Options</summary>
-
-| Option      | Required | Description                                                                        |
-| ----------- | -------- | ---------------------------------------------------------------------------------- |
-| `KEY`       | yes      | Bundle resource key from `databricks.yml` (for example, `agent_openai_agents_sdk`) |
-| `--no-wait` | no       | Return immediately instead of waiting for completion                               |
-| `--restart` | no       | Restart if already running                                                         |
-| `--debug`   | no       | Enable debug logging                                                               |
-| `-o json`   | no       | Output as JSON (default: text)                                                     |
-| `--var`     | no       | Set values for bundle config variables (for example, `--var="key=value"`)          |
-| `--target`  | no       | Bundle target (for example, `dev`, `prod`)                                         |
-| `--profile` | no       | Databricks CLI profile name                                                        |
-
-Job, pipeline, and task-specific flags are omitted. Run `databricks bundle run --help` for the full list.
-
-</details>
 
 `bundle deploy` uploads code and configures resources. `bundle run` starts (or restarts) the app with the new code. Both are required for each update. The resource key (`agent_openai_agents_sdk`) is defined in `databricks.yml`. The app name (`agent-openai-agents-sdk`) is what appears in the workspace.
 
-In CI, pass `--auto-approve` to `bundle deploy` to skip confirmation prompts that occur when the plan includes destructive actions (for example, recreating a UC schema or pipeline).
+For all flags, see [Development: Deploy](/docs/agents/development#deploy).
 
 ## Verify
 
@@ -254,14 +153,6 @@ After verifying the deploy works, consider the following customizations:
 - [Development](/docs/agents/development): local dev loop, evaluation, deploy pipeline, querying
 - [AI Gateway](/docs/agents/ai-gateway): model endpoint governance, rate limits, usage tracking
 - [Observability](/docs/agents/observability): MLflow tracing, evaluation, production monitoring
-
-## Related guides and examples
-
-| Guide or example                                                    | Description                                              |
-| ------------------------------------------------------------------- | -------------------------------------------------------- |
-| [Databricks Local Bootstrap](/resources/databricks-local-bootstrap) | CLI install, auth, and scaffold setup                    |
-| [Streaming AI Chat](/resources/ai-chat-model-serving)               | Streaming chat with Model Serving                        |
-| [Agentic Support Console](/resources/agentic-support-console)       | Example: full AI support console with Lakebase and Genie |
 
 ## Further reading
 

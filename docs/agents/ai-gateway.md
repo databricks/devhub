@@ -5,7 +5,11 @@ sidebar_label: Model serving & AI Gateway
 
 # Model serving and AI Gateway
 
-AI Gateway is a governance and monitoring layer for model serving endpoints. It provides centralized control over permissions, rate limits, usage tracking, payload logging, and AI guardrails.
+Your agent calls a model serving endpoint. AI Gateway is the governance layer on that endpoint: it tracks usage, enforces rate limits, logs payloads, and blocks unsafe content (Llama Guard for safety, Presidio for PII). This page covers how to list endpoints, query them, and configure governance features.
+
+:::note[When you need this]
+Configure AI Gateway when you need rate limits, usage tracking, payload logging, or content safety. Calling a foundation model directly does not require it.
+:::
 
 ## List available endpoints
 

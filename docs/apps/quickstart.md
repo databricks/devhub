@@ -14,7 +14,25 @@ DevHub is organized around [guides and examples](/resources). These companion do
 - Node.js 22+ (AppKit apps are Node/TypeScript)
 - Workspace with [Apps enabled](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/)
 
+## What happens next
+
+Whether you copy a guide or scaffold manually, here's what the flow looks like:
+
+1. The Databricks CLI authenticates against your workspace.
+2. The project is scaffolded with the right dependencies.
+3. Databricks resources are provisioned (Lakebase databases, model serving endpoints, or Genie spaces, depending on the guide).
+4. The coding agent implements your business logic on top of the scaffold.
+5. `databricks bundle deploy` pushes the app to Databricks Apps.
+
+If something fails during the build, guides include troubleshooting context for each step. Coding agents can usually self-correct.
+
+## Build an app from a guide
+
+The fastest path is to copy a [guide from /resources](/resources) into your coding agent and describe what you want to build. [Start here](/docs/start-here) for the full workflow.
+
 ## Scaffold an app
+
+If you're starting from a guide, scaffolding happens automatically. Use `databricks apps init` when you want to scaffold manually.
 
 ```bash title="Common"
 databricks apps init --name my-app
@@ -64,22 +82,6 @@ databricks apps init \
 </details>
 
 Passing `--name` suppresses prompts and uses defaults for unspecified options. App names must be lowercase, hyphenated, and 26 characters or fewer. See [Apps Plugins](/docs/apps/plugins) for the full list of built-in plugins and `databricks apps init --help` for all `--set` keys.
-
-## Build an app from a guide
-
-The fastest path is to copy a [guide from /resources](/resources) into your coding agent and describe what you want to build. [Start here](/docs/start-here) for the full workflow.
-
-## What happens next
-
-Whether you scaffold with `databricks apps init` or paste a guide into a coding agent, the flow is the same:
-
-1. The Databricks CLI authenticates against your workspace.
-2. The project is scaffolded with the right dependencies.
-3. Databricks resources are provisioned (Lakebase databases, model serving endpoints, or Genie spaces, depending on the guide).
-4. The coding agent implements your business logic on top of the scaffold.
-5. `databricks bundle deploy` pushes the app to Databricks Apps.
-
-If something fails during the build, guides include troubleshooting context for each step. Coding agents can usually self-correct.
 
 ## Customize your app
 

@@ -6,7 +6,31 @@ title: Built-in plugins
 
 AppKit plugins are modular extensions that add capabilities to your app. Built-in plugins cover common needs (database, analytics, files). Create custom plugins for your own logic as needed.
 
-## Built-in plugins
+| Plugin        | What it adds                                                                   |
+| ------------- | ------------------------------------------------------------------------------ |
+| **server**    | HTTP server with Express, static file serving, Vite dev mode (always included) |
+| **lakebase**  | PostgreSQL connection pool for Lakebase with automatic OAuth refresh           |
+| **analytics** | SQL query execution against Databricks SQL Warehouses                          |
+| **genie**     | AI/BI Genie space integration for natural language queries                     |
+| **files**     | File operations against Unity Catalog Volumes                                  |
+
+## Using plugins
+
+Plugins are configured in `server/server.ts` using `createApp`:
+
+```typescript
+import { createApp, lakebase, server } from "@databricks/appkit";
+
+const appkit = await createApp({
+  plugins: [server({ autoStart: false }), lakebase()],
+});
+```
+
+Access plugin capabilities through the returned `appkit` instance (for example `appkit.lakebase.query(...)` or `appkit.server.extend(...)`).
+
+## Discover and scaffold
+
+Plugins are how you add Databricks capabilities to your app. Declare them in code; the CLI handles resource sync.
 
 List available plugins:
 
@@ -68,28 +92,6 @@ databricks apps init \
   --var "key=value" \
   --profile $DATABRICKS_PROFILE
 ```
-
-| Plugin        | What it adds                                                                   |
-| ------------- | ------------------------------------------------------------------------------ |
-| **server**    | HTTP server with Express, static file serving, Vite dev mode (always included) |
-| **lakebase**  | PostgreSQL connection pool for Lakebase with automatic OAuth refresh           |
-| **analytics** | SQL query execution against Databricks SQL Warehouses                          |
-| **genie**     | AI/BI Genie space integration for natural language queries                     |
-| **files**     | File operations against Unity Catalog Volumes                                  |
-
-## Using plugins
-
-Plugins are configured in `server/server.ts` using `createApp`:
-
-```typescript
-import { createApp, lakebase, server } from "@databricks/appkit";
-
-const appkit = await createApp({
-  plugins: [server({ autoStart: false }), lakebase()],
-});
-```
-
-Access plugin capabilities through the returned `appkit` instance (for example `appkit.lakebase.query(...)` or `appkit.server.extend(...)`).
 
 ## Plugin manifest
 

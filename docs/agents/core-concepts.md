@@ -4,6 +4,8 @@ title: How agents work
 
 # How agents work
 
+Two things make a Databricks agent: `ResponsesAgent` (the interface your code implements) and `AgentServer` (the server that runs it). Any framework works, including OpenAI Agents SDK, LangGraph, and raw Python, as long as it speaks the contract. MLflow traces everything automatically.
+
 ## ResponsesAgent
 
 [MLflow ResponsesAgent](https://mlflow.org/docs/latest/genai/flavors/responses-agent-intro/) is the recommended interface for building agents on Databricks. It follows the [OpenAI Responses API](https://platform.openai.com/docs/api-reference/responses) schema and provides:
@@ -13,7 +15,7 @@ title: How agents work
 - Tool-calling message history
 - Compatibility with AI Playground, Agent Evaluation, and Agent Monitoring
 
-Any framework works (OpenAI Agents SDK, LangGraph, custom) as long as it implements the ResponsesAgent interface. The [`agent-openai-agents-sdk`](https://github.com/databricks/app-templates/tree/main/agent-openai-agents-sdk) template, used throughout these docs as the primary example, uses the OpenAI Agents SDK.
+The [`agent-openai-agents-sdk`](https://github.com/databricks/app-templates/tree/main/agent-openai-agents-sdk) template, used throughout these docs as the primary example, uses the OpenAI Agents SDK.
 
 ## AgentServer
 
@@ -45,13 +47,7 @@ Each deployed agent app gets a dedicated **service principal** with `DATABRICKS_
 
 ## Configuration files
 
-The [`agent-openai-agents-sdk`](https://github.com/databricks/app-templates/tree/main/agent-openai-agents-sdk) template uses these key files:
-
-- **`agent_server/agent.py`**: your agent logic. Define tools, system prompts, and agent behavior here.
-- **`agent_server/evaluate_agent.py`**: evaluation dataset and scorers for testing agent quality.
-- **`databricks.yml`**: declares the app, resources, permissions, and deployment targets. Resources like serving endpoints, Genie spaces, and Vector Search indexes are granted to the app's service principal here.
-- **`app.yaml`**: runtime configuration (startup command, environment variables).
-- **`pyproject.toml`**: Python dependencies managed by uv. Add packages with `uv add <package>`.
+The template uses `agent.py` for agent logic, `databricks.yml` for resources and deployment, and `app.yaml` for runtime config. See [Development](/docs/agents/development) for details.
 
 ## Deployment targets
 

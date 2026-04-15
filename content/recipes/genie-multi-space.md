@@ -1,14 +1,33 @@
 ## Genie Multi-Space Selector
 
-Upgrade a single-space Genie app (from the [Genie Conversational Analytics](/resources/recipes/genie-conversational-analytics) recipe) to let users switch between multiple AI/BI Genie spaces from a dropdown. Each space gets a named alias; switching spaces remounts `<GenieChat>` and clears stale conversation state automatically.
+Upgrade a single-space Genie app to let users switch between multiple AI/BI Genie spaces from a dropdown. Each space gets a named alias; switching spaces remounts `<GenieChat>` and clears stale conversation state automatically.
+
+:::info[Prerequisites]
+You need a scaffolded AppKit app with the Genie feature already wired up. If you don't have one yet, follow the [Genie Conversational Analytics](/resources/recipes/genie-conversational-analytics) recipe first, then return here.
+:::
 
 ### 1. List all Genie spaces you want to include
+
+List your spaces:
 
 ```bash
 databricks genie list-spaces -o json --profile <PROFILE>
 ```
 
-Note the `space_id` and `title` for each space. Decide on a short lowercase alias for each (e.g. `sales`, `support`). These become the keys in the server `spaces` map and in the `SPACES` array on the client. They must match exactly.
+:::tip[Avoid repeating `--profile` on every command]
+Add your profile to the bundle's `databricks.yml` under the target — then `bundle deploy` and `apps` commands pick it up automatically:
+
+```yaml
+targets:
+  default:
+    workspace:
+      profile: <PROFILE>
+```
+
+This is more reliable than `export DATABRICKS_CONFIG_PROFILE` since it persists across shells and works for agents running commands in subshells.
+:::
+
+Note the `space_id` and `title` for each space. Decide on a short lowercase alias for each (e.g. `sales`, `support`) — these become the keys in the server `spaces` map and in the `SPACES` array on the client. They must match exactly.
 
 ### 2. Update the server plugin
 
@@ -36,17 +55,17 @@ Each key becomes the alias for all API routes (`/api/genie/<alias>/messages`) an
 
 #### `.env` (local development)
 
-Keep `DATABRICKS_GENIE_SPACE_ID`. The platform validator still requires it even when you supply a custom `spaces` map. Point it at whichever space you treat as the default. Add one new variable per additional space:
+Keep `DATABRICKS_GENIE_SPACE_ID` — AppKit requires it at startup even when using a custom `spaces` map. Point it at any of your spaces. Add one variable per UI space:
 
 ```bash
-DATABRICKS_GENIE_SPACE_ID=<first-space-id>
+DATABRICKS_GENIE_SPACE_ID=<any-space-id>
 DATABRICKS_GENIE_SPACE_SALES=<sales-space-id>
 DATABRICKS_GENIE_SPACE_SUPPORT=<support-space-id>
 ```
 
 #### `app.yaml`
 
-Keep the existing `DATABRICKS_GENIE_SPACE_ID → genie-space` mapping for platform validation. Add one `valueFrom` entry per additional space:
+Keep the `DATABRICKS_GENIE_SPACE_ID → genie-space` mapping — AppKit validates it on startup. Add one `valueFrom` per UI space:
 
 ```yaml
 command: ["npm", "run", "start"]
@@ -61,22 +80,14 @@ env:
 
 #### `databricks.yml`
 
-Keep the existing `genie_space_name` / `genie_space_id` variable pair and `genie-space` resource. They satisfy the platform validator and can continue pointing to your first/default space. Add a new variable pair and `genie_space` resource for each additional space:
+Keep `genie_space_id` and `genie-space` — AppKit requires `DATABRICKS_GENIE_SPACE_ID` to be set at runtime. This resource does **not** appear in the UI dropdown; only aliases in the server `spaces` map do. Add a new variable and resource for each UI space:
 
 ```yaml
 variables:
-  # existing from single-space setup, keep as-is, used for platform validation
-  genie_space_name:
-    description: Default Genie space display title
   genie_space_id:
-    description: Default Genie space ID
-  # new: one pair per additional space
-  genie_space_sales_name:
-    description: Sales Genie space display title
+    description: Default Genie space ID (required by AppKit)
   genie_space_sales_id:
     description: Sales Genie space ID
-  genie_space_support_name:
-    description: Support Genie space display title
   genie_space_support_id:
     description: Support Genie space ID
 
@@ -86,36 +97,31 @@ resources:
       user_api_scopes:
         - dashboards.genie
       resources:
-        # existing, keep as-is
         - name: genie-space
           genie_space:
-            name: ${var.genie_space_name}
+            name: genie-space
             space_id: ${var.genie_space_id}
             permission: CAN_RUN
-        # new: one resource block per additional space
         - name: genie-space-sales
           genie_space:
-            name: ${var.genie_space_sales_name}
+            name: genie-space-sales
             space_id: ${var.genie_space_sales_id}
             permission: CAN_RUN
         - name: genie-space-support
           genie_space:
-            name: ${var.genie_space_support_name}
+            name: genie-space-support
             space_id: ${var.genie_space_support_id}
             permission: CAN_RUN
 
 targets:
   default:
     variables:
-      genie_space_name: "<first-space-title>"
-      genie_space_id: <first-space-id>
-      genie_space_sales_name: "<sales-space-title>"
+      genie_space_id: <any-space-id>
       genie_space_sales_id: <sales-space-id>
-      genie_space_support_name: "<support-space-title>"
       genie_space_support_id: <support-space-id>
 ```
 
-Repeat the variable pair and resource block for every additional space beyond the first.
+Repeat the variable and resource block for every space you want in the UI.
 
 ### 4. Inject a build version stamp
 
@@ -228,38 +234,49 @@ export function GeniePage() {
 }
 ```
 
-No changes are needed in `client/src/App.tsx`. The import, nav link, and route from the single-space setup carry over unchanged.
+No changes are needed in `client/src/App.tsx` — the import, nav link, and route from the single-space setup carry over unchanged.
 
 ### 6. Deploy and test
 
 From the app project directory (the folder containing `databricks.yml`):
 
 ```bash
-databricks apps deploy --profile <PROFILE>
+# Build the client
+npm run build
+
+# Deploy bundle resources and sync files to workspace
+# Copy the upload path printed in the output — you'll need it below
+databricks bundle deploy
+
+# Put the app in RUNNING state and wait for compute to be ready
+# The loop polls every 5 seconds — press Ctrl+C if it hangs more than 2 minutes
+databricks apps start <app-name>
+until databricks apps get <app-name> -o json | grep -q '"ACTIVE"'; do sleep 5; done
+
+# First deploy requires --source-code-path: paste the path from bundle deploy output above
+databricks apps deploy <app-name> \
+  --source-code-path <path-from-bundle-deploy-output>
 ```
 
-This runs the full pipeline: typecheck, build, bundle sync, resource update, and app deploy in one step.
+`bundle deploy` prints the workspace upload path (`Uploading bundle files to ...`) — copy that value for `--source-code-path`. `apps start` puts the app into RUNNING state; the `until` loop waits for compute to be ACTIVE. `apps deploy` deploys the source and starts the app server.
 
-:::tip[Bundle deploy vs apps deploy]
-
-`databricks bundle deploy` updates workspace files and bundle resources but does **not** run the full build-and-deploy pipeline. If you only run `bundle deploy`, the app may stay **UNAVAILABLE** with a message like _deploy source code_. Use `databricks apps deploy` from the app project directory to deploy and start the runnable app.
-
-:::
-
-Verify status and open the app URL:
+For subsequent deploys, `--source-code-path` is not needed. Run both `bundle deploy` and `apps deploy` when changing `databricks.yml`; for client-only changes, `apps deploy` alone is sufficient after `npm run build`:
 
 ```bash
-databricks apps get <app-name> --profile <PROFILE>
-databricks apps logs <app-name> --profile <PROFILE>
+npm run build
+databricks bundle deploy
+databricks apps deploy <app-name>
 ```
 
-If the app is **UNAVAILABLE** with _deploy source code_, re-run `databricks apps deploy` from inside the app project directory (not from a parent repo). If compute is **STOPPED**, start it first:
+Check app status and get the URL:
 
 ```bash
-databricks apps start <app-name> --profile <PROFILE>
+databricks apps get <app-name>
 ```
 
-Open the app URL while signed in to Databricks, navigate to the Genie page, and verify:
+If compute is **STOPPED**, run `databricks apps start <app-name>` and wait for `compute_status.state: ACTIVE` before deploying.
+
+Open `<app-url>/genie` while signed in to Databricks and verify:
 
 1. The space selector shows all configured spaces
 2. Asking a question routes to the correct space

@@ -2,21 +2,42 @@
 
 Embed a Databricks AI/BI Genie chat interface so users can explore data through natural language. Configure a Genie space, wire up the server and client plugins, declare app resources, and deploy.
 
-### 1. Create a Genie space in your Databricks workspace
+:::info[Choose your path]
 
-Open your Databricks workspace, navigate to **AI/BI Genie**, and create a new Genie space connected to your data tables. Note the **space title** (display name) shown in the Genie list or space header.
+- **New app** — follow steps 1 → 2 → 8.
+- **Adding Genie to an existing AppKit app** — follow steps 1 → 3 → 4 → 5 → 6 → 7 → 8.
+  :::
 
-To collect both the **title** and **space ID** in one step (for bundle variables and `DATABRICKS_GENIE_SPACE_ID`):
+### 1. Create a Genie space and set your profile
+
+Open your Databricks workspace, navigate to **AI/BI Genie**, and create a new Genie space connected to your data tables.
+
+List your spaces to get the `space_id`:
 
 ```bash
 databricks genie list-spaces -o json --profile <PROFILE>
 ```
 
-Use the `title` string as **Genie space name** and the `space_id` value wherever a space ID is required (scaffold `--set`, `.env`, and `databricks.yml`).
+Use the `space_id` value wherever a space ID is required (scaffold `--set`, `.env`, and `databricks.yml`).
+
+:::tip[Avoid repeating `--profile` on every command]
+Add your profile to the bundle's `databricks.yml` under the target — then `bundle deploy` and `apps` commands pick it up automatically:
+
+```yaml
+targets:
+  default:
+    workspace:
+      profile: <PROFILE>
+```
+
+This is more reliable than `export DATABRICKS_CONFIG_PROFILE` since it persists across shells and works for agents running commands in subshells.
+:::
 
 ### 2. New app: scaffold with the Genie feature
 
 If you are starting a new app, scaffold it with the Genie feature flag. This generates all server, client, resource, and environment wiring automatically.
+
+Run this from a neutral directory (not inside another app folder) — `apps init` creates the project folder in your current working directory:
 
 ```bash
 databricks apps init \
@@ -24,18 +45,39 @@ databricks apps init \
   --version latest \
   --features=genie \
   --set 'genie.genie-space.id=<your-space-id>' \
-  --run none --profile <PROFILE>
+  --run none
 ```
 
-Use the `space_id` from step 1 (or the **About** tab on the space) for `<your-space-id>`. The CLI maps this to `DATABRICKS_GENIE_SPACE_ID`.
+`--run none` skips launching the app locally after scaffolding. Use the `space_id` from step 1 for `<your-space-id>`.
 
 **App name:** Use at most 26 characters, **lowercase letters, digits, and hyphens only** (no underscores). Example: `my-genie-app`, not `my_genie_app`.
 
-After `init`, open `databricks.yml` and check **`targets.default.variables`**. Some templates set **`genie_space_id`** but omit **`genie_space_name`**. If **`genie_space_name`** is missing or empty, set it to the exact **space title** from step 1 (the same title shown in the Genie UI). Deploy requires both **name** and **space ID** in the bundle for the `genie_space` resource.
+:::warning[Fix generated `databricks.yml` before deploying]
+The scaffold generates a `genie_space_name` variable and references it as `name: ${var.genie_space_name}`, but never assigns a value. `bundle deploy` will fail with _no value assigned to required variable genie_space_name_.
 
-`apps init` creates a project folder in **kebab-case** matching `<app-name>`. For deploy and test (step 8), run all commands from **inside that folder** (the directory that contains `databricks.yml`).
+Your `variables:` block should look like this after the fix — only `genie_space_id`, no `genie_space_name`:
+
+```yaml
+variables:
+  genie_space_id:
+    description: Default Genie Space ID
+```
+
+And the `genie_space` resource block should use a hardcoded label:
+
+```yaml
+genie_space:
+  name: genie-space
+  space_id: ${var.genie_space_id}
+  permission: CAN_RUN
+```
+
+The `name: genie-space` is an internal label used by `app.yaml` (`valueFrom: genie-space`), not the Genie space display title.
+:::
 
 Skip to step 8 to deploy.
+
+---
 
 ### 3. Existing app: add Genie server plugin
 
@@ -125,18 +167,10 @@ import { GeniePage } from "./pages/genie/GeniePage";
 
 The Genie space must be declared as an app resource with the `dashboards.genie` API scope. Without the scope, on-behalf-of user execution fails at runtime.
 
-For local development, add the space ID to `.env` (use the `space_id` from `databricks genie list-spaces` or the space **About** tab):
-
-```bash
-DATABRICKS_GENIE_SPACE_ID=<your-space-id>
-```
-
-Add the genie-space variables, the `user_api_scopes` and genie resource under your app, and the target variable values. The **name** is the Genie space **title**; **space ID** must match the same space:
+Add the `genie_space_id` variable, the `user_api_scopes`, and the genie resource under your app. The `name: genie-space` on the resource is the key that `app.yaml` references via `valueFrom`:
 
 ```yaml
 variables:
-  genie_space_name:
-    description: Genie space display title (as shown in the Genie UI)
   genie_space_id:
     description: Genie space ID (from list-spaces or About)
 
@@ -149,18 +183,15 @@ resources:
       resources:
         - name: genie-space
           genie_space:
-            name: ${var.genie_space_name}
+            name: genie-space
             space_id: ${var.genie_space_id}
             permission: CAN_RUN
 
 targets:
   default:
     variables:
-      genie_space_name: "<your-space-title>"
       genie_space_id: <your-space-id>
 ```
-
-The `name: genie-space` on the resource is the key that `app.yaml` references via `valueFrom`.
 
 ### 7. Existing app: map the environment variable in `app.yaml`
 
@@ -180,49 +211,51 @@ For local development, add the space ID to `.env`:
 DATABRICKS_GENIE_SPACE_ID=<your-space-id>
 ```
 
+---
+
 ### 8. Deploy and verify
 
-From the app project directory (the folder with `databricks.yml`), deploy and run in one step:
+From inside the app project folder (the directory containing `databricks.yml`):
 
 ```bash
 cd <app-name>
-databricks apps deploy --profile <PROFILE>
+
+# Build the client
+npm run build
+
+# Deploy bundle resources and sync files to workspace
+# Copy the upload path printed in the output — you'll need it below
+databricks bundle deploy
+
+# Put the app in RUNNING state and wait for compute to be ready
+# The loop polls every 5 seconds — press Ctrl+C if it hangs more than 2 minutes
+databricks apps start <app-name>
+until databricks apps get <app-name> -o json | grep -q '"ACTIVE"'; do sleep 5; done
+
+# First deploy requires --source-code-path: paste the path from bundle deploy output above
+databricks apps deploy <app-name> \
+  --source-code-path <path-from-bundle-deploy-output>
 ```
 
-When run from that directory **without** a trailing app name argument, the CLI runs the full pipeline: validate the project (for Node: install if needed, typecheck, lint, build), sync the bundle to the workspace, create an app deployment, and start the app.
+`bundle deploy` prints the workspace upload path (`Uploading bundle files to ...`) — copy that value for `--source-code-path`. `apps start` puts the app into RUNNING state; the `until` loop waits for compute to be ACTIVE. `apps deploy` deploys the source and starts the app server.
 
-:::tip[Multiple CLI profiles for the same workspace]
-
-If the CLI reports that **multiple profiles matched** your workspace host, pass **`--profile <PROFILE>`** on each command, set **`DATABRICKS_CONFIG_PROFILE`** to one profile, or add **`workspace.profile`** under your bundle target in `databricks.yml` so the bundle resolves auth consistently.
-
-:::
-
-:::tip[Bundle deploy vs apps deploy]
-
-`databricks bundle deploy` updates bundle state and synced files in the workspace, but it does **not** run the full Apps build-and-run pipeline. If you only run `bundle deploy`, the app can stay **UNAVAILABLE** with a message like _deploy source code_ while compute is active. Use `databricks apps deploy` from the app directory when you want the runnable app updated. You may still use `bundle deploy` when you are only changing bundle or workspace configuration and will run `apps deploy` afterward.
-
-:::
-
-Optional flags:
-
-- `--target <target>` if you use a non-default bundle target.
-- `--skip-validation` to skip local build/typecheck/lint (use only when you accept skipping checks).
-
-Check app status, URL, and logs (replace `<app-name>` with the name from `databricks.yml`):
+For subsequent deploys, `--source-code-path` is not needed — the app remembers the path:
 
 ```bash
-databricks apps get <app-name> --profile <PROFILE>
-databricks apps list --profile <PROFILE>
-databricks apps logs <app-name> --profile <PROFILE>
+npm run build
+databricks bundle deploy
+databricks apps deploy <app-name>
 ```
 
-If the app is **UNAVAILABLE** with _deploy source code_, run `databricks apps deploy` from the app project directory again (not from a parent repo root). If **compute** is **STOPPED**, start it:
+Check app status and get the URL:
 
 ```bash
-databricks apps start <app-name> --profile <PROFILE>
+databricks apps get <app-name>
 ```
 
-Open the app URL from `databricks apps get` while signed in to Databricks, navigate to the Genie page, and ask a natural-language question about your data to verify the integration.
+Open `<app-url>/genie` while signed in to Databricks and ask a natural-language question about your data to verify the integration.
+
+If compute is **STOPPED**, run `databricks apps start <app-name>` and wait for `compute_status.state: ACTIVE` before deploying.
 
 ### 9. Troubleshoot common issues
 

@@ -1,6 +1,10 @@
 ## Genie Multi-Space Selector
 
-Upgrade a single-space Genie app (from the [Genie Conversational Analytics](/resources/recipes/genie-conversational-analytics) recipe) to let users switch between multiple AI/BI Genie spaces from a dropdown. Each space gets a named alias; switching spaces remounts `<GenieChat>` and clears stale conversation state automatically.
+Upgrade a single-space Genie app to let users switch between multiple AI/BI Genie spaces from a dropdown. Each space gets a named alias; switching spaces remounts `<GenieChat>` and clears stale conversation state automatically.
+
+:::info[Prerequisites]
+You need a scaffolded AppKit app with the Genie feature already wired up. If you don't have one yet, follow the [Genie Conversational Analytics](/resources/recipes/genie-conversational-analytics) recipe first, then return here.
+:::
 
 ### 1. List all Genie spaces you want to include
 
@@ -51,17 +55,17 @@ Each key becomes the alias for all API routes (`/api/genie/<alias>/messages`) an
 
 #### `.env` (local development)
 
-Keep `DATABRICKS_GENIE_SPACE_ID`. The platform validator still requires it even when you supply a custom `spaces` map. Point it at whichever space you treat as the default. Add one new variable per additional space:
+Keep `DATABRICKS_GENIE_SPACE_ID` — AppKit requires it at startup even when using a custom `spaces` map. Point it at any of your spaces. Add one variable per UI space:
 
 ```bash
-DATABRICKS_GENIE_SPACE_ID=<first-space-id>
+DATABRICKS_GENIE_SPACE_ID=<any-space-id>
 DATABRICKS_GENIE_SPACE_SALES=<sales-space-id>
 DATABRICKS_GENIE_SPACE_SUPPORT=<support-space-id>
 ```
 
 #### `app.yaml`
 
-Keep the existing `DATABRICKS_GENIE_SPACE_ID → genie-space` mapping for platform validation. Add one `valueFrom` entry per additional space:
+Keep the `DATABRICKS_GENIE_SPACE_ID → genie-space` mapping — AppKit validates it on startup. Add one `valueFrom` per UI space:
 
 ```yaml
 command: ["npm", "run", "start"]
@@ -76,14 +80,12 @@ env:
 
 #### `databricks.yml`
 
-Keep the existing `genie_space_id` variable and `genie-space` resource — they satisfy the platform validator and can continue pointing to your first/default space. Add a new variable and `genie_space` resource for each additional space:
+Keep `genie_space_id` and `genie-space` — AppKit requires `DATABRICKS_GENIE_SPACE_ID` to be set at runtime. This resource does **not** appear in the UI dropdown; only aliases in the server `spaces` map do. Add a new variable and resource for each UI space:
 
 ```yaml
 variables:
-  # existing from single-space setup — keep as-is, used for platform validation
   genie_space_id:
-    description: Default Genie space ID
-  # new: one variable per additional space
+    description: Default Genie space ID (required by AppKit)
   genie_space_sales_id:
     description: Sales Genie space ID
   genie_space_support_id:
@@ -95,13 +97,11 @@ resources:
       user_api_scopes:
         - dashboards.genie
       resources:
-        # existing — keep as-is
         - name: genie-space
           genie_space:
             name: genie-space
             space_id: ${var.genie_space_id}
             permission: CAN_RUN
-        # new: one resource block per additional space
         - name: genie-space-sales
           genie_space:
             name: genie-space-sales
@@ -116,12 +116,12 @@ resources:
 targets:
   default:
     variables:
-      genie_space_id: <first-space-id>
+      genie_space_id: <any-space-id>
       genie_space_sales_id: <sales-space-id>
       genie_space_support_id: <support-space-id>
 ```
 
-Repeat the variable and resource block for every additional space beyond the first.
+Repeat the variable and resource block for every space you want in the UI.
 
 ### 4. Inject a build version stamp
 

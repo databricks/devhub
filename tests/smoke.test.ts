@@ -48,7 +48,12 @@ describe("production build smoke tests", () => {
     const text = readBuildFile("llms.txt");
     expect(text).toContain("### Guides");
     expect(text).toContain("### Recipes");
-    expect(text).toContain("### Examples");
+    if (
+      process.env.EXAMPLES_FEATURE === "true" ||
+      process.env.EXAMPLES_FEATURE === "1"
+    ) {
+      expect(text).toContain("### Examples");
+    }
   });
 
   test("llms.txt links to all resource guides", () => {

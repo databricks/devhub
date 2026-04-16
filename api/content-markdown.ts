@@ -6,10 +6,12 @@ import { hasMarkdownSlug } from "../src/lib/content-markdown";
 import { expandMdxImports } from "../src/lib/expand-mdx";
 import {
   examples,
+  filterPublished,
   recipes,
   recipesInOrder,
   templates,
 } from "../src/lib/recipes/recipes";
+import { showDrafts, examplesEnabled } from "../src/lib/feature-flags-server";
 import { solutions } from "../src/lib/solutions/solutions";
 
 export type MarkdownSection =
@@ -212,6 +214,14 @@ function readResourceMarkdown(rootDir: string, slug: string): string {
 
 /** Markdown index served at /resources.md — lists all templates, recipes, and examples. */
 function readResourcesIndex(): string {
+  const includeDrafts = showDrafts();
+  const includeExamples = examplesEnabled();
+  const publishedTemplates = filterPublished(templates, includeDrafts);
+  const publishedRecipes = filterPublished(recipesInOrder, includeDrafts);
+  const publishedExamples = includeExamples
+    ? filterPublished(examples, includeDrafts)
+    : [];
+
   const lines: string[] = [
     "# Resources",
     "",
@@ -219,25 +229,25 @@ function readResourcesIndex(): string {
     "",
   ];
 
-  if (templates.length > 0) {
+  if (publishedTemplates.length > 0) {
     lines.push("## Guides", "");
-    for (const t of templates) {
+    for (const t of publishedTemplates) {
       lines.push(`- [${t.name}](/resources/${t.id}.md): ${t.description}`);
     }
     lines.push("");
   }
 
-  if (recipesInOrder.length > 0) {
+  if (publishedRecipes.length > 0) {
     lines.push("## Recipes", "");
-    for (const r of recipesInOrder) {
+    for (const r of publishedRecipes) {
       lines.push(`- [${r.name}](/resources/${r.id}.md): ${r.description}`);
     }
     lines.push("");
   }
 
-  if (examples.length > 0) {
+  if (publishedExamples.length > 0) {
     lines.push("## Examples", "");
-    for (const e of examples) {
+    for (const e of publishedExamples) {
       lines.push(`- [${e.name}](/resources/${e.id}.md): ${e.description}`);
     }
     lines.push("");

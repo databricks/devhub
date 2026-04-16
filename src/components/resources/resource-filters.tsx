@@ -1,7 +1,16 @@
 import { Checkbox } from "@/components/ui/checkbox";
+import { useFeatureFlags } from "@/lib/feature-flags";
 import { SERVICES, type Service } from "@/lib/recipes/recipes";
 
 export type ResourceType = "examples" | "guides";
+
+const ALL_RESOURCE_TYPES: ReadonlyArray<{
+  type: ResourceType;
+  label: string;
+}> = [
+  { type: "examples", label: "Examples" },
+  { type: "guides", label: "Guides" },
+];
 
 export function ResourceFilters({
   selectedServices,
@@ -14,6 +23,12 @@ export function ResourceFilters({
   selectedResourceTypes: Set<ResourceType>;
   onToggleResourceType: (type: ResourceType) => void;
 }) {
+  const { examplesEnabled } = useFeatureFlags();
+
+  const visibleResourceTypes = examplesEnabled
+    ? ALL_RESOURCE_TYPES
+    : ALL_RESOURCE_TYPES.filter((rt) => rt.type !== "examples");
+
   return (
     <nav className="space-y-6" aria-label="Filters">
       <div>
@@ -37,31 +52,28 @@ export function ResourceFilters({
         </div>
       </div>
 
-      <div className="border-t border-black/8 pt-6 dark:border-white/8">
-        <h3 className="mb-3 text-xs font-semibold tracking-wider text-black/50 uppercase dark:text-white/50">
-          Type
-        </h3>
-        <div className="space-y-2">
-          {(
-            [
-              { type: "examples" as const, label: "Examples" },
-              { type: "guides" as const, label: "Guides" },
-            ] as const
-          ).map(({ type, label }) => (
-            <label
-              key={type}
-              className="flex cursor-pointer items-center gap-2.5 rounded-md px-1 py-1 text-sm text-black/80 transition-colors hover:bg-black/4 dark:text-white/80 dark:hover:bg-white/4"
-            >
-              <Checkbox
-                checked={selectedResourceTypes.has(type)}
-                onCheckedChange={() => onToggleResourceType(type)}
-                aria-label={label}
-              />
-              <span className="leading-tight">{label}</span>
-            </label>
-          ))}
+      {visibleResourceTypes.length > 1 && (
+        <div className="border-t border-black/8 pt-6 dark:border-white/8">
+          <h3 className="mb-3 text-xs font-semibold tracking-wider text-black/50 uppercase dark:text-white/50">
+            Type
+          </h3>
+          <div className="space-y-2">
+            {visibleResourceTypes.map(({ type, label }) => (
+              <label
+                key={type}
+                className="flex cursor-pointer items-center gap-2.5 rounded-md px-1 py-1 text-sm text-black/80 transition-colors hover:bg-black/4 dark:text-white/80 dark:hover:bg-white/4"
+              >
+                <Checkbox
+                  checked={selectedResourceTypes.has(type)}
+                  onCheckedChange={() => onToggleResourceType(type)}
+                  aria-label={label}
+                />
+                <span className="leading-tight">{label}</span>
+              </label>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </nav>
   );
 }

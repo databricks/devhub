@@ -12,6 +12,13 @@ const config: Config = {
   title: "Databricks Developer",
   tagline: "Build intelligent data and AI applications in minutes, not months",
   favicon: "img/favicon.svg",
+  customFields: {
+    showDrafts:
+      process.env.SHOW_DRAFTS === "true" || process.env.SHOW_DRAFTS === "1",
+    examplesFeature:
+      process.env.EXAMPLES_FEATURE === "true" ||
+      process.env.EXAMPLES_FEATURE === "1",
+  },
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
   future: {

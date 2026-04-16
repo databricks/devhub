@@ -6,8 +6,10 @@ import {
   templates,
   recipesInOrder,
   examples,
+  filterPublished,
 } from "../src/lib/recipes/recipes";
 import { expandMdxImports } from "../src/lib/expand-mdx";
+import { showDrafts, examplesEnabled } from "../src/lib/feature-flags-server";
 
 type Section = {
   title: string;
@@ -136,6 +138,14 @@ function readDoc(
 }
 
 function generateLlmsTxt(baseUrl: string, docsDir: string): string {
+  const includeDrafts = showDrafts();
+  const includeExamples = examplesEnabled();
+  const publishedTemplates = filterPublished(templates, includeDrafts);
+  const publishedRecipes = filterPublished(recipesInOrder, includeDrafts);
+  const publishedExamples = includeExamples
+    ? filterPublished(examples, includeDrafts)
+    : [];
+
   const allSections: Section[] = SIDEBAR_SECTIONS.map((section) => ({
     title: section.title,
     description: section.description,
@@ -191,11 +201,11 @@ function generateLlmsTxt(baseUrl: string, docsDir: string): string {
     "",
   );
 
-  if (templates.length > 0) {
+  if (publishedTemplates.length > 0) {
     lines.push(
       "### Guides",
       "",
-      ...templates.map(
+      ...publishedTemplates.map(
         (t) =>
           `- [${t.name}](${baseUrl}/resources/${t.id}.md): ${t.description}`,
       ),
@@ -203,11 +213,11 @@ function generateLlmsTxt(baseUrl: string, docsDir: string): string {
     );
   }
 
-  if (recipesInOrder.length > 0) {
+  if (publishedRecipes.length > 0) {
     lines.push(
       "### Recipes",
       "",
-      ...recipesInOrder.map(
+      ...publishedRecipes.map(
         (r) =>
           `- [${r.name}](${baseUrl}/resources/${r.id}.md): ${r.description}`,
       ),
@@ -215,11 +225,11 @@ function generateLlmsTxt(baseUrl: string, docsDir: string): string {
     );
   }
 
-  if (examples.length > 0) {
+  if (publishedExamples.length > 0) {
     lines.push(
       "### Examples",
       "",
-      ...examples.map(
+      ...publishedExamples.map(
         (e) =>
           `- [${e.name}](${baseUrl}/resources/${e.id}.md): ${e.description}`,
       ),

@@ -2,7 +2,9 @@ import { Bot, Database, Server } from "lucide-react";
 import type { ComponentType } from "react";
 import {
   examples,
+  filterPublished,
   templatePreviewItems,
+  templates,
   type Service,
 } from "@/lib/recipes/recipes";
 
@@ -52,19 +54,33 @@ export const pillars: Pillar[] = [
   },
 ];
 
-export const landingResources: LandingResourceItem[] = [
-  ...examples.map((e) => ({
-    id: e.id,
-    path: `/resources/${e.id}`,
-    title: e.name,
-    description: e.description,
-    tags: e.tags,
-    services: e.services,
-    kind: "example" as const,
-    image: e.image,
-  })),
-  ...[...templatePreviewItems].reverse().map((t) => ({
-    ...t,
-    kind: "guide" as const,
-  })),
-];
+export function buildLandingResources(
+  includeDrafts: boolean,
+  includeExamples: boolean,
+): LandingResourceItem[] {
+  const publishedExamples = includeExamples
+    ? filterPublished(examples, includeDrafts)
+    : [];
+  const publishedTemplates = filterPublished(templates, includeDrafts);
+  const publishedTemplateIds = new Set(publishedTemplates.map((t) => t.id));
+  const publishedPreviewItems = templatePreviewItems.filter((t) =>
+    publishedTemplateIds.has(t.id),
+  );
+
+  return [
+    ...publishedExamples.map((e) => ({
+      id: e.id,
+      path: `/resources/${e.id}`,
+      title: e.name,
+      description: e.description,
+      tags: e.tags,
+      services: e.services,
+      kind: "example" as const,
+      image: e.image,
+    })),
+    ...[...publishedPreviewItems].reverse().map((t) => ({
+      ...t,
+      kind: "guide" as const,
+    })),
+  ];
+}

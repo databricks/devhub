@@ -18,6 +18,7 @@ export type Recipe = {
   tags: string[];
   services: Service[];
   prerequisites?: string[];
+  isDraft?: boolean;
 };
 
 export type Template = {
@@ -27,6 +28,7 @@ export type Template = {
   recipeIds: string[];
   tags: string[];
   services: Service[];
+  isDraft?: boolean;
 };
 
 type TemplatePreviewItem = {
@@ -245,6 +247,7 @@ type TemplateConfig = {
   name: string;
   description: string;
   recipeIds: string[];
+  isDraft?: boolean;
 };
 
 function createTemplate(config: TemplateConfig): Template {
@@ -268,6 +271,7 @@ function createTemplate(config: TemplateConfig): Template {
     recipeIds: config.recipeIds,
     tags,
     services,
+    ...(config.isDraft ? { isDraft: true } : {}),
   };
 }
 
@@ -361,6 +365,7 @@ export type Example = {
   recipeIds: string[];
   tags: string[];
   services: Service[];
+  isDraft?: boolean;
 };
 
 const templateIndex: Record<string, Template> = Object.fromEntries(
@@ -376,6 +381,7 @@ type ExampleConfig = {
   initCommand: string;
   templateIds: string[];
   recipeIds: string[];
+  isDraft?: boolean;
 };
 
 function createExample(config: ExampleConfig): Example {
@@ -403,7 +409,12 @@ function createExample(config: ExampleConfig): Example {
     ]),
   ] as Service[];
 
-  return { ...config, tags, services };
+  return {
+    ...config,
+    tags,
+    services,
+    ...(config.isDraft ? { isDraft: true } : {}),
+  };
 }
 
 export const examples: Example[] = [
@@ -444,3 +455,13 @@ export const examples: Example[] = [
     recipeIds: ["genie-conversational-analytics", "foundation-models-api"],
   }),
 ];
+
+type Draftable = { isDraft?: boolean };
+
+export function filterPublished<T extends Draftable>(
+  items: T[],
+  includeDrafts: boolean,
+): T[] {
+  if (includeDrafts) return items;
+  return items.filter((item) => !item.isDraft);
+}

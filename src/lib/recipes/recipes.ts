@@ -443,4 +443,16 @@ export const examples: Example[] = [
     templateIds: ["app-with-lakebase"],
     recipeIds: ["genie-conversational-analytics", "foundation-models-api"],
   }),
+  createExample({
+    id: "inventory-intelligence",
+    name: "Inventory Intelligence",
+    description:
+      "Retail inventory management with AI-powered demand forecasting, replenishment recommendations, and optional Genie analytics. Built on a live medallion pipeline synced to Lakebase.",
+    image: "/img/examples/inventory-intelligence.svg",
+    githubPath: "examples/inventory-intelligence",
+    initCommand:
+      "git clone --depth 1 https://github.com/databricks/devhub.git\ncd devhub/examples/inventory-intelligence/template",
+    templateIds: ["operational-data-analytics", "app-with-lakebase"],
+    recipeIds: ["genie-conversational-analytics"],
+  }),
 ];

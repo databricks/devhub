@@ -26,6 +26,7 @@ import {
   buildFullPrompt,
   buildAdditionalMarkdown,
   EXAMPLE_AGENT_OUTCOME_BULLETS,
+  EXAMPLE_AGENT_OUTCOME_BULLETS_INIT,
 } from "@/lib/examples/build-example-markdown";
 import type { Example } from "@/lib/recipes/recipes";
 import { templates, recipes } from "@/lib/recipes/recipes";
@@ -88,6 +89,13 @@ function GetStartedSteps({
   fullPrompt: string;
   siteUrl: string;
 }) {
+  const isInit = example.initCommand
+    .trimStart()
+    .startsWith("databricks apps init");
+  const agentBullets = isInit
+    ? EXAMPLE_AGENT_OUTCOME_BULLETS_INIT
+    : EXAMPLE_AGENT_OUTCOME_BULLETS;
+
   function handleCopyPrompt() {
     const base = siteUrl.replace(/\/$/, "");
     const originForCopy =
@@ -129,7 +137,7 @@ function GetStartedSteps({
               </span>
             </div>
             <ul className="mt-5 space-y-2.5 border-l border-border/70 pl-4">
-              {EXAMPLE_AGENT_OUTCOME_BULLETS.map((line) => (
+              {agentBullets.map((line) => (
                 <li
                   key={line}
                   className="text-[13px] leading-snug text-muted-foreground"
@@ -139,12 +147,29 @@ function GetStartedSteps({
               ))}
             </ul>
             <p className="mt-5 font-mono text-[11px] leading-relaxed text-muted-foreground">
-              Use the CLI block below to clone locally, then follow{" "}
-              <code className="rounded border border-border/80 bg-muted/80 px-1.5 py-px font-mono text-[12px] text-card-foreground">
-                template/README.md
-              </code>{" "}
-              in the repo for provisioning, seeding, pipelines, and deploy. This
-              page summarizes the example; the README is the runbook.
+              {isInit ? (
+                <>
+                  Use the CLI block below to scaffold the project with{" "}
+                  <code className="rounded border border-border/80 bg-muted/80 px-1.5 py-px font-mono text-[12px] text-card-foreground">
+                    databricks apps init
+                  </code>
+                  , then follow the generated{" "}
+                  <code className="rounded border border-border/80 bg-muted/80 px-1.5 py-px font-mono text-[12px] text-card-foreground">
+                    README.md
+                  </code>{" "}
+                  for configuration, seeding, and deploy. This page summarizes
+                  the example; the README is the runbook.
+                </>
+              ) : (
+                <>
+                  Use the CLI block below to clone locally, then follow{" "}
+                  <code className="rounded border border-border/80 bg-muted/80 px-1.5 py-px font-mono text-[12px] text-card-foreground">
+                    template/README.md
+                  </code>{" "}
+                  in the repo for provisioning, seeding, pipelines, and deploy.
+                  This page summarizes the example; the README is the runbook.
+                </>
+              )}
             </p>
           </div>
 
@@ -161,18 +186,45 @@ function GetStartedSteps({
                   01
                 </span>
                 <div className="min-w-0 space-y-3">
-                  <p className="m-0 text-sm font-medium text-card-foreground">
-                    Clone locally, then follow{" "}
-                    <code className="rounded border border-border/80 bg-muted/80 px-1.5 py-px font-mono text-[12px] text-card-foreground">
-                      template/README.md
-                    </code>
-                  </p>
-                  <RecipeCodeBlock>{example.initCommand}</RecipeCodeBlock>
-                  <p className="m-0 text-[13px] leading-relaxed text-muted-foreground">
-                    Provisioning (including manual steps and SQL), seeding, and
-                    deployment commands live in that README alongside the app
-                    and bundle code.
-                  </p>
+                  {isInit ? (
+                    <>
+                      <p className="m-0 text-sm font-medium text-card-foreground">
+                        Scaffold with{" "}
+                        <code className="rounded border border-border/80 bg-muted/80 px-1.5 py-px font-mono text-[12px] text-card-foreground">
+                          databricks apps init
+                        </code>
+                        , then follow the generated{" "}
+                        <code className="rounded border border-border/80 bg-muted/80 px-1.5 py-px font-mono text-[12px] text-card-foreground">
+                          README.md
+                        </code>
+                      </p>
+                      <RecipeCodeBlock>{example.initCommand}</RecipeCodeBlock>
+                      <p className="m-0 text-[13px] leading-relaxed text-muted-foreground">
+                        The CLI prompts for required resources (e.g. Lakebase
+                        branch, database), auto-resolves connection details into
+                        your local{" "}
+                        <code className="rounded border border-border/80 bg-muted/80 px-1 py-px font-mono text-[12px] text-card-foreground">
+                          .env
+                        </code>
+                        , and drops you into a ready-to-run project directory.
+                      </p>
+                    </>
+                  ) : (
+                    <>
+                      <p className="m-0 text-sm font-medium text-card-foreground">
+                        Clone locally, then follow{" "}
+                        <code className="rounded border border-border/80 bg-muted/80 px-1.5 py-px font-mono text-[12px] text-card-foreground">
+                          template/README.md
+                        </code>
+                      </p>
+                      <RecipeCodeBlock>{example.initCommand}</RecipeCodeBlock>
+                      <p className="m-0 text-[13px] leading-relaxed text-muted-foreground">
+                        Provisioning (including manual steps and SQL), seeding,
+                        and deployment commands live in that README alongside
+                        the app and bundle code.
+                      </p>
+                    </>
+                  )}
                 </div>
               </li>
             </ol>

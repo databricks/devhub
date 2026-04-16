@@ -357,6 +357,19 @@ export type Example = {
   image: string;
   githubPath: string;
   initCommand: string;
+  /**
+   * Optional markdown block injected into the agent prompt BEFORE the init command,
+   * describing any provisioning the agent must do first (e.g. creating a Lakebase
+   * Postgres project). Leave unset for examples with no external prerequisites.
+   */
+  agentPrereqSteps?: string;
+  /**
+   * Optional markdown block injected into the agent prompt AFTER the init command,
+   * describing local setup and deploy. Use for init-style examples where "cd in,
+   * fill in env, npm install, npm run deploy" is the expected flow. When unset, the
+   * agent is told to follow the generated README.
+   */
+  agentDeploySteps?: string;
   templateIds: string[];
   recipeIds: string[];
   tags: string[];
@@ -374,6 +387,8 @@ type ExampleConfig = {
   image: string;
   githubPath: string;
   initCommand: string;
+  agentPrereqSteps?: string;
+  agentDeploySteps?: string;
   templateIds: string[];
   recipeIds: string[];
 };
@@ -442,5 +457,67 @@ export const examples: Example[] = [
       "git clone --depth 1 https://github.com/databricks/devhub.git\ncd devhub/examples/content-moderator/template",
     templateIds: ["app-with-lakebase"],
     recipeIds: ["genie-conversational-analytics", "foundation-models-api"],
+  }),
+  // Unlike the other examples, rag-chat is consumed via `databricks apps init`
+  // rather than `git clone`. The initCommand points at the AppKit CLI.
+  // See examples/rag-chat/template/appkit.plugins.json for the plugin manifest.
+  // TODO: once PR #49 merges, add "lakebase-pgvector" and "embeddings-generation"
+  // to recipeIds below.
+  createExample({
+    id: "rag-chat",
+    name: "RAG Chat App",
+    description:
+      "Streaming Retrieval-Augmented Generation chat app with pgvector retrieval from Lakebase, Wikipedia seed corpus, Model Serving generation, and Lakebase-backed chat history. Consumed via `databricks apps init`.",
+    image: "/img/examples/rag-chat.svg",
+    githubPath: "examples/rag-chat",
+    initCommand:
+      'databricks apps init \\\n  --template https://github.com/databricks/devhub/tree/main/examples/rag-chat/template \\\n  --name rag-chat-app \\\n  --set lakebase.postgres.branch="$BRANCH_NAME" \\\n  --set lakebase.postgres.database="$DATABASE_NAME"',
+    agentPrereqSteps: [
+      "### 2. Create the Lakebase Postgres prerequisites",
+      "",
+      "The template's AppKit Lakebase plugin requires an existing Postgres **branch** and **database**. `databricks postgres create-project` automatically provisions a default branch named `production` and a default database on it, so one command is all you need. Pick a short lowercase project id and export the resolved resource names — the next step's `databricks apps init` command reads them as shell variables.",
+      "",
+      "```bash",
+      "PROJECT_ID=rag-chat",
+      "",
+      'databricks postgres create-project "$PROJECT_ID"',
+      "",
+      'export BRANCH_NAME="projects/$PROJECT_ID/branches/production"',
+      'export DATABASE_NAME=$(databricks api get "/api/2.0/postgres/$BRANCH_NAME/databases" -o json | \\',
+      "  python3 -c \"import json,sys; print(json.load(sys.stdin)['databases'][0]['name'])\")",
+      "",
+      'echo "Branch:   $BRANCH_NAME"',
+      'echo "Database: $DATABASE_NAME"',
+      "```",
+      "",
+      "`create-project` is long-running; by default the CLI waits for it to finish. If a project with that id already exists, delete it first with `databricks postgres delete-project projects/$PROJECT_ID` and re-run, or pick a different id.",
+    ].join("\n"),
+    agentDeploySteps: [
+      "### 4. Fill in the remaining env, install, and deploy",
+      "",
+      "`databricks apps init` writes `.env` with the resolved Lakebase connection details. Two values still need to be set manually because they don't come from an AppKit plugin:",
+      "",
+      "- `DATABRICKS_WORKSPACE_ID` — the **numeric** workspace id used to build the AI Gateway URL.",
+      "- (Optional) Override `DATABRICKS_ENDPOINT` / `DATABRICKS_EMBEDDING_ENDPOINT` if you want different chat / embeddings endpoints.",
+      "",
+      "Fetch the numeric id from the Unity Catalog metastore-assignment endpoint and patch `.env`:",
+      "",
+      "```bash",
+      "cd rag-chat-app",
+      "",
+      "WORKSPACE_ID=$(databricks api get /api/2.1/unity-catalog/current-metastore-assignment \\",
+      "  | python3 -c \"import json,sys;print(json.load(sys.stdin)['workspace_id'])\")",
+      'sed -i.bak "s/^DATABRICKS_WORKSPACE_ID=.*/DATABRICKS_WORKSPACE_ID=$WORKSPACE_ID/" .env && rm .env.bak',
+      "```",
+      "",
+      "Then install and deploy. `npm run deploy` wraps three steps: hydrate the bundle variable overrides from `.env` + the Lakebase Postgres API (`scripts/sync-bundle-vars.mjs`), `databricks bundle deploy` (creates the Databricks app on first run), and `databricks bundle run app` (starts it and prints the URL).",
+      "",
+      "```bash",
+      "npm install",
+      "npm run deploy",
+      "```",
+    ].join("\n"),
+    templateIds: ["ai-chat-app"],
+    recipeIds: ["ai-chat-model-serving", "lakebase-chat-persistence"],
   }),
 ];

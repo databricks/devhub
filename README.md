@@ -15,7 +15,7 @@ The easiest way to get started building on Databricks is **AppKit**. [AppKit](ht
 3. **Give it to your coding agent** — Paste into Cursor, Claude Code, Codex, or your usual tool. Add a short brief: domain, data, UX, and what “done” looks like.
 4. **Build end to end** — Work with your agent on application code, Databricks Asset Bundles, Lakebase, and platform wiring until you have a **production-ready agentic application**: secure, deployable, and aligned with how Apps and Agents are meant to run on Databricks—not a one-off script.
 
-You will need the [Databricks CLI](https://dev.databricks.com/docs/tools/databricks-cli) installed and authenticated to your workspace before you deploy. For prerequisites, prompts, and companion docs (Agents, Apps, Lakebase), see **[Start here](https://dev.databricks.com/docs/start-here)**.
+You will need the [Databricks CLI](https://dev.databricks.com/docs/tools/databricks-cli) installed and authenticated to your workspace before you deploy. The [Vercel CLI](https://vercel.com/docs/cli) is also required for local development and deployments. For prerequisites, prompts, and companion docs (Agents, Apps, Lakebase), see **[Start here](https://dev.databricks.com/docs/start-here)**.
 
 Whether you are typing `databricks apps init` yourself or pasting a bootstrap prompt into your agent, the goal is the same: **ship faster on a platform that already unifies data, governance, and deployment.**
 

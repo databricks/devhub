@@ -1,5 +1,5 @@
 import type { Application } from 'express';
-import { listChats, createChat, getChatForUser, getChatMessages, appendMessage } from '../lib/chat-store';
+import { listChats, createChat, getChatForUser, getChatMessages, appendMessage, deleteChat } from '../lib/chat-store';
 import { authenticateUser } from '../lib/auth';
 
 interface AppKitWithLakebase {
@@ -52,6 +52,22 @@ export function setupChatPersistenceRoutes(appkit: AppKitWithLakebase) {
       } catch (err) {
         console.error('[chats:messages]', (err as Error).message);
         res.status(500).json({ error: 'Failed to load messages' });
+      }
+    });
+
+    app.delete('/api/chats/:id', async (req, res) => {
+      const userId = authenticateUser(req, res);
+      if (!userId) return;
+      try {
+        const deleted = await deleteChat(appkit, req.params.id, userId);
+        if (!deleted) {
+          res.status(404).json({ error: 'Chat not found' });
+          return;
+        }
+        res.status(204).end();
+      } catch (err) {
+        console.error('[chats:delete]', (err as Error).message);
+        res.status(500).json({ error: 'Failed to delete chat' });
       }
     });
 

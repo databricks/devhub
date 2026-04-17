@@ -1,8 +1,9 @@
 import { useChat } from '@ai-sdk/react';
 import { DefaultChatTransport } from 'ai';
+import { Streamdown } from 'streamdown';
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { MessageSquarePlus, MessageSquare, ChevronDown, ChevronRight } from 'lucide-react';
-import { Button, Input, ScrollArea, Separator } from '@databricks/appkit-ui/react';
+import { MessageSquarePlus, MessageSquare, ChevronDown, ChevronRight, Trash2 } from 'lucide-react';
+import { Button, ScrollArea, Separator, Textarea } from '@databricks/appkit-ui/react';
 
 interface ChatSession {
   id: string;
@@ -89,6 +90,40 @@ export function ChatPage() {
   const transportRef = useRef(createTransport(chatIdRef));
 
   const [input, setInput] = useState('');
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const autosize = useCallback(() => {
+    const el = inputRef.current;
+    if (!el) return;
+    el.style.height = 'auto';
+    el.style.height = `${Math.min(el.scrollHeight, 200)}px`;
+  }, []);
+  const viewportRef = useRef<HTMLDivElement | null>(null);
+  const stickToBottomRef = useRef(true);
+  const lastScrollTopRef = useRef(0);
+  // Radix ScrollArea wraps content in `display: table; min-width: 100%` which
+  // grows horizontally past the viewport when children are wide (long chat
+  // titles push the sidebar delete button off-screen). Force block layout so
+  // children inherit the viewport width and `truncate` can do its job.
+  const forceBlockContent = (vp: HTMLDivElement) => {
+    const content = vp.firstElementChild as HTMLElement | null;
+    if (content) content.style.display = 'block';
+  };
+  const sidebarScrollAreaRef = useCallback((node: HTMLDivElement | null) => {
+    const vp = node?.querySelector<HTMLDivElement>('[data-radix-scroll-area-viewport]') ?? null;
+    if (vp) forceBlockContent(vp);
+  }, []);
+  const scrollAreaRef = useCallback((node: HTMLDivElement | null) => {
+    const vp = node?.querySelector<HTMLDivElement>('[data-radix-scroll-area-viewport]') ?? null;
+    viewportRef.current = vp;
+    if (!vp) return;
+    forceBlockContent(vp);
+    vp.addEventListener('scroll', () => {
+      const top = vp.scrollTop;
+      if (top < lastScrollTopRef.current - 5) stickToBottomRef.current = false;
+      if (vp.scrollHeight - top - vp.clientHeight < 20) stickToBottomRef.current = true;
+      lastScrollTopRef.current = top;
+    });
+  }, []);
   const { messages, setMessages, sendMessage, status } = useChat({
     transport: transportRef.current,
   });
@@ -105,6 +140,11 @@ export function ChatPage() {
   useEffect(() => {
     chatIdRef.current = chatId;
   }, [chatId]);
+
+  useEffect(() => {
+    const vp = viewportRef.current;
+    if (vp && stickToBottomRef.current) vp.scrollTop = vp.scrollHeight;
+  }, [messages]);
 
   const selectChat = useCallback(
     async (id: string) => {
@@ -135,33 +175,51 @@ export function ChatPage() {
     setMessages([]);
   }, [setMessages]);
 
+  const deleteChat = useCallback(
+    async (id: string) => {
+      const res = await fetch(`/api/chats/${id}`, { method: 'DELETE' });
+      if (!res.ok) return;
+      if (chatIdRef.current === id) {
+        chatLoadTokenRef.current += 1;
+        setChatId(null);
+        chatIdRef.current = null;
+        setMessages([]);
+      }
+      setChats((prev) => prev.filter((c) => c.id !== id));
+    },
+    [setMessages]
+  );
+
   const handleSubmit = useCallback(
-    async (e: React.FormEvent) => {
+    (e: React.FormEvent) => {
       e.preventDefault();
+      if (status !== 'ready') return;
       const text = input.trim();
       if (!text) return;
 
-      let activeChatId = chatId;
-
-      if (!activeChatId) {
-        const title = text.slice(0, 80);
-        const res = await fetch('/api/chats', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ title }),
-        });
-        if (!res.ok) return;
-        const chat: ChatSession = await res.json();
-        activeChatId = chat.id;
-        setChatId(activeChatId);
-        chatIdRef.current = activeChatId;
-      }
-
-      await sendMessage({ text });
       setInput('');
-      void loadChats();
+      if (inputRef.current) inputRef.current.style.height = 'auto';
+      inputRef.current?.focus();
+      stickToBottomRef.current = true;
+
+      void (async () => {
+        if (!chatIdRef.current) {
+          const title = text.slice(0, 80);
+          const res = await fetch('/api/chats', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title }),
+          });
+          if (!res.ok) return;
+          const chat: ChatSession = await res.json();
+          setChatId(chat.id);
+          chatIdRef.current = chat.id;
+        }
+        await sendMessage({ text });
+        void loadChats();
+      })();
     },
-    [input, chatId, sendMessage, setInput, loadChats]
+    [input, status, sendMessage, setInput, loadChats]
   );
 
   return (
@@ -181,21 +239,38 @@ export function ChatPage() {
             </Button>
           </div>
           <Separator />
-          <ScrollArea className="flex-1">
+          <ScrollArea ref={sidebarScrollAreaRef} className="min-h-0 flex-1">
             <div className="space-y-1 p-2">
               {chats.map((chat) => (
-                <button
+                <div
                   key={chat.id}
-                  onClick={() => selectChat(chat.id)}
-                  className={`flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm transition-colors ${
+                  className={`flex items-center gap-1 overflow-hidden rounded-md pr-1 transition-colors ${
                     chatId === chat.id
-                      ? 'bg-primary/10 font-medium text-foreground'
+                      ? 'bg-primary/10 text-foreground'
                       : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                   }`}
                 >
-                  <MessageSquare className="h-4 w-4 shrink-0" />
-                  <span className="truncate">{chat.title}</span>
-                </button>
+                  <button
+                    onClick={() => selectChat(chat.id)}
+                    className="flex min-w-0 flex-1 items-center gap-2 rounded-md px-3 py-2 text-left text-sm"
+                  >
+                    <MessageSquare className="h-4 w-4 shrink-0" />
+                    <span className={`truncate ${chatId === chat.id ? 'font-medium' : ''}`}>{chat.title}</span>
+                  </button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    aria-label="Delete chat"
+                    title="Delete chat"
+                    className="h-7 w-7 shrink-0 p-0 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (window.confirm(`Delete "${chat.title}"? This cannot be undone.`)) void deleteChat(chat.id);
+                    }}
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </Button>
+                </div>
               ))}
               {chats.length === 0 && (
                 <p className="px-3 py-6 text-center text-xs text-muted-foreground">No previous chats</p>
@@ -218,7 +293,7 @@ export function ChatPage() {
           <h1 className="text-sm font-semibold text-foreground">RAG Chat</h1>
         </header>
 
-        <ScrollArea className="flex-1 p-4">
+        <ScrollArea ref={scrollAreaRef} className="min-h-0 flex-1 p-4">
           <div className="mx-auto max-w-3xl space-y-4">
             {messages.length === 0 && (
               <div className="flex flex-col items-center justify-center py-20 text-center">
@@ -237,9 +312,15 @@ export function ChatPage() {
                 {message.role === 'assistant' && <SourcesDisplay sources={extractSources(message)} />}
                 {message.parts.map((part, index) =>
                   part.type === 'text' ? (
-                    <p key={`${message.id}-${index}`} className="whitespace-pre-wrap text-sm">
-                      {part.text}
-                    </p>
+                    message.role === 'assistant' ? (
+                      <Streamdown key={`${message.id}-${index}`} animated={false} className="text-sm">
+                        {part.text}
+                      </Streamdown>
+                    ) : (
+                      <p key={`${message.id}-${index}`} className="whitespace-pre-wrap text-sm">
+                        {part.text}
+                      </p>
+                    )
                   ) : null
                 )}
               </div>
@@ -248,12 +329,24 @@ export function ChatPage() {
         </ScrollArea>
 
         <div className="border-t p-4">
-          <form className="mx-auto flex max-w-3xl gap-2" onSubmit={handleSubmit}>
-            <Input
+          <form className="mx-auto flex max-w-3xl items-end gap-2" onSubmit={handleSubmit}>
+            <Textarea
+              ref={inputRef}
               value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask a question..."
-              disabled={status !== 'ready'}
+              onChange={(e) => {
+                setInput(e.target.value);
+                autosize();
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSubmit(e);
+                }
+              }}
+              placeholder="Ask a question... (Shift+Enter for newline)"
+              autoFocus
+              rows={1}
+              className="max-h-[200px] min-h-[40px] resize-none"
             />
             <Button type="submit" disabled={status !== 'ready' || !input.trim()}>
               {status === 'submitted' || status === 'streaming' ? 'Sending...' : 'Send'}

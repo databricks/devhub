@@ -1,4 +1,5 @@
 @import '@databricks/appkit-ui/styles.css';
+@source "../../node_modules/streamdown/dist/*.js";
 
 :root {
   /* --radius: 0.625rem;

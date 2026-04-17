@@ -89,6 +89,14 @@ export async function getChatMessages(appkit: AppKitWithLakebase, chatId: string
   return result.rows;
 }
 
+export async function deleteChat(appkit: AppKitWithLakebase, chatId: string, userId: string) {
+  const result = await appkit.lakebase.query(`DELETE FROM chat.chats WHERE id = $1 AND user_id = $2 RETURNING id`, [
+    chatId,
+    userId,
+  ]);
+  return result.rows.length > 0;
+}
+
 export async function appendMessage(
   appkit: AppKitWithLakebase,
   input: { chatId: string; userId: string; role: string; content: string }

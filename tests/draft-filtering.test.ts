@@ -86,6 +86,7 @@ describe("resources index filters drafts from API markdown", () => {
   afterEach(() => {
     delete process.env.SHOW_DRAFTS;
     delete process.env.EXAMPLES_FEATURE;
+    delete process.env.CI;
     vi.resetModules();
   });
 
@@ -100,6 +101,7 @@ describe("resources index filters drafts from API markdown", () => {
 
   test("resources index excludes examples when feature is disabled", async () => {
     delete process.env.EXAMPLES_FEATURE;
+    process.env.CI = "true";
     const { getDetailMarkdown } = await import("../api/content-markdown");
     const markdown = getDetailMarkdown("resources", "");
     expect(markdown).toContain("## Guides");

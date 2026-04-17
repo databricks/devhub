@@ -1,5 +1,5 @@
 import { execFileSync } from "node:child_process";
-import { readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -13,7 +13,30 @@ const banner =
 const body = `${banner}export const ABOUT_DEVHUB_MARKDOWN_BODY = ${JSON.stringify(raw)};\n`;
 
 writeFileSync(outPath, body, "utf-8");
-execFileSync("npx", ["prettier", "-w", outPath], {
-  cwd: root,
-  stdio: "inherit",
-});
+const localPrettier = resolve(root, "node_modules/.bin/prettier");
+const localPrettierCjs = resolve(
+  root,
+  "node_modules/prettier/bin/prettier.cjs",
+);
+try {
+  if (existsSync(localPrettier)) {
+    execFileSync(localPrettier, ["-w", outPath], {
+      cwd: root,
+      stdio: "inherit",
+    });
+  } else if (existsSync(localPrettierCjs)) {
+    execFileSync(process.execPath, [localPrettierCjs, "-w", outPath], {
+      cwd: root,
+      stdio: "inherit",
+    });
+  } else {
+    execFileSync("npx", ["prettier", "-w", outPath], {
+      cwd: root,
+      stdio: "inherit",
+    });
+  }
+} catch {
+  console.warn(
+    "emit-about-devhub: prettier skipped (install prettier or run with network for npx)",
+  );
+}

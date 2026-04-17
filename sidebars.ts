@@ -172,10 +172,17 @@ const latestAppKitDocId = latestAppKitMajorChannel
 const sidebars: SidebarsConfig = {
   tutorialSidebar: [
     "start-here",
+    "platform-overview",
     {
       type: "category",
-      label: "Databricks Apps",
+      label: "Set up your environment",
+      items: ["tools/databricks-cli", "tools/ai-tools/agent-skills"],
+    },
+    {
+      type: "category",
+      label: "Web apps (Databricks Apps)",
       items: [
+        "apps/overview",
         "apps/quickstart",
         "apps/core-concepts",
         "apps/appkit",
@@ -185,8 +192,9 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: "category",
-      label: "Lakebase Postgres",
+      label: "Postgres database (Lakebase)",
       items: [
+        "lakebase/overview",
         "lakebase/quickstart",
         "lakebase/core-concepts",
         "lakebase/development",
@@ -196,20 +204,12 @@ const sidebars: SidebarsConfig = {
       type: "category",
       label: "AI agents",
       items: [
+        "agents/overview",
         "agents/quickstart",
         "agents/core-concepts",
         "agents/development",
         "agents/ai-gateway",
         "agents/observability",
-      ],
-    },
-    {
-      type: "category",
-      label: "Developer tools",
-      items: [
-        "tools/databricks-cli",
-        "tools/ai-tools/agent-skills",
-        "tools/ai-tools/docs-mcp-server",
       ],
     },
     {
@@ -221,6 +221,7 @@ const sidebars: SidebarsConfig = {
           label: "Databricks CLI",
           href: "https://docs.databricks.com/aws/en/dev-tools/cli/commands",
         },
+        "tools/ai-tools/docs-mcp-server",
         {
           type: "category",
           label: "AppKit",

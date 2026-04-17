@@ -57,7 +57,7 @@ uv run quickstart --skip-lakebase
 
 The quickstart script verifies your environment, configures Databricks authentication, creates an MLflow experiment for tracing, and starts the agent server with a built-in chat UI at `http://localhost:8000` (override with `--port`). If port 3000 is in use, set `CHAT_APP_PORT` in `.env` to a free port.
 
-See [Lakebase quickstart](/docs/lakebase/quickstart) for creating or finding projects when you use Lakebase-backed templates.
+For Lakebase-backed templates, see the [Lakebase quickstart](/docs/lakebase/quickstart) to create or find a project first.
 
 For subsequent runs:
 

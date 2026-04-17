@@ -189,14 +189,24 @@ function Img({ className, ...props }: ComponentPropsWithoutRef<"img">) {
 function InlineCode({
   className,
   children,
+  title,
+  metastring,
   ...props
-}: ComponentPropsWithoutRef<"code">) {
+}: ComponentPropsWithoutRef<"code"> & { metastring?: string }) {
   const languageMatch = className?.match(/language-(\w+)/);
 
   if (languageMatch) {
     const code =
       typeof children === "string" ? children.replace(/\n$/, "") : children;
-    return <CodeBlock language={languageMatch[1]}>{code}</CodeBlock>;
+    return (
+      <CodeBlock
+        language={languageMatch[1]}
+        title={title}
+        metastring={metastring}
+      >
+        {code}
+      </CodeBlock>
+    );
   }
 
   return (

@@ -67,27 +67,42 @@ export async function createChat(appkit: AppKitWithLakebase, input: { userId: st
   return result.rows[0];
 }
 
-export async function getChatMessages(appkit: AppKitWithLakebase, chatId: string) {
+export async function getChatForUser(appkit: AppKitWithLakebase, chatId: string, userId: string) {
   const result = await appkit.lakebase.query(
-    `SELECT id, chat_id, role, content, created_at
-     FROM chat.messages
-     WHERE chat_id = $1
-     ORDER BY created_at ASC`,
-    [chatId]
+    `SELECT id, user_id, title, created_at, updated_at
+     FROM chat.chats
+     WHERE id = $1 AND user_id = $2`,
+    [chatId, userId]
+  );
+  return result.rows[0] ?? null;
+}
+
+export async function getChatMessages(appkit: AppKitWithLakebase, chatId: string, userId: string) {
+  const result = await appkit.lakebase.query(
+    `SELECT m.id, m.chat_id, m.role, m.content, m.created_at
+     FROM chat.messages m
+     JOIN chat.chats c ON c.id = m.chat_id
+     WHERE m.chat_id = $1 AND c.user_id = $2
+     ORDER BY m.created_at ASC`,
+    [chatId, userId]
   );
   return result.rows;
 }
 
 export async function appendMessage(
   appkit: AppKitWithLakebase,
-  input: { chatId: string; role: string; content: string }
+  input: { chatId: string; userId: string; role: string; content: string }
 ) {
   const result = await appkit.lakebase.query(
     `INSERT INTO chat.messages (chat_id, role, content)
-     VALUES ($1, $2, $3)
+     SELECT $1, $2, $3
+     WHERE EXISTS (SELECT 1 FROM chat.chats WHERE id = $1 AND user_id = $4)
      RETURNING id, chat_id, role, content, created_at`,
-    [input.chatId, input.role, input.content]
+    [input.chatId, input.role, input.content, input.userId]
   );
+  if (result.rows.length === 0) {
+    throw new Error(`Chat ${input.chatId} not found or not owned by user`);
+  }
   await appkit.lakebase.query(`UPDATE chat.chats SET updated_at = NOW() WHERE id = $1`, [input.chatId]);
   return result.rows[0];
 }

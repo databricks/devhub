@@ -1,5 +1,5 @@
 import { useChat } from '@ai-sdk/react';
-import { TextStreamChatTransport } from 'ai';
+import { DefaultChatTransport } from 'ai';
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { MessageSquarePlus, MessageSquare, ChevronDown, ChevronRight } from 'lucide-react';
 import { Button, Input, ScrollArea, Separator } from '@databricks/appkit-ui/react';
@@ -27,7 +27,7 @@ interface RagSource {
 }
 
 function createTransport(chatIdRef: React.RefObject<string | null>) {
-  return new TextStreamChatTransport({
+  return new DefaultChatTransport({
     api: '/api/chat',
     body: () => (chatIdRef.current ? { chatId: chatIdRef.current } : {}),
     headers: { 'Content-Type': 'application/json' },
@@ -67,6 +67,19 @@ function SourcesDisplay({ sources }: { sources: RagSource[] }) {
   );
 }
 
+// Pull RAG sources out of any `data-sources` part the server attached to this
+// assistant message. The server writes it via createUIMessageStream before the
+// text tokens, so it's available as soon as the assistant message exists.
+function extractSources(message: { parts?: unknown[] }): RagSource[] {
+  return (message.parts ?? [])
+    .filter((p): p is { type: string; data: RagSource[] } => {
+      if (typeof p !== 'object' || p === null) return false;
+      const part = p as { type?: unknown };
+      return part.type === 'data-sources';
+    })
+    .flatMap((p) => p.data);
+}
+
 export function ChatPage() {
   const [chatId, setChatId] = useState<string | null>(null);
   const chatIdRef = useRef<string | null>(null);
@@ -74,15 +87,12 @@ export function ChatPage() {
   const [chats, setChats] = useState<ChatSession[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const transportRef = useRef(createTransport(chatIdRef));
-  // Map from assistant message index to its RAG sources
-  const [sourcesMap, setSourcesMap] = useState<Record<string, RagSource[]>>({});
 
   const [input, setInput] = useState('');
   const { messages, setMessages, sendMessage, status } = useChat({
     transport: transportRef.current,
   });
 
-  // Fetch chat list
   const loadChats = useCallback(async () => {
     const res = await fetch('/api/chats');
     if (res.ok) setChats(await res.json());
@@ -92,18 +102,15 @@ export function ChatPage() {
     void loadChats();
   }, [loadChats]);
 
-  // Keep chatIdRef in sync with chatId state
   useEffect(() => {
     chatIdRef.current = chatId;
   }, [chatId]);
 
-  // Load messages for selected chat
   const selectChat = useCallback(
     async (id: string) => {
       const loadToken = ++chatLoadTokenRef.current;
       setChatId(id);
       chatIdRef.current = id;
-      setSourcesMap({});
       setMessages([]);
       const res = await fetch(`/api/chats/${id}/messages`);
       if (!res.ok) return;
@@ -121,13 +128,11 @@ export function ChatPage() {
     [setMessages]
   );
 
-  // Start new chat
   const startNewChat = useCallback(() => {
     chatLoadTokenRef.current += 1;
     setChatId(null);
     chatIdRef.current = null;
     setMessages([]);
-    setSourcesMap({});
   }, [setMessages]);
 
   const handleSubmit = useCallback(
@@ -138,7 +143,6 @@ export function ChatPage() {
 
       let activeChatId = chatId;
 
-      // If this is a new conversation, create the chat session first
       if (!activeChatId) {
         const title = text.slice(0, 80);
         const res = await fetch('/api/chats', {
@@ -150,49 +154,18 @@ export function ChatPage() {
         const chat: ChatSession = await res.json();
         activeChatId = chat.id;
         setChatId(activeChatId);
-        // Update ref immediately so the transport reads the correct chatId
         chatIdRef.current = activeChatId;
       }
 
-      // Fetch RAG sources for this query in parallel with sending the message
-      const sourcesPromise = fetch(`/api/chat/sources?q=${encodeURIComponent(text)}`)
-        .then((res) => (res.ok ? res.json() : []))
-        .catch(() => [] as RagSource[]);
-
       await sendMessage({ text });
       setInput('');
-
-      // Store sources keyed by the current message count (the assistant response index)
-      const sources: RagSource[] = await sourcesPromise;
-      if (sources.length > 0) {
-        // The assistant message will be at the current messages length + 1
-        // (user message was just added at length, assistant at length+1)
-        // We key by the user message text as a stable identifier
-        setSourcesMap((prev) => ({ ...prev, [text]: sources }));
-      }
-
-      // Refresh the sidebar chat list
       void loadChats();
     },
     [input, chatId, sendMessage, setInput, loadChats]
   );
 
-  // Build a lookup: for each assistant message, find the preceding user message's sources
-  function getSourcesForAssistantMessage(index: number): RagSource[] {
-    if (index === 0) return [];
-    const prevMessage = messages[index - 1];
-    if (!prevMessage || prevMessage.role !== 'user') return [];
-    const userText =
-      prevMessage.parts
-        ?.filter((p): p is Extract<typeof p, { type: 'text' }> => p.type === 'text')
-        .map((p) => p.text)
-        .join('') ?? '';
-    return sourcesMap[userText] || [];
-  }
-
   return (
     <div className="flex h-screen bg-background">
-      {/* Sidebar */}
       {sidebarOpen && (
         <div className="flex w-72 flex-col border-r bg-muted/30">
           <div className="p-4">
@@ -232,9 +205,7 @@ export function ChatPage() {
         </div>
       )}
 
-      {/* Main chat area */}
       <div className="flex flex-1 flex-col">
-        {/* Header */}
         <header className="flex items-center gap-3 border-b px-4 py-3">
           <Button
             variant="ghost"
@@ -247,7 +218,6 @@ export function ChatPage() {
           <h1 className="text-sm font-semibold text-foreground">RAG Chat</h1>
         </header>
 
-        {/* Messages */}
         <ScrollArea className="flex-1 p-4">
           <div className="mx-auto max-w-3xl space-y-4">
             {messages.length === 0 && (
@@ -259,12 +229,12 @@ export function ChatPage() {
                 </p>
               </div>
             )}
-            {messages.map((message, msgIndex) => (
+            {messages.map((message) => (
               <div key={message.id} className="space-y-1">
                 <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                   {message.role === 'user' ? 'You' : 'Assistant'}
                 </p>
-                {message.role === 'assistant' && <SourcesDisplay sources={getSourcesForAssistantMessage(msgIndex)} />}
+                {message.role === 'assistant' && <SourcesDisplay sources={extractSources(message)} />}
                 {message.parts.map((part, index) =>
                   part.type === 'text' ? (
                     <p key={`${message.id}-${index}`} className="whitespace-pre-wrap text-sm">
@@ -277,7 +247,6 @@ export function ChatPage() {
           </div>
         </ScrollArea>
 
-        {/* Input */}
         <div className="border-t p-4">
           <form className="mx-auto flex max-w-3xl gap-2" onSubmit={handleSubmit}>
             <Input

@@ -1,14 +1,22 @@
 import { createOpenAI } from '@ai-sdk/openai';
-import { streamText, type UIMessage } from 'ai';
+import { streamText, createUIMessageStream, pipeUIMessageStreamToResponse, type UIMessage } from 'ai';
 import { Config } from '@databricks/sdk-experimental';
 import type { Application } from 'express';
 import { generateEmbedding } from '../lib/embeddings';
 import { retrieveSimilar } from '../lib/rag-store';
-import { appendMessage } from '../lib/chat-store';
+import { getChatForUser, appendMessage } from '../lib/chat-store';
+import { authenticateUser } from '../lib/auth';
 
 interface AppKitWithLakebase {
   lakebase: { query(text: string, params?: unknown[]): Promise<{ rows: Record<string, unknown>[] }> };
   server: { extend(fn: (app: Application) => void): void };
+}
+
+interface RagSource {
+  index: number;
+  content: string;
+  similarity: number;
+  metadata: Record<string, unknown>;
 }
 
 async function getDatabricksToken() {
@@ -24,34 +32,22 @@ async function getDatabricksToken() {
 
 export function setupChatRoutes(appkit: AppKitWithLakebase) {
   appkit.server.extend((app) => {
-    // Retrieve RAG sources for a query (called by client before/alongside chat)
-    app.get('/api/chat/sources', async (req, res) => {
-      const query = req.query.q as string | undefined;
-      if (!query) {
-        res.json([]);
+    app.post('/api/chat', async (req, res) => {
+      const userId = authenticateUser(req, res);
+      if (!userId) return;
+
+      const { messages, chatId } = req.body as { messages: UIMessage[]; chatId?: string };
+
+      if (!chatId) {
+        res.status(400).json({ error: 'chatId is required' });
         return;
       }
-      try {
-        const embedding = await generateEmbedding(query);
-        const similar = await retrieveSimilar(appkit, embedding, 5);
-        const sources = similar.map((d: Record<string, unknown>, i: number) => ({
-          index: i + 1,
-          content: d.content as string,
-          similarity: d.similarity as number,
-          metadata: d.metadata as Record<string, unknown>,
-        }));
-        res.json(sources);
-      } catch (err) {
-        console.error('[chat:sources]', (err as Error).message);
-        res.json([]);
+      const chat = await getChatForUser(appkit, chatId, userId);
+      if (!chat) {
+        res.status(404).json({ error: 'Chat not found' });
+        return;
       }
-    });
 
-    app.post('/api/chat', async (req, res) => {
-      const { messages, chatId } = req.body as {
-        messages: UIMessage[];
-        chatId: string;
-      };
       const coreMessages = messages.map((m) => ({
         role: m.role as 'user' | 'assistant' | 'system',
         content:
@@ -63,22 +59,23 @@ export function setupChatRoutes(appkit: AppKitWithLakebase) {
 
       try {
         const lastUserMsg = coreMessages.filter((m) => m.role === 'user').pop();
-
-        // Save the user message
-        if (lastUserMsg && chatId) {
-          await appendMessage(appkit, {
-            chatId,
-            role: 'user',
-            content: lastUserMsg.content,
-          });
+        if (lastUserMsg) {
+          await appendMessage(appkit, { chatId, userId, role: 'user', content: lastUserMsg.content });
         }
 
-        const token = await getDatabricksToken();
-        const endpoint = process.env.DATABRICKS_ENDPOINT || 'databricks-gpt-5-4-mini';
-
+        // Single retrieval pass, reused for both the system prompt and the
+        // UI stream that the client renders as "Retrieved context".
+        let sources: RagSource[] = [];
         let contextPrefix = '';
         if (lastUserMsg) {
-          const similar = await retrieveSimilar(appkit, await generateEmbedding(lastUserMsg.content), 5);
+          const embedding = await generateEmbedding(lastUserMsg.content);
+          const similar = await retrieveSimilar(appkit, embedding, 5);
+          sources = similar.map((d: Record<string, unknown>, i: number) => ({
+            index: i + 1,
+            content: d.content as string,
+            similarity: d.similarity as number,
+            metadata: d.metadata as Record<string, unknown>,
+          }));
           if (similar.length > 0) {
             contextPrefix =
               'Use the following context to inform your answer. If not relevant, say so.\n\n' +
@@ -91,28 +88,34 @@ export function setupChatRoutes(appkit: AppKitWithLakebase) {
           ...coreMessages,
         ];
 
+        const token = await getDatabricksToken();
+        const endpoint = process.env.DATABRICKS_ENDPOINT || 'databricks-gpt-5-4-mini';
         const databricks = createOpenAI({
           baseURL: `https://${process.env.DATABRICKS_WORKSPACE_ID}.ai-gateway.cloud.databricks.com/mlflow/v1`,
           apiKey: token,
         });
-        const result = streamText({
-          model: databricks.chat(endpoint),
-          messages: augmented,
-          maxOutputTokens: 1000,
-          onFinish: async ({ text }) => {
-            if (chatId) {
-              await appendMessage(appkit, {
-                chatId,
-                role: 'assistant',
-                content: text,
-              });
+
+        const stream = createUIMessageStream({
+          execute: ({ writer }) => {
+            if (sources.length > 0) {
+              writer.write({ type: 'data-sources', data: sources, transient: false });
             }
+            const result = streamText({
+              model: databricks.chat(endpoint),
+              messages: augmented,
+              maxOutputTokens: 1000,
+              onFinish: async ({ text }) => {
+                await appendMessage(appkit, { chatId, userId, role: 'assistant', content: text });
+              },
+            });
+            writer.merge(result.toUIMessageStream());
           },
         });
-        result.pipeTextStreamToResponse(res);
+
+        pipeUIMessageStreamToResponse({ stream, response: res });
       } catch (err) {
         console.error('[chat]', (err as Error).message);
-        res.status(502).json({ error: 'Chat request failed' });
+        if (!res.headersSent) res.status(502).json({ error: 'Chat request failed' });
       }
     });
   });

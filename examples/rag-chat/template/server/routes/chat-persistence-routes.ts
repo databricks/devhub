@@ -1,5 +1,6 @@
 import type { Application } from 'express';
-import { listChats, createChat, getChatMessages, appendMessage } from '../lib/chat-store';
+import { listChats, createChat, getChatForUser, getChatMessages, appendMessage } from '../lib/chat-store';
+import { authenticateUser } from '../lib/auth';
 
 interface AppKitWithLakebase {
   lakebase: {
@@ -10,16 +11,13 @@ interface AppKitWithLakebase {
   };
 }
 
-function getUserId(req: { header(name: string): string | undefined }): string {
-  return req.header('x-forwarded-email') || 'local-dev-user';
-}
-
 export function setupChatPersistenceRoutes(appkit: AppKitWithLakebase) {
   appkit.server.extend((app) => {
-    // List all chat sessions for the current user
     app.get('/api/chats', async (req, res) => {
+      const userId = authenticateUser(req, res);
+      if (!userId) return;
       try {
-        const chats = await listChats(appkit, getUserId(req));
+        const chats = await listChats(appkit, userId);
         res.json(chats);
       } catch (err) {
         console.error('[chats:list]', (err as Error).message);
@@ -27,14 +25,12 @@ export function setupChatPersistenceRoutes(appkit: AppKitWithLakebase) {
       }
     });
 
-    // Create a new chat session
     app.post('/api/chats', async (req, res) => {
+      const userId = authenticateUser(req, res);
+      if (!userId) return;
       try {
         const { title } = req.body as { title?: string };
-        const chat = await createChat(appkit, {
-          userId: getUserId(req),
-          title: title || 'New Chat',
-        });
+        const chat = await createChat(appkit, { userId, title: title || 'New Chat' });
         res.status(201).json(chat);
       } catch (err) {
         console.error('[chats:create]', (err as Error).message);
@@ -42,10 +38,16 @@ export function setupChatPersistenceRoutes(appkit: AppKitWithLakebase) {
       }
     });
 
-    // Load messages for a chat session
     app.get('/api/chats/:id/messages', async (req, res) => {
+      const userId = authenticateUser(req, res);
+      if (!userId) return;
       try {
-        const messages = await getChatMessages(appkit, req.params.id);
+        const chat = await getChatForUser(appkit, req.params.id, userId);
+        if (!chat) {
+          res.status(404).json({ error: 'Chat not found' });
+          return;
+        }
+        const messages = await getChatMessages(appkit, req.params.id, userId);
         res.json(messages);
       } catch (err) {
         console.error('[chats:messages]', (err as Error).message);
@@ -53,15 +55,17 @@ export function setupChatPersistenceRoutes(appkit: AppKitWithLakebase) {
       }
     });
 
-    // Save a message to a chat session
     app.post('/api/chats/:id/messages', async (req, res) => {
+      const userId = authenticateUser(req, res);
+      if (!userId) return;
       try {
+        const chat = await getChatForUser(appkit, req.params.id, userId);
+        if (!chat) {
+          res.status(404).json({ error: 'Chat not found' });
+          return;
+        }
         const { role, content } = req.body as { role: string; content: string };
-        const message = await appendMessage(appkit, {
-          chatId: req.params.id,
-          role,
-          content,
-        });
+        const message = await appendMessage(appkit, { chatId: req.params.id, userId, role, content });
         res.status(201).json(message);
       } catch (err) {
         console.error('[chats:save-message]', (err as Error).message);

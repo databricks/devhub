@@ -65,14 +65,7 @@ cd rag-chat-app
 
 `init` creates the app in the workspace, binds the Lakebase resource, and writes a local `.env` with the resolved connection details.
 
-### 4. Set the two manual env values
-
-The template's `.env.tmpl` leaves two values blank because they don't come from a plugin. Fill them in:
-
-- `DATABRICKS_WORKSPACE_ID` — the **numeric** workspace id used to build the AI Gateway URL (`https://<id>.ai-gateway.cloud.databricks.com`). Fetch it with `databricks api get /api/2.1/unity-catalog/current-metastore-assignment | python3 -c "import json,sys;print(json.load(sys.stdin)['workspace_id'])"`.
-- (Optional) Override `DATABRICKS_ENDPOINT` / `DATABRICKS_EMBEDDING_ENDPOINT` if you want a different chat / embeddings endpoint.
-
-### 5. Install, build, and deploy
+### 4. Install and deploy
 
 ```bash
 npm install
@@ -81,12 +74,22 @@ npm run deploy
 
 `npm run deploy` runs `scripts/sync-bundle-vars.mjs` (which hydrates `.databricks/bundle/default/variable-overrides.json` from the app's bound postgres resource) and then `databricks bundle deploy` followed by `databricks bundle run app`. The final line prints the app URL.
 
+`DATABRICKS_WORKSPACE_ID` and the Lakebase connection variables are auto-injected into the deployed runtime from `app.yaml` and the bound `postgres` resource — no further `.env` work is needed for deploy.
+
 ## Develop locally
 
+Local `npm run dev` needs `DATABRICKS_WORKSPACE_ID` (the **numeric** id used to build the AI Gateway URL, `https://<id>.ai-gateway.cloud.databricks.com`) in `.env`. Fetch and patch it:
+
 ```bash
+WORKSPACE_ID=$(databricks api get /api/2.1/unity-catalog/current-metastore-assignment \
+  | python3 -c "import json,sys;print(json.load(sys.stdin)['workspace_id'])")
+sed -i.bak "s/^DATABRICKS_WORKSPACE_ID=.*/DATABRICKS_WORKSPACE_ID=$WORKSPACE_ID/" .env && rm .env.bak
+
 npm install
 npm run dev
 ```
+
+Optionally override `DATABRICKS_ENDPOINT` / `DATABRICKS_EMBEDDING_ENDPOINT` in `.env` if you want different chat / embeddings endpoints (also applies to deploy via `app.yaml`).
 
 The first run seeds a handful of Wikipedia articles into the `rag.documents` table. Set `RAG_RESEED=true` in `.env` to re-seed on every restart.
 
@@ -107,6 +110,5 @@ The first run seeds a handful of Wikipedia articles into the `rag.documents` tab
 
 ## Related DevHub resources
 
-- [RAG Chat App cookbook](https://dev.databricks.com/resources/rag-chat-app-template) — step-by-step walkthrough of the recipes this example composes.
 - [Lakebase chat persistence](https://dev.databricks.com/resources/lakebase-chat-persistence)
 - [Streaming AI chat with Model Serving](https://dev.databricks.com/resources/ai-chat-model-serving)

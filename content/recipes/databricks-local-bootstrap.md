@@ -47,7 +47,7 @@ curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.s
 databricks auth login
 ```
 
-This opens a browser window for OAuth. The user must complete authentication in the browser before the CLI returns.
+This opens a browser window for OAuth. The user must complete authentication in the browser before the CLI returns. Always show the user the OAuth URL from the CLI output as a clickable link so they can open it in their browser.
 
 If you already know the workspace URL, you can authenticate the user directly:
 

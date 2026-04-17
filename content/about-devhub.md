@@ -20,6 +20,24 @@ Do the following to work with DevHub prompts successfully:
 - Examples and guides are also inspirational. Use them to understand the full scope of what can be built on Databricks and serve the user a list of examples and guides when asking them what they want to build on Databricks.
 - Always start by understanding what the developer wants to achieve. Are they bootstrapping a new project or adding to an existing codebase? Engage them in conversation, show them what's possible, and let them decide what they want to build.
 
+## Asking questions
+
+Follow these rules every time you ask the user a question:
+
+1. **One question at a time.** Never ask multiple questions in a single message.
+2. **Format choices as a numbered or lettered list.** Use markdown list syntax so each option renders on its own line. Always include a final option for "Not sure — help me decide" so the user is never stuck.
+3. **Tell the user they can reply with just the letter or number** to make their selection.
+
+Here is an example question. Copy this format exactly:
+
+What kind of app would you like to build? Reply with the letter to choose:
+
+- a) A data dashboard
+- b) An AI-powered chatbot
+- c) A CRUD app with Lakebase
+- d) Something else (describe it)
+- e) Not sure — help me decide
+
 ## Workflow
 
 Unless instructed otherwise, follow the workflow below:

@@ -72,6 +72,15 @@ export const recipes: Recipe[] = [
     prerequisites: ["databricks-local-bootstrap"],
   },
   {
+    id: "embeddings-generation",
+    name: "Generate Embeddings with AI Gateway",
+    description:
+      "Generate text embeddings from a Databricks AI Gateway endpoint using the Databricks SDK.",
+    tags: ["AI", "AI Gateway", "Embeddings"],
+    services: ["AI Gateway"],
+    prerequisites: ["databricks-local-bootstrap"],
+  },
+  {
     id: "model-serving-endpoint-creation",
     name: "Create a Databricks Model Serving endpoint",
     description:
@@ -105,6 +114,15 @@ export const recipes: Recipe[] = [
       "Add a managed Postgres database to your Databricks app using the Lakebase plugin. Covers schema setup, table creation, and full CRUD REST API routes.",
     tags: ["Lakebase", "Postgres", "CRUD", "Data"],
     services: ["Lakebase", "Databricks Apps"],
+    prerequisites: ["databricks-local-bootstrap", "lakebase-create-instance"],
+  },
+  {
+    id: "lakebase-pgvector",
+    name: "Lakebase pgvector",
+    description:
+      "Enable vector similarity search in Lakebase using the pgvector extension. Covers extension setup, vector table design, insert and cosine retrieval helpers, and IVFFlat/HNSW index options.",
+    tags: ["Lakebase", "Postgres", "pgvector", "Vector Search", "Embeddings"],
+    services: ["Lakebase"],
     prerequisites: ["databricks-local-bootstrap", "lakebase-create-instance"],
   },
   {
@@ -220,7 +238,9 @@ export const recipesInOrder: Recipe[] = [
   "databricks-local-bootstrap",
   "lakebase-create-instance",
   "lakebase-data-persistence",
+  "lakebase-pgvector",
   "foundation-models-api",
+  "embeddings-generation",
   "model-serving-endpoint-creation",
   "ai-chat-model-serving",
   "lakebase-chat-persistence",

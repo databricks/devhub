@@ -17,7 +17,7 @@
     "write-heading-ids": "docusaurus write-heading-ids",
     "typecheck": "npm run emit-about-devhub && tsc",
     "fmt": "npx prettier -w .",
-    "test": "npm run build && vitest run && npx playwright test",
+    "test": "EXAMPLES_FEATURE=true npm run build && vitest run && npx playwright test",
     "test:smoke": "npm run emit-about-devhub && vitest run",
     "test:e2e": "npx playwright test",
     "test:docs-verify": "vitest run --config vitest.docs-verify.config.ts",

@@ -4,13 +4,15 @@ import type { Request, Response } from 'express';
 // client-supplied value. Treat that header as the authoritative user identity
 // when running on the platform.
 //
-// `DATABRICKS_APP_NAME` is auto-injected by the runtime, so we use its presence
-// as the signal that we're deployed (vs running locally via `npm run dev`).
+// We use `DATABRICKS_CLIENT_ID` as the "deployed on Databricks Apps" signal:
+// it's the auto-injected service-principal credential, present only in the
+// runtime — local `.env` (scaffolded by `databricks apps init`) pre-sets
+// things like `DATABRICKS_APP_NAME` but never `DATABRICKS_CLIENT_ID`.
 
 export function authenticateUser(req: Request, res: Response): string | null {
   const email = req.header('x-forwarded-email');
   if (email) return email;
-  if (process.env.DATABRICKS_APP_NAME) {
+  if (process.env.DATABRICKS_CLIENT_ID) {
     res.status(401).json({
       error: 'Missing x-forwarded-email. Databricks Apps should inject this header at the gateway.',
     });

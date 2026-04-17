@@ -490,7 +490,10 @@ export const examples: Example[] = [
       'echo "Database: $DATABASE_NAME"',
       "```",
       "",
-      "`create-project` is long-running; by default the CLI waits for it to finish. If a project with that id already exists, delete it first with `databricks postgres delete-project projects/$PROJECT_ID` and re-run, or pick a different id.",
+      "`create-project` is long-running; the CLI waits for it to finish by default. **If it reports `already exists`:**",
+      "",
+      "- **Prefer picking a different `PROJECT_ID`** (e.g. append a short suffix) and re-export `BRANCH_NAME` / `DATABASE_NAME` from the new id. Lakebase projects can hold data that other apps and pipelines depend on, so do **not** run `databricks postgres delete-project` on an existing project without explicit confirmation from the user that nothing else uses it.",
+      "- **Eventual-consistency exception:** if you just deleted a project with this id in the same session and `databricks postgres list-projects` no longer shows it, wait 30–60s and retry `create-project` — the control plane is briefly inconsistent after deletion.",
     ].join("\n"),
     agentDeploySteps: [
       "### 4. Fill in the remaining env, install, and deploy",

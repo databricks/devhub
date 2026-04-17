@@ -1,48 +1,33 @@
 ---
 title: Start here
-description: DevHub is a catalog of guides and examples for the Databricks developer stack. Pick a guide, copy it into your coding agent, and start building.
+description: DevHub is the developer platform for Databricks. Build web apps, AI agents, and data-backed applications deployed and hosted inside your Databricks workspace.
 ---
 
 # Start here
 
-DevHub is a catalog of guides and examples for the Databricks developer stack. Pick a guide, copy it into your coding agent, and you get a working app deployed to Databricks with auth, database, and deployment handled.
+Databricks is a data and AI platform. It manages data pipelines, stores and governs data at scale, runs ML workloads, and serves AI models. DevHub is the developer-facing layer: guides, SDKs, and tools for building applications on top of that platform.
+
+## What you can build
+
+- **A web app**: your app runs inside your workspace with built-in auth and direct data access. Build it with AppKit, a TypeScript SDK with UI components and a plugin system, or use Python.
+- **A Postgres database**: provision Lakebase, managed Postgres that runs inside your workspace, with instant branching and scale-to-zero for development and production.
+- **An AI agent**: give an LLM a goal and a set of tools: functions it can call, APIs it can hit, data it can query. Deploy it to your workspace with hosted model endpoints and built-in tracing.
+
+## Guides and examples
+
+DevHub has two types of resources in the [resources catalog](/resources):
+
+- **Guides**: step-by-step build instructions. Copy one into your coding agent and it handles scaffolding, configuration, and deployment.
+- **Examples**: working apps with source code you can clone and customize.
+
+These docs explain the platform in detail when you or your agent needs more context.
+
+## Where to start
+
+1. **Set up your environment**: install the Databricks CLI and authenticate against your workspace. The [Databricks CLI](/docs/tools/databricks-cli) page walks you through both.
+2. **Pick a product**: read the overview for context or go straight to the quickstart. Choose from [Web app](/docs/apps/overview), [Database](/docs/lakebase/overview), or [AI agent](/docs/agents/overview).
+3. **Start building**: copy a guide into your coding agent to scaffold and deploy, or clone an example and customize it. Browse the [resources catalog](/resources).
 
 ## How the platform fits together
 
-<img src="/img/docs/platform-overview.svg" alt="Architecture diagram showing Apps containing AppKit, Lakebase, and Agents, with Unity Catalog and AI Gateway as workspace services" width="100%" />
-
-| Layer        | What it is                                                                                                                                                                          |
-| ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Apps**     | The hosting layer. Your Node.js or Python app runs as a managed workspace resource with a fixed URL, built-in auth, and managed compute. Deploy with `databricks apps deploy`.      |
-| **AppKit**   | The TypeScript SDK. Provides auth, UI components, and a plugin system (server, lakebase, analytics, genie, files, caching, and more) with support for custom plugins.               |
-| **Lakebase** | The database layer. Managed Postgres for OLTP, co-located with your Lakehouse. Autoscales on demand, scales to zero when idle, and supports branching for development environments. |
-| **Agents**   | The LLM orchestration layer. Deployed as Apps using any framework that implements the ResponsesAgent interface. Supports tool use, MCP servers, and built-in tracing.               |
-
-**[Unity Catalog](https://docs.databricks.com/aws/en/data-governance/)** and **[AI Gateway](/docs/agents/ai-gateway)** are workspace-level services your app connects to for data governance and model serving.
-
-## Pick a guide or example
-
-Guides are step-by-step instructions for your coding agent. Examples are working apps built on top of guides, with source code. A few common starting points are below. Browse the full [resources catalog](/resources) for more.
-
-All guides assume the [Databricks CLI](/docs/tools/databricks-cli) is installed and [authenticated](/docs/tools/databricks-cli#authenticate) against your workspace.
-
-| Resource                                                      | Type    | Best for                                        |
-| ------------------------------------------------------------- | ------- | ----------------------------------------------- |
-| [Hello World App](/resources/hello-world-app)                 | Guide   | Simple apps, static pages, getting started      |
-| [AI Chat App](/resources/ai-chat-app)                         | Guide   | Conversational AI, chatbots, assistants         |
-| [App with Lakebase](/resources/app-with-lakebase)             | Guide   | CRUD apps with persistent storage               |
-| [Agentic Support Console](/resources/agentic-support-console) | Example | Full AI support console with Lakebase and Genie |
-
-## Create your app
-
-Copy the guide into your coding agent and describe what you want to build. The guide handles setup, auth, schemas, and deployment. Your prompt shapes the business logic. A machine-readable index of all guides is at <a href="/llms.txt">llms.txt</a>.
-
-## Companion docs
-
-These docs explain the platform layers that guides build on:
-
-- **[Apps](/docs/apps/quickstart)**: Host web applications as managed Databricks workspace resources.
-- **[Lakebase](/docs/lakebase/quickstart)**: Managed PostgreSQL for application data.
-- **[Agents](/docs/agents/quickstart)**: Build AI agents with tool orchestration, guardrails, and observability.
-- **[Tools](/docs/tools/databricks-cli)**: Databricks CLI, agent skills, and MCP server.
-- **[AppKit Reference](/docs/appkit/v0)**: Component library, plugin API, and TypeScript SDK reference.
+For the full architecture showing how Apps, AppKit, Lakebase, and Agents relate, see [Platform overview](/docs/platform-overview).

@@ -10,11 +10,19 @@ Skills tell your coding agent how Databricks works, including CLI conventions, a
 
 ## Install
 
-```bash
+```bash title="Common"
 databricks experimental aitools install
 ```
 
-The CLI auto-detects installed coding agents (Claude Code, Cursor, Codex CLI, etc.) and symlinks skills into each agent's config directory from a shared canonical location (`~/.databricks/aitools/skills/`). By default skills install globally. Pass `--project` to scope them to the current project instead.
+```bash title="Specific agents"
+databricks experimental aitools install --agents claude-code,cursor
+```
+
+```bash title="Project scope"
+databricks experimental aitools install --project
+```
+
+The CLI auto-detects installed coding agents and symlinks skills into each agent's config directory from a shared canonical location (`~/.databricks/aitools/skills/`). Skills install globally by default.
 
 | Option           | Description                                    |
 | ---------------- | ---------------------------------------------- |
@@ -26,13 +34,13 @@ The CLI auto-detects installed coding agents (Claude Code, Cursor, Codex CLI, et
 
 ## Manage
 
-```bash
-databricks experimental aitools update
+```bash title="List, update, or remove skills"
 databricks experimental aitools list
+databricks experimental aitools update
 databricks experimental aitools uninstall
 ```
 
-`update` fetches the latest release and auto-installs new skills from the manifest. Pass `--check` for a dry run, `--no-new` to skip new skills, or `--force` to re-download even if versions match. `uninstall` removes all skills, or pass `--skills` to remove specific ones. All three commands accept `--global` (default) and `--project` to control scope.
+`update` fetches the latest release and auto-installs new skills from the manifest. Pass `--check` to preview without downloading. All commands accept `--global` (default) and `--project` to control scope.
 
 ## Other install methods
 
@@ -46,17 +54,15 @@ Cursor also supports `/add-plugin databricks-skills` in chat.
 
 ## Available skills
 
-Most skills declare `databricks-core` as a parent, so agents load it first for CLI and auth context.
+Run `databricks experimental aitools skills list` to see available skills and their install status.
 
-| Skill                      | Description                                                                                                                                                                     |
-| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `databricks-core`          | CLI operations, auth, profiles, and data exploration. Base skill for all others.                                                                                                |
-| `databricks-apps`          | Build apps on Databricks Apps using AppKit. Includes references for the AppKit SDK, SQL queries, tRPC, Lakebase, Model Serving, and testing.                                    |
-| `databricks-dabs`          | Create, configure, deploy, and manage Declarative Automation Bundles. References for bundle structure, pipelines, alerts, and permissions.                                      |
-| `databricks-jobs`          | Develop and deploy Lakeflow Jobs with notebooks, Python wheels, or SQL tasks.                                                                                                   |
-| `databricks-lakebase`      | Manage Lakebase Postgres Autoscaling projects, branches, and endpoints.                                                                                                         |
-| `databricks-model-serving` | Manage Model Serving endpoints for LLM inference, custom models, or external models. _(experimental)_                                                                           |
-| `databricks-pipelines`     | Develop Lakeflow Spark Declarative Pipelines (formerly DLT). Large reference set covering streaming tables, materialized views, Auto Loader, Auto CDC, expectations, and sinks. |
+| Skill                  | Description                                                                                                                                                                     |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `databricks`           | CLI operations, auth, profiles, and data exploration. Base skill loaded by all others.                                                                                          |
+| `databricks-apps`      | Build apps on Databricks Apps using AppKit. Includes references for the AppKit SDK, SQL queries, tRPC, Lakebase, Model Serving, and testing.                                    |
+| `databricks-jobs`      | Develop and deploy Lakeflow Jobs with notebooks, Python wheels, or SQL tasks.                                                                                                   |
+| `databricks-lakebase`  | Manage Lakebase Postgres Autoscaling projects, branches, and endpoints.                                                                                                         |
+| `databricks-pipelines` | Develop Lakeflow Spark Declarative Pipelines (formerly DLT). Large reference set covering streaming tables, materialized views, Auto Loader, Auto CDC, expectations, and sinks. |
 
 ## Other skill repositories
 

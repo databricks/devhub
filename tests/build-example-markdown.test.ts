@@ -238,3 +238,113 @@ describe("example Get started: full prompt (Copy prompt) vs export markdown (Cop
     expect(exportMd).not.toContain("### 2.");
   });
 });
+
+describe("init-style examples (databricks apps init)", () => {
+  const initExample: Example = {
+    ...minimalExample,
+    id: "init-example",
+    initCommand:
+      "databricks apps init \\\n  --template https://github.com/databricks/devhub/tree/main/examples/init-example/template \\\n  --name <app-name>",
+  };
+  const initOpts: ExampleMarkdownOptions = {
+    example: initExample,
+    githubUrl,
+    includedTemplates: [],
+    includedRecipes: [],
+    baseUrl,
+  };
+
+  test("export section uses scaffold copy, not clone copy", () => {
+    const section = buildExportGetStartedSection(initExample);
+    expect(section).toContain("scaffold this example");
+    expect(section).toContain("databricks apps init");
+    expect(section).not.toContain("clone the DevHub repository");
+    expect(section).not.toContain("**`template/README.md`**");
+    expect(section).toContain(initExample.initCommand);
+  });
+
+  test("export section surfaces auth prereq before init command", () => {
+    const section = buildExportGetStartedSection(initExample);
+    expect(section).toContain("databricks auth profiles");
+    expect(section).toContain("--profile");
+    const authIdx = section.indexOf("databricks auth profiles");
+    const initIdx = section.indexOf("```bash");
+    expect(authIdx).toBeLessThan(initIdx);
+  });
+
+  test("full prompt has auth verification as step 1 before scaffold step 2", () => {
+    const prompt = buildFullPrompt({ ...initOpts, rawMarkdown: "" });
+    expect(prompt).toContain("### 1. Verify Databricks CLI auth");
+    expect(prompt).toContain(
+      "### 2. Scaffold the project with `databricks apps init`",
+    );
+    expect(prompt).toContain("databricks auth profiles");
+    expect(prompt).toContain("databricks auth login --profile");
+    expect(prompt).not.toContain(
+      "### 1. Clone locally and follow `template/README.md`",
+    );
+    expect(prompt).toContain(initExample.initCommand);
+    const authIdx = prompt.indexOf("### 1. Verify Databricks CLI auth");
+    const scaffoldIdx = prompt.indexOf(
+      "### 2. Scaffold the project with `databricks apps init`",
+    );
+    expect(authIdx).toBeLessThan(scaffoldIdx);
+  });
+
+  test("prereq block is injected as step 2 and scaffold becomes step 3", () => {
+    const exampleWithPrereqs: Example = {
+      ...initExample,
+      agentPrereqSteps: [
+        "### 2. Create the Lakebase Postgres prerequisites",
+        "",
+        "```bash",
+        "databricks postgres create-project my-proj",
+        "```",
+      ].join("\n"),
+    };
+    const prompt = buildFullPrompt({
+      ...initOpts,
+      example: exampleWithPrereqs,
+      rawMarkdown: "",
+    });
+    expect(prompt).toContain("### 1. Verify Databricks CLI auth");
+    expect(prompt).toContain(
+      "### 2. Create the Lakebase Postgres prerequisites",
+    );
+    expect(prompt).toContain(
+      "### 3. Scaffold the project with `databricks apps init`",
+    );
+    expect(prompt).toContain("databricks postgres create-project my-proj");
+    const prereqIdx = prompt.indexOf(
+      "### 2. Create the Lakebase Postgres prerequisites",
+    );
+    const scaffoldIdx = prompt.indexOf(
+      "### 3. Scaffold the project with `databricks apps init`",
+    );
+    expect(prereqIdx).toBeLessThan(scaffoldIdx);
+  });
+
+  test("deploy block replaces the default README pointer when provided", () => {
+    const exampleWithDeploy: Example = {
+      ...initExample,
+      agentDeploySteps: [
+        "### 3. Install and deploy",
+        "",
+        "```bash",
+        "npm install",
+        "npm run deploy",
+        "```",
+      ].join("\n"),
+    };
+    const prompt = buildFullPrompt({
+      ...initOpts,
+      example: exampleWithDeploy,
+      rawMarkdown: "",
+    });
+    expect(prompt).toContain("### 3. Install and deploy");
+    expect(prompt).toContain("npm run deploy");
+    expect(prompt).not.toContain(
+      "A **`README.md`** ships inside the scaffolded project",
+    );
+  });
+});

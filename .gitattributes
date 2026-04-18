@@ -1,0 +1,5 @@
+# Collapse lockfiles in GitHub PR diffs and exclude them from language stats.
+# These files are always machine-generated and are excluded from bundle uploads
+# (see examples/rag-chat/template/databricks.yml:sync.exclude) so they don't
+# reach the Databricks Apps Linux build container.
+examples/*/template/package-lock.json linguist-generated=true -diff

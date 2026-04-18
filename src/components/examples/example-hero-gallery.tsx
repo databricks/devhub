@@ -29,8 +29,7 @@ export function ExampleHeroGallery({
 
   const current = variants.find((v) => v.id === viewId) ?? first;
   const rawPath =
-    current &&
-    (theme === "light" ? current.imageLight : current.imageDark);
+    current && (theme === "light" ? current.imageLight : current.imageDark);
   const src = useBaseUrl(rawPath ?? "");
 
   if (!current || variants.length === 0) {

@@ -20,7 +20,10 @@ import {
   RecipeCodeBlock,
 } from "@/components/templates/recipe-code-block";
 import { RecipeToc } from "@/components/templates/recipe-toc";
-import { buildMarkdownWithAboutDevhubLeadIn } from "@/lib/copy-about-devhub";
+import {
+  buildMarkdownWithAboutDevhubLeadIn,
+  useAboutDevhubBody,
+} from "@/lib/copy-about-devhub";
 import {
   buildFullPrompt,
   buildAdditionalMarkdown,
@@ -29,6 +32,8 @@ import {
 } from "@/lib/examples/build-example-markdown";
 import type { Example } from "@/lib/recipes/recipes";
 import { templates, recipes } from "@/lib/recipes/recipes";
+import { useExampleSections } from "@/lib/use-raw-content-markdown";
+import { joinContentSections } from "@/lib/content-sections";
 import { ResourceImageCarousel } from "@/components/examples/resource-image-carousel";
 import { ResourcePreviewImage } from "@/components/examples/resource-preview-image";
 import { FallbackCardArt } from "@/components/examples/fallback-card-art";
@@ -39,7 +44,6 @@ const GITHUB_BASE = "https://github.com/databricks/devhub/tree/main";
 
 type ExampleDetailProps = {
   example: Example;
-  rawMarkdown: string;
   children: ReactNode;
 };
 
@@ -86,10 +90,12 @@ function GetStartedSteps({
   example,
   fullPrompt,
   siteUrl,
+  aboutDevhubBody,
 }: {
   example: Example;
   fullPrompt: string;
   siteUrl: string;
+  aboutDevhubBody: string;
 }) {
   const isInit = example.initCommand
     .trimStart()
@@ -103,6 +109,7 @@ function GetStartedSteps({
     const originForCopy =
       typeof window !== "undefined" ? window.location.origin : base;
     const text = buildMarkdownWithAboutDevhubLeadIn(
+      aboutDevhubBody,
       `${originForCopy}/llms.txt`,
       fullPrompt,
     );
@@ -239,13 +246,16 @@ function GetStartedSteps({
 
 export function ExampleDetail({
   example,
-  rawMarkdown,
   children,
 }: ExampleDetailProps): ReactNode {
   const { siteConfig } = useDocusaurusContext();
   const contentRef = useRef<HTMLDivElement>(null);
   const permalink = `/resources/${example.id}`;
   const githubUrl = `${GITHUB_BASE}/${example.githubPath}`;
+
+  const sections = useExampleSections(example.id) ?? { content: "" };
+  const rawMarkdown = joinContentSections(sections);
+  const aboutDevhubBody = useAboutDevhubBody();
 
   const includedTemplates = example.templateIds
     .map((id) => templates.find((t) => t.id === id))
@@ -263,7 +273,7 @@ export function ExampleDetail({
     baseUrl: siteConfig.url,
   };
   const additionalMarkdown = buildAdditionalMarkdown(mdOpts);
-  const fullPrompt = buildFullPrompt({ ...mdOpts, rawMarkdown });
+  const fullPrompt = buildFullPrompt({ ...mdOpts, sections });
 
   return (
     <Layout title={example.name} description={example.description}>
@@ -351,6 +361,7 @@ export function ExampleDetail({
                   example={example}
                   fullPrompt={fullPrompt}
                   siteUrl={siteConfig.url}
+                  aboutDevhubBody={aboutDevhubBody}
                 />
 
                 <div className="recipe-content-card" ref={contentRef}>

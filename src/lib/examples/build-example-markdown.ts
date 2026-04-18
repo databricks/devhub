@@ -1,3 +1,4 @@
+import type { ContentSections } from "@/lib/content-sections";
 import type { Example } from "@/lib/recipes/recipes";
 
 type ResourceRef = { id: string; name: string; description: string };
@@ -9,6 +10,8 @@ export type ExampleMarkdownOptions = {
   includedRecipes: ResourceRef[];
   baseUrl: string;
 };
+
+export type ExampleSections = ContentSections;
 
 /** Outcome bullets shown in the Get started card (agent-first copy). */
 export const EXAMPLE_AGENT_OUTCOME_BULLETS = [
@@ -67,12 +70,12 @@ export function buildExportGetStartedSection(example: Example): string {
 }
 
 export function buildFullPrompt(
-  opts: ExampleMarkdownOptions & { rawMarkdown: string },
+  opts: ExampleMarkdownOptions & { sections: ExampleSections },
 ): string {
   const {
     example,
     githubUrl,
-    rawMarkdown,
+    sections,
     includedTemplates,
     includedRecipes,
     baseUrl,
@@ -88,8 +91,8 @@ export function buildFullPrompt(
   ];
 
   if (isInitCommand(example.initCommand)) {
-    const hasPrereqs = Boolean(example.agentPrereqSteps);
-    const hasDeployBlock = Boolean(example.agentDeploySteps);
+    const hasPrereqs = Boolean(sections.prerequisites);
+    const hasDeployBlock = Boolean(sections.deployment);
     const initStepNumber = hasPrereqs ? 3 : 2;
 
     lines.push(
@@ -116,7 +119,7 @@ export function buildFullPrompt(
     );
 
     if (hasPrereqs) {
-      lines.push(example.agentPrereqSteps!, "");
+      lines.push(sections.prerequisites!, "");
     }
 
     lines.push(
@@ -131,7 +134,7 @@ export function buildFullPrompt(
     );
 
     if (hasDeployBlock) {
-      lines.push(example.agentDeploySteps!, "");
+      lines.push(sections.deployment!, "");
     } else {
       lines.push(
         "A **`README.md`** ships inside the scaffolded project. Follow it end to end to configure, run, and deploy the app.",
@@ -159,8 +162,8 @@ export function buildFullPrompt(
     );
   }
 
-  if (rawMarkdown) {
-    lines.push("", rawMarkdown);
+  if (sections.content) {
+    lines.push("", sections.content);
   }
 
   lines.push("", `## Source Code`, "", `GitHub: ${githubUrl}`);

@@ -1,0 +1,6 @@
+Verify these Databricks workspace features are enabled before starting. If any check fails, ask your workspace admin to enable the feature.
+
+- **Databricks CLI authenticated.** Run `databricks auth profiles` and confirm at least one profile shows `Valid: YES`. If none do, authenticate with `databricks auth login --host <workspace-url> --profile <PROFILE>`.
+- **Model Serving enabled.** Run `databricks serving-endpoints list --profile <PROFILE>` and confirm the command succeeds (an empty list is fine — you are about to create an endpoint). A permission or `not enabled` error means Model Serving is not available to this identity.
+- **Permission to create serving endpoints.** The Databricks CLI call in Step 3 requires the `CAN_MANAGE` serving-endpoint permission on the workspace. If `databricks serving-endpoints create` returns `PERMISSION_DENIED`, ask your admin to grant it.
+- **A foundation model or registered MLflow model to serve.** List foundation-model entities available to your workspace with `databricks serving-endpoints get-open-api --profile <PROFILE> -o json`. If you plan to serve a registered Unity Catalog model instead, confirm it exists in the Databricks UI under **Models** before running `databricks serving-endpoints create`.

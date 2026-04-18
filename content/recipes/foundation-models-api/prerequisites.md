@@ -1,0 +1,4 @@
+Verify these Databricks workspace features are enabled before starting. If any check fails, ask your workspace admin to enable the feature.
+
+- **Databricks CLI authenticated.** Run `databricks auth profiles` and confirm at least one profile shows `Valid: YES`. If none do, authenticate with `databricks auth login --host <workspace-url> --profile <PROFILE>`.
+- **AI Gateway (currently in Beta).** AI Gateway is built into all Foundation Model API endpoints, but it is still a **Beta** feature — behavior and APIs can change. Confirm availability by listing endpoints and checking the config: `databricks serving-endpoints list --profile <PROFILE>` should return at least one `databricks-*` foundation-model endpoint, and `databricks serving-endpoints get <endpoint-name> --profile <PROFILE> -o json | grep -q '"ai_gateway"' && echo ok` should print `ok`. Endpoint availability varies by workspace and region.

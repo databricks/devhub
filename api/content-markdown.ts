@@ -2,7 +2,14 @@ import { existsSync, readFileSync } from "fs";
 import { resolve } from "path";
 import { substituteAboutDevhubLlmsUrl } from "../src/lib/copy-preamble";
 import { ABOUT_DEVHUB_SLUG } from "../src/lib/bootstrap-prompt";
-import { hasMarkdownSlug } from "../src/lib/content-markdown";
+import {
+  hasContentSlug,
+  hasSolutionSlug,
+  joinContentSections,
+  readContentSections,
+  readCookbookIntro,
+} from "../src/lib/content-markdown";
+import { buildCookbookMarkdownDocument } from "../src/lib/cookbook-composition";
 import { expandMdxImports } from "../src/lib/expand-mdx";
 import {
   examples,
@@ -21,10 +28,6 @@ export type MarkdownSection =
   | "examples"
   | "templates"
   | "resources";
-
-function recipeMarkdownPath(recipeId: string): string {
-  return `content/recipes/${recipeId}.md`;
-}
 
 function validateSlug(slug: string): void {
   if (!slug || slug.trim() === "") {
@@ -74,7 +77,7 @@ function readDocsMarkdown(rootDir: string, slug: string): string {
 }
 
 function readSolutionMarkdown(rootDir: string, slug: string): string {
-  if (!hasMarkdownSlug(rootDir, "solutions", slug)) {
+  if (!hasSolutionSlug(rootDir, slug)) {
     throw new Error(`Solution page not found: "${slug}"`);
   }
 
@@ -89,69 +92,50 @@ function readSolutionMarkdown(rootDir: string, slug: string): string {
 }
 
 function readRecipeMarkdown(rootDir: string, slug: string): string {
-  if (!hasMarkdownSlug(rootDir, "recipes", slug)) {
+  if (!hasContentSlug(rootDir, "recipes", slug)) {
     throw new Error(`Recipe page not found: "${slug}"`);
   }
-
-  const contentPath = resolve(rootDir, "content", "recipes", `${slug}.md`);
-  const content = readIfExists(contentPath);
-  if (!content) {
-    throw new Error(
-      `Recipe markdown source missing for "${slug}" at content/recipes/${slug}.md`,
-    );
-  }
-  return content;
+  return joinContentSections(readContentSections(rootDir, "recipes", slug));
 }
 
 function readExampleMarkdown(rootDir: string, slug: string): string {
-  if (!hasMarkdownSlug(rootDir, "examples", slug)) {
+  if (!hasContentSlug(rootDir, "examples", slug)) {
     throw new Error(`Example page not found: "${slug}"`);
   }
 
-  const contentPath = resolve(rootDir, "content", "examples", `${slug}.md`);
-  const content = readIfExists(contentPath);
-  if (!content) {
-    throw new Error(
-      `Example markdown source missing for "${slug}" at content/examples/${slug}.md`,
-    );
-  }
+  const content = joinContentSections(
+    readContentSections(rootDir, "examples", slug),
+  );
 
   const example = examples.find((e) => e.id === slug);
-  const lines: string[] = [];
-  if (example) {
-    lines.push(content.trim(), "");
-    if (example.initCommand) {
-      lines.push(
-        "## Quick start",
-        "",
-        "```bash",
-        example.initCommand,
-        "```",
-        "",
-      );
-    }
-    if (example.githubPath) {
-      lines.push(
-        `[View source on GitHub](https://github.com/databricks/devhub/tree/main/${example.githubPath})`,
-        "",
-      );
-    }
-    const includedResources = [
-      ...example.templateIds.map((id) => templates.find((t) => t.id === id)),
-      ...example.recipeIds.map((id) => recipes.find((r) => r.id === id)),
-    ].filter(Boolean);
-    if (includedResources.length > 0) {
-      lines.push("## Included Resources", "");
-      for (const resource of includedResources) {
-        lines.push(
-          `- [${resource.name}](/resources/${resource.id}.md): ${resource.description}`,
-        );
-      }
-      lines.push("");
-    }
-    return lines.join("\n");
+  if (!example) {
+    return content;
   }
-  return content;
+
+  const lines: string[] = [content.trim(), ""];
+  if (example.initCommand) {
+    lines.push("## Quick start", "", "```bash", example.initCommand, "```", "");
+  }
+  if (example.githubPath) {
+    lines.push(
+      `[View source on GitHub](https://github.com/databricks/devhub/tree/main/${example.githubPath})`,
+      "",
+    );
+  }
+  const includedResources = [
+    ...example.templateIds.map((id) => templates.find((t) => t.id === id)),
+    ...example.recipeIds.map((id) => recipes.find((r) => r.id === id)),
+  ].filter(Boolean);
+  if (includedResources.length > 0) {
+    lines.push("## Included Resources", "");
+    for (const resource of includedResources) {
+      lines.push(
+        `- [${resource.name}](/resources/${resource.id}.md): ${resource.description}`,
+      );
+    }
+    lines.push("");
+  }
+  return lines.join("\n");
 }
 
 function readTemplateMarkdown(rootDir: string, slug: string): string {
@@ -160,49 +144,34 @@ function readTemplateMarkdown(rootDir: string, slug: string): string {
     throw new Error(`Template page not found: "${slug}"`);
   }
 
-  const lines: string[] = [
-    "---",
-    `title: "${template.name.replace(/"/g, '\\"')}"`,
-    `url: /resources/${template.id}`,
-    `summary: "${template.description.replace(/"/g, '\\"')}"`,
-    "---",
-    "",
-    `# ${template.name}`,
-    "",
-    template.description,
-    "",
-  ];
-
-  for (const recipeId of template.recipeIds) {
+  const recipeInputs = template.recipeIds.map((recipeId) => {
     const recipe = recipes.find((entry) => entry.id === recipeId);
     if (!recipe) {
       throw new Error(`Recipe not found: "${recipeId}"`);
     }
-    if (!hasMarkdownSlug(rootDir, "recipes", recipeId)) {
+    if (!hasContentSlug(rootDir, "recipes", recipeId)) {
       throw new Error(`Recipe page not found: "${recipeId}"`);
     }
+    return {
+      id: recipe.id,
+      name: recipe.name,
+      sections: readContentSections(rootDir, "recipes", recipeId),
+    };
+  });
 
-    const recipePath = recipeMarkdownPath(recipeId);
-    const absoluteRecipePath = resolve(rootDir, recipePath);
-    const recipeContent = readIfExists(absoluteRecipePath);
-    if (!recipeContent) {
-      throw new Error(
-        `Recipe markdown missing for "${recipeId}" at ${recipePath}`,
-      );
-    }
-
-    lines.push(recipeContent.trim());
-    lines.push("");
-  }
-
-  return lines.join("\n");
+  return buildCookbookMarkdownDocument({
+    templateName: template.name,
+    templateDescription: template.description,
+    intro: readCookbookIntro(rootDir, slug),
+    recipes: recipeInputs,
+  });
 }
 
 function readResourceMarkdown(rootDir: string, slug: string): string {
-  if (hasMarkdownSlug(rootDir, "recipes", slug)) {
+  if (hasContentSlug(rootDir, "recipes", slug)) {
     return readRecipeMarkdown(rootDir, slug);
   }
-  if (hasMarkdownSlug(rootDir, "examples", slug)) {
+  if (hasContentSlug(rootDir, "examples", slug)) {
     return readExampleMarkdown(rootDir, slug);
   }
   const template = templates.find((t) => t.id === slug);

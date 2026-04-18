@@ -25,6 +25,7 @@ import {
 import {
   buildAboutDevhubForBrowserCopy,
   buildMarkdownWithAboutDevhubLeadIn,
+  useAboutDevhubBody,
 } from "@/lib/copy-about-devhub";
 
 type AIExportMenuProps = {
@@ -59,6 +60,7 @@ export function AIExportMenu({
   const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
   const fullUrl = baseUrl + permalink;
   const mcpUrl = baseUrl + "/api/mcp";
+  const aboutDevhubBody = useAboutDevhubBody();
   const fetchedMarkdownRef = useRef<string | null>(null);
 
   useEffect(() => {
@@ -82,14 +84,18 @@ export function AIExportMenu({
     const llmsUrl = `${originForCopy}/llms.txt`;
 
     if (agentBodyAfterAbout !== undefined) {
-      return buildMarkdownWithAboutDevhubLeadIn(llmsUrl, agentBodyAfterAbout);
+      return buildMarkdownWithAboutDevhubLeadIn(
+        aboutDevhubBody,
+        llmsUrl,
+        agentBodyAfterAbout,
+      );
     }
 
     const rawContent = resolveContent();
     const escapedTitle = title.replace(/"/g, '\\"');
     const escapedDescription = description.replace(/"/g, '\\"');
 
-    const about = buildAboutDevhubForBrowserCopy(llmsUrl);
+    const about = buildAboutDevhubForBrowserCopy(aboutDevhubBody, llmsUrl);
     let md = `${about}\n\n`;
     md += `---\ntitle: "${escapedTitle}"\nurl: ${fullUrl}\nsummary: "${escapedDescription}"\n---\n\n`;
     if (rawContent) md += `${rawContent}\n\n`;
@@ -97,6 +103,7 @@ export function AIExportMenu({
     return md;
   }, [
     agentBodyAfterAbout,
+    aboutDevhubBody,
     resolveContent,
     additionalMarkdown,
     title,

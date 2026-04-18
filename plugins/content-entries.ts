@@ -1,7 +1,13 @@
 import { readFileSync } from "fs";
 import { resolve } from "path";
 import type { LoadContext, Plugin } from "@docusaurus/types";
-import { getMarkdownSlugs } from "../src/lib/content-markdown";
+import {
+  getContentSlugs,
+  getSolutionSlugs,
+  joinContentSections,
+  readContentSections,
+  type ContentSections,
+} from "../src/lib/content-markdown";
 import {
   recipes,
   examples,
@@ -38,32 +44,50 @@ type ContentEntriesPluginOptions = {
   contentSection: "recipes" | "solutions" | "examples";
 };
 
-function createRouteModuleSource(entryType: EntryType, slug: string): string {
+function createFolderRouteModuleSource(
+  entryType: "recipe" | "example",
+  slug: string,
+  sections: ContentSections,
+): string {
+  const section = entryType === "recipe" ? "recipes" : "examples";
+  const hasPrereqs = sections.prerequisites !== undefined;
+  const hasDeploy = sections.deployment !== undefined;
+
+  const imports: string[] = [
+    `import Content from "@site/content/${section}/${slug}/content.md";`,
+  ];
+  if (hasPrereqs) {
+    imports.push(
+      `import Prerequisites from "@site/content/${section}/${slug}/prerequisites.md";`,
+    );
+  }
+  if (hasDeploy) {
+    imports.push(
+      `import Deployment from "@site/content/${section}/${slug}/deployment.md";`,
+    );
+  }
+
+  const prereqsBlock = hasPrereqs
+    ? '      <h2 id="prerequisites">Prerequisites</h2>\n      <Prerequisites />'
+    : null;
+  const deployBlock = hasDeploy
+    ? '      <h2 id="deployment">Deployment</h2>\n      <Deployment />'
+    : null;
+
+  const children = [prereqsBlock, "      <Content />", deployBlock]
+    .filter(Boolean)
+    .join("\n");
+
   if (entryType === "recipe") {
     return `import type { ReactNode } from "react";
 import { RecipeDetail } from "@/components/templates/recipe-detail";
-import EntryContent from "@site/content/recipes/${slug}.md";
+${imports.join("\n")}
 
 export default function RecipeEntryPage(): ReactNode {
   return (
     <RecipeDetail recipeId="${slug}">
-      <EntryContent />
+${children}
     </RecipeDetail>
-  );
-}
-`;
-  }
-
-  if (entryType === "solution") {
-    return `import type { ReactNode } from "react";
-import { SolutionDetail } from "@/components/solutions/solution-detail";
-import EntryContent from "@site/content/solutions/${slug}.md";
-
-export default function SolutionEntryPage(): ReactNode {
-  return (
-    <SolutionDetail solutionId="${slug}">
-      <EntryContent />
-    </SolutionDetail>
   );
 }
 `;
@@ -72,18 +96,31 @@ export default function SolutionEntryPage(): ReactNode {
   return `import type { ReactNode } from "react";
 import { ExampleDetail } from "@/components/examples/example-detail";
 import { examples } from "@/lib/recipes/recipes";
-import { useRawExampleMarkdown } from "@/lib/use-raw-content-markdown";
-import EntryContent from "@site/content/examples/${slug}.md";
+${imports.join("\n")}
 
 const example = examples.find((e) => e.id === "${slug}");
 
 export default function ExampleEntryPage(): ReactNode {
-  const rawMarkdown = useRawExampleMarkdown("${slug}");
   if (!example) throw new Error("Example ${slug} not found");
   return (
-    <ExampleDetail example={example} rawMarkdown={rawMarkdown}>
-      <EntryContent />
+    <ExampleDetail example={example}>
+${children}
     </ExampleDetail>
+  );
+}
+`;
+}
+
+function createSolutionRouteModuleSource(slug: string): string {
+  return `import type { ReactNode } from "react";
+import { SolutionDetail } from "@/components/solutions/solution-detail";
+import EntryContent from "@site/content/solutions/${slug}.md";
+
+export default function SolutionEntryPage(): ReactNode {
+  return (
+    <SolutionDetail solutionId="${slug}">
+      <EntryContent />
+    </SolutionDetail>
   );
 }
 `;
@@ -149,23 +186,42 @@ export default function contentEntriesPlugin(
     async contentLoaded({ actions }) {
       const { addRoute, createData, setGlobalData } = actions;
       assertNoDuplicateSlugs();
-      const contentSlugs = getMarkdownSlugs(
-        context.siteDir,
-        options.contentSection,
-      );
+
+      const folderSection: "recipes" | "examples" | null =
+        options.entryType === "recipe"
+          ? "recipes"
+          : options.entryType === "example"
+            ? "examples"
+            : null;
+
+      const contentSlugs = folderSection
+        ? getContentSlugs(context.siteDir, folderSection)
+        : getSolutionSlugs(context.siteDir);
       assertSlugParity(options.entryType, contentSlugs);
 
       const publishedSlugs = getRegistrySlugs(options.entryType);
 
+      const sectionsBySlug: Record<string, ContentSections> = {};
       const rawMarkdownBySlug: Record<string, string> = {};
+
       for (const slug of publishedSlugs) {
-        const filePath = resolve(
-          context.siteDir,
-          "content",
-          options.contentSection,
-          `${slug}.md`,
-        );
-        rawMarkdownBySlug[slug] = readFileSync(filePath, "utf-8");
+        if (folderSection) {
+          const sections = readContentSections(
+            context.siteDir,
+            folderSection,
+            slug,
+          );
+          sectionsBySlug[slug] = sections;
+          rawMarkdownBySlug[slug] = joinContentSections(sections);
+        } else {
+          const filePath = resolve(
+            context.siteDir,
+            "content",
+            options.contentSection,
+            `${slug}.md`,
+          );
+          rawMarkdownBySlug[slug] = readFileSync(filePath, "utf-8");
+        }
       }
 
       setGlobalData({
@@ -173,12 +229,22 @@ export default function contentEntriesPlugin(
         routeBasePath: options.routeBasePath,
         slugs: publishedSlugs,
         rawMarkdownBySlug,
+        sectionsBySlug,
       });
 
       for (const slug of publishedSlugs) {
+        const source =
+          options.entryType === "recipe" || options.entryType === "example"
+            ? createFolderRouteModuleSource(
+                options.entryType,
+                slug,
+                sectionsBySlug[slug],
+              )
+            : createSolutionRouteModuleSource(slug);
+
         const modulePath = await createData(
           `${options.id}-${slug}-route.tsx`,
-          createRouteModuleSource(options.entryType, slug),
+          source,
         );
 
         addRoute({

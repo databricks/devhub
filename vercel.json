@@ -6,11 +6,11 @@
       "maxDuration": 30
     },
     "api/markdown.ts": {
-      "includeFiles": "{docs/**,content/about-devhub.md,content/solutions/**,content/recipes/**,content/examples/**}",
+      "includeFiles": "{docs/**,content/about-devhub.md,content/solutions/**,content/recipes/**/*.md,content/examples/**/*.md}",
       "maxDuration": 30
     },
     "api/bootstrap-prompt.ts": {
-      "includeFiles": "{content/about-devhub.md,content/recipes/**}",
+      "includeFiles": "{content/about-devhub.md,content/recipes/**/*.md}",
       "maxDuration": 10
     }
   },

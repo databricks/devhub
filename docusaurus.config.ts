@@ -2,7 +2,9 @@ import { themes as prismThemes } from "prism-react-renderer";
 import type { Config } from "@docusaurus/types";
 import type * as Preset from "@docusaurus/preset-classic";
 import path from "path";
+import aboutDevhubPlugin from "./plugins/about-devhub";
 import contentEntriesPlugin from "./plugins/content-entries";
+import cookbooksPlugin from "./plugins/cookbooks";
 import llmsTxtPlugin from "./plugins/llms-txt";
 import remarkCliTabs from "./plugins/remark-cli-tabs";
 import { examplesEnabled, showDrafts } from "./src/lib/feature-flags-server";
@@ -113,6 +115,8 @@ const config: Config = {
       },
     ],
     llmsTxtPlugin,
+    aboutDevhubPlugin,
+    cookbooksPlugin,
   ],
 
   themeConfig: {

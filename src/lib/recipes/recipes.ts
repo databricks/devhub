@@ -494,19 +494,6 @@ export type Example = ResourcePreview & {
   description: string;
   githubPath: string;
   initCommand: string;
-  /**
-   * Optional markdown block injected into the agent prompt BEFORE the init command,
-   * describing any provisioning the agent must do first (e.g. creating a Lakebase
-   * Postgres project). Leave unset for examples with no external prerequisites.
-   */
-  agentPrereqSteps?: string;
-  /**
-   * Optional markdown block injected into the agent prompt AFTER the init command,
-   * describing local setup and deploy. Use for init-style examples where "cd in,
-   * fill in env, npm install, npm run deploy" is the expected flow. When unset, the
-   * agent is told to follow the generated README.
-   */
-  agentDeploySteps?: string;
   templateIds: string[];
   recipeIds: string[];
   tags: string[];
@@ -530,8 +517,6 @@ type ExampleConfig = {
   description: string;
   githubPath: string;
   initCommand: string;
-  agentPrereqSteps?: string;
-  agentDeploySteps?: string;
   templateIds: string[];
   recipeIds: string[];
   previewImageLightUrl?: string;
@@ -643,56 +628,6 @@ export const examples: Example[] = [
     githubPath: "examples/rag-chat",
     initCommand:
       'databricks apps init \\\n  --template https://github.com/databricks/devhub/tree/main/examples/rag-chat/template \\\n  --name rag-chat-app \\\n  --set lakebase.postgres.branch="$BRANCH_NAME" \\\n  --set lakebase.postgres.database="$DATABASE_NAME"',
-    agentPrereqSteps: [
-      "### 2. Create the Lakebase Postgres prerequisites",
-      "",
-      "The template's AppKit Lakebase plugin requires an existing Postgres **branch** and **database**. `databricks postgres create-project` automatically provisions a default branch named `production` and a default database on it, so one command is all you need. Pick a short lowercase project id and export the resolved resource names — the next step's `databricks apps init` command reads them as shell variables.",
-      "",
-      "```bash",
-      "PROJECT_ID=rag-chat",
-      "",
-      'databricks postgres create-project "$PROJECT_ID"',
-      "",
-      'export BRANCH_NAME="projects/$PROJECT_ID/branches/production"',
-      'export DATABASE_NAME=$(databricks api get "/api/2.0/postgres/$BRANCH_NAME/databases" -o json | \\',
-      "  python3 -c \"import json,sys; print(json.load(sys.stdin)['databases'][0]['name'])\")",
-      "",
-      'echo "Branch:   $BRANCH_NAME"',
-      'echo "Database: $DATABASE_NAME"',
-      "```",
-      "",
-      "`create-project` is long-running; the CLI waits for it to finish by default. **If it reports `already exists`:**",
-      "",
-      "- **Prefer picking a different `PROJECT_ID`** (e.g. append a short suffix) and re-export `BRANCH_NAME` / `DATABASE_NAME` from the new id. Lakebase projects can hold data that other apps and pipelines depend on, so do **not** run `databricks postgres delete-project` on an existing project without explicit confirmation from the user that nothing else uses it.",
-      "- **Eventual-consistency exception:** if you just deleted a project with this id in the same session and `databricks postgres list-projects` no longer shows it, wait 30–60s and retry `create-project` — the control plane is briefly inconsistent after deletion.",
-    ].join("\n"),
-    agentDeploySteps: [
-      "### 4. Install and deploy",
-      "",
-      "`databricks apps init` already wrote `.env` with the resolved Lakebase connection details. For a deploy-only flow you can go straight to deploy — `DATABRICKS_WORKSPACE_ID` and the Lakebase variables are auto-injected into the deployed runtime from `app.yaml` and the bound `postgres` resource.",
-      "",
-      "```bash",
-      "cd rag-chat-app",
-      "npm install",
-      "npm run deploy",
-      "```",
-      "",
-      "`npm run deploy` wraps three steps: hydrate the bundle variable overrides from `.env` + the Lakebase Postgres API (`scripts/sync-bundle-vars.mjs`), `databricks bundle deploy` (creates the Databricks app on first run), and `databricks bundle run app` (starts it and prints the URL).",
-      "",
-      "#### Optional — run locally before deploying",
-      "",
-      "Local `npm run dev` needs `DATABRICKS_WORKSPACE_ID` (the **numeric** id used to build the AI Gateway URL) in `.env`. In the deployed app this is auto-injected; locally you have to fetch and patch it yourself:",
-      "",
-      "```bash",
-      "WORKSPACE_ID=$(databricks api get /api/2.1/unity-catalog/current-metastore-assignment \\",
-      "  | python3 -c \"import json,sys;print(json.load(sys.stdin)['workspace_id'])\")",
-      'sed -i.bak "s/^DATABRICKS_WORKSPACE_ID=.*/DATABRICKS_WORKSPACE_ID=$WORKSPACE_ID/" .env && rm .env.bak',
-      "",
-      "npm run dev",
-      "```",
-      "",
-      "(Optionally override `DATABRICKS_ENDPOINT` / `DATABRICKS_EMBEDDING_ENDPOINT` in `.env` if you want different chat / embeddings endpoints — also applies to deploy via `app.yaml`.)",
-    ].join("\n"),
     templateIds: ["ai-chat-app"],
     recipeIds: ["ai-chat-model-serving", "lakebase-chat-persistence"],
     previewImageLightUrl: "/img/examples/rag-chat-preview-light.png",

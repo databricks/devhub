@@ -5,7 +5,10 @@ import {
   buildExportGetStartedSection,
   buildIncludedGuidesPreamble,
 } from "../src/lib/examples/build-example-markdown";
-import type { ExampleMarkdownOptions } from "../src/lib/examples/build-example-markdown";
+import type {
+  ExampleMarkdownOptions,
+  ExampleSections,
+} from "../src/lib/examples/build-example-markdown";
 import type { Example } from "../src/lib/recipes/recipes";
 
 const minimalExample: Example = {
@@ -26,16 +29,19 @@ const githubUrl =
 
 const baseUrl = "https://example.com";
 
-const sampleRawMarkdown = [
+const sampleContentMarkdown = [
   "## Test Example",
   "",
-  "This is the example overview from content/examples/test-example.md.",
+  "This is the example overview from content/examples/test-example/content.md.",
   "",
   "### Data Flow",
   "",
   "1. Step one",
   "2. Step two",
 ].join("\n");
+
+const emptySections: ExampleSections = { content: "" };
+const contentOnlySections: ExampleSections = { content: sampleContentMarkdown };
 
 const sampleTemplates = [
   { id: "tmpl-a", name: "Template A", description: "First template." },
@@ -79,13 +85,13 @@ describe("buildExportGetStartedSection", () => {
 
 describe("buildFullPrompt", () => {
   test("includes example name and description", () => {
-    const prompt = buildFullPrompt({ ...baseOpts, rawMarkdown: "" });
+    const prompt = buildFullPrompt({ ...baseOpts, sections: emptySections });
     expect(prompt).toContain("# Test Example");
     expect(prompt).toContain("A test example for unit tests.");
   });
 
   test("includes get started steps", () => {
-    const prompt = buildFullPrompt({ ...baseOpts, rawMarkdown: "" });
+    const prompt = buildFullPrompt({ ...baseOpts, sections: emptySections });
     expect(prompt).toContain("## Get started");
     expect(prompt).toContain(
       "### 1. Clone locally and follow `template/README.md`",
@@ -101,20 +107,20 @@ describe("buildFullPrompt", () => {
     expect(prompt).not.toContain("### 3. Deploy the application");
   });
 
-  test("includes rawMarkdown content", () => {
+  test("includes content section body", () => {
     const prompt = buildFullPrompt({
       ...baseOpts,
-      rawMarkdown: sampleRawMarkdown,
+      sections: contentOnlySections,
     });
     expect(prompt).toContain("This is the example overview");
     expect(prompt).toContain("### Data Flow");
     expect(prompt).toContain("1. Step one");
   });
 
-  test("rawMarkdown appears after get started and before source code", () => {
+  test("content body appears after get started and before source code", () => {
     const prompt = buildFullPrompt({
       ...baseOpts,
-      rawMarkdown: sampleRawMarkdown,
+      sections: contentOnlySections,
     });
     const getStartedIdx = prompt.indexOf("### 1. Clone locally");
     const rawIdx = prompt.indexOf("This is the example overview");
@@ -124,7 +130,7 @@ describe("buildFullPrompt", () => {
   });
 
   test("includes github link", () => {
-    const prompt = buildFullPrompt({ ...baseOpts, rawMarkdown: "" });
+    const prompt = buildFullPrompt({ ...baseOpts, sections: emptySections });
     expect(prompt).toContain("## Source Code");
     expect(prompt).toContain(githubUrl);
   });
@@ -132,7 +138,7 @@ describe("buildFullPrompt", () => {
   test("includes guides from templates and recipes", () => {
     const prompt = buildFullPrompt({
       ...baseOpts,
-      rawMarkdown: "",
+      sections: emptySections,
       includedTemplates: sampleTemplates,
       includedRecipes: sampleRecipes,
     });
@@ -147,12 +153,12 @@ describe("buildFullPrompt", () => {
   });
 
   test("omits guides section when no templates or recipes", () => {
-    const prompt = buildFullPrompt({ ...baseOpts, rawMarkdown: "" });
+    const prompt = buildFullPrompt({ ...baseOpts, sections: emptySections });
     expect(prompt).not.toContain("## Included guides");
   });
 
-  test("omits rawMarkdown section when empty string", () => {
-    const prompt = buildFullPrompt({ ...baseOpts, rawMarkdown: "" });
+  test("omits content body when section is empty", () => {
+    const prompt = buildFullPrompt({ ...baseOpts, sections: emptySections });
     expect(prompt).not.toContain("This is the example overview");
     expect(prompt).toContain("## Source Code");
   });
@@ -198,14 +204,14 @@ describe("buildAdditionalMarkdown", () => {
 });
 
 describe("buildFullPrompt matches Copy as Markdown content", () => {
-  test("full prompt includes same rawMarkdown as Copy as Markdown would", () => {
+  test("full prompt includes same content body as Copy as Markdown would", () => {
     const prompt = buildFullPrompt({
       ...baseOpts,
-      rawMarkdown: sampleRawMarkdown,
+      sections: contentOnlySections,
       includedTemplates: sampleTemplates,
       includedRecipes: sampleRecipes,
     });
-    for (const line of sampleRawMarkdown.split("\n").filter(Boolean)) {
+    for (const line of sampleContentMarkdown.split("\n").filter(Boolean)) {
       expect(prompt).toContain(line);
     }
   });
@@ -213,7 +219,7 @@ describe("buildFullPrompt matches Copy as Markdown content", () => {
 
 describe("example Get started: full prompt (Copy prompt) vs export markdown (Copy as Markdown)", () => {
   test("full prompt uses ### substeps; export uses ## Get started without ### clone substep", () => {
-    const full = buildFullPrompt({ ...baseOpts, rawMarkdown: "" });
+    const full = buildFullPrompt({ ...baseOpts, sections: emptySections });
     const exportMd = buildAdditionalMarkdown(baseOpts);
 
     expect(full).toContain(
@@ -272,7 +278,7 @@ describe("init-style examples (databricks apps init)", () => {
   });
 
   test("full prompt has auth verification as step 1 before scaffold step 2", () => {
-    const prompt = buildFullPrompt({ ...initOpts, rawMarkdown: "" });
+    const prompt = buildFullPrompt({ ...initOpts, sections: emptySections });
     expect(prompt).toContain("### 1. Verify Databricks CLI auth");
     expect(prompt).toContain(
       "### 2. Scaffold the project with `databricks apps init`",
@@ -290,10 +296,10 @@ describe("init-style examples (databricks apps init)", () => {
     expect(authIdx).toBeLessThan(scaffoldIdx);
   });
 
-  test("prereq block is injected as step 2 and scaffold becomes step 3", () => {
-    const exampleWithPrereqs: Example = {
-      ...initExample,
-      agentPrereqSteps: [
+  test("prereq section is injected as step 2 and scaffold becomes step 3", () => {
+    const sections: ExampleSections = {
+      content: "",
+      prerequisites: [
         "### 2. Create the Lakebase Postgres prerequisites",
         "",
         "```bash",
@@ -303,8 +309,7 @@ describe("init-style examples (databricks apps init)", () => {
     };
     const prompt = buildFullPrompt({
       ...initOpts,
-      example: exampleWithPrereqs,
-      rawMarkdown: "",
+      sections,
     });
     expect(prompt).toContain("### 1. Verify Databricks CLI auth");
     expect(prompt).toContain(
@@ -323,10 +328,10 @@ describe("init-style examples (databricks apps init)", () => {
     expect(prereqIdx).toBeLessThan(scaffoldIdx);
   });
 
-  test("deploy block replaces the default README pointer when provided", () => {
-    const exampleWithDeploy: Example = {
-      ...initExample,
-      agentDeploySteps: [
+  test("deploy section replaces the default README pointer when provided", () => {
+    const sections: ExampleSections = {
+      content: "",
+      deployment: [
         "### 3. Install and deploy",
         "",
         "```bash",
@@ -337,8 +342,7 @@ describe("init-style examples (databricks apps init)", () => {
     };
     const prompt = buildFullPrompt({
       ...initOpts,
-      example: exampleWithDeploy,
-      rawMarkdown: "",
+      sections,
     });
     expect(prompt).toContain("### 3. Install and deploy");
     expect(prompt).toContain("npm run deploy");

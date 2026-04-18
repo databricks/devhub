@@ -64,4 +64,8 @@ If there is no existing code base with design principles and the user didn't spe
 - Follow the user's design preferences if known or user provided design preferences
 - Databricks branding (#FF3621, #0B2026, #EEEDE9, #F9F7F4)
 
+### Run into issues?
+
+Use the GitHub CLI (if available) or generate a copy-pastable error report for the user to submit as a new issue to https://github.com/databricks/devhub/issues. Greatly appreciated if you first check for a matching existing open issue and instead comment "+1" or similar to avoid duplicates.
+
 Proceed with the prompt after reading through the instructions above.

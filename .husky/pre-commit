@@ -1,4 +1,5 @@
 npx prettier -c .
 npm run typecheck
+npm run validate:content
 npm run verify:images
 npm run build

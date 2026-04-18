@@ -34,6 +34,38 @@ describe("detail markdown resolver", () => {
     expect(markdown).toContain("## Databricks Local App Development Bootstrap");
   });
 
+  test("template markdown hoists all recipe prereqs before any recipe content", () => {
+    const markdown = getDetailMarkdown("templates", "ai-chat-app");
+
+    const firstLineStart = (pattern: RegExp): number =>
+      markdown.search(pattern);
+
+    const prereqIdx = firstLineStart(/^## Prerequisites$/m);
+    const bootstrapContentIdx = firstLineStart(
+      /^## Databricks Local App Development Bootstrap$/m,
+    );
+    const lakebaseContentIdx = firstLineStart(
+      /^## Lakebase Chat Persistence$/m,
+    );
+
+    expect(prereqIdx).toBeGreaterThanOrEqual(0);
+    expect(prereqIdx).toBeLessThan(bootstrapContentIdx);
+    expect(bootstrapContentIdx).toBeLessThan(lakebaseContentIdx);
+    // Only one combined `## Prerequisites` heading, with demoted H3 per recipe.
+    expect(markdown.match(/^## Prerequisites$/gm)?.length).toBe(1);
+    expect(markdown).toMatch(/^### Databricks Local Bootstrap$/m);
+    expect(markdown).toMatch(/^### Lakebase Chat Persistence$/m);
+  });
+
+  test("template markdown includes cookbook intro.md above Prerequisites when present", () => {
+    const markdown = getDetailMarkdown("templates", "ai-chat-app");
+    const introIdx = markdown.indexOf("## What you are building");
+    const prereqIdx = markdown.indexOf("## Prerequisites");
+    expect(introIdx).toBeGreaterThanOrEqual(0);
+    expect(introIdx).toBeLessThan(prereqIdx);
+    expect(markdown).toContain("How the recipes fit together");
+  });
+
   test("rejects path traversal", () => {
     expect(() => getDetailMarkdown("docs", "../package.json")).toThrow(
       "path traversal",

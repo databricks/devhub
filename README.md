@@ -19,19 +19,6 @@ You will need the [Databricks CLI](https://dev.databricks.com/docs/tools/databri
 
 Whether you are typing `databricks apps init` yourself or pasting a bootstrap prompt into your agent, the goal is the same: **ship faster on a platform that already unifies data, governance, and deployment.**
 
-## Local development
-
-```bash
-npm install
-npm run dev
-```
-
-## Build
-
-```bash
-npm run build
-```
-
 ## Contributing
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md) for the contribution workflow.
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for local development setup, content authoring guidelines, image requirements, and the pull request workflow.

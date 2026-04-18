@@ -48,5 +48,5 @@ Use this checklist after drafting and before final handoff.
 - Confirm `.databricks/`, `node_modules/`, and `.env` are not committed.
 - Confirm pipeline SQL uses schema-qualified names (not hardcoded catalog names).
 - Confirm `initCommand` in `recipes.ts` uses clone + `cd` into `devhub/examples/<id>/template` (see `createExample()` / example detail page); optional CLI scaffold uses `https://github.com/databricks/devhub/tree/main/examples/<id>`.
-- Confirm hero image exists at `static/img/examples/<id>.svg` (or `.png`).
+- Images are optional. If provided, confirm they pass `npm run verify:images` (16:9 ±2%, ≥1600×900 px, PNG/JPG/WEBP — no SVG screenshots). Set `previewImageLightUrl`/`previewImageDarkUrl` (or `galleryImages` for a multi-slide carousel) in the `createExample()` entry. When omitted, the UI falls back to generic card art.
 - Confirm `content/examples/<id>.md` exists and matches the example's `id`, and points readers at `template/README.md` for setup.

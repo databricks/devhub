@@ -1,5 +1,4 @@
 import Link from "@docusaurus/Link";
-import useBaseUrl from "@docusaurus/useBaseUrl";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import Layout from "@theme/Layout";
 import { MDXProvider } from "@mdx-js/react";
@@ -30,7 +29,9 @@ import {
 } from "@/lib/examples/build-example-markdown";
 import type { Example } from "@/lib/recipes/recipes";
 import { templates, recipes } from "@/lib/recipes/recipes";
-import { ExampleHeroGallery } from "@/components/examples/example-hero-gallery";
+import { ResourceImageCarousel } from "@/components/examples/resource-image-carousel";
+import { ResourcePreviewImage } from "@/components/examples/resource-preview-image";
+import { FallbackCardArt } from "@/components/examples/fallback-card-art";
 
 const mdxComponents = { pre: RecipePre };
 
@@ -243,7 +244,6 @@ export function ExampleDetail({
 }: ExampleDetailProps): ReactNode {
   const { siteConfig } = useDocusaurusContext();
   const contentRef = useRef<HTMLDivElement>(null);
-  const heroImageUrl = useBaseUrl(example.image);
   const permalink = `/resources/${example.id}`;
   const githubUrl = `${GITHUB_BASE}/${example.githubPath}`;
 
@@ -317,18 +317,18 @@ export function ExampleDetail({
                   ))}
                 </div>
 
-                {example.heroVariants && example.heroVariants.length > 0 ? (
-                  <ExampleHeroGallery
+                {example.galleryImages && example.galleryImages.length > 0 ? (
+                  <ResourceImageCarousel
+                    images={example.galleryImages}
                     exampleName={example.name}
-                    variants={example.heroVariants}
                   />
                 ) : (
-                  <div className="mb-8 overflow-hidden rounded-xl">
-                    <img
-                      src={heroImageUrl}
-                      alt={`${example.name} architecture`}
-                      className="h-auto w-full object-cover"
-                      loading="lazy"
+                  <div className="relative mb-8 aspect-[16/9] w-full overflow-hidden rounded-xl border border-border/60 bg-muted/30">
+                    <ResourcePreviewImage
+                      lightUrl={example.previewImageLightUrl}
+                      darkUrl={example.previewImageDarkUrl}
+                      alt={`${example.name} preview`}
+                      fallback={<FallbackCardArt index={0} />}
                     />
                   </div>
                 )}

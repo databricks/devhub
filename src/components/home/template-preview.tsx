@@ -20,94 +20,8 @@ import {
   buildLandingResources,
   type LandingResourceItem,
 } from "@/lib/landing-content";
-import { ExampleCardHoverVisual } from "@/components/examples/example-card-hover-visual";
-import { ExamplePlaceholderArt } from "@/components/examples/example-placeholder-art";
-
-function GradientArt({ index }: { index: number }): ReactNode {
-  const variant = index % 4;
-  return (
-    <>
-      {variant === 0 ? (
-        <div className="absolute inset-0">
-          <div className="absolute left-7 top-6 h-16 w-24 rounded-md bg-[#0e1116]/95 shadow-lg" />
-          <div className="absolute left-16 top-12 h-20 w-28 rounded-md bg-db-lava/95" />
-          <div className="absolute right-8 top-8 h-14 w-14 rounded-full border border-white/25" />
-        </div>
-      ) : null}
-      {variant === 1 ? (
-        <div className="absolute inset-0">
-          <div className="absolute left-6 top-6 h-30 w-16 border-r border-black/12 bg-white/72" />
-          <div className="absolute left-28 top-12 h-2 w-24 rounded bg-black/14" />
-          <div className="absolute left-28 top-20 h-2 w-32 rounded bg-black/10" />
-          <div className="absolute left-28 top-28 h-2 w-20 rounded bg-black/12" />
-        </div>
-      ) : null}
-      {variant === 2 ? (
-        <div className="absolute inset-0">
-          <div className="absolute inset-0 opacity-80 [background-image:radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.25)_1px,transparent_0)] [background-size:8px_8px]" />
-          <div className="absolute left-6 top-8 h-24 w-24 rounded-full border border-white/25" />
-          <div className="absolute right-8 bottom-7 h-14 w-20 rounded-md bg-[#0f141b] shadow-lg" />
-        </div>
-      ) : null}
-      {variant === 3 ? (
-        <div className="absolute inset-0">
-          <div className="absolute left-6 top-6 h-32 w-20 border-r border-black/10 bg-white/72" />
-          <div className="absolute right-7 top-6 h-12 w-14 rounded bg-[#78a8ff]/55" />
-          <div className="absolute right-7 top-22 h-16 w-14 rounded bg-[#7dc8ff]/45" />
-        </div>
-      ) : null}
-    </>
-  );
-}
-
-function CardVisual({
-  item,
-  index,
-}: {
-  item: LandingResourceItem;
-  index: number;
-}): ReactNode {
-  if (item.kind === "example") {
-    if (item.exampleCardHover) {
-      return (
-        <div className="relative h-44 overflow-hidden border-b border-black/10 dark:border-white/10">
-          <ExampleCardHoverVisual
-            imageLight={item.exampleCardHover.imageLight}
-            imageDark={item.exampleCardHover.imageDark}
-            alt={item.title}
-          />
-        </div>
-      );
-    }
-    return (
-      <div className="relative h-44 overflow-hidden border-b border-black/10 dark:border-white/10">
-        <ExamplePlaceholderArt />
-      </div>
-    );
-  }
-
-  return (
-    <div
-      className={[
-        "relative h-44 overflow-hidden border-b border-black/10 dark:border-white/10",
-        index % 4 === 0
-          ? "bg-gradient-to-br from-[#171b21] via-[#2a3038] to-[#11141a]"
-          : "",
-        index % 4 === 1
-          ? "bg-gradient-to-br from-[#eceff2] via-[#fafafa] to-[#e8ebee]"
-          : "",
-        index % 4 === 2
-          ? "bg-gradient-to-br from-[#11141a] via-[#1b2028] to-[#0d0f14]"
-          : "",
-        index % 4 === 3
-          ? "bg-gradient-to-br from-[#e9ecef] via-[#f9fafb] to-[#e2e7eb]"
-          : "",
-      ].join(" ")}
-    >
-      <GradientArt index={index} />
-    </div>
-  );
-}
+import { FallbackCardArt } from "@/components/examples/fallback-card-art";
+import { ResourcePreviewImage } from "@/components/examples/resource-preview-image";
 
 function KindBadge({ kind }: { kind: LandingResourceItem["kind"] }): ReactNode {
   if (kind === "example") {
@@ -137,7 +51,14 @@ function ResourceCard({
   return (
     <Link to={item.path} className="no-underline">
       <Card className="group flex h-full flex-col overflow-hidden rounded-xl border border-black/10 bg-[#f7f6f4] shadow-none transition-all duration-200 hover:border-black/20 dark:border-white/10 dark:bg-[#182a32] dark:hover:border-white/20">
-        <CardVisual item={item} index={index} />
+        <div className="relative aspect-[16/9] overflow-hidden border-b border-black/10 dark:border-white/10">
+          <ResourcePreviewImage
+            lightUrl={item.previewImageLightUrl}
+            darkUrl={item.previewImageDarkUrl}
+            alt={item.title}
+            fallback={<FallbackCardArt index={index} />}
+          />
+        </div>
         <CardHeader className="pb-2">
           <div className="mb-1.5 flex items-center gap-2">
             <KindBadge kind={item.kind} />

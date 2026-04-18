@@ -15,11 +15,14 @@ For every change to DevHub, do the following:
 - make your changes
 - run `npm run fmt` to format the code
 - run `npm run typecheck` to verify types are correct
+- run `npm run verify:images` to verify example/resource images (16:9, ≥1600x900) when you've added or changed anything under `static/img/examples/`
 - use agent-browser to verify the changes
 - use the `seo-audit` skill to verify all changes are SEO-friendly
 - use the `frontend-design` skill to verify all changes adhere to the design principles
 - run `npm run build` to verify build is successful
 - run `npm run test` to run smoke tests (builds, serves, verifies sitemap.xml, robots.txt, and llms.txt)
+
+The pre-commit hook (husky) runs `prettier -c .`, `npm run typecheck`, `npm run verify:images`, and `npm run build`, so failing any of these locally will also block the commit.
 
 ## Package Manager
 

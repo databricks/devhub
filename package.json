@@ -21,6 +21,7 @@
     "test:smoke": "npm run emit-about-devhub && vitest run",
     "test:e2e": "npx playwright test",
     "test:docs-verify": "vitest run --config vitest.docs-verify.config.ts",
+    "verify:images": "node scripts/verify-resource-images.mjs",
     "prepare": "husky"
   },
   "dependencies": {
@@ -61,6 +62,7 @@
     "@tailwindcss/postcss": "^4.2.1",
     "@vercel/node": "^5.6.15",
     "husky": "^9.1.7",
+    "image-size": "^2.0.2",
     "postcss": "^8.5.8",
     "tailwindcss": "^4.2.1",
     "typescript": "~5.6.2",

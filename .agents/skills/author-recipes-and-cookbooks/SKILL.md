@@ -159,18 +159,56 @@ Create `content/examples/<example-id>.md`:
 Update `src/lib/recipes/recipes.ts`:
 
 - Add an entry to `examples` using `createExample()`.
-- Set `id`, `name`, `description`, `image`, `githubPath`, `initCommand`, `templateIds`, `recipeIds`.
+- Set `id`, `name`, `description`, `githubPath`, `initCommand`, `templateIds`, `recipeIds`.
 - `templateIds` references cookbooks that the example builds upon.
 - `recipeIds` references standalone recipes not already included in a referenced cookbook.
 - `createExample()` derives `tags` and `services` from the referenced cookbooks and recipes.
-- `image` points to a static SVG/PNG in `static/img/examples/`.
 - `initCommand` uses the format: `git clone --depth 1 https://github.com/databricks/devhub.git` then `cd devhub/examples/<example-id>/template` (shown on the example detail page; users follow `template/README.md` for provisioning and deploy). Optional CLI scaffold: `databricks apps init --template https://github.com/databricks/devhub/tree/main/examples/<example-id>`.
 - `githubPath` is `examples/<example-id>`.
 
-### 4. Add A Hero Image
+### 4. Add Preview And Gallery Images (Optional)
 
-Place a hero image at `static/img/examples/<example-id>.svg` (or `.png`).
-This is shown at the top of the example detail page.
+Images are **optional**. When omitted, the UI automatically falls back to the generic guide card art — that's fine for a first pass, and the site will look clean either way.
+
+When you add images, they must conform to the DevHub resource-image contract. The pre-commit hook runs `npm run verify:images`; any non-conforming file blocks the commit.
+
+**Contract (enforced):**
+
+- **Aspect ratio:** 16:9 (±2%)
+- **Minimum resolution:** 1600×900 px (recommended: 1920×1080)
+- **Formats:** PNG, JPEG, or WEBP. SVG is not a valid preview image — the site expects real screenshots at this slot.
+- **Storage:** `static/img/examples/<example-id>-<slot>-<theme>.png`, e.g. `saas-tracker-dashboard-light.png` and `saas-tracker-dashboard-dark.png`.
+
+**Always ship both a light and a dark variant.** The site picks the matching image based on the visitor's color mode. If only one variant is set the other mode reuses it, which looks jarring (bright light-mode screenshot flashed onto a dark card, or vice versa). Capture the same screen twice at the same viewport and zoom — once with the app in light mode, once in dark mode — so the two frames align perfectly in the carousel.
+
+**Schema fields on `Example` (all optional, same contract for all three resource types):**
+
+- `previewImageLightUrl` / `previewImageDarkUrl` — single theme-aware preview. Used on the landing carousel card, the `/resources` list card, and the example detail hero when no `galleryImages` are set. Either omit both or provide both.
+- `galleryImages?: Array<{ lightUrl: string; darkUrl: string }>` — themed slides for the example detail-page carousel. Each slide must provide both a light and dark URL. Omit when a single preview image is enough.
+
+`Template` and `Recipe` also accept `previewImageLightUrl` / `previewImageDarkUrl` and will surface the image on their `/resources` list and landing cards when set.
+
+**Style the app in the Databricks brand palette before capturing screenshots.** We want example apps to feel like Databricks apps, not generic demos. The site's theme tokens live in `src/css/custom.css`; reuse the same hex values in the example app's own CSS / Tailwind config:
+
+| Token             | Hex       | Role                                                                |
+| ----------------- | --------- | ------------------------------------------------------------------- |
+| `--db-navy`       | `#0b2026` | Primary dark surface (dark-mode page background, sidebars, headers) |
+| `--db-navy-light` | `#1b3139` | Secondary dark surface (dark-mode cards, raised panels)             |
+| `--db-lava`       | `#ff3621` | Primary brand orange (buttons, highlights, focus states, badges)    |
+| `--db-lava-dark`  | `#eb1600` | Hover / pressed state for the primary orange                        |
+| `--db-lava-light` | `#ff5542` | Primary orange in dark mode (keeps contrast against navy)           |
+| `--db-oat-medium` | `#eeede9` | Cream accent (secondary buttons, muted rows, light chips)           |
+| `--db-bg`         | `#f9f7f4` | Light-mode page background (soft off-white)                         |
+| `--db-card`       | `#ffffff` | Light-mode cards / raised surfaces                                  |
+
+Guidance for screenshots:
+
+- **Light mode:** `--db-bg` + `--db-card` surfaces, navy text, orange accents.
+- **Dark mode:** `--db-navy` + `--db-navy-light` surfaces, `--db-lava-light` accents, near-white text. Do not use pure-black CSS defaults.
+- Use orange (`--db-lava` / `--db-lava-light`) sparingly — primary CTAs, active / selected state, single accents. Avoid saturating whole regions.
+- The AppKit defaults already wire these tokens into Tailwind; look at an existing example's `template/client/tailwind.config.ts` as the starting point so new examples are on-brand by default.
+
+**Verify locally:** `npm run verify:images`. The script walks `static/img/examples/` and reports ratio + size issues with a suggested fix per file.
 
 ### 5. Verify DevHub Build
 

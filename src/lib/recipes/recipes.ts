@@ -11,7 +11,30 @@ export const SERVICES = [
 
 export type Service = (typeof SERVICES)[number];
 
-export type Recipe = {
+/**
+ * Theme-aware preview image pair shared by Recipe, Template, and Example.
+ *
+ * Rendered on: landing carousel card, /resources list card, and the example
+ * detail hero when no galleryImages are set. When both URLs are omitted the UI
+ * falls back to the generic guide card art (FallbackCardArt).
+ *
+ * Image contract (enforced by `npm run verify:images`):
+ *   - 16:9 aspect ratio, minimum 1600x900 px
+ *   - PNG / JPG / WEBP (rasters). SVGs are not valid preview images.
+ *   - Provide both light and dark variants (or neither, to fall back).
+ */
+export type ResourcePreview = {
+  previewImageLightUrl?: string;
+  previewImageDarkUrl?: string;
+};
+
+/** One slide in an Example detail-page carousel. Same 16:9 / ≥1600x900 contract. */
+export type GalleryImage = {
+  lightUrl: string;
+  darkUrl: string;
+};
+
+export type Recipe = ResourcePreview & {
   id: string;
   name: string;
   description: string;
@@ -21,7 +44,7 @@ export type Recipe = {
   isDraft?: boolean;
 };
 
-export type Template = {
+export type Template = ResourcePreview & {
   id: string;
   name: string;
   description: string;
@@ -38,6 +61,8 @@ type TemplatePreviewItem = {
   description: string;
   tags?: string[];
   services?: Service[];
+  previewImageLightUrl?: string;
+  previewImageDarkUrl?: string;
 };
 
 export const recipes: Recipe[] = [
@@ -48,6 +73,10 @@ export const recipes: Recipe[] = [
       "Prepare a local Databricks app workspace: install CLI, authenticate, scaffold, and install Databricks agent skills.",
     tags: ["Databricks CLI", "Setup", "Agent Skills"],
     services: ["Databricks Apps"],
+    previewImageLightUrl:
+      "/img/guides/databricks-local-bootstrap-preview-light.png",
+    previewImageDarkUrl:
+      "/img/guides/databricks-local-bootstrap-preview-dark.png",
   },
   {
     id: "ai-chat-model-serving",
@@ -56,6 +85,8 @@ export const recipes: Recipe[] = [
       "Build a streaming AI chat experience using AI SDK and Databricks Model Serving endpoints.",
     tags: ["AI", "Chat", "AI SDK", "Model Serving"],
     services: ["Databricks Apps", "Model Serving"],
+    previewImageLightUrl: "/img/guides/ai-chat-model-serving-preview-light.png",
+    previewImageDarkUrl: "/img/guides/ai-chat-model-serving-preview-dark.png",
     prerequisites: [
       "databricks-local-bootstrap",
       "lakebase-data-persistence",
@@ -70,6 +101,8 @@ export const recipes: Recipe[] = [
     tags: ["AI", "AI Gateway", "Foundation Models"],
     services: ["AI Gateway"],
     prerequisites: ["databricks-local-bootstrap"],
+    previewImageLightUrl: "/img/guides/foundation-models-api-preview-light.png",
+    previewImageDarkUrl: "/img/guides/foundation-models-api-preview-dark.png",
   },
   {
     id: "embeddings-generation",
@@ -79,6 +112,8 @@ export const recipes: Recipe[] = [
     tags: ["AI", "AI Gateway", "Embeddings"],
     services: ["AI Gateway"],
     prerequisites: ["databricks-local-bootstrap"],
+    previewImageLightUrl: "/img/guides/embeddings-generation-preview-light.png",
+    previewImageDarkUrl: "/img/guides/embeddings-generation-preview-dark.png",
   },
   {
     id: "model-serving-endpoint-creation",
@@ -88,6 +123,10 @@ export const recipes: Recipe[] = [
     tags: ["Model Serving", "AI Gateway", "Endpoints", "Inference"],
     services: ["Model Serving", "AI Gateway"],
     prerequisites: ["databricks-local-bootstrap"],
+    previewImageLightUrl:
+      "/img/guides/model-serving-endpoint-creation-preview-light.png",
+    previewImageDarkUrl:
+      "/img/guides/model-serving-endpoint-creation-preview-dark.png",
   },
   {
     id: "lakebase-chat-persistence",
@@ -97,6 +136,10 @@ export const recipes: Recipe[] = [
     tags: ["Lakebase", "Postgres", "Chat", "Persistence"],
     services: ["Lakebase", "Databricks Apps"],
     prerequisites: ["lakebase-data-persistence", "ai-chat-model-serving"],
+    previewImageLightUrl:
+      "/img/guides/lakebase-chat-persistence-preview-light.png",
+    previewImageDarkUrl:
+      "/img/guides/lakebase-chat-persistence-preview-dark.png",
   },
   {
     id: "lakebase-create-instance",
@@ -106,6 +149,10 @@ export const recipes: Recipe[] = [
     tags: ["Lakebase", "Postgres", "Setup"],
     services: ["Lakebase"],
     prerequisites: ["databricks-local-bootstrap"],
+    previewImageLightUrl:
+      "/img/guides/lakebase-create-instance-preview-light.png",
+    previewImageDarkUrl:
+      "/img/guides/lakebase-create-instance-preview-dark.png",
   },
   {
     id: "lakebase-data-persistence",
@@ -115,6 +162,10 @@ export const recipes: Recipe[] = [
     tags: ["Lakebase", "Postgres", "CRUD", "Data"],
     services: ["Lakebase", "Databricks Apps"],
     prerequisites: ["databricks-local-bootstrap", "lakebase-create-instance"],
+    previewImageLightUrl:
+      "/img/guides/lakebase-data-persistence-preview-light.png",
+    previewImageDarkUrl:
+      "/img/guides/lakebase-data-persistence-preview-dark.png",
   },
   {
     id: "lakebase-pgvector",
@@ -124,6 +175,8 @@ export const recipes: Recipe[] = [
     tags: ["Lakebase", "Postgres", "pgvector", "Vector Search", "Embeddings"],
     services: ["Lakebase"],
     prerequisites: ["databricks-local-bootstrap", "lakebase-create-instance"],
+    previewImageLightUrl: "/img/guides/lakebase-pgvector-preview-light.png",
+    previewImageDarkUrl: "/img/guides/lakebase-pgvector-preview-dark.png",
   },
   {
     id: "lakebase-change-data-feed-autoscaling",
@@ -140,6 +193,10 @@ export const recipes: Recipe[] = [
     ],
     services: ["Lakebase", "Unity Catalog"],
     prerequisites: ["databricks-local-bootstrap"],
+    previewImageLightUrl:
+      "/img/guides/lakebase-change-data-feed-autoscaling-preview-light.png",
+    previewImageDarkUrl:
+      "/img/guides/lakebase-change-data-feed-autoscaling-preview-dark.png",
   },
   {
     id: "sync-tables-autoscaling",
@@ -149,6 +206,9 @@ export const recipes: Recipe[] = [
     tags: ["Lakebase", "Sync Tables", "Unity Catalog", "Synced Tables", "CDF"],
     services: ["Lakebase", "Unity Catalog"],
     prerequisites: ["databricks-local-bootstrap"],
+    previewImageLightUrl:
+      "/img/guides/sync-tables-autoscaling-preview-light.png",
+    previewImageDarkUrl: "/img/guides/sync-tables-autoscaling-preview-dark.png",
   },
   {
     id: "genie-conversational-analytics",
@@ -158,6 +218,10 @@ export const recipes: Recipe[] = [
     tags: ["Genie", "AI/BI", "Natural Language", "Analytics"],
     services: ["Genie", "Databricks Apps"],
     prerequisites: ["databricks-local-bootstrap"],
+    previewImageLightUrl:
+      "/img/guides/genie-conversational-analytics-preview-light.png",
+    previewImageDarkUrl:
+      "/img/guides/genie-conversational-analytics-preview-dark.png",
   },
   {
     id: "unity-catalog-setup",
@@ -167,6 +231,8 @@ export const recipes: Recipe[] = [
     tags: ["Unity Catalog", "S3", "External Storage", "Setup"],
     services: ["Unity Catalog"],
     prerequisites: ["databricks-local-bootstrap"],
+    previewImageLightUrl: "/img/guides/unity-catalog-setup-preview-light.png",
+    previewImageDarkUrl: "/img/guides/unity-catalog-setup-preview-dark.png",
   },
   {
     id: "genie-multi-space",
@@ -176,6 +242,8 @@ export const recipes: Recipe[] = [
     tags: ["Genie", "AI/BI", "Natural Language", "Data"],
     services: ["Genie"],
     prerequisites: ["genie-conversational-analytics"],
+    previewImageLightUrl: "/img/guides/genie-multi-space-preview-light.png",
+    previewImageDarkUrl: "/img/guides/genie-multi-space-preview-dark.png",
   },
   {
     id: "medallion-architecture-from-cdc",
@@ -192,6 +260,10 @@ export const recipes: Recipe[] = [
     ],
     services: ["Lakeflow Pipelines"],
     prerequisites: ["databricks-local-bootstrap"],
+    previewImageLightUrl:
+      "/img/guides/medallion-architecture-from-cdc-preview-light.png",
+    previewImageDarkUrl:
+      "/img/guides/medallion-architecture-from-cdc-preview-dark.png",
   },
   {
     id: "lakebase-off-platform-env-management",
@@ -200,6 +272,10 @@ export const recipes: Recipe[] = [
       "Define and validate cross-platform environment variables for Lakebase-backed apps deployed outside Databricks App Platform.",
     tags: ["Lakebase", "Environment Variables", "AWS", "Vercel", "Netlify"],
     services: ["Lakebase"],
+    previewImageLightUrl:
+      "/img/guides/lakebase-off-platform-env-management-preview-light.png",
+    previewImageDarkUrl:
+      "/img/guides/lakebase-off-platform-env-management-preview-dark.png",
   },
   {
     id: "lakebase-token-management",
@@ -209,6 +285,10 @@ export const recipes: Recipe[] = [
     tags: ["Lakebase", "OAuth", "Tokens", "Security"],
     services: ["Lakebase"],
     prerequisites: ["lakebase-off-platform-env-management"],
+    previewImageLightUrl:
+      "/img/guides/lakebase-token-management-preview-light.png",
+    previewImageDarkUrl:
+      "/img/guides/lakebase-token-management-preview-dark.png",
   },
   {
     id: "lakebase-drizzle-off-platform",
@@ -218,6 +298,10 @@ export const recipes: Recipe[] = [
     tags: ["Lakebase", "Drizzle", "Postgres", "ORM"],
     services: ["Lakebase"],
     prerequisites: ["lakebase-token-management"],
+    previewImageLightUrl:
+      "/img/guides/lakebase-drizzle-off-platform-preview-light.png",
+    previewImageDarkUrl:
+      "/img/guides/lakebase-drizzle-off-platform-preview-dark.png",
   },
   {
     id: "volume-file-upload",
@@ -227,6 +311,8 @@ export const recipes: Recipe[] = [
     tags: ["Volumes", "Unity Catalog", "Files", "Upload", "CSV"],
     services: ["Unity Catalog"],
     prerequisites: ["databricks-local-bootstrap"],
+    previewImageLightUrl: "/img/guides/volume-file-upload-preview-light.png",
+    previewImageDarkUrl: "/img/guides/volume-file-upload-preview-dark.png",
   },
 ];
 
@@ -267,6 +353,8 @@ type TemplateConfig = {
   name: string;
   description: string;
   recipeIds: string[];
+  previewImageLightUrl?: string;
+  previewImageDarkUrl?: string;
   isDraft?: boolean;
 };
 
@@ -291,6 +379,12 @@ function createTemplate(config: TemplateConfig): Template {
     recipeIds: config.recipeIds,
     tags,
     services,
+    ...(config.previewImageLightUrl
+      ? { previewImageLightUrl: config.previewImageLightUrl }
+      : {}),
+    ...(config.previewImageDarkUrl
+      ? { previewImageDarkUrl: config.previewImageDarkUrl }
+      : {}),
     ...(config.isDraft ? { isDraft: true } : {}),
   };
 }
@@ -302,6 +396,8 @@ export const templates: Template[] = [
     description:
       "Databricks local bootstrap for CLI, auth, app scaffolding, and agent skill setup.",
     recipeIds: ["databricks-local-bootstrap"],
+    previewImageLightUrl: "/img/guides/hello-world-app-preview-light.png",
+    previewImageDarkUrl: "/img/guides/hello-world-app-preview-dark.png",
   }),
   createTemplate({
     id: "ai-chat-app",
@@ -316,6 +412,8 @@ export const templates: Template[] = [
       "lakebase-data-persistence",
       "lakebase-chat-persistence",
     ],
+    previewImageLightUrl: "/img/guides/ai-chat-app-preview-light.png",
+    previewImageDarkUrl: "/img/guides/ai-chat-app-preview-dark.png",
   }),
   createTemplate({
     id: "app-with-lakebase",
@@ -327,6 +425,8 @@ export const templates: Template[] = [
       "lakebase-create-instance",
       "lakebase-data-persistence",
     ],
+    previewImageLightUrl: "/img/guides/app-with-lakebase-preview-light.png",
+    previewImageDarkUrl: "/img/guides/app-with-lakebase-preview-dark.png",
   }),
   createTemplate({
     id: "genie-analytics-app",
@@ -334,6 +434,8 @@ export const templates: Template[] = [
     description:
       "Build a minimal Databricks App with AI/BI Genie conversational analytics. Covers CLI setup, Genie space configuration, plugin wiring, and deploy.",
     recipeIds: ["databricks-local-bootstrap", "genie-conversational-analytics"],
+    previewImageLightUrl: "/img/guides/genie-analytics-app-preview-light.png",
+    previewImageDarkUrl: "/img/guides/genie-analytics-app-preview-dark.png",
   }),
   createTemplate({
     id: "lakebase-off-platform",
@@ -346,6 +448,8 @@ export const templates: Template[] = [
       "lakebase-token-management",
       "lakebase-drizzle-off-platform",
     ],
+    previewImageLightUrl: "/img/guides/lakebase-off-platform-preview-light.png",
+    previewImageDarkUrl: "/img/guides/lakebase-off-platform-preview-dark.png",
   }),
   createTemplate({
     id: "operational-data-analytics",
@@ -360,6 +464,10 @@ export const templates: Template[] = [
       "sync-tables-autoscaling",
       "medallion-architecture-from-cdc",
     ],
+    previewImageLightUrl:
+      "/img/guides/operational-data-analytics-preview-light.png",
+    previewImageDarkUrl:
+      "/img/guides/operational-data-analytics-preview-dark.png",
   }),
 ];
 
@@ -371,22 +479,19 @@ export const templatePreviewItems: TemplatePreviewItem[] = templates.map(
     description: template.description,
     tags: template.tags,
     services: template.services,
+    ...(template.previewImageLightUrl
+      ? { previewImageLightUrl: template.previewImageLightUrl }
+      : {}),
+    ...(template.previewImageDarkUrl
+      ? { previewImageDarkUrl: template.previewImageDarkUrl }
+      : {}),
   }),
 );
 
-/** Optional screenshot sets for the example detail hero (light/dark per view). */
-export type ExampleHeroVariant = {
-  id: string;
-  label: string;
-  imageLight: string;
-  imageDark: string;
-};
-
-export type Example = {
+export type Example = ResourcePreview & {
   id: string;
   name: string;
   description: string;
-  image: string;
   githubPath: string;
   initCommand: string;
   /**
@@ -406,21 +511,14 @@ export type Example = {
   recipeIds: string[];
   tags: string[];
   services: Service[];
-  /** When set, the detail page shows view + light/dark toggles instead of a single image. */
-  heroVariants?: ExampleHeroVariant[];
+  /**
+   * Optional array of themed screenshots for the detail-page carousel. Each slide
+   * must provide both a light and dark URL. When empty/undefined, the detail page
+   * shows the single previewImage*Url (or falls back to the generic card art).
+   */
+  galleryImages?: GalleryImage[];
   isDraft?: boolean;
 };
-
-/** Light/dark paths for resource-card / landing hover preview (primary example view). */
-export function exampleCardHoverPair(
-  example: Example,
-): { imageLight: string; imageDark: string } | undefined {
-  const v =
-    example.heroVariants?.find((h) => h.id === "subscriptions") ??
-    example.heroVariants?.find((h) => h.id === "guidelines");
-  if (!v) return undefined;
-  return { imageLight: v.imageLight, imageDark: v.imageDark };
-}
 
 const templateIndex: Record<string, Template> = Object.fromEntries(
   templates.map((t) => [t.id, t]),
@@ -430,14 +528,15 @@ type ExampleConfig = {
   id: string;
   name: string;
   description: string;
-  image: string;
   githubPath: string;
   initCommand: string;
   agentPrereqSteps?: string;
   agentDeploySteps?: string;
   templateIds: string[];
   recipeIds: string[];
-  heroVariants?: ExampleHeroVariant[];
+  previewImageLightUrl?: string;
+  previewImageDarkUrl?: string;
+  galleryImages?: GalleryImage[];
   isDraft?: boolean;
 };
 
@@ -480,76 +579,56 @@ export const examples: Example[] = [
     name: "Agentic Support Console",
     description:
       "End-to-end AI-powered support console combining Lakebase, Lakehouse Sync, a medallion pipeline, an LLM agent job, reverse sync, and a Databricks App with Genie analytics.",
-    image: "/img/examples/agentic-support-console.svg",
     githubPath: "examples/agentic-support-console",
     initCommand:
       "git clone --depth 1 https://github.com/databricks/devhub.git\ncd devhub/examples/agentic-support-console/template",
     templateIds: ["operational-data-analytics", "app-with-lakebase"],
     recipeIds: ["genie-conversational-analytics", "foundation-models-api"],
+    previewImageLightUrl:
+      "/img/examples/agentic-support-console-preview-light.png",
+    previewImageDarkUrl:
+      "/img/examples/agentic-support-console-preview-dark.png",
   }),
   createExample({
     id: "saas-tracker",
     name: "SaaS Subscription Tracker",
     description:
       "Internal tool for tracking team SaaS subscriptions, owners, costs, and renewals with Lakebase persistence and Genie spend analytics.",
-    image: "/img/examples/saas-tracker-subscriptions-light.png",
-    heroVariants: [
-      {
-        id: "subscriptions",
-        label: "Subscriptions",
-        imageLight: "/img/examples/saas-tracker-subscriptions-light.png",
-        imageDark: "/img/examples/saas-tracker-subscriptions-dark.png",
-      },
-      {
-        id: "genie",
-        label: "Ask Genie",
-        imageLight: "/img/examples/saas-tracker-genie-light.png",
-        imageDark: "/img/examples/saas-tracker-genie-dark.png",
-      },
-    ],
     githubPath: "examples/saas-tracker",
     initCommand:
       "git clone --depth 1 https://github.com/databricks/devhub.git\ncd devhub/examples/saas-tracker/template",
     templateIds: ["app-with-lakebase"],
     recipeIds: ["genie-conversational-analytics"],
+    previewImageLightUrl: "/img/examples/saas-tracker-preview-light.png",
+    previewImageDarkUrl: "/img/examples/saas-tracker-preview-dark.png",
   }),
   createExample({
     id: "content-moderator",
     name: "Content Moderator",
     description:
       "Internal content moderation tool with per-channel guidelines, AI-powered compliance scoring via Model Serving, and a moderator review workflow backed by Lakebase and Genie analytics.",
-    image: "/img/examples/content-moderator-guidelines-light.png",
-    heroVariants: [
-      {
-        id: "guidelines",
-        label: "Guidelines",
-        imageLight: "/img/examples/content-moderator-guidelines-light.png",
-        imageDark: "/img/examples/content-moderator-guidelines-dark.png",
-      },
-      {
-        id: "genie",
-        label: "Ask Genie",
-        imageLight: "/img/examples/content-moderator-genie-light.png",
-        imageDark: "/img/examples/content-moderator-genie-dark.png",
-      },
-    ],
     githubPath: "examples/content-moderator",
     initCommand:
       "git clone --depth 1 https://github.com/databricks/devhub.git\ncd devhub/examples/content-moderator/template",
     templateIds: ["app-with-lakebase"],
     recipeIds: ["genie-conversational-analytics", "foundation-models-api"],
+    previewImageLightUrl: "/img/examples/content-moderator-preview-light.png",
+    previewImageDarkUrl: "/img/examples/content-moderator-preview-dark.png",
   }),
   createExample({
     id: "inventory-intelligence",
     name: "Inventory Intelligence",
     description:
       "Retail inventory management with AI-powered demand forecasting, replenishment recommendations, and optional Genie analytics. Built on a live medallion pipeline synced to Lakebase.",
-    image: "/img/examples/inventory-intelligence.svg",
     githubPath: "examples/inventory-intelligence",
     initCommand:
       "git clone --depth 1 https://github.com/databricks/devhub.git\ncd devhub/examples/inventory-intelligence/template",
     templateIds: ["operational-data-analytics", "app-with-lakebase"],
     recipeIds: ["genie-conversational-analytics"],
+    previewImageLightUrl:
+      "/img/examples/inventory-intelligence-preview-light.png",
+    previewImageDarkUrl:
+      "/img/examples/inventory-intelligence-preview-dark.png",
   }),
   // Unlike the other examples, rag-chat is consumed via `databricks apps init`
   // rather than `git clone`. The initCommand points at the AppKit CLI.
@@ -561,7 +640,6 @@ export const examples: Example[] = [
     name: "RAG Chat App",
     description:
       "Streaming Retrieval-Augmented Generation chat app with pgvector retrieval from Lakebase, Wikipedia seed corpus, Model Serving generation, and Lakebase-backed chat history. Consumed via `databricks apps init`.",
-    image: "/img/examples/rag-chat.svg",
     githubPath: "examples/rag-chat",
     initCommand:
       'databricks apps init \\\n  --template https://github.com/databricks/devhub/tree/main/examples/rag-chat/template \\\n  --name rag-chat-app \\\n  --set lakebase.postgres.branch="$BRANCH_NAME" \\\n  --set lakebase.postgres.database="$DATABASE_NAME"',
@@ -617,6 +695,8 @@ export const examples: Example[] = [
     ].join("\n"),
     templateIds: ["ai-chat-app"],
     recipeIds: ["ai-chat-model-serving", "lakebase-chat-persistence"],
+    previewImageLightUrl: "/img/examples/rag-chat-preview-light.png",
+    previewImageDarkUrl: "/img/examples/rag-chat-preview-dark.png",
   }),
 ];
 

@@ -2,7 +2,6 @@ import { Bot, Database, Server } from "lucide-react";
 import type { ComponentType } from "react";
 import {
   examples,
-  exampleCardHoverPair,
   filterPublished,
   templatePreviewItems,
   templates,
@@ -25,33 +24,32 @@ export type LandingResourceItem = {
   tags?: string[];
   services?: Service[];
   kind: "example" | "guide";
-  image?: string;
-  /** Example cards only: hover swaps light/dark homepage screenshots */
-  exampleCardHover?: { imageLight: string; imageDark: string };
+  previewImageLightUrl?: string;
+  previewImageDarkUrl?: string;
 };
 
 export const pillars: Pillar[] = [
   {
     title: "Lakebase",
-    subtitle: "The operational data layer for AI agents and apps.",
+    subtitle: "Managed Postgres, colocated with your Lakehouse.",
     description:
-      "Postgres integrated with the lakehouse, built for modern operational workloads.",
+      "Provision with the CLI, connect like any Postgres. Instant branching, scales to zero, and change data feed to Unity Catalog.",
     link: "/docs/lakebase/quickstart",
     icon: Database,
   },
   {
     title: "Agent Bricks",
-    subtitle: "Production AI agents that continuously improve.",
+    subtitle: "LLM-driven apps that call tools and return structured output.",
     description:
-      "A unified platform to build, deploy, and govern AI agents on your data.",
+      "Any Python framework, Databricks-hosted models, automatic MLflow tracing, and MCP for workspace tools.",
     link: "/docs/agents/quickstart",
     icon: Bot,
   },
   {
     title: "Databricks Apps",
-    subtitle: "The fastest way to ship data and AI applications.",
+    subtitle: "Web apps that run inside your workspace.",
     description:
-      "Build secure, interactive apps on the Data Intelligence Platform with built-in auth and serverless compute.",
+      "One CLI command to deploy. Fixed URL, built-in OAuth, and direct access to your workspace data \u2014 no separate hosting service.",
     link: "/docs/apps/appkit",
     icon: Server,
   },
@@ -71,23 +69,35 @@ export function buildLandingResources(
   );
 
   return [
-    ...publishedExamples.map((e) => {
-      const hover = exampleCardHoverPair(e);
-      return {
-        id: e.id,
-        path: `/resources/${e.id}`,
-        title: e.name,
-        description: e.description,
-        tags: e.tags,
-        services: e.services,
-        kind: "example" as const,
-        image: e.image,
-        ...(hover ? { exampleCardHover: hover } : {}),
-      };
-    }),
-    ...[...publishedPreviewItems].reverse().map((t) => ({
-      ...t,
-      kind: "guide" as const,
+    ...publishedExamples.map<LandingResourceItem>((e) => ({
+      id: e.id,
+      path: `/resources/${e.id}`,
+      title: e.name,
+      description: e.description,
+      tags: e.tags,
+      services: e.services,
+      kind: "example",
+      ...(e.previewImageLightUrl
+        ? { previewImageLightUrl: e.previewImageLightUrl }
+        : {}),
+      ...(e.previewImageDarkUrl
+        ? { previewImageDarkUrl: e.previewImageDarkUrl }
+        : {}),
+    })),
+    ...[...publishedPreviewItems].reverse().map<LandingResourceItem>((t) => ({
+      id: t.id,
+      path: t.path,
+      title: t.title,
+      description: t.description,
+      tags: t.tags,
+      services: t.services,
+      kind: "guide",
+      ...(t.previewImageLightUrl
+        ? { previewImageLightUrl: t.previewImageLightUrl }
+        : {}),
+      ...(t.previewImageDarkUrl
+        ? { previewImageDarkUrl: t.previewImageDarkUrl }
+        : {}),
     })),
   ];
 }

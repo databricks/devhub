@@ -12,7 +12,6 @@ const minimalExample: Example = {
   id: "test-example",
   name: "Test Example",
   description: "A test example for unit tests.",
-  image: "/img/examples/test.svg",
   githubPath: "examples/test-example",
   initCommand:
     "git clone --depth 1 https://github.com/databricks/devhub.git\ncd devhub/examples/test-example/template",

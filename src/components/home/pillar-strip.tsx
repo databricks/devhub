@@ -2,51 +2,273 @@ import Link from "@docusaurus/Link";
 import type { ReactNode } from "react";
 import { pillars, type Pillar } from "@/lib/landing-content";
 
+/**
+ * Conceptual illustration for each pillar. Not UI skeletons — each is a
+ * purpose-built SVG that encodes the core idea of the concept:
+ *   - Lakebase: a Postgres cylinder sitting on layered Lakehouse strata,
+ *     with a git-like branching tree on the side (instant branches).
+ *   - Agent Bricks: a central LLM hub connected to orbiting tool nodes of
+ *     different shapes (tool use across Python, MCP, data access).
+ *   - Databricks Apps: nested frames showing an app living inside a workspace
+ *     with a lava "live" status badge (platform-hosted deployment).
+ */
 function PillarVisual({ index }: { index: number }): ReactNode {
   return (
-    <div
-      className={[
-        "relative aspect-[4/3] w-full overflow-hidden rounded-lg",
-        index === 0
-          ? "bg-gradient-to-br from-[#17353d] via-[#2e5960] to-[#4f838b]"
-          : "",
-        index === 1
-          ? "bg-gradient-to-br from-[#f0eee9] via-[#f5f2eb] to-[#e9e5dc]"
-          : "",
-        index === 2
-          ? "bg-gradient-to-br from-[#11141a] via-[#1b2028] to-[#11141a]"
-          : "",
-      ].join(" ")}
-    >
-      {index === 0 ? (
-        <div className="absolute inset-0">
-          <div className="absolute left-10 top-8 h-32 w-32 rotate-45 border border-white/60" />
-          <div className="absolute left-20 top-12 h-32 w-32 rotate-45 border border-white/35" />
-          <div className="absolute right-8 bottom-8 h-20 w-40 rounded-md border border-white/20 bg-white/5" />
-          <div className="absolute right-12 bottom-14 h-2 w-24 rounded bg-white/20" />
-          <div className="absolute right-12 bottom-20 h-2 w-16 rounded bg-white/15" />
-        </div>
-      ) : null}
-      {index === 1 ? (
-        <div className="absolute inset-0">
-          <div className="absolute left-8 top-8 h-14 w-14 rounded-full bg-[#0c4a63]/90" />
-          <div className="absolute left-28 top-10 h-16 w-16 bg-[#e6b83d]" />
-          <div className="absolute left-[5rem] top-28 h-18 w-18 rounded-md bg-[#f4c1b4]" />
-          <div className="absolute right-12 top-12 h-24 w-24 rounded-full border border-[#6f7682]/40" />
-          <div className="absolute right-8 bottom-10 h-16 w-32 rounded-md border border-black/8 bg-white/60" />
-          <div className="absolute right-12 bottom-16 h-2 w-20 rounded bg-black/10" />
-        </div>
-      ) : null}
-      {index === 2 ? (
-        <div className="absolute inset-0">
-          <div className="absolute inset-0 opacity-80 [background-image:radial-gradient(circle_at_1px_1px,rgba(239,83,54,0.8)_1px,transparent_0)] [background-size:10px_10px]" />
-          <div className="absolute left-8 top-8 h-24 w-44 rounded-md border border-white/15 bg-white/5" />
-          <div className="absolute left-12 top-14 h-2 w-28 rounded bg-white/20" />
-          <div className="absolute left-12 top-20 h-2 w-16 rounded bg-white/15" />
-          <div className="absolute right-8 bottom-8 h-20 w-28 rounded-md border border-white/10 bg-white/5" />
-        </div>
-      ) : null}
+    <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl border border-black/10 bg-db-oat-medium/40 shadow-[0_12px_32px_rgba(11,32,38,0.08)] dark:border-white/10 dark:bg-db-navy-light dark:shadow-[0_12px_32px_rgba(0,0,0,0.45)]">
+      {index === 0 ? <LakebaseConcept /> : null}
+      {index === 1 ? <AgentBricksConcept /> : null}
+      {index === 2 ? <AppsConcept /> : null}
     </div>
+  );
+}
+
+function LakebaseConcept(): ReactNode {
+  return (
+    <svg
+      viewBox="0 0 400 300"
+      className="h-full w-full"
+      preserveAspectRatio="xMidYMid meet"
+    >
+      <g className="text-black/18 dark:text-white/22">
+        <rect
+          x="36"
+          y="186"
+          width="328"
+          height="22"
+          rx="5"
+          fill="currentColor"
+          opacity="0.55"
+        />
+        <rect
+          x="58"
+          y="214"
+          width="284"
+          height="18"
+          rx="5"
+          fill="currentColor"
+          opacity="0.35"
+        />
+        <rect
+          x="82"
+          y="236"
+          width="236"
+          height="14"
+          rx="4"
+          fill="currentColor"
+          opacity="0.2"
+        />
+      </g>
+
+      <g transform="translate(220 60)">
+        <ellipse cx="64" cy="14" rx="64" ry="14" fill="#ff3621" />
+        <rect x="0" y="14" width="128" height="104" fill="#ff3621" />
+        <ellipse cx="64" cy="118" rx="64" ry="14" fill="#ff5542" />
+        <ellipse
+          cx="64"
+          cy="14"
+          rx="64"
+          ry="14"
+          fill="#ffffff"
+          opacity="0.14"
+        />
+        <ellipse
+          cx="64"
+          cy="56"
+          rx="64"
+          ry="14"
+          fill="#000000"
+          opacity="0.18"
+        />
+      </g>
+
+      <g
+        className="text-[#ff3621] dark:text-[#ff5542]"
+        stroke="currentColor"
+        fill="currentColor"
+      >
+        <line
+          x1="82"
+          y1="72"
+          x2="82"
+          y2="172"
+          strokeWidth="3"
+          strokeLinecap="round"
+        />
+        <circle cx="82" cy="72" r="5.5" />
+        <circle cx="82" cy="172" r="5.5" />
+        <path
+          d="M82 92 Q82 100 96 102 L124 102"
+          strokeWidth="2.5"
+          fill="none"
+          strokeLinecap="round"
+        />
+        <circle cx="128" cy="102" r="5" />
+        <path
+          d="M82 142 Q82 150 96 152 L132 152"
+          strokeWidth="2.5"
+          fill="none"
+          strokeLinecap="round"
+        />
+        <circle cx="136" cy="152" r="5" />
+      </g>
+    </svg>
+  );
+}
+
+function AgentBricksConcept(): ReactNode {
+  const cx = 200;
+  const cy = 150;
+  const hubR = 34;
+  const tools = [
+    { dx: -120, dy: -70, shape: "square" as const },
+    { dx: 120, dy: -70, shape: "circle" as const },
+    { dx: -140, dy: 0, shape: "triangle" as const },
+    { dx: 140, dy: 10, shape: "diamond" as const },
+    { dx: -100, dy: 80, shape: "square" as const },
+    { dx: 100, dy: 86, shape: "circle" as const },
+  ];
+  return (
+    <svg
+      viewBox="0 0 400 300"
+      className="h-full w-full"
+      preserveAspectRatio="xMidYMid meet"
+    >
+      <g
+        className="text-black/22 dark:text-white/25"
+        stroke="currentColor"
+        strokeWidth="1.5"
+      >
+        {tools.map((t, i) => (
+          <line
+            key={i}
+            x1={cx}
+            y1={cy}
+            x2={cx + t.dx}
+            y2={cy + t.dy}
+            strokeLinecap="round"
+          />
+        ))}
+      </g>
+
+      <g className="text-black/45 dark:text-white/55" fill="currentColor">
+        {tools.map((t, i) => {
+          const x = cx + t.dx;
+          const y = cy + t.dy;
+          const accent = i === 1;
+          const fill = accent ? "#ff3621" : "currentColor";
+          if (t.shape === "circle") {
+            return (
+              <circle key={i} cx={x} cy={y} r={accent ? 16 : 15} fill={fill} />
+            );
+          }
+          if (t.shape === "square") {
+            return (
+              <rect
+                key={i}
+                x={x - 15}
+                y={y - 15}
+                width="30"
+                height="30"
+                rx="5"
+                fill={fill}
+              />
+            );
+          }
+          if (t.shape === "triangle") {
+            return (
+              <polygon
+                key={i}
+                points={`${x},${y - 17} ${x + 15},${y + 10} ${x - 15},${y + 10}`}
+                fill={fill}
+              />
+            );
+          }
+          return (
+            <polygon
+              key={i}
+              points={`${x},${y - 17} ${x + 17},${y} ${x},${y + 17} ${x - 17},${y}`}
+              fill={fill}
+            />
+          );
+        })}
+      </g>
+
+      <g>
+        <circle
+          cx={cx}
+          cy={cy}
+          r={hubR + 10}
+          fill="#ff3621"
+          fillOpacity="0.12"
+        />
+        <circle cx={cx} cy={cy} r={hubR} fill="#ff3621" />
+        <circle cx={cx - 10} cy={cy - 2} r="3" fill="#ffffff" opacity="0.95" />
+        <circle cx={cx + 2} cy={cy - 2} r="3" fill="#ffffff" opacity="0.78" />
+        <circle cx={cx + 14} cy={cy - 2} r="3" fill="#ffffff" opacity="0.58" />
+      </g>
+    </svg>
+  );
+}
+
+function AppsConcept(): ReactNode {
+  return (
+    <svg
+      viewBox="0 0 400 300"
+      className="h-full w-full"
+      preserveAspectRatio="xMidYMid meet"
+    >
+      <rect
+        x="30"
+        y="40"
+        width="340"
+        height="220"
+        rx="18"
+        className="text-black/18 dark:text-white/22"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeDasharray="6 4"
+      />
+      <g className="text-black/22 dark:text-white/32" fill="currentColor">
+        <circle cx="46" cy="56" r="3.5" />
+        <circle cx="58" cy="56" r="3.5" />
+        <circle cx="70" cy="56" r="3.5" />
+      </g>
+
+      <rect
+        x="70"
+        y="76"
+        width="260"
+        height="152"
+        rx="14"
+        className="text-black/8 dark:text-white/10"
+        fill="currentColor"
+      />
+      <rect
+        x="70"
+        y="76"
+        width="260"
+        height="152"
+        rx="14"
+        className="text-black/22 dark:text-white/22"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+      />
+
+      <g className="text-black/42 dark:text-white/58" fill="currentColor">
+        <rect x="90" y="98" width="92" height="10" rx="3" opacity="0.75" />
+        <rect x="90" y="122" width="220" height="8" rx="3" opacity="0.4" />
+        <rect x="90" y="140" width="180" height="8" rx="3" opacity="0.35" />
+        <rect x="90" y="158" width="200" height="8" rx="3" opacity="0.3" />
+        <rect x="90" y="186" width="76" height="24" rx="8" fill="#ff3621" />
+      </g>
+
+      <g transform="translate(304 88)">
+        <rect x="-18" y="-10" width="30" height="20" rx="10" fill="#ff3621" />
+        <circle cx="-8" cy="0" r="3" fill="#ffffff" />
+      </g>
+    </svg>
   );
 }
 

@@ -4,8 +4,6 @@ describe("server feature flags", () => {
   afterEach(() => {
     delete process.env.SHOW_DRAFTS;
     delete process.env.EXAMPLES_FEATURE;
-    delete process.env.CI;
-    delete process.env.npm_lifecycle_event;
     vi.resetModules();
   });
 
@@ -14,46 +12,36 @@ describe("server feature flags", () => {
     expect(showDrafts()).toBe(false);
   });
 
-  test('showDrafts returns true when env var is "true"', async () => {
+  test('showDrafts returns true only when env var is exactly "true"', async () => {
     process.env.SHOW_DRAFTS = "true";
     const { showDrafts } = await import("../src/lib/feature-flags-server");
     expect(showDrafts()).toBe(true);
   });
 
-  test('showDrafts returns true when env var is "1"', async () => {
-    process.env.SHOW_DRAFTS = "1";
+  test("showDrafts returns false for any other value", async () => {
     const { showDrafts } = await import("../src/lib/feature-flags-server");
-    expect(showDrafts()).toBe(true);
+    for (const value of ["1", "yes", "True", "TRUE", ""]) {
+      process.env.SHOW_DRAFTS = value;
+      expect(showDrafts()).toBe(false);
+    }
   });
 
-  test("showDrafts returns false for arbitrary string", async () => {
-    process.env.SHOW_DRAFTS = "yes";
-    const { showDrafts } = await import("../src/lib/feature-flags-server");
-    expect(showDrafts()).toBe(false);
-  });
-
-  test("examplesEnabled returns false when env var is unset (non-dev)", async () => {
-    process.env.CI = "true";
+  test("examplesEnabled returns false when env var is unset", async () => {
     const { examplesEnabled } = await import("../src/lib/feature-flags-server");
     expect(examplesEnabled()).toBe(false);
   });
 
-  test("examplesEnabled returns true for npm run start without env var", async () => {
-    delete process.env.CI;
-    process.env.npm_lifecycle_event = "start";
-    const { examplesEnabled } = await import("../src/lib/feature-flags-server");
-    expect(examplesEnabled()).toBe(true);
-  });
-
-  test('examplesEnabled returns true when env var is "true"', async () => {
+  test('examplesEnabled returns true only when env var is exactly "true"', async () => {
     process.env.EXAMPLES_FEATURE = "true";
     const { examplesEnabled } = await import("../src/lib/feature-flags-server");
     expect(examplesEnabled()).toBe(true);
   });
 
-  test('examplesEnabled returns true when env var is "1"', async () => {
-    process.env.EXAMPLES_FEATURE = "1";
+  test("examplesEnabled returns false for any other value", async () => {
     const { examplesEnabled } = await import("../src/lib/feature-flags-server");
-    expect(examplesEnabled()).toBe(true);
+    for (const value of ["1", "yes", "True", "TRUE", ""]) {
+      process.env.EXAMPLES_FEATURE = value;
+      expect(examplesEnabled()).toBe(false);
+    }
   });
 });

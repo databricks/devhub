@@ -374,6 +374,14 @@ export const templatePreviewItems: TemplatePreviewItem[] = templates.map(
   }),
 );
 
+/** Optional screenshot sets for the example detail hero (light/dark per view). */
+export type ExampleHeroVariant = {
+  id: string;
+  label: string;
+  imageLight: string;
+  imageDark: string;
+};
+
 export type Example = {
   id: string;
   name: string;
@@ -385,8 +393,21 @@ export type Example = {
   recipeIds: string[];
   tags: string[];
   services: Service[];
+  /** When set, the detail page shows view + light/dark toggles instead of a single image. */
+  heroVariants?: ExampleHeroVariant[];
   isDraft?: boolean;
 };
+
+/** Light/dark paths for resource-card / landing hover preview (primary example view). */
+export function exampleCardHoverPair(
+  example: Example,
+): { imageLight: string; imageDark: string } | undefined {
+  const v =
+    example.heroVariants?.find((h) => h.id === "subscriptions") ??
+    example.heroVariants?.find((h) => h.id === "guidelines");
+  if (!v) return undefined;
+  return { imageLight: v.imageLight, imageDark: v.imageDark };
+}
 
 const templateIndex: Record<string, Template> = Object.fromEntries(
   templates.map((t) => [t.id, t]),
@@ -401,6 +422,7 @@ type ExampleConfig = {
   initCommand: string;
   templateIds: string[];
   recipeIds: string[];
+  heroVariants?: ExampleHeroVariant[];
   isDraft?: boolean;
 };
 
@@ -455,7 +477,21 @@ export const examples: Example[] = [
     name: "SaaS Subscription Tracker",
     description:
       "Internal tool for tracking team SaaS subscriptions, owners, costs, and renewals with Lakebase persistence and Genie spend analytics.",
-    image: "/img/examples/saas-tracker.svg",
+    image: "/img/examples/saas-tracker-subscriptions-light.png",
+    heroVariants: [
+      {
+        id: "subscriptions",
+        label: "Subscriptions",
+        imageLight: "/img/examples/saas-tracker-subscriptions-light.png",
+        imageDark: "/img/examples/saas-tracker-subscriptions-dark.png",
+      },
+      {
+        id: "genie",
+        label: "Ask Genie",
+        imageLight: "/img/examples/saas-tracker-genie-light.png",
+        imageDark: "/img/examples/saas-tracker-genie-dark.png",
+      },
+    ],
     githubPath: "examples/saas-tracker",
     initCommand:
       "git clone --depth 1 https://github.com/databricks/devhub.git\ncd devhub/examples/saas-tracker/template",
@@ -467,7 +503,21 @@ export const examples: Example[] = [
     name: "Content Moderator",
     description:
       "Internal content moderation tool with per-channel guidelines, AI-powered compliance scoring via Model Serving, and a moderator review workflow backed by Lakebase and Genie analytics.",
-    image: "/img/examples/content-moderator.svg",
+    image: "/img/examples/content-moderator-guidelines-light.png",
+    heroVariants: [
+      {
+        id: "guidelines",
+        label: "Guidelines",
+        imageLight: "/img/examples/content-moderator-guidelines-light.png",
+        imageDark: "/img/examples/content-moderator-guidelines-dark.png",
+      },
+      {
+        id: "genie",
+        label: "Ask Genie",
+        imageLight: "/img/examples/content-moderator-genie-light.png",
+        imageDark: "/img/examples/content-moderator-genie-dark.png",
+      },
+    ],
     githubPath: "examples/content-moderator",
     initCommand:
       "git clone --depth 1 https://github.com/databricks/devhub.git\ncd devhub/examples/content-moderator/template",

@@ -4,6 +4,8 @@ describe("server feature flags", () => {
   afterEach(() => {
     delete process.env.SHOW_DRAFTS;
     delete process.env.EXAMPLES_FEATURE;
+    delete process.env.CI;
+    delete process.env.npm_lifecycle_event;
     vi.resetModules();
   });
 
@@ -30,9 +32,17 @@ describe("server feature flags", () => {
     expect(showDrafts()).toBe(false);
   });
 
-  test("examplesEnabled returns false when env var is unset", async () => {
+  test("examplesEnabled returns false when env var is unset (non-dev)", async () => {
+    process.env.CI = "true";
     const { examplesEnabled } = await import("../src/lib/feature-flags-server");
     expect(examplesEnabled()).toBe(false);
+  });
+
+  test("examplesEnabled returns true for npm run start without env var", async () => {
+    delete process.env.CI;
+    process.env.npm_lifecycle_event = "start";
+    const { examplesEnabled } = await import("../src/lib/feature-flags-server");
+    expect(examplesEnabled()).toBe(true);
   });
 
   test('examplesEnabled returns true when env var is "true"', async () => {

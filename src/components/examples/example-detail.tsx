@@ -29,6 +29,7 @@ import {
 } from "@/lib/examples/build-example-markdown";
 import type { Example } from "@/lib/recipes/recipes";
 import { templates, recipes } from "@/lib/recipes/recipes";
+import { ExampleHeroGallery } from "@/components/examples/example-hero-gallery";
 
 const mdxComponents = { pre: RecipePre };
 
@@ -264,14 +265,21 @@ export function ExampleDetail({
                   ))}
                 </div>
 
-                <div className="mb-8 overflow-hidden rounded-xl">
-                  <img
-                    src={heroImageUrl}
-                    alt={`${example.name} architecture`}
-                    className="h-auto w-full object-cover"
-                    loading="lazy"
+                {example.heroVariants && example.heroVariants.length > 0 ? (
+                  <ExampleHeroGallery
+                    exampleName={example.name}
+                    variants={example.heroVariants}
                   />
-                </div>
+                ) : (
+                  <div className="mb-8 overflow-hidden rounded-xl">
+                    <img
+                      src={heroImageUrl}
+                      alt={`${example.name} architecture`}
+                      className="h-auto w-full object-cover"
+                      loading="lazy"
+                    />
+                  </div>
+                )}
 
                 <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center">
                   <Button asChild variant="outline" size="sm">

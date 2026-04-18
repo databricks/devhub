@@ -2,6 +2,7 @@ import { Bot, Database, Server } from "lucide-react";
 import type { ComponentType } from "react";
 import {
   examples,
+  exampleCardHoverPair,
   filterPublished,
   templatePreviewItems,
   templates,
@@ -25,6 +26,8 @@ export type LandingResourceItem = {
   services?: Service[];
   kind: "example" | "guide";
   image?: string;
+  /** Example cards only: hover swaps light/dark homepage screenshots */
+  exampleCardHover?: { imageLight: string; imageDark: string };
 };
 
 export const pillars: Pillar[] = [
@@ -68,16 +71,20 @@ export function buildLandingResources(
   );
 
   return [
-    ...publishedExamples.map((e) => ({
-      id: e.id,
-      path: `/resources/${e.id}`,
-      title: e.name,
-      description: e.description,
-      tags: e.tags,
-      services: e.services,
-      kind: "example" as const,
-      image: e.image,
-    })),
+    ...publishedExamples.map((e) => {
+      const hover = exampleCardHoverPair(e);
+      return {
+        id: e.id,
+        path: `/resources/${e.id}`,
+        title: e.name,
+        description: e.description,
+        tags: e.tags,
+        services: e.services,
+        kind: "example" as const,
+        image: e.image,
+        ...(hover ? { exampleCardHover: hover } : {}),
+      };
+    }),
     ...[...publishedPreviewItems].reverse().map((t) => ({
       ...t,
       kind: "guide" as const,

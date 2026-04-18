@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { useCallback, useRef, useState } from "react";
-import { Check } from "lucide-react";
+import { Check, LoaderCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CopyButton } from "@/components/code/copy-button";
 import { getBootstrapPromptApiPath } from "@/lib/bootstrap-prompt";
@@ -60,12 +60,13 @@ async function getBootstrapPrompt(): Promise<string> {
 }
 
 export function HeroSection(): ReactNode {
-  const [copyState, setCopyState] = useState<"idle" | "copied" | "error">(
-    "idle",
-  );
+  const [copyState, setCopyState] = useState<
+    "idle" | "copying" | "copied" | "error"
+  >("idle");
   const resetTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   const handleCopyBootstrapPrompt = useCallback(async () => {
+    setCopyState("copying");
     try {
       const bootstrapPrompt = await getBootstrapPrompt();
       const copied = await copyTextToClipboard(bootstrapPrompt);
@@ -108,11 +109,14 @@ export function HeroSection(): ReactNode {
             </div>
             <span className="text-sm text-black/35 dark:text-white/35">or</span>
             <Button
-              className="h-11 rounded-full px-6 font-medium"
+              className="h-11 w-40 rounded-full px-6 font-medium"
               onClick={handleCopyBootstrapPrompt}
+              disabled={copyState === "copying"}
               title="Copies a setup guide you can paste into Cursor, Claude Code, or Codex"
             >
-              {copyState === "copied" ? (
+              {copyState === "copying" ? (
+                <LoaderCircle className="h-4 w-4 animate-spin" />
+              ) : copyState === "copied" ? (
                 <span className="inline-flex items-center gap-1.5">
                   <Check className="h-4 w-4" />
                   Copied

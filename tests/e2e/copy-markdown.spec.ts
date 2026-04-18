@@ -243,7 +243,7 @@ test.describe("copy markdown exports raw markdown on docs pages", () => {
     const copied = await getCopiedText(page);
     expect(copied).toContain("# About DevHub");
     expect(copied).toContain("# Start here");
-    expect(copied).toContain("## Pick a guide");
+    expect(copied).toContain("## Guides and examples");
   });
 
   test("raw-docs static files are served", async ({ request }) => {

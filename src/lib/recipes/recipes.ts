@@ -18,6 +18,7 @@ export type Recipe = {
   tags: string[];
   services: Service[];
   prerequisites?: string[];
+  isDraft?: boolean;
 };
 
 export type Template = {
@@ -27,6 +28,7 @@ export type Template = {
   recipeIds: string[];
   tags: string[];
   services: Service[];
+  isDraft?: boolean;
 };
 
 type TemplatePreviewItem = {
@@ -70,6 +72,15 @@ export const recipes: Recipe[] = [
     prerequisites: ["databricks-local-bootstrap"],
   },
   {
+    id: "embeddings-generation",
+    name: "Generate Embeddings with AI Gateway",
+    description:
+      "Generate text embeddings from a Databricks AI Gateway endpoint using the Databricks SDK.",
+    tags: ["AI", "AI Gateway", "Embeddings"],
+    services: ["AI Gateway"],
+    prerequisites: ["databricks-local-bootstrap"],
+  },
+  {
     id: "model-serving-endpoint-creation",
     name: "Create a Databricks Model Serving endpoint",
     description:
@@ -103,6 +114,15 @@ export const recipes: Recipe[] = [
       "Add a managed Postgres database to your Databricks app using the Lakebase plugin. Covers schema setup, table creation, and full CRUD REST API routes.",
     tags: ["Lakebase", "Postgres", "CRUD", "Data"],
     services: ["Lakebase", "Databricks Apps"],
+    prerequisites: ["databricks-local-bootstrap", "lakebase-create-instance"],
+  },
+  {
+    id: "lakebase-pgvector",
+    name: "Lakebase pgvector",
+    description:
+      "Enable vector similarity search in Lakebase using the pgvector extension. Covers extension setup, vector table design, insert and cosine retrieval helpers, and IVFFlat/HNSW index options.",
+    tags: ["Lakebase", "Postgres", "pgvector", "Vector Search", "Embeddings"],
+    services: ["Lakebase"],
     prerequisites: ["databricks-local-bootstrap", "lakebase-create-instance"],
   },
   {
@@ -218,7 +238,9 @@ export const recipesInOrder: Recipe[] = [
   "databricks-local-bootstrap",
   "lakebase-create-instance",
   "lakebase-data-persistence",
+  "lakebase-pgvector",
   "foundation-models-api",
+  "embeddings-generation",
   "model-serving-endpoint-creation",
   "ai-chat-model-serving",
   "lakebase-chat-persistence",
@@ -245,6 +267,7 @@ type TemplateConfig = {
   name: string;
   description: string;
   recipeIds: string[];
+  isDraft?: boolean;
 };
 
 function createTemplate(config: TemplateConfig): Template {
@@ -268,6 +291,7 @@ function createTemplate(config: TemplateConfig): Template {
     recipeIds: config.recipeIds,
     tags,
     services,
+    ...(config.isDraft ? { isDraft: true } : {}),
   };
 }
 
@@ -350,6 +374,14 @@ export const templatePreviewItems: TemplatePreviewItem[] = templates.map(
   }),
 );
 
+/** Optional screenshot sets for the example detail hero (light/dark per view). */
+export type ExampleHeroVariant = {
+  id: string;
+  label: string;
+  imageLight: string;
+  imageDark: string;
+};
+
 export type Example = {
   id: string;
   name: string;
@@ -374,7 +406,21 @@ export type Example = {
   recipeIds: string[];
   tags: string[];
   services: Service[];
+  /** When set, the detail page shows view + light/dark toggles instead of a single image. */
+  heroVariants?: ExampleHeroVariant[];
+  isDraft?: boolean;
 };
+
+/** Light/dark paths for resource-card / landing hover preview (primary example view). */
+export function exampleCardHoverPair(
+  example: Example,
+): { imageLight: string; imageDark: string } | undefined {
+  const v =
+    example.heroVariants?.find((h) => h.id === "subscriptions") ??
+    example.heroVariants?.find((h) => h.id === "guidelines");
+  if (!v) return undefined;
+  return { imageLight: v.imageLight, imageDark: v.imageDark };
+}
 
 const templateIndex: Record<string, Template> = Object.fromEntries(
   templates.map((t) => [t.id, t]),
@@ -391,6 +437,8 @@ type ExampleConfig = {
   agentDeploySteps?: string;
   templateIds: string[];
   recipeIds: string[];
+  heroVariants?: ExampleHeroVariant[];
+  isDraft?: boolean;
 };
 
 function createExample(config: ExampleConfig): Example {
@@ -418,7 +466,12 @@ function createExample(config: ExampleConfig): Example {
     ]),
   ] as Service[];
 
-  return { ...config, tags, services };
+  return {
+    ...config,
+    tags,
+    services,
+    ...(config.isDraft ? { isDraft: true } : {}),
+  };
 }
 
 export const examples: Example[] = [
@@ -439,7 +492,21 @@ export const examples: Example[] = [
     name: "SaaS Subscription Tracker",
     description:
       "Internal tool for tracking team SaaS subscriptions, owners, costs, and renewals with Lakebase persistence and Genie spend analytics.",
-    image: "/img/examples/saas-tracker.svg",
+    image: "/img/examples/saas-tracker-subscriptions-light.png",
+    heroVariants: [
+      {
+        id: "subscriptions",
+        label: "Subscriptions",
+        imageLight: "/img/examples/saas-tracker-subscriptions-light.png",
+        imageDark: "/img/examples/saas-tracker-subscriptions-dark.png",
+      },
+      {
+        id: "genie",
+        label: "Ask Genie",
+        imageLight: "/img/examples/saas-tracker-genie-light.png",
+        imageDark: "/img/examples/saas-tracker-genie-dark.png",
+      },
+    ],
     githubPath: "examples/saas-tracker",
     initCommand:
       "git clone --depth 1 https://github.com/databricks/devhub.git\ncd devhub/examples/saas-tracker/template",
@@ -451,12 +518,38 @@ export const examples: Example[] = [
     name: "Content Moderator",
     description:
       "Internal content moderation tool with per-channel guidelines, AI-powered compliance scoring via Model Serving, and a moderator review workflow backed by Lakebase and Genie analytics.",
-    image: "/img/examples/content-moderator.svg",
+    image: "/img/examples/content-moderator-guidelines-light.png",
+    heroVariants: [
+      {
+        id: "guidelines",
+        label: "Guidelines",
+        imageLight: "/img/examples/content-moderator-guidelines-light.png",
+        imageDark: "/img/examples/content-moderator-guidelines-dark.png",
+      },
+      {
+        id: "genie",
+        label: "Ask Genie",
+        imageLight: "/img/examples/content-moderator-genie-light.png",
+        imageDark: "/img/examples/content-moderator-genie-dark.png",
+      },
+    ],
     githubPath: "examples/content-moderator",
     initCommand:
       "git clone --depth 1 https://github.com/databricks/devhub.git\ncd devhub/examples/content-moderator/template",
     templateIds: ["app-with-lakebase"],
     recipeIds: ["genie-conversational-analytics", "foundation-models-api"],
+  }),
+  createExample({
+    id: "inventory-intelligence",
+    name: "Inventory Intelligence",
+    description:
+      "Retail inventory management with AI-powered demand forecasting, replenishment recommendations, and optional Genie analytics. Built on a live medallion pipeline synced to Lakebase.",
+    image: "/img/examples/inventory-intelligence.svg",
+    githubPath: "examples/inventory-intelligence",
+    initCommand:
+      "git clone --depth 1 https://github.com/databricks/devhub.git\ncd devhub/examples/inventory-intelligence/template",
+    templateIds: ["operational-data-analytics", "app-with-lakebase"],
+    recipeIds: ["genie-conversational-analytics"],
   }),
   // Unlike the other examples, rag-chat is consumed via `databricks apps init`
   // rather than `git clone`. The initCommand points at the AppKit CLI.
@@ -526,3 +619,13 @@ export const examples: Example[] = [
     recipeIds: ["ai-chat-model-serving", "lakebase-chat-persistence"],
   }),
 ];
+
+type Draftable = { isDraft?: boolean };
+
+export function filterPublished<T extends Draftable>(
+  items: T[],
+  includeDrafts: boolean,
+): T[] {
+  if (includeDrafts) return items;
+  return items.filter((item) => !item.isDraft);
+}

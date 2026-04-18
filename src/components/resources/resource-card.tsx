@@ -9,7 +9,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import type { Example, Recipe, Template } from "@/lib/recipes/recipes";
+import {
+  exampleCardHoverPair,
+  type Example,
+  type Recipe,
+  type Template,
+} from "@/lib/recipes/recipes";
+import { ExampleCardHoverVisual } from "@/components/examples/example-card-hover-visual";
 
 export type ResourceItem =
   | { kind: "example"; data: Example }
@@ -110,6 +116,8 @@ export function ResourceCard({
   const description = item.data.description;
   const tags = item.data.tags;
   const href = getResourceHref(item);
+  const exampleHover =
+    item.kind === "example" ? exampleCardHoverPair(item.data) : undefined;
 
   return (
     <Card
@@ -120,9 +128,19 @@ export function ResourceCard({
       } bg-[#f7f6f4] dark:bg-[#182a32]`}
     >
       <div
-        className={`relative h-40 overflow-hidden border-b border-black/10 md:h-44 dark:border-white/10 ${visual.gradient}`}
+        className={`relative h-40 overflow-hidden border-b border-black/10 md:h-44 dark:border-white/10 ${
+          isExample && exampleHover ? "" : visual.gradient
+        }`}
       >
-        {visual.shapes}
+        {isExample && exampleHover ? (
+          <ExampleCardHoverVisual
+            imageLight={exampleHover.imageLight}
+            imageDark={exampleHover.imageDark}
+            alt={name}
+          />
+        ) : (
+          visual.shapes
+        )}
       </div>
       <CardHeader className="pb-2">
         <div className="mb-2 flex items-center justify-between gap-2">

@@ -186,6 +186,11 @@
 }
 
 @layer base {
+  button,
+  [role="button"] {
+    cursor: pointer;
+  }
+
   /* Tailwind v4 container can conflict with Infima defaults in dev/hot reload. */
   .container {
     margin-inline: auto;

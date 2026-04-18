@@ -2,7 +2,13 @@ import { readFileSync } from "fs";
 import { resolve } from "path";
 import type { LoadContext, Plugin } from "@docusaurus/types";
 import { getMarkdownSlugs } from "../src/lib/content-markdown";
-import { recipes, examples, templates } from "../src/lib/recipes/recipes";
+import {
+  recipes,
+  examples,
+  templates,
+  filterPublished,
+} from "../src/lib/recipes/recipes";
+import { showDrafts, examplesEnabled } from "../src/lib/feature-flags-server";
 import { solutions } from "../src/lib/solutions/solutions";
 
 function assertNoDuplicateSlugs(): void {
@@ -84,6 +90,22 @@ export default function ExampleEntryPage(): ReactNode {
 }
 
 function getRegistrySlugs(entryType: EntryType): string[] {
+  const includeDrafts = showDrafts();
+  if (entryType === "recipe") {
+    return filterPublished(recipes, includeDrafts)
+      .map((recipe) => recipe.id)
+      .sort();
+  }
+  if (entryType === "example") {
+    if (!examplesEnabled()) return [];
+    return filterPublished(examples, includeDrafts)
+      .map((example) => example.id)
+      .sort();
+  }
+  return solutions.map((solution) => solution.id).sort();
+}
+
+function getAllRegistrySlugs(entryType: EntryType): string[] {
   if (entryType === "recipe") {
     return recipes.map((recipe) => recipe.id).sort();
   }
@@ -93,15 +115,11 @@ function getRegistrySlugs(entryType: EntryType): string[] {
   return solutions.map((solution) => solution.id).sort();
 }
 
-function assertSlugParity(
-  entryType: EntryType,
-  contentSlugs: string[],
-  registrySlugs: string[],
-): void {
-  const onlyInContent = contentSlugs.filter(
-    (slug) => !registrySlugs.includes(slug),
-  );
-  const onlyInRegistry = registrySlugs.filter(
+function assertSlugParity(entryType: EntryType, contentSlugs: string[]): void {
+  const allSlugs = getAllRegistrySlugs(entryType);
+
+  const onlyInContent = contentSlugs.filter((slug) => !allSlugs.includes(slug));
+  const onlyInRegistry = allSlugs.filter(
     (slug) => !contentSlugs.includes(slug),
   );
 
@@ -135,11 +153,12 @@ export default function contentEntriesPlugin(
         context.siteDir,
         options.contentSection,
       );
-      const registrySlugs = getRegistrySlugs(options.entryType);
-      assertSlugParity(options.entryType, contentSlugs, registrySlugs);
+      assertSlugParity(options.entryType, contentSlugs);
+
+      const publishedSlugs = getRegistrySlugs(options.entryType);
 
       const rawMarkdownBySlug: Record<string, string> = {};
-      for (const slug of contentSlugs) {
+      for (const slug of publishedSlugs) {
         const filePath = resolve(
           context.siteDir,
           "content",
@@ -152,11 +171,11 @@ export default function contentEntriesPlugin(
       setGlobalData({
         entryType: options.entryType,
         routeBasePath: options.routeBasePath,
-        slugs: contentSlugs,
+        slugs: publishedSlugs,
         rawMarkdownBySlug,
       });
 
-      for (const slug of contentSlugs) {
+      for (const slug of publishedSlugs) {
         const modulePath = await createData(
           `${options.id}-${slug}-route.tsx`,
           createRouteModuleSource(options.entryType, slug),

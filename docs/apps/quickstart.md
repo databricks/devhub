@@ -21,10 +21,10 @@ Whether you copy a guide or scaffold manually, here's what the flow looks like:
 1. The Databricks CLI authenticates against your workspace.
 2. The project is scaffolded with the right dependencies.
 3. Databricks resources are provisioned (Lakebase databases, model serving endpoints, or Genie spaces, depending on the guide).
-4. The coding agent implements your business logic on top of the scaffold.
+4. The coding agent builds your application on top of the scaffold.
 5. `databricks bundle deploy` pushes the app to Databricks Apps.
 
-If something fails during the build, guides include troubleshooting context for each step. Coding agents can usually self-correct.
+If something fails during the build, guides include troubleshooting context for each step. Coding agents can diagnose and fix most errors from the troubleshooting context.
 
 ## Build an app from a guide
 

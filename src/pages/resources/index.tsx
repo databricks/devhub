@@ -23,29 +23,38 @@ import {
 } from "@/components/ui/sheet";
 import {
   examples,
+  filterPublished,
   recipesInOrder,
   templates,
   type Service,
 } from "@/lib/recipes/recipes";
+import { useFeatureFlags } from "@/lib/feature-flags";
 import { useAllRawRecipeMarkdown } from "@/lib/use-raw-content-markdown";
 
-function buildResourceItems(): ResourceItem[] {
-  const exampleItems: ResourceItem[] = examples.map((e) => ({
+function buildResourceItems(
+  includeDrafts: boolean,
+  includeExamples: boolean,
+): ResourceItem[] {
+  const publishedExamples = includeExamples
+    ? filterPublished(examples, includeDrafts)
+    : [];
+  const publishedTemplates = filterPublished(templates, includeDrafts);
+  const publishedRecipes = filterPublished(recipesInOrder, includeDrafts);
+
+  const exampleItems: ResourceItem[] = publishedExamples.map((e) => ({
     kind: "example",
     data: e,
   }));
-  const templateItems: ResourceItem[] = templates.map((t) => ({
+  const templateItems: ResourceItem[] = publishedTemplates.map((t) => ({
     kind: "template",
     data: t,
   }));
-  const recipeItems: ResourceItem[] = recipesInOrder.map((r) => ({
+  const recipeItems: ResourceItem[] = publishedRecipes.map((r) => ({
     kind: "recipe",
     data: r,
   }));
   return [...exampleItems, ...templateItems, ...recipeItems];
 }
-
-const ALL_ITEMS = buildResourceItems();
 
 export default function ResourcesPage(): ReactNode {
   const [searchQuery, setSearchQuery] = useState("");
@@ -58,6 +67,14 @@ export default function ResourcesPage(): ReactNode {
   const [activeTags, setActiveTags] = useState<Set<string>>(new Set());
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+
+  const { showDrafts: includeDrafts, examplesEnabled: includeExamples } =
+    useFeatureFlags();
+
+  const ALL_ITEMS = useMemo(
+    () => buildResourceItems(includeDrafts, includeExamples),
+    [includeDrafts, includeExamples],
+  );
 
   const rawBySlug = useAllRawRecipeMarkdown();
 
@@ -87,11 +104,17 @@ export default function ResourcesPage(): ReactNode {
 
       return true;
     });
-  }, [searchQuery, selectedServices, selectedResourceTypes, activeTags]);
+  }, [
+    searchQuery,
+    selectedServices,
+    selectedResourceTypes,
+    activeTags,
+    ALL_ITEMS,
+  ]);
 
   const selectedItems = useMemo(
     () => ALL_ITEMS.filter((item) => selectedIds.has(item.data.id)),
-    [selectedIds],
+    [selectedIds, ALL_ITEMS],
   );
 
   const selectedRawMarkdown = useMemo(() => {
@@ -205,7 +228,11 @@ export default function ResourcesPage(): ReactNode {
   return (
     <Layout
       title="Resources"
-      description="Guides and examples for building on Databricks"
+      description={
+        includeExamples
+          ? "Guides and examples for building on Databricks"
+          : "Guides for building on Databricks"
+      }
     >
       <main className="border-t border-db-cyan/30 bg-db-bg dark:border-db-cyan/25 dark:bg-[#0d1a1f]">
         <div className="container px-4 py-12 md:py-16">
@@ -216,12 +243,15 @@ export default function ResourcesPage(): ReactNode {
               Resources
             </p>
             <h1 className="mb-4 max-w-3xl text-4xl leading-[1.06] font-medium tracking-tight text-black dark:text-white md:text-5xl">
-              <span className="text-db-lava">Examples &amp; Guides</span> for
-              building on Databricks.
+              <span className="text-db-lava">
+                {includeExamples ? "Examples & Guides" : "Guides"}
+              </span>{" "}
+              for building on Databricks.
             </h1>
             <p className="mb-10 max-w-2xl text-lg text-black/68 dark:text-white/68">
-              Step-by-step guides to copy into your coding agent. Explore
-              end-to-end examples as reference implementations.
+              Step-by-step guides to copy into your coding agent.
+              {includeExamples &&
+                " Explore end-to-end examples as reference implementations."}
             </p>
 
             {/* Toolbar: search + actions */}

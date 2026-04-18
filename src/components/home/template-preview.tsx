@@ -15,10 +15,13 @@ import {
   CarouselPrevious,
   CarouselNext,
 } from "@/components/ui/carousel";
+import { useFeatureFlags } from "@/lib/feature-flags";
 import {
-  landingResources,
+  buildLandingResources,
   type LandingResourceItem,
 } from "@/lib/landing-content";
+import { ExampleCardHoverVisual } from "@/components/examples/example-card-hover-visual";
+import { ExamplePlaceholderArt } from "@/components/examples/example-placeholder-art";
 
 function GradientArt({ index }: { index: number }): ReactNode {
   const variant = index % 4;
@@ -57,21 +60,6 @@ function GradientArt({ index }: { index: number }): ReactNode {
   );
 }
 
-function ExampleArt(): ReactNode {
-  return (
-    <div className="absolute inset-0">
-      <div className="absolute inset-0 bg-gradient-to-br from-[#0f172a] via-[#1a2744] to-[#0c1322]" />
-      <div className="absolute left-6 top-5 h-14 w-28 rounded-md border border-white/15 bg-white/5" />
-      <div className="absolute left-10 top-8 h-1.5 w-16 rounded bg-db-lava/70" />
-      <div className="absolute left-10 top-12 h-1.5 w-10 rounded bg-white/20" />
-      <div className="absolute right-6 top-6 h-20 w-20 rounded-full border border-white/10" />
-      <div className="absolute right-10 top-10 h-12 w-12 rounded-full border border-db-lava/30" />
-      <div className="absolute bottom-6 left-8 h-10 w-36 rounded-md border border-white/10 bg-white/5" />
-      <div className="absolute bottom-9 left-11 h-1.5 w-20 rounded bg-white/15" />
-    </div>
-  );
-}
-
 function CardVisual({
   item,
   index,
@@ -80,9 +68,20 @@ function CardVisual({
   index: number;
 }): ReactNode {
   if (item.kind === "example") {
+    if (item.exampleCardHover) {
+      return (
+        <div className="relative h-44 overflow-hidden border-b border-black/10 dark:border-white/10">
+          <ExampleCardHoverVisual
+            imageLight={item.exampleCardHover.imageLight}
+            imageDark={item.exampleCardHover.imageDark}
+            alt={item.title}
+          />
+        </div>
+      );
+    }
     return (
       <div className="relative h-44 overflow-hidden border-b border-black/10 dark:border-white/10">
-        <ExampleArt />
+        <ExamplePlaceholderArt />
       </div>
     );
   }
@@ -171,13 +170,20 @@ function ResourceCard({
 }
 
 export function TemplatePreview(): ReactNode {
+  const { showDrafts: includeDrafts, examplesEnabled: includeExamples } =
+    useFeatureFlags();
+  const landingResources = buildLandingResources(
+    includeDrafts,
+    includeExamples,
+  );
+
   return (
     <section className="bg-white py-16 dark:bg-db-navy md:py-20">
       <div className="container px-4">
         <div className="mx-auto mb-8 max-w-6xl">
           <p className="mb-3 inline-flex items-center gap-2 text-[10px] font-semibold tracking-[0.12em] text-black/50 uppercase dark:text-white/50">
             <span className="text-db-lava">&#9679;</span>
-            Guides and Examples
+            {includeExamples ? "Guides and Examples" : "Guides"}
           </p>
           <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
             <h2 className="max-w-xl text-3xl leading-tight font-medium tracking-tight text-black dark:text-white md:text-4xl">

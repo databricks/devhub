@@ -23,6 +23,11 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# Example template build artifacts and Databricks state
+examples/**/dist/
+examples/**/client/dist/
+examples/**/.databricks/
+
 # Playwright
 /test-results
 /playwright-report

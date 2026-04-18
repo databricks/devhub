@@ -5,6 +5,7 @@ import path from "path";
 import contentEntriesPlugin from "./plugins/content-entries";
 import llmsTxtPlugin from "./plugins/llms-txt";
 import remarkCliTabs from "./plugins/remark-cli-tabs";
+import { examplesEnabled } from "./src/lib/feature-flags-server";
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
@@ -12,6 +13,11 @@ const config: Config = {
   title: "Databricks Developer",
   tagline: "Build intelligent data and AI applications in minutes, not months",
   favicon: "img/favicon.svg",
+  customFields: {
+    showDrafts:
+      process.env.SHOW_DRAFTS === "true" || process.env.SHOW_DRAFTS === "1",
+    examplesFeature: examplesEnabled(),
+  },
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
   future: {

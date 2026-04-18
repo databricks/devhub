@@ -74,7 +74,6 @@ describe("empty-slug index pages", () => {
     expect(markdown).toContain("# Resources");
     expect(markdown).toContain("## Guides");
     expect(markdown).toContain("## Recipes");
-    expect(markdown).toContain("## Examples");
     expect(markdown).toMatch(/\(\/resources\/[\w-]+\.md\)/);
   });
 

@@ -8,6 +8,7 @@
     "start": "docusaurus start",
     "build": "docusaurus build",
     "sync:appkit-docs": "node scripts/sync-appkit-docs.mjs",
+    "sync:appkit-examples": "node scripts/sync-appkit-examples.mjs",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",
     "clear": "docusaurus clear",

@@ -1017,3 +1017,23 @@
     }
   }
 }
+
+/* AppKit DocExample previews: isolate component styles from the docs chrome.
+   Components that use `min-height: 100svh` or `fixed` positioning (Sidebar,
+   Drawer, Sheet) escape the preview container by default; we clamp them here. */
+.doc-example-preview {
+  container-type: inline-size;
+}
+
+.doc-example-preview [data-slot="sidebar-wrapper"] {
+  min-height: 100%;
+  height: 100%;
+}
+
+.doc-example-preview [data-slot="sidebar-container"] {
+  position: absolute !important;
+}
+
+.doc-example-preview [data-slot="sidebar-inset"] {
+  min-height: 100%;
+}

@@ -225,9 +225,9 @@ function DocSidebarItemCategoryCollapsible({
       >
         <Link
           className={clsx(
-            "menu__link overflow-hidden",
-            "!rounded-md !px-2.5 !py-2 transition-colors",
-            "!text-muted-foreground hover:!text-foreground hover:!bg-transparent",
+            "menu__link overflow-hidden relative",
+            "!rounded-md !px-2.5 !py-2 transition-colors duration-150",
+            "!text-muted-foreground hover:!text-foreground hover:!bg-db-navy/[0.04] dark:hover:!bg-white/[0.05]",
             "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
             collapsible && "menu__link--sublist",
             collapsible &&
@@ -236,8 +236,13 @@ function DocSidebarItemCategoryCollapsible({
             !href &&
               collapsible &&
               "after:!opacity-45 after:![background-size:1.1em_1.1em] after:![min-width:1.1em] after:transition-opacity hover:after:!opacity-80",
-            isActive && "menu__link--active !text-foreground",
-            isCurrentPage && "!text-foreground",
+            isActive && "menu__link--active !text-db-navy dark:!text-white",
+            isCurrentPage && [
+              "!font-bold !text-db-navy dark:!text-white",
+              "!bg-db-lava/[0.08] hover:!bg-db-lava/[0.12]",
+              "dark:!bg-db-lava-light/[0.14] dark:hover:!bg-db-lava-light/[0.18]",
+              "before:content-[''] before:absolute before:left-0 before:top-1.5 before:bottom-1.5 before:w-[3px] before:rounded-full before:bg-db-lava dark:before:bg-db-lava-light",
+            ],
           )}
           onClick={handleItemClick}
           aria-current={isCurrentPage ? "page" : undefined}

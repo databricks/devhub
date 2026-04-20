@@ -1,6 +1,6 @@
 import { Bold, Italic, Underline } from "lucide-react";
 
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { ToggleGroup, ToggleGroupItem } from "@databricks/appkit-ui/react";
 
 export default function ToggleGroupExample() {
   return (

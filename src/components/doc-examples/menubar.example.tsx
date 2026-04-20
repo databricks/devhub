@@ -12,7 +12,7 @@ import {
   MenubarSubContent,
   MenubarSubTrigger,
   MenubarTrigger,
-} from "@/components/ui/menubar";
+} from "@databricks/appkit-ui/react";
 
 export default function MenubarExample() {
   return (

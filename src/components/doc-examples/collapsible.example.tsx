@@ -3,12 +3,12 @@
 import * as React from "react";
 import { ChevronsUpDown } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
 import {
+  Button,
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@/components/ui/collapsible";
+} from "@databricks/appkit-ui/react";
 
 export default function CollapsibleExample() {
   const [isOpen, setIsOpen] = React.useState(false);

@@ -1,10 +1,10 @@
-import { Button } from "@/components/ui/button";
 import {
+  Button,
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from "@databricks/appkit-ui/react";
 
 export default function TooltipExample() {
   return (

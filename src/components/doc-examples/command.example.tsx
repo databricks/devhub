@@ -16,7 +16,7 @@ import {
   CommandList,
   CommandSeparator,
   CommandShortcut,
-} from "@/components/ui/command";
+} from "@databricks/appkit-ui/react";
 
 export default function CommandExample() {
   return (

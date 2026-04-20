@@ -1,20 +1,10 @@
-import { Button } from "@/components/ui/button";
 import {
+  Button,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Item,
-  ItemActions,
-  ItemContent,
-  ItemDescription,
-  ItemTitle,
-} from "@/components/ui/item";
-import { Label } from "@/components/ui/label";
-import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
@@ -29,7 +19,13 @@ import {
   SidebarProvider,
   SidebarRail,
   SidebarTrigger,
-} from "@/components/ui/sidebar";
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemTitle,
+  Label,
+} from "@databricks/appkit-ui/react";
 import { useState } from "react";
 
 export default function SidebarExample() {

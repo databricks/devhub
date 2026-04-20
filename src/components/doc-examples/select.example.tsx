@@ -8,7 +8,7 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@databricks/appkit-ui/react";
 
 export default function SelectExample() {
   return (

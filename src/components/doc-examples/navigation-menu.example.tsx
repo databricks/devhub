@@ -2,8 +2,8 @@
 
 import * as React from "react";
 
-import { cn } from "@/lib/utils";
 import {
+  cn,
   NavigationMenu,
   NavigationMenuContent,
   NavigationMenuItem,
@@ -11,7 +11,7 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu";
+} from "@databricks/appkit-ui/react";
 
 const components: { title: string; href: string; description: string }[] = [
   {

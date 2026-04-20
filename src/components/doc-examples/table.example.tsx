@@ -7,7 +7,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@databricks/appkit-ui/react";
 
 const invoices = [
   {

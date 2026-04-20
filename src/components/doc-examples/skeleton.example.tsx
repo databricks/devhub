@@ -1,4 +1,4 @@
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@databricks/appkit-ui/react";
 
 export default function SkeletonExample() {
   return (

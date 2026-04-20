@@ -6,7 +6,7 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "@/components/ui/pagination";
+} from "@databricks/appkit-ui/react";
 
 export default function PaginationExample() {
   return (

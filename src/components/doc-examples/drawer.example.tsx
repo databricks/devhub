@@ -4,8 +4,8 @@ import * as React from "react";
 import { Minus, Plus } from "lucide-react";
 import { Bar, BarChart, ResponsiveContainer } from "recharts";
 
-import { Button } from "@/components/ui/button";
 import {
+  Button,
   Drawer,
   DrawerClose,
   DrawerContent,
@@ -14,7 +14,7 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from "@/components/ui/drawer";
+} from "@databricks/appkit-ui/react";
 
 const data = [
   {

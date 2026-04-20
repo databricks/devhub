@@ -1,6 +1,6 @@
 import { Bold } from "lucide-react";
 
-import { Toggle } from "@/components/ui/toggle";
+import { Toggle } from "@databricks/appkit-ui/react";
 
 export default function ToggleExample() {
   return (

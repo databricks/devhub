@@ -1,6 +1,10 @@
 import { Terminal } from "lucide-react";
 
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@databricks/appkit-ui/react";
 
 export default function AlertExample() {
   return (

@@ -3,7 +3,7 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion";
+} from "@databricks/appkit-ui/react";
 
 export default function AccordionExample() {
   return (

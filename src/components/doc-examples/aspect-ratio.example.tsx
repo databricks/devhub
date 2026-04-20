@@ -1,4 +1,4 @@
-import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { AspectRatio } from "@databricks/appkit-ui/react";
 
 export default function AspectRatioExample() {
   return (

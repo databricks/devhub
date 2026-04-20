@@ -2,7 +2,7 @@
 
 import * as React from "react";
 
-import { Calendar } from "@/components/ui/calendar";
+import { Calendar } from "@databricks/appkit-ui/react";
 
 export default function CalendarExample() {
   const [date, setDate] = React.useState<Date | undefined>(new Date());

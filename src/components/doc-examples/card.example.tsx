@@ -1,16 +1,16 @@
 import { BellRing, Check } from "lucide-react";
 
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 import {
+  cn,
+  Button,
   Card,
   CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Switch } from "@/components/ui/switch";
+  Switch,
+} from "@databricks/appkit-ui/react";
 
 const notifications = [
   {

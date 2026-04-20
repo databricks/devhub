@@ -1,4 +1,4 @@
-import { Separator } from "@/components/ui/separator";
+import { Separator } from "@databricks/appkit-ui/react";
 
 export default function SeparatorExample() {
   return (

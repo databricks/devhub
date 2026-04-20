@@ -1,5 +1,4 @@
-import { cn } from "@/lib/utils";
-import { Slider } from "@/components/ui/slider";
+import { cn, Slider } from "@databricks/appkit-ui/react";
 
 type SliderProps = React.ComponentProps<typeof Slider>;
 

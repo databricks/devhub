@@ -2,12 +2,12 @@ import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
-} from "@/components/ui/resizable";
+} from "@databricks/appkit-ui/react";
 
 export default function ResizableExample() {
   return (
     <ResizablePanelGroup
-      orientation="horizontal"
+      direction="horizontal"
       className="max-w-md rounded-lg border md:min-w-[450px]"
     >
       <ResizablePanel defaultSize={50}>
@@ -17,7 +17,7 @@ export default function ResizableExample() {
       </ResizablePanel>
       <ResizableHandle />
       <ResizablePanel defaultSize={50}>
-        <ResizablePanelGroup orientation="vertical">
+        <ResizablePanelGroup direction="vertical">
           <ResizablePanel defaultSize={25}>
             <div className="flex h-full items-center justify-center p-6">
               <span className="font-semibold">Two</span>

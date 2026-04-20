@@ -1,6 +1,6 @@
 "use client";
 
-import { Checkbox } from "@/components/ui/checkbox";
+import { Checkbox } from "@databricks/appkit-ui/react";
 
 export default function CheckboxExample() {
   return (

@@ -2,7 +2,7 @@
 
 import { toast } from "sonner";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@databricks/appkit-ui/react";
 
 export default function SonnerExample() {
   return (

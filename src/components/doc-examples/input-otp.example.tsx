@@ -3,7 +3,7 @@ import {
   InputOTPGroup,
   InputOTPSeparator,
   InputOTPSlot,
-} from "@/components/ui/input-otp";
+} from "@databricks/appkit-ui/react";
 
 export default function InputOtpExample() {
   return (

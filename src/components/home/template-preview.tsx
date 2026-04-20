@@ -104,12 +104,14 @@ export function TemplatePreview(): ReactNode {
         <div className="mx-auto mb-8 max-w-6xl">
           <p className="mb-3 inline-flex items-center gap-2 text-[10px] font-semibold tracking-[0.12em] text-black/50 uppercase dark:text-white/50">
             <span className="text-db-lava">&#9679;</span>
-            {includeExamples ? "Guides and Examples" : "Guides"}
+            More copy-pasteable prompts
           </p>
           <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
-            <h2 className="max-w-xl text-3xl leading-tight font-medium tracking-tight text-black dark:text-white md:text-4xl">
-              Start with a guide or example to{" "}
-              <span className="text-db-lava">build agentic applications</span>.
+            <h2 className="max-w-2xl text-3xl leading-tight font-medium tracking-tight text-black dark:text-white md:text-4xl">
+              Get inspired by what&apos;s possible.{" "}
+              <span className="text-db-lava">
+                Every guide is a prompt you can paste.
+              </span>
             </h2>
             <Link
               to="/resources"
@@ -118,6 +120,17 @@ export function TemplatePreview(): ReactNode {
               See all resources &rarr;
             </Link>
           </div>
+          <p className="mt-4 max-w-2xl text-sm leading-relaxed text-black/55 dark:text-white/55">
+            Beyond the wizard prompt, each guide and example on{" "}
+            <Link
+              to="/resources"
+              className="text-black/80 no-underline underline-offset-2 hover:underline dark:text-white/80"
+            >
+              /resources
+            </Link>{" "}
+            is a focused, copy-pasteable prompt for a specific pattern —
+            authentication, RAG, streaming, deployments, and more.
+          </p>
         </div>
 
         <div className="mx-auto max-w-6xl">

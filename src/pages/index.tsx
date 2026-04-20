@@ -5,6 +5,7 @@ import { DecisionMakerCta } from "@/components/home/decision-maker-cta";
 import { HeroSection } from "@/components/home/hero-section";
 import { PillarStrip } from "@/components/home/pillar-strip";
 import { TemplatePreview } from "@/components/home/template-preview";
+import { WizardFlow } from "@/components/home/wizard-flow";
 
 export default function Home(): ReactNode {
   return (
@@ -34,8 +35,9 @@ export default function Home(): ReactNode {
       </Head>
       <main>
         <HeroSection />
-        <TemplatePreview />
+        <WizardFlow />
         <PillarStrip />
+        <TemplatePreview />
         <DecisionMakerCta />
       </main>
     </Layout>

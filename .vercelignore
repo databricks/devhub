@@ -7,3 +7,8 @@ build
 test-results
 playwright-report
 screenshots
+
+# Keep Vercel on npm — bun.lock would make it try bun, which
+# hits registry-proxy issues and hangs/fails the deploy
+bun.lock
+bun.lockb

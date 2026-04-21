@@ -1,8 +1,8 @@
 import type { ReactNode } from "react";
 import { useCallback, useRef, useState } from "react";
-import { Check, LoaderCircle } from "lucide-react";
+import { ArrowRight, Check, Clipboard, LoaderCircle } from "lucide-react";
+import Link from "@docusaurus/Link";
 import { Button } from "@/components/ui/button";
-import { CopyButton } from "@/components/code/copy-button";
 import { getBootstrapPromptApiPath } from "@/lib/bootstrap-prompt";
 
 function fallbackCopyTextToClipboard(text: string): boolean {
@@ -89,49 +89,65 @@ export function HeroSection(): ReactNode {
       <div className="container px-4 py-20 md:py-28">
         <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
           <h1 className="text-5xl leading-[1.08] font-medium tracking-tight md:text-7xl">
-            Build agentic applications in minutes, not months.
+            Ship your first Databricks app in&nbsp;minutes, not months.
           </h1>
-          <p className="mt-6 max-w-xl text-base leading-relaxed text-black/60 dark:text-white/60">
-            Lakebase for your data. Agent Bricks for your AI. Databricks Apps
-            for your deployment. One platform, production-ready.
+          <p className="mt-6 max-w-2xl text-base leading-relaxed text-black/60 md:text-lg dark:text-white/60">
+            Your company already runs on Databricks. Build full-stack apps and
+            AI agents on top of it. Copy the prompt and your coding agent does
+            the rest.
           </p>
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-            <div className="inline-flex h-11 items-stretch overflow-hidden rounded-full border border-black/22 bg-white pl-4 font-mono text-sm text-black dark:border-white/24 dark:bg-white/6 dark:text-white">
-              <code className="m-0 flex items-center bg-transparent p-0 pr-2 text-inherit">
-                $ databricks apps init
-              </code>
-              <CopyButton
-                text="databricks apps init"
-                label="Copy command"
-                variant="segment"
-                className="!h-full !w-11 !rounded-none !rounded-r-full !border-l !border-black/16 !bg-transparent !text-black hover:!bg-black/10 hover:!text-black dark:!border-white/18 dark:!bg-transparent dark:!text-white dark:hover:!bg-white/16 dark:hover:!text-white"
-              />
-            </div>
-            <span className="text-sm text-black/35 dark:text-white/35">or</span>
+          <div className="mt-9 flex flex-col items-center gap-3">
             <Button
-              className="h-11 w-40 rounded-full px-6 font-medium"
+              className="h-12 rounded-full px-7 text-[0.95rem] font-medium shadow-[0_10px_30px_-10px_rgba(255,54,33,0.55)] transition-transform hover:-translate-y-0.5"
               onClick={handleCopyBootstrapPrompt}
               disabled={copyState === "copying"}
-              title="Copies a setup guide you can paste into Cursor, Claude Code, or Codex"
+              title="Copies instructions you can paste into Cursor, Claude Code, Codex, or your favorite coding agent"
             >
               {copyState === "copying" ? (
-                <LoaderCircle className="h-4 w-4 animate-spin" />
+                <span className="inline-flex items-center gap-2">
+                  <LoaderCircle className="h-4 w-4 animate-spin" />
+                  Copying…
+                </span>
               ) : copyState === "copied" ? (
-                <span className="inline-flex items-center gap-1.5">
+                <span className="inline-flex items-center gap-2">
                   <Check className="h-4 w-4" />
-                  Copied
+                  Copied — now paste into your agent
                 </span>
               ) : copyState === "error" ? (
-                "Failed to copy"
+                "Failed to copy — try again"
               ) : (
-                "Copy Prompt"
+                <span className="inline-flex items-center gap-2">
+                  <Clipboard className="h-4 w-4" />
+                  Copy prompt for your agent
+                </span>
               )}
             </Button>
+            <p className="text-sm text-black/45 dark:text-white/45">
+              Open your agent in any folder and paste.
+              <br />
+              Works with Cursor, Claude Code, Codex, or your favorite coding
+              agent.
+            </p>
+            <button
+              type="button"
+              onClick={() => {
+                document
+                  .getElementById("wizard-flow")
+                  ?.scrollIntoView({ behavior: "smooth" });
+              }}
+              className="group inline-flex cursor-pointer items-center gap-2 rounded-full border border-black/15 bg-white/70 px-5 py-2 text-sm font-medium text-black/80 backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:border-black/25 hover:text-black dark:border-white/15 dark:bg-white/8 dark:text-white/80 dark:hover:border-white/25 dark:hover:text-white"
+            >
+              How it works
+              <ArrowRight className="h-4 w-4 rotate-90 transition-transform group-hover:translate-y-0.5" />
+            </button>
           </div>
-          <p className="mt-4 text-xs text-black/40 dark:text-white/40">
-            Scaffold an app with the CLI command, or copy a step-by-step guide
-            for your AI coding agent.
-          </p>
+
+          <Link
+            to="/docs/start-here"
+            className="mt-8 text-sm text-black/40 underline decoration-black/15 underline-offset-2 hover:text-black/60 hover:decoration-black/30 dark:text-white/40 dark:decoration-white/15 dark:hover:text-white/60 dark:hover:decoration-white/30"
+          >
+            Read the docs
+          </Link>
         </div>
       </div>
       <div className="h-3 w-full bg-db-lava" />

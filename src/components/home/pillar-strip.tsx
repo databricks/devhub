@@ -327,8 +327,30 @@ function PillarRow({
 
 export function PillarStrip(): ReactNode {
   return (
-    <section className="bg-db-oat-medium py-16 dark:bg-black md:py-24">
+    <section className="bg-db-oat-medium py-20 dark:bg-black md:py-28">
       <div className="container px-4">
+        <div className="mx-auto mb-14 max-w-3xl text-center md:mb-20">
+          <p className="mb-4 inline-flex items-center gap-2 text-[10px] font-semibold tracking-[0.14em] uppercase text-black/55 dark:text-white/55">
+            <span className="h-1.5 w-1.5 rounded-full bg-db-lava" />
+            The building blocks
+          </p>
+          <h2 className="text-3xl leading-[1.1] font-medium tracking-tight text-black md:text-5xl dark:text-white">
+            The wizard wires these up{" "}
+            <span className="text-db-lava">for you</span>.
+          </h2>
+          <p className="mt-5 text-base leading-relaxed text-black/60 md:text-lg dark:text-white/60">
+            Three first-class primitives for operationalizing data on
+            Databricks. Same workspace, same identity, same governance —
+            composed by{" "}
+            <Link
+              to="/docs/apps/appkit"
+              className="font-medium text-black no-underline underline-offset-2 hover:underline dark:text-white"
+            >
+              AppKit
+            </Link>
+            , our open-source TypeScript SDK.
+          </p>
+        </div>
         <div className="mx-auto flex max-w-5xl flex-col gap-16 md:gap-24">
           {pillars.map((pillar, index) => (
             <PillarRow key={pillar.title} pillar={pillar} index={index} />

@@ -132,12 +132,12 @@ const config: Config = {
       },
       items: [
         { to: "/solutions", label: "Solutions", position: "left" },
-        { to: "/resources", label: "Resources", position: "left" },
         {
           to: "/docs/start-here",
           label: "Docs",
           position: "left",
         },
+        { to: "/resources", label: "Resources", position: "left" },
       ],
     },
     footer: {

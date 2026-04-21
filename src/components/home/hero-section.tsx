@@ -88,8 +88,12 @@ export function HeroSection(): ReactNode {
     <section className="relative bg-db-oat-medium text-black dark:bg-black dark:text-white">
       <div className="container px-4 py-20 md:py-28">
         <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
+          <span className="mb-4 inline-block rounded-full border border-black/10 bg-white/60 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-black/50 backdrop-blur-sm dark:border-white/10 dark:bg-white/5 dark:text-white/50">
+            Databricks Developer Hub
+          </span>
           <h1 className="text-5xl leading-[1.08] font-medium tracking-tight md:text-7xl">
-            Ship your first Databricks app in&nbsp;minutes, not months.
+            Build <span className="text-db-lava">agentic applications</span> in
+            minutes, not months.
           </h1>
           <p className="mt-6 max-w-2xl text-base leading-relaxed text-black/60 md:text-lg dark:text-white/60">
             Your company already runs on Databricks. Build full-stack apps and
@@ -128,26 +132,27 @@ export function HeroSection(): ReactNode {
               Works with Cursor, Claude Code, Codex, or your favorite coding
               agent.
             </p>
-            <button
-              type="button"
-              onClick={() => {
-                document
-                  .getElementById("wizard-flow")
-                  ?.scrollIntoView({ behavior: "smooth" });
-              }}
-              className="group inline-flex cursor-pointer items-center gap-2 rounded-full border border-black/15 bg-white/70 px-5 py-2 text-sm font-medium text-black/80 backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:border-black/25 hover:text-black dark:border-white/15 dark:bg-white/8 dark:text-white/80 dark:hover:border-white/25 dark:hover:text-white"
-            >
-              How it works
-              <ArrowRight className="h-4 w-4 rotate-90 transition-transform group-hover:translate-y-0.5" />
-            </button>
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={() => {
+                  document
+                    .getElementById("wizard-flow")
+                    ?.scrollIntoView({ behavior: "smooth" });
+                }}
+                className="group inline-flex cursor-pointer items-center gap-2 rounded-full border border-black/15 bg-white/70 px-5 py-2 text-sm font-medium text-black/80 backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:border-black/25 hover:text-black dark:border-white/15 dark:bg-white/8 dark:text-white/80 dark:hover:border-white/25 dark:hover:text-white"
+              >
+                How it works
+                <ArrowRight className="h-4 w-4 rotate-90 transition-transform group-hover:translate-y-0.5" />
+              </button>
+              <Link
+                to="/docs/start-here"
+                className="group inline-flex items-center gap-2 rounded-full border border-black/15 bg-white/70 px-5 py-2 text-sm font-medium text-black/80 no-underline backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:border-black/25 hover:text-black dark:border-white/15 dark:bg-white/8 dark:text-white/80 dark:hover:border-white/25 dark:hover:text-white"
+              >
+                Read the docs
+              </Link>
+            </div>
           </div>
-
-          <Link
-            to="/docs/start-here"
-            className="mt-8 text-sm text-black/40 underline decoration-black/15 underline-offset-2 hover:text-black/60 hover:decoration-black/30 dark:text-white/40 dark:decoration-white/15 dark:hover:text-white/60 dark:hover:decoration-white/30"
-          >
-            Read the docs
-          </Link>
         </div>
       </div>
       <div className="h-3 w-full bg-db-lava" />

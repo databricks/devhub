@@ -1,15 +1,19 @@
 import { test, expect } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { getDetailMarkdown } from "../../api/content-markdown";
 import { substituteAboutDevhubLlmsUrl } from "../../src/lib/copy-preamble";
 
 const ABOUT_DEVHUB_MARKDOWN = readFileSync(
   resolve(process.cwd(), "content/about-devhub.md"),
   "utf-8",
 );
-const LOCAL_BOOTSTRAP_MARKDOWN = readFileSync(
-  resolve(process.cwd(), "content/recipes/databricks-local-bootstrap.md"),
-  "utf-8",
+// Recipes live in per-slug folders (content/recipes/<slug>/content.md) since
+// the `feat(content): per-folder recipes/examples` restructure, so we resolve
+// via getDetailMarkdown rather than reading a flat file path.
+const LOCAL_BOOTSTRAP_MARKDOWN = getDetailMarkdown(
+  "recipes",
+  "databricks-local-bootstrap",
 );
 const BOOTSTRAP_PROMPT_MARKDOWN = `${substituteAboutDevhubLlmsUrl(ABOUT_DEVHUB_MARKDOWN, "https://dev.databricks.com/llms.txt").trimEnd()}\n\n---\n\n${LOCAL_BOOTSTRAP_MARKDOWN.trimEnd()}\n`;
 

@@ -121,7 +121,7 @@ export function TemplatePreview(): ReactNode {
             </Link>
           </div>
           <p className="mt-4 max-w-2xl text-sm leading-relaxed text-black/55 dark:text-white/55">
-            Beyond the wizard prompt, each guide and example on{" "}
+            Beyond the prompt, each guide and example on{" "}
             <Link
               to="/resources"
               className="text-black/80 no-underline underline-offset-2 hover:underline dark:text-white/80"

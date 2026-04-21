@@ -1,12 +1,17 @@
 import Link from "@docusaurus/Link";
 import type { ReactNode } from "react";
+import { useCallback, useRef, useState } from "react";
 import {
+  Check,
   Clipboard,
+  LoaderCircle,
   MessagesSquare,
   Rocket,
   Sparkles,
   type LucideIcon,
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { getBootstrapPromptApiPath } from "@/lib/bootstrap-prompt";
 
 type WizardStep = {
   number: string;
@@ -15,6 +20,7 @@ type WizardStep = {
   description: string;
   icon: LucideIcon;
   visual: ReactNode;
+  action?: ReactNode;
 };
 
 function ClipboardVisual(): ReactNode {
@@ -25,51 +31,75 @@ function ClipboardVisual(): ReactNode {
       preserveAspectRatio="xMidYMid meet"
       aria-hidden
     >
-      <rect
-        x="48"
-        y="36"
-        width="304"
-        height="188"
-        rx="14"
-        className="text-black/8 dark:text-white/8"
-        fill="currentColor"
-      />
-      <rect
-        x="48"
-        y="36"
-        width="304"
-        height="188"
-        rx="14"
-        className="text-black/18 dark:text-white/18"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-      />
-      <g className="text-black/30 dark:text-white/35" fill="currentColor">
-        <rect x="70" y="60" width="120" height="10" rx="3" opacity="0.85" />
-        <rect x="70" y="82" width="220" height="7" rx="3" opacity="0.4" />
-        <rect x="70" y="96" width="190" height="7" rx="3" opacity="0.35" />
-        <rect x="70" y="110" width="240" height="7" rx="3" opacity="0.35" />
-        <rect x="70" y="124" width="180" height="7" rx="3" opacity="0.3" />
-        <rect x="70" y="146" width="140" height="7" rx="3" opacity="0.3" />
-        <rect x="70" y="160" width="210" height="7" rx="3" opacity="0.25" />
-      </g>
-      <g transform="translate(260 156)">
-        <rect x="0" y="0" width="64" height="44" rx="10" fill="#ff3621" />
-        <g transform="translate(18 10)" fill="#ffffff">
-          <rect x="2" y="0" width="16" height="4" rx="1.5" opacity="0.9" />
+      {/* Red pill button centered */}
+      <g transform="translate(200 110)">
+        {/* Button shadow */}
+        <rect
+          x="-110"
+          y="2"
+          width="220"
+          height="48"
+          rx="24"
+          fill="#ff3621"
+          opacity="0.25"
+        />
+        {/* Button background */}
+        <rect x="-110" y="-20" width="220" height="48" rx="24" fill="#ff3621" />
+        {/* Clipboard icon inside button */}
+        <g
+          transform="translate(-84 -10)"
+          fill="none"
+          stroke="#ffffff"
+          strokeWidth="1.8"
+        >
           <rect
-            x="0"
-            y="4"
-            width="20"
-            height="22"
-            rx="3"
-            fill="none"
-            stroke="#ffffff"
-            strokeWidth="2"
+            x="2"
+            y="0"
+            width="12"
+            height="3"
+            rx="1.5"
+            fill="#ffffff"
+            opacity="0.9"
           />
+          <rect x="0" y="3" width="16" height="18" rx="2.5" />
+        </g>
+        {/* Button text placeholder lines */}
+        <g fill="#ffffff">
+          <rect x="-58" y="-8" width="148" height="8" rx="4" opacity="0.95" />
+          <rect x="-36" y="6" width="104" height="6" rx="3" opacity="0.5" />
         </g>
       </g>
+
+      {/* Mouse cursor clicking the button */}
+      <g transform="translate(268 138)">
+        <path
+          d="M0 0 L0 20 L5.5 15.5 L9.5 24 L13 22.5 L9 14 L15.5 13.5 Z"
+          fill="white"
+          stroke="black"
+          strokeWidth="1.5"
+          strokeLinejoin="round"
+        />
+      </g>
+
+      {/* Click ripple rings */}
+      <circle
+        cx="268"
+        cy="138"
+        r="8"
+        fill="none"
+        stroke="#ff3621"
+        strokeWidth="1.5"
+        opacity="0.4"
+      />
+      <circle
+        cx="268"
+        cy="138"
+        r="16"
+        fill="none"
+        stroke="#ff3621"
+        strokeWidth="1"
+        opacity="0.2"
+      />
     </svg>
   );
 }
@@ -82,72 +112,160 @@ function ChatVisual(): ReactNode {
       preserveAspectRatio="xMidYMid meet"
       aria-hidden
     >
-      <g transform="translate(30 40)">
-        <path
-          d="M8 0 H240 a16 16 0 0 1 16 16 V64 a16 16 0 0 1 -16 16 H40 L24 94 V80 H8 a8 8 0 0 1 -8 -8 V8 a8 8 0 0 1 8 -8 Z"
-          className="text-black/6 dark:text-white/8"
+      {/* Terminal window background */}
+      <rect
+        x="30"
+        y="20"
+        width="340"
+        height="220"
+        rx="12"
+        className="text-black/[0.03] dark:text-white/[0.03]"
+        fill="currentColor"
+      />
+      <rect
+        x="30"
+        y="20"
+        width="340"
+        height="220"
+        rx="12"
+        className="text-black/15 dark:text-white/15"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.25"
+      />
+
+      {/* Title bar dots */}
+      <circle
+        cx="50"
+        cy="36"
+        r="4"
+        className="text-black/15 dark:text-white/15"
+        fill="currentColor"
+      />
+      <circle
+        cx="64"
+        cy="36"
+        r="4"
+        className="text-black/15 dark:text-white/15"
+        fill="currentColor"
+      />
+      <circle
+        cx="78"
+        cy="36"
+        r="4"
+        className="text-black/15 dark:text-white/15"
+        fill="currentColor"
+      />
+
+      {/* Terminal title */}
+      <text
+        x="200"
+        y="39"
+        textAnchor="middle"
+        className="text-black/30 dark:text-white/30"
+        fill="currentColor"
+        fontSize="8"
+        fontFamily="monospace"
+      >
+        Terminal
+      </text>
+
+      {/* Line 1: cd ~/projects */}
+      <g transform="translate(50 70)">
+        <text
+          className="text-black/40 dark:text-white/45"
           fill="currentColor"
-        />
-        <path
-          d="M8 0 H240 a16 16 0 0 1 16 16 V64 a16 16 0 0 1 -16 16 H40 L24 94 V80 H8 a8 8 0 0 1 -8 -8 V8 a8 8 0 0 1 8 -8 Z"
-          className="text-black/18 dark:text-white/20"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.25"
-        />
-        <g className="text-black/40 dark:text-white/55" fill="currentColor">
-          <rect x="20" y="18" width="180" height="8" rx="3" opacity="0.75" />
-          <rect x="20" y="34" width="140" height="7" rx="3" opacity="0.45" />
-          <rect x="20" y="48" width="160" height="7" rx="3" opacity="0.4" />
-        </g>
+          fontSize="10"
+          fontFamily="monospace"
+        >
+          <tspan fill="#ff3621" opacity="0.7">
+            $
+          </tspan>
+          <tspan dx="6">cd ~/projects</tspan>
+        </text>
       </g>
 
-      <g transform="translate(120 150)">
-        <path
-          d="M32 0 H244 a8 8 0 0 1 8 8 V72 a8 8 0 0 1 -8 8 H52 L32 96 V80 a8 8 0 0 1 -8 -8 V8 a8 8 0 0 1 8 -8 Z"
-          fill="#ff3621"
-        />
-        <g fill="#ffffff">
-          <circle cx="46" cy="24" r="3" />
-          <rect
-            x="56"
-            y="20"
-            width="12"
-            height="8"
-            rx="2"
-            fill="none"
-            stroke="#ffffff"
-            strokeWidth="1.5"
-          />
-          <rect x="76" y="22" width="120" height="6" rx="2" opacity="0.95" />
-          <circle cx="46" cy="42" r="3" opacity="0.85" />
-          <rect
-            x="56"
-            y="38"
-            width="12"
-            height="8"
-            rx="2"
-            fill="none"
-            stroke="#ffffff"
-            strokeWidth="1.5"
-            opacity="0.85"
-          />
-          <rect x="76" y="40" width="100" height="6" rx="2" opacity="0.75" />
-          <circle cx="46" cy="60" r="3" opacity="0.75" />
-          <rect
-            x="56"
-            y="56"
-            width="12"
-            height="8"
-            rx="2"
-            fill="none"
-            stroke="#ffffff"
-            strokeWidth="1.5"
-            opacity="0.75"
-          />
-          <rect x="76" y="58" width="84" height="6" rx="2" opacity="0.65" />
-        </g>
+      {/* Line 2: cursor (or code .) to open agent */}
+      <g transform="translate(50 96)">
+        <text
+          className="text-black/40 dark:text-white/45"
+          fill="currentColor"
+          fontSize="10"
+          fontFamily="monospace"
+        >
+          <tspan fill="#ff3621" opacity="0.7">
+            $
+          </tspan>
+          <tspan dx="6">cursor .</tspan>
+        </text>
       </g>
+
+      {/* Divider line */}
+      <line
+        x1="50"
+        y1="116"
+        x2="350"
+        y2="116"
+        className="text-black/8 dark:text-white/8"
+        stroke="currentColor"
+        strokeWidth="1"
+      />
+
+      {/* Agent chat area label */}
+      <text
+        x="50"
+        y="138"
+        className="text-black/25 dark:text-white/25"
+        fill="currentColor"
+        fontSize="8"
+        fontFamily="sans-serif"
+        letterSpacing="0.5"
+      >
+        AGENT CHAT
+      </text>
+
+      {/* Ghost text: paste the prompt */}
+      <rect
+        x="50"
+        y="150"
+        width="300"
+        height="60"
+        rx="8"
+        className="text-black/[0.04] dark:text-white/[0.04]"
+        fill="currentColor"
+      />
+      <rect
+        x="50"
+        y="150"
+        width="300"
+        height="60"
+        rx="8"
+        className="text-black/10 dark:text-white/10"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1"
+        strokeDasharray="4 3"
+      />
+      <text
+        x="200"
+        y="177"
+        textAnchor="middle"
+        className="text-black/25 dark:text-white/25"
+        fill="currentColor"
+        fontSize="10"
+        fontFamily="monospace"
+      >
+        Paste the copied prompt here...
+      </text>
+      <rect
+        x="298"
+        y="166"
+        width="8"
+        height="14"
+        rx="1.5"
+        fill="#ff3621"
+        opacity="0.5"
+      />
     </svg>
   );
 }
@@ -452,31 +570,97 @@ function ShipVisual(): ReactNode {
   );
 }
 
+function CopyPromptButton(): ReactNode {
+  const [copyState, setCopyState] = useState<
+    "idle" | "copying" | "copied" | "error"
+  >("idle");
+  const resetTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+
+  const handleCopy = useCallback(async () => {
+    setCopyState("copying");
+    try {
+      const response = await fetch(getBootstrapPromptApiPath());
+      if (!response.ok) throw new Error(`Failed to fetch: ${response.status}`);
+      const text = await response.text();
+      if (!text.trim()) throw new Error("Empty prompt");
+
+      if (navigator?.clipboard?.writeText) {
+        await navigator.clipboard.writeText(text);
+      } else {
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+        textArea.setAttribute("readonly", "");
+        textArea.style.position = "fixed";
+        textArea.style.top = "-9999px";
+        document.body.append(textArea);
+        textArea.select();
+        document.execCommand("copy");
+        textArea.remove();
+      }
+
+      setCopyState("copied");
+    } catch {
+      setCopyState("error");
+    } finally {
+      clearTimeout(resetTimerRef.current);
+      resetTimerRef.current = setTimeout(() => setCopyState("idle"), 2500);
+    }
+  }, []);
+
+  return (
+    <Button
+      className="mt-5 h-10 rounded-full px-5 text-sm font-medium shadow-[0_8px_24px_-8px_rgba(255,54,33,0.5)] transition-transform hover:-translate-y-0.5"
+      onClick={handleCopy}
+      disabled={copyState === "copying"}
+    >
+      {copyState === "copying" ? (
+        <span className="inline-flex items-center gap-2">
+          <LoaderCircle className="h-4 w-4 animate-spin" />
+          Copying…
+        </span>
+      ) : copyState === "copied" ? (
+        <span className="inline-flex items-center gap-2">
+          <Check className="h-4 w-4" />
+          Copied — now paste into your agent
+        </span>
+      ) : copyState === "error" ? (
+        "Failed to copy — try again"
+      ) : (
+        <span className="inline-flex items-center gap-2">
+          <Clipboard className="h-4 w-4" />
+          Copy prompt for your agent
+        </span>
+      )}
+    </Button>
+  );
+}
+
 const steps: WizardStep[] = [
   {
     number: "01",
     eyebrow: "Copy",
-    title: "Copy the wizard prompt",
+    title: "Copy the prompt",
     description:
-      "One click copies a guided setup prompt — the full recipe your coding agent needs to build and deploy on Databricks.",
+      "One click copies everything your coding agent needs to build and deploy on Databricks.",
     icon: Clipboard,
     visual: <ClipboardVisual />,
+    action: <CopyPromptButton />,
   },
   {
     number: "02",
     eyebrow: "Paste",
     title: "Paste it into your coding agent",
     description:
-      "Works with Cursor, Claude Code, or Codex. Your agent reads the prompt and starts a conversation: what do you want to build, which data, which workspace?",
+      "Navigate to your projects folder (e.g. ~/projects), open your coding agent, and paste the prompt. It creates a new directory for your app and sets everything up inside it.",
     icon: MessagesSquare,
     visual: <ChatVisual />,
   },
   {
     number: "03",
     eyebrow: "Build",
-    title: "It scaffolds, wires, and iterates",
+    title: "Your agent scaffolds, wires, and iterates",
     description:
-      "The wizard uses AppKit to scaffold the app, provisions Lakebase for data, wires Agent Bricks for AI, and iterates on the UI until it feels right — all guided by your answers.",
+      "Your agent scaffolds the app, provisions whatever it needs, and iterates on the UI — all guided by your answers.",
     icon: Sparkles,
     visual: <BuildVisual />,
   },
@@ -485,7 +669,7 @@ const steps: WizardStep[] = [
     eyebrow: "Ship",
     title: "Deploy to your workspace",
     description:
-      "One command ships it to Databricks Apps. Unity Catalog governs the data, OAuth is built in, and you get a live URL under your workspace.",
+      "Once you're ready, just tell your agent to deploy — it ships your app to Databricks Apps. You get a live URL under your workspace, with data governance and authentication built in.",
     icon: Rocket,
     visual: <ShipVisual />,
   },
@@ -522,7 +706,8 @@ function StepRow({
         <p className="mt-3 max-w-lg text-[0.95rem] leading-relaxed text-black/60 dark:text-white/60">
           {step.description}
         </p>
-        <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/70 px-3 py-1.5 text-[11px] font-medium text-black/70 backdrop-blur-sm dark:border-white/12 dark:bg-white/6 dark:text-white/70">
+        {step.action}
+        <div className="mt-5 flex w-fit items-center gap-2 rounded-full border border-black/10 bg-white/70 px-3 py-1.5 text-[11px] font-medium text-black/70 backdrop-blur-sm dark:border-white/12 dark:bg-white/6 dark:text-white/70">
           <Icon className="h-3.5 w-3.5 text-db-lava" />
           Step {step.number}
         </div>
@@ -547,16 +732,16 @@ export function WizardFlow(): ReactNode {
         <div className="mx-auto mb-14 max-w-3xl text-center md:mb-20">
           <p className="mb-4 inline-flex items-center gap-2 text-[10px] font-semibold tracking-[0.14em] uppercase text-black/55 dark:text-white/55">
             <span className="h-1.5 w-1.5 rounded-full bg-db-lava" />
-            How the wizard prompt works
+            How the prompt works
           </p>
           <h2 className="text-3xl leading-[1.1] font-medium tracking-tight text-black md:text-5xl dark:text-white">
             Copy. Paste. Build.{" "}
             <span className="text-db-lava">Ship to Databricks.</span>
           </h2>
           <p className="mt-5 text-base leading-relaxed text-black/60 md:text-lg dark:text-white/60">
-            The wizard prompt guides you and your coding agent from an empty
-            folder to a deployed Databricks app — with your data, your
-            workspace, and your agent logic wired together in one conversation.
+            Four steps from an empty folder to a live Databricks app.
+            Here&apos;s what the prompt does when you paste it into your coding
+            agent.
           </p>
         </div>
 
@@ -578,8 +763,8 @@ export function WizardFlow(): ReactNode {
             >
               /resources
             </Link>{" "}
-            is a copy-pasteable prompt. Get inspired by what&apos;s already
-            possible, then hand it to your agent.
+            is a ready-to-paste prompt. Browse what&apos;s already possible,
+            then paste one into your agent to get started.
           </p>
         </div>
       </div>

@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import Head from "@docusaurus/Head";
 import { useLocation } from "@docusaurus/router";
 import BrowserOnly from "@docusaurus/BrowserOnly";
+import { Analytics } from "@vercel/analytics/react";
 import { Toaster } from "sonner";
 
 // Keep in sync with middleware.ts matcher and vercel.json headers/rewrites
@@ -46,6 +47,7 @@ function SonnerToaster() {
 export default function Root({ children }: { children: ReactNode }): ReactNode {
   return (
     <>
+      <Analytics />
       <MarkdownAlternate />
       {children}
       <BrowserOnly>{() => <SonnerToaster />}</BrowserOnly>

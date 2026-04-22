@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { useCallback, useRef, useState } from "react";
 import { ArrowRight, Check, Clipboard, LoaderCircle } from "lucide-react";
 import Link from "@docusaurus/Link";
+import { track } from "@vercel/analytics";
 import { Button } from "@/components/ui/button";
 import { getBootstrapPromptApiPath } from "@/lib/bootstrap-prompt";
 
@@ -76,6 +77,7 @@ export function HeroSection(): ReactNode {
       }
 
       setCopyState("copied");
+      track("copy_bootstrap_prompt", { source: "hero" });
     } catch {
       setCopyState("error");
     } finally {

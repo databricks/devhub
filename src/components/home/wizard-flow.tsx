@@ -311,7 +311,7 @@ function BuildVisual(): ReactNode {
         />
         <ellipse cx="48" cy="22" rx="28" ry="8" fill="#ff3621" />
         <rect x="20" y="22" width="56" height="30" fill="#ff3621" />
-        <ellipse cx="48" cy="52" rx="28" ry="8" fill="#ff5542" />
+        <ellipse cx="48" cy="52" rx="28" ry="8" fill="#ff3621" />
         <text
           x="48"
           y="72"

@@ -92,7 +92,7 @@
     --card-foreground: #f5f7f8;
     --popover: var(--db-dark-card);
     --popover-foreground: #f5f7f8;
-    --primary: var(--db-lava-light);
+    --primary: var(--db-lava);
     --primary-foreground: #ffffff;
     --secondary: #243a45;
     --secondary-foreground: #f5f7f8;

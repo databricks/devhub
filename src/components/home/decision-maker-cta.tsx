@@ -14,7 +14,7 @@ function DevCard(): ReactNode {
           to="/resources"
           className="underline decoration-white/40 underline-offset-2 hover:decoration-white/70"
         >
-          guide
+          template
         </Link>
         , paste it into your coding agent, and describe what you want. Database,
         AI models, and deployment are handled. You focus on your app.
@@ -37,9 +37,9 @@ function OrgCard(): ReactNode {
           to="/docs/start-here"
           className="underline decoration-white/30 underline-offset-2 hover:decoration-white/60"
         >
-          Read the docs
-        </Link>{" "}
-        to learn more.
+          Learn more
+        </Link>
+        .
       </p>
     </article>
   );
@@ -50,11 +50,11 @@ export function DecisionMakerCta(): ReactNode {
     <section className="bg-white py-16 text-black dark:bg-db-navy dark:text-white md:py-20">
       <div className="container px-4">
         <div className="mx-auto grid max-w-6xl grid-cols-1 gap-8 lg:grid-cols-[1.05fr_1.4fr] lg:gap-10">
-          <div>
+          <div className="flex items-center">
             <h2 className="max-w-md text-4xl leading-[1.05] font-medium tracking-tight md:text-5xl lg:text-6xl">
               Built for enterprise.
               <br />
-              <span className="text-db-lava">Loved</span> by developers.
+              <span className="text-db-lava">Loved by</span> developers.
             </h2>
           </div>
 
@@ -63,17 +63,22 @@ export function DecisionMakerCta(): ReactNode {
             <OrgCard />
           </div>
 
-          <div className="relative hidden min-h-[360px] overflow-hidden border border-black/10 bg-[#0d1216] sm:block dark:border-white/10 md:min-h-[420px]">
+          <div className="relative hidden overflow-hidden border border-black/10 bg-[#0d1216] sm:block dark:border-white/10">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_18%,rgba(255,255,255,0.2)_0,transparent_40%),radial-gradient(circle_at_82%_18%,rgba(255,197,92,0.35)_0,transparent_34%),radial-gradient(circle_at_35%_86%,rgba(120,205,255,0.33)_0,transparent_40%)]" />
             <div className="absolute inset-0 opacity-60 [background-image:radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.26)_1px,transparent_0)] [background-size:6px_6px]" />
             <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(0,0,0,0.68)_15%,rgba(0,0,0,0.2)_55%,rgba(0,0,0,0.8)_100%)]" />
 
-            <div className="absolute right-5 top-5 max-w-[280px] md:right-7 md:top-7 md:max-w-[300px]">
-              <OrgCard />
-            </div>
-
-            <div className="absolute bottom-0 left-5 max-w-[280px] md:bottom-6 md:left-7 md:max-w-[300px]">
-              <DevCard />
+            <div className="relative z-10 flex min-h-[360px] flex-col justify-between p-5 md:min-h-[420px] md:p-7">
+              <div className="flex justify-start">
+                <div className="max-w-[280px] md:max-w-[300px]">
+                  <OrgCard />
+                </div>
+              </div>
+              <div className="z-10 -mt-8 flex justify-end">
+                <div className="max-w-[280px] md:max-w-[300px]">
+                  <DevCard />
+                </div>
+              </div>
             </div>
           </div>
         </div>

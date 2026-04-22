@@ -25,10 +25,34 @@ Do the following to work with DevHub prompts successfully:
 Follow these rules every time you ask the user a question:
 
 1. **One question at a time.** Never ask multiple questions in a single message.
-2. **Format choices as a numbered or lettered list.** Use markdown list syntax so each option renders on its own line. Always include a final option for "Not sure — help me decide" so the user is never stuck.
-3. **Tell the user they can reply with just the letter or number** to make their selection.
+2. **Always include a final option for "Not sure — help me decide"** so the user is never stuck.
+3. **Prefer interactive multiple-choice UI when available.** Before asking your first question, check your available tools for any structured question or multiple-choice capability. If one exists, **always** use it instead of plain text. This gives the user a faster, click-to-select experience. Known tools by environment:
+   - **Cursor**: Use the `AskQuestion` tool.
+   - **Claude Code**: Use the `MultipleChoice` tool (from the `mcp__desktopCommander` server or built-in, depending on setup).
+   - **Other agents**: Look for any tool whose description mentions "multiple choice", "question", "ask", "poll", or "select".
+4. **Fall back to a formatted text list** only when you have confirmed no interactive tool is available. Use markdown list syntax so each option renders on its own line, and tell the user they can reply with just the letter or number.
 
-Here is an example question. Copy this format exactly:
+### Example: Cursor (`AskQuestion` tool)
+
+```
+AskQuestion({
+  questions: [{
+    id: "app-type",
+    prompt: "What kind of app would you like to build?",
+    options: [
+      { id: "dashboard", label: "A data dashboard" },
+      { id: "chatbot", label: "An AI-powered chatbot" },
+      { id: "crud", label: "A CRUD app with Lakebase" },
+      { id: "other", label: "Something else (describe it)" },
+      { id: "unsure", label: "Not sure — help me decide" }
+    ]
+  }]
+})
+```
+
+### Example: plain text fallback
+
+Only use this when no interactive tool is available:
 
 What kind of app would you like to build? Reply with the letter to choose:
 

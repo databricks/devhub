@@ -1,4 +1,3 @@
-import Link from "@docusaurus/Link";
 import type { ReactNode } from "react";
 import { useCallback, useRef, useState } from "react";
 import {
@@ -751,23 +750,6 @@ export function WizardFlow(): ReactNode {
           {steps.map((step, index) => (
             <StepRow key={step.number} step={step} index={index} />
           ))}
-        </div>
-
-        <div className="mx-auto mt-16 max-w-3xl rounded-2xl border border-black/10 bg-db-oat-medium/60 p-6 text-center dark:border-white/10 dark:bg-black/40 md:mt-24 md:p-8">
-          <p className="text-sm leading-relaxed text-black/70 dark:text-white/70">
-            <span className="font-medium text-black dark:text-white">
-              Want a more specific starting point?
-            </span>{" "}
-            Every guide and example on{" "}
-            <Link
-              to="/resources"
-              className="font-medium text-db-lava no-underline hover:underline"
-            >
-              /resources
-            </Link>{" "}
-            is a ready-to-paste prompt. Browse what&apos;s already possible,
-            then paste one into your agent to get started.
-          </p>
         </div>
       </div>
     </section>

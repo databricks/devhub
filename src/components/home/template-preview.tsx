@@ -50,7 +50,7 @@ function ResourceCard({
 }): ReactNode {
   return (
     <Link to={item.path} className="no-underline">
-      <Card className="group flex h-full flex-col overflow-hidden rounded-xl border border-black/10 bg-[#f7f6f4] shadow-none transition-all duration-200 hover:border-black/20 dark:border-white/10 dark:bg-[#182a32] dark:hover:border-white/20">
+      <Card className="group flex h-full flex-col overflow-hidden rounded-xl border border-black/10 bg-white shadow-none transition-all duration-200 hover:border-black/20 dark:border-white/10 dark:bg-db-navy-light dark:hover:border-white/20">
         <div className="relative aspect-[16/9] overflow-hidden border-b border-black/10 dark:border-white/10">
           <ResourcePreviewImage
             lightUrl={item.previewImageLightUrl}
@@ -99,37 +99,28 @@ export function TemplatePreview(): ReactNode {
   );
 
   return (
-    <section className="bg-white py-16 dark:bg-db-navy md:py-20">
+    <section className="bg-db-oat-medium py-16 dark:bg-black md:py-20">
       <div className="container px-4">
         <div className="mx-auto mb-8 max-w-6xl">
           <p className="mb-3 inline-flex items-center gap-2 text-[10px] font-semibold tracking-[0.12em] text-black/50 uppercase dark:text-white/50">
             <span className="text-db-lava">&#9679;</span>
-            More copy-pasteable prompts
+            Templates
           </p>
           <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
             <h2 className="max-w-2xl text-3xl leading-tight font-medium tracking-tight text-black dark:text-white md:text-4xl">
-              Get inspired by what&apos;s possible.{" "}
-              <span className="text-db-lava">
-                Every guide is a prompt you can paste.
-              </span>
+              Jumpstart your next project with{" "}
+              <span className="text-db-lava">a template.</span>
             </h2>
             <Link
               to="/resources"
               className="shrink-0 text-sm font-medium text-black/70 no-underline hover:text-black dark:text-white/70 dark:hover:text-white"
             >
-              See all resources &rarr;
+              See all templates &rarr;
             </Link>
           </div>
           <p className="mt-4 max-w-2xl text-sm leading-relaxed text-black/55 dark:text-white/55">
-            Beyond the prompt, each guide and example on{" "}
-            <Link
-              to="/resources"
-              className="text-black/80 no-underline underline-offset-2 hover:underline dark:text-white/80"
-            >
-              /resources
-            </Link>{" "}
-            is a focused, copy-pasteable prompt for a specific pattern —
-            authentication, RAG, streaming, deployments, and more.
+            Browse templates for inspiration, or use one to hit the ground
+            running. Every template is a prompt you can paste into your agent.
           </p>
         </div>
 

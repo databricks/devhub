@@ -36,7 +36,7 @@ export default function Home(): ReactNode {
       <main>
         <HeroSection />
         <WizardFlow />
-        <PillarStrip />
+        {/* <PillarStrip /> */}
         <TemplatePreview />
         <DecisionMakerCta />
       </main>

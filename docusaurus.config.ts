@@ -138,6 +138,12 @@ const config: Config = {
           position: "left",
         },
         { to: "/resources", label: "Resources", position: "left" },
+        {
+          href: "https://databricks.com/signup",
+          label: "Try Databricks",
+          position: "right",
+          className: "navbar-try-databricks",
+        },
       ],
     },
     footer: {

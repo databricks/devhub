@@ -218,6 +218,7 @@
 
   .navbar__toggle {
     color: #fff;
+    margin-left: 0.75rem;
   }
 
   .navbar__brand {
@@ -261,6 +262,27 @@
   .navbar__brand:focus-visible {
     outline: 2px solid var(--ring);
     outline-offset: 2px;
+  }
+
+  .navbar-try-databricks {
+    order: 100;
+    margin-left: 0.5rem;
+    margin-right: 0.75rem;
+    background-color: #ff3621;
+    color: #fff !important;
+    font-weight: 600;
+    font-size: 0.8125rem;
+    padding: 0.375rem 0.875rem !important;
+    border-radius: 0.375rem;
+    border: 1px solid transparent;
+    transition:
+      background-color 0.15s ease,
+      filter 0.15s ease;
+  }
+
+  .navbar-try-databricks:hover {
+    background-color: #e52e1a !important;
+    text-decoration: none;
   }
 
   .navbar__items--right .navbar-icon-link {

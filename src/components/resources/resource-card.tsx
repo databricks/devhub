@@ -21,11 +21,6 @@ function getResourceHref(item: ResourceItem): string {
   return `/resources/${item.data.id}`;
 }
 
-function getResourceBadge(item: ResourceItem): string {
-  if (item.kind === "example") return "Example";
-  return "Guide";
-}
-
 export function ResourceCard({
   item,
   index,
@@ -64,17 +59,7 @@ export function ResourceCard({
         />
       </div>
       <CardHeader className="pb-2">
-        <div className="mb-2 flex items-center justify-between gap-2">
-          <Badge
-            variant="secondary"
-            className={`rounded-md border px-2 py-0.5 text-[10px] font-semibold tracking-wide uppercase ${
-              isExample
-                ? "border-db-lava/20 bg-db-lava/8 text-db-lava"
-                : "border-black/10 bg-black/5 text-black/60 dark:border-white/10 dark:bg-white/8 dark:text-white/60"
-            }`}
-          >
-            {getResourceBadge(item)}
-          </Badge>
+        <div className="mb-2 flex items-center justify-end gap-2">
           {!isExample && (
             <Checkbox
               checked={selected}

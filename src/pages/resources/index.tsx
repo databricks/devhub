@@ -227,12 +227,8 @@ export default function ResourcesPage(): ReactNode {
 
   return (
     <Layout
-      title="Resources"
-      description={
-        includeExamples
-          ? "Guides and examples for building on Databricks"
-          : "Guides for building on Databricks"
-      }
+      title="Templates"
+      description="Templates to jumpstart your next Databricks app"
     >
       <main className="border-t border-db-cyan/30 bg-db-bg dark:border-db-cyan/25 dark:bg-[#0d1a1f]">
         <div className="container px-4 py-12 md:py-16">
@@ -240,18 +236,15 @@ export default function ResourcesPage(): ReactNode {
             {/* Hero */}
             <p className="mb-4 inline-flex items-center gap-2 text-[10px] font-semibold tracking-[0.12em] text-black/60 uppercase dark:text-white/60">
               <span className="text-db-lava">&#9658;</span>
-              Resources
+              Templates
             </p>
             <h1 className="mb-4 max-w-3xl text-4xl leading-[1.06] font-medium tracking-tight text-black dark:text-white md:text-5xl">
-              <span className="text-db-lava">
-                {includeExamples ? "Examples & Guides" : "Guides"}
-              </span>{" "}
-              for building on Databricks.
+              <span className="text-db-lava">Templates</span> to jumpstart your
+              next Databricks app.
             </h1>
             <p className="mb-10 max-w-2xl text-lg text-black/68 dark:text-white/68">
-              Step-by-step guides to copy into your coding agent.
-              {includeExamples &&
-                " Explore end-to-end examples as reference implementations."}
+              Use each template as a step-by-step guide, or copy it as a prompt
+              for your coding agent to build for you.
             </p>
 
             {/* Toolbar: search + actions */}
@@ -368,7 +361,7 @@ export default function ResourcesPage(): ReactNode {
                   </div>
                 )}
                 <p className="mt-6 text-center text-xs text-black/40 dark:text-white/40">
-                  {filteredItems.length} of {ALL_ITEMS.length} resources
+                  {filteredItems.length} of {ALL_ITEMS.length} templates
                 </p>
               </div>
             </div>

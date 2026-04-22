@@ -44,7 +44,7 @@ export function TemplateDetail({
                   className="mb-6 inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground no-underline transition-colors hover:text-foreground"
                 >
                   <span aria-hidden="true">&larr;</span>
-                  All resources
+                  All templates
                 </Link>
 
                 <div className="mb-3 flex justify-end">

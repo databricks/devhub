@@ -23,24 +23,6 @@ import {
 import { FallbackCardArt } from "@/components/examples/fallback-card-art";
 import { ResourcePreviewImage } from "@/components/examples/resource-preview-image";
 
-function KindBadge({ kind }: { kind: LandingResourceItem["kind"] }): ReactNode {
-  if (kind === "example") {
-    return (
-      <Badge className="rounded-sm bg-db-lava/10 px-1.5 py-0 text-[11px] font-medium text-db-lava dark:bg-db-lava/20 dark:text-db-lava">
-        Example
-      </Badge>
-    );
-  }
-  return (
-    <Badge
-      variant="secondary"
-      className="rounded-sm border border-black/10 bg-black/4 px-1.5 py-0 text-[11px] font-medium text-black/60 dark:border-white/10 dark:bg-white/8 dark:text-white/60"
-    >
-      Guide
-    </Badge>
-  );
-}
-
 function ResourceCard({
   item,
   index,
@@ -60,9 +42,6 @@ function ResourceCard({
           />
         </div>
         <CardHeader className="pb-2">
-          <div className="mb-1.5 flex items-center gap-2">
-            <KindBadge kind={item.kind} />
-          </div>
           <CardTitle className="text-[1.2rem] leading-tight font-medium text-black dark:text-white">
             {item.title}
           </CardTitle>

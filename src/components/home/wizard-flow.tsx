@@ -10,6 +10,7 @@ import {
   Sparkles,
   type LucideIcon,
 } from "lucide-react";
+import { track } from "@vercel/analytics";
 import { Button } from "@/components/ui/button";
 import { getBootstrapPromptApiPath } from "@/lib/bootstrap-prompt";
 
@@ -599,6 +600,7 @@ function CopyPromptButton(): ReactNode {
       }
 
       setCopyState("copied");
+      track("copy_bootstrap_prompt", { source: "wizard" });
     } catch {
       setCopyState("error");
     } finally {

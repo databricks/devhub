@@ -30,6 +30,7 @@ function SonnerToaster() {
 
   return (
     <Toaster
+      position="top-right"
       theme={theme}
       className="toaster group"
       style={

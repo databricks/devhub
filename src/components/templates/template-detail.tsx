@@ -3,7 +3,7 @@ import useBaseUrl from "@docusaurus/useBaseUrl";
 import Layout from "@theme/Layout";
 import { MDXProvider } from "@mdx-js/react";
 import { useRef, type ReactNode } from "react";
-import { AIExportMenu } from "@/components/ai-export-menu";
+import { TemplateUsageBanner } from "@/components/template-usage-banner";
 import { Badge } from "@/components/ui/badge";
 import { RecipePre } from "@/components/templates/recipe-code-block";
 import { RecipeList } from "@/components/templates/recipe-list";
@@ -47,14 +47,12 @@ export function TemplateDetail({
                   All templates
                 </Link>
 
-                <div className="mb-3 flex justify-end">
-                  <AIExportMenu
-                    rawMarkdown={rawMarkdown}
-                    title={template.name}
-                    description={template.description}
-                    permalink={permalink}
-                  />
-                </div>
+                <TemplateUsageBanner
+                  rawMarkdown={rawMarkdown}
+                  title={template.name}
+                  description={template.description}
+                  permalink={permalink}
+                />
 
                 <div className="mb-3 flex flex-wrap items-center gap-3">
                   <h1 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">

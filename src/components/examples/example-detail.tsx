@@ -5,7 +5,7 @@ import { MDXProvider } from "@mdx-js/react";
 import { useRef, type ReactNode } from "react";
 import { toast } from "sonner";
 import { ClipboardCopy, ExternalLink } from "lucide-react";
-import { AIExportMenu } from "@/components/ai-export-menu";
+import { TemplateUsageBanner } from "@/components/template-usage-banner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -290,16 +290,14 @@ export function ExampleDetail({
                   All templates
                 </Link>
 
-                <div className="mb-3 flex justify-end">
-                  <AIExportMenu
-                    rawMarkdown={rawMarkdown}
-                    additionalMarkdown={additionalMarkdown}
-                    agentBodyAfterAbout={fullPrompt}
-                    title={example.name}
-                    description={example.description}
-                    permalink={permalink}
-                  />
-                </div>
+                <TemplateUsageBanner
+                  rawMarkdown={rawMarkdown}
+                  additionalMarkdown={additionalMarkdown}
+                  agentBodyAfterAbout={fullPrompt}
+                  title={example.name}
+                  description={example.description}
+                  permalink={permalink}
+                />
 
                 <div className="mb-3 flex flex-wrap items-center gap-3">
                   <Badge

@@ -132,12 +132,12 @@ const config: Config = {
       },
       items: [
         { to: "/solutions", label: "Solutions", position: "left" },
+        { to: "/resources", label: "Templates", position: "left" },
         {
           to: "/docs/start-here",
-          label: "Docs",
+          label: "Learn More",
           position: "left",
         },
-        { to: "/resources", label: "Resources", position: "left" },
         {
           href: "https://databricks.com/signup",
           label: "Try Databricks",

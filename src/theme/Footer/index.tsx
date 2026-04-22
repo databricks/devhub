@@ -34,19 +34,19 @@ const FOOTER_SECTIONS: FooterSection[] = [
     ],
   },
   {
-    title: "Docs",
+    title: "Resources",
+    items: [
+      { label: "Templates", to: "/resources" },
+      { label: "Solutions", to: "/solutions" },
+    ],
+  },
+  {
+    title: "Learn",
     items: [
       { label: "Start Here", to: "/docs/start-here" },
       { label: "Agents", to: "/docs/agents/quickstart" },
       { label: "AppKit", to: "/docs/apps/appkit" },
       { label: "Lakebase", to: "/docs/lakebase/quickstart" },
-    ],
-  },
-  {
-    title: "Resources",
-    items: [
-      { label: "Guides", to: "/resources" },
-      { label: "Solutions", to: "/solutions" },
     ],
   },
   {

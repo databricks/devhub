@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { track } from "@vercel/analytics";
 import { toast } from "sonner";
 import { Check, Clipboard, LoaderCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -105,6 +106,7 @@ export function CopyPromptButton({
       const md = buildAIMarkdown();
       await navigator.clipboard.writeText(md);
       setCopyState("copied");
+      track("copy_prompt", { title, permalink });
       toast.success("Prompt copied");
     } catch {
       setCopyState("error");

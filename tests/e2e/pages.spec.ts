@@ -7,7 +7,7 @@ const PAGES = [
     path: "/solutions/devhub-launch",
     title: "Introducing dev.databricks.com",
   },
-  { path: "/resources", title: "Resources" },
+  { path: "/resources", title: "Templates" },
   { path: "/resources/hello-world-app", title: "Hello World App" },
   { path: "/resources/ai-chat-app", title: "AI Chat App" },
   { path: "/resources/app-with-lakebase", title: "App with Lakebase" },

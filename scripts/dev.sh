@@ -16,4 +16,7 @@ if [ -f "$ENV_FILE" ]; then
   set +a
 fi
 
+# Sync AppKit docs if not already present
+node scripts/sync-appkit-docs.mjs
+
 exec vercel dev "$@"

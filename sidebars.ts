@@ -20,18 +20,42 @@ type AppKitDocTree = {
   items: AppKitSidebarItem[];
 };
 
-function getAppKitMajorChannels(): string[] {
+// Returns the list of AppKit doc channels found under docs/appkit/.
+// "latest" is always first, followed by any version-* directories
+// (from Docusaurus versioned_docs convention, future).
+function getAppKitChannels(): string[] {
   const docsAppKitRoot = path.resolve(process.cwd(), "docs", "appkit");
 
   if (!fs.existsSync(docsAppKitRoot)) {
     return [];
   }
 
-  return fs
+  const entries = fs
     .readdirSync(docsAppKitRoot, { withFileTypes: true })
-    .filter((entry) => entry.isDirectory() && /^v\d+$/.test(entry.name))
+    .filter((entry) => entry.isDirectory());
+
+  const channels: string[] = [];
+
+  // "latest" always comes first
+  if (entries.some((entry) => entry.name === "latest")) {
+    channels.push("latest");
+  }
+
+  // Then any version-* directories (Docusaurus versioned_docs convention)
+  const versionDirs = entries
+    .filter((entry) => entry.name.startsWith("version-"))
     .map((entry) => entry.name)
-    .sort((a, b) => Number(b.slice(1)) - Number(a.slice(1)));
+    .sort()
+    .reverse();
+
+  channels.push(...versionDirs);
+
+  // Also support "next" for unreleased dev docs (future)
+  if (entries.some((entry) => entry.name === "next")) {
+    channels.push("next");
+  }
+
+  return channels;
 }
 
 function toDocId(relativePath: string): string {
@@ -139,34 +163,37 @@ function readAppKitDocTree(relativeDir: string): AppKitDocTree {
   };
 }
 
-const appKitMajorChannels = getAppKitMajorChannels();
+const appKitChannels = getAppKitChannels();
 
-const appKitVersionItems = appKitMajorChannels
-  .map((majorChannel, index) => {
-    const majorTree = readAppKitDocTree(path.join("appkit", majorChannel));
+// Each channel becomes a collapsible category whose header links to the
+// channel's index doc (e.g. "Getting started"). This mirrors the old v0
+// behavior and ensures the index page is always reachable from the sidebar.
+const appKitVersionItems = appKitChannels
+  .map((channel) => {
+    const tree = readAppKitDocTree(path.join("appkit", channel));
 
-    if (!majorTree.indexDocId && majorTree.items.length === 0) {
+    if (!tree.indexDocId && tree.items.length === 0) {
       return null;
     }
 
     return {
       type: "category" as const,
-      label: index === 0 ? `${majorChannel} (current)` : majorChannel,
-      link: majorTree.indexDocId
+      label: channel,
+      link: tree.indexDocId
         ? {
             type: "doc" as const,
-            id: majorTree.indexDocId,
+            id: tree.indexDocId,
           }
         : undefined,
       collapsed: true,
-      items: majorTree.items,
+      items: tree.items,
     };
   })
   .filter((item): item is Exclude<typeof item, null> => item !== null);
 
-const latestAppKitMajorChannel = appKitMajorChannels[0];
-const latestAppKitDocId = latestAppKitMajorChannel
-  ? readAppKitDocTree(path.join("appkit", latestAppKitMajorChannel)).indexDocId
+const latestChannel = appKitChannels[0];
+const latestAppKitDocId = latestChannel
+  ? readAppKitDocTree(path.join("appkit", latestChannel)).indexDocId
   : null;
 
 const sidebars: SidebarsConfig = {
@@ -223,7 +250,7 @@ const sidebars: SidebarsConfig = {
           label: "AppKit",
           link: {
             type: "doc",
-            id: latestAppKitDocId ?? "appkit/v0/index",
+            id: latestAppKitDocId ?? "appkit/latest/index",
           },
           collapsed: true,
           items: appKitVersionItems,

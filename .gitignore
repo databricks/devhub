@@ -11,6 +11,9 @@ bun.lock
 .cache-loader
 static/llms.txt
 static/raw-docs
+docs/appkit/
+src/components/doc-examples/
+static/appkit-preview/
 
 # Misc
 .DS_Store

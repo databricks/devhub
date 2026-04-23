@@ -7,7 +7,7 @@ import {
 
 const RESOURCE_COUNT =
   examples.length + templates.length + recipesInOrder.length;
-const TOTAL_RESOURCES = `${RESOURCE_COUNT} of ${RESOURCE_COUNT} resources`;
+const TOTAL_RESOURCES = `${RESOURCE_COUNT} of ${RESOURCE_COUNT} templates`;
 
 function setupClipboardMock(page: import("@playwright/test").Page) {
   return page.addInitScript(() => {
@@ -37,7 +37,7 @@ test.describe("resources page search", () => {
 
     await page.getByRole("searchbox").fill("genie");
     await expect(
-      page.getByText(`7 of ${RESOURCE_COUNT} resources`),
+      page.getByText(`7 of ${RESOURCE_COUNT} templates`),
     ).toBeVisible();
     await expect(
       page.getByRole("link", { name: "Inventory Intelligence" }),
@@ -76,7 +76,7 @@ test.describe("resources page service filter", () => {
     await page.getByRole("checkbox", { name: "Lakebase", exact: true }).check();
 
     const count = page.getByText(
-      new RegExp(`^\\d+ of ${RESOURCE_COUNT} resources$`),
+      new RegExp(`^\\d+ of ${RESOURCE_COUNT} templates$`),
     );
     await expect(count).not.toHaveText(TOTAL_RESOURCES);
 
@@ -124,7 +124,7 @@ test.describe("resources page tag filter", () => {
     await page.getByRole("button", { name: "Genie" }).first().click();
 
     await expect(
-      page.getByText(new RegExp(`^\\d+ of ${RESOURCE_COUNT} resources$`)),
+      page.getByText(new RegExp(`^\\d+ of ${RESOURCE_COUNT} templates$`)),
     ).not.toHaveText(TOTAL_RESOURCES);
     await expect(page.getByRole("button", { name: "Clear all" })).toBeVisible();
   });

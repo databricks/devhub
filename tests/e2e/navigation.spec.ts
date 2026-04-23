@@ -20,9 +20,9 @@ const BOOTSTRAP_PROMPT_MARKDOWN = `${substituteAboutDevhubLlmsUrl(ABOUT_DEVHUB_M
 test.describe("navbar navigation", () => {
   const NAVBAR_LINKS = [
     { label: "Solutions", expectedPath: "/solutions" },
-    { label: "Resources", expectedPath: "/resources" },
+    { label: "Templates", expectedPath: "/resources" },
     {
-      label: "Docs",
+      label: "Learn More",
       expectedPath: "/docs/start-here",
     },
   ];
@@ -49,7 +49,7 @@ test.describe("footer navigation", () => {
     { href: "/docs/agents/overview", label: "Agent Bricks" },
     { href: "/docs/apps/appkit", label: "AppKit" },
     { href: "/docs/lakebase/quickstart", label: "Lakebase" },
-    { href: "/resources", label: "Guides" },
+    { href: "/resources", label: "Templates" },
     { href: "/solutions", label: "Solutions" },
   ];
 
@@ -88,7 +88,8 @@ test.describe("home page link navigation", () => {
     await page.goto("/");
     const button = page
       .locator("main")
-      .getByRole("button", { name: "Copy Prompt" });
+      .getByRole("button", { name: "Copy prompt for your agent" })
+      .first();
     await button.waitFor({ state: "visible" });
     await expect(button).toBeEnabled();
     await button.click();
@@ -112,10 +113,7 @@ test.describe("home page link navigation", () => {
     page,
   }) => {
     await page.goto("/");
-    const link = page
-      .locator("main")
-      .locator('a[href^="/docs/lakebase"]')
-      .first();
+    const link = page.locator('a[href="/docs/lakebase/quickstart"]').first();
     await link.waitFor({ state: "visible" });
     await link.click();
     await page.waitForURL("**/docs/lakebase/quickstart");
@@ -233,7 +231,7 @@ test.describe("resource detail page navigation", () => {
     page,
   }) => {
     await page.goto("/resources/hello-world-app");
-    await page.getByRole("link", { name: /All resources/ }).click();
+    await page.getByRole("link", { name: /All templates/ }).click();
     await page.waitForURL("**/resources");
     expect(new URL(page.url()).pathname).toBe("/resources");
   });
@@ -242,7 +240,7 @@ test.describe("resource detail page navigation", () => {
     page,
   }) => {
     await page.goto("/resources/agentic-support-console");
-    await page.getByRole("link", { name: /All resources/ }).click();
+    await page.getByRole("link", { name: /All templates/ }).click();
     await page.waitForURL("**/resources");
     expect(new URL(page.url()).pathname).toBe("/resources");
   });

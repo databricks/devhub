@@ -33,6 +33,15 @@ async function clickCopyMarkdownAndWaitForToast(
   });
 }
 
+async function clickCopyPromptAndWaitForToast(
+  page: import("@playwright/test").Page,
+) {
+  const button = page.getByRole("button", { name: "Copy prompt" }).first();
+  await button.waitFor({ state: "visible" });
+  await button.click();
+  await expect(page.getByText("Prompt copied")).toBeVisible({ timeout: 5000 });
+}
+
 test.describe("copy markdown exports raw markdown on recipe pages", () => {
   test("recipe detail page copies actual markdown with code fences", async ({
     page,
@@ -40,7 +49,7 @@ test.describe("copy markdown exports raw markdown on recipe pages", () => {
     await setupClipboardMock(page);
     await page.goto("/resources/databricks-local-bootstrap");
 
-    await clickCopyMarkdownAndWaitForToast(page);
+    await clickCopyPromptAndWaitForToast(page);
 
     const copied = await getCopiedText(page);
     expect(copied).toContain("# About DevHub");
@@ -58,7 +67,7 @@ test.describe("copy markdown exports raw markdown on template pages", () => {
     await setupClipboardMock(page);
     await page.goto("/resources/hello-world-app");
 
-    await clickCopyMarkdownAndWaitForToast(page);
+    await clickCopyPromptAndWaitForToast(page);
 
     const copied = await getCopiedText(page);
     expect(copied).toContain("# About DevHub");
@@ -72,7 +81,7 @@ test.describe("copy markdown exports raw markdown on template pages", () => {
     await setupClipboardMock(page);
     await page.goto("/resources/app-with-lakebase");
 
-    await clickCopyMarkdownAndWaitForToast(page);
+    await clickCopyPromptAndWaitForToast(page);
 
     const copied = await getCopiedText(page);
     expect(copied).toContain("# About DevHub");
@@ -87,7 +96,7 @@ test.describe("copy markdown exports raw markdown on example pages", () => {
     await setupClipboardMock(page);
     await page.goto("/resources/agentic-support-console");
 
-    await clickCopyMarkdownAndWaitForToast(page);
+    await clickCopyPromptAndWaitForToast(page);
 
     const copied = await getCopiedText(page);
     expect(copied).toContain("# About DevHub");
@@ -100,7 +109,7 @@ test.describe("copy markdown exports raw markdown on example pages", () => {
     await setupClipboardMock(page);
     await page.goto("/resources/saas-tracker");
 
-    await clickCopyMarkdownAndWaitForToast(page);
+    await clickCopyPromptAndWaitForToast(page);
 
     const copied = await getCopiedText(page);
     expect(copied).toContain("# About DevHub");
@@ -119,7 +128,7 @@ test.describe("copy markdown exports raw markdown on example pages", () => {
       page.getByRole("heading", { name: "Get started", exact: true }),
     ).toBeVisible();
     await expect(
-      page.getByRole("button", { name: "Copy prompt" }),
+      page.getByRole("button", { name: "Copy prompt" }).first(),
     ).toBeVisible();
     await expect(page.getByText("Paste into your coding agent")).toBeVisible();
     await expect(
@@ -139,13 +148,13 @@ test.describe("copy markdown exports raw markdown on example pages", () => {
     ).toBeVisible();
   });
 
-  test("Get started: Copy Markdown includes clone bash block and included guides preamble", async ({
+  test("Get started: Copy prompt includes clone bash block and included guides preamble", async ({
     page,
   }) => {
     await setupClipboardMock(page);
     await page.goto("/resources/agentic-support-console");
 
-    await clickCopyMarkdownAndWaitForToast(page);
+    await clickCopyPromptAndWaitForToast(page);
 
     const copied = await getCopiedText(page);
     expect(copied).toContain("# About DevHub");
@@ -165,22 +174,28 @@ test.describe("copy markdown exports raw markdown on example pages", () => {
     );
   });
 
-  test("Get started: Copy Markdown and Copy prompt produce identical markdown", async ({
+  test("Get started: banner and Get-started Copy prompt buttons produce identical markdown", async ({
     page,
   }) => {
     await setupClipboardMock(page);
     await page.goto("/resources/agentic-support-console");
 
-    await clickCopyMarkdownAndWaitForToast(page);
-    const fromCopyAsMarkdown = await getCopiedText(page);
-
-    await page.getByRole("button", { name: "Copy prompt" }).click();
+    await page.getByRole("button", { name: "Copy prompt" }).first().click();
     await expect(page.getByText("Prompt copied")).toBeVisible({
       timeout: 5000,
     });
-    const fromCopyPrompt = await getCopiedText(page);
+    const fromBanner = await getCopiedText(page);
 
-    expect(fromCopyAsMarkdown).toBe(fromCopyPrompt);
+    await page
+      .locator("section.example-get-started")
+      .getByRole("button", { name: "Copy prompt" })
+      .click();
+    await expect(page.getByText("Prompt copied")).toBeVisible({
+      timeout: 5000,
+    });
+    const fromGetStarted = await getCopiedText(page);
+
+    expect(fromBanner).toBe(fromGetStarted);
   });
 
   test("Get started: Copy prompt copies full prompt with bash and ### substeps", async ({
@@ -189,7 +204,10 @@ test.describe("copy markdown exports raw markdown on example pages", () => {
     await setupClipboardMock(page);
     await page.goto("/resources/agentic-support-console");
 
-    await page.getByRole("button", { name: "Copy prompt" }).click();
+    await page
+      .locator("section.example-get-started")
+      .getByRole("button", { name: "Copy prompt" })
+      .click();
     await expect(page.getByText("Prompt copied")).toBeVisible({
       timeout: 5000,
     });

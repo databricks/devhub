@@ -250,7 +250,7 @@ export function ExampleDetail({
 }: ExampleDetailProps): ReactNode {
   const { siteConfig } = useDocusaurusContext();
   const contentRef = useRef<HTMLDivElement>(null);
-  const permalink = `/resources/${example.id}`;
+  const permalink = `/templates/${example.id}`;
   const githubUrl = `${GITHUB_BASE}/${example.githubPath}`;
 
   const sections = useExampleSections(example.id) ?? { content: "" };
@@ -283,7 +283,7 @@ export function ExampleDetail({
             <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_220px]">
               <div className="min-w-0">
                 <Link
-                  to="/resources"
+                  to="/templates"
                   className="mb-6 inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground no-underline transition-colors hover:text-foreground"
                 >
                   <span aria-hidden="true">&larr;</span>
@@ -380,7 +380,7 @@ export function ExampleDetail({
                           key={t.id}
                           name={t.name}
                           description={t.description}
-                          href={`/resources/${t.id}`}
+                          href={`/templates/${t.id}`}
                         />
                       ))}
                       {includedRecipes.map((r) => (
@@ -388,7 +388,7 @@ export function ExampleDetail({
                           key={r.id}
                           name={r.name}
                           description={r.description}
-                          href={`/resources/${r.id}`}
+                          href={`/templates/${r.id}`}
                         />
                       ))}
                     </div>

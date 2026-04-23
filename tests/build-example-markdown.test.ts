@@ -145,10 +145,10 @@ describe("buildFullPrompt", () => {
     expect(prompt).toContain("## Included guides");
     expect(prompt).toContain(buildIncludedGuidesPreamble());
     expect(prompt).toContain(
-      "[Template A](https://example.com/resources/tmpl-a.md) - First template.",
+      "[Template A](https://example.com/templates/tmpl-a.md) - First template.",
     );
     expect(prompt).toContain(
-      "[Recipe B](https://example.com/resources/recipe-b.md) - First recipe.",
+      "[Recipe B](https://example.com/templates/recipe-b.md) - First recipe.",
     );
   });
 
@@ -190,10 +190,10 @@ describe("buildAdditionalMarkdown", () => {
     expect(md).toContain("## Included guides");
     expect(md).toContain(buildIncludedGuidesPreamble());
     expect(md).toContain(
-      "[Template A](https://example.com/resources/tmpl-a.md)",
+      "[Template A](https://example.com/templates/tmpl-a.md)",
     );
     expect(md).toContain(
-      "[Recipe B](https://example.com/resources/recipe-b.md)",
+      "[Recipe B](https://example.com/templates/recipe-b.md)",
     );
   });
 

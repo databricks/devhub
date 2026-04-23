@@ -10,14 +10,13 @@ import { rewrite } from "@vercel/functions";
  */
 const SECTION_PREFIXES: Record<string, string> = {
   "/docs/": "docs",
-  "/resources/": "resources",
+  "/templates/": "resources",
   "/solutions/": "solutions",
-  "/templates/": "templates",
 };
 
-// Sections that have an index page (e.g., /resources → /resources.md)
+// Sections that have an index page (e.g., /templates → /templates.md)
 const BARE_SECTIONS: Record<string, string> = {
-  "/resources": "resources",
+  "/templates": "resources",
   "/solutions": "solutions",
 };
 
@@ -58,10 +57,5 @@ export default function middleware(request: Request): Response | undefined {
 }
 
 export const config = {
-  matcher: [
-    "/docs/:path*",
-    "/resources/:path*",
-    "/solutions/:path*",
-    "/templates/:path*",
-  ],
+  matcher: ["/docs/:path*", "/templates/:path*", "/solutions/:path*"],
 };

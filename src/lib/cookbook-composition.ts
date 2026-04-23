@@ -76,7 +76,7 @@ export function composeCookbookMarkdown(
 
 /**
  * Wraps the composed body with YAML frontmatter + title block, matching the API markdown
- * shape expected by `/resources/<template>.md` consumers.
+ * shape expected by `/templates/<template>.md` consumers.
  */
 export function buildCookbookMarkdownDocument(
   input: CookbookCompositionInput,

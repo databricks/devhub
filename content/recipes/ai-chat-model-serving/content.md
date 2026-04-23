@@ -6,8 +6,8 @@ Build a streaming AI chat experience in a Databricks App using Vercel AI SDK wit
 
 Complete these recipes before adding chat:
 
-- [`Databricks Local Bootstrap`](/resources/hello-world-app#databricks-local-bootstrap)
-- [`Query AI Gateway Endpoints`](/resources/ai-chat-app#query-ai-gateway-endpoints)
+- [`Databricks Local Bootstrap`](/templates/hello-world-app#databricks-local-bootstrap)
+- [`Query AI Gateway Endpoints`](/templates/ai-chat-app#query-ai-gateway-endpoints)
 
 :::tip[Deploy before local development]
 Lakebase tables are owned by the identity that creates them. Deploy the app first so the service principal creates and owns the schemas. Then grant yourself local dev access:

@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 /**
  * Shared decorative art used when a resource (example, guide, or template) has
  * no preview screenshot. Six rotating variants so adjacent cards never repeat.
- * Called from the landing carousel, the /resources list, and the example detail
+ * Called from the landing carousel, the /templates list, and the example detail
  * hero whenever `previewImage*Url` and `galleryImages` are empty.
  */
 const VARIANTS: Array<{

@@ -154,9 +154,9 @@ databricks postgres update-project \
 
 | Guide                                                                         | Description                                             |
 | ----------------------------------------------------------------------------- | ------------------------------------------------------- |
-| [Sync Tables to Lakebase](/resources/sync-tables-autoscaling)                 | Sync Unity Catalog tables into Lakebase Autoscaling     |
-| [Lakehouse Sync (CDC)](/resources/lakebase-change-data-feed-autoscaling)      | Change data feed from Lakebase to Unity Catalog         |
-| [Medallion Architecture from CDC](/resources/medallion-architecture-from-cdc) | Bronze/silver/gold pipeline from Lakehouse Sync history |
+| [Sync Tables to Lakebase](/templates/sync-tables-autoscaling)                 | Sync Unity Catalog tables into Lakebase Autoscaling     |
+| [Lakehouse Sync (CDC)](/templates/lakebase-change-data-feed-autoscaling)      | Change data feed from Lakebase to Unity Catalog         |
+| [Medallion Architecture from CDC](/templates/medallion-architecture-from-cdc) | Bronze/silver/gold pipeline from Lakehouse Sync history |
 
 ## Further reading
 

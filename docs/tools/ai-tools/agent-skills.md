@@ -73,5 +73,5 @@ Run `databricks experimental aitools skills list` to see available skills and th
 
 - [Agent skills (Databricks docs)](https://docs.databricks.com/aws/en/agent-skills/)
 - [AI-assisted development](/docs/appkit/v0/development/ai-assisted-development)
-- [Local bootstrap recipe](/resources/databricks-local-bootstrap)
+- [Local bootstrap recipe](/templates/databricks-local-bootstrap)
 - [Docs MCP Server](/docs/tools/ai-tools/docs-mcp-server)

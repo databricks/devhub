@@ -10,7 +10,7 @@ export type ResourceItem =
   | { kind: "recipe"; data: Recipe };
 
 function getResourceHref(item: ResourceItem): string {
-  return `/resources/${item.data.id}`;
+  return `/templates/${item.data.id}`;
 }
 
 export function ResourceCard({

@@ -30,7 +30,7 @@ describe("production build smoke tests", () => {
   test("llms.txt links use .md suffix", () => {
     const text = readBuildFile("llms.txt");
     expect(text).toContain("/docs/start-here.md");
-    expect(text).toContain("/resources/hello-world-app.md");
+    expect(text).toContain("/templates/hello-world-app.md");
     expect(text).toContain("/solutions.md");
   });
 
@@ -61,13 +61,13 @@ describe("production build smoke tests", () => {
 
     const expectedTemplates = [
       "/solutions.md",
-      "/resources.md",
-      "/resources/hello-world-app.md",
-      "/resources/ai-chat-app.md",
-      "/resources/app-with-lakebase.md",
-      "/resources/genie-analytics-app.md",
-      "/resources/lakebase-off-platform.md",
-      "/resources/operational-data-analytics.md",
+      "/templates.md",
+      "/templates/hello-world-app.md",
+      "/templates/ai-chat-app.md",
+      "/templates/app-with-lakebase.md",
+      "/templates/genie-analytics-app.md",
+      "/templates/lakebase-off-platform.md",
+      "/templates/operational-data-analytics.md",
     ];
 
     for (const path of expectedTemplates) {

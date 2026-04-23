@@ -14,7 +14,7 @@ export type Service = (typeof SERVICES)[number];
 /**
  * Theme-aware preview image pair shared by Recipe, Template, and Example.
  *
- * Rendered on: landing carousel card, /resources list card, and the example
+ * Rendered on: landing carousel card, /templates list card, and the example
  * detail hero when no galleryImages are set. When both URLs are omitted the UI
  * falls back to the generic guide card art (FallbackCardArt).
  *
@@ -474,7 +474,7 @@ export const templates: Template[] = [
 export const templatePreviewItems: TemplatePreviewItem[] = templates.map(
   (template) => ({
     id: template.id,
-    path: `/resources/${template.id}`,
+    path: `/templates/${template.id}`,
     title: template.name,
     description: template.description,
     tags: template.tags,

@@ -9,7 +9,7 @@ This page continues from [Quickstart](/docs/lakebase/quickstart). It covers inte
 
 ## AppKit integration
 
-The [Lakebase Data Persistence](/resources/app-with-lakebase#lakebase-data-persistence) guide covers building Lakebase-backed apps with AppKit. It covers scaffolding, schema setup, CRUD routes, environment configuration, and deployment.
+The [Lakebase Data Persistence](/templates/app-with-lakebase#lakebase-data-persistence) guide covers building Lakebase-backed apps with AppKit. It covers scaffolding, schema setup, CRUD routes, environment configuration, and deployment.
 
 Key points from the guide:
 
@@ -28,7 +28,7 @@ For pool configuration, ORM access (`.pool`, `.getOrmConfig()`, `.getPgConfig()`
 
 ## Off-platform apps
 
-For apps hosted outside Databricks (AWS, Vercel, Netlify, and others), the platform does not inject connection details or refresh OAuth tokens automatically. Unlike deployed apps, there is no built-in OAuth refresh, so token rotation is the app's responsibility. For token rotation patterns and machine-to-machine flows, see [About authentication](https://docs.databricks.com/aws/en/oltp/projects/authentication). See the [Lakebase Off-Platform](/resources/lakebase-off-platform) guide for a complete implementation with environment setup and Drizzle ORM integration.
+For apps hosted outside Databricks (AWS, Vercel, Netlify, and others), the platform does not inject connection details or refresh OAuth tokens automatically. Unlike deployed apps, there is no built-in OAuth refresh, so token rotation is the app's responsibility. For token rotation patterns and machine-to-machine flows, see [About authentication](https://docs.databricks.com/aws/en/oltp/projects/authentication). See the [Lakebase Off-Platform](/templates/lakebase-off-platform) guide for a complete implementation with environment setup and Drizzle ORM integration.
 
 ## Auth model
 
@@ -522,12 +522,12 @@ For multiple fields, use a comma-separated update mask.
 
 | Guide                                                                         | Description                                    |
 | ----------------------------------------------------------------------------- | ---------------------------------------------- |
-| [Create a Lakebase Instance](/resources/lakebase-create-instance)             | Provision a project, collect connection values |
-| [Lakebase Data Persistence](/resources/lakebase-data-persistence)             | Schema setup, CRUD routes, deploy workflow     |
-| [Lakebase Chat Persistence](/resources/lakebase-chat-persistence)             | Chat/message schema on Lakebase                |
-| [Lakebase Change Data Feed](/resources/lakebase-change-data-feed-autoscaling) | Sync Lakebase to Unity Catalog                 |
-| [Sync Tables](/resources/sync-tables-autoscaling)                             | Unity Catalog to Lakebase                      |
-| [Lakebase Off-Platform](/resources/lakebase-off-platform)                     | Env, tokens, and Drizzle for off-platform apps |
+| [Create a Lakebase Instance](/templates/lakebase-create-instance)             | Provision a project, collect connection values |
+| [Lakebase Data Persistence](/templates/lakebase-data-persistence)             | Schema setup, CRUD routes, deploy workflow     |
+| [Lakebase Chat Persistence](/templates/lakebase-chat-persistence)             | Chat/message schema on Lakebase                |
+| [Lakebase Change Data Feed](/templates/lakebase-change-data-feed-autoscaling) | Sync Lakebase to Unity Catalog                 |
+| [Sync Tables](/templates/sync-tables-autoscaling)                             | Unity Catalog to Lakebase                      |
+| [Lakebase Off-Platform](/templates/lakebase-off-platform)                     | Env, tokens, and Drizzle for off-platform apps |
 
 ## Further reading
 

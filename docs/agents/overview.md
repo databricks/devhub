@@ -65,10 +65,10 @@ Start from a template that matches your use case. Each one includes the Model Se
 
 | You want to...                                          | Template                                                      |
 | ------------------------------------------------------- | ------------------------------------------------------------- |
-| Add a streaming chatbot to your app                     | [AI Chat App](/resources/ai-chat-app)                         |
-| Let users query tables in natural language              | [Genie Analytics App](/resources/genie-analytics-app)         |
-| Build a full AI support console (Genie plus AI Gateway) | [Agentic Support Console](/resources/agentic-support-console) |
-| Add multi-space Genie switching to an existing app      | [Genie Multi-Space Selector](/resources/genie-multi-space)    |
+| Add a streaming chatbot to your app                     | [AI Chat App](/templates/ai-chat-app)                         |
+| Let users query tables in natural language              | [Genie Analytics App](/templates/genie-analytics-app)         |
+| Build a full AI support console (Genie plus AI Gateway) | [Agentic Support Console](/templates/agentic-support-console) |
+| Add multi-space Genie switching to an existing app      | [Genie Multi-Space Selector](/templates/genie-multi-space)    |
 
 ## Where to next
 

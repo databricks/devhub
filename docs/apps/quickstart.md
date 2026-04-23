@@ -6,7 +6,7 @@ title: Quickstart
 
 Databricks Apps hosts and operates web applications inside your Databricks workspace. AppKit is the TypeScript SDK for building these apps with a plugin-based architecture. Building on top of an AI agent? See [Agent Bricks](/docs/agents/overview).
 
-DevHub is organized around [guides and examples](/resources). These companion docs explain Databricks Apps and AppKit when you or your agent need platform detail beyond a guide. For how the site fits together, see [Start here](/docs/start-here).
+DevHub is organized around [guides and examples](/templates). These companion docs explain Databricks Apps and AppKit when you or your agent need platform detail beyond a guide. For how the site fits together, see [Start here](/docs/start-here).
 
 ## Prerequisites
 
@@ -28,7 +28,7 @@ If something fails during the build, guides include troubleshooting context for 
 
 ## Build an app from a guide
 
-The fastest path is to copy a [guide from /resources](/resources) into your coding agent and describe what you want to build. [Start here](/docs/start-here) for the full workflow.
+The fastest path is to copy a [guide from /templates](/templates) into your coding agent and describe what you want to build. [Start here](/docs/start-here) for the full workflow.
 
 ## Scaffold an app
 
@@ -90,8 +90,8 @@ After scaffolding or copying a guide, consider the following customizations:
 - **Add a plugin**: When you scaffold, pass `--features` with comma-separated plugin names (for example, `lakebase,analytics`). Use `--set` only for resource field values (`plugin.resourceKey.field=value`), not to name plugins. For an existing app, register plugins in `createApp` in `server/server.ts` and run `npx @databricks/appkit plugin sync --write` so `appkit.plugins.json` stays in sync. See [Plugins](/docs/apps/plugins).
 - **Add a new route**: Create a route handler in your app's server code and register it in the router.
 - **Customize the UI theme**: Use [AppKit styling](/docs/appkit/v0/api/appkit-ui/styling) to adjust colors, fonts, and component appearance.
-- **Connect to Lakebase**: Add the Lakebase plugin for persistent storage. See the [Lakebase Data Persistence](/resources/app-with-lakebase#lakebase-data-persistence) guide.
-- **Add AI features**: Add the [Foundation Models API](/resources/ai-chat-app#query-ai-gateway-endpoints) guide for model serving, or the [Genie](/resources/genie-analytics-app#genie-conversational-analytics) guide for conversational analytics.
+- **Connect to Lakebase**: Add the Lakebase plugin for persistent storage. See the [Lakebase Data Persistence](/templates/app-with-lakebase#lakebase-data-persistence) guide.
+- **Add AI features**: Add the [Foundation Models API](/templates/ai-chat-app#query-ai-gateway-endpoints) guide for model serving, or the [Genie](/templates/genie-analytics-app#genie-conversational-analytics) guide for conversational analytics.
 
 ## Next steps
 

@@ -171,11 +171,11 @@ export function buildFullPrompt(
   const guides = [
     ...includedTemplates.map(
       (t) =>
-        `- [${t.name}](${baseUrl}/resources/${t.id}.md) - ${t.description}`,
+        `- [${t.name}](${baseUrl}/templates/${t.id}.md) - ${t.description}`,
     ),
     ...includedRecipes.map(
       (r) =>
-        `- [${r.name}](${baseUrl}/resources/${r.id}.md) - ${r.description}`,
+        `- [${r.name}](${baseUrl}/templates/${r.id}.md) - ${r.description}`,
     ),
   ];
   if (guides.length > 0) {
@@ -203,11 +203,11 @@ export function buildAdditionalMarkdown(opts: ExampleMarkdownOptions): string {
   const links = [
     ...includedTemplates.map(
       (t) =>
-        `- [${t.name}](${baseUrl}/resources/${t.id}.md) - ${t.description}`,
+        `- [${t.name}](${baseUrl}/templates/${t.id}.md) - ${t.description}`,
     ),
     ...includedRecipes.map(
       (r) =>
-        `- [${r.name}](${baseUrl}/resources/${r.id}.md) - ${r.description}`,
+        `- [${r.name}](${baseUrl}/templates/${r.id}.md) - ${r.description}`,
     ),
   ];
   if (links.length > 0) {

@@ -7,7 +7,7 @@ import { Toaster } from "sonner";
 
 // Keep in sync with middleware.ts matcher and vercel.json headers/rewrites
 // TODO: centralize content section definitions into a shared module
-const MD_PREFIXES = ["/docs/", "/resources", "/solutions", "/templates/"];
+const MD_PREFIXES = ["/docs/", "/templates", "/solutions"];
 
 /** Injects <link rel="alternate" type="text/markdown"> so agents discover the .md variant. */
 function MarkdownAlternate(): ReactNode {

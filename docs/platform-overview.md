@@ -24,18 +24,18 @@ Apps, AppKit, Lakebase, and Agent Bricks are four layers that make up a full-sta
 
 ## Pick a guide or example
 
-Guides are step-by-step instructions for your coding agent. Examples are working apps built on top of guides, with source code. Here are a few common starting points. The [resources catalog](/resources) has the full list.
+Guides are step-by-step instructions for your coding agent. Examples are working apps built on top of guides, with source code. Here are a few common starting points. The [resources catalog](/templates) has the full list.
 
 All guides assume the [Databricks CLI](/docs/tools/databricks-cli) is installed and [authenticated](/docs/tools/databricks-cli#authenticate) against your workspace.
 
 | Resource                                                      | Type    | Best for                                        |
 | ------------------------------------------------------------- | ------- | ----------------------------------------------- |
-| [Hello World App](/resources/hello-world-app)                 | Guide   | Simple apps, static pages, getting started      |
-| [AI Chat App](/resources/ai-chat-app)                         | Guide   | Conversational AI, chatbots, assistants         |
-| [App with Lakebase](/resources/app-with-lakebase)             | Guide   | CRUD apps with persistent storage               |
-| [Agentic Support Console](/resources/agentic-support-console) | Example | Full AI support console with Lakebase and Genie |
+| [Hello World App](/templates/hello-world-app)                 | Guide   | Simple apps, static pages, getting started      |
+| [AI Chat App](/templates/ai-chat-app)                         | Guide   | Conversational AI, chatbots, assistants         |
+| [App with Lakebase](/templates/app-with-lakebase)             | Guide   | CRUD apps with persistent storage               |
+| [Agentic Support Console](/templates/agentic-support-console) | Example | Full AI support console with Lakebase and Genie |
 
-More guides and examples are in the [resources catalog](/resources).
+More guides and examples are in the [resources catalog](/templates).
 
 ## Companion docs
 

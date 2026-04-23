@@ -24,12 +24,8 @@
       "destination": "/api/markdown?section=docs&slug=$1"
     },
     {
-      "source": "/resources.md",
+      "source": "/templates.md",
       "destination": "/api/markdown?section=resources&slug="
-    },
-    {
-      "source": "/resources/(.+)\\.md",
-      "destination": "/api/markdown?section=resources&slug=$1"
     },
     {
       "source": "/solutions.md",
@@ -41,7 +37,7 @@
     },
     {
       "source": "/templates/(.+)\\.md",
-      "destination": "/api/markdown?section=templates&slug=$1"
+      "destination": "/api/markdown?section=resources&slug=$1"
     },
     {
       "source": "/(.+)\\.md",
@@ -50,7 +46,7 @@
   ],
   "headers": [
     {
-      "source": "/(docs|resources|solutions|templates)(.*)",
+      "source": "/(docs|templates|solutions)(.*)",
       "headers": [
         { "key": "Link", "value": "</llms.txt>; rel=\"llms-txt\"" },
         { "key": "X-LLMs-Txt", "value": "/llms.txt" }

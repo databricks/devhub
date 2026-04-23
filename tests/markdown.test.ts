@@ -106,7 +106,7 @@ describe("empty-slug index pages", () => {
     expect(markdown).toContain("# Resources");
     expect(markdown).toContain("## Guides");
     expect(markdown).toContain("## Recipes");
-    expect(markdown).toMatch(/\(\/resources\/[\w-]+\.md\)/);
+    expect(markdown).toMatch(/\(\/templates\/[\w-]+\.md\)/);
   });
 
   test("solutions index contains heading and .md links", () => {
@@ -135,8 +135,8 @@ describe("example markdown includes metadata", () => {
 
   test("includes related recipe and template links", () => {
     const markdown = getDetailMarkdown("examples", "agentic-support-console");
-    expect(markdown).toContain("/resources/operational-data-analytics");
-    expect(markdown).toContain("/resources/genie-conversational-analytics");
+    expect(markdown).toContain("/templates/operational-data-analytics");
+    expect(markdown).toContain("/templates/genie-conversational-analytics");
   });
 });
 

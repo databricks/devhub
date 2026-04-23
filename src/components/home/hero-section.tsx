@@ -139,7 +139,7 @@ export function HeroSection(): ReactNode {
                 <ArrowRight className="h-4 w-4 rotate-90 transition-transform group-hover:translate-y-0.5" />
               </button>
               <Link
-                to="/resources"
+                to="/templates"
                 className="group inline-flex items-center gap-2 rounded-full border border-black/15 bg-white/70 px-5 py-2 text-sm font-medium text-black/80 no-underline backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:border-black/25 hover:text-black dark:border-white/15 dark:bg-white/8 dark:text-white/80 dark:hover:border-white/25 dark:hover:text-white"
               >
                 Browse templates

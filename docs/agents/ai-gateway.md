@@ -330,10 +330,10 @@ See [Integrate with coding agents](https://docs.databricks.com/aws/en/ai-gateway
 
 | Template                                                                      | Description                           |
 | ----------------------------------------------------------------------------- | ------------------------------------- |
-| [Query AI Gateway Endpoints](/resources/foundation-models-api)                | Access foundation models from AppKit  |
-| [Streaming AI Chat](/resources/ai-chat-model-serving)                         | Streaming chat with the Vercel AI SDK |
-| [Create a Model Serving Endpoint](/resources/model-serving-endpoint-creation) | Provision and test a new endpoint     |
-| [AI Chat App](/resources/ai-chat-app)                                         | Streaming chat with history           |
+| [Query AI Gateway Endpoints](/templates/foundation-models-api)                | Access foundation models from AppKit  |
+| [Streaming AI Chat](/templates/ai-chat-model-serving)                         | Streaming chat with the Vercel AI SDK |
+| [Create a Model Serving Endpoint](/templates/model-serving-endpoint-creation) | Provision and test a new endpoint     |
+| [AI Chat App](/templates/ai-chat-app)                                         | Streaming chat with history           |
 
 ## Further reading
 

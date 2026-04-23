@@ -2,7 +2,7 @@
 
 Enable vector similarity search in Lakebase using the pgvector extension.
 
-This recipe assumes you have already completed the [Create a Lakebase Instance](/resources/lakebase-create-instance) recipe and have a Lakebase project provisioned.
+This recipe assumes you have already completed the [Create a Lakebase Instance](/templates/lakebase-create-instance) recipe and have a Lakebase project provisioned.
 
 ### 1. Enable pgvector
 

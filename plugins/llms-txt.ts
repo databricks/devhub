@@ -196,7 +196,7 @@ function generateLlmsTxt(baseUrl: string, docsDir: string): string {
     "",
     "Guides and examples for building on Databricks.",
     "",
-    `- [All Resources](${baseUrl}/resources.md): Browse all resources`,
+    `- [All Resources](${baseUrl}/templates.md): Browse all resources`,
     "",
   );
 
@@ -206,7 +206,7 @@ function generateLlmsTxt(baseUrl: string, docsDir: string): string {
       "",
       ...publishedTemplates.map(
         (t) =>
-          `- [${t.name}](${baseUrl}/resources/${t.id}.md): ${t.description}`,
+          `- [${t.name}](${baseUrl}/templates/${t.id}.md): ${t.description}`,
       ),
       "",
     );
@@ -218,7 +218,7 @@ function generateLlmsTxt(baseUrl: string, docsDir: string): string {
       "",
       ...publishedRecipes.map(
         (r) =>
-          `- [${r.name}](${baseUrl}/resources/${r.id}.md): ${r.description}`,
+          `- [${r.name}](${baseUrl}/templates/${r.id}.md): ${r.description}`,
       ),
       "",
     );
@@ -230,7 +230,7 @@ function generateLlmsTxt(baseUrl: string, docsDir: string): string {
       "",
       ...publishedExamples.map(
         (e) =>
-          `- [${e.name}](${baseUrl}/resources/${e.id}.md): ${e.description}`,
+          `- [${e.name}](${baseUrl}/templates/${e.id}.md): ${e.description}`,
       ),
       "",
     );

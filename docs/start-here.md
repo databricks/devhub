@@ -15,7 +15,7 @@ Databricks is a data and AI platform. It manages data pipelines, stores and gove
 
 ## Guides and examples
 
-DevHub has two types of resources in the [resources catalog](/resources):
+DevHub has two types of resources in the [resources catalog](/templates):
 
 - **Guides**: step-by-step build instructions. Copy one into your coding agent and it handles scaffolding, configuration, and deployment.
 - **Examples**: working apps with source code you can clone and customize.
@@ -26,7 +26,7 @@ These docs explain the platform in detail when you or your agent needs more cont
 
 1. **Set up your environment**: install the Databricks CLI and authenticate against your workspace. The [Databricks CLI](/docs/tools/databricks-cli) page walks you through both.
 2. **Pick a product**: read the overview for context or go straight to the quickstart. Choose from [Web app](/docs/apps/overview), [Database](/docs/lakebase/overview), or [AI agent](/docs/agents/overview).
-3. **Start building**: copy a guide into your coding agent to scaffold and deploy, or clone an example and customize it. Browse the [resources catalog](/resources).
+3. **Start building**: copy a guide into your coding agent to scaffold and deploy, or clone an example and customize it. Browse the [resources catalog](/templates).
 
 ## How the platform fits together
 

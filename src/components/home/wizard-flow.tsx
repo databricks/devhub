@@ -680,17 +680,19 @@ function StepRow({
       ].join(" ")}
     >
       <div className={isReversed ? "md:[direction:ltr]" : ""}>
-        <p className="mb-4 inline-flex items-center gap-2.5 text-[10px] font-semibold tracking-[0.14em] uppercase">
-          <span className="font-mono text-db-lava">{step.number}</span>
-          <span className="h-px w-6 bg-db-lava/60" />
-          <span className="text-black/55 dark:text-white/55">
+        <p className="mb-3 inline-flex items-center gap-3 text-[10px] font-semibold tracking-[0.14em] uppercase">
+          <span className="font-mono text-xl font-bold tracking-tight text-db-lava">
+            {step.number}
+          </span>
+          <span className="h-px w-5 bg-db-lava/60" />
+          <span className="text-xl font-bold tracking-tight text-black/55 dark:text-white/55">
             {step.eyebrow}
           </span>
         </p>
-        <h3 className="text-2xl leading-snug font-medium tracking-tight text-black md:text-[2rem] md:leading-[1.15] dark:text-white">
+        <h3 className="text-xl leading-snug font-medium tracking-tight text-black md:text-2xl md:leading-[1.15] dark:text-white">
           {step.title}
         </h3>
-        <p className="mt-3 max-w-lg text-[0.95rem] leading-relaxed text-black/60 dark:text-white/60">
+        <p className="mt-2.5 max-w-lg text-sm leading-relaxed text-black/60 dark:text-white/60">
           {step.description}
         </p>
         {step.action}

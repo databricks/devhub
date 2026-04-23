@@ -47,7 +47,7 @@ test.describe("copy markdown exports raw markdown on recipe pages", () => {
     page,
   }) => {
     await setupClipboardMock(page);
-    await page.goto("/resources/databricks-local-bootstrap");
+    await page.goto("/templates/databricks-local-bootstrap");
 
     await clickCopyPromptAndWaitForToast(page);
 
@@ -65,7 +65,7 @@ test.describe("copy markdown exports raw markdown on template pages", () => {
     page,
   }) => {
     await setupClipboardMock(page);
-    await page.goto("/resources/hello-world-app");
+    await page.goto("/templates/hello-world-app");
 
     await clickCopyPromptAndWaitForToast(page);
 
@@ -79,7 +79,7 @@ test.describe("copy markdown exports raw markdown on template pages", () => {
 
   test("multi-recipe template includes all recipes", async ({ page }) => {
     await setupClipboardMock(page);
-    await page.goto("/resources/app-with-lakebase");
+    await page.goto("/templates/app-with-lakebase");
 
     await clickCopyPromptAndWaitForToast(page);
 
@@ -94,7 +94,7 @@ test.describe("copy markdown exports raw markdown on template pages", () => {
 test.describe("copy markdown exports raw markdown on example pages", () => {
   test("example detail page copies markdown content", async ({ page }) => {
     await setupClipboardMock(page);
-    await page.goto("/resources/agentic-support-console");
+    await page.goto("/templates/agentic-support-console");
 
     await clickCopyPromptAndWaitForToast(page);
 
@@ -107,7 +107,7 @@ test.describe("copy markdown exports raw markdown on example pages", () => {
 
   test("saas-tracker example copies markdown content", async ({ page }) => {
     await setupClipboardMock(page);
-    await page.goto("/resources/saas-tracker");
+    await page.goto("/templates/saas-tracker");
 
     await clickCopyPromptAndWaitForToast(page);
 
@@ -122,7 +122,7 @@ test.describe("copy markdown exports raw markdown on example pages", () => {
   test("Get started: page shows agent-first copy and manual steps", async ({
     page,
   }) => {
-    await page.goto("/resources/agentic-support-console");
+    await page.goto("/templates/agentic-support-console");
 
     await expect(
       page.getByRole("heading", { name: "Get started", exact: true }),
@@ -152,7 +152,7 @@ test.describe("copy markdown exports raw markdown on example pages", () => {
     page,
   }) => {
     await setupClipboardMock(page);
-    await page.goto("/resources/agentic-support-console");
+    await page.goto("/templates/agentic-support-console");
 
     await clickCopyPromptAndWaitForToast(page);
 
@@ -178,7 +178,7 @@ test.describe("copy markdown exports raw markdown on example pages", () => {
     page,
   }) => {
     await setupClipboardMock(page);
-    await page.goto("/resources/agentic-support-console");
+    await page.goto("/templates/agentic-support-console");
 
     await page.getByRole("button", { name: "Copy prompt" }).first().click();
     await expect(page.getByText("Prompt copied")).toBeVisible({
@@ -202,7 +202,7 @@ test.describe("copy markdown exports raw markdown on example pages", () => {
     page,
   }) => {
     await setupClipboardMock(page);
-    await page.goto("/resources/agentic-support-console");
+    await page.goto("/templates/agentic-support-console");
 
     await page
       .locator("section.example-get-started")

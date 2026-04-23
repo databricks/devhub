@@ -33,13 +33,13 @@ Every guide is written to be practical. Less theory, more working code.
 
 ### Full example apps
 
-The [resources](/resources) page now includes **three production-grade example applications** you can clone, provision, and deploy end to end. Each comes with a `template/README.md` runbook that covers infrastructure provisioning, data seeding, pipeline deploys, and app deployment, taking you from zero to running app.
+The [resources](/templates) page now includes **three production-grade example applications** you can clone, provision, and deploy end to end. Each comes with a `template/README.md` runbook that covers infrastructure provisioning, data seeding, pipeline deploys, and app deployment, taking you from zero to running app.
 
 | Example                                                           | What it demonstrates                                                                                               |
 | ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
-| **[Agentic Support Console](/resources/agentic-support-console)** | Lakebase, Lakehouse Sync CDC, a medallion pipeline, an LLM agent job, reverse sync, and Genie analytics in one app |
-| **[SaaS Subscription Tracker](/resources/saas-tracker)**          | CRUD app with Lakebase persistence and Genie spend analytics                                                       |
-| **[Content Moderator](/resources/content-moderator)**             | Per-channel guidelines, AI compliance scoring via Model Serving, moderator review workflow, and Genie analytics    |
+| **[Agentic Support Console](/templates/agentic-support-console)** | Lakebase, Lakehouse Sync CDC, a medallion pipeline, an LLM agent job, reverse sync, and Genie analytics in one app |
+| **[SaaS Subscription Tracker](/templates/saas-tracker)**          | CRUD app with Lakebase persistence and Genie spend analytics                                                       |
+| **[Content Moderator](/templates/content-moderator)**             | Per-channel guidelines, AI compliance scoring via Model Serving, moderator review workflow, and Genie analytics    |
 
 Each example builds on one or more guides and recipes. Clone the repo, follow the README, and you have a working app that demonstrates how the full Databricks developer stack fits together.
 
@@ -49,12 +49,12 @@ Recipes are self-contained, copy-pasteable markdown documents that walk you thro
 
 Here are some highlights:
 
-- **[Databricks Local Bootstrap](/resources/databricks-local-bootstrap)**: Set up a local development environment with CLI, auth, and agent skills in one pass.
-- **[Streaming AI Chat with Model Serving](/resources/ai-chat-model-serving)**: Wire up AI SDK with Databricks Model Serving for streaming chat responses.
-- **[Lakebase Data Persistence](/resources/lakebase-data-persistence)**: Add a managed Postgres database to your app with schema setup and full CRUD API routes.
-- **[Genie Conversational Analytics](/resources/genie-conversational-analytics)**: Embed a natural-language analytics chat interface powered by Databricks AI/BI Genie.
-- **[Lakehouse Sync CDC Replication](/resources/lakebase-change-data-feed-autoscaling)**: Replicate Lakebase tables into Unity Catalog as Delta tables with change data capture.
-- **[Medallion Architecture from CDC](/resources/medallion-architecture-from-cdc)**: Transform CDC history tables into silver/gold layers using Lakeflow Declarative Pipelines.
+- **[Databricks Local Bootstrap](/templates/databricks-local-bootstrap)**: Set up a local development environment with CLI, auth, and agent skills in one pass.
+- **[Streaming AI Chat with Model Serving](/templates/ai-chat-model-serving)**: Wire up AI SDK with Databricks Model Serving for streaming chat responses.
+- **[Lakebase Data Persistence](/templates/lakebase-data-persistence)**: Add a managed Postgres database to your app with schema setup and full CRUD API routes.
+- **[Genie Conversational Analytics](/templates/genie-conversational-analytics)**: Embed a natural-language analytics chat interface powered by Databricks AI/BI Genie.
+- **[Lakehouse Sync CDC Replication](/templates/lakebase-change-data-feed-autoscaling)**: Replicate Lakebase tables into Unity Catalog as Delta tables with change data capture.
+- **[Medallion Architecture from CDC](/templates/medallion-architecture-from-cdc)**: Transform CDC history tables into silver/gold layers using Lakeflow Declarative Pipelines.
 
 There are currently **17 recipes** covering everything from initial workspace setup to production data pipelines.
 
@@ -64,12 +64,12 @@ Guides bundle multiple recipes into end-to-end project blueprints. Instead of as
 
 | Guide                                                                   | What it builds                                                                     |
 | ----------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| **[Hello World App](/resources/hello-world-app)**                       | CLI setup, auth, app scaffolding, and agent skills                                 |
-| **[AI Chat App](/resources/ai-chat-app)**                               | Streaming chat with Model Serving, AI SDK, and persistent chat history in Lakebase |
-| **[App with Lakebase](/resources/app-with-lakebase)**                   | App with Lakebase for persistent storage, schema setup, and CRUD API               |
-| **[Genie Analytics App](/resources/genie-analytics-app)**               | Conversational analytics with AI/BI Genie                                          |
-| **[Lakebase Off-Platform](/resources/lakebase-off-platform)**           | Use Lakebase from Vercel, Netlify, or AWS with portable env and token management   |
-| **[Operational Data Analytics](/resources/operational-data-analytics)** | Unity Catalog, Lakehouse Sync CDC, and a medallion architecture pipeline           |
+| **[Hello World App](/templates/hello-world-app)**                       | CLI setup, auth, app scaffolding, and agent skills                                 |
+| **[AI Chat App](/templates/ai-chat-app)**                               | Streaming chat with Model Serving, AI SDK, and persistent chat history in Lakebase |
+| **[App with Lakebase](/templates/app-with-lakebase)**                   | App with Lakebase for persistent storage, schema setup, and CRUD API               |
+| **[Genie Analytics App](/templates/genie-analytics-app)**               | Conversational analytics with AI/BI Genie                                          |
+| **[Lakebase Off-Platform](/templates/lakebase-off-platform)**           | Use Lakebase from Vercel, Netlify, or AWS with portable env and token management   |
+| **[Operational Data Analytics](/templates/operational-data-analytics)** | Unity Catalog, Lakehouse Sync CDC, and a medallion architecture pipeline           |
 
 Guides are particularly useful when you're starting a new project and want a proven architecture rather than assembling individual pieces. The example apps above are built from these guides.
 
@@ -79,8 +79,8 @@ Every recipe, guide, example, and solution on this site is available as raw mark
 
 ```
 https://dev.databricks.com/solutions/devhub-launch.md
-https://dev.databricks.com/resources/ai-chat-app.md
-https://dev.databricks.com/resources/agentic-support-console.md
+https://dev.databricks.com/templates/ai-chat-app.md
+https://dev.databricks.com/templates/agentic-support-console.md
 https://dev.databricks.com/docs/start-here.md
 ```
 
@@ -124,7 +124,7 @@ If you're building on Databricks and have ideas for what would help, we want to 
 The fastest way to start building:
 
 1. Install the [Databricks CLI](/docs/tools/databricks-cli) and authenticate with your workspace
-2. Browse the [resources](/resources) to find a guide or example that matches your use case
+2. Browse the [resources](/templates) to find a guide or example that matches your use case
 3. Copy a guide into your AI coding agent, or clone an example and follow its README
 4. Read the [docs](/docs/start-here) when you need to go deeper on any topic
 

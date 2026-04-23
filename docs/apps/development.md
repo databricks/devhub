@@ -343,14 +343,14 @@ For additional troubleshooting, see [Deploy apps](https://docs.databricks.com/aw
 
 | Guide or example                                                            | Description                                          |
 | --------------------------------------------------------------------------- | ---------------------------------------------------- |
-| [Databricks Local Bootstrap](/resources/databricks-local-bootstrap)         | CLI install, auth, scaffold, and agent skill setup   |
-| [Lakebase Data Persistence](/resources/lakebase-data-persistence)           | Add Lakebase to an AppKit app with schema and routes |
-| [Lakebase Chat Persistence](/resources/lakebase-chat-persistence)           | Persist AI chat sessions to Lakebase                 |
-| [Genie Conversational Analytics](/resources/genie-conversational-analytics) | Natural language data queries with Genie             |
-| [Streaming AI Chat](/resources/ai-chat-model-serving)                       | AI chat with Databricks Model Serving                |
-| [Query AI Gateway Endpoints](/resources/foundation-models-api)              | Call model serving endpoints from AppKit             |
-| [SaaS Subscription Tracker](/resources/saas-tracker)                        | Example: internal CRUD tool with Lakebase and Genie  |
-| [Agentic Support Console](/resources/agentic-support-console)               | Example: full AI support console with agent job      |
+| [Databricks Local Bootstrap](/templates/databricks-local-bootstrap)         | CLI install, auth, scaffold, and agent skill setup   |
+| [Lakebase Data Persistence](/templates/lakebase-data-persistence)           | Add Lakebase to an AppKit app with schema and routes |
+| [Lakebase Chat Persistence](/templates/lakebase-chat-persistence)           | Persist AI chat sessions to Lakebase                 |
+| [Genie Conversational Analytics](/templates/genie-conversational-analytics) | Natural language data queries with Genie             |
+| [Streaming AI Chat](/templates/ai-chat-model-serving)                       | AI chat with Databricks Model Serving                |
+| [Query AI Gateway Endpoints](/templates/foundation-models-api)              | Call model serving endpoints from AppKit             |
+| [SaaS Subscription Tracker](/templates/saas-tracker)                        | Example: internal CRUD tool with Lakebase and Genie  |
+| [Agentic Support Console](/templates/agentic-support-console)               | Example: full AI support console with agent job      |
 
 ## Further reading
 

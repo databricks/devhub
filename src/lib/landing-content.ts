@@ -71,7 +71,7 @@ export function buildLandingResources(
   return [
     ...publishedExamples.map<LandingResourceItem>((e) => ({
       id: e.id,
-      path: `/resources/${e.id}`,
+      path: `/templates/${e.id}`,
       title: e.name,
       description: e.description,
       tags: e.tags,

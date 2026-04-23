@@ -36,7 +36,7 @@ const FOOTER_SECTIONS: FooterSection[] = [
   {
     title: "Resources",
     items: [
-      { label: "Templates", to: "/resources" },
+      { label: "Templates", to: "/templates" },
       { label: "Solutions", to: "/solutions" },
     ],
   },

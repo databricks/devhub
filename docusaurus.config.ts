@@ -98,7 +98,7 @@ const config: Config = {
       {
         id: "recipes",
         entryType: "recipe",
-        routeBasePath: "/resources",
+        routeBasePath: "/templates",
         contentSection: "recipes",
       },
     ],
@@ -116,7 +116,7 @@ const config: Config = {
       {
         id: "examples",
         entryType: "example",
-        routeBasePath: "/resources",
+        routeBasePath: "/templates",
         contentSection: "examples",
       },
     ],
@@ -138,7 +138,7 @@ const config: Config = {
       },
       items: [
         { to: "/solutions", label: "Solutions", position: "left" },
-        { to: "/resources", label: "Templates", position: "left" },
+        { to: "/templates", label: "Templates", position: "left" },
         {
           to: "/docs/start-here",
           label: "Learn More",
@@ -176,7 +176,7 @@ const config: Config = {
           title: "Docs",
           items: [
             { label: "Start Here", to: "/docs/start-here" },
-            { label: "Resources", to: "/resources" },
+            { label: "Resources", to: "/templates" },
           ],
         },
         {

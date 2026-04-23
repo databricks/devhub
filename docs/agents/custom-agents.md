@@ -90,9 +90,9 @@ For server logic outside the built-in plugin routes (for example, custom Express
 
 | Template                                                       | Description                           |
 | -------------------------------------------------------------- | ------------------------------------- |
-| [Agentic Support Console](/resources/agentic-support-console)  | Full agent-driven support UI example  |
-| [Query AI Gateway Endpoints](/resources/foundation-models-api) | Calling foundation models from AppKit |
-| [Streaming AI Chat](/resources/ai-chat-model-serving)          | Streaming chat with the Vercel AI SDK |
+| [Agentic Support Console](/templates/agentic-support-console)  | Full agent-driven support UI example  |
+| [Query AI Gateway Endpoints](/templates/foundation-models-api) | Calling foundation models from AppKit |
+| [Streaming AI Chat](/templates/ai-chat-model-serving)          | Streaming chat with the Vercel AI SDK |
 
 ## Further reading
 

@@ -63,7 +63,7 @@ export default function handler(req: VercelRequest, res: VercelResponse): void {
           `\`${requestedPath}\` does not exist.`,
           "",
           "- [Site index](/llms.txt): Table of contents for all documentation, guides, and examples",
-          "- [All resources](/resources.md): Guides and examples for building on Databricks",
+          "- [All templates](/templates.md): Guides and examples for building on Databricks",
           "- [All solutions](/solutions.md): Use-case solutions",
           "- [Start here](/docs/start-here.md): Site orientation and getting started guide",
           "",

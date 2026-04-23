@@ -23,7 +23,7 @@ export function TemplateDetail({
 }: TemplateDetailProps): ReactNode {
   const contentRef = useRef<HTMLDivElement>(null);
   const heroImageUrl = useBaseUrl("/img/template-detail-hero.svg");
-  const permalink = `/resources/${template.id}`;
+  const permalink = `/templates/${template.id}`;
 
   return (
     <Layout title={template.name} description={template.description}>
@@ -33,7 +33,7 @@ export function TemplateDetail({
             <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_220px]">
               <div className="min-w-0">
                 <Link
-                  to="/resources"
+                  to="/templates"
                   className="mb-6 inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground no-underline transition-colors hover:text-foreground"
                 >
                   <span aria-hidden="true">&larr;</span>

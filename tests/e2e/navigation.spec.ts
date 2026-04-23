@@ -20,7 +20,7 @@ const BOOTSTRAP_PROMPT_MARKDOWN = `${substituteAboutDevhubLlmsUrl(ABOUT_DEVHUB_M
 test.describe("navbar navigation", () => {
   const NAVBAR_LINKS = [
     { label: "Solutions", expectedPath: "/solutions" },
-    { label: "Templates", expectedPath: "/resources" },
+    { label: "Templates", expectedPath: "/templates" },
     {
       label: "Learn More",
       expectedPath: "/docs/start-here",
@@ -49,7 +49,7 @@ test.describe("footer navigation", () => {
     { href: "/docs/agents/overview", label: "Agent Bricks" },
     { href: "/docs/apps/appkit", label: "AppKit" },
     { href: "/docs/lakebase/quickstart", label: "Lakebase" },
-    { href: "/resources", label: "Templates" },
+    { href: "/templates", label: "Templates" },
     { href: "/solutions", label: "Solutions" },
   ];
 
@@ -138,22 +138,22 @@ test.describe("home page link navigation", () => {
     expect(new URL(page.url()).pathname).toBe("/docs/apps/appkit");
   });
 
-  test('"See all resources" navigates to /resources', async ({ page }) => {
+  test('"See all templates" navigates to /templates', async ({ page }) => {
     await page.goto("/");
-    await page.locator('a[href="/resources"]').first().click();
-    await page.waitForURL("**/resources");
-    expect(new URL(page.url()).pathname).toBe("/resources");
+    await page.locator('a[href="/templates"]').first().click();
+    await page.waitForURL("**/templates");
+    expect(new URL(page.url()).pathname).toBe("/templates");
   });
 
-  test("resource preview card navigates to /resources/hello-world-app", async ({
+  test("resource preview card navigates to /templates/hello-world-app", async ({
     page,
   }) => {
     await page.goto("/");
-    const link = page.locator('a[href="/resources/hello-world-app"]');
+    const link = page.locator('a[href="/templates/hello-world-app"]');
     await link.waitFor({ state: "visible" });
     await link.click();
-    await page.waitForURL("**/resources/hello-world-app");
-    expect(new URL(page.url()).pathname).toBe("/resources/hello-world-app");
+    await page.waitForURL("**/templates/hello-world-app");
+    expect(new URL(page.url()).pathname).toBe("/templates/hello-world-app");
   });
 });
 
@@ -177,18 +177,18 @@ test.describe("solutions page navigation", () => {
   }
 });
 
-test.describe("resources page navigation", () => {
+test.describe("templates page navigation", () => {
   const RESOURCES = [
-    { path: "/resources/hello-world-app", kind: "guide" },
-    { path: "/resources/ai-chat-app", kind: "guide" },
-    { path: "/resources/agentic-support-console", kind: "example" },
-    { path: "/resources/saas-tracker", kind: "example" },
-    { path: "/resources/databricks-local-bootstrap", kind: "guide" },
+    { path: "/templates/hello-world-app", kind: "guide" },
+    { path: "/templates/ai-chat-app", kind: "guide" },
+    { path: "/templates/agentic-support-console", kind: "example" },
+    { path: "/templates/saas-tracker", kind: "example" },
+    { path: "/templates/databricks-local-bootstrap", kind: "guide" },
   ];
 
   for (const { path, kind } of RESOURCES) {
     test(`${kind} card navigates to ${path}`, async ({ page }) => {
-      await page.goto("/resources");
+      await page.goto("/templates");
       const link = page.locator(`a[href="${path}"]`).first();
       await link.waitFor({ state: "visible" });
       await link.click();
@@ -222,27 +222,27 @@ test.describe("solution detail page navigation", () => {
         .filter((href): href is string => Boolean(href)),
     );
     expect(hrefs).toContain("/docs/start-here");
-    expect(hrefs).toContain("/resources");
+    expect(hrefs).toContain("/templates");
   });
 });
 
 test.describe("resource detail page navigation", () => {
-  test('"All resources" back link navigates to /resources from guide', async ({
+  test('"All templates" back link navigates to /templates from guide', async ({
     page,
   }) => {
-    await page.goto("/resources/hello-world-app");
+    await page.goto("/templates/hello-world-app");
     await page.getByRole("link", { name: /All templates/ }).click();
-    await page.waitForURL("**/resources");
-    expect(new URL(page.url()).pathname).toBe("/resources");
+    await page.waitForURL("**/templates");
+    expect(new URL(page.url()).pathname).toBe("/templates");
   });
 
-  test('"All resources" back link navigates to /resources from example', async ({
+  test('"All templates" back link navigates to /templates from example', async ({
     page,
   }) => {
-    await page.goto("/resources/agentic-support-console");
+    await page.goto("/templates/agentic-support-console");
     await page.getByRole("link", { name: /All templates/ }).click();
-    await page.waitForURL("**/resources");
-    expect(new URL(page.url()).pathname).toBe("/resources");
+    await page.waitForURL("**/templates");
+    expect(new URL(page.url()).pathname).toBe("/templates");
   });
 });
 
@@ -250,7 +250,7 @@ test.describe("example detail page", () => {
   test("shows example badge, GitHub link, and init command", async ({
     page,
   }) => {
-    const response = await page.goto("/resources/agentic-support-console");
+    const response = await page.goto("/templates/agentic-support-console");
     expect(response?.status()).toBe(200);
     await expect(
       page.locator("main").getByText("Example", { exact: true }),
@@ -265,7 +265,7 @@ test.describe("example detail page", () => {
   });
 
   test("shows included guide resources", async ({ page }) => {
-    await page.goto("/resources/agentic-support-console");
+    await page.goto("/templates/agentic-support-console");
     await expect(
       page.getByRole("heading", { name: "Included Resources" }),
     ).toBeVisible();

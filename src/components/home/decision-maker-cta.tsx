@@ -11,7 +11,7 @@ function DevCard(): ReactNode {
       <p className="mt-3 text-sm leading-relaxed text-white/90 md:mt-4">
         Pick a{" "}
         <Link
-          to="/resources"
+          to="/templates"
           className="underline decoration-white/40 underline-offset-2 hover:decoration-white/70"
         >
           template

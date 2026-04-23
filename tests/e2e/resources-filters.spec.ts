@@ -13,7 +13,7 @@ test.describe("resources page search", () => {
   test("search bar filters results and clearing restores all", async ({
     page,
   }) => {
-    await page.goto("/resources");
+    await page.goto("/templates");
     await expect(page.getByText(TOTAL_RESOURCES)).toBeVisible();
 
     await page.getByRole("searchbox").fill("genie");
@@ -21,25 +21,25 @@ test.describe("resources page search", () => {
       page.getByText(`7 of ${RESOURCE_COUNT} templates`),
     ).toBeVisible();
     await expect(
-      page.locator('a[href="/resources/inventory-intelligence"]'),
+      page.locator('a[href="/templates/inventory-intelligence"]'),
     ).toBeVisible();
     await expect(
-      page.locator('a[href="/resources/agentic-support-console"]'),
+      page.locator('a[href="/templates/agentic-support-console"]'),
     ).toBeVisible();
     await expect(
-      page.locator('a[href="/resources/saas-tracker"]'),
+      page.locator('a[href="/templates/saas-tracker"]'),
     ).toBeVisible();
     await expect(
-      page.locator('a[href="/resources/content-moderator"]'),
+      page.locator('a[href="/templates/content-moderator"]'),
     ).toBeVisible();
     await expect(
-      page.locator('a[href="/resources/genie-analytics-app"]'),
+      page.locator('a[href="/templates/genie-analytics-app"]'),
     ).toBeVisible();
     await expect(
-      page.locator('a[href="/resources/genie-conversational-analytics"]'),
+      page.locator('a[href="/templates/genie-conversational-analytics"]'),
     ).toBeVisible();
     await expect(
-      page.locator('a[href="/resources/genie-multi-space"]'),
+      page.locator('a[href="/templates/genie-multi-space"]'),
     ).toBeVisible();
 
     await page.getByRole("searchbox").fill("");
@@ -51,7 +51,7 @@ test.describe("resources page service filter", () => {
   test("checking a service narrows results and shows active pill", async ({
     page,
   }) => {
-    await page.goto("/resources");
+    await page.goto("/templates");
     await expect(page.getByText(TOTAL_RESOURCES)).toBeVisible();
 
     await page.getByRole("checkbox", { name: "Lakebase", exact: true }).check();
@@ -62,10 +62,10 @@ test.describe("resources page service filter", () => {
     await expect(count).not.toHaveText(TOTAL_RESOURCES);
 
     await expect(
-      page.locator('a[href="/resources/lakebase-off-platform"]'),
+      page.locator('a[href="/templates/lakebase-off-platform"]'),
     ).toBeVisible();
     await expect(
-      page.locator('a[href="/resources/query-ai-gateway-endpoints"]'),
+      page.locator('a[href="/templates/query-ai-gateway-endpoints"]'),
     ).toBeHidden();
   });
 });
@@ -74,23 +74,23 @@ test.describe("resources page resource type filter", () => {
   test("Examples filter shows only examples, Guides shows only guides", async ({
     page,
   }) => {
-    await page.goto("/resources");
+    await page.goto("/templates");
 
     await page.getByRole("checkbox", { name: "Examples" }).check();
     await expect(
-      page.locator('a[href="/resources/agentic-support-console"]'),
+      page.locator('a[href="/templates/agentic-support-console"]'),
     ).toBeVisible();
     await expect(
-      page.locator('a[href="/resources/hello-world-app"]'),
+      page.locator('a[href="/templates/hello-world-app"]'),
     ).toBeHidden();
 
     await page.getByRole("checkbox", { name: "Examples" }).uncheck();
     await page.getByRole("checkbox", { name: "Guides" }).check();
     await expect(
-      page.locator('a[href="/resources/databricks-local-bootstrap"]'),
+      page.locator('a[href="/templates/databricks-local-bootstrap"]'),
     ).toBeVisible();
     await expect(
-      page.locator('a[href="/resources/agentic-support-console"]'),
+      page.locator('a[href="/templates/agentic-support-console"]'),
     ).toBeHidden();
   });
 });
@@ -99,7 +99,7 @@ test.describe("resources page clear all filters", () => {
   test("clear all resets search, service filter, and tag filters", async ({
     page,
   }) => {
-    await page.goto("/resources");
+    await page.goto("/templates");
 
     await page.getByRole("searchbox").fill("lakebase");
     await page.getByRole("checkbox", { name: "Lakebase", exact: true }).check();

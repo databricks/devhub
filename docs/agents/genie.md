@@ -127,7 +127,7 @@ genie({
 }),
 ```
 
-Bind each ID to a separate resource in `app.yaml`. See the [Genie Multi-Space Selector](/resources/genie-multi-space) template for a working UI with space switching, conversation cleanup, and URL sync.
+Bind each ID to a separate resource in `app.yaml`. See the [Genie Multi-Space Selector](/templates/genie-multi-space) template for a working UI with space switching, conversation cleanup, and URL sync.
 
 ## Permissions and data access
 
@@ -140,9 +140,9 @@ The `genie` plugin calls the Genie API on behalf of the signed-in user. Both the
 
 | Template                                                                    | Description                                      |
 | --------------------------------------------------------------------------- | ------------------------------------------------ |
-| [Genie Conversational Analytics](/resources/genie-conversational-analytics) | Scaffold an AppKit app with a single Genie space |
-| [Genie Multi-Space Selector](/resources/genie-multi-space)                  | UI pattern for switching between spaces          |
-| [Genie Analytics App](/resources/genie-analytics-app)                       | Full template with Genie chat                    |
+| [Genie Conversational Analytics](/templates/genie-conversational-analytics) | Scaffold an AppKit app with a single Genie space |
+| [Genie Multi-Space Selector](/templates/genie-multi-space)                  | UI pattern for switching between spaces          |
+| [Genie Analytics App](/templates/genie-analytics-app)                       | Full template with Genie chat                    |
 
 ## Further reading
 

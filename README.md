@@ -10,7 +10,7 @@ The easiest way to get started building on Databricks is **AppKit**. [AppKit](ht
 
 ## How to use DevHub guides and examples
 
-1. **Browse [Resources](https://dev.databricks.com/resources)** — Filter **Guides** (step-by-step prompts) or **Examples** (full example apps with step-by-step instructions).
+1. **Browse [Templates](https://dev.databricks.com/templates)** — Filter **Guides** (step-by-step prompts) or **Examples** (full example apps with step-by-step instructions).
 2. **Copy** — Use **Copy as Markdown** on a resource page so your agent gets recipes, commands, and context in one paste.
 3. **Give it to your coding agent** — Paste into Cursor, Claude Code, Codex, or your usual tool. Add a short brief: domain, data, UX, and what “done” looks like.
 4. **Build end to end** — Work with your agent on application code, Databricks Asset Bundles, Lakebase, and platform wiring until you have a **production-ready agentic application**: secure, deployable, and aligned with how Apps and Agents are meant to run on Databricks—not a one-off script.

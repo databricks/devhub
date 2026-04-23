@@ -130,7 +130,7 @@ function readExampleMarkdown(rootDir: string, slug: string): string {
     lines.push("## Included Resources", "");
     for (const resource of includedResources) {
       lines.push(
-        `- [${resource.name}](/resources/${resource.id}.md): ${resource.description}`,
+        `- [${resource.name}](/templates/${resource.id}.md): ${resource.description}`,
       );
     }
     lines.push("");
@@ -181,7 +181,7 @@ function readResourceMarkdown(rootDir: string, slug: string): string {
   throw new Error(`Resource page not found: "${slug}"`);
 }
 
-/** Markdown index served at /resources.md — lists all templates, recipes, and examples. */
+/** Markdown index served at /templates.md — lists all templates, recipes, and examples. */
 function readResourcesIndex(): string {
   const includeDrafts = showDrafts();
   const includeExamples = examplesEnabled();
@@ -201,7 +201,7 @@ function readResourcesIndex(): string {
   if (publishedTemplates.length > 0) {
     lines.push("## Guides", "");
     for (const t of publishedTemplates) {
-      lines.push(`- [${t.name}](/resources/${t.id}.md): ${t.description}`);
+      lines.push(`- [${t.name}](/templates/${t.id}.md): ${t.description}`);
     }
     lines.push("");
   }
@@ -209,7 +209,7 @@ function readResourcesIndex(): string {
   if (publishedRecipes.length > 0) {
     lines.push("## Recipes", "");
     for (const r of publishedRecipes) {
-      lines.push(`- [${r.name}](/resources/${r.id}.md): ${r.description}`);
+      lines.push(`- [${r.name}](/templates/${r.id}.md): ${r.description}`);
     }
     lines.push("");
   }
@@ -217,7 +217,7 @@ function readResourcesIndex(): string {
   if (publishedExamples.length > 0) {
     lines.push("## Examples", "");
     for (const e of publishedExamples) {
-      lines.push(`- [${e.name}](/resources/${e.id}.md): ${e.description}`);
+      lines.push(`- [${e.name}](/templates/${e.id}.md): ${e.description}`);
     }
     lines.push("");
   }
@@ -249,7 +249,7 @@ export function getDetailMarkdown(
 ): string {
   const slug = normalizeSlug(rawSlug);
 
-  // Empty slug → serve the section index page (e.g., /resources.md, /solutions.md)
+  // Empty slug → serve the section index page (e.g., /templates.md, /solutions.md)
   if (!slug || slug.trim() === "") {
     if (section === "resources") return readResourcesIndex();
     if (section === "solutions") return readSolutionsIndex();

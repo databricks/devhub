@@ -131,10 +131,10 @@ Medium is the default. Compute size is configured in the workspace UI (not avail
 
 | Guide                                                     | Description                         |
 | --------------------------------------------------------- | ----------------------------------- |
-| [Hello World App](/resources/hello-world-app)             | Minimal AppKit app with CLI setup   |
-| [App with Lakebase](/resources/app-with-lakebase)         | CRUD app with Lakebase persistence  |
-| [AI Chat App](/resources/ai-chat-app)                     | Conversational AI with chat history |
-| [Lakebase Off-Platform](/resources/lakebase-off-platform) | Apps hosted outside Databricks      |
+| [Hello World App](/templates/hello-world-app)             | Minimal AppKit app with CLI setup   |
+| [App with Lakebase](/templates/app-with-lakebase)         | CRUD app with Lakebase persistence  |
+| [AI Chat App](/templates/ai-chat-app)                     | Conversational AI with chat history |
+| [Lakebase Off-Platform](/templates/lakebase-off-platform) | Apps hosted outside Databricks      |
 
 ## Further reading
 

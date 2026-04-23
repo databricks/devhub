@@ -71,7 +71,7 @@ export function TemplatePreview(): ReactNode {
               <span className="text-db-lava">a template.</span>
             </h2>
             <Link
-              to="/resources"
+              to="/templates"
               className="shrink-0 text-sm font-medium text-black/70 no-underline hover:text-black dark:text-white/70 dark:hover:text-white"
             >
               See all templates &rarr;

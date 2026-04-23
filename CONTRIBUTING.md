@@ -62,12 +62,12 @@ If any step fails, the commit is aborted. Fix the issue and commit again.
 
 ## Authoring Content
 
-DevHub has three tiers of content, all rendered at `/resources/<id>`:
+DevHub has three tiers of content, all rendered at `/templates/<id>`:
 
 | Tier         | Purpose                                                           | Source                                                                            |
 | ------------ | ----------------------------------------------------------------- | --------------------------------------------------------------------------------- |
 | **Recipe**   | One atomic outcome (e.g. "Create a Lakebase instance")            | `content/recipes/<id>.md` + metadata in `src/lib/recipes/recipes.ts`              |
-| **Cookbook** | End-to-end use case composed from multiple recipes (aka Template) | Metadata in `src/lib/recipes/recipes.ts` + page in `src/pages/resources/<id>.tsx` |
+| **Cookbook** | End-to-end use case composed from multiple recipes (aka Template) | Metadata in `src/lib/recipes/recipes.ts` + page in `src/pages/templates/<id>.tsx` |
 | **Example**  | Full runnable app with code, pipelines, deploy                    | `content/examples/<id>.md` + `examples/<id>/template/` + metadata                 |
 
 In the UI, cookbooks and recipes are both labelled "Guides"; examples are labelled "Examples". Slugs must be globally unique across the three — the content-entries plugin validates this at build time.
@@ -148,7 +148,7 @@ Guidance:
 
 | Slot                                          | Property(-ies)                                 | Notes                                              |
 | --------------------------------------------- | ---------------------------------------------- | -------------------------------------------------- |
-| Landing carousel card, `/resources` list card | `previewImageLightUrl` / `previewImageDarkUrl` | Same contract for recipes, cookbooks, examples.    |
+| Landing carousel card, `/templates` list card | `previewImageLightUrl` / `previewImageDarkUrl` | Same contract for recipes, cookbooks, examples.    |
 | Example detail hero (single image)            | `previewImageLightUrl` / `previewImageDarkUrl` | Used when `galleryImages` is not set.              |
 | Example detail carousel (multiple images)     | `galleryImages: Array<{ lightUrl, darkUrl }>`  | Each slide must include both a light and dark URL. |
 

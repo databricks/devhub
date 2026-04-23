@@ -21,6 +21,8 @@ npm run dev
 
 `npm run dev` starts Docusaurus and the Vercel Functions together at [http://localhost:3000](http://localhost:3000). The site reloads on save.
 
+AppKit reference docs are fetched automatically on first build or dev start via a shallow git clone of the [appkit](https://github.com/databricks/appkit) repository. Run `npm run sync:appkit-docs` to force a re-sync.
+
 You'll also need the [Vercel CLI](https://vercel.com/docs/cli) (for `vercel dev`) and the [Databricks CLI](https://dev.databricks.com/docs/tools/databricks-cli) if you plan to verify end-to-end flows against a real workspace.
 
 ### Feature Flags
@@ -47,7 +49,7 @@ A flag is **enabled only when its value is exactly `"true"`** — any other valu
 | `npm run verify:images`    | Check every image under `static/img/guides/` and `static/img/examples/` matches the 16:9 / ≥1600×900 contract |
 | `npm run build`            | Production build via Docusaurus                                                                               |
 | `npm run test`             | Build + Vitest + Playwright smoke tests (includes sitemap, robots, llms.txt)                                  |
-| `npm run sync:appkit-docs` | Regenerate AppKit reference docs                                                                              |
+| `npm run sync:appkit-docs` | Force re-sync AppKit docs from main (auto-synced on first build)                                              |
 
 ### Pre-Commit Hook
 
@@ -174,24 +176,24 @@ Example for an example:
 
    ```ts
    createExample({
-     id: "inventory-intelligence",
-     // ...
-     previewImageLightUrl:
-       "/img/examples/inventory-intelligence-dashboard-light.png",
-     previewImageDarkUrl:
-       "/img/examples/inventory-intelligence-dashboard-dark.png",
-     // optional carousel:
-     galleryImages: [
-       {
-         lightUrl: "/img/examples/inventory-intelligence-dashboard-light.png",
-         darkUrl: "/img/examples/inventory-intelligence-dashboard-dark.png",
-       },
-       {
-         lightUrl:
-           "/img/examples/inventory-intelligence-replenishment-light.png",
-         darkUrl: "/img/examples/inventory-intelligence-replenishment-dark.png",
-       },
-     ],
+   	id: "inventory-intelligence",
+   	// ...
+   	previewImageLightUrl:
+   		"/img/examples/inventory-intelligence-dashboard-light.png",
+   	previewImageDarkUrl:
+   		"/img/examples/inventory-intelligence-dashboard-dark.png",
+   	// optional carousel:
+   	galleryImages: [
+   		{
+   			lightUrl: "/img/examples/inventory-intelligence-dashboard-light.png",
+   			darkUrl: "/img/examples/inventory-intelligence-dashboard-dark.png",
+   		},
+   		{
+   			lightUrl:
+   				"/img/examples/inventory-intelligence-replenishment-light.png",
+   			darkUrl: "/img/examples/inventory-intelligence-replenishment-dark.png",
+   		},
+   	],
    });
    ```
 

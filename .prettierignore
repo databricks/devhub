@@ -1,6 +1,13 @@
 dist/
+build/
 .databricks/
+.docusaurus/
 **/dist/
 **/.databricks/
 **/node_modules/
 node_modules/
+
+# Generated at build time by scripts/sync-appkit-docs.mjs
+docs/appkit/
+src/components/doc-examples/
+static/appkit-preview/

@@ -29,6 +29,9 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
+      - name: Sync AppKit docs
+        run: node scripts/sync-appkit-docs.mjs
+
       - name: Format check
         run: bunx prettier -c .
 

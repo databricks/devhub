@@ -46,7 +46,7 @@ test.describe("footer navigation", () => {
       href: "/docs/start-here",
       label: "Start Here",
     },
-    { href: "/docs/agents/quickstart", label: "Agents" },
+    { href: "/docs/agents/overview", label: "Agent Bricks" },
     { href: "/docs/apps/appkit", label: "AppKit" },
     { href: "/docs/lakebase/quickstart", label: "Lakebase" },
     { href: "/resources", label: "Guides" },
@@ -122,13 +122,13 @@ test.describe("home page link navigation", () => {
     expect(new URL(page.url()).pathname).toContain("/docs/lakebase/quickstart");
   });
 
-  test("pillar card Agent Bricks navigates to /docs/agents/quickstart", async ({
+  test("pillar card Agent Bricks navigates to /docs/agents/overview", async ({
     page,
   }) => {
     await page.goto("/");
-    await page.locator('a[href="/docs/agents/quickstart"]').first().click();
-    await page.waitForURL("**/docs/agents/quickstart");
-    expect(new URL(page.url()).pathname).toBe("/docs/agents/quickstart");
+    await page.locator('a[href="/docs/agents/overview"]').first().click();
+    await page.waitForURL("**/docs/agents/overview");
+    expect(new URL(page.url()).pathname).toBe("/docs/agents/overview");
   });
 
   test("pillar card Databricks Apps navigates to /docs/apps/appkit", async ({
@@ -289,11 +289,10 @@ test.describe("example detail page", () => {
 test.describe("docs sidebar navigation", () => {
   const SIDEBAR_LINKS = [
     { href: "/docs/start-here" },
-    { href: "/docs/agents/quickstart" },
-    { href: "/docs/agents/core-concepts" },
-    { href: "/docs/agents/development" },
+    { href: "/docs/agents/overview" },
     { href: "/docs/agents/ai-gateway" },
-    { href: "/docs/agents/observability" },
+    { href: "/docs/agents/genie" },
+    { href: "/docs/agents/custom-agents" },
     { href: "/docs/apps/quickstart" },
     { href: "/docs/apps/core-concepts" },
     { href: "/docs/apps/plugins" },

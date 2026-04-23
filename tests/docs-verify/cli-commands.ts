@@ -142,25 +142,9 @@ export const CLI_COMMANDS: CommandSpec[] = [
     command: "apps delete",
     doc: "docs/apps/development.md",
   },
-  // Agents
-  // agents/development.md is the canonical reference for deploy commands;
-  // testing them here catches drift in that page independently.
-  {
-    command: "bundle validate",
-    doc: "docs/agents/development.md",
-  },
-  {
-    command: "bundle deploy",
-    doc: "docs/agents/development.md",
-  },
-  {
-    command: "bundle run",
-    doc: "docs/agents/development.md",
-  },
-  {
-    command: "apps get",
-    doc: "docs/agents/quickstart.md",
-  },
+  // Agents: serving-endpoints CLI is documented in the AppKit-consumer
+  // ai-gateway page. Python agent authoring (bundle commands, MLflow
+  // experiments) lives on docs.databricks.com, not in DevHub.
   {
     command: "serving-endpoints list",
     doc: "docs/agents/ai-gateway.md",
@@ -176,9 +160,5 @@ export const CLI_COMMANDS: CommandSpec[] = [
   {
     command: "serving-endpoints create",
     doc: "docs/agents/ai-gateway.md",
-  },
-  {
-    command: "experiments create-experiment",
-    doc: "docs/agents/observability.md",
   },
 ];

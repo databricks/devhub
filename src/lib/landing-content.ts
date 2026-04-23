@@ -39,10 +39,10 @@ export const pillars: Pillar[] = [
   },
   {
     title: "Agent Bricks",
-    subtitle: "LLM-driven apps that call tools and return structured output.",
+    subtitle: "Managed AI agents and governed LLM endpoints.",
     description:
-      "Any Python framework, Databricks-hosted models, automatic MLflow tracing, and MCP for workspace tools.",
-    link: "/docs/agents/quickstart",
+      "Connect Knowledge Assistants, Genie spaces, and foundation models to your AppKit app. AI Gateway handles rate limits, cost attribution, and content safety.",
+    link: "/docs/agents/overview",
     icon: Bot,
   },
   {

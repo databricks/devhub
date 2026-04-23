@@ -47,6 +47,12 @@ const config: Config = {
     locales: ["en"],
   },
 
+  markdown: {
+    mermaid: true,
+  },
+
+  themes: ["@docusaurus/theme-mermaid"],
+
   presets: [
     [
       "classic",
@@ -188,6 +194,27 @@ const config: Config = {
       theme: prismThemes.github,
       darkTheme: prismThemes.dracula,
       additionalLanguages: ["bash", "diff", "json", "sql", "css"],
+    },
+    mermaid: {
+      theme: { light: "base", dark: "dark" },
+      options: {
+        // Light-mode palette tuned to the devhub brand tokens in
+        // src/css/custom.css (oat/navy/lava/cyan). Kept neutral on nodes so
+        // lava can still pop on highlighted content around the diagram.
+        // Dark mode uses mermaid's built-in "dark" theme; devhub's dark
+        // background (#111b20) reads well with it without overrides.
+        themeVariables: {
+          primaryColor: "#eeede9", // --db-oat-medium, warm node fill
+          primaryTextColor: "#0b2026", // --db-navy, high-contrast text
+          primaryBorderColor: "#1b3139", // --db-navy-light, restrained border
+          lineColor: "#5a6b73", // muted navy-gray for arrows
+          secondaryColor: "#f9f7f4", // --db-bg, for subgraph/alt fills
+          tertiaryColor: "#ffffff", // --db-card, tertiary fills
+          noteBkgColor: "#e0f4fe", // --db-cyan tint, for note() nodes
+          noteBorderColor: "#7dd3fc", // --db-cyan
+          noteTextColor: "#0b2026",
+        },
+      },
     },
   } satisfies Preset.ThemeConfig,
 };

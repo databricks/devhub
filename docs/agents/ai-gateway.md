@@ -1,17 +1,143 @@
 ---
-title: Model serving and AI Gateway
-sidebar_label: Model serving & AI Gateway
+title: AI Gateway
+sidebar_label: AI Gateway
+description: Call governed LLM endpoints from your AppKit app using the Model Serving plugin. AI Gateway adds rate limits, usage tracking, guardrails, and cost attribution.
 ---
 
-# Model serving and AI Gateway
+# AI Gateway
 
-Your agent calls a model serving endpoint. AI Gateway is the governance layer on that endpoint: it tracks usage, enforces rate limits, logs payloads, and blocks unsafe content (Llama Guard for safety, Presidio for PII). This page covers how to list endpoints, query them, and configure governance features.
+**AI Gateway** is a Databricks governance layer for LLM endpoints and MCP servers. It tracks usage, enforces rate limits, logs payloads, filters unsafe content and PII, and attributes cost. From your AppKit app, you call a governed endpoint with the Model Serving plugin. This page covers the AppKit wiring, the governance features, and the CLI for inspecting and provisioning endpoints.
 
-:::note[When you need this]
-Configure AI Gateway when you need rate limits, usage tracking, payload logging, or content safety. Calling a foundation model directly does not require it.
+## Prerequisites
+
+- Databricks CLI `v0.296+` with an [authenticated profile](/docs/tools/databricks-cli#authenticate).
+- A running AppKit app. See [Apps quickstart](/docs/apps/quickstart).
+- A serving endpoint your app can query. Most workspaces come with Databricks-hosted [foundation models](https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/) (prefixed `databricks-`, for example `databricks-claude-sonnet-4-6`) preconfigured with AI Gateway. See [List available endpoints](#list-available-endpoints) to confirm.
+
+## Call a governed endpoint from AppKit
+
+The [Model Serving plugin](/docs/appkit/v0/plugins/serving) handles the HTTP plumbing, auth, and streaming. Endpoint names come from environment variables at runtime, so the same code runs locally and in production.
+
+### Register the plugin
+
+```typescript title="server/server.ts"
+import { createApp, server, serving } from "@databricks/appkit";
+
+const AppKit = await createApp({
+  plugins: [
+    server(),
+    serving({
+      endpoints: {
+        chat: { env: "DATABRICKS_SERVING_ENDPOINT_NAME" },
+      },
+    }),
+  ],
+});
+```
+
+`chat` is an alias you pick. The plugin resolves it at request time by reading `DATABRICKS_SERVING_ENDPOINT_NAME`. Bind the env var in `app.yaml`:
+
+```yaml title="app.yaml"
+env:
+  - name: DATABRICKS_SERVING_ENDPOINT_NAME
+    valueFrom: serving-endpoint
+```
+
+When you deploy, Databricks Apps injects the endpoint name into the container. For local dev, set the env var in `.env`.
+
+### Stream from a React component
+
+```tsx title="client/src/ChatPanel.tsx"
+import { useState } from "react";
+import { useServingStream } from "@databricks/appkit-ui/react";
+
+export function ChatPanel() {
+  const [prompt, setPrompt] = useState("");
+  const { stream, chunks, streaming, error, reset } = useServingStream(
+    { messages: [{ role: "user", content: prompt }], max_tokens: 500 },
+    { alias: "chat" },
+  );
+
+  return (
+    <>
+      <input value={prompt} onChange={(e) => setPrompt(e.target.value)} />
+      <button onClick={() => stream()} disabled={streaming || !prompt}>
+        Send
+      </button>
+      <button onClick={reset}>Clear</button>
+      {chunks.map((chunk, i) => (
+        <pre key={i}>{JSON.stringify(chunk)}</pre>
+      ))}
+      {error && <p>{error}</p>}
+    </>
+  );
+}
+```
+
+The first argument is the request body. The second holds options, including the alias. The hook manages the SSE connection, aborts on unmount, and accumulates parsed chunks into state. For a non-streaming call, use `useServingInvoke` with the same shape.
+
+For chat models, extract text from each chunk (typically `chunk.choices?.[0]?.delta?.content`) and concatenate for display. During development, rendering raw chunks as JSON confirms the shape before you build your display logic.
+
+### Call it from a route handler
+
+For agent orchestration, pre/post-processing, or logging on the backend, call the plugin directly. The plugin's built-in HTTP routes run as the authenticated user by default. In a custom route handler like this one, call `.asUser(req)` explicitly to get the same per-user behavior.
+
+```typescript title="server/server.ts"
+AppKit.server.extend((app) => {
+  app.post("/api/summarize", async (req, res) => {
+    const { text } = req.body;
+    const result = await AppKit.serving("chat")
+      .asUser(req)
+      .invoke({
+        messages: [
+          { role: "system", content: "Summarize the text in two sentences." },
+          { role: "user", content: text },
+        ],
+      });
+    res.json(result);
+  });
+});
+```
+
+### Named versus default mode
+
+The examples above use **named mode** with an explicit alias. Omit the config to register a `default` alias backed by `DATABRICKS_SERVING_ENDPOINT_NAME`. Named mode scales to multiple endpoints (chat, classifier, embeddings) in the same app.
+
+## Two AI Gateway surfaces
+
+:::note[Two surfaces, one plugin]
+
+You might see AI Gateway in two places in your workspace:
+
+- **Classic**: features toggled on an existing Model Serving endpoint. Usage logs to `system.serving.endpoint_usage`. The Model Serving plugin calls these endpoints directly.
+- **Beta standalone**: a separate product with its own endpoints under the **LLMs** tab of the AI Gateway UI. Usage logs to `system.ai_gateway.usage`. The Model Serving plugin doesn't call these directly. For Databricks-hosted Beta endpoints, click **View legacy endpoint** in the workspace UI to get the underlying Model Serving endpoint name, then point the plugin at that.
+
+- [AI Gateway landing](https://docs.databricks.com/aws/en/ai-gateway/)
+- [AI Gateway for LLM endpoints](https://docs.databricks.com/aws/en/ai-gateway/overview-beta)
+- [Configure AI Gateway on model serving endpoints](https://docs.databricks.com/aws/en/ai-gateway/configure-ai-gateway-endpoints)
+
 :::
 
+## Governance features
+
+AI Gateway features vary by endpoint type. Configure them in the workspace UI or through the REST API (`PUT /api/2.0/serving-endpoints/{name}/ai-gateway`).
+
+| Feature               | What it does                                                         |
+| --------------------- | -------------------------------------------------------------------- |
+| **Usage tracking**    | Records request and token counts to `system.serving.endpoint_usage`  |
+| **Payload logging**   | Logs request and response payloads to Unity Catalog inference tables |
+| **Rate limits**       | QPM and TPM limits per user, group, or service principal             |
+| **AI Guardrails**     | Safety filters (Llama Guard) and PII detection (Presidio)            |
+| **Fallbacks**         | Route to backup endpoints on failure                                 |
+| **Traffic splitting** | Split traffic across multiple served entities                        |
+
+See [Configure AI Gateway on serving endpoints](https://docs.databricks.com/aws/en/ai-gateway/configure-ai-gateway-endpoints) for the full configuration guide. For the newer standalone experience, see [AI Gateway for LLM endpoints](https://docs.databricks.com/aws/en/ai-gateway/overview-beta).
+
+AI Gateway also governs MCP server access. AppKit apps don't configure this directly. It applies when an agent endpoint you call (for example ABMAS or a custom Python agent) routes to an MCP server internally. See [custom agent endpoints](/docs/agents/custom-agents).
+
 ## List available endpoints
+
+Use the CLI to see which endpoints your workspace exposes and which ones already have AI Gateway features configured.
 
 ```bash title="Common"
 databricks serving-endpoints list -o json
@@ -62,20 +188,6 @@ Foundation Model API endpoints (prefixed `databricks-`) are available in most wo
     "name": "databricks-claude-sonnet-4-6",
     "state": { "config_update": "NOT_UPDATING", "ready": "READY" },
     "task": "llm/v1/chat"
-  },
-  {
-    "config": {
-      "served_entities": [
-        {
-          "entity_name": "my-registered-model",
-          "name": "my-custom-endpoint",
-          "workload_size": "Small"
-        }
-      ]
-    },
-    "name": "my-custom-endpoint",
-    "state": { "config_update": "NOT_UPDATING", "ready": "READY" },
-    "task": "llm/v1/chat"
   }
 ]
 ```
@@ -111,43 +223,9 @@ databricks serving-endpoints get $ENDPOINT_NAME \
 
 Check for `ai_gateway` in the response to confirm AI Gateway is configured on the endpoint.
 
-<details>
-<summary>Example output</summary>
+## Query from the terminal
 
-```json
-{
-  "ai_gateway": {
-    "usage_tracking_config": { "enabled": true }
-  },
-  "config": {
-    "config_version": 1,
-    "served_entities": [
-      {
-        "foundation_model": {
-          "description": "Claude Sonnet 4.6 is a state-of-the-art, hybrid reasoning model...",
-          "display_name": "Claude Sonnet 4.6",
-          "docs": "https://docs.databricks.com/machine-learning/foundation-models/supported-models.html#claude-sonnet-4-6",
-          "name": "system.ai.databricks-claude-sonnet-4-6"
-        },
-        "name": "databricks-claude-sonnet-4-6"
-      }
-    ]
-  },
-  "creation_timestamp": 1747872000000,
-  "name": "databricks-claude-sonnet-4-6",
-  "permission_level": "CAN_QUERY",
-  "route_optimized": false,
-  "state": {
-    "config_update": "NOT_UPDATING",
-    "ready": "READY"
-  },
-  "task": "llm/v1/chat"
-}
-```
-
-</details>
-
-## Query an endpoint
+Useful for smoke-testing an endpoint before wiring it into your app.
 
 ```bash title="Common"
 databricks serving-endpoints query databricks-claude-sonnet-4-6 \
@@ -179,7 +257,7 @@ databricks serving-endpoints query $ENDPOINT_NAME \
 | `--temperature`       | no       | Sampling temperature                                  |
 | `--n`                 | no       | Number of candidates to generate                      |
 | `--stream`            | no       | Enable streaming responses                            |
-| `--client-request-id` | no       | Request identifier for inference/usage tables         |
+| `--client-request-id` | no       | Request identifier for inference and usage tables     |
 | `--debug`             | no       | Enable debug logging                                  |
 | `-o json`             | no       | Output as JSON (default: text)                        |
 | `--target`            | no       | Bundle target to use (if applicable)                  |
@@ -187,32 +265,7 @@ databricks serving-endpoints query $ENDPOINT_NAME \
 
 </details>
 
-<details>
-<summary>Example response</summary>
-
-```json
-{
-  "choices": [
-    {
-      "index": 0,
-      "message": {
-        "role": "assistant",
-        "content": "Hello! How can I help you today?"
-      },
-      "finish_reason": "stop"
-    }
-  ],
-  "usage": {
-    "prompt_tokens": 8,
-    "completion_tokens": 9,
-    "total_tokens": 17
-  }
-}
-```
-
-</details>
-
-## Create a serving endpoint
+## Provision an endpoint
 
 ```bash title="Common"
 databricks serving-endpoints create my-model-endpoint \
@@ -263,89 +316,30 @@ databricks serving-endpoints create $ENDPOINT_NAME \
 
 </details>
 
-Wait for the endpoint to reach READY state:
+Wait for the endpoint to reach `READY` state before querying it.
 
-```bash title="Common"
-databricks serving-endpoints get my-model-endpoint -o json
-```
+## Coding agent integrations
 
-```bash title="All Options"
-databricks serving-endpoints get $ENDPOINT_NAME \
-  --debug \
-  -o json \
-  --target $TARGET \
-  --profile $DATABRICKS_PROFILE
-```
+AI Gateway can also govern AI coding tools. Route requests from Cursor, Codex CLI, and Gemini CLI through a Databricks AI Gateway endpoint to get one invoice, one usage dashboard, and one place to manage permissions and rate limits across your organization.
 
-## Governance features
+To set up an integration, open **AI Gateway** in your workspace sidebar, go to the **LLMs** tab, and open the **Coding agents** section. Follow the tool-specific instructions (base URL, API key, model provider).
 
-AI Gateway features vary by endpoint type. Configure them in the Serving UI or through the REST API (`PUT /api/2.0/serving-endpoints/{name}/ai-gateway`).
+See [Integrate with coding agents](https://docs.databricks.com/aws/en/ai-gateway/coding-agent-integration-beta) for the full walkthrough and the current list of supported tools.
 
-| Feature               | What it does                                                     |
-| --------------------- | ---------------------------------------------------------------- |
-| **Usage tracking**    | Records request/token counts to `system.serving.endpoint_usage`  |
-| **Payload logging**   | Logs request/response payloads to Unity Catalog inference tables |
-| **Rate limits**       | QPM/TPM limits per user, group, or service principal             |
-| **AI Guardrails**     | Safety filters (Llama Guard) and PII detection (Presidio)        |
-| **Fallbacks**         | Route to backup endpoints on failure                             |
-| **Traffic splitting** | Split traffic across multiple served entities                    |
+## Related templates
 
-See [Configure AI Gateway on serving endpoints](https://docs.databricks.com/aws/en/ai-gateway/configure-ai-gateway-endpoints) for the full configuration guide.
-
-## Using AI Gateway in AppKit apps
-
-For AppKit-based apps, query endpoints through the Databricks SDK:
-
-```typescript
-import { getWorkspaceClient } from "@databricks/appkit";
-
-const workspaceClient = getWorkspaceClient({});
-const result = await workspaceClient.servingEndpoints.query({
-  name: process.env.DATABRICKS_ENDPOINT || "<endpoint-name>",
-  messages: [{ role: "user", content: "Hello" }],
-  max_tokens: 1000,
-});
-```
-
-For streaming responses with the Vercel AI SDK, use `createOpenAI` pointed at the AI Gateway URL:
-
-```typescript
-import { createOpenAI } from "@ai-sdk/openai";
-import { streamText } from "ai";
-
-const databricks = createOpenAI({
-  baseURL: `https://${process.env.DATABRICKS_WORKSPACE_ID}.ai-gateway.cloud.databricks.com/mlflow/v1`,
-  apiKey: token,
-});
-
-const result = streamText({
-  model: databricks.chat("<endpoint-name>"),
-  messages,
-  maxOutputTokens: 1000,
-});
-```
-
-See the [Streaming AI Chat recipe](/resources/ai-chat-app#streaming-ai-chat-with-model-serving) for the full implementation with auth helpers.
-
-## Coding agent integrations (Beta)
-
-AI Gateway provides a unified invoice, usage dashboard, and governance for AI coding tools. Supported tools: Claude Code, Cursor, Codex CLI, Cline, Gemini CLI, and Goose.
-
-To set up an integration, go to **AI Gateway** in your workspace sidebar and open the **Coding agents** section. A setup wizard walks you through configuring each tool, including generating an API key (PAT).
-
-See [Integrate with coding agents](https://docs.databricks.com/aws/en/ai-gateway/coding-agent-integration-beta) for additional details.
-
-## Related guides
-
-| Guide                                                                         | Description                              |
-| ----------------------------------------------------------------------------- | ---------------------------------------- |
-| [Query AI Gateway Endpoints](/resources/foundation-models-api)                | Access foundation models with AppKit SDK |
-| [Streaming AI Chat](/resources/ai-chat-model-serving)                         | Streaming chat with Vercel AI SDK        |
-| [Create a Model Serving Endpoint](/resources/model-serving-endpoint-creation) | Provision and test a new endpoint        |
+| Template                                                                      | Description                           |
+| ----------------------------------------------------------------------------- | ------------------------------------- |
+| [Query AI Gateway Endpoints](/resources/foundation-models-api)                | Access foundation models from AppKit  |
+| [Streaming AI Chat](/resources/ai-chat-model-serving)                         | Streaming chat with the Vercel AI SDK |
+| [Create a Model Serving Endpoint](/resources/model-serving-endpoint-creation) | Provision and test a new endpoint     |
+| [AI Chat App](/resources/ai-chat-app)                                         | Streaming chat with history           |
 
 ## Further reading
 
-- [AI Gateway](https://docs.databricks.com/aws/en/ai-gateway/)
-- [AI Gateway for serving endpoints](https://docs.databricks.com/aws/en/ai-gateway/overview-serving-endpoints)
+- [AI Gateway landing](https://docs.databricks.com/aws/en/ai-gateway/)
+- [AI Gateway for LLM endpoints](https://docs.databricks.com/aws/en/ai-gateway/overview-beta)
 - [Configure AI Gateway on serving endpoints](https://docs.databricks.com/aws/en/ai-gateway/configure-ai-gateway-endpoints)
-- [Integrate with coding agents (Beta)](https://docs.databricks.com/aws/en/ai-gateway/coding-agent-integration-beta)
+- [Integrate with coding agents](https://docs.databricks.com/aws/en/ai-gateway/coding-agent-integration-beta)
+- [AppKit Model Serving plugin reference](/docs/appkit/v0/plugins/serving)
+- [AppKit execution context](/docs/appkit/v0/plugins/execution-context)

@@ -33,15 +33,14 @@ const SIDEBAR_SECTIONS: Array<{
     slugs: ["start-here"],
   },
   {
-    title: "Agents",
+    title: "Agent Bricks",
     description:
-      "Design, develop, and monitor AI agents with Databricks model serving, guardrails, and observability.",
+      "Connect Agent Bricks agents, governed LLM endpoints, and Genie spaces to your AppKit app. Covers AI Gateway, the Model Serving plugin for calling LLM and agent endpoints, and the Genie plugin for natural-language data queries.",
     slugs: [
-      "agents/quickstart",
-      "agents/core-concepts",
-      "agents/development",
+      "agents/overview",
       "agents/ai-gateway",
-      "agents/observability",
+      "agents/genie",
+      "agents/custom-agents",
     ],
   },
   {

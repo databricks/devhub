@@ -1,13 +1,6 @@
 import Link from "@docusaurus/Link";
 import { type ReactNode } from "react";
-import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Carousel,
   CarouselContent,
@@ -51,19 +44,6 @@ function ResourceCard({
             {item.description}
           </p>
         </CardContent>
-        <CardFooter className="pt-0">
-          <div className="flex flex-wrap gap-1.5">
-            {item.tags?.slice(-2).map((tag) => (
-              <Badge
-                key={tag}
-                variant="secondary"
-                className="rounded-sm border border-black/10 bg-black/4 px-1.5 py-0 text-[11px] font-medium text-black/78 dark:border-white/10 dark:bg-white/8 dark:text-white/78"
-              >
-                {tag}
-              </Badge>
-            ))}
-          </div>
-        </CardFooter>
       </Card>
     </Link>
   );

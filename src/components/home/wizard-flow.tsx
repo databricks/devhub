@@ -1,14 +1,6 @@
 import type { ReactNode } from "react";
 import { useCallback, useRef, useState } from "react";
-import {
-  Check,
-  Clipboard,
-  LoaderCircle,
-  MessagesSquare,
-  Rocket,
-  Sparkles,
-  type LucideIcon,
-} from "lucide-react";
+import { Check, Clipboard, LoaderCircle } from "lucide-react";
 import { track } from "@vercel/analytics";
 import { Button } from "@/components/ui/button";
 import { getBootstrapPromptApiPath } from "@/lib/bootstrap-prompt";
@@ -18,7 +10,6 @@ type WizardStep = {
   eyebrow: string;
   title: string;
   description: string;
-  icon: LucideIcon;
   visual: ReactNode;
   action?: ReactNode;
 };
@@ -284,11 +275,11 @@ function BuildVisual(): ReactNode {
         strokeWidth="1.25"
         fill="none"
       >
-        <path d="M80 178 C 140 110, 180 110, 200 130" strokeLinecap="round" />
-        <path d="M320 178 C 260 110, 220 110, 200 130" strokeLinecap="round" />
+        <path d="M80 142 C 140 74, 180 74, 200 94" strokeLinecap="round" />
+        <path d="M320 142 C 260 74, 220 74, 200 94" strokeLinecap="round" />
       </g>
 
-      <g transform="translate(40 150)">
+      <g transform="translate(40 114)">
         <rect
           x="0"
           y="0"
@@ -324,7 +315,7 @@ function BuildVisual(): ReactNode {
         </text>
       </g>
 
-      <g transform="translate(152 112)">
+      <g transform="translate(152 76)">
         <rect
           x="0"
           y="0"
@@ -361,7 +352,7 @@ function BuildVisual(): ReactNode {
         </text>
       </g>
 
-      <g transform="translate(264 150)">
+      <g transform="translate(264 114)">
         <rect
           x="0"
           y="0"
@@ -643,7 +634,6 @@ const steps: WizardStep[] = [
     title: "Copy the prompt",
     description:
       "One click copies everything your coding agent needs to build and deploy on Databricks.",
-    icon: Clipboard,
     visual: <ClipboardVisual />,
     action: <CopyPromptButton />,
   },
@@ -653,7 +643,6 @@ const steps: WizardStep[] = [
     title: "Paste it into your coding agent",
     description:
       "Navigate to your projects folder (e.g. ~/projects), open your coding agent, and paste the prompt. It creates a new directory for your app and sets everything up inside it.",
-    icon: MessagesSquare,
     visual: <ChatVisual />,
   },
   {
@@ -662,7 +651,6 @@ const steps: WizardStep[] = [
     title: "Your agent scaffolds, wires, and iterates",
     description:
       "Your agent scaffolds the app, provisions whatever it needs, and iterates on the UI — all guided by your answers.",
-    icon: Sparkles,
     visual: <BuildVisual />,
   },
   {
@@ -671,7 +659,6 @@ const steps: WizardStep[] = [
     title: "Deploy to your workspace",
     description:
       "Once you're ready, just tell your agent to deploy — it ships your app to Databricks Apps. You get a live URL under your workspace, with data governance and authentication built in.",
-    icon: Rocket,
     visual: <ShipVisual />,
   },
 ];
@@ -684,7 +671,6 @@ function StepRow({
   index: number;
 }): ReactNode {
   const isReversed = index % 2 === 1;
-  const Icon = step.icon;
 
   return (
     <div
@@ -708,10 +694,6 @@ function StepRow({
           {step.description}
         </p>
         {step.action}
-        <div className="mt-5 flex w-fit items-center gap-2 rounded-full border border-black/10 bg-white/70 px-3 py-1.5 text-[11px] font-medium text-black/70 backdrop-blur-sm dark:border-white/12 dark:bg-white/6 dark:text-white/70">
-          <Icon className="h-3.5 w-3.5 text-db-lava" />
-          Step {step.number}
-        </div>
       </div>
       <div className={isReversed ? "md:[direction:ltr]" : ""}>
         <div className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl border border-black/10 bg-white shadow-[0_18px_48px_-24px_rgba(11,32,38,0.25)] dark:border-white/10 dark:bg-db-navy-light dark:shadow-[0_18px_48px_-24px_rgba(0,0,0,0.6)]">

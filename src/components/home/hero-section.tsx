@@ -90,17 +90,14 @@ export function HeroSection(): ReactNode {
     <section className="relative bg-db-oat-medium text-black dark:bg-black dark:text-white">
       <div className="container px-4 py-20 md:py-28">
         <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
-          <span className="mb-4 inline-block rounded-full border border-black/10 bg-white/60 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-black/50 backdrop-blur-sm dark:border-white/10 dark:bg-white/5 dark:text-white/50">
-            Databricks Developer Hub
-          </span>
           <h1 className="text-5xl leading-[1.08] font-medium tracking-tight md:text-7xl">
             Build <span className="text-db-lava">agentic applications</span> in
             minutes, not months.
           </h1>
           <p className="mt-6 max-w-2xl text-base leading-relaxed text-black/60 md:text-lg dark:text-white/60">
-            Your company already runs on Databricks. Build full-stack apps and
-            AI agents on top of it. Copy the prompt and your coding agent does
-            the rest.
+            Copy the prompt into Cursor, Claude Code, Codex, or any coding agent
+            — <br className="hidden md:inline" />
+            it will walk you through building a complete app, step by step.
           </p>
           <div className="mt-9 flex flex-col items-center gap-3">
             <Button
@@ -128,12 +125,6 @@ export function HeroSection(): ReactNode {
                 </span>
               )}
             </Button>
-            <p className="text-sm text-black/45 dark:text-white/45">
-              Open your agent in any folder and paste.
-              <br />
-              Works with Cursor, Claude Code, Codex, or your favorite coding
-              agent.
-            </p>
             <div className="mt-4 flex items-center gap-3">
               <button
                 type="button"

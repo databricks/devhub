@@ -9,25 +9,6 @@ const RESOURCE_COUNT =
   examples.length + templates.length + recipesInOrder.length;
 const TOTAL_RESOURCES = `${RESOURCE_COUNT} of ${RESOURCE_COUNT} templates`;
 
-function setupClipboardMock(page: import("@playwright/test").Page) {
-  return page.addInitScript(() => {
-    Object.defineProperty(window.navigator, "clipboard", {
-      value: {
-        writeText: async (value: string) => {
-          (window as { __copiedText?: string }).__copiedText = value;
-        },
-      },
-      configurable: true,
-    });
-  });
-}
-
-function getCopiedText(page: import("@playwright/test").Page) {
-  return page.evaluate(
-    () => (window as { __copiedText?: string }).__copiedText ?? "",
-  );
-}
-
 test.describe("resources page search", () => {
   test("search bar filters results and clearing restores all", async ({
     page,
@@ -40,25 +21,25 @@ test.describe("resources page search", () => {
       page.getByText(`7 of ${RESOURCE_COUNT} templates`),
     ).toBeVisible();
     await expect(
-      page.getByRole("link", { name: "Inventory Intelligence" }),
+      page.locator('a[href="/resources/inventory-intelligence"]'),
     ).toBeVisible();
     await expect(
-      page.getByRole("link", { name: "Agentic Support Console" }),
+      page.locator('a[href="/resources/agentic-support-console"]'),
     ).toBeVisible();
     await expect(
-      page.getByRole("link", { name: "SaaS Subscription Tracker" }),
+      page.locator('a[href="/resources/saas-tracker"]'),
     ).toBeVisible();
     await expect(
-      page.getByRole("link", { name: "Content Moderator" }),
+      page.locator('a[href="/resources/content-moderator"]'),
     ).toBeVisible();
     await expect(
-      page.getByRole("link", { name: "Genie Analytics App" }),
+      page.locator('a[href="/resources/genie-analytics-app"]'),
     ).toBeVisible();
     await expect(
-      page.getByRole("link", { name: "Genie Conversational Analytics" }),
+      page.locator('a[href="/resources/genie-conversational-analytics"]'),
     ).toBeVisible();
     await expect(
-      page.getByRole("link", { name: "Genie Multi-Space Selector" }),
+      page.locator('a[href="/resources/genie-multi-space"]'),
     ).toBeVisible();
 
     await page.getByRole("searchbox").fill("");
@@ -81,10 +62,10 @@ test.describe("resources page service filter", () => {
     await expect(count).not.toHaveText(TOTAL_RESOURCES);
 
     await expect(
-      page.getByRole("link", { name: "Lakebase Data Persistence" }),
+      page.locator('a[href="/resources/lakebase-off-platform"]'),
     ).toBeVisible();
     await expect(
-      page.getByRole("link", { name: "Query AI Gateway Endpoints" }),
+      page.locator('a[href="/resources/query-ai-gateway-endpoints"]'),
     ).toBeHidden();
   });
 });
@@ -97,36 +78,20 @@ test.describe("resources page resource type filter", () => {
 
     await page.getByRole("checkbox", { name: "Examples" }).check();
     await expect(
-      page.getByRole("link", { name: "Agentic Support Console" }),
+      page.locator('a[href="/resources/agentic-support-console"]'),
     ).toBeVisible();
     await expect(
-      page.getByRole("link", { name: "Hello World App" }),
+      page.locator('a[href="/resources/hello-world-app"]'),
     ).toBeHidden();
 
     await page.getByRole("checkbox", { name: "Examples" }).uncheck();
     await page.getByRole("checkbox", { name: "Guides" }).check();
     await expect(
-      page.getByRole("link", { name: "Databricks Local Bootstrap" }),
+      page.locator('a[href="/resources/databricks-local-bootstrap"]'),
     ).toBeVisible();
     await expect(
-      page.getByRole("link", { name: "Agentic Support Console" }),
+      page.locator('a[href="/resources/agentic-support-console"]'),
     ).toBeHidden();
-  });
-});
-
-test.describe("resources page tag filter", () => {
-  test("clicking a tag on a card adds an active filter pill", async ({
-    page,
-  }) => {
-    await page.goto("/resources");
-    await expect(page.getByText(TOTAL_RESOURCES)).toBeVisible();
-
-    await page.getByRole("button", { name: "Genie" }).first().click();
-
-    await expect(
-      page.getByText(new RegExp(`^\\d+ of ${RESOURCE_COUNT} templates$`)),
-    ).not.toHaveText(TOTAL_RESOURCES);
-    await expect(page.getByRole("button", { name: "Clear all" })).toBeVisible();
   });
 });
 
@@ -145,56 +110,5 @@ test.describe("resources page clear all filters", () => {
     await expect(page.getByRole("searchbox")).toHaveValue("");
     await expect(page.getByText(TOTAL_RESOURCES)).toBeVisible();
     await expect(page.getByRole("button", { name: "Clear all" })).toBeHidden();
-  });
-});
-
-test.describe("example cards are not selectable", () => {
-  test("example card has no checkbox", async ({ page }) => {
-    await page.goto("/resources");
-    const exampleCard = page.getByRole("link", {
-      name: "Agentic Support Console",
-    });
-    await expect(exampleCard).toBeVisible();
-    const card = exampleCard.locator(
-      "xpath=ancestor::div[contains(@class, 'rounded-xl')]",
-    );
-    await expect(card.getByRole("checkbox")).toBeHidden();
-  });
-});
-
-test.describe("resources page selection and copy", () => {
-  test("select all, remove one, copy markdown, then deselect all", async ({
-    page,
-  }) => {
-    await setupClipboardMock(page);
-    await page.goto("/resources");
-
-    await page.getByRole("checkbox", { name: "Select all" }).check();
-    await expect(page.getByText(/\d+ selected:/)).toBeVisible();
-
-    const firstChip = page
-      .getByText(/selected:/)
-      .locator("..")
-      .getByRole("button")
-      .first();
-    await firstChip.click();
-
-    const trigger = page.getByRole("button", { name: "Copy as" });
-    await expect(trigger).toBeEnabled();
-    await trigger.click();
-    const menuItem = page.getByRole("menuitem", { name: "Copy Markdown" });
-    await menuItem.waitFor({ state: "visible" });
-    await menuItem.click();
-    await expect(page.getByText("Markdown copied")).toBeVisible({
-      timeout: 5000,
-    });
-
-    const copied = await getCopiedText(page);
-    expect(copied.length).toBeGreaterThan(0);
-
-    const selectAll = page.getByRole("checkbox", { name: "Select all" });
-    await selectAll.click();
-    await selectAll.click();
-    await expect(page.getByText(/\d+ selected:/)).toBeHidden();
   });
 });

@@ -2,17 +2,17 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useFeatureFlags } from "@/lib/feature-flags";
 import { SERVICES, type Service } from "@/lib/recipes/recipes";
 
-export type ResourceType = "examples" | "guides";
+export type TemplateType = "examples" | "cookbooks";
 
-const ALL_RESOURCE_TYPES: ReadonlyArray<{
-  type: ResourceType;
+const ALL_TEMPLATE_TYPES: ReadonlyArray<{
+  type: TemplateType;
   label: string;
 }> = [
   { type: "examples", label: "Examples" },
-  { type: "guides", label: "Guides" },
+  { type: "cookbooks", label: "Cookbooks" },
 ];
 
-export function ResourceFilters({
+export function TemplateFilters({
   selectedServices,
   onToggleService,
   selectedResourceTypes,
@@ -20,14 +20,14 @@ export function ResourceFilters({
 }: {
   selectedServices: Set<Service>;
   onToggleService: (service: Service) => void;
-  selectedResourceTypes: Set<ResourceType>;
-  onToggleResourceType: (type: ResourceType) => void;
+  selectedResourceTypes: Set<TemplateType>;
+  onToggleResourceType: (type: TemplateType) => void;
 }) {
   const { examplesEnabled } = useFeatureFlags();
 
   const visibleResourceTypes = examplesEnabled
-    ? ALL_RESOURCE_TYPES
-    : ALL_RESOURCE_TYPES.filter((rt) => rt.type !== "examples");
+    ? ALL_TEMPLATE_TYPES
+    : ALL_TEMPLATE_TYPES.filter((rt) => rt.type !== "examples");
 
   return (
     <nav className="space-y-6" aria-label="Filters">

@@ -1,12 +1,12 @@
 import { XIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import type { ResourceItem } from "./resource-card";
+import type { TemplateItem } from "./template-card";
 
 export function SelectedItems({
   items,
   onRemove,
 }: {
-  items: ResourceItem[];
+  items: TemplateItem[];
   onRemove: (id: string) => void;
 }) {
   if (items.length === 0) return null;

@@ -4,8 +4,8 @@ import Layout from "@theme/Layout";
 import { MDXProvider } from "@mdx-js/react";
 import { useRef, type ReactNode } from "react";
 import { TemplateUsageBanner } from "@/components/template-usage-banner";
-import { RecipePre } from "@/components/templates/recipe-code-block";
-import { RecipeToc } from "@/components/templates/recipe-toc";
+import { RecipePre } from "@/components/cookbooks/recipe-code-block";
+import { RecipeToc } from "@/components/cookbooks/recipe-toc";
 import type { Cookbook } from "@/lib/recipes/recipes";
 
 const recipeComponents = { pre: RecipePre };

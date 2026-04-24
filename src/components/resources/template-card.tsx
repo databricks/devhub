@@ -4,20 +4,20 @@ import type { Example, Recipe, Cookbook } from "@/lib/recipes/recipes";
 import { FallbackCardArt } from "@/components/examples/fallback-card-art";
 import { ResourcePreviewImage } from "@/components/examples/resource-preview-image";
 
-export type ResourceItem =
+export type TemplateItem =
   | { kind: "example"; data: Example }
-  | { kind: "template"; data: Cookbook }
+  | { kind: "cookbook"; data: Cookbook }
   | { kind: "recipe"; data: Recipe };
 
-function getResourceHref(item: ResourceItem): string {
+function getResourceHref(item: TemplateItem): string {
   return `/templates/${item.data.id}`;
 }
 
-export function ResourceCard({
+export function TemplateCard({
   item,
   index,
 }: {
-  item: ResourceItem;
+  item: TemplateItem;
   index: number;
 }) {
   const name = item.data.name;

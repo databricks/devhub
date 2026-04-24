@@ -18,8 +18,8 @@ import {
 import {
   RecipePre,
   RecipeCodeBlock,
-} from "@/components/templates/recipe-code-block";
-import { RecipeToc } from "@/components/templates/recipe-toc";
+} from "@/components/cookbooks/recipe-code-block";
+import { RecipeToc } from "@/components/cookbooks/recipe-toc";
 import {
   buildMarkdownWithAboutDevhubLeadIn,
   useAboutDevhubBody,

@@ -5,8 +5,8 @@ import { MDXProvider } from "@mdx-js/react";
 import { useRef, type ReactNode } from "react";
 import { AIExportMenu } from "@/components/ai-export-menu";
 import { Badge } from "@/components/ui/badge";
-import { RecipePre } from "@/components/templates/recipe-code-block";
-import { RecipeToc } from "@/components/templates/recipe-toc";
+import { RecipePre } from "@/components/cookbooks/recipe-code-block";
+import { RecipeToc } from "@/components/cookbooks/recipe-toc";
 import { solutions } from "@/lib/solutions/solutions";
 import { useRawSolutionMarkdown } from "@/lib/use-raw-content-markdown";
 

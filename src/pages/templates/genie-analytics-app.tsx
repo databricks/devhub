@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { CookbookDetail } from "@/components/templates/cookbook-detail";
+import { CookbookDetail } from "@/components/cookbooks/cookbook-detail";
 import { cookbooks, recipes } from "@/lib/recipes/recipes";
 import {
   useAllRecipeSections,

@@ -1,7 +1,7 @@
 import { XIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import type { Service } from "@/lib/recipes/recipes";
-import type { ResourceType } from "./resource-filters";
+import type { TemplateType } from "./template-filters";
 
 export function ActiveFilters({
   activeTags,
@@ -16,8 +16,8 @@ export function ActiveFilters({
   onRemoveTag: (tag: string) => void;
   selectedServices: Set<Service>;
   onRemoveService: (service: Service) => void;
-  selectedResourceTypes: Set<ResourceType>;
-  onRemoveResourceType: (type: ResourceType) => void;
+  selectedResourceTypes: Set<TemplateType>;
+  onRemoveResourceType: (type: TemplateType) => void;
   onClearAll: () => void;
 }) {
   const hasFilters =

@@ -80,7 +80,7 @@ function createFolderRouteModuleSource(
 
   if (entryType === "recipe") {
     return `import type { ReactNode } from "react";
-import { RecipeDetail } from "@/components/templates/recipe-detail";
+import { RecipeDetail } from "@/components/cookbooks/recipe-detail";
 ${imports.join("\n")}
 
 export default function RecipeEntryPage(): ReactNode {

@@ -50,8 +50,8 @@ describe("stripPrerequisitesHeading", () => {
 describe("composeCookbookMarkdown", () => {
   test("hoists every recipe's prereqs into one combined section with H3 per recipe", () => {
     const md = composeCookbookMarkdown({
-      templateName: "Cookbook X",
-      templateDescription: "desc",
+      cookbookName: "Cookbook X",
+      cookbookDescription: "desc",
       recipes: [recipeA, recipeB],
     });
 
@@ -73,8 +73,8 @@ describe("composeCookbookMarkdown", () => {
 
   test("prepends intro content above the Prerequisites section", () => {
     const md = composeCookbookMarkdown({
-      templateName: "Cookbook",
-      templateDescription: "desc",
+      cookbookName: "Cookbook",
+      cookbookDescription: "desc",
       intro: "## What you are building\n\nSome paragraph.",
       recipes: [recipeA],
     });
@@ -87,8 +87,8 @@ describe("composeCookbookMarkdown", () => {
 
   test("skips Prerequisites section when no recipe has prerequisites", () => {
     const md = composeCookbookMarkdown({
-      templateName: "Cookbook",
-      templateDescription: "desc",
+      cookbookName: "Cookbook",
+      cookbookDescription: "desc",
       recipes: [recipeNoExtras],
     });
     expect(md).not.toContain("## Prerequisites");
@@ -97,8 +97,8 @@ describe("composeCookbookMarkdown", () => {
 
   test("emits combined Deployment section after content when any recipe has a deployment", () => {
     const md = composeCookbookMarkdown({
-      templateName: "Cookbook",
-      templateDescription: "desc",
+      cookbookName: "Cookbook",
+      cookbookDescription: "desc",
       recipes: [recipeA, recipeB],
     });
 
@@ -111,8 +111,8 @@ describe("composeCookbookMarkdown", () => {
 
   test("omits Deployment section when no recipe has deployment content", () => {
     const md = composeCookbookMarkdown({
-      templateName: "Cookbook",
-      templateDescription: "desc",
+      cookbookName: "Cookbook",
+      cookbookDescription: "desc",
       recipes: [recipeA],
     });
     expect(md).not.toContain("## Deployment");
@@ -120,8 +120,8 @@ describe("composeCookbookMarkdown", () => {
 
   test("drops the ## Prerequisites heading from each recipe's body", () => {
     const md = composeCookbookMarkdown({
-      templateName: "Cookbook",
-      templateDescription: "desc",
+      cookbookName: "Cookbook",
+      cookbookDescription: "desc",
       recipes: [recipeA, recipeB],
     });
     const prereqHeadings = md.match(/^## Prerequisites$/gm);
@@ -132,8 +132,8 @@ describe("composeCookbookMarkdown", () => {
 describe("buildCookbookMarkdownDocument", () => {
   test("wraps composed body with frontmatter and title", () => {
     const md = buildCookbookMarkdownDocument({
-      templateName: "Cookbook X",
-      templateDescription: 'Desc with "quotes".',
+      cookbookName: "Cookbook X",
+      cookbookDescription: 'Desc with "quotes".',
       recipes: [recipeA],
     });
     expect(md.startsWith("---\n")).toBe(true);

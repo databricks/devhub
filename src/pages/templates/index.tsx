@@ -2,13 +2,13 @@ import Layout from "@theme/Layout";
 import { FilterIcon } from "lucide-react";
 import { useCallback, useMemo, useState, type ReactNode } from "react";
 import { ActiveFilters } from "@/components/resources/active-filters";
-import type { ResourceItem } from "@/components/resources/resource-card";
-import { ResourceCard } from "@/components/resources/resource-card";
+import type { TemplateItem } from "@/components/resources/template-card";
+import { TemplateCard } from "@/components/resources/template-card";
 import {
-  ResourceFilters,
-  type ResourceType,
-} from "@/components/resources/resource-filters";
-import { ResourceSearch } from "@/components/resources/resource-search";
+  TemplateFilters,
+  type TemplateType,
+} from "@/components/resources/template-filters";
+import { TemplateSearch } from "@/components/resources/resource-search";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -29,26 +29,26 @@ import { useFeatureFlags } from "@/lib/feature-flags";
 function buildResourceItems(
   includeDrafts: boolean,
   includeExamples: boolean,
-): ResourceItem[] {
+): TemplateItem[] {
   const publishedExamples = includeExamples
     ? filterPublished(examples, includeDrafts)
     : [];
   const publishedTemplates = filterPublished(cookbooks, includeDrafts);
   const publishedRecipes = filterPublished(recipesInOrder, includeDrafts);
 
-  const exampleItems: ResourceItem[] = publishedExamples.map((e) => ({
+  const exampleItems: TemplateItem[] = publishedExamples.map((e) => ({
     kind: "example",
     data: e,
   }));
-  const templateItems: ResourceItem[] = publishedTemplates.map((t) => ({
-    kind: "template",
+  const cookbookItems: TemplateItem[] = publishedTemplates.map((t) => ({
+    kind: "cookbook",
     data: t,
   }));
-  const recipeItems: ResourceItem[] = publishedRecipes.map((r) => ({
+  const recipeItems: TemplateItem[] = publishedRecipes.map((r) => ({
     kind: "recipe",
     data: r,
   }));
-  return [...exampleItems, ...templateItems, ...recipeItems];
+  return [...exampleItems, ...cookbookItems, ...recipeItems];
 }
 
 export default function ResourcesPage(): ReactNode {
@@ -57,7 +57,7 @@ export default function ResourcesPage(): ReactNode {
     new Set(),
   );
   const [selectedResourceTypes, setSelectedResourceTypes] = useState<
-    Set<ResourceType>
+    Set<TemplateType>
   >(new Set());
   const [activeTags, setActiveTags] = useState<Set<string>>(new Set());
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
@@ -76,7 +76,7 @@ export default function ResourcesPage(): ReactNode {
       if (selectedResourceTypes.size > 0 && selectedResourceTypes.size < 2) {
         const isExample = item.kind === "example";
         if (selectedResourceTypes.has("examples") && !isExample) return false;
-        if (selectedResourceTypes.has("guides") && isExample) return false;
+        if (selectedResourceTypes.has("cookbooks") && isExample) return false;
       }
 
       if (selectedServices.size > 0) {
@@ -113,7 +113,7 @@ export default function ResourcesPage(): ReactNode {
     });
   }, []);
 
-  const handleToggleResourceType = useCallback((type: ResourceType) => {
+  const handleToggleResourceType = useCallback((type: TemplateType) => {
     setSelectedResourceTypes((prev) => {
       const next = new Set(prev);
       if (next.has(type)) next.delete(type);
@@ -143,7 +143,7 @@ export default function ResourcesPage(): ReactNode {
     selectedResourceTypes.size > 0;
 
   const filtersSidebar = (
-    <ResourceFilters
+    <TemplateFilters
       selectedServices={selectedServices}
       onToggleService={handleToggleService}
       selectedResourceTypes={selectedResourceTypes}
@@ -193,7 +193,7 @@ export default function ResourcesPage(): ReactNode {
                 )}
               </Button>
               <div className="flex-1">
-                <ResourceSearch value={searchQuery} onChange={setSearchQuery} />
+                <TemplateSearch value={searchQuery} onChange={setSearchQuery} />
               </div>
             </div>
 
@@ -242,7 +242,7 @@ export default function ResourcesPage(): ReactNode {
                 ) : (
                   <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
                     {filteredItems.map((item, index) => (
-                      <ResourceCard
+                      <TemplateCard
                         key={item.data.id}
                         item={item}
                         index={index}

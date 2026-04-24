@@ -26,7 +26,7 @@ The fastest path is to copy a [resource guide](/templates) into your coding agen
 
 Each guide includes the [Create a Lakebase Instance](/templates/lakebase-create-instance) resource, which walks through project creation and connection value collection.
 
-To scaffold manually with the CLI, run `databricks apps init` and select the **Lakebase** plugin when prompted. See [Apps Plugins](/docs/apps/plugins) for details.
+To scaffold manually with the CLI, run `databricks apps init` and select the **Lakebase** plugin when prompted. See [Apps Development](/docs/apps/development) for details.
 
 ## Customize your app
 

@@ -185,8 +185,6 @@ const sidebars: SidebarsConfig = {
         "apps/overview",
         "apps/quickstart",
         "apps/core-concepts",
-        "apps/appkit",
-        "apps/plugins",
         "apps/development",
       ],
     },

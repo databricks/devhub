@@ -343,7 +343,7 @@ export function PillarStrip(): ReactNode {
             Databricks. Same workspace, same identity, same governance —
             composed by{" "}
             <Link
-              to="/docs/apps/appkit"
+              to="/docs/apps/overview"
               className="font-medium text-black no-underline underline-offset-2 hover:underline dark:text-white"
             >
               AppKit

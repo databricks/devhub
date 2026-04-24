@@ -176,24 +176,24 @@ Example for an example:
 
    ```ts
    createExample({
-   	id: "inventory-intelligence",
-   	// ...
-   	previewImageLightUrl:
-   		"/img/examples/inventory-intelligence-dashboard-light.png",
-   	previewImageDarkUrl:
-   		"/img/examples/inventory-intelligence-dashboard-dark.png",
-   	// optional carousel:
-   	galleryImages: [
-   		{
-   			lightUrl: "/img/examples/inventory-intelligence-dashboard-light.png",
-   			darkUrl: "/img/examples/inventory-intelligence-dashboard-dark.png",
-   		},
-   		{
-   			lightUrl:
-   				"/img/examples/inventory-intelligence-replenishment-light.png",
-   			darkUrl: "/img/examples/inventory-intelligence-replenishment-dark.png",
-   		},
-   	],
+     id: "inventory-intelligence",
+     // ...
+     previewImageLightUrl:
+       "/img/examples/inventory-intelligence-dashboard-light.png",
+     previewImageDarkUrl:
+       "/img/examples/inventory-intelligence-dashboard-dark.png",
+     // optional carousel:
+     galleryImages: [
+       {
+         lightUrl: "/img/examples/inventory-intelligence-dashboard-light.png",
+         darkUrl: "/img/examples/inventory-intelligence-dashboard-dark.png",
+       },
+       {
+         lightUrl:
+           "/img/examples/inventory-intelligence-replenishment-light.png",
+         darkUrl: "/img/examples/inventory-intelligence-replenishment-dark.png",
+       },
+     ],
    });
    ```
 

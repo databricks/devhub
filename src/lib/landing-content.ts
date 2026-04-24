@@ -3,8 +3,8 @@ import type { ComponentType } from "react";
 import {
   examples,
   filterPublished,
-  templatePreviewItems,
-  templates,
+  cookbookPreviewItems,
+  cookbooks,
   type Service,
 } from "@/lib/recipes/recipes";
 
@@ -62,9 +62,9 @@ export function buildLandingResources(
   const publishedExamples = includeExamples
     ? filterPublished(examples, includeDrafts)
     : [];
-  const publishedTemplates = filterPublished(templates, includeDrafts);
+  const publishedTemplates = filterPublished(cookbooks, includeDrafts);
   const publishedTemplateIds = new Set(publishedTemplates.map((t) => t.id));
-  const publishedPreviewItems = templatePreviewItems.filter((t) =>
+  const publishedPreviewItems = cookbookPreviewItems.filter((t) =>
     publishedTemplateIds.has(t.id),
   );
 

@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
-import { TemplateDetail } from "@/components/templates/template-detail";
-import { templates, recipes } from "@/lib/recipes/recipes";
+import { CookbookDetail } from "@/components/templates/template-detail";
+import { cookbooks, recipes } from "@/lib/recipes/recipes";
 import {
   useAllRecipeSections,
   useCookbookIntro,
@@ -20,16 +20,16 @@ import LakebaseDataPersistenceContent from "@site/content/recipes/lakebase-data-
 import LakebaseChatPersistencePrereqs from "@site/content/recipes/lakebase-chat-persistence/prerequisites.md";
 import LakebaseChatPersistenceContent from "@site/content/recipes/lakebase-chat-persistence/content.md";
 
-const TEMPLATE_ID = "ai-chat-app";
+const COOKBOOK_ID = "ai-chat-app";
 
 export default function AiChatAppPage(): ReactNode {
-  const template = templates.find((t) => t.id === TEMPLATE_ID);
-  if (!template) throw new Error(`Template ${TEMPLATE_ID} not found`);
+  const cookbook = cookbooks.find((t) => t.id === COOKBOOK_ID);
+  if (!cookbook) throw new Error(`Cookbook ${COOKBOOK_ID} not found`);
 
   const sectionsBySlug = useAllRecipeSections();
-  const intro = useCookbookIntro(TEMPLATE_ID);
+  const intro = useCookbookIntro(COOKBOOK_ID);
 
-  const recipeInputs = template.recipeIds.map((id) => {
+  const recipeInputs = cookbook.recipeIds.map((id) => {
     const recipe = recipes.find((r) => r.id === id);
     const sections = sectionsBySlug[id];
     if (!recipe || !sections) {
@@ -39,14 +39,14 @@ export default function AiChatAppPage(): ReactNode {
   });
 
   const rawMarkdown = composeCookbookMarkdown({
-    templateName: template.name,
-    templateDescription: template.description,
+    cookbookName: cookbook.name,
+    cookbookDescription: cookbook.description,
     intro,
     recipes: recipeInputs,
   });
 
   return (
-    <TemplateDetail template={template} rawMarkdown={rawMarkdown}>
+    <CookbookDetail cookbook={cookbook} rawMarkdown={rawMarkdown}>
       <Intro />
       <h2 id="prerequisites">Prerequisites</h2>
       <BootstrapPrereqs />
@@ -67,6 +67,6 @@ export default function AiChatAppPage(): ReactNode {
       <LakebaseDataPersistenceContent />
       <hr />
       <LakebaseChatPersistenceContent />
-    </TemplateDetail>
+    </CookbookDetail>
   );
 }

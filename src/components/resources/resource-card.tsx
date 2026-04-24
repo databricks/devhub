@@ -1,12 +1,12 @@
 import Link from "@docusaurus/Link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import type { Example, Recipe, Template } from "@/lib/recipes/recipes";
+import type { Example, Recipe, Cookbook } from "@/lib/recipes/recipes";
 import { FallbackCardArt } from "@/components/examples/fallback-card-art";
 import { ResourcePreviewImage } from "@/components/examples/resource-preview-image";
 
 export type ResourceItem =
   | { kind: "example"; data: Example }
-  | { kind: "template"; data: Template }
+  | { kind: "template"; data: Cookbook }
   | { kind: "recipe"; data: Recipe };
 
 function getResourceHref(item: ResourceItem): string {

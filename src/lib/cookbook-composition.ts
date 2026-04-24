@@ -7,8 +7,8 @@ export type CookbookRecipeInput = {
 };
 
 export type CookbookCompositionInput = {
-  templateName: string;
-  templateDescription: string;
+  cookbookName: string;
+  cookbookDescription: string;
   intro?: string;
   recipes: CookbookRecipeInput[];
 };
@@ -86,13 +86,13 @@ export function buildCookbookMarkdownDocument(
 
   const header = [
     "---",
-    `title: "${escape(input.templateName)}"`,
-    `summary: "${escape(input.templateDescription)}"`,
+    `title: "${escape(input.cookbookName)}"`,
+    `summary: "${escape(input.cookbookDescription)}"`,
     "---",
     "",
-    `# ${input.templateName}`,
+    `# ${input.cookbookName}`,
     "",
-    input.templateDescription,
+    input.cookbookDescription,
     "",
   ].join("\n");
 

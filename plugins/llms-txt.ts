@@ -3,7 +3,7 @@ import path from "path";
 import type { LoadContext, Plugin } from "@docusaurus/types";
 import { solutions } from "../src/lib/solutions/solutions";
 import {
-  templates,
+  cookbooks,
   recipesInOrder,
   examples,
   filterPublished,
@@ -138,7 +138,7 @@ function readDoc(
 function generateLlmsTxt(baseUrl: string, docsDir: string): string {
   const includeDrafts = showDrafts();
   const includeExamples = examplesEnabled();
-  const publishedTemplates = filterPublished(templates, includeDrafts);
+  const publishedTemplates = filterPublished(cookbooks, includeDrafts);
   const publishedRecipes = filterPublished(recipesInOrder, includeDrafts);
   const publishedExamples = includeExamples
     ? filterPublished(examples, includeDrafts)

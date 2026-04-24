@@ -16,7 +16,7 @@ import {
   filterPublished,
   recipes,
   recipesInOrder,
-  templates,
+  cookbooks,
 } from "../src/lib/recipes/recipes";
 import { showDrafts, examplesEnabled } from "../src/lib/feature-flags-server";
 import { solutions } from "../src/lib/solutions/solutions";
@@ -123,7 +123,7 @@ function readExampleMarkdown(rootDir: string, slug: string): string {
     );
   }
   const includedResources = [
-    ...example.templateIds.map((id) => templates.find((t) => t.id === id)),
+    ...example.cookbookIds.map((id) => cookbooks.find((t) => t.id === id)),
     ...example.recipeIds.map((id) => recipes.find((r) => r.id === id)),
   ].filter(Boolean);
   if (includedResources.length > 0) {
@@ -139,7 +139,7 @@ function readExampleMarkdown(rootDir: string, slug: string): string {
 }
 
 function readTemplateMarkdown(rootDir: string, slug: string): string {
-  const template = templates.find((entry) => entry.id === slug);
+  const template = cookbooks.find((entry) => entry.id === slug);
   if (!template) {
     throw new Error(`Template page not found: "${slug}"`);
   }
@@ -160,8 +160,8 @@ function readTemplateMarkdown(rootDir: string, slug: string): string {
   });
 
   return buildCookbookMarkdownDocument({
-    templateName: template.name,
-    templateDescription: template.description,
+    cookbookName: template.name,
+    cookbookDescription: template.description,
     intro: readCookbookIntro(rootDir, slug),
     recipes: recipeInputs,
   });
@@ -174,7 +174,7 @@ function readResourceMarkdown(rootDir: string, slug: string): string {
   if (hasContentSlug(rootDir, "examples", slug)) {
     return readExampleMarkdown(rootDir, slug);
   }
-  const template = templates.find((t) => t.id === slug);
+  const template = cookbooks.find((t) => t.id === slug);
   if (template) {
     return readTemplateMarkdown(rootDir, slug);
   }
@@ -185,7 +185,7 @@ function readResourceMarkdown(rootDir: string, slug: string): string {
 function readResourcesIndex(): string {
   const includeDrafts = showDrafts();
   const includeExamples = examplesEnabled();
-  const publishedTemplates = filterPublished(templates, includeDrafts);
+  const publishedTemplates = filterPublished(cookbooks, includeDrafts);
   const publishedRecipes = filterPublished(recipesInOrder, includeDrafts);
   const publishedExamples = includeExamples
     ? filterPublished(examples, includeDrafts)

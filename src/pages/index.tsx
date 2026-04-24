@@ -3,7 +3,6 @@ import Layout from "@theme/Layout";
 import type { ReactNode } from "react";
 import { DecisionMakerCta } from "@/components/home/decision-maker-cta";
 import { HeroSection } from "@/components/home/hero-section";
-import { PillarStrip } from "@/components/home/pillar-strip";
 import { TemplatePreview } from "@/components/home/template-preview";
 import { WizardFlow } from "@/components/home/wizard-flow";
 
@@ -36,7 +35,6 @@ export default function Home(): ReactNode {
       <main>
         <HeroSection />
         <WizardFlow />
-        {/* <PillarStrip /> */}
         <TemplatePreview />
         <DecisionMakerCta />
       </main>

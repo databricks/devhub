@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
-import { TemplateDetail } from "@/components/templates/template-detail";
-import { templates, recipes } from "@/lib/recipes/recipes";
+import { CookbookDetail } from "@/components/templates/template-detail";
+import { cookbooks, recipes } from "@/lib/recipes/recipes";
 import {
   useAllRecipeSections,
   useCookbookIntro,
@@ -11,16 +11,16 @@ import BootstrapContent from "@site/content/recipes/databricks-local-bootstrap/c
 import GenieConversationalAnalyticsPrereqs from "@site/content/recipes/genie-conversational-analytics/prerequisites.md";
 import GenieConversationalAnalyticsContent from "@site/content/recipes/genie-conversational-analytics/content.md";
 
-const TEMPLATE_ID = "genie-analytics-app";
+const COOKBOOK_ID = "genie-analytics-app";
 
 export default function GenieAnalyticsAppPage(): ReactNode {
-  const template = templates.find((t) => t.id === TEMPLATE_ID);
-  if (!template) throw new Error(`Template ${TEMPLATE_ID} not found`);
+  const cookbook = cookbooks.find((t) => t.id === COOKBOOK_ID);
+  if (!cookbook) throw new Error(`Cookbook ${COOKBOOK_ID} not found`);
 
   const sectionsBySlug = useAllRecipeSections();
-  const intro = useCookbookIntro(TEMPLATE_ID);
+  const intro = useCookbookIntro(COOKBOOK_ID);
 
-  const recipeInputs = template.recipeIds.map((id) => {
+  const recipeInputs = cookbook.recipeIds.map((id) => {
     const recipe = recipes.find((r) => r.id === id);
     const sections = sectionsBySlug[id];
     if (!recipe || !sections) {
@@ -30,14 +30,14 @@ export default function GenieAnalyticsAppPage(): ReactNode {
   });
 
   const rawMarkdown = composeCookbookMarkdown({
-    templateName: template.name,
-    templateDescription: template.description,
+    cookbookName: cookbook.name,
+    cookbookDescription: cookbook.description,
     intro,
     recipes: recipeInputs,
   });
 
   return (
-    <TemplateDetail template={template} rawMarkdown={rawMarkdown}>
+    <CookbookDetail cookbook={cookbook} rawMarkdown={rawMarkdown}>
       <h2 id="prerequisites">Prerequisites</h2>
       <BootstrapPrereqs />
       <GenieConversationalAnalyticsPrereqs />
@@ -45,6 +45,6 @@ export default function GenieAnalyticsAppPage(): ReactNode {
       <BootstrapContent />
       <hr />
       <GenieConversationalAnalyticsContent />
-    </TemplateDetail>
+    </CookbookDetail>
   );
 }

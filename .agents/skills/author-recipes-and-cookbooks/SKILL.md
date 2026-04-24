@@ -1,33 +1,31 @@
 ---
 name: author-recipes-and-cookbooks
-description: Author and maintain DevHub resources on `dev.databricks.com/resources`, including standalone recipes (`content/recipes/*.md`), cookbooks/templates (metadata in `src/lib/recipes/recipes.ts` plus composition pages in `src/pages/resources/*.tsx`), and examples (`content/examples/*.md` plus full app code in `examples/`). Use when creating a new recipe, updating an existing recipe, creating a new cookbook/template from multiple recipes, creating a new example with full working code, adjusting prerequisites/tags/descriptions, or rewriting content to be both copy-pastable for coding agents and readable for humans.
+description: Author and maintain DevHub templates on `dev.databricks.com/templates`, including standalone recipes (`content/recipes/*.md`), cookbooks (metadata in `src/lib/recipes/recipes.ts` plus composition pages in `src/pages/templates/*.tsx`), and examples (`content/examples/*.md` plus full app code in `examples/`). Use when creating a new recipe, updating an existing recipe, creating a new cookbook from multiple recipes, creating a new example with full working code, adjusting prerequisites/tags/descriptions, or rewriting content to be both copy-pastable for coding agents and readable for humans.
 ---
 
 # Author Recipes, Cookbooks, And Examples
 
 ## Overview
 
-Use this skill to add or update DevHub resources with consistent structure, metadata, and writing quality.
-Treat each resource as both an execution prompt for agents and a learning guide for humans.
+Use this skill to add or update DevHub templates with consistent structure, metadata, and writing quality.
+Treat each template as both an execution prompt for agents and a learning guide for humans.
 
-## Resource Hierarchy
+## Template Hierarchy
 
-Three tiers of resources exist, from atomic to comprehensive:
+Three tiers of templates exist, from atomic to comprehensive:
 
 1. **Recipe** -- one atomic guide for exactly one outcome.
-2. **Cookbook (Template)** -- a complete end-to-end use case composed from multiple recipes.
+2. **Cookbook** -- a complete end-to-end use case composed from multiple recipes.
 3. **Example** -- a full working codebase that combines cookbooks and recipes with additional narrative and deployable code.
 
-All three live at `/resources/:id` (flat URL hierarchy). In the UI, cookbooks and recipes are called "Guides" in the UI; examples are "Examples."
+All three live at `/templates/:id` (flat URL hierarchy).
 
 ## Use The Shared Vocabulary
 
-- Treat `template` and `cookbook` as synonyms in the codebase (the type is `Template`, the UI says "Guide").
-- The user-facing filter on `/resources` is "Examples" vs "Guides" (no cookbook/recipe distinction shown to users).
-- All resource slugs must be globally unique across examples, templates, and recipes. The content-entries plugin validates this at build time.
+- In the UI, recipes, cookbooks, and examples are all called "Templates" (no recipe/cookbook/example distinction shown to users).
+- All template slugs must be globally unique across recipes, cookbooks, and examples. The content-entries plugin validates this at build time.
 
-One word for all: Resources
-Two words for all: Guides and Examples
+One word for all: Templates
 
 ## Choose The Authoring Path
 
@@ -58,19 +56,19 @@ Two words for all: Guides and Examples
 8. Keep recipe metadata and markdown content aligned (name, intent, and scope must match).
 9. Verify the slug does not collide with any existing template or example id.
 
-## Author A Cookbook (Template)
+## Author A Cookbook
 
 1. Confirm the cookbook covers a full standalone use case.
 2. Select recipes in the intended execution order.
 3. Update `src/lib/recipes/recipes.ts`:
-   - add or update an entry in `templates`
+   - add or update an entry in `cookbooks`
    - set `id`, `name`, `description`, `recipeIds`
-   - rely on `createTemplate()` to derive `tags` and `services`
-4. Create or update `src/pages/resources/<template-id>.tsx` using the existing cookbook pattern:
-   - import `TemplateDetail`, `templates`, `useAllRawRecipeMarkdown`
+   - rely on `createCookbook()` to derive `tags` and `services`
+4. Create or update `src/pages/templates/<cookbook-id>.tsx` using the existing cookbook pattern:
+   - import `CookbookDetail`, `templates`, `useAllRawRecipeMarkdown`
    - import each recipe markdown module from `@site/content/recipes/...`
-   - select template via `templates.find((t) => t.id === "<template-id>")`
-   - build `rawMarkdown` from `template.recipeIds` joined with `\n\n---\n\n`
+   - select cookbook via `cookbooks.find((t) => t.id === "<cookbook-id>")`
+   - build `rawMarkdown` from `cookbook.recipeIds` joined with `\n\n---\n\n`
    - render recipes in the same order as `recipeIds`, separated with `<hr />`
 5. Keep cookbook pages declarative and minimal; avoid extra logic not needed for composition.
 6. Verify the slug does not collide with any existing recipe or example id.

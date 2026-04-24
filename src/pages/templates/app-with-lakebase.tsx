@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
-import { TemplateDetail } from "@/components/templates/template-detail";
-import { templates, recipes } from "@/lib/recipes/recipes";
+import { CookbookDetail } from "@/components/templates/template-detail";
+import { cookbooks, recipes } from "@/lib/recipes/recipes";
 import {
   useAllRecipeSections,
   useCookbookIntro,
@@ -13,16 +13,16 @@ import LakebaseCreateInstanceContent from "@site/content/recipes/lakebase-create
 import LakebaseDataPersistencePrereqs from "@site/content/recipes/lakebase-data-persistence/prerequisites.md";
 import LakebaseDataPersistenceContent from "@site/content/recipes/lakebase-data-persistence/content.md";
 
-const TEMPLATE_ID = "app-with-lakebase";
+const COOKBOOK_ID = "app-with-lakebase";
 
 export default function AppWithLakebasePage(): ReactNode {
-  const template = templates.find((t) => t.id === TEMPLATE_ID);
-  if (!template) throw new Error(`Template ${TEMPLATE_ID} not found`);
+  const cookbook = cookbooks.find((t) => t.id === COOKBOOK_ID);
+  if (!cookbook) throw new Error(`Cookbook ${COOKBOOK_ID} not found`);
 
   const sectionsBySlug = useAllRecipeSections();
-  const intro = useCookbookIntro(TEMPLATE_ID);
+  const intro = useCookbookIntro(COOKBOOK_ID);
 
-  const recipeInputs = template.recipeIds.map((id) => {
+  const recipeInputs = cookbook.recipeIds.map((id) => {
     const recipe = recipes.find((r) => r.id === id);
     const sections = sectionsBySlug[id];
     if (!recipe || !sections) {
@@ -32,14 +32,14 @@ export default function AppWithLakebasePage(): ReactNode {
   });
 
   const rawMarkdown = composeCookbookMarkdown({
-    templateName: template.name,
-    templateDescription: template.description,
+    cookbookName: cookbook.name,
+    cookbookDescription: cookbook.description,
     intro,
     recipes: recipeInputs,
   });
 
   return (
-    <TemplateDetail template={template} rawMarkdown={rawMarkdown}>
+    <CookbookDetail cookbook={cookbook} rawMarkdown={rawMarkdown}>
       <h2 id="prerequisites">Prerequisites</h2>
       <BootstrapPrereqs />
       <LakebaseCreateInstancePrereqs />
@@ -50,6 +50,6 @@ export default function AppWithLakebasePage(): ReactNode {
       <LakebaseCreateInstanceContent />
       <hr />
       <LakebaseDataPersistenceContent />
-    </TemplateDetail>
+    </CookbookDetail>
   );
 }

@@ -21,7 +21,7 @@ import {
   examples,
   filterPublished,
   recipesInOrder,
-  templates,
+  cookbooks,
   type Service,
 } from "@/lib/recipes/recipes";
 import { useFeatureFlags } from "@/lib/feature-flags";
@@ -33,7 +33,7 @@ function buildResourceItems(
   const publishedExamples = includeExamples
     ? filterPublished(examples, includeDrafts)
     : [];
-  const publishedTemplates = filterPublished(templates, includeDrafts);
+  const publishedTemplates = filterPublished(cookbooks, includeDrafts);
   const publishedRecipes = filterPublished(recipesInOrder, includeDrafts);
 
   const exampleItems: ResourceItem[] = publishedExamples.map((e) => ({

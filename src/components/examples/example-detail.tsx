@@ -31,7 +31,7 @@ import {
   EXAMPLE_AGENT_OUTCOME_BULLETS_INIT,
 } from "@/lib/examples/build-example-markdown";
 import type { Example } from "@/lib/recipes/recipes";
-import { templates, recipes } from "@/lib/recipes/recipes";
+import { cookbooks, recipes } from "@/lib/recipes/recipes";
 import { useExampleSections } from "@/lib/use-raw-content-markdown";
 import { joinContentSections } from "@/lib/content-sections";
 import { ResourceImageCarousel } from "@/components/examples/resource-image-carousel";
@@ -257,8 +257,8 @@ export function ExampleDetail({
   const rawMarkdown = joinContentSections(sections);
   const aboutDevhubBody = useAboutDevhubBody();
 
-  const includedTemplates = example.templateIds
-    .map((id) => templates.find((t) => t.id === id))
+  const includedTemplates = example.cookbookIds
+    .map((id) => cookbooks.find((t) => t.id === id))
     .filter(Boolean);
 
   const includedRecipes = example.recipeIds

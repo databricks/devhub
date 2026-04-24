@@ -12,7 +12,7 @@ export const SERVICES = [
 export type Service = (typeof SERVICES)[number];
 
 /**
- * Theme-aware preview image pair shared by Recipe, Template, and Example.
+ * Theme-aware preview image pair shared by Recipe, Cookbook, and Example.
  *
  * Rendered on: landing carousel card, /templates list card, and the example
  * detail hero when no galleryImages are set. When both URLs are omitted the UI
@@ -44,7 +44,7 @@ export type Recipe = ResourcePreview & {
   isDraft?: boolean;
 };
 
-export type Template = ResourcePreview & {
+export type Cookbook = ResourcePreview & {
   id: string;
   name: string;
   description: string;
@@ -54,7 +54,7 @@ export type Template = ResourcePreview & {
   isDraft?: boolean;
 };
 
-type TemplatePreviewItem = {
+type CookbookPreviewItem = {
   id: string;
   path: string;
   title: string;
@@ -348,7 +348,7 @@ export const recipesInOrder: Recipe[] = [
   return recipe;
 });
 
-type TemplateConfig = {
+type CookbookConfig = {
   id: string;
   name: string;
   description: string;
@@ -358,7 +358,7 @@ type TemplateConfig = {
   isDraft?: boolean;
 };
 
-function createTemplate(config: TemplateConfig): Template {
+function createCookbook(config: CookbookConfig): Cookbook {
   const selectedRecipes = config.recipeIds.map((recipeId) => {
     const recipe = recipeIndex[recipeId];
     if (!recipe) {
@@ -389,8 +389,8 @@ function createTemplate(config: TemplateConfig): Template {
   };
 }
 
-export const templates: Template[] = [
-  createTemplate({
+export const cookbooks: Cookbook[] = [
+  createCookbook({
     id: "hello-world-app",
     name: "Hello World App",
     description:
@@ -399,7 +399,7 @@ export const templates: Template[] = [
     previewImageLightUrl: "/img/guides/hello-world-app-preview-light.png",
     previewImageDarkUrl: "/img/guides/hello-world-app-preview-dark.png",
   }),
-  createTemplate({
+  createCookbook({
     id: "ai-chat-app",
     name: "AI Chat App",
     description:
@@ -415,7 +415,7 @@ export const templates: Template[] = [
     previewImageLightUrl: "/img/guides/ai-chat-app-preview-light.png",
     previewImageDarkUrl: "/img/guides/ai-chat-app-preview-dark.png",
   }),
-  createTemplate({
+  createCookbook({
     id: "app-with-lakebase",
     name: "App with Lakebase",
     description:
@@ -428,7 +428,7 @@ export const templates: Template[] = [
     previewImageLightUrl: "/img/guides/app-with-lakebase-preview-light.png",
     previewImageDarkUrl: "/img/guides/app-with-lakebase-preview-dark.png",
   }),
-  createTemplate({
+  createCookbook({
     id: "genie-analytics-app",
     name: "Genie Analytics App",
     description:
@@ -437,7 +437,7 @@ export const templates: Template[] = [
     previewImageLightUrl: "/img/guides/genie-analytics-app-preview-light.png",
     previewImageDarkUrl: "/img/guides/genie-analytics-app-preview-dark.png",
   }),
-  createTemplate({
+  createCookbook({
     id: "lakebase-off-platform",
     name: "Lakebase Off-Platform",
     description:
@@ -451,7 +451,7 @@ export const templates: Template[] = [
     previewImageLightUrl: "/img/guides/lakebase-off-platform-preview-light.png",
     previewImageDarkUrl: "/img/guides/lakebase-off-platform-preview-dark.png",
   }),
-  createTemplate({
+  createCookbook({
     id: "operational-data-analytics",
     name: "Operational Data Analytics",
     description:
@@ -471,19 +471,19 @@ export const templates: Template[] = [
   }),
 ];
 
-export const templatePreviewItems: TemplatePreviewItem[] = templates.map(
-  (template) => ({
-    id: template.id,
-    path: `/templates/${template.id}`,
-    title: template.name,
-    description: template.description,
-    tags: template.tags,
-    services: template.services,
-    ...(template.previewImageLightUrl
-      ? { previewImageLightUrl: template.previewImageLightUrl }
+export const cookbookPreviewItems: CookbookPreviewItem[] = cookbooks.map(
+  (cookbook) => ({
+    id: cookbook.id,
+    path: `/templates/${cookbook.id}`,
+    title: cookbook.name,
+    description: cookbook.description,
+    tags: cookbook.tags,
+    services: cookbook.services,
+    ...(cookbook.previewImageLightUrl
+      ? { previewImageLightUrl: cookbook.previewImageLightUrl }
       : {}),
-    ...(template.previewImageDarkUrl
-      ? { previewImageDarkUrl: template.previewImageDarkUrl }
+    ...(cookbook.previewImageDarkUrl
+      ? { previewImageDarkUrl: cookbook.previewImageDarkUrl }
       : {}),
   }),
 );
@@ -494,7 +494,7 @@ export type Example = ResourcePreview & {
   description: string;
   githubPath: string;
   initCommand: string;
-  templateIds: string[];
+  cookbookIds: string[];
   recipeIds: string[];
   tags: string[];
   services: Service[];
@@ -507,8 +507,8 @@ export type Example = ResourcePreview & {
   isDraft?: boolean;
 };
 
-const templateIndex: Record<string, Template> = Object.fromEntries(
-  templates.map((t) => [t.id, t]),
+const cookbookIndex: Record<string, Cookbook> = Object.fromEntries(
+  cookbooks.map((t) => [t.id, t]),
 );
 
 type ExampleConfig = {
@@ -517,7 +517,7 @@ type ExampleConfig = {
   description: string;
   githubPath: string;
   initCommand: string;
-  templateIds: string[];
+  cookbookIds: string[];
   recipeIds: string[];
   previewImageLightUrl?: string;
   previewImageDarkUrl?: string;
@@ -526,9 +526,9 @@ type ExampleConfig = {
 };
 
 function createExample(config: ExampleConfig): Example {
-  const referencedTemplates = config.templateIds.map((id) => {
-    const t = templateIndex[id];
-    if (!t) throw new Error(`Unknown template id in example: ${id}`);
+  const referencedCookbooks = config.cookbookIds.map((id) => {
+    const t = cookbookIndex[id];
+    if (!t) throw new Error(`Unknown cookbook id in example: ${id}`);
     return t;
   });
   const referencedRecipes = config.recipeIds.map((id) => {
@@ -539,13 +539,13 @@ function createExample(config: ExampleConfig): Example {
 
   const tags = [
     ...new Set([
-      ...referencedTemplates.flatMap((t) => t.tags),
+      ...referencedCookbooks.flatMap((t) => t.tags),
       ...referencedRecipes.flatMap((r) => r.tags),
     ]),
   ];
   const services = [
     ...new Set([
-      ...referencedTemplates.flatMap((t) => t.services),
+      ...referencedCookbooks.flatMap((t) => t.services),
       ...referencedRecipes.flatMap((r) => r.services),
     ]),
   ] as Service[];
@@ -567,7 +567,7 @@ export const examples: Example[] = [
     githubPath: "examples/agentic-support-console",
     initCommand:
       "git clone --depth 1 https://github.com/databricks/devhub.git\ncd devhub/examples/agentic-support-console/template",
-    templateIds: ["operational-data-analytics", "app-with-lakebase"],
+    cookbookIds: ["operational-data-analytics", "app-with-lakebase"],
     recipeIds: ["genie-conversational-analytics", "foundation-models-api"],
     previewImageLightUrl:
       "/img/examples/agentic-support-console-preview-light.png",
@@ -582,7 +582,7 @@ export const examples: Example[] = [
     githubPath: "examples/saas-tracker",
     initCommand:
       "git clone --depth 1 https://github.com/databricks/devhub.git\ncd devhub/examples/saas-tracker/template",
-    templateIds: ["app-with-lakebase"],
+    cookbookIds: ["app-with-lakebase"],
     recipeIds: ["genie-conversational-analytics"],
     previewImageLightUrl: "/img/examples/saas-tracker-preview-light.png",
     previewImageDarkUrl: "/img/examples/saas-tracker-preview-dark.png",
@@ -595,7 +595,7 @@ export const examples: Example[] = [
     githubPath: "examples/content-moderator",
     initCommand:
       "git clone --depth 1 https://github.com/databricks/devhub.git\ncd devhub/examples/content-moderator/template",
-    templateIds: ["app-with-lakebase"],
+    cookbookIds: ["app-with-lakebase"],
     recipeIds: ["genie-conversational-analytics", "foundation-models-api"],
     previewImageLightUrl: "/img/examples/content-moderator-preview-light.png",
     previewImageDarkUrl: "/img/examples/content-moderator-preview-dark.png",
@@ -608,7 +608,7 @@ export const examples: Example[] = [
     githubPath: "examples/inventory-intelligence",
     initCommand:
       "git clone --depth 1 https://github.com/databricks/devhub.git\ncd devhub/examples/inventory-intelligence/template",
-    templateIds: ["operational-data-analytics", "app-with-lakebase"],
+    cookbookIds: ["operational-data-analytics", "app-with-lakebase"],
     recipeIds: ["genie-conversational-analytics"],
     previewImageLightUrl:
       "/img/examples/inventory-intelligence-preview-light.png",
@@ -628,7 +628,7 @@ export const examples: Example[] = [
     githubPath: "examples/rag-chat",
     initCommand:
       'databricks apps init \\\n  --template https://github.com/databricks/devhub/tree/main/examples/rag-chat/template \\\n  --name rag-chat-app \\\n  --set lakebase.postgres.branch="$BRANCH_NAME" \\\n  --set lakebase.postgres.database="$DATABASE_NAME"',
-    templateIds: ["ai-chat-app"],
+    cookbookIds: ["ai-chat-app"],
     recipeIds: ["ai-chat-model-serving", "lakebase-chat-persistence"],
     previewImageLightUrl: "/img/examples/rag-chat-preview-light.png",
     previewImageDarkUrl: "/img/examples/rag-chat-preview-dark.png",

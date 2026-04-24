@@ -11,7 +11,7 @@ import {
 import {
   recipes,
   examples,
-  templates,
+  cookbooks,
   filterPublished,
 } from "../src/lib/recipes/recipes";
 import { showDrafts, examplesEnabled } from "../src/lib/feature-flags-server";
@@ -20,7 +20,7 @@ import { solutions } from "../src/lib/solutions/solutions";
 function assertNoDuplicateSlugs(): void {
   const all: Array<{ id: string; type: string }> = [
     ...examples.map((e) => ({ id: e.id, type: "example" })),
-    ...templates.map((t) => ({ id: t.id, type: "template" })),
+    ...cookbooks.map((t) => ({ id: t.id, type: "template" })),
     ...recipes.map((r) => ({ id: r.id, type: "recipe" })),
   ];
   const seen = new Map<string, string>();

@@ -3,7 +3,7 @@ import {
   getCookbookSlugs,
   readCookbookIntro,
 } from "../src/lib/content-markdown";
-import { templates } from "../src/lib/recipes/recipes";
+import { cookbooks } from "../src/lib/recipes/recipes";
 
 export type CookbooksGlobalData = {
   /** Raw `content/cookbooks/<slug>/intro.md` bodies keyed by template id. */
@@ -11,7 +11,7 @@ export type CookbooksGlobalData = {
 };
 
 function assertCookbookSlugParity(contentSlugs: string[]): void {
-  const templateIds = templates.map((t) => t.id);
+  const templateIds = cookbooks.map((t) => t.id);
   const unknown = contentSlugs.filter((slug) => !templateIds.includes(slug));
   if (unknown.length > 0) {
     throw new Error(

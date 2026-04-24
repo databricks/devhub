@@ -12,6 +12,14 @@ const APPKIT_REMOTE =
   process.env.APPKIT_REMOTE || "https://github.com/databricks/appkit.git";
 const APPKIT_BRANCH = process.env.APPKIT_BRANCH || "main";
 
+if (!/^[\w.\-/]+$/.test(APPKIT_BRANCH)) {
+  throw new Error(`Invalid APPKIT_BRANCH: ${APPKIT_BRANCH}`);
+}
+
+if (!/^https?:\/\//.test(APPKIT_REMOTE) && !/^git@/.test(APPKIT_REMOTE)) {
+  throw new Error(`Invalid APPKIT_REMOTE: must be an HTTPS or SSH git URL`);
+}
+
 // Where upstream appkit stores its source-of-truth component examples.
 // Paths are relative to the cloned appkit repo root.
 const UPSTREAM_EXAMPLE_DIRS = ["packages/appkit-ui/src/react/ui/examples"];
@@ -29,10 +37,8 @@ function run(command, args, cwd) {
     timeout: SPAWN_TIMEOUT,
   });
 
-  if (result.signal === "SIGTERM") {
-    fail(
-      `Command timed out after ${SPAWN_TIMEOUT / 1000}s: ${command} ${args.join(" ")}`,
-    );
+  if (result.signal) {
+    fail(`Command killed by ${result.signal}: ${command} ${args.join(" ")}`);
   }
   if (result.status !== 0) {
     fail(`Command failed: ${command} ${args.join(" ")}`);
@@ -46,10 +52,8 @@ function runCapture(command, args, cwd) {
     timeout: SPAWN_TIMEOUT,
   });
 
-  if (result.signal === "SIGTERM") {
-    fail(
-      `Command timed out after ${SPAWN_TIMEOUT / 1000}s: ${command} ${args.join(" ")}`,
-    );
+  if (result.signal) {
+    fail(`Command killed by ${result.signal}: ${command} ${args.join(" ")}`);
   }
   if (result.status !== 0) {
     fail(`Command failed: ${command} ${args.join(" ")}`);

@@ -8,8 +8,9 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const repoRoot = path.resolve(__dirname, "..");
 
-const APPKIT_REMOTE = "https://github.com/databricks/appkit.git";
-const APPKIT_BRANCH = "main";
+const APPKIT_REMOTE =
+  process.env.APPKIT_REMOTE || "https://github.com/databricks/appkit.git";
+const APPKIT_BRANCH = process.env.APPKIT_BRANCH || "main";
 
 // Where upstream appkit stores its source-of-truth component examples.
 // Paths are relative to the cloned appkit repo root.

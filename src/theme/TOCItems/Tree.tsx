@@ -12,7 +12,7 @@ function TOCItemTree({
     return null;
   }
   return (
-    <ul className={isChild ? "m-0 list-none pl-0" : className}>
+    <ul className={isChild ? "m-0 list-none pl-3" : className}>
       {toc.map((heading) => (
         <li key={heading.id} className="m-0">
           <Link

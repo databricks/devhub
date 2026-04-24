@@ -110,7 +110,7 @@ function CollapseButton({
       }
       aria-expanded={!collapsed}
       type="button"
-      className="clean-btn menu__caret before:!hidden"
+      className="clean-btn menu__caret before:!opacity-45 before:![background-size:1.1em_1.1em] before:![min-width:1.1em] before:transition-opacity hover:before:!opacity-80"
       onClick={onClick}
     />
   );

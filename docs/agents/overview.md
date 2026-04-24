@@ -63,12 +63,11 @@ Authoring a custom agent from scratch is a Python workflow: the `ResponsesAgent`
 
 Start from a template that matches your use case. Each one includes the Model Serving or Genie plugin wiring, an `app.yaml` resource binding, and a working UI you can adapt.
 
-| You want to...                                          | Template                                                      |
-| ------------------------------------------------------- | ------------------------------------------------------------- |
-| Add a streaming chatbot to your app                     | [AI Chat App](/templates/ai-chat-app)                         |
-| Let users query tables in natural language              | [Genie Analytics App](/templates/genie-analytics-app)         |
-| Build a full AI support console (Genie plus AI Gateway) | [Agentic Support Console](/templates/agentic-support-console) |
-| Add multi-space Genie switching to an existing app      | [Genie Multi-Space Selector](/templates/genie-multi-space)    |
+| You want to...                                     | Template                                                   |
+| -------------------------------------------------- | ---------------------------------------------------------- |
+| Add a streaming chatbot to your app                | [AI Chat App](/templates/ai-chat-app)                      |
+| Let users query tables in natural language         | [Genie Analytics App](/templates/genie-analytics-app)      |
+| Add multi-space Genie switching to an existing app | [Genie Multi-Space Selector](/templates/genie-multi-space) |
 
 ## Where to next
 

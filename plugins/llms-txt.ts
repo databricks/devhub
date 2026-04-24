@@ -48,10 +48,9 @@ const SIDEBAR_SECTIONS: Array<{
     description:
       "Host and operate web applications as managed Databricks workspace resources.",
     slugs: [
+      "apps/overview",
       "apps/quickstart",
       "apps/core-concepts",
-      "apps/appkit",
-      "apps/plugins",
       "apps/development",
     ],
   },

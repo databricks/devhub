@@ -6,13 +6,30 @@ description: Databricks Apps hosts web applications inside your workspace with b
 
 # What is Databricks Apps?
 
-Databricks Apps is a hosting service for web applications that runs inside your Databricks workspace. You deploy with a single CLI command and the app gets a fixed URL, built-in OAuth, and a dedicated service principal. No external hosting service. No separate auth layer.
+Databricks Apps hosts your web app inside your workspace. It gets a fixed URL, built-in OAuth, and direct access to your workspace data and services. No separate hosting service, no auth layer to build, no credential rotation to manage.
 
-Apps run as managed workspace resources. The platform handles compute, TLS, and authentication.
+**AppKit** is the TypeScript SDK for building those apps. It provides pre-built React UI components, type-safe data access, and a plugin system for connecting to Databricks services.
 
-## What problem it solves
+## How it works
 
-Normally, an app that reads or writes Databricks data requires a separate server, manual credential management, and cross-network configuration. Apps removes this: your app lives inside the workspace, authenticates through it, and connects to your data the same way your notebooks do.
+AppKit uses a three-layer architecture with plugins that register capabilities at each layer:
+
+- **Client**: React frontend served by Vite. The `@databricks/appkit-ui` package provides data tables, charts, dialogs, and layout components.
+- **Server**: Express HTTP server with Databricks OAuth built in. Plugins attach routes and middleware at this layer.
+- **Data**: Plugin-based access to Databricks resources. Each plugin wraps a resource type and exposes a typed API on the `AppKit` object.
+
+| Plugin                                             | What it adds                                                                                                                 |
+| -------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| [**server**](/docs/appkit/v0/plugins/server)       | Express HTTP server, static file serving, Vite dev mode (always included)                                                    |
+| [**lakebase**](/docs/appkit/v0/plugins/lakebase)   | Postgres connection pool for [Lakebase Postgres](/docs/lakebase/quickstart) with automatic OAuth token refresh               |
+| [**analytics**](/docs/appkit/v0/plugins/analytics) | SQL query execution against [Databricks SQL Warehouses](https://docs.databricks.com/aws/en/compute/sql-warehouse/index.html) |
+| [**genie**](/docs/appkit/v0/plugins/genie)         | [Genie space](/docs/agents/genie) integration for natural-language data queries                                              |
+| [**serving**](/docs/appkit/v0/plugins/serving)     | Authenticated proxy to [Model Serving](/docs/agents/ai-gateway) endpoints with streaming support                             |
+| [**files**](/docs/appkit/v0/plugins/files)         | File operations against [Unity Catalog Volumes](https://docs.databricks.com/aws/en/files/index.html)                         |
+
+## How auth works
+
+Every app gets a dedicated service principal. Databricks injects its credentials at runtime, so your app can call workspace APIs without managing tokens. By default, all requests run as this service principal and all users share its permissions. When you need per-user data access, Databricks can forward the signed-in user's token via `x-forwarded-access-token`. AppKit's built-in [Genie](/docs/agents/genie) and [Model Serving](/docs/agents/ai-gateway) plugins handle this automatically.
 
 ## When to use it
 
@@ -23,14 +40,8 @@ Normally, an app that reads or writes Databricks data requires a separate server
 ## When not to use it
 
 - Your app is a static site with no Databricks data access.
-- You're serving external users who won't have workspace access.
-
-## How it fits together
-
-- **AppKit** is the TypeScript SDK built for Databricks Apps. It provides UI components, a plugin system (Lakebase, analytics, Genie, files, and more), and type-safe data access.
-- **Lakebase** is the Postgres database layer you connect to from an App for persistent OLTP storage.
-- **Agents** are LLM-driven applications deployed as Databricks Apps using the same CLI and bundle workflow.
+- You're serving users outside your Databricks account (for example, public-facing apps or customers without Databricks access).
 
 ## Next steps
 
-To get started, see the [Quickstart](/docs/apps/quickstart), where you scaffold and deploy a working app to your workspace.
+[Templates](/templates) are agent-ready prompts organized by use case. Find one that fits, or see the [Apps Quickstart](/docs/apps/quickstart) for a step-by-step walkthrough.

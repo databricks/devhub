@@ -50,7 +50,7 @@ export const pillars: Pillar[] = [
     subtitle: "Web apps that run inside your workspace.",
     description:
       "One CLI command to deploy. Fixed URL, built-in OAuth, and direct access to your workspace data \u2014 no separate hosting service.",
-    link: "/docs/apps/appkit",
+    link: "/docs/apps/overview",
     icon: Server,
   },
 ];

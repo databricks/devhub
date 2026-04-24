@@ -16,16 +16,23 @@ const APPKIT_BRANCH = "main";
 const UPSTREAM_EXAMPLE_DIRS = ["packages/appkit-ui/src/react/ui/examples"];
 
 function fail(message) {
-	console.error(`Error: ${message}`);
-	process.exit(1);
+	throw new Error(message);
 }
+
+const SPAWN_TIMEOUT = 120_000; // 2 minutes
 
 function run(command, args, cwd) {
 	const result = spawnSync(command, args, {
 		cwd,
 		stdio: "inherit",
+		timeout: SPAWN_TIMEOUT,
 	});
 
+	if (result.signal === "SIGTERM") {
+		fail(
+			`Command timed out after ${SPAWN_TIMEOUT / 1000}s: ${command} ${args.join(" ")}`,
+		);
+	}
 	if (result.status !== 0) {
 		fail(`Command failed: ${command} ${args.join(" ")}`);
 	}
@@ -35,8 +42,14 @@ function runCapture(command, args, cwd) {
 	const result = spawnSync(command, args, {
 		cwd,
 		encoding: "utf-8",
+		timeout: SPAWN_TIMEOUT,
 	});
 
+	if (result.signal === "SIGTERM") {
+		fail(
+			`Command timed out after ${SPAWN_TIMEOUT / 1000}s: ${command} ${args.join(" ")}`,
+		);
+	}
 	if (result.status !== 0) {
 		fail(`Command failed: ${command} ${args.join(" ")}`);
 	}
@@ -64,30 +77,40 @@ function replaceDir(source, destination) {
 	copyDirRecursive(source, destination);
 }
 
-// Checks whether docs/appkit/latest/ already has synced content.
-// If so, reads .source-ref and logs info for the developer, then returns true.
+// Checks whether all three sync outputs are present:
+// 1. docs/appkit/latest/.source-ref (docs were synced)
+// 2. src/components/doc-examples/registry.ts (examples were synced)
+// 3. static/appkit-preview/latest/styles.css (styles were compiled)
+// If any is missing, returns false so the sync re-runs.
 function isAlreadySynced(latestDir) {
-	const hasContent =
-		fs.existsSync(latestDir) &&
-		fs
-			.readdirSync(latestDir)
-			.some((name) => name.endsWith(".md") || name.endsWith(".mdx"));
+	const sourceRefPath = path.join(latestDir, ".source-ref");
+	const registryPath = path.join(
+		repoRoot,
+		"src",
+		"components",
+		"doc-examples",
+		"registry.ts",
+	);
+	const stylesPath = path.join(
+		repoRoot,
+		"static",
+		"appkit-preview",
+		"latest",
+		"styles.css",
+	);
 
-	if (!hasContent) {
+	if (
+		!fs.existsSync(sourceRefPath) ||
+		!fs.existsSync(registryPath) ||
+		!fs.existsSync(stylesPath)
+	) {
 		return false;
 	}
 
-	const sourceRefPath = path.join(latestDir, ".source-ref");
-	if (fs.existsSync(sourceRefPath)) {
-		const ref = fs.readFileSync(sourceRefPath, "utf-8").trim();
-		console.log(
-			`Using AppKit docs synced on ${ref}. Run 'npm run sync:appkit-docs' to resync.`,
-		);
-	} else {
-		console.log(
-			"AppKit docs already present. Run 'npm run sync:appkit-docs' to resync.",
-		);
-	}
+	const ref = fs.readFileSync(sourceRefPath, "utf-8").trim();
+	console.log(
+		`Using AppKit docs synced on ${ref}. Run 'npm run sync:appkit-docs' to resync.`,
+	);
 
 	return true;
 }
@@ -306,41 +329,46 @@ async function main() {
 
 	const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "devhub-appkit-docs-"));
 
-	cloneAppKit(tempDir);
+	try {
+		cloneAppKit(tempDir);
 
-	const sha = getHeadSha(tempDir);
-	const syncDate = new Date().toISOString().slice(0, 10);
-	const appkitDocsSource = path.join(tempDir, "docs", "docs");
+		const sha = getHeadSha(tempDir);
+		const syncDate = new Date().toISOString().slice(0, 10);
+		const appkitDocsSource = path.join(tempDir, "docs", "docs");
 
-	if (!fs.existsSync(appkitDocsSource)) {
-		fail("Could not find docs/docs in cloned AppKit repository.");
+		if (!fs.existsSync(appkitDocsSource)) {
+			fail("Could not find docs/docs in cloned AppKit repository.");
+		}
+
+		// Clear existing docs and copy latest
+		fs.rmSync(docsRoot, { recursive: true, force: true });
+		fs.mkdirSync(docsRoot, { recursive: true });
+
+		replaceDir(appkitDocsSource, latestDir);
+		fs.writeFileSync(
+			path.join(latestDir, ".source-ref"),
+			`${syncDate} (${sha})\n`,
+			"utf-8",
+		);
+
+		// Copy versioned docs if present (future-proofing)
+		syncVersionedDocs(tempDir, docsRoot);
+
+		syncExamples(tempDir);
+		const stylesVersion = await syncCompiledStyles("latest");
+
+		console.log(
+			`\nAppKit docs synced from ${APPKIT_BRANCH} (${sha}), styles @ ${stylesVersion}.`,
+		);
+		console.log("Done.");
+	} finally {
+		fs.rmSync(tempDir, { recursive: true, force: true });
 	}
-
-	// Clear existing docs and copy latest
-	fs.rmSync(docsRoot, { recursive: true, force: true });
-	fs.mkdirSync(docsRoot, { recursive: true });
-
-	replaceDir(appkitDocsSource, latestDir);
-	fs.writeFileSync(
-		path.join(latestDir, ".source-ref"),
-		`${syncDate} (${sha})\n`,
-		"utf-8",
-	);
-
-	// Copy versioned docs if present (future-proofing)
-	syncVersionedDocs(tempDir, docsRoot);
-
-	syncExamples(tempDir);
-	const stylesVersion = await syncCompiledStyles("latest");
-
-	fs.rmSync(tempDir, { recursive: true, force: true });
-
-	console.log(
-		`\nAppKit docs synced from ${APPKIT_BRANCH} (${sha}), styles @ ${stylesVersion}.`,
-	);
-	console.log("Done.");
 }
 
 main().catch((error) => {
-	fail(error instanceof Error ? error.message : String(error));
+	console.error(
+		`Error: ${error instanceof Error ? error.message : String(error)}`,
+	);
+	process.exit(1);
 });

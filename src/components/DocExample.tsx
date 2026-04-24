@@ -54,8 +54,8 @@ export function DocExample({ name }: DocExampleProps): ReactNode {
 		return (
 			<div className="my-6 rounded-xl border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">
 				Missing DocExample for <code>{name}</code>. Re-run{" "}
-				<code>npm run sync:appkit-docs v0</code> to sync examples from the
-				upstream appkit release.
+				<code>npm run sync:appkit-docs</code> to sync examples from the upstream
+				appkit repo.
 			</div>
 		);
 	}

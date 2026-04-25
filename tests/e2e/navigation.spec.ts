@@ -145,7 +145,7 @@ test.describe("home page link navigation", () => {
     expect(new URL(page.url()).pathname).toBe("/templates");
   });
 
-  test("resource preview card navigates to /templates/hello-world-app", async ({
+  test("template preview card navigates to /templates/hello-world-app", async ({
     page,
   }) => {
     await page.goto("/");
@@ -178,15 +178,15 @@ test.describe("solutions page navigation", () => {
 });
 
 test.describe("templates page navigation", () => {
-  const RESOURCES = [
-    { path: "/templates/hello-world-app", kind: "guide" },
-    { path: "/templates/ai-chat-app", kind: "guide" },
+  const TEMPLATES = [
+    { path: "/templates/hello-world-app", kind: "cookbook" },
+    { path: "/templates/ai-chat-app", kind: "cookbook" },
     { path: "/templates/agentic-support-console", kind: "example" },
     { path: "/templates/saas-tracker", kind: "example" },
-    { path: "/templates/databricks-local-bootstrap", kind: "guide" },
+    { path: "/templates/databricks-local-bootstrap", kind: "recipe" },
   ];
 
-  for (const { path, kind } of RESOURCES) {
+  for (const { path, kind } of TEMPLATES) {
     test(`${kind} card navigates to ${path}`, async ({ page }) => {
       await page.goto("/templates");
       const link = page.locator(`a[href="${path}"]`).first();
@@ -226,8 +226,8 @@ test.describe("solution detail page navigation", () => {
   });
 });
 
-test.describe("resource detail page navigation", () => {
-  test('"All templates" back link navigates to /templates from guide', async ({
+test.describe("template detail page navigation", () => {
+  test('"All templates" back link navigates to /templates from cookbook', async ({
     page,
   }) => {
     await page.goto("/templates/hello-world-app");
@@ -264,10 +264,10 @@ test.describe("example detail page", () => {
     await expect(page.getByText("git clone --depth 1")).toBeVisible();
   });
 
-  test("shows included guide resources", async ({ page }) => {
+  test("shows included templates", async ({ page }) => {
     await page.goto("/templates/agentic-support-console");
     await expect(
-      page.getByRole("heading", { name: "Included Resources" }),
+      page.getByRole("heading", { name: "Included Templates" }),
     ).toBeVisible();
     await expect(
       page.getByText("Operational Data Analytics", { exact: true }),

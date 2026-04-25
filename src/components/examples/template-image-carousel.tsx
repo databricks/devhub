@@ -12,7 +12,7 @@ import {
 import type { GalleryImage } from "@/lib/recipes/recipes";
 
 /**
- * Generic image carousel for resource detail pages.
+ * Image carousel for template detail pages.
  *
  * - Each slide renders the light or dark variant based on the current site
  *   color mode; there is no manual light/dark toggle.
@@ -20,7 +20,7 @@ import type { GalleryImage } from "@/lib/recipes/recipes";
  *   `npm run verify:images`.
  * - Arrows only render when there's more than one image.
  */
-export function ResourceImageCarousel({
+export function TemplateImageCarousel({
   images,
   exampleName,
 }: {

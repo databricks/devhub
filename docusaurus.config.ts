@@ -176,7 +176,7 @@ const config: Config = {
           title: "Docs",
           items: [
             { label: "Start Here", to: "/docs/start-here" },
-            { label: "Resources", to: "/templates" },
+            { label: "Templates", to: "/templates" },
           ],
         },
         {

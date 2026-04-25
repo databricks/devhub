@@ -76,7 +76,7 @@ export function TemplateUsageBanner(copyPromptProps: CopyPromptProps) {
             Read step-by-step
           </div>
           <p className="m-0 text-[13px] leading-relaxed text-muted-foreground">
-            Follow the guide below to set things up manually, at your own pace.
+            Follow the steps below to set things up manually, at your own pace.
           </p>
           <div className="mt-auto pt-1">
             <Button variant="outline" size="sm" onClick={handleScrollToContent}>

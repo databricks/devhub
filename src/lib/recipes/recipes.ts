@@ -16,14 +16,14 @@ export type Service = (typeof SERVICES)[number];
  *
  * Rendered on: landing carousel card, /templates list card, and the example
  * detail hero when no galleryImages are set. When both URLs are omitted the UI
- * falls back to the generic guide card art (FallbackCardArt).
+ * falls back to the generic template card art (FallbackCardArt).
  *
  * Image contract (enforced by `npm run verify:images`):
  *   - 16:9 aspect ratio, minimum 1600x900 px
  *   - PNG / JPG / WEBP (rasters). SVGs are not valid preview images.
  *   - Provide both light and dark variants (or neither, to fall back).
  */
-export type ResourcePreview = {
+export type PreviewImages = {
   previewImageLightUrl?: string;
   previewImageDarkUrl?: string;
 };
@@ -34,7 +34,7 @@ export type GalleryImage = {
   darkUrl: string;
 };
 
-export type Recipe = ResourcePreview & {
+export type Recipe = PreviewImages & {
   id: string;
   name: string;
   description: string;
@@ -44,7 +44,7 @@ export type Recipe = ResourcePreview & {
   isDraft?: boolean;
 };
 
-export type Cookbook = ResourcePreview & {
+export type Cookbook = PreviewImages & {
   id: string;
   name: string;
   description: string;
@@ -488,7 +488,7 @@ export const cookbookPreviewItems: CookbookPreviewItem[] = cookbooks.map(
   }),
 );
 
-export type Example = ResourcePreview & {
+export type Example = PreviewImages & {
   id: string;
   name: string;
   description: string;

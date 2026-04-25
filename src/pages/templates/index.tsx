@@ -169,8 +169,8 @@ export default function TemplatesPage(): ReactNode {
               next Databricks app.
             </h1>
             <p className="mb-10 max-w-2xl text-lg text-black/68 dark:text-white/68">
-              Use each template as a step-by-step guide, or copy it as a prompt
-              for your coding agent to build for you.
+              Use each template step by step, or copy it as a prompt for your
+              coding agent to build for you.
             </p>
 
             {/* Toolbar: search + actions */}

@@ -1,13 +1,13 @@
 import type { ContentSections } from "@/lib/content-sections";
 import type { Example } from "@/lib/recipes/recipes";
 
-type ResourceRef = { id: string; name: string; description: string };
+type ContentRef = { id: string; name: string; description: string };
 
 export type ExampleMarkdownOptions = {
   example: Example;
   githubUrl: string;
-  includedTemplates: ResourceRef[];
-  includedRecipes: ResourceRef[];
+  includedCookbooks: ContentRef[];
+  includedRecipes: ContentRef[];
   baseUrl: string;
 };
 
@@ -30,10 +30,10 @@ function isInitCommand(initCommand: string): boolean {
   return initCommand.trimStart().startsWith("databricks apps init");
 }
 
-/** Intro copy for the included guides / recipes list (Copy as Markdown and Copy prompt). */
-export function buildIncludedGuidesPreamble(): string {
+/** Intro copy for the included templates list (Copy as Markdown and Copy prompt). */
+export function buildIncludedTemplatesPreamble(): string {
   return [
-    "These **guides** (multi-step cookbooks) and **recipes** informed how this example was built; their patterns are reflected in the template code, bundles, and workflows.",
+    "These **templates** (multi-recipe cookbooks and standalone recipes) informed how this example was built; their patterns are reflected in the template code, bundles, and workflows.",
     "",
     "Review them on DevHub when you need more context on a technique than `template/README.md` alone provides.",
   ].join("\n");
@@ -76,7 +76,7 @@ export function buildFullPrompt(
     example,
     githubUrl,
     sections,
-    includedTemplates,
+    includedCookbooks,
     includedRecipes,
     baseUrl,
   } = opts;
@@ -168,24 +168,24 @@ export function buildFullPrompt(
 
   lines.push("", `## Source Code`, "", `GitHub: ${githubUrl}`);
 
-  const guides = [
-    ...includedTemplates.map(
-      (t) =>
-        `- [${t.name}](${baseUrl}/templates/${t.id}.md) - ${t.description}`,
+  const includedTemplateLinks = [
+    ...includedCookbooks.map(
+      (c) =>
+        `- [${c.name}](${baseUrl}/templates/${c.id}.md) - ${c.description}`,
     ),
     ...includedRecipes.map(
       (r) =>
         `- [${r.name}](${baseUrl}/templates/${r.id}.md) - ${r.description}`,
     ),
   ];
-  if (guides.length > 0) {
+  if (includedTemplateLinks.length > 0) {
     lines.push(
       "",
-      "## Included guides",
+      "## Included templates",
       "",
-      buildIncludedGuidesPreamble(),
+      buildIncludedTemplatesPreamble(),
       "",
-      ...guides,
+      ...includedTemplateLinks,
     );
   }
 
@@ -193,7 +193,7 @@ export function buildFullPrompt(
 }
 
 export function buildAdditionalMarkdown(opts: ExampleMarkdownOptions): string {
-  const { example, githubUrl, includedTemplates, includedRecipes, baseUrl } =
+  const { example, githubUrl, includedCookbooks, includedRecipes, baseUrl } =
     opts;
   const sections: string[] = [];
 
@@ -201,9 +201,9 @@ export function buildAdditionalMarkdown(opts: ExampleMarkdownOptions): string {
   sections.push(`## Source Code\n\nGitHub: ${githubUrl}`);
 
   const links = [
-    ...includedTemplates.map(
-      (t) =>
-        `- [${t.name}](${baseUrl}/templates/${t.id}.md) - ${t.description}`,
+    ...includedCookbooks.map(
+      (c) =>
+        `- [${c.name}](${baseUrl}/templates/${c.id}.md) - ${c.description}`,
     ),
     ...includedRecipes.map(
       (r) =>
@@ -212,9 +212,9 @@ export function buildAdditionalMarkdown(opts: ExampleMarkdownOptions): string {
   ];
   if (links.length > 0) {
     sections.push(
-      "## Included guides",
+      "## Included templates",
       "",
-      buildIncludedGuidesPreamble(),
+      buildIncludedTemplatesPreamble(),
       "",
       links.join("\n"),
     );

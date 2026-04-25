@@ -73,38 +73,38 @@ describe("detail markdown resolver", () => {
   });
 });
 
-describe("resources meta-section resolves recipes, examples, and templates", () => {
-  test("resolves a recipe slug via resources", () => {
+describe("templates section resolves recipes, examples, and cookbooks", () => {
+  test("resolves a recipe slug via templates", () => {
     const markdown = getDetailMarkdown(
-      "resources",
+      "templates",
       "databricks-local-bootstrap",
     );
     expect(markdown).toContain("## Databricks Local App Development Bootstrap");
   });
 
-  test("resolves an example slug via resources", () => {
-    const markdown = getDetailMarkdown("resources", "agentic-support-console");
+  test("resolves an example slug via templates", () => {
+    const markdown = getDetailMarkdown("templates", "agentic-support-console");
     expect(markdown).toContain("## Agentic Support Console");
   });
 
-  test("resolves a template slug via resources", () => {
-    const markdown = getDetailMarkdown("resources", "hello-world-app");
+  test("resolves a cookbook slug via templates", () => {
+    const markdown = getDetailMarkdown("templates", "hello-world-app");
     expect(markdown).toContain("# Hello World App");
     expect(markdown).toContain("## Databricks Local App Development Bootstrap");
   });
 
-  test("throws for unknown resource slug", () => {
-    expect(() => getDetailMarkdown("resources", "nonexistent-slug")).toThrow(
-      "Resource page not found",
+  test("throws for unknown template slug", () => {
+    expect(() => getDetailMarkdown("templates", "nonexistent-slug")).toThrow(
+      "Template not found",
     );
   });
 });
 
 describe("empty-slug index pages", () => {
-  test("resources index contains headings and .md links", () => {
-    const markdown = getDetailMarkdown("resources", "");
-    expect(markdown).toContain("# Resources");
-    expect(markdown).toContain("## Guides");
+  test("templates index contains headings and .md links", () => {
+    const markdown = getDetailMarkdown("templates", "");
+    expect(markdown).toContain("# Templates");
+    expect(markdown).toContain("## Cookbooks");
     expect(markdown).toContain("## Recipes");
     expect(markdown).toMatch(/\(\/templates\/[\w-]+\.md\)/);
   });
@@ -203,8 +203,8 @@ describe("prependLlmsReference prepends about-devhub body", () => {
     expect(result).toContain("# Introducing dev.databricks.com");
   });
 
-  test("resources meta-section starts with about devhub", () => {
-    const markdown = getDetailMarkdown("resources", "agentic-support-console");
+  test("templates meta-section starts with about devhub", () => {
+    const markdown = getDetailMarkdown("templates", "agentic-support-console");
     const result = prependLlmsReference(markdown, "dev.databricks.com");
     expect(result.startsWith(ABOUT_START)).toBe(true);
     expect(result).toContain("## Agentic Support Console");
@@ -225,9 +225,9 @@ describe("slug normalization strips .md extension", () => {
     expect(markdown).toContain("## Databricks Local App Development Bootstrap");
   });
 
-  test("resources slug with .md extension resolves", () => {
+  test("templates slug with .md extension resolves", () => {
     const markdown = getDetailMarkdown(
-      "resources",
+      "templates",
       "agentic-support-console.md",
     );
     expect(markdown).toContain("## Agentic Support Console");

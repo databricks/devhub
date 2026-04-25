@@ -5,20 +5,20 @@ import {
   cookbooks,
 } from "../../src/lib/recipes/recipes";
 
-const RESOURCE_COUNT =
+const TEMPLATE_COUNT =
   examples.length + cookbooks.length + recipesInOrder.length;
-const TOTAL_RESOURCES = `${RESOURCE_COUNT} of ${RESOURCE_COUNT} templates`;
+const TOTAL_TEMPLATES = `${TEMPLATE_COUNT} of ${TEMPLATE_COUNT} templates`;
 
-test.describe("resources page search", () => {
+test.describe("templates page search", () => {
   test("search bar filters results and clearing restores all", async ({
     page,
   }) => {
     await page.goto("/templates");
-    await expect(page.getByText(TOTAL_RESOURCES)).toBeVisible();
+    await expect(page.getByText(TOTAL_TEMPLATES)).toBeVisible();
 
     await page.getByRole("searchbox").fill("genie");
     await expect(
-      page.getByText(`7 of ${RESOURCE_COUNT} templates`),
+      page.getByText(`7 of ${TEMPLATE_COUNT} templates`),
     ).toBeVisible();
     await expect(
       page.locator('a[href="/templates/inventory-intelligence"]'),
@@ -43,23 +43,23 @@ test.describe("resources page search", () => {
     ).toBeVisible();
 
     await page.getByRole("searchbox").fill("");
-    await expect(page.getByText(TOTAL_RESOURCES)).toBeVisible();
+    await expect(page.getByText(TOTAL_TEMPLATES)).toBeVisible();
   });
 });
 
-test.describe("resources page service filter", () => {
+test.describe("templates page service filter", () => {
   test("checking a service narrows results and shows active pill", async ({
     page,
   }) => {
     await page.goto("/templates");
-    await expect(page.getByText(TOTAL_RESOURCES)).toBeVisible();
+    await expect(page.getByText(TOTAL_TEMPLATES)).toBeVisible();
 
     await page.getByRole("checkbox", { name: "Lakebase", exact: true }).check();
 
     const count = page.getByText(
-      new RegExp(`^\\d+ of ${RESOURCE_COUNT} templates$`),
+      new RegExp(`^\\d+ of ${TEMPLATE_COUNT} templates$`),
     );
-    await expect(count).not.toHaveText(TOTAL_RESOURCES);
+    await expect(count).not.toHaveText(TOTAL_TEMPLATES);
 
     await expect(
       page.locator('a[href="/templates/lakebase-off-platform"]'),
@@ -70,8 +70,8 @@ test.describe("resources page service filter", () => {
   });
 });
 
-test.describe("resources page resource type filter", () => {
-  test("Examples filter shows only examples, Cookbooks filter hides examples", async ({
+test.describe("templates page type filter", () => {
+  test("Examples filter shows only examples, Guides & Recipes filter hides examples", async ({
     page,
   }) => {
     await page.goto("/templates");
@@ -85,7 +85,7 @@ test.describe("resources page resource type filter", () => {
     ).toBeHidden();
 
     await page.getByRole("checkbox", { name: "Examples" }).uncheck();
-    await page.getByRole("checkbox", { name: "Cookbooks" }).check();
+    await page.getByRole("checkbox", { name: "Guides & Recipes" }).check();
     await expect(
       page.locator('a[href="/templates/databricks-local-bootstrap"]'),
     ).toBeVisible();
@@ -95,7 +95,7 @@ test.describe("resources page resource type filter", () => {
   });
 });
 
-test.describe("resources page clear all filters", () => {
+test.describe("templates page clear all filters", () => {
   test("clear all resets search, service filter, and tag filters", async ({
     page,
   }) => {
@@ -108,7 +108,7 @@ test.describe("resources page clear all filters", () => {
     await page.getByRole("button", { name: "Clear all" }).click();
 
     await expect(page.getByRole("searchbox")).toHaveValue("");
-    await expect(page.getByText(TOTAL_RESOURCES)).toBeVisible();
+    await expect(page.getByText(TOTAL_TEMPLATES)).toBeVisible();
     await expect(page.getByRole("button", { name: "Clear all" })).toBeHidden();
   });
 });

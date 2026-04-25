@@ -26,8 +26,7 @@ export type MarkdownSection =
   | "recipes"
   | "solutions"
   | "examples"
-  | "templates"
-  | "resources";
+  | "templates";
 
 function validateSlug(slug: string): void {
   if (!slug || slug.trim() === "") {
@@ -122,29 +121,27 @@ function readExampleMarkdown(rootDir: string, slug: string): string {
       "",
     );
   }
-  const includedResources = [
-    ...example.cookbookIds.map((id) => cookbooks.find((t) => t.id === id)),
+  const includedTemplates = [
+    ...example.cookbookIds.map((id) => cookbooks.find((c) => c.id === id)),
     ...example.recipeIds.map((id) => recipes.find((r) => r.id === id)),
   ].filter(Boolean);
-  if (includedResources.length > 0) {
-    lines.push("## Included Resources", "");
-    for (const resource of includedResources) {
-      lines.push(
-        `- [${resource.name}](/templates/${resource.id}.md): ${resource.description}`,
-      );
+  if (includedTemplates.length > 0) {
+    lines.push("## Included Templates", "");
+    for (const t of includedTemplates) {
+      lines.push(`- [${t.name}](/templates/${t.id}.md): ${t.description}`);
     }
     lines.push("");
   }
   return lines.join("\n");
 }
 
-function readTemplateMarkdown(rootDir: string, slug: string): string {
-  const template = cookbooks.find((entry) => entry.id === slug);
-  if (!template) {
-    throw new Error(`Template page not found: "${slug}"`);
+function readCookbookMarkdown(rootDir: string, slug: string): string {
+  const cookbook = cookbooks.find((entry) => entry.id === slug);
+  if (!cookbook) {
+    throw new Error(`Cookbook not found: "${slug}"`);
   }
 
-  const recipeInputs = template.recipeIds.map((recipeId) => {
+  const recipeInputs = cookbook.recipeIds.map((recipeId) => {
     const recipe = recipes.find((entry) => entry.id === recipeId);
     if (!recipe) {
       throw new Error(`Recipe not found: "${recipeId}"`);
@@ -160,47 +157,47 @@ function readTemplateMarkdown(rootDir: string, slug: string): string {
   });
 
   return buildCookbookMarkdownDocument({
-    cookbookName: template.name,
-    cookbookDescription: template.description,
+    cookbookName: cookbook.name,
+    cookbookDescription: cookbook.description,
     intro: readCookbookIntro(rootDir, slug),
     recipes: recipeInputs,
   });
 }
 
-function readResourceMarkdown(rootDir: string, slug: string): string {
+function readTemplateMarkdown(rootDir: string, slug: string): string {
   if (hasContentSlug(rootDir, "recipes", slug)) {
     return readRecipeMarkdown(rootDir, slug);
   }
   if (hasContentSlug(rootDir, "examples", slug)) {
     return readExampleMarkdown(rootDir, slug);
   }
-  const template = cookbooks.find((t) => t.id === slug);
-  if (template) {
-    return readTemplateMarkdown(rootDir, slug);
+  const cookbook = cookbooks.find((c) => c.id === slug);
+  if (cookbook) {
+    return readCookbookMarkdown(rootDir, slug);
   }
-  throw new Error(`Resource page not found: "${slug}"`);
+  throw new Error(`Template not found: "${slug}"`);
 }
 
-/** Markdown index served at /templates.md — lists all templates, recipes, and examples. */
-function readResourcesIndex(): string {
+/** Markdown index served at /templates.md — lists all cookbooks, recipes, and examples. */
+function readTemplatesIndex(): string {
   const includeDrafts = showDrafts();
   const includeExamples = examplesEnabled();
-  const publishedTemplates = filterPublished(cookbooks, includeDrafts);
+  const publishedCookbooks = filterPublished(cookbooks, includeDrafts);
   const publishedRecipes = filterPublished(recipesInOrder, includeDrafts);
   const publishedExamples = includeExamples
     ? filterPublished(examples, includeDrafts)
     : [];
 
   const lines: string[] = [
-    "# Resources",
+    "# Templates",
     "",
-    "Guides and examples for building on Databricks.",
+    "Templates for building on Databricks.",
     "",
   ];
 
-  if (publishedTemplates.length > 0) {
-    lines.push("## Guides", "");
-    for (const t of publishedTemplates) {
+  if (publishedCookbooks.length > 0) {
+    lines.push("## Cookbooks", "");
+    for (const t of publishedCookbooks) {
       lines.push(`- [${t.name}](/templates/${t.id}.md): ${t.description}`);
     }
     lines.push("");
@@ -251,7 +248,7 @@ export function getDetailMarkdown(
 
   // Empty slug → serve the section index page (e.g., /templates.md, /solutions.md)
   if (!slug || slug.trim() === "") {
-    if (section === "resources") return readResourcesIndex();
+    if (section === "templates") return readTemplatesIndex();
     if (section === "solutions") return readSolutionsIndex();
     throw new Error("Missing slug");
   }
@@ -269,8 +266,6 @@ export function getDetailMarkdown(
       return readExampleMarkdown(rootDir, slug);
     case "templates":
       return readTemplateMarkdown(rootDir, slug);
-    case "resources":
-      return readResourceMarkdown(rootDir, slug);
     default:
       throw new Error(`Unsupported section: "${section}"`);
   }

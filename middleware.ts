@@ -10,13 +10,13 @@ import { rewrite } from "@vercel/functions";
  */
 const SECTION_PREFIXES: Record<string, string> = {
   "/docs/": "docs",
-  "/templates/": "resources",
+  "/templates/": "templates",
   "/solutions/": "solutions",
 };
 
 // Sections that have an index page (e.g., /templates → /templates.md)
 const BARE_SECTIONS: Record<string, string> = {
-  "/templates": "resources",
+  "/templates": "templates",
   "/solutions": "solutions",
 };
 

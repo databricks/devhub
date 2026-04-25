@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 
 /**
- * Shared decorative art used when a resource (example, guide, or template) has
+ * Shared decorative art used when a template (example, cookbook, or recipe) has
  * no preview screenshot. Six rotating variants so adjacent cards never repeat.
  * Called from the landing carousel, the /templates list, and the example detail
  * hero whenever `previewImage*Url` and `galleryImages` are empty.

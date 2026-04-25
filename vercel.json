@@ -25,7 +25,7 @@
     },
     {
       "source": "/templates.md",
-      "destination": "/api/markdown?section=resources&slug="
+      "destination": "/api/markdown?section=templates&slug="
     },
     {
       "source": "/solutions.md",
@@ -37,7 +37,7 @@
     },
     {
       "source": "/templates/(.+)\\.md",
-      "destination": "/api/markdown?section=resources&slug=$1"
+      "destination": "/api/markdown?section=templates&slug=$1"
     },
     {
       "source": "/(.+)\\.md",

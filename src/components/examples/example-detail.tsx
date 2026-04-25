@@ -34,8 +34,8 @@ import type { Example } from "@/lib/recipes/recipes";
 import { cookbooks, recipes } from "@/lib/recipes/recipes";
 import { useExampleSections } from "@/lib/use-raw-content-markdown";
 import { joinContentSections } from "@/lib/content-sections";
-import { ResourceImageCarousel } from "@/components/examples/resource-image-carousel";
-import { ResourcePreviewImage } from "@/components/examples/resource-preview-image";
+import { TemplateImageCarousel } from "@/components/examples/template-image-carousel";
+import { TemplatePreviewImage } from "@/components/examples/template-preview-image";
 import { FallbackCardArt } from "@/components/examples/fallback-card-art";
 
 const mdxComponents = { pre: RecipePre };
@@ -47,7 +47,7 @@ type ExampleDetailProps = {
   children: ReactNode;
 };
 
-function IncludedResourceCard({
+function IncludedTemplateCard({
   name,
   description,
   href,
@@ -63,7 +63,7 @@ function IncludedResourceCard({
           variant="secondary"
           className="mb-1 w-fit rounded-md border border-black/10 bg-black/5 px-2 py-0.5 text-[10px] font-semibold tracking-wide text-black/60 uppercase dark:border-white/10 dark:bg-white/8 dark:text-white/60"
         >
-          Guide
+          Template
         </Badge>
         <CardTitle className="text-base leading-tight font-medium">
           {name}
@@ -257,8 +257,8 @@ export function ExampleDetail({
   const rawMarkdown = joinContentSections(sections);
   const aboutDevhubBody = useAboutDevhubBody();
 
-  const includedTemplates = example.cookbookIds
-    .map((id) => cookbooks.find((t) => t.id === id))
+  const includedCookbooks = example.cookbookIds
+    .map((id) => cookbooks.find((c) => c.id === id))
     .filter(Boolean);
 
   const includedRecipes = example.recipeIds
@@ -268,7 +268,7 @@ export function ExampleDetail({
   const mdOpts = {
     example,
     githubUrl,
-    includedTemplates,
+    includedCookbooks,
     includedRecipes,
     baseUrl: siteConfig.url,
   };
@@ -326,13 +326,13 @@ export function ExampleDetail({
                 </div>
 
                 {example.galleryImages && example.galleryImages.length > 0 ? (
-                  <ResourceImageCarousel
+                  <TemplateImageCarousel
                     images={example.galleryImages}
                     exampleName={example.name}
                   />
                 ) : (
                   <div className="relative mb-8 aspect-[16/9] w-full overflow-hidden rounded-xl border border-border/60 bg-muted/30">
-                    <ResourcePreviewImage
+                    <TemplatePreviewImage
                       lightUrl={example.previewImageLightUrl}
                       darkUrl={example.previewImageDarkUrl}
                       alt={`${example.name} preview`}
@@ -368,23 +368,23 @@ export function ExampleDetail({
                   </MDXProvider>
                 </div>
 
-                {(includedTemplates.length > 0 ||
+                {(includedCookbooks.length > 0 ||
                   includedRecipes.length > 0) && (
                   <div className="mt-12">
                     <h2 className="mb-6 text-xl font-semibold tracking-tight">
-                      Included Resources
+                      Included Templates
                     </h2>
                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                      {includedTemplates.map((t) => (
-                        <IncludedResourceCard
-                          key={t.id}
-                          name={t.name}
-                          description={t.description}
-                          href={`/templates/${t.id}`}
+                      {includedCookbooks.map((c) => (
+                        <IncludedTemplateCard
+                          key={c.id}
+                          name={c.name}
+                          description={c.description}
+                          href={`/templates/${c.id}`}
                         />
                       ))}
                       {includedRecipes.map((r) => (
-                        <IncludedResourceCard
+                        <IncludedTemplateCard
                           key={r.id}
                           name={r.name}
                           description={r.description}

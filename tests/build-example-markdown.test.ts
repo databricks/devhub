@@ -3,7 +3,7 @@ import {
   buildFullPrompt,
   buildAdditionalMarkdown,
   buildExportGetStartedSection,
-  buildIncludedGuidesPreamble,
+  buildIncludedTemplatesPreamble,
 } from "../src/lib/examples/build-example-markdown";
 import type {
   ExampleMarkdownOptions,
@@ -18,7 +18,7 @@ const minimalExample: Example = {
   githubPath: "examples/test-example",
   initCommand:
     "git clone --depth 1 https://github.com/databricks/devhub.git\ncd devhub/examples/test-example/template",
-  templateIds: [],
+  cookbookIds: [],
   recipeIds: [],
   tags: [],
   services: [],
@@ -54,17 +54,16 @@ const sampleRecipes = [
 const baseOpts: ExampleMarkdownOptions = {
   example: minimalExample,
   githubUrl,
-  includedTemplates: [],
+  includedCookbooks: [],
   includedRecipes: [],
   baseUrl,
 };
 
-describe("buildIncludedGuidesPreamble", () => {
-  test("explains guides mirror the template and points to DevHub for extra context", () => {
-    const text = buildIncludedGuidesPreamble();
-    expect(text).toContain("**guides**");
-    expect(text).toContain("cookbooks");
-    expect(text).toContain("**recipes**");
+describe("buildIncludedTemplatesPreamble", () => {
+  test("explains templates mirror the code and points to DevHub for extra context", () => {
+    const text = buildIncludedTemplatesPreamble();
+    expect(text).toContain("**templates**");
+    expect(text).toContain("recipes");
     expect(text).toContain("template code");
     expect(text).toContain("`template/README.md`");
     expect(text).toContain("DevHub");
@@ -135,15 +134,15 @@ describe("buildFullPrompt", () => {
     expect(prompt).toContain(githubUrl);
   });
 
-  test("includes guides from templates and recipes", () => {
+  test("includes templates from cookbooks and recipes", () => {
     const prompt = buildFullPrompt({
       ...baseOpts,
       sections: emptySections,
-      includedTemplates: sampleTemplates,
+      includedCookbooks: sampleTemplates,
       includedRecipes: sampleRecipes,
     });
-    expect(prompt).toContain("## Included guides");
-    expect(prompt).toContain(buildIncludedGuidesPreamble());
+    expect(prompt).toContain("## Included templates");
+    expect(prompt).toContain(buildIncludedTemplatesPreamble());
     expect(prompt).toContain(
       "[Template A](https://example.com/templates/tmpl-a.md) - First template.",
     );
@@ -152,9 +151,9 @@ describe("buildFullPrompt", () => {
     );
   });
 
-  test("omits guides section when no templates or recipes", () => {
+  test("omits included templates section when no cookbooks or recipes", () => {
     const prompt = buildFullPrompt({ ...baseOpts, sections: emptySections });
-    expect(prompt).not.toContain("## Included guides");
+    expect(prompt).not.toContain("## Included templates");
   });
 
   test("omits content body when section is empty", () => {
@@ -181,14 +180,14 @@ describe("buildAdditionalMarkdown", () => {
     expect(md).toContain(githubUrl);
   });
 
-  test("includes resource links", () => {
+  test("includes template links", () => {
     const md = buildAdditionalMarkdown({
       ...baseOpts,
-      includedTemplates: sampleTemplates,
+      includedCookbooks: sampleTemplates,
       includedRecipes: sampleRecipes,
     });
-    expect(md).toContain("## Included guides");
-    expect(md).toContain(buildIncludedGuidesPreamble());
+    expect(md).toContain("## Included templates");
+    expect(md).toContain(buildIncludedTemplatesPreamble());
     expect(md).toContain(
       "[Template A](https://example.com/templates/tmpl-a.md)",
     );
@@ -197,9 +196,9 @@ describe("buildAdditionalMarkdown", () => {
     );
   });
 
-  test("omits guides section when no templates or recipes", () => {
+  test("omits included templates section when no cookbooks or recipes", () => {
     const md = buildAdditionalMarkdown(baseOpts);
-    expect(md).not.toContain("## Included guides");
+    expect(md).not.toContain("## Included templates");
   });
 });
 
@@ -208,7 +207,7 @@ describe("buildFullPrompt matches Copy as Markdown content", () => {
     const prompt = buildFullPrompt({
       ...baseOpts,
       sections: contentOnlySections,
-      includedTemplates: sampleTemplates,
+      includedCookbooks: sampleTemplates,
       includedRecipes: sampleRecipes,
     });
     for (const line of sampleContentMarkdown.split("\n").filter(Boolean)) {
@@ -237,7 +236,7 @@ describe("example Get started: full prompt (Copy prompt) vs export markdown (Cop
   test("export markdown never embeds full-prompt subheadings in the appended section", () => {
     const exportMd = buildAdditionalMarkdown({
       ...baseOpts,
-      includedTemplates: sampleTemplates,
+      includedCookbooks: sampleTemplates,
       includedRecipes: sampleRecipes,
     });
     expect(exportMd).not.toContain("### 2.");
@@ -254,7 +253,7 @@ describe("init-style examples (databricks apps init)", () => {
   const initOpts: ExampleMarkdownOptions = {
     example: initExample,
     githubUrl,
-    includedTemplates: [],
+    includedCookbooks: [],
     includedRecipes: [],
     baseUrl,
   };

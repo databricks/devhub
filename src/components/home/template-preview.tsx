@@ -14,7 +14,7 @@ import {
   type LandingTemplateItem,
 } from "@/lib/landing-content";
 import { FallbackCardArt } from "@/components/examples/fallback-card-art";
-import { ResourcePreviewImage } from "@/components/examples/resource-preview-image";
+import { TemplatePreviewImage } from "@/components/examples/template-preview-image";
 
 function TemplateCarouselCard({
   item,
@@ -27,7 +27,7 @@ function TemplateCarouselCard({
     <Link to={item.path} className="no-underline">
       <Card className="group flex h-full flex-col overflow-hidden rounded-xl border border-black/10 bg-white shadow-none transition-all duration-200 hover:border-black/20 dark:border-white/10 dark:bg-db-navy-light dark:hover:border-white/20">
         <div className="relative aspect-[16/9] overflow-hidden border-b border-black/10 dark:border-white/10">
-          <ResourcePreviewImage
+          <TemplatePreviewImage
             lightUrl={item.previewImageLightUrl}
             darkUrl={item.previewImageDarkUrl}
             alt={item.title}

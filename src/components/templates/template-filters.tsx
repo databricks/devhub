@@ -9,7 +9,7 @@ const ALL_TEMPLATE_TYPES: ReadonlyArray<{
   label: string;
 }> = [
   { type: "examples", label: "Examples" },
-  { type: "cookbooks", label: "Cookbooks" },
+  { type: "cookbooks", label: "Guides & Recipes" },
 ];
 
 export function TemplateFilters({

@@ -13,9 +13,9 @@ Databricks is a data and AI platform. It manages data pipelines, stores and gove
 - **A Postgres database**: provision Lakebase, managed Postgres that runs inside your workspace, with instant branching and scale-to-zero for development and production.
 - **An AI agent**: give an LLM a goal and a set of tools: functions it can call, APIs it can hit, data it can query. Deploy it to your workspace with hosted model endpoints and built-in tracing.
 
-## Guides and examples
+## Templates
 
-DevHub has two types of resources in the [resources catalog](/templates):
+DevHub has two types of templates in the [templates catalog](/templates):
 
 - **Guides**: step-by-step build instructions. Copy one into your coding agent and it handles scaffolding, configuration, and deployment.
 - **Examples**: working apps with source code you can clone and customize.

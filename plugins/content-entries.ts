@@ -20,7 +20,7 @@ import { solutions } from "../src/lib/solutions/solutions";
 function assertNoDuplicateSlugs(): void {
   const all: Array<{ id: string; type: string }> = [
     ...examples.map((e) => ({ id: e.id, type: "example" })),
-    ...cookbooks.map((t) => ({ id: t.id, type: "template" })),
+    ...cookbooks.map((c) => ({ id: c.id, type: "cookbook" })),
     ...recipes.map((r) => ({ id: r.id, type: "recipe" })),
   ];
   const seen = new Map<string, string>();
@@ -28,7 +28,7 @@ function assertNoDuplicateSlugs(): void {
     const existing = seen.get(id);
     if (existing) {
       throw new Error(
-        `Duplicate slug "${id}" used by both ${existing} and ${type}. All resources must have unique slugs.`,
+        `Duplicate slug "${id}" used by both ${existing} and ${type}. All content entries must have unique slugs.`,
       );
     }
     seen.set(id, type);

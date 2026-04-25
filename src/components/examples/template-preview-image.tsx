@@ -15,7 +15,7 @@ import type { ReactNode } from "react";
  * by `npm run verify:images`), so object-cover yields a clean edge with no
  * letterboxing.
  */
-export function ResourcePreviewImage({
+export function TemplatePreviewImage({
   lightUrl,
   darkUrl,
   alt,

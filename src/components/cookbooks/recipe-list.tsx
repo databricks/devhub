@@ -21,7 +21,7 @@ export function RecipeList({ recipes }: RecipeListProps): ReactNode {
         <BookOpen size={18} className="shrink-0 text-db-lava" />
         <div className="flex-1">
           <p className="m-0 text-sm font-semibold text-foreground">
-            This guide includes {recipes.length} recipes
+            This template includes {recipes.length} recipes
           </p>
           <p className="m-0 text-xs text-muted-foreground">
             {isOpen ? "Click to collapse" : "Click to see the recipe list"}

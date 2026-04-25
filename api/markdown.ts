@@ -11,18 +11,17 @@ function parseSection(section: unknown): MarkdownSection {
     section === "recipes" ||
     section === "solutions" ||
     section === "examples" ||
-    section === "templates" ||
-    section === "resources"
+    section === "templates"
   ) {
     return section;
   }
   throw new Error(
-    'Invalid section. Expected one of: "docs", "recipes", "solutions", "examples", "templates", "resources".',
+    'Invalid section. Expected one of: "docs", "recipes", "solutions", "examples", "templates".',
   );
 }
 
 /**
- * Serves markdown content for any doc/resource/solution/template page.
+ * Serves markdown content for any doc/solution/template page.
  * Reached via .md URL rewrites (vercel.json) or content negotiation (middleware.ts).
  */
 export default function handler(req: VercelRequest, res: VercelResponse): void {
@@ -62,8 +61,8 @@ export default function handler(req: VercelRequest, res: VercelResponse): void {
           "",
           `\`${requestedPath}\` does not exist.`,
           "",
-          "- [Site index](/llms.txt): Table of contents for all documentation, guides, and examples",
-          "- [All templates](/templates.md): Guides and examples for building on Databricks",
+          "- [Site index](/llms.txt): Table of contents for all documentation and templates",
+          "- [All templates](/templates.md): Templates for building on Databricks",
           "- [All solutions](/solutions.md): Use-case solutions",
           "- [Start here](/docs/start-here.md): Site orientation and getting started guide",
           "",

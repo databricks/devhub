@@ -2,7 +2,7 @@ import { describe, expect, test, afterEach, vi } from "vitest";
 import {
   filterPublished,
   type Recipe,
-  type Template,
+  type Cookbook,
   type Example,
 } from "../src/lib/recipes/recipes";
 
@@ -59,18 +59,18 @@ describe("filterPublished", () => {
     expect(result).toHaveLength(2);
   });
 
-  test("works with templates", () => {
-    const draft: Template = {
-      id: "draft-tmpl",
-      name: "Draft Template",
+  test("works with cookbooks", () => {
+    const draft: Cookbook = {
+      id: "draft-cb",
+      name: "Draft Cookbook",
       description: "A draft",
       recipeIds: [],
       tags: [],
       services: [],
       isDraft: true,
     };
-    const published: Template = {
-      id: "pub-tmpl",
+    const published: Cookbook = {
+      id: "pub-cb",
       name: "Published",
       description: "Published",
       recipeIds: [],
@@ -82,7 +82,7 @@ describe("filterPublished", () => {
   });
 });
 
-describe("resources index filters drafts from API markdown", () => {
+describe("templates index filters drafts from API markdown", () => {
   afterEach(() => {
     delete process.env.SHOW_DRAFTS;
     delete process.env.EXAMPLES_FEATURE;
@@ -90,21 +90,21 @@ describe("resources index filters drafts from API markdown", () => {
     vi.resetModules();
   });
 
-  test("resources index includes non-draft entries", async () => {
+  test("templates index includes non-draft entries", async () => {
     process.env.EXAMPLES_FEATURE = "true";
     const { getDetailMarkdown } = await import("../api/content-markdown");
-    const markdown = getDetailMarkdown("resources", "");
-    expect(markdown).toContain("## Guides");
+    const markdown = getDetailMarkdown("templates", "");
+    expect(markdown).toContain("## Cookbooks");
     expect(markdown).toContain("## Recipes");
     expect(markdown).toContain("## Examples");
   });
 
-  test("resources index excludes examples when feature is disabled", async () => {
+  test("templates index excludes examples when feature is disabled", async () => {
     delete process.env.EXAMPLES_FEATURE;
     process.env.CI = "true";
     const { getDetailMarkdown } = await import("../api/content-markdown");
-    const markdown = getDetailMarkdown("resources", "");
-    expect(markdown).toContain("## Guides");
+    const markdown = getDetailMarkdown("templates", "");
+    expect(markdown).toContain("## Cookbooks");
     expect(markdown).toContain("## Recipes");
     expect(markdown).not.toContain("## Examples");
   });

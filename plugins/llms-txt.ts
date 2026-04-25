@@ -29,7 +29,7 @@ const SIDEBAR_SECTIONS: Array<{
   {
     title: "Start Here",
     description:
-      "Site orientation: what DevHub is, how to use guides and examples, and where to find companion docs.",
+      "Site orientation: what DevHub is, how to use templates and examples, and where to find companion docs.",
     slugs: ["start-here"],
   },
   {
@@ -138,7 +138,7 @@ function readDoc(
 function generateLlmsTxt(baseUrl: string, docsDir: string): string {
   const includeDrafts = showDrafts();
   const includeExamples = examplesEnabled();
-  const publishedTemplates = filterPublished(cookbooks, includeDrafts);
+  const publishedCookbooks = filterPublished(cookbooks, includeDrafts);
   const publishedRecipes = filterPublished(recipesInOrder, includeDrafts);
   const publishedExamples = includeExamples
     ? filterPublished(examples, includeDrafts)
@@ -165,7 +165,7 @@ function generateLlmsTxt(baseUrl: string, docsDir: string): string {
   const lines: string[] = [
     "# Databricks Developer Hub",
     "",
-    "> Documentation, guides, and examples for building apps and AI agents on Databricks using Lakebase (managed Postgres), Model Serving, and Databricks Apps.",
+    "> Documentation, templates, and examples for building apps and AI agents on Databricks using Lakebase (managed Postgres), Model Serving, and Databricks Apps.",
     "",
   ];
 
@@ -189,21 +189,21 @@ function generateLlmsTxt(baseUrl: string, docsDir: string): string {
     lines.push("");
   }
 
-  // Resources — grouped by type
+  // Templates — grouped by type
   lines.push(
-    "## Resources",
+    "## Templates",
     "",
-    "Guides and examples for building on Databricks.",
+    "Templates and examples for building on Databricks.",
     "",
-    `- [All Resources](${baseUrl}/templates.md): Browse all resources`,
+    `- [All Templates](${baseUrl}/templates.md): Browse all templates`,
     "",
   );
 
-  if (publishedTemplates.length > 0) {
+  if (publishedCookbooks.length > 0) {
     lines.push(
-      "### Guides",
+      "### Cookbooks",
       "",
-      ...publishedTemplates.map(
+      ...publishedCookbooks.map(
         (t) =>
           `- [${t.name}](${baseUrl}/templates/${t.id}.md): ${t.description}`,
       ),

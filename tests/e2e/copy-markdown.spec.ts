@@ -148,7 +148,7 @@ test.describe("copy markdown exports raw markdown on example pages", () => {
     ).toBeVisible();
   });
 
-  test("Get started: Copy prompt includes clone bash block and included guides preamble", async ({
+  test("Get started: Copy prompt includes clone bash block and included templates preamble", async ({
     page,
   }) => {
     await setupClipboardMock(page);
@@ -165,9 +165,9 @@ test.describe("copy markdown exports raw markdown on example pages", () => {
       "git clone --depth 1 https://github.com/databricks/devhub.git",
     );
     expect(copied).toContain("**`template/README.md`**");
-    expect(copied).toContain("## Included guides");
+    expect(copied).toContain("## Included templates");
     expect(copied).toContain(
-      "These **guides** (multi-step cookbooks) and **recipes** informed how this example was built",
+      "These **templates** (multi-recipe cookbooks and standalone recipes) informed how this example was built",
     );
     expect(copied).toContain(
       "### 1. Clone locally and follow `template/README.md`",
@@ -261,7 +261,7 @@ test.describe("copy markdown exports raw markdown on docs pages", () => {
     const copied = await getCopiedText(page);
     expect(copied).toContain("# About DevHub");
     expect(copied).toContain("# Start here");
-    expect(copied).toContain("## Guides and examples");
+    expect(copied).toContain("## Templates");
   });
 
   test("raw-docs static files are served", async ({ request }) => {

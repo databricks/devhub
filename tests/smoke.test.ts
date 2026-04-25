@@ -24,7 +24,7 @@ describe("production build smoke tests", () => {
   test("llms.txt has correct H1 and description", () => {
     const text = readBuildFile("llms.txt");
     expect(text).toContain("# Databricks Developer Hub");
-    expect(text).toContain("> Documentation, guides, and examples");
+    expect(text).toContain("> Documentation, templates, and examples");
   });
 
   test("llms.txt links use .md suffix", () => {
@@ -34,19 +34,19 @@ describe("production build smoke tests", () => {
     expect(text).toContain("/solutions.md");
   });
 
-  test("llms.txt section order: Start Here before Resources before Solutions", () => {
+  test("llms.txt section order: Start Here before Templates before Solutions", () => {
     const text = readBuildFile("llms.txt");
     const startHereIdx = text.indexOf("## Start Here");
-    const resourcesIdx = text.indexOf("## Resources");
+    const templatesIdx = text.indexOf("## Templates");
     const solutionsIdx = text.indexOf("## Solutions");
     expect(startHereIdx).toBeGreaterThan(-1);
-    expect(resourcesIdx).toBeGreaterThan(startHereIdx);
-    expect(solutionsIdx).toBeGreaterThan(resourcesIdx);
+    expect(templatesIdx).toBeGreaterThan(startHereIdx);
+    expect(solutionsIdx).toBeGreaterThan(templatesIdx);
   });
 
-  test("llms.txt resources have subheadings", () => {
+  test("llms.txt templates have subheadings", () => {
     const text = readBuildFile("llms.txt");
-    expect(text).toContain("### Guides");
+    expect(text).toContain("### Cookbooks");
     expect(text).toContain("### Recipes");
     if (
       process.env.EXAMPLES_FEATURE === "true" ||

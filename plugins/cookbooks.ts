@@ -6,16 +6,16 @@ import {
 import { cookbooks } from "../src/lib/recipes/recipes";
 
 export type CookbooksGlobalData = {
-  /** Raw `content/cookbooks/<slug>/intro.md` bodies keyed by template id. */
+  /** Raw `content/cookbooks/<slug>/intro.md` bodies keyed by cookbook id. */
   introsBySlug: Record<string, string>;
 };
 
 function assertCookbookSlugParity(contentSlugs: string[]): void {
-  const templateIds = cookbooks.map((t) => t.id);
-  const unknown = contentSlugs.filter((slug) => !templateIds.includes(slug));
+  const cookbookIds = cookbooks.map((c) => c.id);
+  const unknown = contentSlugs.filter((slug) => !cookbookIds.includes(slug));
   if (unknown.length > 0) {
     throw new Error(
-      `content/cookbooks/ contains folders that do not match any template id: ${unknown.join(", ")}. Rename the folder or add the template to src/lib/recipes/recipes.ts.`,
+      `content/cookbooks/ contains folders that do not match any cookbook id: ${unknown.join(", ")}. Rename the folder or add the cookbook to src/lib/recipes/recipes.ts.`,
     );
   }
 }

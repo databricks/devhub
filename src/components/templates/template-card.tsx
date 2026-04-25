@@ -2,14 +2,14 @@ import Link from "@docusaurus/Link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { Example, Recipe, Cookbook } from "@/lib/recipes/recipes";
 import { FallbackCardArt } from "@/components/examples/fallback-card-art";
-import { ResourcePreviewImage } from "@/components/examples/resource-preview-image";
+import { TemplatePreviewImage } from "@/components/examples/template-preview-image";
 
 export type TemplateItem =
   | { kind: "example"; data: Example }
   | { kind: "cookbook"; data: Cookbook }
   | { kind: "recipe"; data: Recipe };
 
-function getResourceHref(item: TemplateItem): string {
+function getTemplateHref(item: TemplateItem): string {
   return `/templates/${item.data.id}`;
 }
 
@@ -22,7 +22,7 @@ export function TemplateCard({
 }) {
   const name = item.data.name;
   const description = item.data.description;
-  const href = getResourceHref(item);
+  const href = getTemplateHref(item);
   const lightUrl = item.data.previewImageLightUrl;
   const darkUrl = item.data.previewImageDarkUrl;
 
@@ -30,7 +30,7 @@ export function TemplateCard({
     <Link to={href} className="no-underline">
       <Card className="group flex h-full flex-col overflow-hidden rounded-xl border border-black/10 shadow-none transition-all duration-200 hover:border-black/20 dark:border-white/10 dark:hover:border-white/20 bg-[#f7f6f4] dark:bg-[#182a32]">
         <div className="relative aspect-[16/9] overflow-hidden border-b border-black/10 dark:border-white/10">
-          <ResourcePreviewImage
+          <TemplatePreviewImage
             lightUrl={lightUrl}
             darkUrl={darkUrl}
             alt={name}

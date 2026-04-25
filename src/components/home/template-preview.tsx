@@ -10,17 +10,17 @@ import {
 } from "@/components/ui/carousel";
 import { useFeatureFlags } from "@/lib/feature-flags";
 import {
-  buildLandingResources,
-  type LandingResourceItem,
+  buildLandingTemplates,
+  type LandingTemplateItem,
 } from "@/lib/landing-content";
 import { FallbackCardArt } from "@/components/examples/fallback-card-art";
 import { ResourcePreviewImage } from "@/components/examples/resource-preview-image";
 
-function ResourceCard({
+function TemplateCarouselCard({
   item,
   index,
 }: {
-  item: LandingResourceItem;
+  item: LandingTemplateItem;
   index: number;
 }): ReactNode {
   return (
@@ -52,7 +52,7 @@ function ResourceCard({
 export function TemplatePreview(): ReactNode {
   const { showDrafts: includeDrafts, examplesEnabled: includeExamples } =
     useFeatureFlags();
-  const landingResources = buildLandingResources(
+  const landingTemplates = buildLandingTemplates(
     includeDrafts,
     includeExamples,
   );
@@ -86,12 +86,12 @@ export function TemplatePreview(): ReactNode {
         <div className="mx-auto max-w-6xl">
           <Carousel opts={{ align: "start", loop: true }} className="w-full">
             <CarouselContent>
-              {landingResources.map((item, index) => (
+              {landingTemplates.map((item, index) => (
                 <CarouselItem
                   key={item.id}
                   className="basis-[85%] sm:basis-1/2 lg:basis-1/3 xl:basis-1/4"
                 >
-                  <ResourceCard item={item} index={index} />
+                  <TemplateCarouselCard item={item} index={index} />
                 </CarouselItem>
               ))}
             </CarouselContent>

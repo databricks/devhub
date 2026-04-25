@@ -15,17 +15,17 @@ const ALL_TEMPLATE_TYPES: ReadonlyArray<{
 export function TemplateFilters({
   selectedServices,
   onToggleService,
-  selectedResourceTypes,
-  onToggleResourceType,
+  selectedTemplateTypes,
+  onToggleTemplateType,
 }: {
   selectedServices: Set<Service>;
   onToggleService: (service: Service) => void;
-  selectedResourceTypes: Set<TemplateType>;
-  onToggleResourceType: (type: TemplateType) => void;
+  selectedTemplateTypes: Set<TemplateType>;
+  onToggleTemplateType: (type: TemplateType) => void;
 }) {
   const { examplesEnabled } = useFeatureFlags();
 
-  const visibleResourceTypes = examplesEnabled
+  const visibleTemplateTypes = examplesEnabled
     ? ALL_TEMPLATE_TYPES
     : ALL_TEMPLATE_TYPES.filter((rt) => rt.type !== "examples");
 
@@ -52,20 +52,20 @@ export function TemplateFilters({
         </div>
       </div>
 
-      {visibleResourceTypes.length > 1 && (
+      {visibleTemplateTypes.length > 1 && (
         <div className="border-t border-black/8 pt-6 dark:border-white/8">
           <h3 className="mb-3 text-xs font-semibold tracking-wider text-black/50 uppercase dark:text-white/50">
             Type
           </h3>
           <div className="space-y-2">
-            {visibleResourceTypes.map(({ type, label }) => (
+            {visibleTemplateTypes.map(({ type, label }) => (
               <label
                 key={type}
                 className="flex cursor-pointer items-center gap-2.5 rounded-md px-1 py-1 text-sm text-black/80 transition-colors hover:bg-black/4 dark:text-white/80 dark:hover:bg-white/4"
               >
                 <Checkbox
-                  checked={selectedResourceTypes.has(type)}
-                  onCheckedChange={() => onToggleResourceType(type)}
+                  checked={selectedTemplateTypes.has(type)}
+                  onCheckedChange={() => onToggleTemplateType(type)}
                   aria-label={label}
                 />
                 <span className="leading-tight">{label}</span>

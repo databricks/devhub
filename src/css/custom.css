@@ -466,8 +466,8 @@
 }
 
 @layer utilities {
-  /* Resources filters sidebar: custom dark variant uses :where() (zero specificity), so dark:bg-* can tie bg-white/60 and lose cascade order in prod. */
-  [data-theme="dark"] .resources-filter-surface {
+  /* Templates filters sidebar: custom dark variant uses :where() (zero specificity), so dark:bg-* can tie bg-white/60 and lose cascade order in prod. */
+  [data-theme="dark"] .templates-filter-surface {
     background-color: var(--db-dark-card);
     border-color: rgb(255 255 255 / 0.12);
   }

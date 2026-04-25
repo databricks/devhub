@@ -8,22 +8,22 @@ export function ActiveFilters({
   onRemoveTag,
   selectedServices,
   onRemoveService,
-  selectedResourceTypes,
-  onRemoveResourceType,
+  selectedTemplateTypes,
+  onRemoveTemplateType,
   onClearAll,
 }: {
   activeTags: Set<string>;
   onRemoveTag: (tag: string) => void;
   selectedServices: Set<Service>;
   onRemoveService: (service: Service) => void;
-  selectedResourceTypes: Set<TemplateType>;
-  onRemoveResourceType: (type: TemplateType) => void;
+  selectedTemplateTypes: Set<TemplateType>;
+  onRemoveTemplateType: (type: TemplateType) => void;
   onClearAll: () => void;
 }) {
   const hasFilters =
     activeTags.size > 0 ||
     selectedServices.size > 0 ||
-    selectedResourceTypes.size > 0;
+    selectedTemplateTypes.size > 0;
 
   if (!hasFilters) return null;
 
@@ -45,11 +45,11 @@ export function ActiveFilters({
           </Badge>
         </button>
       ))}
-      {[...selectedResourceTypes].map((type) => (
+      {[...selectedTemplateTypes].map((type) => (
         <button
           key={`rt-${type}`}
           type="button"
-          onClick={() => onRemoveResourceType(type)}
+          onClick={() => onRemoveTemplateType(type)}
           className="group/pill cursor-pointer"
         >
           <Badge

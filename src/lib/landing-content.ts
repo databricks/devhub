@@ -16,14 +16,14 @@ export type Pillar = {
   icon?: ComponentType<{ className?: string }>;
 };
 
-export type LandingResourceItem = {
+export type LandingTemplateItem = {
   id: string;
   path: string;
   title: string;
   description: string;
   tags?: string[];
   services?: Service[];
-  kind: "example" | "guide";
+  kind: "example" | "cookbook";
   previewImageLightUrl?: string;
   previewImageDarkUrl?: string;
 };
@@ -55,21 +55,21 @@ export const pillars: Pillar[] = [
   },
 ];
 
-export function buildLandingResources(
+export function buildLandingTemplates(
   includeDrafts: boolean,
   includeExamples: boolean,
-): LandingResourceItem[] {
+): LandingTemplateItem[] {
   const publishedExamples = includeExamples
     ? filterPublished(examples, includeDrafts)
     : [];
-  const publishedTemplates = filterPublished(cookbooks, includeDrafts);
-  const publishedTemplateIds = new Set(publishedTemplates.map((t) => t.id));
-  const publishedPreviewItems = cookbookPreviewItems.filter((t) =>
-    publishedTemplateIds.has(t.id),
+  const publishedCookbooks = filterPublished(cookbooks, includeDrafts);
+  const publishedCookbookIds = new Set(publishedCookbooks.map((c) => c.id));
+  const publishedPreviewItems = cookbookPreviewItems.filter((c) =>
+    publishedCookbookIds.has(c.id),
   );
 
   return [
-    ...publishedExamples.map<LandingResourceItem>((e) => ({
+    ...publishedExamples.map<LandingTemplateItem>((e) => ({
       id: e.id,
       path: `/templates/${e.id}`,
       title: e.name,
@@ -84,19 +84,19 @@ export function buildLandingResources(
         ? { previewImageDarkUrl: e.previewImageDarkUrl }
         : {}),
     })),
-    ...[...publishedPreviewItems].reverse().map<LandingResourceItem>((t) => ({
-      id: t.id,
-      path: t.path,
-      title: t.title,
-      description: t.description,
-      tags: t.tags,
-      services: t.services,
-      kind: "guide",
-      ...(t.previewImageLightUrl
-        ? { previewImageLightUrl: t.previewImageLightUrl }
+    ...[...publishedPreviewItems].reverse().map<LandingTemplateItem>((c) => ({
+      id: c.id,
+      path: c.path,
+      title: c.title,
+      description: c.description,
+      tags: c.tags,
+      services: c.services,
+      kind: "cookbook",
+      ...(c.previewImageLightUrl
+        ? { previewImageLightUrl: c.previewImageLightUrl }
         : {}),
-      ...(t.previewImageDarkUrl
-        ? { previewImageDarkUrl: t.previewImageDarkUrl }
+      ...(c.previewImageDarkUrl
+        ? { previewImageDarkUrl: c.previewImageDarkUrl }
         : {}),
     })),
   ];

@@ -26,23 +26,23 @@ import {
 } from "@/lib/recipes/recipes";
 import { useFeatureFlags } from "@/lib/feature-flags";
 
-function buildResourceItems(
+function buildTemplateItems(
   includeDrafts: boolean,
   includeExamples: boolean,
 ): TemplateItem[] {
   const publishedExamples = includeExamples
     ? filterPublished(examples, includeDrafts)
     : [];
-  const publishedTemplates = filterPublished(cookbooks, includeDrafts);
+  const publishedCookbooks = filterPublished(cookbooks, includeDrafts);
   const publishedRecipes = filterPublished(recipesInOrder, includeDrafts);
 
   const exampleItems: TemplateItem[] = publishedExamples.map((e) => ({
     kind: "example",
     data: e,
   }));
-  const cookbookItems: TemplateItem[] = publishedTemplates.map((t) => ({
+  const cookbookItems: TemplateItem[] = publishedCookbooks.map((c) => ({
     kind: "cookbook",
-    data: t,
+    data: c,
   }));
   const recipeItems: TemplateItem[] = publishedRecipes.map((r) => ({
     kind: "recipe",
@@ -51,12 +51,12 @@ function buildResourceItems(
   return [...exampleItems, ...cookbookItems, ...recipeItems];
 }
 
-export default function ResourcesPage(): ReactNode {
+export default function TemplatesPage(): ReactNode {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedServices, setSelectedServices] = useState<Set<Service>>(
     new Set(),
   );
-  const [selectedResourceTypes, setSelectedResourceTypes] = useState<
+  const [selectedTemplateTypes, setSelectedTemplateTypes] = useState<
     Set<TemplateType>
   >(new Set());
   const [activeTags, setActiveTags] = useState<Set<string>>(new Set());
@@ -66,17 +66,17 @@ export default function ResourcesPage(): ReactNode {
     useFeatureFlags();
 
   const ALL_ITEMS = useMemo(
-    () => buildResourceItems(includeDrafts, includeExamples),
+    () => buildTemplateItems(includeDrafts, includeExamples),
     [includeDrafts, includeExamples],
   );
 
   const filteredItems = useMemo(() => {
     const query = searchQuery.toLowerCase().trim();
     return ALL_ITEMS.filter((item) => {
-      if (selectedResourceTypes.size > 0 && selectedResourceTypes.size < 2) {
+      if (selectedTemplateTypes.size > 0 && selectedTemplateTypes.size < 2) {
         const isExample = item.kind === "example";
-        if (selectedResourceTypes.has("examples") && !isExample) return false;
-        if (selectedResourceTypes.has("cookbooks") && isExample) return false;
+        if (selectedTemplateTypes.has("examples") && !isExample) return false;
+        if (selectedTemplateTypes.has("cookbooks") && isExample) return false;
       }
 
       if (selectedServices.size > 0) {
@@ -99,7 +99,7 @@ export default function ResourcesPage(): ReactNode {
   }, [
     searchQuery,
     selectedServices,
-    selectedResourceTypes,
+    selectedTemplateTypes,
     activeTags,
     ALL_ITEMS,
   ]);
@@ -113,8 +113,8 @@ export default function ResourcesPage(): ReactNode {
     });
   }, []);
 
-  const handleToggleResourceType = useCallback((type: TemplateType) => {
-    setSelectedResourceTypes((prev) => {
+  const handleToggleTemplateType = useCallback((type: TemplateType) => {
+    setSelectedTemplateTypes((prev) => {
       const next = new Set(prev);
       if (next.has(type)) next.delete(type);
       else next.add(type);
@@ -132,7 +132,7 @@ export default function ResourcesPage(): ReactNode {
 
   const handleClearAllFilters = useCallback(() => {
     setSelectedServices(new Set());
-    setSelectedResourceTypes(new Set());
+    setSelectedTemplateTypes(new Set());
     setActiveTags(new Set());
     setSearchQuery("");
   }, []);
@@ -140,14 +140,14 @@ export default function ResourcesPage(): ReactNode {
   const hasActiveFilters =
     activeTags.size > 0 ||
     selectedServices.size > 0 ||
-    selectedResourceTypes.size > 0;
+    selectedTemplateTypes.size > 0;
 
   const filtersSidebar = (
     <TemplateFilters
       selectedServices={selectedServices}
       onToggleService={handleToggleService}
-      selectedResourceTypes={selectedResourceTypes}
-      onToggleResourceType={handleToggleResourceType}
+      selectedTemplateTypes={selectedTemplateTypes}
+      onToggleTemplateType={handleToggleTemplateType}
     />
   );
 
@@ -187,7 +187,7 @@ export default function ResourcesPage(): ReactNode {
                 {hasActiveFilters && (
                   <Badge className="ml-0.5 size-5 justify-center rounded-full p-0 text-[10px]">
                     {selectedServices.size +
-                      selectedResourceTypes.size +
+                      selectedTemplateTypes.size +
                       activeTags.size}
                   </Badge>
                 )}
@@ -205,8 +205,8 @@ export default function ResourcesPage(): ReactNode {
                   onRemoveTag={handleRemoveTag}
                   selectedServices={selectedServices}
                   onRemoveService={handleToggleService}
-                  selectedResourceTypes={selectedResourceTypes}
-                  onRemoveResourceType={handleToggleResourceType}
+                  selectedTemplateTypes={selectedTemplateTypes}
+                  onRemoveTemplateType={handleToggleTemplateType}
                   onClearAll={handleClearAllFilters}
                 />
               </div>
@@ -216,7 +216,7 @@ export default function ResourcesPage(): ReactNode {
             <div className="flex gap-8">
               {/* Sidebar (desktop) */}
               <aside className="hidden w-52 shrink-0 md:block">
-                <div className="resources-filter-surface sticky top-24 rounded-xl border border-black/8 bg-white/60 p-4">
+                <div className="templates-filter-surface sticky top-24 rounded-xl border border-black/8 bg-white/60 p-4">
                   {filtersSidebar}
                 </div>
               </aside>

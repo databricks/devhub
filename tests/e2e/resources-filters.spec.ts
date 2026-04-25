@@ -2,11 +2,11 @@ import { test, expect } from "@playwright/test";
 import {
   examples,
   recipesInOrder,
-  templates,
+  cookbooks,
 } from "../../src/lib/recipes/recipes";
 
 const RESOURCE_COUNT =
-  examples.length + templates.length + recipesInOrder.length;
+  examples.length + cookbooks.length + recipesInOrder.length;
 const TOTAL_RESOURCES = `${RESOURCE_COUNT} of ${RESOURCE_COUNT} templates`;
 
 test.describe("resources page search", () => {
@@ -71,7 +71,7 @@ test.describe("resources page service filter", () => {
 });
 
 test.describe("resources page resource type filter", () => {
-  test("Examples filter shows only examples, Guides shows only guides", async ({
+  test("Examples filter shows only examples, Cookbooks filter hides examples", async ({
     page,
   }) => {
     await page.goto("/templates");
@@ -85,7 +85,7 @@ test.describe("resources page resource type filter", () => {
     ).toBeHidden();
 
     await page.getByRole("checkbox", { name: "Examples" }).uncheck();
-    await page.getByRole("checkbox", { name: "Guides" }).check();
+    await page.getByRole("checkbox", { name: "Cookbooks" }).check();
     await expect(
       page.locator('a[href="/templates/databricks-local-bootstrap"]'),
     ).toBeVisible();

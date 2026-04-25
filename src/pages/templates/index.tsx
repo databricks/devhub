@@ -1,14 +1,14 @@
 import Layout from "@theme/Layout";
 import { FilterIcon } from "lucide-react";
 import { useCallback, useMemo, useState, type ReactNode } from "react";
-import { ActiveFilters } from "@/components/resources/active-filters";
-import type { TemplateItem } from "@/components/resources/template-card";
-import { TemplateCard } from "@/components/resources/template-card";
+import { ActiveFilters } from "@/components/templates/active-filters";
+import type { TemplateItem } from "@/components/templates/template-card";
+import { TemplateCard } from "@/components/templates/template-card";
 import {
   TemplateFilters,
   type TemplateType,
-} from "@/components/resources/template-filters";
-import { TemplateSearch } from "@/components/resources/resource-search";
+} from "@/components/templates/template-filters";
+import { TemplateSearch } from "@/components/templates/template-search";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {

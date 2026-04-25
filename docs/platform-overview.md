@@ -28,12 +28,11 @@ Guides are step-by-step instructions for your coding agent. Examples are working
 
 All guides assume the [Databricks CLI](/docs/tools/databricks-cli) is installed and [authenticated](/docs/tools/databricks-cli#authenticate) against your workspace.
 
-| Resource                                                      | Type    | Best for                                        |
-| ------------------------------------------------------------- | ------- | ----------------------------------------------- |
-| [Hello World App](/templates/hello-world-app)                 | Guide   | Simple apps, static pages, getting started      |
-| [AI Chat App](/templates/ai-chat-app)                         | Guide   | Conversational AI, chatbots, assistants         |
-| [App with Lakebase](/templates/app-with-lakebase)             | Guide   | CRUD apps with persistent storage               |
-| [Agentic Support Console](/templates/agentic-support-console) | Example | Full AI support console with Lakebase and Genie |
+| Resource                                          | Type  | Best for                                   |
+| ------------------------------------------------- | ----- | ------------------------------------------ |
+| [Hello World App](/templates/hello-world-app)     | Guide | Simple apps, static pages, getting started |
+| [AI Chat App](/templates/ai-chat-app)             | Guide | Conversational AI, chatbots, assistants    |
+| [App with Lakebase](/templates/app-with-lakebase) | Guide | CRUD apps with persistent storage          |
 
 More guides and examples are in the [resources catalog](/templates).
 
@@ -43,6 +42,6 @@ These docs explain the platform layers that guides build on:
 
 - **[Web apps (Databricks Apps)](/docs/apps/quickstart)**: Scaffold and deploy a working app built with AppKit (TypeScript) or Python.
 - **[Postgres database (Lakebase)](/docs/lakebase/quickstart)**: Provision a Lakebase project and connect it to an app.
-- **[Agent Bricks (AI Tools)](/docs/agents/overview)**: Connect Knowledge Assistants, Genie spaces, and governed LLM endpoints to your AppKit app.
+- **[Agent Bricks](/docs/agents/overview)**: Connect your AppKit app to Agent Bricks: governed model endpoints, Genie spaces, and Knowledge Assistants.
 - **[Set up your environment](/docs/tools/databricks-cli)**: Databricks CLI, agent skills, and MCP server.
 - **[AppKit Reference](/docs/appkit/v0)**: Component library, plugin API, and TypeScript SDK reference.

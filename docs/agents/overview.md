@@ -1,23 +1,18 @@
 ---
 title: What is Agent Bricks?
 sidebar_label: Overview
-description: Call Agent Bricks endpoints and Genie spaces from your AppKit app with the Model Serving and Genie plugins. Per-user permissions, streaming, and cost attribution built in.
+description: Agent Bricks is Databricks' enterprise agent platform. It unifies model access, execution, governance, and business context so teams can build, deploy, and govern agents in production.
 ---
 
 # What is Agent Bricks?
 
-**Agent Bricks** is a Databricks toolkit for adding AI chatbots and agents to your apps. In your workspace UI, you configure what a chatbot should do: answer questions about your documents (Knowledge Assistant) or coordinate multiple data sources (Multi-Agent Supervisor). Databricks handles evaluation, tuning, and quality improvement from expert feedback, and hosts the agent at an HTTP endpoint your app can call.
+**Agent Bricks** is Databricks' enterprise agent platform for building, deploying, and governing agents that operate on your business data. It unifies model access, execution, governance, and context across a single system: from the model you call, to the data your agent reads, to the identity it acts under. In your workspace you configure Knowledge Assistants, Multi-Agent Supervisors, and custom Python agents. Databricks handles evaluation, tuning, and quality improvement, then hosts each agent at an HTTP endpoint your app can call.
 
-Two related Databricks products appear throughout this section:
-
-- **AI Gateway** governs LLM calls with rate limits, usage tracking, cost attribution, and content safety. It applies to any Model Serving endpoint your app calls, including Agent Bricks ones.
-- **Genie spaces** provide a natural-language interface over Unity Catalog tables. They can plug into a Multi-Agent Supervisor as a subagent or stand alone.
-
-Your AppKit app calls all three the same way: the [Model Serving plugin](/docs/appkit/v0/plugins/serving) (agents, foundation models, and governed endpoints) and the [Genie plugin](/docs/appkit/v0/plugins/genie) (Genie spaces).
+Your AppKit app connects to Agent Bricks capabilities through two plugins: the [Model Serving plugin](/docs/appkit/v0/plugins/serving) for agents, foundation models, and governed endpoints, and the [Genie plugin](/docs/appkit/v0/plugins/genie) for natural-language queries over Unity Catalog tables.
 
 ## How it fits together
 
-Agents on Databricks typically surface to your AppKit app as one of two resources: a **Model Serving endpoint** (a foundation model, Knowledge Assistant, Agent Bricks Multi-Agent Supervisor, or custom Python agent) or a **Genie space** (natural-language queries over Unity Catalog tables). The [Model Serving plugin](/docs/appkit/v0/plugins/serving) and [Genie plugin](/docs/appkit/v0/plugins/genie) cover both.
+Your AppKit app calls Agent Bricks through a **Model Serving endpoint** (a foundation model, Knowledge Assistant, Agent Bricks Multi-Agent Supervisor, or custom Python agent) or a **Genie space** (natural-language queries over Unity Catalog tables). The [Model Serving plugin](/docs/appkit/v0/plugins/serving) and [Genie plugin](/docs/appkit/v0/plugins/genie) cover both.
 
 ```mermaid
 flowchart LR
@@ -28,7 +23,7 @@ flowchart LR
     Space --> UC["Unity Catalog<br/>tables"]
 ```
 
-## Two plugins, two resources
+## AppKit plugins for Agent Bricks
 
 | You want to                                                                   | Use this plugin | Frontend helper                        |
 | ----------------------------------------------------------------------------- | --------------- | -------------------------------------- |
@@ -38,6 +33,12 @@ flowchart LR
 
 Pick the plugin that matches the resource. No other primitive is required for the AI surface.
 
+## Auth
+
+Serving and Genie HTTP routes run on behalf of the authenticated user by default. If the user doesn't have `CAN QUERY` on the serving endpoint or `CAN RUN` on the Genie space, the call fails with a 403. You don't write the permission check.
+
+For server logic outside a route handler, call `AppKit.serving("alias").asUser(req).invoke(...)` to keep the same behavior.
+
 ## Why AppKit instead of raw `fetch`
 
 You could call a serving endpoint directly with `fetch` and a token. The plugin isn't doing something you can't do yourself. It's doing these things so you don't have to:
@@ -46,12 +47,6 @@ You could call a serving endpoint directly with `fetch` and a token. The plugin 
 - **Streaming plumbing done.** SSE parsing, abort on unmount, token accumulation, error handling. `useServingStream` and `useGenieChat` handle these.
 - **No secrets in the frontend.** The plugin proxies through your server. Tokens stay on the backend. No PAT in the React bundle.
 - **Typed endpoint aliases.** If your serving endpoint publishes an OpenAPI schema, AppKit generates TypeScript types for request and response per alias. Autocomplete for chunk shapes, not `unknown`.
-
-## Auth
-
-Serving and Genie HTTP routes run on behalf of the authenticated user by default. If the user doesn't have `CAN QUERY` on the serving endpoint or `CAN RUN` on the Genie space, the call fails with a 403. You don't write the permission check.
-
-For server logic outside a route handler, call `AppKit.serving("alias").asUser(req).invoke(...)` to keep the same behavior.
 
 :::note[Authoring a custom agent]
 
@@ -71,6 +66,6 @@ Start from a template that matches your use case. Each one includes the Model Se
 
 ## Where to next
 
-- [AI Gateway](/docs/agents/ai-gateway) for calling foundation models or agent endpoints.
+- [AI Gateway](/docs/agents/ai-gateway) for governed access to models, agent endpoints, and external tools.
 - [Genie spaces](/docs/agents/genie) for chat-with-your-data over Unity Catalog tables.
 - [Custom agent endpoints](/docs/agents/custom-agents) for wiring Knowledge Assistant, Supervisor Agent, or your own Python agent.

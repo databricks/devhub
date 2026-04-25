@@ -42,6 +42,8 @@ export type Recipe = PreviewImages & {
   services: Service[];
   prerequisites?: string[];
   isDraft?: boolean;
+  /** When true, the recipe is still usable by cookbooks and examples but hidden from the /templates listing page. */
+  unlisted?: boolean;
 };
 
 export type Cookbook = PreviewImages & {

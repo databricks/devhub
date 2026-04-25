@@ -34,7 +34,10 @@ function buildTemplateItems(
     ? filterPublished(examples, includeDrafts)
     : [];
   const publishedCookbooks = filterPublished(cookbooks, includeDrafts);
-  const publishedRecipes = filterPublished(recipesInOrder, includeDrafts);
+  const publishedRecipes = filterPublished(
+    recipesInOrder,
+    includeDrafts,
+  ).filter((r) => !r.unlisted);
 
   const exampleItems: TemplateItem[] = publishedExamples.map((e) => ({
     kind: "example",

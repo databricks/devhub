@@ -59,6 +59,34 @@ describe("filterPublished", () => {
     expect(result).toHaveLength(2);
   });
 
+  test("unlisted recipes are still included by filterPublished", () => {
+    const unlisted: Recipe = {
+      id: "unlisted-recipe",
+      name: "Unlisted Recipe",
+      description: "Hidden from /templates but still published",
+      tags: ["test"],
+      services: ["Lakebase"],
+      unlisted: true,
+    };
+    const result = filterPublished([publishedRecipe, unlisted], false);
+    expect(result).toHaveLength(2);
+    expect(result.map((r) => r.id)).toContain("unlisted-recipe");
+  });
+
+  test("unlisted + draft recipe is excluded when includeDrafts is false", () => {
+    const unlistedDraft: Recipe = {
+      id: "unlisted-draft",
+      name: "Unlisted Draft",
+      description: "Both unlisted and draft",
+      tags: [],
+      services: [],
+      unlisted: true,
+      isDraft: true,
+    };
+    expect(filterPublished([unlistedDraft], false)).toHaveLength(0);
+    expect(filterPublished([unlistedDraft], true)).toHaveLength(1);
+  });
+
   test("works with cookbooks", () => {
     const draft: Cookbook = {
       id: "draft-cb",

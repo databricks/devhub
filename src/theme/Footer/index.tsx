@@ -44,16 +44,16 @@ const FOOTER_SECTIONS: FooterSection[] = [
     title: "Learn",
     items: [
       { label: "Start Here", to: "/docs/start-here" },
-      { label: "Agent Bricks", to: "/docs/agents/overview" },
       { label: "Databricks Apps", to: "/docs/apps/overview" },
-      { label: "Lakebase", to: "/docs/lakebase/quickstart" },
+      { label: "Lakebase", to: "/docs/lakebase/overview" },
+      { label: "Agent Bricks", to: "/docs/agents/overview" },
     ],
   },
   {
     title: "More",
     items: [
       { label: "Databricks", href: "https://databricks.com" },
-      { label: "Sign Up", href: "https://login.databricks.com/signup" },
+      { label: "Sign Up", href: "https://databricks.com/signup" },
       {
         label: "Privacy Policy",
         href: "https://www.databricks.com/legal/privacynotice",

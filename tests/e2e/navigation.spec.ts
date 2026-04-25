@@ -48,7 +48,7 @@ test.describe("footer navigation", () => {
     },
     { href: "/docs/agents/overview", label: "Agent Bricks" },
     { href: "/docs/apps/overview", label: "Databricks Apps" },
-    { href: "/docs/lakebase/quickstart", label: "Lakebase" },
+    { href: "/docs/lakebase/overview", label: "Lakebase" },
     { href: "/templates", label: "Templates" },
     { href: "/solutions", label: "Solutions" },
   ];
@@ -109,15 +109,15 @@ test.describe("home page link navigation", () => {
     expect(finalCopiedText).toContain("llms.txt");
   });
 
-  test("pillar card Lakebase navigates to /docs/lakebase/quickstart", async ({
+  test("pillar card Lakebase navigates to /docs/lakebase/overview", async ({
     page,
   }) => {
     await page.goto("/");
-    const link = page.locator('a[href="/docs/lakebase/quickstart"]').first();
+    const link = page.locator('a[href="/docs/lakebase/overview"]').first();
     await link.waitFor({ state: "visible" });
     await link.click();
-    await page.waitForURL("**/docs/lakebase/quickstart");
-    expect(new URL(page.url()).pathname).toContain("/docs/lakebase/quickstart");
+    await page.waitForURL("**/docs/lakebase/overview");
+    expect(new URL(page.url()).pathname).toContain("/docs/lakebase/overview");
   });
 
   test("pillar card Agent Bricks navigates to /docs/agents/overview", async ({

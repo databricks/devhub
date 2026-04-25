@@ -34,7 +34,7 @@ export const pillars: Pillar[] = [
     subtitle: "Managed Postgres, colocated with your Lakehouse.",
     description:
       "Provision with the CLI, connect like any Postgres. Instant branching, scales to zero, and change data feed to Unity Catalog.",
-    link: "/docs/lakebase/quickstart",
+    link: "/docs/lakebase/overview",
     icon: Database,
   },
   {

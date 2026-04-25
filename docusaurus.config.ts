@@ -70,6 +70,7 @@ const config: Config = {
   ],
 
   plugins: [
+    require.resolve("docusaurus-lunr-search"),
     function sourceAliasPlugin() {
       return {
         name: "docusaurus-source-alias",

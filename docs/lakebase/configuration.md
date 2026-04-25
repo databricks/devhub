@@ -1,15 +1,47 @@
 ---
-title: Projects, branches, and computes
-sidebar_label: Projects, branches & computes
+title: Lakebase Postgres configuration
+sidebar_label: Configuration
 ---
 
-# Projects, branches, and computes
+# Lakebase Postgres configuration
 
-Lakebase is managed Postgres inside Databricks. It organizes resources into projects, branches, and computes. Think git branches, but for your database: branches are instant, isolated copies. Computes are the processing power attached to each one, and they can scale to zero when idle.
+AppKit connects to Lakebase Postgres using a `postgres` resource declared in `databricks.yml` and `LAKEBASE_ENDPOINT` set in `app.yaml`.
+
+## Connection values
+
+Databricks Apps injects most connection values at startup. `LAKEBASE_ENDPOINT` is the exception. It is declared in `app.yaml` via `valueFrom: postgres` and resolved at startup from the `postgres` resource:
+
+```yaml
+env:
+  - name: LAKEBASE_ENDPOINT
+    valueFrom: postgres
+```
+
+| Variable            | Description                                                        | Source                                      |
+| ------------------- | ------------------------------------------------------------------ | ------------------------------------------- |
+| `LAKEBASE_ENDPOINT` | Endpoint resource path (`projects/.../branches/.../endpoints/...`) | Set via `valueFrom: postgres` in `app.yaml` |
+| `PGHOST`            | Lakebase Postgres host                                             | Auto-injected by the platform               |
+| `PGDATABASE`        | PostgreSQL database name                                           | Auto-injected by the platform               |
+| `PGSSLMODE`         | TLS mode (`require`)                                               | Auto-injected by the platform               |
+| `PGPORT`            | Port (5432)                                                        | Auto-injected by the platform               |
+
+For local development, these values come from your `.env` file. [Local setup](/docs/lakebase/development#local-setup) explains how to populate them.
+
+## Plugin manifest
+
+When you register the `lakebase()` plugin in `createApp`, AppKit generates `appkit.plugins.json` declaring the plugin's resource requirements. Run `npx @databricks/appkit plugin sync --write` to regenerate it after adding or changing plugins:
+
+```bash
+npx @databricks/appkit plugin sync --write
+```
+
+This runs automatically during `npm run dev` and `npm run build`. Commit it alongside your code.
+
+The [AppKit configuration](/docs/appkit/v0/configuration) reference covers `app.yaml` plugin resource bindings in detail.
 
 ## Resource hierarchy
 
-Lakebase organizes resources as **projects** containing **branches**, with branches containing **computes** and **databases**.
+Lakebase Postgres organizes resources as **projects** containing **branches**, with branches containing **computes** and **databases**.
 
 ```text
 projects/{project_id}
@@ -21,19 +53,23 @@ projects/{project_id}
 - **Project**: top-level container. Created with `databricks postgres create-project`.
 - **Branch**: isolated database environment. New projects get a default `production` branch with a `databricks_postgres` database.
 - **Compute**: provides processing power and memory for a branch. Each branch gets a `primary` read-write compute created automatically. Read-only replicas can be added for read scaling.
-- **Database**: a PostgreSQL database within a branch. List with `databricks postgres list-databases <branch>`. See [Quickstart](/docs/lakebase/quickstart#get-connection-values) for example output.
+- **Database**: a PostgreSQL database within a branch. List with `databricks postgres list-databases <branch>`.
 
 The CLI and API refer to computes as **endpoints** (`ENDPOINT_TYPE_READ_WRITE` for read-write, `ENDPOINT_TYPE_READ_ONLY` for read replicas). Commands and resource paths in this doc use that term.
 
-IDs must be 1-63 characters, start with a lowercase letter, and contain only lowercase letters, numbers, and hyphens.
+The [`postgres` CLI reference](https://docs.databricks.com/aws/en/oltp/projects/cli) covers all `databricks postgres` commands.
 
 ## Branching
 
-Branches create isolated database environments. When you branch, Lakebase copies the source branch's schema and data via copy-on-write. New branches are instant and you only pay for data you change.
+Branches create isolated database environments. When you branch, Lakebase Postgres copies the source branch's schema and data via copy-on-write. New branches are instant and you only pay for data you change.
 
 Each new branch gets a `primary` read-write endpoint at `projects/{project_id}/branches/{branch_id}/endpoints/primary`, inheriting the project's `default_endpoint_settings`. Use `create-endpoint` to add read replicas (`ENDPOINT_TYPE_READ_ONLY`).
 
-Branches require an expiration policy (`ttl`, `expire_time`, or `no_expiry: true`). See [branch expiration](https://docs.databricks.com/aws/en/oltp/projects/manage-branches#expiration) for details. For CLI commands, see [Feature branches](/docs/lakebase/development#feature-branches).
+Branches require an expiration policy (`ttl`, `expire_time`, or `no_expiry: true`). [Branch expiration](https://docs.databricks.com/aws/en/oltp/projects/manage-branches#expiration) details all options. For CLI commands, [Feature branches](/docs/lakebase/development#feature-branches) has examples.
+
+:::note
+Project, branch, endpoint, and database IDs must be 1-63 characters, start with a lowercase letter, and contain only lowercase letters, numbers, and hyphens.
+:::
 
 ## Autoscaling
 
@@ -42,11 +78,16 @@ Computes autoscale between a configured min and max compute unit (CU) range. Def
 - **Production branch**: 1 CU (min and max), scale to zero disabled.
 - **Child branches**: 1 CU (min and max), scale to zero enabled (5-minute default).
 
-The Lakebase UI sets higher defaults: 8–16 CU for production and 2–4 CU for child branches.
+The Lakebase Postgres UI sets higher defaults: 8–16 CU for production and 2–4 CU for child branches.
 
-Autoscaling is supported from 0.5 to 32 CU; computes from 36 to 112 CU are fixed size. The difference between max and min cannot exceed 16 CU (`max - min <= 16`).
+[Autoscaling](https://docs.databricks.com/aws/en/oltp/projects/autoscaling) is supported from 0.5 to 32 CU; computes from 36 to 112 CU are fixed size. The difference between max and min cannot exceed 16 CU (`max - min <= 16`).
 
-Compute units (CU) are the capacity measure for Lakebase. Each CU provides approximately 2 GB of RAM.
+Compute units (CU) are the capacity measure for Lakebase Postgres. Each CU provides approximately 2 GB of RAM.
+
+Scaling within the configured range happens without connection interruptions. Changing the min/max configuration may cause a brief interruption.
+
+<details>
+<summary>Configure autoscaling</summary>
 
 ```bash title="Common"
 databricks postgres update-endpoint \
@@ -71,9 +112,6 @@ databricks postgres update-endpoint \
   --profile $DATABRICKS_PROFILE
 ```
 
-<details>
-<summary>Options</summary>
-
 | Option        | Required | Description                                                                                         |
 | ------------- | -------- | --------------------------------------------------------------------------------------------------- |
 | `NAME`        | yes      | Endpoint resource path: `projects/{project_id}/branches/{branch_id}/endpoints/{endpoint_id}`        |
@@ -88,11 +126,9 @@ databricks postgres update-endpoint \
 
 </details>
 
-Scaling within the configured range happens without connection interruptions. Changing the min/max configuration may cause a brief interruption.
-
 ## Scale to zero
 
-Scale to zero suspends idle computes to eliminate costs. When a new query arrives, the compute resumes automatically (typically a few hundred milliseconds).
+[Scale to zero](https://docs.databricks.com/aws/en/oltp/projects/scale-to-zero) suspends idle computes to eliminate costs. When a new query arrives, the compute resumes automatically (typically a few hundred milliseconds).
 
 | Setting         | Default    |
 | --------------- | ---------- |
@@ -103,7 +139,10 @@ Apps connecting to a scaled-down compute will see a brief pause on the first que
 
 When a compute resumes, session context resets (temporary tables, prepared statements, session settings, connection pools).
 
-Configure at the project level so new branches inherit the settings:
+<details>
+<summary>Configure scale to zero</summary>
+
+**Project defaults** (new branches inherit these settings):
 
 ```bash title="Common"
 databricks postgres update-project \
@@ -133,9 +172,6 @@ databricks postgres update-project \
   --profile $DATABRICKS_PROFILE
 ```
 
-<details>
-<summary>Options</summary>
-
 | Option        | Required | Description                                                      |
 | ------------- | -------- | ---------------------------------------------------------------- |
 | `NAME`        | yes      | Project resource path: `projects/{project_id}`                   |
@@ -148,20 +184,28 @@ databricks postgres update-project \
 | `--target`    | no       | Bundle target to use (if applicable)                             |
 | `--profile`   | no       | Databricks CLI profile name                                      |
 
+**Per-endpoint** (change or disable on an existing endpoint):
+
+Use `spec.suspension` as the update mask for all suspension changes on `update-endpoint`.
+
+```bash title="Change timeout"
+databricks postgres update-endpoint \
+  projects/my-project/branches/production/endpoints/primary \
+  "spec.suspension" \
+  --json '{"spec": {"suspend_timeout_duration": "300s"}}'
+```
+
+```bash title="Disable scale to zero"
+databricks postgres update-endpoint \
+  projects/my-project/branches/production/endpoints/primary \
+  "spec.suspension" \
+  --json '{"spec": {"no_suspension": true}}'
+```
+
+:::note
+Setting `no_suspension: false` is not supported and returns an error. To re-enable scale to zero after disabling it, set `suspend_timeout_duration` instead.
+:::
+
 </details>
 
-## Related guides
-
-| Guide                                                                         | Description                                             |
-| ----------------------------------------------------------------------------- | ------------------------------------------------------- |
-| [Sync Tables to Lakebase](/templates/sync-tables-autoscaling)                 | Sync Unity Catalog tables into Lakebase Autoscaling     |
-| [Lakehouse Sync (CDC)](/templates/lakebase-change-data-feed-autoscaling)      | Change data feed from Lakebase to Unity Catalog         |
-| [Medallion Architecture from CDC](/templates/medallion-architecture-from-cdc) | Bronze/silver/gold pipeline from Lakehouse Sync history |
-
-## Further reading
-
-- [CLI reference for Lakebase](https://docs.databricks.com/aws/en/oltp/projects/cli)
-- [Command references: `postgres`](https://docs.databricks.com/aws/en/dev-tools/cli/reference/postgres-commands) and [`psql`](https://docs.databricks.com/aws/en/dev-tools/cli/reference/psql-command)
-- [About Lakebase](https://docs.databricks.com/aws/en/oltp/projects/about)
-- [Autoscaling](https://docs.databricks.com/aws/en/oltp/projects/autoscaling)
-- [Scale to zero](https://docs.databricks.com/aws/en/oltp/projects/scale-to-zero)
+Once your resources are configured, [Lakebase Postgres development](/docs/lakebase/development) walks through connecting locally, adding the AppKit plugin, and branching for development workflows. [Templates](/templates) have complete examples for common patterns including CRUD apps, chat persistence, and Unity Catalog sync.

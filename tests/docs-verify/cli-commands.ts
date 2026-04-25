@@ -91,11 +91,11 @@ export const CLI_COMMANDS: CommandSpec[] = [
   },
   {
     command: "postgres update-endpoint",
-    doc: "docs/lakebase/core-concepts.md",
+    doc: "docs/lakebase/configuration.md",
   },
   {
     command: "postgres update-project",
-    doc: "docs/lakebase/core-concepts.md",
+    doc: "docs/lakebase/configuration.md",
   },
   {
     command: "postgres delete-branch",

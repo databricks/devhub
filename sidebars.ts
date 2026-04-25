@@ -200,7 +200,7 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: "category",
-      label: "Agent Bricks (AI Tools)",
+      label: "Agent Bricks",
       items: [
         "agents/overview",
         "agents/ai-gateway",

@@ -184,7 +184,7 @@ const sidebars: SidebarsConfig = {
       items: [
         "apps/overview",
         "apps/quickstart",
-        "apps/core-concepts",
+        "apps/configuration",
         "apps/development",
       ],
     },
@@ -194,7 +194,7 @@ const sidebars: SidebarsConfig = {
       items: [
         "lakebase/overview",
         "lakebase/quickstart",
-        "lakebase/core-concepts",
+        "lakebase/configuration",
         "lakebase/development",
       ],
     },

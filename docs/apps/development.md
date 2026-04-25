@@ -1,9 +1,9 @@
 ---
-title: Development
+title: App development
 sidebar_label: Development
 ---
 
-# Development
+# App development
 
 This page is the CLI and workflow reference for Databricks Apps and AppKit. It covers adding plugins, scaffolding, deploying, managing, and troubleshooting your app.
 
@@ -156,7 +156,7 @@ env:
     value: info
 ```
 
-Resources referenced by `valueFrom` must be declared in `databricks.yml`. See [App configuration](/docs/apps/core-concepts#resources) for the full resource list.
+Resources referenced by `valueFrom` must be declared in `databricks.yml`. See [App configuration](/docs/apps/configuration#resources) for the full resource list.
 
 ## Pre-deploy checklist
 

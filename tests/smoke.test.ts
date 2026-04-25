@@ -85,10 +85,10 @@ describe("production build smoke tests", () => {
       "/docs/agents/genie.md",
       "/docs/agents/custom-agents.md",
       "/docs/apps/quickstart.md",
-      "/docs/apps/core-concepts.md",
+      "/docs/apps/configuration.md",
       "/docs/apps/development.md",
       "/docs/lakebase/quickstart.md",
-      "/docs/lakebase/core-concepts.md",
+      "/docs/lakebase/configuration.md",
       "/docs/lakebase/development.md",
       "/docs/appkit/v0.md",
       "/docs/appkit/v0/plugins.md",
@@ -109,7 +109,7 @@ describe("production build smoke tests", () => {
   });
 
   test("raw-docs preserve CLI tab code blocks for markdown export", () => {
-    const coreConcepts = readBuildFile("raw-docs/lakebase/core-concepts.md");
+    const coreConcepts = readBuildFile("raw-docs/lakebase/configuration.md");
     expect(coreConcepts).toContain('title="Common"');
     expect(coreConcepts).toContain('title="All Options"');
     expect(coreConcepts).toContain("databricks postgres update-endpoint");

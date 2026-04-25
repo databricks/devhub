@@ -50,7 +50,7 @@ const SIDEBAR_SECTIONS: Array<{
     slugs: [
       "apps/overview",
       "apps/quickstart",
-      "apps/core-concepts",
+      "apps/configuration",
       "apps/development",
     ],
   },
@@ -60,7 +60,7 @@ const SIDEBAR_SECTIONS: Array<{
       "Managed PostgreSQL for operational workloads with Databricks-native governance and Delta Lake sync.",
     slugs: [
       "lakebase/quickstart",
-      "lakebase/core-concepts",
+      "lakebase/configuration",
       "lakebase/development",
     ],
   },

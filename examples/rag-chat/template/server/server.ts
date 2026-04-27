@@ -6,13 +6,13 @@ import { setupChatTables } from './lib/chat-store';
 import { seedFromWikipedia } from './lib/seed-data';
 import { generateEmbedding } from './lib/embeddings';
 
-const appkit = await createApp({
-  plugins: [server({ autoStart: false }), lakebase()],
+await createApp({
+  plugins: [server(), lakebase()],
+  async onPluginsReady(appkit) {
+    await setupRagTables(appkit);
+    await setupChatTables(appkit);
+    await seedFromWikipedia(appkit, generateEmbedding, insertDocument);
+    setupChatRoutes(appkit);
+    setupChatPersistenceRoutes(appkit);
+  },
 });
-
-await setupRagTables(appkit);
-await setupChatTables(appkit);
-await seedFromWikipedia(appkit, generateEmbedding, insertDocument);
-setupChatRoutes(appkit);
-setupChatPersistenceRoutes(appkit);
-await appkit.server.start();

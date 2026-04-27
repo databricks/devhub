@@ -38,7 +38,19 @@ CREATE INDEX IF NOT EXISTS idx_messages_chat_id_created_at
 
 ### 2. Run setup from your server bootstrap
 
-In `server/server.ts`, keep `autoStart: false` and run schema setup before `appkit.server.start()`.
+In `server/server.ts`, run schema setup inside `onPluginsReady` so it completes before AppKit starts the HTTP server:
+
+```typescript
+import { createApp, server, lakebase } from "@databricks/appkit";
+import { setupChatTables } from "./lib/chat-store";
+
+await createApp({
+  plugins: [server(), lakebase()],
+  async onPluginsReady(appkit) {
+    await setupChatTables(appkit);
+  },
+});
+```
 
 ### 3. Add persistence helpers
 

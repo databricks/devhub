@@ -184,9 +184,10 @@ describe("Scaffold app with Lakebase feature", { timeout: 120_000 }, () => {
     );
   });
 
-  test("server.ts uses autoStart: false with lakebase", () => {
+  test("server.ts wires lakebase setup through onPluginsReady", () => {
     const serverTs = readFileSync(resolve(appDir, "server/server.ts"), "utf-8");
-    expect(serverTs).toContain("autoStart: false");
+    expect(serverTs).toContain("onPluginsReady");
+    expect(serverTs).not.toContain("autoStart");
     expect(serverTs).toContain("lakebase");
     expect(serverTs).toContain("setupSampleLakebaseRoutes");
     console.log("[apps+lakebase] server.ts:", serverTs.trim());

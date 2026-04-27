@@ -39,7 +39,7 @@ export function ModeToggle({ className }: ModeToggleProps): ReactNode {
           variant="ghost"
           size="icon"
           className={[
-            "size-8 rounded-md text-white/78 hover:bg-white/8 hover:text-white",
+            "size-8 rounded-md text-white/72 hover:bg-white/8! hover:text-white! dark:hover:bg-white/8!",
             className ?? "",
           ].join(" ")}
           aria-label="Theme options"

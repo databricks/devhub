@@ -120,4 +120,4 @@ See [Best practices](https://docs.databricks.com/aws/en/dev-tools/databricks-app
 | Crashed   | App failed to start or exited      |
 | Stopped   | App was manually stopped           |
 
-Browse [templates](/templates) for working examples of each resource type in a complete AppKit app.
+Once your app is configured, [Apps development](/docs/apps/development) covers local setup, deploy flags, and the full AppKit plugin API. [Templates](/templates) cover common patterns including chat apps, CRUD with Lakebase, and Genie integrations.

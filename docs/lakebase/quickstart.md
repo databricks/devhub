@@ -77,4 +77,4 @@ npm install && npm run dev
 
 ## Next steps
 
-[Templates](/templates) have complete examples for common Lakebase Postgres patterns. If you scaffolded manually, [Lakebase Postgres development](/docs/lakebase/development) covers local setup, feature branches, and the full plugin API. [Lakebase Postgres configuration](/docs/lakebase/configuration) has the reference for `app.yaml`, resource declarations, and connection values.
+[Templates](/templates) cover common Lakebase Postgres patterns. If you scaffolded manually, [Lakebase Postgres development](/docs/lakebase/development) covers local setup, feature branches, and the full plugin API. [Lakebase Postgres configuration](/docs/lakebase/configuration) has the reference for `app.yaml`, resource declarations, and connection values.

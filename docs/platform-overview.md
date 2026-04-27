@@ -5,7 +5,7 @@ description: How Databricks Apps, AppKit, Lakebase, and Agent Bricks fit togethe
 
 # Platform overview
 
-DevHub is a catalog of guides and examples for the Databricks developer stack. Pick a guide, copy it into your coding agent, and it handles scaffolding, auth, database, and deployment.
+DevHub is a catalog of templates for the Databricks developer stack. Pick a template, copy it into your coding agent, and it handles scaffolding, auth, database, and deployment.
 
 ## How the platform fits together
 
@@ -22,23 +22,23 @@ Apps, AppKit, Lakebase, and Agent Bricks are four layers that make up a full-sta
 
 **[Unity Catalog](https://docs.databricks.com/aws/en/data-governance/)** and **[AI Gateway](/docs/agents/ai-gateway)** are workspace-level services your app connects to for data governance and model serving.
 
-## Pick a guide or example
+## Pick a template
 
-Guides are step-by-step instructions for your coding agent. Examples are working apps built on top of guides, with source code. Here are a few common starting points. The [resources catalog](/templates) has the full list.
+Templates are step-by-step instructions for your coding agent. Here are a few common starting points. The [templates catalog](/templates) has the full list.
 
-All guides assume the [Databricks CLI](/docs/tools/databricks-cli) is installed and [authenticated](/docs/tools/databricks-cli#authenticate) against your workspace.
+All templates assume the [Databricks CLI](/docs/tools/databricks-cli) is installed and [authenticated](/docs/tools/databricks-cli#authenticate) against your workspace.
 
-| Resource                                          | Type  | Best for                                   |
-| ------------------------------------------------- | ----- | ------------------------------------------ |
-| [Hello World App](/templates/hello-world-app)     | Guide | Simple apps, static pages, getting started |
-| [AI Chat App](/templates/ai-chat-app)             | Guide | Conversational AI, chatbots, assistants    |
-| [App with Lakebase](/templates/app-with-lakebase) | Guide | CRUD apps with persistent storage          |
+| Resource                                          | Type     | Best for                                   |
+| ------------------------------------------------- | -------- | ------------------------------------------ |
+| [Hello World App](/templates/hello-world-app)     | Template | Simple apps, static pages, getting started |
+| [AI Chat App](/templates/ai-chat-app)             | Template | Conversational AI, chatbots, assistants    |
+| [App with Lakebase](/templates/app-with-lakebase) | Template | CRUD apps with persistent storage          |
 
-More guides and examples are in the [resources catalog](/templates).
+More templates are in the [templates catalog](/templates).
 
 ## Companion docs
 
-These docs explain the platform layers that guides build on:
+These docs explain the platform layers that templates build on:
 
 - **[Web apps (Databricks Apps)](/docs/apps/quickstart)**: Scaffold and deploy a working app built with AppKit (TypeScript) or Python.
 - **[Postgres database (Lakebase)](/docs/lakebase/quickstart)**: Provision a Lakebase project and connect it to an app.

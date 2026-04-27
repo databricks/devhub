@@ -497,4 +497,6 @@ npx @databricks/appkit docs "lakebase"         # view Lakebase Postgres plugin d
 
 Or view the [AppKit Lakebase Postgres plugin reference](/docs/appkit/v0/plugins/lakebase) on this site.
 
+## Where to next
+
 [Templates](/templates) cover common Lakebase Postgres patterns. Browse them to find a starting point, or copy one into your coding agent to scaffold a working app.

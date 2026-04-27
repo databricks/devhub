@@ -58,7 +58,6 @@ After installing, confirm the server is working:
 2. Ask your agent to call `list_docs_resources` and verify it returns a docs index.
 3. Ask your agent to fetch a specific page with `get_doc_resource`.
 
-## Further reading
+## Where to next
 
-- [Model Context Protocol (MCP) on Databricks](https://docs.databricks.com/aws/en/generative-ai/mcp)
-- [Use Databricks managed MCP servers](https://docs.databricks.com/aws/en/generative-ai/mcp/managed-mcp)
+With the docs server running, your agent can fetch any page from this site. See [agent skills](/docs/tools/ai-tools/agent-skills) to also install Databricks platform knowledge, or browse the [templates catalog](/templates) to start building.

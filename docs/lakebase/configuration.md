@@ -208,4 +208,6 @@ Setting `no_suspension: false` is not supported and returns an error. To re-enab
 
 </details>
 
-Once your resources are configured, [Lakebase Postgres development](/docs/lakebase/development) walks through connecting locally, adding the AppKit plugin, and branching for development workflows. [Templates](/templates) cover common patterns including CRUD apps, chat persistence, and Unity Catalog sync.
+## Where to next
+
+See [Lakebase Postgres development](/docs/lakebase/development) for local setup, feature branches, and the full plugin API, or browse the [templates catalog](/templates) for complete patterns.

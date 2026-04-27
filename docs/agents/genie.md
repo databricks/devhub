@@ -112,7 +112,7 @@ export function CustomChat() {
 }
 ```
 
-`status` cycles through `idle`, `streaming`, `loading-history`, `loading-older`, and `error`. Use it to drive loading states in your UI. The hook also returns `error`, `conversationId`, and pagination helpers (`hasPreviousPage`, `isFetchingPreviousPage`, `fetchPreviousPage`). See the [AppKit Genie plugin reference](/docs/appkit/v0/plugins/genie) for the full return type.
+`status` cycles through `idle`, `streaming`, `loading-history`, `loading-older`, and `error`. Use it to drive loading states in your UI. The hook also returns `error`, `conversationId`, and pagination helpers (`hasPreviousPage`, `isFetchingPreviousPage`, `fetchPreviousPage`). See the [AppKit Genie plugin reference](/docs/appkit/v0/plugins/genie) for the full return type and the [Genie conversation API](https://docs.databricks.com/aws/en/genie/conversation-api) for the underlying REST API.
 
 ## Multiple spaces
 
@@ -136,17 +136,6 @@ The `genie` plugin calls the Genie API on behalf of the signed-in user. Both the
 - **App service principal**: `CAN RUN` on the Genie space, plus `SELECT` on the underlying Unity Catalog tables. Attach the space as a resource in `app.yaml` to provision these automatically. See [Add a Genie space resource to an app](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/genie).
 - **End users**: access to the Genie space (shared with them or via a group) and `SELECT` on the same tables. If the user doesn't have access, the call returns a 403. You don't write the permission check.
 
-## Related templates
+## Where to next
 
-| Template                                                                    | Description                                      |
-| --------------------------------------------------------------------------- | ------------------------------------------------ |
-| [Genie Conversational Analytics](/templates/genie-conversational-analytics) | Scaffold an AppKit app with a single Genie space |
-| [Genie Multi-Space Selector](/templates/genie-multi-space)                  | UI pattern for switching between spaces          |
-| [Genie Analytics App](/templates/genie-analytics-app)                       | Full template with Genie chat                    |
-
-## Further reading
-
-- [What is a Genie space](https://docs.databricks.com/aws/en/genie/)
-- [Genie conversation API](https://docs.databricks.com/aws/en/genie/conversation-api)
-- [Add a Genie space resource to an app](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/genie)
-- [AppKit Genie plugin reference](/docs/appkit/v0/plugins/genie)
+Try the [Genie Analytics App](/templates/genie-analytics-app) for a complete wired setup, or explore [Custom agent endpoints](/docs/agents/custom-agents) for Knowledge Assistants and Supervisor Agents.

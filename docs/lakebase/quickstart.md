@@ -75,6 +75,6 @@ Execute `databricks apps deploy` before `npm run dev`. Deploying sets up a manag
 npm install && npm run dev
 ```
 
-## Next steps
+## Where to next
 
-[Templates](/templates) cover common Lakebase Postgres patterns. If you scaffolded manually, [Lakebase Postgres development](/docs/lakebase/development) covers local setup, feature branches, and the full plugin API. [Lakebase Postgres configuration](/docs/lakebase/configuration) has the reference for `app.yaml`, resource declarations, and connection values.
+For local development workflow, feature branches, and the full plugin API, see [Lakebase Postgres development](/docs/lakebase/development).

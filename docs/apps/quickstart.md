@@ -49,4 +49,6 @@ databricks apps deploy                                   # deploys to your works
 
 To scaffold with specific plugins, pass `--features` with a comma-separated list. Run `databricks apps manifest` to see all available plugins and their required resource fields.
 
-See [Apps Development](/docs/apps/development) for the full scaffold options, deploy flags, and environment configuration. For `app.yaml`, resource bindings, and env vars, see [App configuration](/docs/apps/configuration).
+## Where to next
+
+For the full local development workflow, deploy flags, and plugin setup, see [Apps development](/docs/apps/development).

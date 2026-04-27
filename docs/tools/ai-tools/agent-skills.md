@@ -67,14 +67,6 @@ Run `databricks experimental aitools skills list` to see available skills and th
 | `databricks-pipelines`            | Develop Lakeflow Spark Declarative Pipelines (formerly DLT). Large reference set covering streaming tables, materialized views, Auto Loader, Auto CDC, expectations, and sinks. |
 | `databricks-serverless-migration` | Migrate Databricks workloads from classic compute to serverless. Covers compatibility checks, configuration, code patterns, networking, and streaming migration.                |
 
-## Other skill repositories
+## Where to next
 
-- [AI Dev Kit skills](https://github.com/databricks-solutions/ai-dev-kit/tree/main/databricks-skills) -- community patterns for SQL analytics, ML evaluation, model serving, streaming, and Unity Catalog
-- [MLflow skills](https://github.com/mlflow/skills) -- tracing, LLM judges, evals, and production traffic analysis
-
-## Further reading
-
-- [Agent skills (Databricks docs)](https://docs.databricks.com/aws/en/agent-skills/)
-- [AI-assisted development](/docs/appkit/v0/development/ai-assisted-development)
-- [Local bootstrap recipe](/templates/databricks-local-bootstrap)
-- [Docs MCP Server](/docs/tools/ai-tools/docs-mcp-server)
+With Databricks agent skills installed, your coding agent has the context it needs to build and deploy. Browse the [templates catalog](/templates) to start building.

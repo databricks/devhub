@@ -34,7 +34,7 @@ See [Knowledge Assistant](https://docs.databricks.com/aws/en/generative-ai/agent
 
 Coordinates subagents (Genie spaces, other agent endpoints, Unity Catalog functions, MCP servers) to complete a task, handling delegation and result synthesis. Good for workflows that span domains, for example searching research reports and querying usage data in the same conversation. Like Knowledge Assistant, the builder produces a single agent endpoint.
 
-See [Agent Bricks Multi-Agent Supervisor](https://docs.databricks.com/aws/en/generative-ai/agent-bricks/multi-agent-supervisor).
+See [Agent Bricks Multi-Agent Supervisor](https://docs.databricks.com/aws/en/generative-ai/agent-bricks/multi-agent-supervisor) and the [Supervisor API](https://docs.databricks.com/aws/en/generative-ai/agent-bricks/supervisor-api) for response shapes and query parameters.
 
 ### Custom Python agent
 
@@ -86,17 +86,6 @@ Serving routes in AppKit run on behalf of the authenticated user by default. If 
 
 For server logic outside the built-in plugin routes (for example, custom Express routes), call `AppKit.serving("assistant").asUser(req).invoke(...)` to keep per-user behavior. For background work without a request (scheduled tasks, workers), omit `asUser` and the call runs as the app's service principal.
 
-## Related templates
+## Where to next
 
-| Template                                                       | Description                           |
-| -------------------------------------------------------------- | ------------------------------------- |
-| [Query AI Gateway Endpoints](/templates/foundation-models-api) | Calling foundation models from AppKit |
-| [Streaming AI Chat](/templates/ai-chat-model-serving)          | Streaming chat with the Vercel AI SDK |
-
-## Further reading
-
-- [Knowledge Assistant](https://docs.databricks.com/aws/en/generative-ai/agent-bricks/knowledge-assistant)
-- [Agent Bricks Multi-Agent Supervisor](https://docs.databricks.com/aws/en/generative-ai/agent-bricks/multi-agent-supervisor)
-- [Create an AI agent](https://docs.databricks.com/aws/en/generative-ai/agent-framework/create-agent)
-- [Supervisor API](https://docs.databricks.com/aws/en/generative-ai/agent-bricks/supervisor-api)
-- [AppKit Model Serving plugin reference](/docs/appkit/v0/plugins/serving)
+Try the [AI Chat App](/templates/ai-chat-app) for a complete AppKit and agent setup, or browse the [templates catalog](/templates) for more patterns.

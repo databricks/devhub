@@ -7,7 +7,7 @@
     "dev": "bash scripts/dev.sh",
     "start": "docusaurus start",
     "build": "docusaurus build",
-    "sync:appkit-docs": "node scripts/sync-appkit-docs.mjs",
+    "sync:appkit-docs": "node scripts/sync-appkit-docs.mjs --force",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",
     "clear": "docusaurus clear",
@@ -22,7 +22,9 @@
     "test:docs-verify": "vitest run --config vitest.docs-verify.config.ts",
     "verify:images": "node scripts/verify-resource-images.mjs",
     "validate:content": "node scripts/validate-content.mjs",
-    "prepare": "husky"
+    "prepare": "husky",
+    "prebuild": "node scripts/sync-appkit-docs.mjs",
+    "prestart": "node scripts/sync-appkit-docs.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.3.0",

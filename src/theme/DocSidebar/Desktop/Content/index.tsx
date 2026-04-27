@@ -91,30 +91,35 @@ function getAppKitSidebarItems(sidebar: SidebarLikeItem[]): SidebarLikeItem[] {
   return appKitCategory.items;
 }
 
+function extractChannel(href: string): string | null {
+  const match = href.match(/^\/docs\/appkit\/([^/]+)/);
+  return match ? match[1] : null;
+}
+
 function getAppKitChannelOptions(
   items: SidebarLikeItem[],
 ): AppKitChannelOption[] {
-  const seen = new Set<string>();
-  const options: AppKitChannelOption[] = [];
+  const channels = new Map<string, AppKitChannelOption>();
 
-  for (const item of items) {
-    if (!item.href?.startsWith("/docs/appkit/")) {
-      continue;
+  function collect(list: SidebarLikeItem[]) {
+    for (const item of list) {
+      if (item.href) {
+        const channel = extractChannel(item.href);
+        if (channel && !channels.has(channel)) {
+          channels.set(channel, {
+            label: channel,
+            href: `/docs/appkit/${channel}`,
+          });
+        }
+      }
+      if (isSidebarCategory(item)) {
+        collect(item.items);
+      }
     }
-
-    const normalizedHref = normalizePath(item.href);
-    if (seen.has(normalizedHref)) {
-      continue;
-    }
-
-    seen.add(normalizedHref);
-    options.push({
-      label: item.label ?? normalizedHref,
-      href: normalizedHref,
-    });
   }
 
-  return options;
+  collect(items);
+  return Array.from(channels.values());
 }
 
 function getActiveChannelHref(

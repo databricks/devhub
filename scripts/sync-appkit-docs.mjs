@@ -1,8 +1,6 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { Readable } from "node:stream";
-import { pipeline } from "node:stream/promises";
 import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
 
@@ -10,21 +8,38 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const repoRoot = path.resolve(__dirname, "..");
 
+const APPKIT_REMOTE =
+  process.env.APPKIT_REMOTE || "https://github.com/databricks/appkit.git";
+const APPKIT_BRANCH = process.env.APPKIT_BRANCH || "main";
+
+if (!/^[\w.\-/]+$/.test(APPKIT_BRANCH)) {
+  throw new Error(`Invalid APPKIT_BRANCH: ${APPKIT_BRANCH}`);
+}
+
+if (!/^https?:\/\//.test(APPKIT_REMOTE) && !/^git@/.test(APPKIT_REMOTE)) {
+  throw new Error(`Invalid APPKIT_REMOTE: must be an HTTPS or SSH git URL`);
+}
+
 // Where upstream appkit stores its source-of-truth component examples.
-// Paths are relative to the extracted appkit tarball root.
+// Paths are relative to the cloned appkit repo root.
 const UPSTREAM_EXAMPLE_DIRS = ["packages/appkit-ui/src/react/ui/examples"];
 
 function fail(message) {
-  console.error(`Error: ${message}`);
-  process.exit(1);
+  throw new Error(message);
 }
+
+const SPAWN_TIMEOUT = 120_000; // 2 minutes
 
 function run(command, args, cwd) {
   const result = spawnSync(command, args, {
     cwd,
     stdio: "inherit",
+    timeout: SPAWN_TIMEOUT,
   });
 
+  if (result.signal) {
+    fail(`Command killed by ${result.signal}: ${command} ${args.join(" ")}`);
+  }
   if (result.status !== 0) {
     fail(`Command failed: ${command} ${args.join(" ")}`);
   }
@@ -34,8 +49,12 @@ function runCapture(command, args, cwd) {
   const result = spawnSync(command, args, {
     cwd,
     encoding: "utf-8",
+    timeout: SPAWN_TIMEOUT,
   });
 
+  if (result.signal) {
+    fail(`Command killed by ${result.signal}: ${command} ${args.join(" ")}`);
+  }
   if (result.status !== 0) {
     fail(`Command failed: ${command} ${args.join(" ")}`);
   }
@@ -63,91 +82,121 @@ function replaceDir(source, destination) {
   copyDirRecursive(source, destination);
 }
 
-function normalizeMajorChannel(raw) {
-  const value = raw.trim();
-  if (value.length === 0) {
-    fail("Version channel cannot be empty.");
+// Checks whether all three sync outputs are present:
+// 1. docs/appkit/latest/.source-ref (docs were synced)
+// 2. src/components/doc-examples/registry.ts (examples were synced)
+// 3. static/appkit-preview/latest/styles.css (styles were compiled)
+// If any is missing, returns false so the sync re-runs.
+function isAlreadySynced(latestDir) {
+  const sourceRefPath = path.join(latestDir, ".source-ref");
+  const registryPath = path.join(
+    repoRoot,
+    "src",
+    "components",
+    "doc-examples",
+    "registry.ts",
+  );
+  const stylesPath = path.join(
+    repoRoot,
+    "static",
+    "appkit-preview",
+    "latest",
+    "styles.css",
+  );
+
+  if (
+    !fs.existsSync(sourceRefPath) ||
+    !fs.existsSync(registryPath) ||
+    !fs.existsSync(stylesPath)
+  ) {
+    return false;
   }
 
-  if (!/^v\d+$/.test(value)) {
-    fail("Only major channels are allowed: v0, v1, v2, ...");
-  }
+  const ref = fs.readFileSync(sourceRefPath, "utf-8").trim();
+  console.log(
+    `Using AppKit docs synced on ${ref}. Run 'npm run sync:appkit-docs' to resync.`,
+  );
 
-  return value;
+  return true;
 }
 
-function parseSemverTag(tag) {
-  const match = /^v(\d+)\.(\d+)\.(\d+)$/.exec(tag);
-  if (!match) {
-    return null;
-  }
+// Shallow-clones the appkit repo at the given branch into destDir,
+// using sparse checkout to only fetch docs and examples.
+function cloneAppKit(destDir) {
+  console.log(`Cloning ${APPKIT_REMOTE} (branch: ${APPKIT_BRANCH})...`);
 
-  return {
-    major: Number(match[1]),
-    minor: Number(match[2]),
-    patch: Number(match[3]),
-  };
-}
-
-function compareSemver(a, b) {
-  if (a.major !== b.major) {
-    return a.major - b.major;
-  }
-  if (a.minor !== b.minor) {
-    return a.minor - b.minor;
-  }
-  return a.patch - b.patch;
-}
-
-function resolveLatestTagForMajor(majorChannel) {
-  const major = Number(majorChannel.slice(1));
-  const remote = "https://github.com/databricks/appkit.git";
-  const pattern = `v${major}.*`;
-
-  const output = runCapture(
+  run(
     "git",
-    ["ls-remote", "--tags", "--refs", remote, pattern],
+    [
+      "clone",
+      "--depth",
+      "1",
+      "--branch",
+      APPKIT_BRANCH,
+      "--sparse",
+      "--filter=blob:none",
+      APPKIT_REMOTE,
+      destDir,
+    ],
     repoRoot,
   );
 
-  const tags = output
-    .split("\n")
-    .map((line) => line.trim())
-    .filter((line) => line.length > 0)
-    .map((line) => {
-      const parts = line.split(/\s+/);
-      const ref = parts[1] ?? "";
-      const tag = ref.replace("refs/tags/", "");
-      const parsed = parseSemverTag(tag);
-      if (!parsed) {
-        return null;
-      }
-      return { tag, parsed };
-    })
-    .filter((item) => item !== null);
-
-  if (tags.length === 0) {
-    fail(`No tags found for major channel '${majorChannel}'.`);
-  }
-
-  tags.sort((a, b) => compareSemver(a.parsed, b.parsed));
-  return tags[tags.length - 1].tag;
+  run(
+    "git",
+    [
+      "-C",
+      destDir,
+      "sparse-checkout",
+      "set",
+      "docs/docs",
+      "docs/versioned_docs",
+      "docs/versions.json",
+      "packages/appkit-ui/src/react/ui/examples",
+    ],
+    repoRoot,
+  );
 }
 
-async function downloadTarball(url, outputFile) {
-  const response = await fetch(url);
-  if (!response.ok) {
-    return false;
-  }
-  if (!response.body) {
-    fail(`No response body returned from ${url}`);
+function getHeadSha(repoDir) {
+  return runCapture(
+    "git",
+    ["-C", repoDir, "rev-parse", "--short", "HEAD"],
+    repoRoot,
+  ).trim();
+}
+
+// Copies versioned docs from the cloned repo if they exist.
+// Currently AppKit has no versioned_docs — this is future-proofing for when
+// AppKit adopts Docusaurus versioning (docs/versioned_docs/version-X/).
+//
+// TODO: When AppKit starts using Docusaurus versioning:
+// - Read docs/versions.json to determine the latest released version
+// - Copy docs/versioned_docs/version-<latest>/ → docs/appkit/latest/ (instead of docs/docs/)
+// - Copy docs/docs/ → docs/appkit/next/ (unreleased dev docs)
+// - Copy remaining versioned_docs/version-*/ → docs/appkit/version-*/
+function syncVersionedDocs(clonedRoot, docsRoot) {
+  const versionedDocsDir = path.join(clonedRoot, "docs", "versioned_docs");
+
+  if (!fs.existsSync(versionedDocsDir)) {
+    return;
   }
 
-  await pipeline(
-    Readable.fromWeb(response.body),
-    fs.createWriteStream(outputFile),
-  );
-  return true;
+  const versionDirs = fs
+    .readdirSync(versionedDocsDir, { withFileTypes: true })
+    .filter(
+      (entry) => entry.isDirectory() && entry.name.startsWith("version-"),
+    );
+
+  if (versionDirs.length === 0) {
+    return;
+  }
+
+  for (const entry of versionDirs) {
+    const src = path.join(versionedDocsDir, entry.name);
+    const dest = path.join(docsRoot, entry.name);
+    replaceDir(src, dest);
+    console.log(`Synced versioned docs: ${entry.name}`);
+  }
 }
 
 // Pascal-cases a kebab-cased file stem ("alert-dialog" -> "AlertDialog").
@@ -159,17 +208,17 @@ function pascalCase(stem) {
     .join("");
 }
 
-// Walks the extracted appkit tree for example files and writes them under
+// Walks the cloned appkit tree for example files and writes them under
 // src/components/doc-examples, preserving kebab-case filenames so the
 // <DocExample name="..."> contract stays stable.
-function syncExamples(extractedRoot) {
+function syncExamples(clonedRoot) {
   const outDir = path.join(repoRoot, "src", "components", "doc-examples");
   fs.rmSync(outDir, { recursive: true, force: true });
   fs.mkdirSync(outDir, { recursive: true });
 
   const collected = [];
   for (const dir of UPSTREAM_EXAMPLE_DIRS) {
-    const srcDir = path.join(extractedRoot, dir);
+    const srcDir = path.join(clonedRoot, dir);
     if (!fs.existsSync(srcDir)) continue;
 
     for (const entry of fs.readdirSync(srcDir, { withFileTypes: true })) {
@@ -206,7 +255,7 @@ function syncExamples(extractedRoot) {
     })
     .join(",\n");
 
-  const registry = `// Auto-generated by scripts/sync-appkit-docs.mjs. Do not edit by hand.\n// Source files alongside this registry are vendored verbatim from the\n// matching appkit release tag and import from '@databricks/appkit-ui/react'.\nimport type { ComponentType } from "react";\n${imports}\n\nexport type DocExampleEntry = { Component: ComponentType; source: string };\n\nexport const docExamples = {\n${entries},\n} as const satisfies Record<string, DocExampleEntry>;\n\nexport type DocExampleKey = keyof typeof docExamples;\n`;
+  const registry = `// Auto-generated by scripts/sync-appkit-docs.mjs. Do not edit by hand.\n// Source files alongside this registry are vendored verbatim from the\n// appkit main branch and import from '@databricks/appkit-ui/react'.\nimport type { ComponentType } from "react";\n${imports}\n\nexport type DocExampleEntry = { Component: ComponentType; source: string };\n\nexport const docExamples = {\n${entries},\n} as const satisfies Record<string, DocExampleEntry>;\n\nexport type DocExampleKey = keyof typeof docExamples;\n`;
 
   fs.writeFileSync(path.join(outDir, "registry.ts"), registry, "utf-8");
 
@@ -219,7 +268,7 @@ function syncExamples(extractedRoot) {
 // with @import "tailwindcss" and @source directives pointing at the built
 // React components) into a real CSS bundle, and writes it to a public static
 // path so the DocExample iframe can link it directly without webpack.
-async function syncCompiledStyles(majorChannel) {
+async function syncCompiledStyles(channel) {
   const pkgDir = path.join(
     repoRoot,
     "node_modules",
@@ -242,7 +291,7 @@ async function syncCompiledStyles(majorChannel) {
     fail(`dist/styles.css not found in @databricks/appkit-ui@${version}.`);
   }
 
-  const destDir = path.join(repoRoot, "static", "appkit-preview", majorChannel);
+  const destDir = path.join(repoRoot, "static", "appkit-preview", channel);
   fs.mkdirSync(destDir, { recursive: true });
   const destCss = path.join(destDir, "styles.css");
 
@@ -259,7 +308,7 @@ async function syncCompiledStyles(majorChannel) {
 
   // NOTE: avoid `*/` anywhere inside this banner -- it would terminate the
   // CSS comment early and break the entire stylesheet's parsing.
-  const banner = `/* Synced from @databricks/appkit-ui@${version} (${majorChannel}).\n * Source of truth: https://github.com/databricks/appkit\n * Compiled via @tailwindcss/postcss; do not edit by hand.\n * Regenerate via: npm run sync:appkit-docs ${majorChannel}\n */\n`;
+  const banner = `/* Synced from @databricks/appkit-ui@${version} (${channel}).\n * Source of truth: https://github.com/databricks/appkit\n * Compiled via @tailwindcss/postcss; do not edit by hand.\n * Regenerate via: npm run sync:appkit-docs\n */\n`;
   fs.writeFileSync(destCss, banner + result.css, "utf-8");
 
   console.log(
@@ -271,72 +320,60 @@ async function syncCompiledStyles(majorChannel) {
 }
 
 async function main() {
-  const majorArg = process.argv[2];
-  if (!majorArg) {
-    fail("Usage: node scripts/sync-appkit-docs.mjs <major-channel>");
-  }
-
-  const majorChannel = normalizeMajorChannel(majorArg);
-  const resolvedTag = resolveLatestTagForMajor(majorChannel);
+  const force = process.argv.includes("--force");
 
   const docsRoot = path.join(repoRoot, "docs", "appkit");
-  const majorDir = path.join(docsRoot, majorChannel);
+  const latestDir = path.join(docsRoot, "latest");
+
+  // Skip if docs already exist (unless --force)
+  if (!force && isAlreadySynced(latestDir)) {
+    return;
+  }
 
   fs.mkdirSync(docsRoot, { recursive: true });
 
   const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "devhub-appkit-docs-"));
-  const archivePath = path.join(tempDir, "appkit.tar.gz");
 
-  const tagUrl = `https://codeload.github.com/databricks/appkit/tar.gz/refs/tags/${resolvedTag}`;
+  try {
+    cloneAppKit(tempDir);
 
-  console.log(
-    `Resolved ${majorChannel} to latest AppKit tag ${resolvedTag}. Downloading source...`,
-  );
-  const downloaded = await downloadTarball(tagUrl, archivePath);
+    const sha = getHeadSha(tempDir);
+    const syncDate = new Date().toISOString().slice(0, 10);
+    const appkitDocsSource = path.join(tempDir, "docs", "docs");
 
-  if (!downloaded) {
-    fail(`Could not download AppKit source for tag '${resolvedTag}'.`);
-  }
+    if (!fs.existsSync(appkitDocsSource)) {
+      fail("Could not find docs/docs in cloned AppKit repository.");
+    }
 
-  run("tar", ["-xzf", archivePath], tempDir);
+    // Clear existing docs and copy latest
+    fs.rmSync(docsRoot, { recursive: true, force: true });
+    fs.mkdirSync(docsRoot, { recursive: true });
 
-  const extracted = fs
-    .readdirSync(tempDir, { withFileTypes: true })
-    .filter((entry) => entry.isDirectory())
-    .map((entry) => path.join(tempDir, entry.name))
-    .find((fullPath) => fs.existsSync(path.join(fullPath, "docs", "docs")));
-
-  if (!extracted) {
-    fail("Could not find docs/docs in downloaded AppKit source.");
-  }
-
-  const appkitDocsSource = path.join(extracted, "docs", "docs");
-
-  replaceDir(appkitDocsSource, majorDir);
-  fs.writeFileSync(
-    path.join(majorDir, ".source-ref"),
-    `databricks/appkit@${resolvedTag} (${majorChannel})\n`,
-    "utf-8",
-  );
-  fs.rmSync(path.join(docsRoot, "current"), { recursive: true, force: true });
-
-  syncExamples(extracted);
-  const stylesVersion = await syncCompiledStyles(majorChannel);
-
-  fs.rmSync(tempDir, { recursive: true, force: true });
-
-  console.log(`\nUpdated major docs: ${path.relative(repoRoot, majorDir)}`);
-  console.log(`AppKit docs @ ${resolvedTag}, styles @ ${stylesVersion}.`);
-  if (`v${stylesVersion}` !== resolvedTag) {
-    console.log(
-      `Note: docs tag (${resolvedTag}) and installed @databricks/appkit-ui ` +
-        `(${stylesVersion}) differ. Update the dep in package.json if you ` +
-        `want them aligned.`,
+    replaceDir(appkitDocsSource, latestDir);
+    fs.writeFileSync(
+      path.join(latestDir, ".source-ref"),
+      `${syncDate} (${sha})\n`,
+      "utf-8",
     );
+
+    // Copy versioned docs if present (future-proofing)
+    syncVersionedDocs(tempDir, docsRoot);
+
+    syncExamples(tempDir);
+    const stylesVersion = await syncCompiledStyles("latest");
+
+    console.log(
+      `\nAppKit docs synced from ${APPKIT_BRANCH} (${sha}), styles @ ${stylesVersion}.`,
+    );
+    console.log("Done.");
+  } finally {
+    fs.rmSync(tempDir, { recursive: true, force: true });
   }
-  console.log("Done.");
 }
 
 main().catch((error) => {
-  fail(error instanceof Error ? error.message : String(error));
+  console.error(
+    `Error: ${error instanceof Error ? error.message : String(error)}`,
+  );
+  process.exit(1);
 });

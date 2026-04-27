@@ -54,8 +54,8 @@ export function DocExample({ name }: DocExampleProps): ReactNode {
     return (
       <div className="my-6 rounded-xl border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">
         Missing DocExample for <code>{name}</code>. Re-run{" "}
-        <code>npm run sync:appkit-docs v0</code> to sync examples from the
-        upstream appkit release.
+        <code>npm run sync:appkit-docs</code> to sync examples from the upstream
+        appkit repo.
       </div>
     );
   }
@@ -160,7 +160,7 @@ function IframePreview({
 }: IframePreviewProps) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [mountNode, setMountNode] = useState<HTMLElement | null>(null);
-  const stylesHref = useBaseUrl("/appkit-preview/v0/styles.css");
+  const stylesHref = useBaseUrl("/appkit-preview/latest/styles.css");
 
   const height = useAutoHeight(iframeRef, customHeight);
   useDarkModeSync(iframeRef);

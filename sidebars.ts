@@ -20,18 +20,42 @@ type AppKitDocTree = {
   items: AppKitSidebarItem[];
 };
 
-function getAppKitMajorChannels(): string[] {
+// Returns the list of AppKit doc channels found under docs/appkit/.
+// "latest" is always first, followed by any version-* directories
+// (from Docusaurus versioned_docs convention, future).
+function getAppKitChannels(): string[] {
   const docsAppKitRoot = path.resolve(process.cwd(), "docs", "appkit");
 
   if (!fs.existsSync(docsAppKitRoot)) {
     return [];
   }
 
-  return fs
+  const entries = fs
     .readdirSync(docsAppKitRoot, { withFileTypes: true })
-    .filter((entry) => entry.isDirectory() && /^v\d+$/.test(entry.name))
+    .filter((entry) => entry.isDirectory());
+
+  const channels: string[] = [];
+
+  // "latest" always comes first
+  if (entries.some((entry) => entry.name === "latest")) {
+    channels.push("latest");
+  }
+
+  // Then any version-* directories (Docusaurus versioned_docs convention)
+  const versionDirs = entries
+    .filter((entry) => entry.name.startsWith("version-"))
     .map((entry) => entry.name)
-    .sort((a, b) => Number(b.slice(1)) - Number(a.slice(1)));
+    .sort()
+    .reverse();
+
+  channels.push(...versionDirs);
+
+  // Also support "next" for unreleased dev docs (future)
+  if (entries.some((entry) => entry.name === "next")) {
+    channels.push("next");
+  }
+
+  return channels;
 }
 
 function toDocId(relativePath: string): string {
@@ -139,35 +163,21 @@ function readAppKitDocTree(relativeDir: string): AppKitDocTree {
   };
 }
 
-const appKitMajorChannels = getAppKitMajorChannels();
-
-const appKitVersionItems = appKitMajorChannels
-  .map((majorChannel, index) => {
-    const majorTree = readAppKitDocTree(path.join("appkit", majorChannel));
-
-    if (!majorTree.indexDocId && majorTree.items.length === 0) {
-      return null;
-    }
-
-    return {
-      type: "category" as const,
-      label: index === 0 ? `${majorChannel} (current)` : majorChannel,
-      link: majorTree.indexDocId
-        ? {
-            type: "doc" as const,
-            id: majorTree.indexDocId,
-          }
-        : undefined,
-      collapsed: true,
-      items: majorTree.items,
-    };
-  })
-  .filter((item): item is Exclude<typeof item, null> => item !== null);
-
-const latestAppKitMajorChannel = appKitMajorChannels[0];
-const latestAppKitDocId = latestAppKitMajorChannel
-  ? readAppKitDocTree(path.join("appkit", latestAppKitMajorChannel)).indexDocId
+// Build a flat list of AppKit sidebar items from the latest channel.
+// The index doc ("Getting started") is prepended as an explicit item so it
+// appears in the sidebar and Docusaurus pagination works correctly.
+const latestChannel = getAppKitChannels()[0];
+const latestAppKitTree = latestChannel
+  ? readAppKitDocTree(path.join("appkit", latestChannel))
   : null;
+
+const appKitItems: AppKitSidebarItem[] = [];
+if (latestAppKitTree) {
+  if (latestAppKitTree.indexDocId) {
+    appKitItems.push(latestAppKitTree.indexDocId);
+  }
+  appKitItems.push(...latestAppKitTree.items);
+}
 
 const sidebars: SidebarsConfig = {
   tutorialSidebar: [
@@ -221,12 +231,8 @@ const sidebars: SidebarsConfig = {
         {
           type: "category",
           label: "AppKit",
-          link: {
-            type: "doc",
-            id: latestAppKitDocId ?? "appkit/v0/index",
-          },
           collapsed: true,
-          items: appKitVersionItems,
+          items: appKitItems,
         },
       ],
     },

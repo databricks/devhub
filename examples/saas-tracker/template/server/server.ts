@@ -7,11 +7,9 @@ import {
 } from "@databricks/appkit";
 import { setupSaasRoutes } from "./routes/saas-routes";
 
-createApp({
-  plugins: [server({ autoStart: false }), analytics(), genie(), lakebase()],
-})
-  .then(async (appkit) => {
+await createApp({
+  plugins: [server(), analytics(), genie(), lakebase()],
+  async onPluginsReady(appkit) {
     await setupSaasRoutes(appkit);
-    await appkit.server.start();
-  })
-  .catch(console.error);
+  },
+});

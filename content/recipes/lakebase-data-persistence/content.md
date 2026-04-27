@@ -45,20 +45,18 @@ The code below may be outdated. To get the latest, clone `https://github.com/dat
 
 #### Update `server/server.ts`
 
-Use `autoStart: false` on the server plugin so database setup runs before accepting requests. Import and register the `lakebase` plugin, then call route setup in the `.then()` handler:
+Register the `lakebase` plugin and run route setup inside `onPluginsReady`. AppKit waits for that hook to resolve before the server starts accepting requests, so your schema setup completes before the first call lands:
 
 ```typescript
 import { createApp, server, lakebase } from "@databricks/appkit";
 import { setupRoutes } from "./routes/item-routes";
 
-createApp({
-  plugins: [server({ autoStart: false }), lakebase()],
-})
-  .then(async (appkit) => {
+await createApp({
+  plugins: [server(), lakebase()],
+  async onPluginsReady(appkit) {
     await setupRoutes(appkit);
-    await appkit.server.start();
-  })
-  .catch(console.error);
+  },
+});
 ```
 
 #### Create `server/routes/item-routes.ts`

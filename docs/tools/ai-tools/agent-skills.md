@@ -40,7 +40,7 @@ databricks experimental aitools update
 databricks experimental aitools uninstall
 ```
 
-`update` fetches the latest release and auto-installs new skills from the manifest. Pass `--check` to preview without downloading. All commands accept `--global` (default) and `--project` to control scope.
+`update` fetches the latest release and auto-installs new skills from the manifest. Pass `--check` to preview without downloading, `--no-new` to skip auto-installing new skills, or `--force` to re-download even if versions match. All commands accept `--global` (default) and `--project` to control scope.
 
 ## Other install methods
 
@@ -56,13 +56,16 @@ Cursor also supports `/add-plugin databricks-skills` in chat.
 
 Run `databricks experimental aitools skills list` to see available skills and their install status.
 
-| Skill                  | Description                                                                                                                                                                     |
-| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `databricks`           | CLI operations, auth, profiles, and data exploration. Base skill loaded by all others.                                                                                          |
-| `databricks-apps`      | Build apps on Databricks Apps using AppKit. Includes references for the AppKit SDK, SQL queries, tRPC, Lakebase, Model Serving, and testing.                                    |
-| `databricks-jobs`      | Develop and deploy Lakeflow Jobs with notebooks, Python wheels, or SQL tasks.                                                                                                   |
-| `databricks-lakebase`  | Manage Lakebase Postgres Autoscaling projects, branches, and endpoints.                                                                                                         |
-| `databricks-pipelines` | Develop Lakeflow Spark Declarative Pipelines (formerly DLT). Large reference set covering streaming tables, materialized views, Auto Loader, Auto CDC, expectations, and sinks. |
+| Skill                             | Description                                                                                                                                                                     |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `databricks-apps`                 | Build apps on Databricks Apps using AppKit. Includes references for the AppKit SDK, SQL queries, tRPC, Lakebase, Model Serving, and testing.                                    |
+| `databricks-core`                 | CLI operations, auth, profiles, data exploration, and bundles. Base skill for all Databricks development.                                                                       |
+| `databricks-dabs`                 | Declare, deploy, and manage Databricks resources with Declarative Automation Bundles (DABs). Covers bundle structure, deploy/run commands, resource permissions, and pipelines. |
+| `databricks-jobs`                 | Develop and deploy Lakeflow Jobs with notebooks, Python wheels, or SQL tasks.                                                                                                   |
+| `databricks-lakebase`             | Manage Lakebase Postgres Autoscaling projects, branches, and endpoints.                                                                                                         |
+| `databricks-model-serving`        | Create and manage Model Serving endpoints for real-time ML inference with auto-scaling and version management.                                                                  |
+| `databricks-pipelines`            | Develop Lakeflow Spark Declarative Pipelines (formerly DLT). Large reference set covering streaming tables, materialized views, Auto Loader, Auto CDC, expectations, and sinks. |
+| `databricks-serverless-migration` | Migrate Databricks workloads from classic compute to serverless. Covers compatibility checks, configuration, code patterns, networking, and streaming migration.                |
 
 ## Other skill repositories
 

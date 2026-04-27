@@ -209,7 +209,7 @@ databricks postgres list-endpoints \
   projects/$PROJECT_ID/branches/$BRANCH_ID \
   -o json \
   --page-size 100 \
-  --page-token "$PAGE_TOKEN" \
+  --limit 100 \
   --debug \
   --target $TARGET \
   --profile $DATABRICKS_PROFILE
@@ -218,15 +218,15 @@ databricks postgres list-endpoints \
 <details>
 <summary>Options</summary>
 
-| Option         | Required | Description                                                        |
-| -------------- | -------- | ------------------------------------------------------------------ |
-| `PARENT`       | yes      | Branch resource path: `projects/{project_id}/branches/{branch_id}` |
-| `-o json`      | no       | Output as JSON (default: text)                                     |
-| `--page-size`  | no       | Max items per page (must be at least `10` if set)                  |
-| `--page-token` | no       | Pagination token for next page                                     |
-| `--debug`      | no       | Enable debug logging                                               |
-| `--target`     | no       | Bundle target to use (if applicable)                               |
-| `--profile`    | no       | Databricks CLI profile name                                        |
+| Option        | Required | Description                                                                 |
+| ------------- | -------- | --------------------------------------------------------------------------- |
+| `PARENT`      | yes      | Branch resource path: `projects/{project_id}/branches/{branch_id}`          |
+| `-o json`     | no       | Output as JSON (default: text)                                              |
+| `--page-size` | no       | Items per API request (upper bound per page; must be at least `10` if set)  |
+| `--limit`     | no       | Maximum total results to return; CLI auto-paginates and stops at this count |
+| `--debug`     | no       | Enable debug logging                                                        |
+| `--target`    | no       | Bundle target to use (if applicable)                                        |
+| `--profile`   | no       | Databricks CLI profile name                                                 |
 
 </details>
 
@@ -272,7 +272,7 @@ databricks postgres list-databases \
   projects/$PROJECT_ID/branches/$BRANCH_ID \
   -o json \
   --page-size 100 \
-  --page-token "$PAGE_TOKEN" \
+  --limit 100 \
   --debug \
   --target $TARGET \
   --profile $DATABRICKS_PROFILE
@@ -281,15 +281,15 @@ databricks postgres list-databases \
 <details>
 <summary>Options</summary>
 
-| Option         | Required | Description                                                        |
-| -------------- | -------- | ------------------------------------------------------------------ |
-| `PARENT`       | yes      | Branch resource path: `projects/{project_id}/branches/{branch_id}` |
-| `-o json`      | no       | Output as JSON (default: text)                                     |
-| `--page-size`  | no       | Max items per page                                                 |
-| `--page-token` | no       | Pagination token for next page                                     |
-| `--debug`      | no       | Enable debug logging                                               |
-| `--target`     | no       | Bundle target to use (if applicable)                               |
-| `--profile`    | no       | Databricks CLI profile name                                        |
+| Option        | Required | Description                                                                 |
+| ------------- | -------- | --------------------------------------------------------------------------- |
+| `PARENT`      | yes      | Branch resource path: `projects/{project_id}/branches/{branch_id}`          |
+| `-o json`     | no       | Output as JSON (default: text)                                              |
+| `--page-size` | no       | Items per API request (upper bound per page)                                |
+| `--limit`     | no       | Maximum total results to return; CLI auto-paginates and stops at this count |
+| `--debug`     | no       | Enable debug logging                                                        |
+| `--target`    | no       | Bundle target to use (if applicable)                                        |
+| `--profile`   | no       | Databricks CLI profile name                                                 |
 
 </details>
 

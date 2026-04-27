@@ -13,7 +13,14 @@ export const MUTUALLY_EXCLUSIVE: Record<string, string[]> = {
 };
 
 export const SKIP_FLAGS: Record<string, string[]> = {
-  "apps init": ["--name"],
+  "apps init": ["--name", "--auto-approve"],
+  "apps deploy": [
+    // Advanced API/CI flags not surfaced in user-facing docs
+    "--cluster-id",
+    "--fail-on-active-runs",
+    "--force-lock",
+    "--plan",
+  ],
   "postgres create-project": ["--name"],
   "postgres create-branch": ["--name"],
   "postgres update-branch": ["--name"],
@@ -86,10 +93,6 @@ export const CLI_COMMANDS: CommandSpec[] = [
     doc: "docs/lakebase/development.md",
   },
   {
-    command: "postgres update-branch",
-    doc: "docs/lakebase/development.md",
-  },
-  {
     command: "postgres update-endpoint",
     doc: "docs/lakebase/configuration.md",
   },
@@ -108,7 +111,7 @@ export const CLI_COMMANDS: CommandSpec[] = [
   // Apps
   {
     command: "apps init",
-    doc: "docs/apps/quickstart.md",
+    doc: "docs/apps/development.md",
   },
   {
     command: "apps deploy",
@@ -119,12 +122,8 @@ export const CLI_COMMANDS: CommandSpec[] = [
     doc: "docs/apps/development.md",
   },
   {
-    command: "apps init",
-    doc: "docs/apps/plugins.md",
-  },
-  {
     command: "apps manifest",
-    doc: "docs/apps/plugins.md",
+    doc: "docs/apps/development.md",
   },
   {
     command: "apps get",

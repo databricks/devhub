@@ -192,6 +192,7 @@ databricks apps deploy $APP_NAME \
   --json @$CONFIG_FILE \
   --source-code-path $SOURCE_PATH \
   --mode SNAPSHOT \
+  --auto-approve \
   --skip-validation \
   --skip-tests \
   --force \
@@ -210,6 +211,7 @@ databricks apps deploy $APP_NAME \
 | Option               | Required | Description                                                                                |
 | -------------------- | -------- | ------------------------------------------------------------------------------------------ |
 | `APP_NAME`           | no       | App name. Omit when running from a project directory (auto-detected from `databricks.yml`) |
+| `--auto-approve`     | no       | Skip interactive approvals that might be required for deployment                           |
 | `--skip-validation`  | no       | Skip project validation (build, typecheck, lint)                                           |
 | `--skip-tests`       | no       | Skip running tests during validation (default: true)                                       |
 | `--force`            | no       | Force-override Git branch validation                                                       |

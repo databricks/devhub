@@ -396,37 +396,6 @@
     display: none;
   }
 
-  /* In the mobile sidebar, render icon links as full-width text links so that
-     GitHub / YouTube / Reddit are still discoverable on small screens. A
-     leading mask glyph keeps the brand recognizable next to the label. */
-  .navbar-sidebar .navbar-icon-link {
-    width: auto;
-    height: auto;
-    padding: 0.75rem 1rem !important;
-    font-size: 1rem;
-    color: rgb(255 255 255 / 0.88);
-    border-radius: 0.5rem;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.625rem;
-  }
-
-  .navbar-sidebar .navbar-icon-link::before {
-    content: "";
-    position: static;
-    display: inline-block;
-    width: 1.05rem;
-    height: 1.05rem;
-    flex: 0 0 1.05rem;
-    background-color: rgb(255 255 255 / 0.78);
-    -webkit-mask-position: center;
-    -webkit-mask-repeat: no-repeat;
-    -webkit-mask-size: contain;
-    mask-position: center;
-    mask-repeat: no-repeat;
-    mask-size: contain;
-  }
-
   /* Hide desktop social icons on mobile to keep the top bar uncluttered;
      they remain accessible inside the hamburger sidebar with text labels. */
   @media (max-width: 996px) {
@@ -435,24 +404,198 @@
     }
   }
 
+  /* ──────────────────────────────────────────────────────────────────────
+     Mobile sidebar (hamburger menu)
+     Layout: brand bar at top, then a flex column of items with
+     - primary navigation (Solutions / Templates / Docs)
+     - "Community" group of secondary social links
+     - Try Databricks CTA pinned to the bottom of the panel
+     ────────────────────────────────────────────────────────────────────── */
+
+  .navbar-sidebar__brand {
+    padding: 1rem 1rem;
+    border-bottom: 1px solid rgb(255 255 255 / 0.08);
+    height: auto;
+    min-height: 3.75rem;
+  }
+
+  .navbar-sidebar__close {
+    color: rgb(255 255 255 / 0.7);
+  }
+
+  .navbar-sidebar__close:hover {
+    color: #fff;
+  }
+
+  /* Make the items panel a full-height flex column so we can pin the CTA
+     to the bottom with margin-top: auto on its list item. */
+  .navbar-sidebar__items {
+    padding: 0;
+  }
+
+  .navbar-sidebar__items .navbar-sidebar__item.menu {
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem 1rem 1.25rem;
+  }
+
+  .navbar-sidebar__items .navbar-sidebar__item.menu .menu__list {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    gap: 0.125rem;
+  }
+
+  /* Primary navigation links: larger, confident, plenty of touch area. */
   .navbar-sidebar__items .menu__link {
-    padding: 0.75rem 1rem;
-    font-size: 1rem;
-    font-weight: 500;
-    border-radius: 0.5rem;
-    color: rgb(255 255 255 / 0.88);
+    padding: 0.75rem 0.875rem;
+    font-size: 1.0625rem;
+    font-weight: 600;
+    line-height: 1.25;
+    border-radius: 0.625rem;
+    color: rgb(255 255 255 / 0.92) !important;
+    transition:
+      color 0.15s ease,
+      background-color 0.15s ease;
   }
 
   .navbar-sidebar__items .menu__link:hover {
-    background-color: rgb(255 255 255 / 0.08);
-    color: #fff;
+    background-color: rgb(255 255 255 / 0.06) !important;
+    color: #fff !important;
   }
 
   .navbar-sidebar__items .menu__link--active {
-    color: #fff;
-    background-color: rgb(255 255 255 / 0.1);
+    color: #fff !important;
+    background-color: rgb(255 255 255 / 0.08) !important;
   }
 
+  /* Hide the noisy external-link arrow next to social labels and the CTA
+     inside the mobile sidebar; the brand glyph and button styling already
+     communicate intent. */
+  .navbar-sidebar__items .menu__link [class*="iconExternalLink"] {
+    display: none !important;
+  }
+
+  /* "Community" section header drawn with a top border + small label
+     immediately above the first icon-link list item. */
+  .navbar-sidebar__items
+    .menu__list-item:not(:has(.navbar-icon-link)):has(
+      + .menu__list-item:has(.navbar-icon-link)
+    ) {
+    margin-bottom: 0.5rem;
+  }
+
+  .navbar-sidebar__items
+    .menu__list-item:has(.navbar-icon-link):not(
+      :has(+ .menu__list-item .navbar-icon-link)
+    ),
+  .navbar-sidebar__items .menu__list-item:has(.navbar-icon-link):first-of-type,
+  .navbar-sidebar__items
+    .menu__list-item:not(:has(.navbar-icon-link))
+    + .menu__list-item:has(.navbar-icon-link) {
+    position: relative;
+  }
+
+  .navbar-sidebar__items
+    .menu__list-item:not(:has(.navbar-icon-link))
+    + .menu__list-item:has(.navbar-icon-link) {
+    margin-top: 1.25rem;
+  }
+
+  .navbar-sidebar__items
+    .menu__list-item:not(:has(.navbar-icon-link))
+    + .menu__list-item:has(.navbar-icon-link)::before {
+    content: "Community";
+    display: block;
+    padding: 0 0.875rem 0.375rem;
+    margin-top: -0.5rem;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgb(255 255 255 / 0.45);
+    border-top: 1px solid rgb(255 255 255 / 0.08);
+    padding-top: 1rem;
+  }
+
+  /* Secondary social links: smaller, lighter weight, dim color, brand glyph
+     rendered inline before the label. */
+  .navbar-sidebar .navbar-icon-link {
+    width: auto;
+    height: auto;
+    padding: 0.5rem 0.875rem !important;
+    font-size: 0.9375rem !important;
+    font-weight: 500 !important;
+    color: rgb(255 255 255 / 0.7) !important;
+    border-radius: 0.5rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+  }
+
+  .navbar-sidebar .navbar-icon-link:hover {
+    color: #fff !important;
+    background-color: rgb(255 255 255 / 0.06) !important;
+  }
+
+  .navbar-sidebar .navbar-icon-link::before {
+    content: "";
+    position: static;
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    flex: 0 0 1rem;
+    background-color: rgb(255 255 255 / 0.6);
+    -webkit-mask-position: center;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-size: contain;
+    mask-position: center;
+    mask-repeat: no-repeat;
+    mask-size: contain;
+    transition: background-color 0.15s ease;
+  }
+
+  .navbar-sidebar .navbar-icon-link:hover::before {
+    background-color: #fff;
+  }
+
+  /* Try Databricks CTA: pinned to the bottom of the sidebar inside a
+     visually distinct footer area separated by a top divider. The button
+     is centered and sized for comfortable thumb reach without spanning
+     the entire screen width. */
+  .navbar-sidebar__items .menu__list-item:has(.navbar-try-databricks) {
+    margin-top: auto;
+    padding: 1.25rem 0 0.25rem;
+    border-top: 1px solid rgb(255 255 255 / 0.08);
+    text-align: center;
+  }
+
+  .navbar-sidebar .menu__link.navbar-try-databricks {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+    width: auto;
+    min-width: 12rem;
+    margin: 0 auto;
+    padding: 0.75rem 1.5rem !important;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    border-radius: 9999px;
+    color: #fff !important;
+    background-color: var(--db-lava);
+    border: 1px solid transparent;
+    box-shadow:
+      0 1px 0 rgb(255 255 255 / 0.18) inset,
+      0 6px 16px -8px rgb(255 54 33 / 0.6);
+  }
+
+  .navbar-sidebar .menu__link.navbar-try-databricks:hover {
+    background-color: var(--db-lava-dark) !important;
+    color: #fff !important;
+  }
+
+  /* Collapsible category headers inside the sidebar. */
   .navbar-sidebar__items .menu__list-item-collapsible .menu__link--sublist,
   .navbar-sidebar__items
     .menu__list-item-collapsible
@@ -486,20 +629,6 @@
 
   .navbar-sidebar__item--back .menu__link:hover {
     color: #fff !important;
-  }
-
-  .navbar-sidebar__items .menu__list-item .menu__link {
-    color: rgb(255 255 255 / 0.78) !important;
-  }
-
-  .navbar-sidebar__items .menu__list-item .menu__link:hover {
-    color: #fff !important;
-    background-color: rgb(255 255 255 / 0.08) !important;
-  }
-
-  .navbar-sidebar__items .menu__link--active {
-    color: #fff !important;
-    background-color: rgb(255 255 255 / 0.1) !important;
   }
 
   .navbar-sidebar--show .navbar__items--right > :not(.navbar__toggle) {

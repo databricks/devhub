@@ -292,6 +292,7 @@
     padding: 0.4rem !important;
     font-size: 0;
     border-radius: 0.375rem;
+    color: transparent;
   }
 
   .navbar__items--right .navbar-icon-link::before {
@@ -302,7 +303,9 @@
     width: 1.125rem;
     height: 1.125rem;
     background-color: rgb(255 255 255 / 0.72);
-    transition: background-color 0.15s ease;
+    transition:
+      background-color 0.15s ease,
+      transform 0.15s ease;
     -webkit-mask-position: center;
     -webkit-mask-repeat: no-repeat;
     -webkit-mask-size: contain;
@@ -311,8 +314,27 @@
     mask-size: contain;
   }
 
+  .navbar__items--right .navbar-icon-link:hover {
+    background-color: rgb(255 255 255 / 0.08);
+  }
+
   .navbar__items--right .navbar-icon-link:hover::before {
     background-color: #fff;
+    transform: scale(1.06);
+  }
+
+  .navbar__items--right .navbar-icon-link:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+
+  /* Subtle separator between the social-icon cluster and the theme/CTA cluster.
+     navbar-try-databricks uses CSS `order: 100` so it visually sits last; place
+     the divider on its left edge to delineate the icon group from the CTA. */
+  .navbar__items--right .navbar-icon-link ~ .navbar-try-databricks {
+    border-left: 1px solid rgb(255 255 255 / 0.14);
+    padding-left: 0.875rem !important;
+    margin-left: 0.5rem;
   }
 
   .navbar-icon-github::before {
@@ -326,8 +348,13 @@
   }
 
   .navbar-icon-reddit::before {
-    -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='black' d='M12 0A12 12 0 1 0 24 12 12 12 0 0 0 12 0zm5 4.75A1.25 1.25 0 1 1 15.8 6.3l-2.6-.55-.8 3.75a9.3 9.3 0 0 1 4.68 1.5 1.75 1.75 0 1 1 .74 3.88c.02.09.03.18.03.27 0 2.7-3.13 4.87-7 4.87s-7-2.17-7-4.87c0-.1.01-.19.03-.28A1.75 1.75 0 1 1 6.8 11a9.36 9.36 0 0 1 4.75-1.5l.88-4.18 2.9.62A1.22 1.22 0 0 1 17 4.75zM9.25 12A1.25 1.25 0 1 0 10.5 13.25 1.25 1.25 0 0 0 9.25 12zm5.5 0A1.25 1.25 0 1 0 16 13.25 1.25 1.25 0 0 0 14.75 12zM9.3 16.1a.33.33 0 0 0-.46.46c.84.84 2.48.91 2.96.91s2.1-.06 2.96-.91a.33.33 0 1 0-.46-.46c-.54.53-1.68.73-2.5.73s-1.97-.2-2.5-.73z'/%3E%3C/svg%3E");
-    mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='black' d='M12 0A12 12 0 1 0 24 12 12 12 0 0 0 12 0zm5 4.75A1.25 1.25 0 1 1 15.8 6.3l-2.6-.55-.8 3.75a9.3 9.3 0 0 1 4.68 1.5 1.75 1.75 0 1 1 .74 3.88c.02.09.03.18.03.27 0 2.7-3.13 4.87-7 4.87s-7-2.17-7-4.87c0-.1.01-.19.03-.28A1.75 1.75 0 1 1 6.8 11a9.36 9.36 0 0 1 4.75-1.5l.88-4.18 2.9.62A1.22 1.22 0 0 1 17 4.75zM9.25 12A1.25 1.25 0 1 0 10.5 13.25 1.25 1.25 0 0 0 9.25 12zm5.5 0A1.25 1.25 0 1 0 16 13.25 1.25 1.25 0 0 0 14.75 12zM9.3 16.1a.33.33 0 0 0-.46.46c.84.84 2.48.91 2.96.91s2.1-.06 2.96-.91a.33.33 0 1 0-.46-.46c-.54.53-1.68.73-2.5.73s-1.97-.2-2.5-.73z'/%3E%3C/svg%3E");
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='black' d='M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.985 0 1.795.81 1.795 1.794 0 .724-.434 1.343-1.052 1.623.034.21.052.422.052.633 0 3.214-3.726 5.83-8.336 5.83-4.61 0-8.336-2.616-8.336-5.83 0-.211.018-.423.052-.633-.618-.28-1.052-.899-1.052-1.623 0-.985.81-1.794 1.795-1.794.477 0 .898.182 1.207.49 1.207-.855 2.863-1.418 4.688-1.488l.886-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='black' d='M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.985 0 1.795.81 1.795 1.794 0 .724-.434 1.343-1.052 1.623.034.21.052.422.052.633 0 3.214-3.726 5.83-8.336 5.83-4.61 0-8.336-2.616-8.336-5.83 0-.211.018-.423.052-.633-.618-.28-1.052-.899-1.052-1.623 0-.985.81-1.794 1.795-1.794.477 0 .898.182 1.207.49 1.207-.855 2.863-1.418 4.688-1.488l.886-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z'/%3E%3C/svg%3E");
+  }
+
+  .navbar-icon-youtube::before {
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='black' d='M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='black' d='M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z'/%3E%3C/svg%3E");
   }
 
   .footer {
@@ -367,22 +394,41 @@
     display: none;
   }
 
-  /* Keep icon-only navbar links desktop-only; mobile sidebar needs text links */
+  /* In the mobile sidebar, render icon links as full-width text links so that
+     GitHub / YouTube / Reddit are still discoverable on small screens. A
+     leading mask glyph keeps the brand recognizable next to the label. */
   .navbar-sidebar .navbar-icon-link {
     width: auto;
     height: auto;
-    padding: inherit !important;
-    font-size: inherit;
-    border-radius: inherit;
+    padding: 0.75rem 1rem !important;
+    font-size: 1rem;
+    color: rgb(255 255 255 / 0.88);
+    border-radius: 0.5rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
   }
 
   .navbar-sidebar .navbar-icon-link::before {
-    display: none;
+    content: "";
+    position: static;
+    display: inline-block;
+    width: 1.05rem;
+    height: 1.05rem;
+    flex: 0 0 1.05rem;
+    background-color: rgb(255 255 255 / 0.78);
+    -webkit-mask-position: center;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-size: contain;
+    mask-position: center;
+    mask-repeat: no-repeat;
+    mask-size: contain;
   }
 
+  /* Hide desktop social icons on mobile to keep the top bar uncluttered;
+     they remain accessible inside the hamburger sidebar with text labels. */
   @media (max-width: 996px) {
-    .navbar__items--right .navbar-icon-link,
-    .navbar-sidebar .navbar-icon-link {
+    .navbar__items--right .navbar-icon-link {
       display: none !important;
     }
   }

@@ -141,8 +141,29 @@ const config: Config = {
         { to: "/templates", label: "Templates", position: "left" },
         {
           to: "/docs/start-here",
-          label: "Learn More",
+          label: "Docs",
           position: "left",
+        },
+        {
+          href: "https://www.reddit.com/r/databricks",
+          label: "Reddit",
+          position: "right",
+          className: "navbar-icon-link navbar-icon-reddit",
+          "aria-label": "Databricks subreddit",
+        },
+        {
+          href: "https://www.youtube.com/@Databricks",
+          label: "YouTube",
+          position: "right",
+          className: "navbar-icon-link navbar-icon-youtube",
+          "aria-label": "Databricks YouTube channel",
+        },
+        {
+          href: "https://github.com/databricks/devhub",
+          label: "GitHub",
+          position: "right",
+          className: "navbar-icon-link navbar-icon-github",
+          "aria-label": "DevHub GitHub repository",
         },
         {
           href: "https://databricks.com/signup",

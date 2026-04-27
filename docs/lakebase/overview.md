@@ -49,6 +49,6 @@ The plugin handles OAuth token refresh and connection pooling automatically. Whe
 - Pure analytics: read-only queries against large datasets belong in Unity Catalog, not Lakebase Postgres.
 - Apps with no other Databricks workspace dependencies. The colocation advantage doesn't apply, and auth is your responsibility.
 
-## Next steps
+## Where to next
 
 [Templates](/templates) are agent-ready prompts organized by use case. Find one that fits, or see the [Lakebase Postgres Quickstart](/docs/lakebase/quickstart) for step-by-step instructions.

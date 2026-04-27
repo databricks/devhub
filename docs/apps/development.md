@@ -462,3 +462,7 @@ npx @databricks/appkit docs "<query-or-doc-path>"  # view a specific section or 
 ```
 
 Run without arguments to browse the index. Useful when building with an AI coding assistant. Point it here instead of guessing API shapes, or view the [AppKit reference](/docs/appkit/v0) on this site.
+
+## Where to next
+
+Browse the [templates catalog](/templates) to start building, or add capabilities to your app: [Lakebase Postgres](/docs/lakebase/overview) for persistent storage or [Agent Bricks](/docs/agents/overview) for AI features.

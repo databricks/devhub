@@ -42,6 +42,6 @@ Every app gets a dedicated service principal. Databricks injects its credentials
 - Your app is a static site with no Databricks data access.
 - You're serving users outside your Databricks account (for example, public-facing apps or customers without Databricks access).
 
-## Next steps
+## Where to next
 
 [Templates](/templates) are agent-ready prompts organized by use case. Find one that fits, or see the [Apps Quickstart](/docs/apps/quickstart) for a step-by-step walkthrough.

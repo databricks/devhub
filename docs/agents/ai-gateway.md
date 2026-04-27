@@ -6,7 +6,7 @@ description: Call governed LLM endpoints from your AppKit app using the Model Se
 
 # AI Gateway
 
-**AI Gateway** is a Databricks governance layer for LLM endpoints and MCP servers. It tracks usage, enforces rate limits, logs payloads, filters unsafe content and PII, and attributes cost. From your AppKit app, you call a governed endpoint with the Model Serving plugin. This page covers the AppKit wiring, the governance features, and the CLI for inspecting and provisioning endpoints.
+**AI Gateway** is a Databricks governance layer for LLM endpoints and MCP servers. It tracks usage, enforces rate limits, logs payloads, filters unsafe content and PII, and attributes cost. See the [AI Gateway overview](https://docs.databricks.com/aws/en/ai-gateway/) for a full product introduction. From your AppKit app, you call a governed endpoint with the Model Serving plugin. This page covers the AppKit wiring, the governance features, and the CLI for inspecting and provisioning endpoints.
 
 ## Prerequisites
 
@@ -318,7 +318,7 @@ databricks serving-endpoints create $ENDPOINT_NAME \
 
 </details>
 
-Wait for the endpoint to reach `READY` state before querying it.
+Wait for the endpoint to reach `READY` state before querying it. For a step-by-step walkthrough, see the [Create a Model Serving Endpoint](/templates/model-serving-endpoint-creation) template.
 
 ## Coding agent integrations
 
@@ -328,20 +328,6 @@ To set up an integration, open **AI Gateway** in your workspace sidebar, go to t
 
 See [Integrate with coding agents](https://docs.databricks.com/aws/en/ai-gateway/coding-agent-integration-beta) for the full walkthrough and the current list of supported tools.
 
-## Related templates
+## Where to next
 
-| Template                                                                      | Description                           |
-| ----------------------------------------------------------------------------- | ------------------------------------- |
-| [Query AI Gateway Endpoints](/templates/foundation-models-api)                | Access foundation models from AppKit  |
-| [Streaming AI Chat](/templates/ai-chat-model-serving)                         | Streaming chat with the Vercel AI SDK |
-| [Create a Model Serving Endpoint](/templates/model-serving-endpoint-creation) | Provision and test a new endpoint     |
-| [AI Chat App](/templates/ai-chat-app)                                         | Streaming chat with history           |
-
-## Further reading
-
-- [AI Gateway landing](https://docs.databricks.com/aws/en/ai-gateway/)
-- [AI Gateway for LLM endpoints](https://docs.databricks.com/aws/en/ai-gateway/overview-beta)
-- [Configure AI Gateway on serving endpoints](https://docs.databricks.com/aws/en/ai-gateway/configure-ai-gateway-endpoints)
-- [Integrate with coding agents](https://docs.databricks.com/aws/en/ai-gateway/coding-agent-integration-beta)
-- [AppKit Model Serving plugin reference](/docs/appkit/v0/plugins/serving)
-- [AppKit execution context](/docs/appkit/v0/plugins/execution-context)
+Try the [AI Chat App](/templates/ai-chat-app) to wire a governed endpoint into your app, or explore the other agent capabilities: [Genie spaces](/docs/agents/genie) or [Custom agent endpoints](/docs/agents/custom-agents).

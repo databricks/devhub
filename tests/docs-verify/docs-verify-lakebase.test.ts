@@ -347,7 +347,7 @@ describe("Lakebase workflow", { timeout: 600_000 }, () => {
         },
       )}'`,
       PROFILE,
-      { timeoutMs: 60_000 },
+      { timeoutMs: 180_000 },
     );
     console.log("[lakebase] created branch:", branch.name);
 
@@ -428,7 +428,7 @@ describe("Lakebase workflow", { timeout: 600_000 }, () => {
         },
       )}'`,
       PROFILE,
-      { timeoutMs: 60_000 },
+      { timeoutMs: 180_000 },
     );
     console.log("[lakebase] created ephemeral branch:", branch.name);
 
@@ -482,35 +482,52 @@ describe("Lakebase workflow", { timeout: 600_000 }, () => {
     console.log("[lakebase] deleted read-only endpoint");
   });
 
-  test("update endpoint: set scale-to-zero directly (feature-gated)", () => {
-    const spec = JSON.stringify({
-      spec: { suspend_timeout_duration: "300s" },
-    });
-    try {
-      cli(
-        `postgres update-endpoint ${endpointName} "spec.suspend_timeout_duration" --json '${spec}'`,
-        PROFILE,
-        { timeoutMs: 120_000 },
-      );
-      console.log("[lakebase] update-endpoint suspend_timeout_duration done");
-    } catch (e) {
-      const msg = (e as Error).message;
-      if (msg.includes("Unknown field path")) {
-        console.warn(
-          "[lakebase] suspend_timeout_duration via update-endpoint not supported on this workspace (feature-gated, skipping)",
-        );
-        return;
-      }
-      throw e;
-    }
+  test("update endpoint: scale-to-zero enable, disable, and re-enable", () => {
+    // Production branch starts with scale to zero disabled (suspend_timeout_duration absent).
 
-    const endpoint = cliJson<{
+    // Enable: set a timeout
+    cli(
+      `postgres update-endpoint ${endpointName} "spec.suspension" --json '{"spec":{"suspend_timeout_duration":"300s"}}'`,
+      PROFILE,
+      { timeoutMs: 120_000 },
+    );
+    const enabled = cliJson<{
       status: { suspend_timeout_duration?: string };
     }>(`postgres get-endpoint ${endpointName}`, PROFILE);
-    expect(endpoint.status.suspend_timeout_duration).toBe("300s");
+    expect(enabled.status.suspend_timeout_duration).toBe("300s");
     console.log(
-      "[lakebase] suspend_timeout_duration verified:",
-      endpoint.status.suspend_timeout_duration,
+      "[lakebase] scale-to-zero enabled:",
+      enabled.status.suspend_timeout_duration,
+    );
+
+    // Disable: no_suspension: true — suspend_timeout_duration disappears from status
+    cli(
+      `postgres update-endpoint ${endpointName} "spec.suspension" --json '{"spec":{"no_suspension":true}}'`,
+      PROFILE,
+      { timeoutMs: 120_000 },
+    );
+    const disabled = cliJson<{
+      status: { suspend_timeout_duration?: string };
+    }>(`postgres get-endpoint ${endpointName}`, PROFILE);
+    expect(disabled.status.suspend_timeout_duration).toBeUndefined();
+    console.log(
+      "[lakebase] scale-to-zero disabled, suspend_timeout_duration:",
+      disabled.status.suspend_timeout_duration,
+    );
+
+    // Re-enable: setting suspend_timeout_duration brings it back (no_suspension: false is not supported)
+    cli(
+      `postgres update-endpoint ${endpointName} "spec.suspension" --json '{"spec":{"suspend_timeout_duration":"300s"}}'`,
+      PROFILE,
+      { timeoutMs: 120_000 },
+    );
+    const reenabled = cliJson<{
+      status: { suspend_timeout_duration?: string };
+    }>(`postgres get-endpoint ${endpointName}`, PROFILE);
+    expect(reenabled.status.suspend_timeout_duration).toBe("300s");
+    console.log(
+      "[lakebase] scale-to-zero re-enabled:",
+      reenabled.status.suspend_timeout_duration,
     );
   });
 });

@@ -145,6 +145,7 @@ databricks serving-endpoints list -o json
 
 ```bash title="All Options"
 databricks serving-endpoints list \
+  --limit 100 \
   --debug \
   -o json \
   --target $TARGET \
@@ -156,6 +157,7 @@ databricks serving-endpoints list \
 
 | Option      | Required | Description                          |
 | ----------- | -------- | ------------------------------------ |
+| `--limit`   | no       | Maximum number of results to return  |
 | `--debug`   | no       | Enable debug logging                 |
 | `-o json`   | no       | Output as JSON (default: text)       |
 | `--target`  | no       | Bundle target to use (if applicable) |

@@ -163,38 +163,21 @@ function readAppKitDocTree(relativeDir: string): AppKitDocTree {
   };
 }
 
-const appKitChannels = getAppKitChannels();
-
-// Each channel becomes a collapsible category whose header links to the
-// channel's index doc (e.g. "Getting started"). This mirrors the old v0
-// behavior and ensures the index page is always reachable from the sidebar.
-const appKitVersionItems = appKitChannels
-  .map((channel) => {
-    const tree = readAppKitDocTree(path.join("appkit", channel));
-
-    if (!tree.indexDocId && tree.items.length === 0) {
-      return null;
-    }
-
-    return {
-      type: "category" as const,
-      label: channel,
-      link: tree.indexDocId
-        ? {
-            type: "doc" as const,
-            id: tree.indexDocId,
-          }
-        : undefined,
-      collapsed: true,
-      items: tree.items,
-    };
-  })
-  .filter((item): item is Exclude<typeof item, null> => item !== null);
-
-const latestChannel = appKitChannels[0];
-const latestAppKitDocId = latestChannel
-  ? readAppKitDocTree(path.join("appkit", latestChannel)).indexDocId
+// Build a flat list of AppKit sidebar items from the latest channel.
+// The index doc ("Getting started") is prepended as an explicit item so it
+// appears in the sidebar and Docusaurus pagination works correctly.
+const latestChannel = getAppKitChannels()[0];
+const latestAppKitTree = latestChannel
+  ? readAppKitDocTree(path.join("appkit", latestChannel))
   : null;
+
+const appKitItems: AppKitSidebarItem[] = [];
+if (latestAppKitTree) {
+  if (latestAppKitTree.indexDocId) {
+    appKitItems.push(latestAppKitTree.indexDocId);
+  }
+  appKitItems.push(...latestAppKitTree.items);
+}
 
 const sidebars: SidebarsConfig = {
   tutorialSidebar: [
@@ -248,12 +231,8 @@ const sidebars: SidebarsConfig = {
         {
           type: "category",
           label: "AppKit",
-          link: {
-            type: "doc",
-            id: latestAppKitDocId ?? "appkit/latest/index",
-          },
           collapsed: true,
-          items: appKitVersionItems,
+          items: appKitItems,
         },
       ],
     },

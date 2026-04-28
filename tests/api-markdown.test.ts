@@ -82,6 +82,21 @@ describe("/api/markdown about-devhub preamble policy", () => {
     expect(result.body).toContain("Quickstart");
   });
 
+  test("solution responses do NOT include the About DevHub preamble", () => {
+    const result = call({ section: "solutions", slug: "devhub-launch" });
+    expect(result.statusCode).toBe(200);
+    expect(result.body).not.toContain("# About DevHub");
+    expect(result.body).not.toContain("/llms.txt");
+    expect(result.body).toContain("Introducing dev.databricks.com");
+  });
+
+  test("solutions index does NOT include the preamble", () => {
+    const result = call({ section: "solutions", slug: "" });
+    expect(result.statusCode).toBe(200);
+    expect(result.body).not.toContain("# About DevHub");
+    expect(result.body).toContain("# Solutions");
+  });
+
   test("recipe responses DO include the About DevHub preamble", () => {
     const result = call({
       section: "recipes",
@@ -109,21 +124,8 @@ describe("/api/markdown about-devhub preamble policy", () => {
     expect(result.body).toContain("## Agentic Support Console");
   });
 
-  test("solution responses DO include the About DevHub preamble", () => {
-    const result = call({ section: "solutions", slug: "devhub-launch" });
-    expect(result.statusCode).toBe(200);
-    expect(result.body.startsWith("# About DevHub")).toBe(true);
-    expect(result.body).toContain("Introducing dev.databricks.com");
-  });
-
   test("templates index DOES include the preamble", () => {
     const result = call({ section: "templates", slug: "" });
-    expect(result.statusCode).toBe(200);
-    expect(result.body.startsWith("# About DevHub")).toBe(true);
-  });
-
-  test("solutions index DOES include the preamble", () => {
-    const result = call({ section: "solutions", slug: "" });
     expect(result.statusCode).toBe(200);
     expect(result.body.startsWith("# About DevHub")).toBe(true);
   });

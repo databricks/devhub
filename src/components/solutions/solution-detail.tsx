@@ -51,6 +51,7 @@ export function SolutionDetail({
                     title={solution.title}
                     description={solution.description}
                     permalink={permalink}
+                    omitAboutDevhubPreamble
                   />
                 </div>
 

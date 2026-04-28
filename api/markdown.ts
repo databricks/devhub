@@ -40,13 +40,17 @@ export default function handler(req: VercelRequest, res: VercelResponse): void {
     const parsed = parseSection(req.query.section);
     const markdown = getDetailMarkdown(parsed, slug);
     // The About DevHub preamble (with llms.txt site index) is meant for
-    // copy-paste prompts that ask an agent to BUILD something — recipes,
-    // cookbooks, examples, solutions. Reference docs are linked from those
-    // prompts, so adding the same preamble to /docs/*.md just doubles the
-    // prelude when an agent fetches a doc as a follow-up. Keep docs raw.
+    // copy-paste prompts that ask an agent to BUILD something — i.e. our
+    // resources: templates, recipes, examples, and the templates index.
+    // Reference docs and solution narratives are linked from those prompts,
+    // so adding the same preamble there would just double the prelude when
+    // an agent fetches them as a follow-up. Keep docs and solutions raw.
+    const includeAboutPreamble =
+      parsed === "templates" || parsed === "recipes" || parsed === "examples";
     const siteUrl = resolveSiteUrlForRequest(req.headers.host);
-    const withRef =
-      parsed === "docs" ? markdown : prependLlmsReference(markdown, siteUrl);
+    const withRef = includeAboutPreamble
+      ? prependLlmsReference(markdown, siteUrl)
+      : markdown;
 
     const filename = slug ? `${slug.replace(/\//g, "-")}.md` : `${parsed}.md`;
     res.setHeader("Content-Type", "text/markdown; charset=utf-8");

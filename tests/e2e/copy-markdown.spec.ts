@@ -234,18 +234,20 @@ test.describe("copy markdown exports raw markdown on example pages", () => {
 });
 
 test.describe("copy markdown exports raw markdown on solution pages", () => {
-  test("solution detail page copies actual markdown", async ({ page }) => {
+  test("solution detail page copies actual markdown without the About DevHub preamble", async ({
+    page,
+  }) => {
     await setupClipboardMock(page);
     await page.goto("/solutions/devhub-launch");
 
     await clickCopyMarkdownAndWaitForToast(page);
 
     const copied = await getCopiedText(page);
-    expect(copied).toContain("# About DevHub");
+    expect(copied).not.toContain("# About DevHub");
+    expect(copied).not.toContain("/llms.txt");
     expect(copied).toContain("# Introducing dev.databricks.com");
     expect(copied).toContain("**dev.databricks.com**");
     expect(copied).toContain('title: "Introducing dev.databricks.com"');
-    expect(copied).toContain("llms.txt");
   });
 });
 

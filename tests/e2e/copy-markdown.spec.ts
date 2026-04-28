@@ -264,7 +264,7 @@ test.describe("copy markdown exports raw markdown on docs pages", () => {
     expect(copied).not.toContain("# About DevHub");
     expect(copied).not.toContain("/llms.txt");
     expect(copied).toContain("# Start here");
-    expect(copied).toContain("## Templates");
+    expect(copied).toContain("## Where to start");
   });
 
   test("raw-docs static files are served", async ({ request }) => {

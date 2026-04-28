@@ -8,7 +8,7 @@ description: Databricks Apps hosts web applications inside your workspace with b
 
 Databricks Apps hosts your web app inside your workspace. It gets a fixed URL, built-in OAuth, and direct access to your workspace data and services. No separate hosting service, no auth layer to build, no credential rotation to manage.
 
-**AppKit** is the TypeScript SDK for building those apps. It provides pre-built React UI components, type-safe data access, and a plugin system for connecting to Databricks services.
+**[AppKit](/docs/appkit/v0)** is the TypeScript SDK for building those apps. It provides pre-built React UI components, type-safe data access, and a plugin system for connecting to Databricks services.
 
 ## How it works
 
@@ -29,18 +29,19 @@ AppKit uses a three-layer architecture with plugins that register capabilities a
 
 ## How auth works
 
-Every app gets a dedicated service principal. Databricks injects its credentials at runtime, so your app can call workspace APIs without managing tokens. By default, all requests run as this service principal and all users share its permissions. When you need per-user data access, Databricks can forward the signed-in user's token via `x-forwarded-access-token`. AppKit's built-in [Genie](/docs/agents/genie) and [Model Serving](/docs/agents/ai-gateway) plugins handle this automatically.
+Every app gets a dedicated service principal. Databricks injects its credentials at runtime, so your app can call workspace APIs without managing tokens.
+
+By default, all requests run as this service principal and all users share its permissions. When you need per-user data access, Databricks can forward the signed-in user's token via `x-forwarded-access-token`. AppKit's built-in [Genie](/docs/agents/genie) and [Model Serving](/docs/agents/ai-gateway) plugins handle this automatically.
 
 ## When to use it
 
-- You're building a web app, internal tool, or API that reads or writes Databricks data.
-- You want auth handled by the platform, without building login flows, token rotation, or session management.
-- You're deploying an AI agent (agents run as Apps).
+Apps are about **interactivity**, not only analytics. A dashboard is great for read-only views with pre-canned filters; an app does that plus accepts input, runs logic, and persists results. Build an app when your workflow needs any of those, for example a scenario builder that saves user-created cases, or an internal tool replacing a manual spreadsheet process.
 
 ## When not to use it
 
-- Your app is a static site with no Databricks data access.
-- You're serving users outside your Databricks account (for example, public-facing apps or customers without Databricks access).
+- **Static sites with no Databricks data access.** Host these anywhere.
+- **Public-facing or customer-facing apps.** Users have to be authenticated as identities in your Databricks account, so anyone outside your enterprise directory can't sign in.
+- **Pure read-only dashboards** that AI/BI [Dashboards](https://docs.databricks.com/aws/en/dashboards/) already cover. Use a dashboard until you need to persist user input or run custom logic on top of it.
 
 ## Where to next
 

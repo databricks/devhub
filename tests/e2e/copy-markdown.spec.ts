@@ -250,7 +250,7 @@ test.describe("copy markdown exports raw markdown on solution pages", () => {
 });
 
 test.describe("copy markdown exports raw markdown on docs pages", () => {
-  test("docs page copies raw markdown fetched from static file", async ({
+  test("docs page copies raw markdown without the About DevHub preamble", async ({
     page,
   }) => {
     await setupClipboardMock(page);
@@ -259,7 +259,8 @@ test.describe("copy markdown exports raw markdown on docs pages", () => {
     await clickCopyMarkdownAndWaitForToast(page);
 
     const copied = await getCopiedText(page);
-    expect(copied).toContain("# About DevHub");
+    expect(copied).not.toContain("# About DevHub");
+    expect(copied).not.toContain("/llms.txt");
     expect(copied).toContain("# Start here");
     expect(copied).toContain("## Templates");
   });
@@ -271,7 +272,7 @@ test.describe("copy markdown exports raw markdown on docs pages", () => {
     expect(text).toContain("# Start here");
   });
 
-  test("docs page with CLI tabs includes both code variants in copied markdown", async ({
+  test("docs page with CLI tabs includes both code variants and no About preamble", async ({
     page,
   }) => {
     await setupClipboardMock(page);
@@ -280,9 +281,15 @@ test.describe("copy markdown exports raw markdown on docs pages", () => {
     await clickCopyMarkdownAndWaitForToast(page);
 
     const copied = await getCopiedText(page);
-    expect(copied).toContain("# About DevHub");
+    expect(copied).not.toContain("# About DevHub");
     expect(copied).toContain('title="Common"');
     expect(copied).toContain('title="All Options"');
     expect(copied).toContain("databricks postgres create-branch");
   });
 });
+
+// Note: the /docs/*.md, /templates/*.md, /solutions/*.md routes themselves
+// are Vercel rewrites to /api/markdown, exercised end-to-end by the unit
+// tests in tests/api-markdown.test.ts (`/api/markdown about-devhub preamble
+// policy`). Playwright runs against `docusaurus serve`, which doesn't run
+// Vercel functions, so we cover the markdown endpoints there instead.

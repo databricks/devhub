@@ -168,13 +168,6 @@ describe("prependLlmsReference prepends about-devhub body", () => {
     expect(result).not.toMatch(/\n\n\n$/);
   });
 
-  test("docs markdown starts with about devhub", () => {
-    const markdown = getDetailMarkdown("docs", "start-here");
-    const result = prependLlmsReference(markdown, "dev.databricks.com");
-    expect(result.startsWith(ABOUT_START)).toBe(true);
-    expect(result).toContain("title:");
-  });
-
   test("recipe markdown starts with about devhub", () => {
     const markdown = getDetailMarkdown("recipes", "databricks-local-bootstrap");
     const result = prependLlmsReference(markdown, "dev.databricks.com");

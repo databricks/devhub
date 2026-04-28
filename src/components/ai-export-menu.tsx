@@ -40,6 +40,12 @@ type AIExportMenuProps = {
    * markdown (e.g. example pages align with the Get started "Copy prompt" button).
    */
   agentBodyAfterAbout?: string;
+  /**
+   * When true, the About DevHub preamble is omitted from copy/send actions
+   * (used on reference docs pages — agents only need the doc body itself, the
+   * preamble is already part of resource prompts that link to the doc).
+   */
+  omitAboutDevhubPreamble?: boolean;
   title: string;
   description: string;
   permalink: string;
@@ -52,6 +58,7 @@ export function AIExportMenu({
   rawMarkdownUrl,
   additionalMarkdown,
   agentBodyAfterAbout,
+  omitAboutDevhubPreamble = false,
   title,
   description,
   permalink,
@@ -99,8 +106,10 @@ export function AIExportMenu({
     const escapedTitle = title.replace(/"/g, '\\"');
     const escapedDescription = description.replace(/"/g, '\\"');
 
-    const about = buildAboutDevhubForBrowserCopy(aboutDevhubBody, llmsUrl);
-    let md = `${about}\n\n`;
+    let md = "";
+    if (!omitAboutDevhubPreamble) {
+      md += `${buildAboutDevhubForBrowserCopy(aboutDevhubBody, llmsUrl)}\n\n`;
+    }
     md += `---\ntitle: "${escapedTitle}"\nurl: ${fullUrl}\nsummary: "${escapedDescription}"\n---\n\n`;
     if (rawContent) md += `${rawContent}\n\n`;
     if (additionalMarkdown) md += `${additionalMarkdown}\n\n`;
@@ -108,6 +117,7 @@ export function AIExportMenu({
   }, [
     agentBodyAfterAbout,
     aboutDevhubBody,
+    omitAboutDevhubPreamble,
     resolveContent,
     additionalMarkdown,
     title,

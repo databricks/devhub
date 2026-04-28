@@ -70,6 +70,7 @@ export default function DocItemLayout({ children }: Props): ReactNode {
                 title={metadata.title ?? ""}
                 description={metadata.description ?? ""}
                 permalink={metadata.permalink ?? ""}
+                omitAboutDevhubPreamble
               />
             </div>
 

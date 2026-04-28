@@ -105,11 +105,46 @@ function readInstalledAppKitChannel() {
   return { channel: `v${major}`, version };
 }
 
-// Checks whether all three sync outputs are present:
-// 1. docs/appkit/<channel>/.source-ref (docs were synced)
-// 2. src/components/doc-examples/registry.ts (examples were synced)
-// 3. static/appkit-preview/<channel>/styles.css (styles were compiled)
-// If any is missing, returns false so the sync re-runs.
+// Resolves the upstream HEAD short SHA without cloning. Returns null if the
+// remote is unreachable (offline dev), in which case callers should fall back
+// to whatever is already on disk.
+function getUpstreamHeadSha() {
+  const result = spawnSync(
+    "git",
+    ["ls-remote", APPKIT_REMOTE, `refs/heads/${APPKIT_BRANCH}`],
+    {
+      encoding: "utf-8",
+      timeout: SPAWN_TIMEOUT,
+    },
+  );
+  if (result.status !== 0) return null;
+  const [fullSha] = result.stdout.trim().split(/\s+/);
+  if (!fullSha || !/^[0-9a-f]{7,}$/.test(fullSha)) return null;
+  return fullSha.slice(0, 7);
+}
+
+// Reads the short SHA from the channel's `.source-ref` marker file.
+// Format: "YYYY-MM-DD (abcdef0)\n".
+function readSyncedSha(sourceRefPath) {
+  if (!fs.existsSync(sourceRefPath)) return null;
+  const ref = fs.readFileSync(sourceRefPath, "utf-8").trim();
+  const match = ref.match(/\(([0-9a-f]{7,})\)/);
+  return match ? match[1].slice(0, 7) : null;
+}
+
+// Decides whether the existing on-disk sync is still valid. The sync is valid
+// only when ALL of these hold:
+//
+//   1. docs/appkit/<channel>/.source-ref exists (docs were synced before)
+//   2. src/components/doc-examples/registry.ts exists (examples were synced)
+//   3. static/appkit-preview/<channel>/styles.css exists (styles compiled)
+//   4. The recorded SHA matches the current upstream HEAD on APPKIT_BRANCH
+//
+// Item 4 is the important one: Vercel restores the build cache between
+// deploys, so the marker files are always present even when upstream has new
+// commits. Without an upstream check, the sync hook would forever skip and
+// production would serve stale AppKit docs. If we cannot reach the remote
+// (offline dev), we keep the cached docs and log a warning instead of failing.
 function isAlreadySynced(channelDir, channel) {
   const sourceRefPath = path.join(channelDir, ".source-ref");
   const registryPath = path.join(
@@ -135,11 +170,27 @@ function isAlreadySynced(channelDir, channel) {
     return false;
   }
 
+  const localSha = readSyncedSha(sourceRefPath);
+  const upstreamSha = getUpstreamHeadSha();
   const ref = fs.readFileSync(sourceRefPath, "utf-8").trim();
-  console.log(
-    `Using AppKit docs synced on ${ref}. Run 'npm run sync:appkit-docs' to resync.`,
-  );
 
+  if (upstreamSha === null) {
+    console.warn(
+      `Could not reach ${APPKIT_REMOTE} to check for updates; using cached AppKit docs synced on ${ref}.`,
+    );
+    return true;
+  }
+
+  if (localSha !== upstreamSha) {
+    console.log(
+      `Cached AppKit docs are at ${localSha} but upstream ${APPKIT_BRANCH} is at ${upstreamSha}; re-syncing.`,
+    );
+    return false;
+  }
+
+  console.log(
+    `AppKit docs are up to date with ${APPKIT_BRANCH} (${ref}). Skipping sync.`,
+  );
   return true;
 }
 

@@ -1216,3 +1216,15 @@
     }
   }
 }
+
+/* Override Infima's `table { display: block }` so columns fill the container.
+ * Unlayered to beat Infima's @layer docusaurus.infima rule. */
+.db-docs-article .theme-doc-markdown table {
+  display: table;
+}
+
+/* Let long paths/URLs in cells break when they'd overflow the column. */
+.db-docs-article .theme-doc-markdown td code,
+.db-docs-article .theme-doc-markdown th code {
+  overflow-wrap: break-word;
+}

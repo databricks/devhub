@@ -266,7 +266,7 @@ function Th({ className, ...props }: ComponentPropsWithoutRef<"th">) {
   return (
     <th
       className={cn(
-        "whitespace-nowrap px-3 py-2 text-left align-top text-xs uppercase tracking-wide text-db-navy/80 last:w-full last:whitespace-normal dark:text-white/90",
+        "px-3 py-2 text-left align-top text-xs uppercase tracking-wide text-db-navy/80 dark:text-white/90",
         className,
       )}
       {...props}
@@ -278,7 +278,7 @@ function Td({ className, ...props }: ComponentPropsWithoutRef<"td">) {
   return (
     <td
       className={cn(
-        "whitespace-nowrap px-3 py-2.5 align-top last:w-full last:whitespace-normal text-db-navy/85 dark:text-white/85",
+        "px-3 py-2.5 align-top text-db-navy/85 dark:text-white/85",
         className,
       )}
       {...props}

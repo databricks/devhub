@@ -1,4 +1,5 @@
 import Head from "@docusaurus/Head";
+import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import Layout from "@theme/Layout";
 import type { ReactNode } from "react";
 import { DecisionMakerCta } from "@/components/home/decision-maker-cta";
@@ -7,6 +8,8 @@ import { TemplatePreview } from "@/components/home/template-preview";
 import { WizardFlow } from "@/components/home/wizard-flow";
 
 export default function Home(): ReactNode {
+  const { siteConfig } = useDocusaurusContext();
+  const siteUrl = siteConfig.url.replace(/\/$/, "");
   return (
     <Layout
       title="Databricks Developer"
@@ -18,8 +21,8 @@ export default function Home(): ReactNode {
             "@context": "https://schema.org",
             "@type": "Organization",
             name: "Databricks",
-            url: "https://dev.databricks.com",
-            logo: "https://dev.databricks.com/img/databricks-logo.svg",
+            url: siteUrl,
+            logo: `${siteUrl}/img/databricks-logo.svg`,
             sameAs: ["https://www.linkedin.com/company/databricks"],
           })}
         </script>
@@ -28,7 +31,7 @@ export default function Home(): ReactNode {
             "@context": "https://schema.org",
             "@type": "WebSite",
             name: "Databricks Developer",
-            url: "https://dev.databricks.com",
+            url: siteUrl,
           })}
         </script>
       </Head>

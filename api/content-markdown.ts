@@ -276,12 +276,28 @@ export function readAboutDevhubBody(rootDir: string = process.cwd()): string {
   return readFileSync(filePath, "utf-8");
 }
 
-export function prependLlmsReference(markdown: string, host: string): string {
-  const protocol = host.startsWith("localhost") ? "http" : "https";
-  const llmsUrl = `${protocol}://${host}/llms.txt`;
+/**
+ * Prepends the About DevHub block (with llms.txt URL substituted to point at
+ * the caller's site origin) to a markdown body. Accepts either a bare host
+ * (`localhost:3001`) or a full origin (`https://dev.databricks.com`) for
+ * backwards-compatibility with existing tests.
+ */
+export function prependLlmsReference(
+  markdown: string,
+  siteUrlOrHost: string,
+): string {
+  const llmsUrl = toLlmsUrl(siteUrlOrHost);
   const about = substituteAboutDevhubLlmsUrl(
     readAboutDevhubBody(process.cwd()),
     llmsUrl,
   );
   return `${about.trimEnd()}\n\n${markdown.trimEnd()}\n`;
+}
+
+function toLlmsUrl(siteUrlOrHost: string): string {
+  if (/^https?:\/\//i.test(siteUrlOrHost)) {
+    return `${siteUrlOrHost.replace(/\/$/, "")}/llms.txt`;
+  }
+  const protocol = siteUrlOrHost.startsWith("localhost") ? "http" : "https";
+  return `${protocol}://${siteUrlOrHost}/llms.txt`;
 }

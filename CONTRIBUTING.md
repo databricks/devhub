@@ -39,6 +39,17 @@ SHOW_DRAFTS=true
 
 A flag is **enabled only when its value is exactly `"true"`** — any other value (empty, `"1"`, `"yes"`) is treated as disabled.
 
+### Site URL Resolution
+
+Anywhere we need an absolute URL — `llms.txt`, `sitemap.xml`, `robots.txt`, JSON-LD, `/api/markdown`, `/api/bootstrap-prompt`, `/api/mcp`, the `Copy prompt` / `Copy Markdown` buttons — we resolve the site origin in this order (see `src/lib/site-url.ts`):
+
+1. `SITE_URL` (explicit override, e.g. `https://example.com` — useful for one-off builds and tests)
+2. `VERCEL_PROJECT_PRODUCTION_URL` when `VERCEL_ENV=production` (auto-set by Vercel; becomes `dev.databricks.com` once the custom domain is attached, otherwise the project's `*.vercel.app` URL)
+3. `VERCEL_URL` (per-deployment URL, used on preview / branch / `vercel dev` deployments)
+4. `https://dev.databricks.com` as a final, safe production fallback
+
+So locally it points to `http://localhost:3000`, on preview deployments to the deployment's `*.vercel.app` URL, and in production to whatever production URL Vercel has assigned. No env var setup is required on Vercel.
+
 ### Common Scripts
 
 | Command                    | What it does                                                                                                  |

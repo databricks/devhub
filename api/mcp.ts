@@ -3,12 +3,7 @@ import { z } from "zod";
 import { readFileSync, existsSync } from "fs";
 import { resolve } from "path";
 import { expandMdxImports } from "../src/lib/expand-mdx";
-
-function getSiteUrl(): string {
-  if (process.env.SITE_URL) return process.env.SITE_URL;
-  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
-  throw new Error("SITE_URL or VERCEL_URL environment variable must be set");
-}
+import { resolveSiteUrl } from "../src/lib/site-url";
 
 const DOCS_DIR = resolve(__dirname, "..", "docs");
 
@@ -47,7 +42,7 @@ const handler = createMcpHandler(
           "Lists all available Databricks developer documentation pages. Returns the documentation index as markdown with page URLs and titles. Use get_doc_resource to fetch specific pages.",
       },
       async () => {
-        const response = await fetch(`${getSiteUrl()}/llms.txt`);
+        const response = await fetch(`${resolveSiteUrl()}/llms.txt`);
         if (!response.ok) {
           if (response.status === 404) {
             throw new Error("Docs index not found");

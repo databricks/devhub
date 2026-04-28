@@ -10,6 +10,7 @@ bun.lock
 .docusaurus
 .cache-loader
 static/llms.txt
+static/robots.txt
 static/raw-docs
 docs/appkit/
 src/components/doc-examples/

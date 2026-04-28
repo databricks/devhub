@@ -7,7 +7,9 @@ import contentEntriesPlugin from "./plugins/content-entries";
 import cookbooksPlugin from "./plugins/cookbooks";
 import llmsTxtPlugin from "./plugins/llms-txt";
 import remarkCliTabs from "./plugins/remark-cli-tabs";
+import robotsTxtPlugin from "./plugins/robots-txt";
 import { examplesEnabled, showDrafts } from "./src/lib/feature-flags-server";
+import { resolveSiteUrl } from "./src/lib/site-url";
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
@@ -25,8 +27,9 @@ const config: Config = {
     v4: true, // Improve compatibility with the upcoming Docusaurus v4
   },
 
-  // Set the production url of your site here
-  url: "https://dev.databricks.com",
+  // Resolved at build time from SITE_URL / VERCEL_PROJECT_PRODUCTION_URL /
+  // VERCEL_URL, falling back to the production domain. See src/lib/site-url.ts.
+  url: resolveSiteUrl(),
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: "/",
@@ -121,6 +124,7 @@ const config: Config = {
       },
     ],
     llmsTxtPlugin,
+    robotsTxtPlugin,
     aboutDevhubPlugin,
     cookbooksPlugin,
   ],

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { track } from "@vercel/analytics";
+import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import { toast } from "sonner";
 import { Check, Clipboard, LoaderCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -38,7 +39,10 @@ export function CopyPromptButton({
   disabled = false,
   disabledTooltip = "select recipe to copy",
 }: CopyPromptButtonProps) {
-  const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
+  const { siteConfig } = useDocusaurusContext();
+  const buildSiteUrl = siteConfig.url.replace(/\/$/, "");
+  const baseUrl =
+    typeof window !== "undefined" ? window.location.origin : buildSiteUrl;
   const fullUrl = baseUrl + permalink;
   const aboutDevhubBody = useAboutDevhubBody();
   const fetchedMarkdownRef = useRef<string | null>(null);
@@ -64,7 +68,7 @@ export function CopyPromptButton({
   }, [rawMarkdown]);
 
   const buildAIMarkdown = useCallback((): string => {
-    const originForCopy = baseUrl || "https://dev.databricks.com";
+    const originForCopy = baseUrl || buildSiteUrl;
     const llmsUrl = `${originForCopy}/llms.txt`;
 
     if (agentBodyAfterAbout !== undefined) {
@@ -94,6 +98,7 @@ export function CopyPromptButton({
     description,
     fullUrl,
     baseUrl,
+    buildSiteUrl,
   ]);
 
   const handleCopy = useCallback(async () => {

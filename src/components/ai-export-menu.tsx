@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef } from "react";
+import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import { toast } from "sonner";
 import {
   ClipboardCopyIcon,
@@ -57,7 +58,10 @@ export function AIExportMenu({
   disabled = false,
   disabledTooltip = "select recipe to copy",
 }: AIExportMenuProps) {
-  const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
+  const { siteConfig } = useDocusaurusContext();
+  const buildSiteUrl = siteConfig.url.replace(/\/$/, "");
+  const baseUrl =
+    typeof window !== "undefined" ? window.location.origin : buildSiteUrl;
   const fullUrl = baseUrl + permalink;
   const mcpUrl = baseUrl + "/api/mcp";
   const aboutDevhubBody = useAboutDevhubBody();
@@ -80,7 +84,7 @@ export function AIExportMenu({
   }, [rawMarkdown]);
 
   const buildAIMarkdown = useCallback((): string => {
-    const originForCopy = baseUrl || "https://dev.databricks.com";
+    const originForCopy = baseUrl || buildSiteUrl;
     const llmsUrl = `${originForCopy}/llms.txt`;
 
     if (agentBodyAfterAbout !== undefined) {
@@ -110,6 +114,7 @@ export function AIExportMenu({
     description,
     fullUrl,
     baseUrl,
+    buildSiteUrl,
   ]);
 
   const handleCopyMarkdown = useCallback(() => {

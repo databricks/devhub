@@ -270,17 +270,18 @@ function copyRawDocs(docsDir: string, destDir: string): void {
   }
 }
 
-/** Use the Vercel preview URL for non-production builds, otherwise the configured site URL. */
-function getBaseUrl(configUrl: string): string {
-  if (process.env.VERCEL_ENV !== "production" && process.env.VERCEL_URL) {
-    return `https://${process.env.VERCEL_URL}`;
-  }
+/**
+ * The canonical site URL is already resolved in docusaurus.config.ts from
+ * SITE_URL / VERCEL_PROJECT_PRODUCTION_URL / VERCEL_URL (see src/lib/site-url.ts).
+ * We just normalize the trailing slash here.
+ */
+function normalizeBaseUrl(configUrl: string): string {
   return configUrl.replace(/\/$/, "");
 }
 
 export default function llmsTxtPlugin(context: LoadContext): Plugin {
   const docsDir = path.resolve(__dirname, "..", "docs");
-  const baseUrl = getBaseUrl(context.siteConfig.url);
+  const baseUrl = normalizeBaseUrl(context.siteConfig.url);
 
   const staticDir = path.resolve(__dirname, "..", "static");
   fs.writeFileSync(
@@ -293,7 +294,7 @@ export default function llmsTxtPlugin(context: LoadContext): Plugin {
     name: "docusaurus-llms-txt",
 
     async postBuild({ siteConfig, outDir }) {
-      const buildBaseUrl = getBaseUrl(siteConfig.url);
+      const buildBaseUrl = normalizeBaseUrl(siteConfig.url);
       fs.writeFileSync(
         path.join(outDir, "llms.txt"),
         generateLlmsTxt(buildBaseUrl, docsDir),

@@ -4,6 +4,7 @@ import {
   getDetailMarkdown,
   type MarkdownSection,
 } from "./content-markdown";
+import { resolveSiteUrlForRequest } from "../src/lib/site-url";
 
 function parseSection(section: unknown): MarkdownSection {
   if (
@@ -38,8 +39,8 @@ export default function handler(req: VercelRequest, res: VercelResponse): void {
   try {
     const parsed = parseSection(req.query.section);
     const markdown = getDetailMarkdown(parsed, slug);
-    const host = req.headers.host ?? "dev.databricks.com";
-    const withRef = prependLlmsReference(markdown, host);
+    const siteUrl = resolveSiteUrlForRequest(req.headers.host);
+    const withRef = prependLlmsReference(markdown, siteUrl);
 
     const filename = slug ? `${slug.replace(/\//g, "-")}.md` : `${parsed}.md`;
     res.setHeader("Content-Type", "text/markdown; charset=utf-8");

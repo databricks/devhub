@@ -5,6 +5,7 @@ import {
   BOOTSTRAP_PROMPT_SECTION,
   BOOTSTRAP_PROMPT_SLUG,
 } from "../src/lib/bootstrap-prompt";
+import { resolveSiteUrlForRequest } from "../src/lib/site-url";
 
 export default function handler(req: VercelRequest, res: VercelResponse): void {
   if (req.method !== "GET" && req.method !== "HEAD") {
@@ -15,9 +16,8 @@ export default function handler(req: VercelRequest, res: VercelResponse): void {
 
   try {
     const rootDir = process.cwd();
-    const host = req.headers.host ?? "dev.databricks.com";
-    const protocol = host.startsWith("localhost") ? "http" : "https";
-    const llmsUrl = `${protocol}://${host}/llms.txt`;
+    const siteUrl = resolveSiteUrlForRequest(req.headers.host);
+    const llmsUrl = `${siteUrl}/llms.txt`;
     const about = substituteAboutDevhubLlmsUrl(
       readAboutDevhubBody(rootDir),
       llmsUrl,

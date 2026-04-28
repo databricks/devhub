@@ -21,10 +21,7 @@ test.describe("navbar navigation", () => {
   const NAVBAR_LINKS = [
     { label: "Solutions", expectedPath: "/solutions" },
     { label: "Templates", expectedPath: "/templates" },
-    {
-      label: "Learn More",
-      expectedPath: "/docs/start-here",
-    },
+    { label: "Docs", expectedPath: "/docs/start-here" },
   ];
 
   for (const { label, expectedPath } of NAVBAR_LINKS) {

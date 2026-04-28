@@ -82,13 +82,36 @@ function replaceDir(source, destination) {
   copyDirRecursive(source, destination);
 }
 
+// Reads the major version of the installed @databricks/appkit-ui package and
+// returns the matching channel directory name (e.g. v0, v1). The local docs
+// channel always tracks the installed package's major so the sidebar, the
+// preview iframe styles, and the compiled examples stay in lockstep with the
+// SDK that the site links against.
+function readInstalledAppKitChannel() {
+  const pkgJsonPath = path.join(
+    repoRoot,
+    "node_modules",
+    "@databricks",
+    "appkit-ui",
+    "package.json",
+  );
+  if (!fs.existsSync(pkgJsonPath)) {
+    fail(
+      "@databricks/appkit-ui is not installed. Run `npm install` and retry.",
+    );
+  }
+  const { version } = JSON.parse(fs.readFileSync(pkgJsonPath, "utf-8"));
+  const major = version.split(".")[0];
+  return { channel: `v${major}`, version };
+}
+
 // Checks whether all three sync outputs are present:
-// 1. docs/appkit/latest/.source-ref (docs were synced)
+// 1. docs/appkit/<channel>/.source-ref (docs were synced)
 // 2. src/components/doc-examples/registry.ts (examples were synced)
-// 3. static/appkit-preview/latest/styles.css (styles were compiled)
+// 3. static/appkit-preview/<channel>/styles.css (styles were compiled)
 // If any is missing, returns false so the sync re-runs.
-function isAlreadySynced(latestDir) {
-  const sourceRefPath = path.join(latestDir, ".source-ref");
+function isAlreadySynced(channelDir, channel) {
+  const sourceRefPath = path.join(channelDir, ".source-ref");
   const registryPath = path.join(
     repoRoot,
     "src",
@@ -100,7 +123,7 @@ function isAlreadySynced(latestDir) {
     repoRoot,
     "static",
     "appkit-preview",
-    "latest",
+    channel,
     "styles.css",
   );
 
@@ -171,7 +194,7 @@ function getHeadSha(repoDir) {
 //
 // TODO: When AppKit starts using Docusaurus versioning:
 // - Read docs/versions.json to determine the latest released version
-// - Copy docs/versioned_docs/version-<latest>/ → docs/appkit/latest/ (instead of docs/docs/)
+// - Copy docs/versioned_docs/version-<latest>/ → docs/appkit/v<major>/ (instead of docs/docs/)
 // - Copy docs/docs/ → docs/appkit/next/ (unreleased dev docs)
 // - Copy remaining versioned_docs/version-*/ → docs/appkit/version-*/
 function syncVersionedDocs(clonedRoot, docsRoot) {
@@ -268,23 +291,13 @@ function syncExamples(clonedRoot) {
 // with @import "tailwindcss" and @source directives pointing at the built
 // React components) into a real CSS bundle, and writes it to a public static
 // path so the DocExample iframe can link it directly without webpack.
-async function syncCompiledStyles(channel) {
+async function syncCompiledStyles(channel, version) {
   const pkgDir = path.join(
     repoRoot,
     "node_modules",
     "@databricks",
     "appkit-ui",
   );
-  if (!fs.existsSync(pkgDir)) {
-    fail(
-      "@databricks/appkit-ui is not installed. Run `npm install` and retry.",
-    );
-  }
-
-  const pkgJson = JSON.parse(
-    fs.readFileSync(path.join(pkgDir, "package.json"), "utf-8"),
-  );
-  const version = pkgJson.version;
 
   const srcCss = path.join(pkgDir, "dist", "styles.css");
   if (!fs.existsSync(srcCss)) {
@@ -315,18 +328,17 @@ async function syncCompiledStyles(channel) {
     `Compiled @databricks/appkit-ui@${version} styles to ` +
       `${path.relative(repoRoot, destCss)} (${(result.css.length / 1024).toFixed(1)} KB).`,
   );
-
-  return version;
 }
 
 async function main() {
   const force = process.argv.includes("--force");
 
   const docsRoot = path.join(repoRoot, "docs", "appkit");
-  const latestDir = path.join(docsRoot, "latest");
+  const { channel, version } = readInstalledAppKitChannel();
+  const channelDir = path.join(docsRoot, channel);
 
   // Skip if docs already exist (unless --force)
-  if (!force && isAlreadySynced(latestDir)) {
+  if (!force && isAlreadySynced(channelDir, channel)) {
     return;
   }
 
@@ -345,13 +357,15 @@ async function main() {
       fail("Could not find docs/docs in cloned AppKit repository.");
     }
 
-    // Clear existing docs and copy latest
+    // Clear existing docs and copy fresh content into the versioned channel
+    // directory (e.g. v0/, v1/) matching the installed @databricks/appkit-ui
+    // major version.
     fs.rmSync(docsRoot, { recursive: true, force: true });
     fs.mkdirSync(docsRoot, { recursive: true });
 
-    replaceDir(appkitDocsSource, latestDir);
+    replaceDir(appkitDocsSource, channelDir);
     fs.writeFileSync(
-      path.join(latestDir, ".source-ref"),
+      path.join(channelDir, ".source-ref"),
       `${syncDate} (${sha})\n`,
       "utf-8",
     );
@@ -360,10 +374,10 @@ async function main() {
     syncVersionedDocs(tempDir, docsRoot);
 
     syncExamples(tempDir);
-    const stylesVersion = await syncCompiledStyles("latest");
+    await syncCompiledStyles(channel, version);
 
     console.log(
-      `\nAppKit docs synced from ${APPKIT_BRANCH} (${sha}), styles @ ${stylesVersion}.`,
+      `\nAppKit docs synced from ${APPKIT_BRANCH} (${sha}) into docs/appkit/${channel}/, styles @ ${version}.`,
     );
     console.log("Done.");
   } finally {

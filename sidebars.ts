@@ -21,8 +21,9 @@ type AppKitDocTree = {
 };
 
 // Returns the list of AppKit doc channels found under docs/appkit/.
-// "latest" is always first, followed by any version-* directories
-// (from Docusaurus versioned_docs convention, future).
+// Channels are versioned per major (v0, v1, ...) and sorted descending so
+// the highest-numbered version (the canonical "latest" stable release) is
+// first. Optional "next" is appended last for unreleased dev docs.
 function getAppKitChannels(): string[] {
   const docsAppKitRoot = path.resolve(process.cwd(), "docs", "appkit");
 
@@ -36,21 +37,13 @@ function getAppKitChannels(): string[] {
 
   const channels: string[] = [];
 
-  // "latest" always comes first
-  if (entries.some((entry) => entry.name === "latest")) {
-    channels.push("latest");
-  }
-
-  // Then any version-* directories (Docusaurus versioned_docs convention)
   const versionDirs = entries
-    .filter((entry) => entry.name.startsWith("version-"))
+    .filter((entry) => /^v\d+$/.test(entry.name))
     .map((entry) => entry.name)
-    .sort()
-    .reverse();
+    .sort((a, b) => Number(b.slice(1)) - Number(a.slice(1)));
 
   channels.push(...versionDirs);
 
-  // Also support "next" for unreleased dev docs (future)
   if (entries.some((entry) => entry.name === "next")) {
     channels.push("next");
   }
@@ -172,9 +165,10 @@ const latestAppKitTree = latestChannel
   : null;
 
 const appKitItems: AppKitSidebarItem[] = [];
+const appKitIndexDocId = latestAppKitTree?.indexDocId ?? null;
 if (latestAppKitTree) {
-  if (latestAppKitTree.indexDocId) {
-    appKitItems.push(latestAppKitTree.indexDocId);
+  if (appKitIndexDocId) {
+    appKitItems.push(appKitIndexDocId);
   }
   appKitItems.push(...latestAppKitTree.items);
 }
@@ -232,6 +226,9 @@ const sidebars: SidebarsConfig = {
           type: "category",
           label: "AppKit",
           collapsed: true,
+          ...(appKitIndexDocId
+            ? { link: { type: "doc" as const, id: appKitIndexDocId } }
+            : {}),
           items: appKitItems,
         },
       ],

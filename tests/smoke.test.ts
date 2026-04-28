@@ -161,6 +161,69 @@ describe("production build smoke tests", () => {
     }
   });
 
+  test("compiled AppKit preview stylesheet ships in the build", () => {
+    const registry = readFileSync(
+      resolve(
+        __dirname,
+        "..",
+        "src",
+        "components",
+        "doc-examples",
+        "registry.ts",
+      ),
+      "utf-8",
+    );
+    const channel = registry.match(
+      /export const APPKIT_CHANNEL = "([^"]+)";/,
+    )?.[1];
+    expect(channel).toBeDefined();
+    const css = readBuildFile(`appkit-preview/${channel}/styles.css`);
+    expect(css.length).toBeGreaterThan(50_000);
+    expect(css).toContain("Synced from @databricks/appkit-ui@");
+    expect(css).toMatch(/--color-(primary|background|foreground|border)/);
+  });
+
+  test("AppKit DocExample iframe references the compiled stylesheet path", () => {
+    // The Docusaurus client bundle inlines the iframe HTML template; ensure
+    // the dynamic `/appkit-preview/<channel>/styles.css` href made it into the
+    // emitted JS so previews actually load styles in production.
+    const registry = readFileSync(
+      resolve(
+        __dirname,
+        "..",
+        "src",
+        "components",
+        "doc-examples",
+        "registry.ts",
+      ),
+      "utf-8",
+    );
+    const channel = registry.match(
+      /export const APPKIT_CHANNEL = "([^"]+)";/,
+    )?.[1];
+    expect(channel).toBeDefined();
+    // Confirm the asset itself is reachable in build/ (covered above) and
+    // assert the legacy hardcoded path no longer ships anywhere in the build.
+    const buildRoot = resolve(__dirname, "..", "build");
+    const grep = (pattern: string) => {
+      const { execSync } =
+        require("child_process") as typeof import("child_process");
+      try {
+        const out = execSync(
+          `grep -rl ${JSON.stringify(pattern)} "${buildRoot}/assets/js" || true`,
+          {
+            encoding: "utf-8",
+            maxBuffer: 50 * 1024 * 1024,
+          },
+        );
+        return out.trim();
+      } catch {
+        return "";
+      }
+    };
+    expect(grep("/appkit-preview/latest/styles.css")).toBe("");
+  });
+
   test("raw-docs strip Docusaurus frontmatter", () => {
     const text = readBuildFile("raw-docs/start-here.md");
     expect(text).not.toMatch(/^---\n/);

@@ -12,7 +12,11 @@ import CodeBlock from "@theme/CodeBlock";
 import { PortalContainerProvider } from "@databricks/appkit-ui/react";
 import { Toaster } from "sonner";
 import { cn } from "@/lib/utils";
-import { docExamples, type DocExampleKey } from "./doc-examples/registry";
+import {
+  APPKIT_CHANNEL,
+  docExamples,
+  type DocExampleKey,
+} from "./doc-examples/registry";
 
 type DocExampleProps = {
   name: string;
@@ -160,7 +164,12 @@ function IframePreview({
 }: IframePreviewProps) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [mountNode, setMountNode] = useState<HTMLElement | null>(null);
-  const stylesHref = useBaseUrl("/appkit-preview/latest/styles.css");
+  // The compiled stylesheet path is keyed by the @databricks/appkit-ui major
+  // version (v0, v1, ...) and written by scripts/sync-appkit-docs.mjs into
+  // static/appkit-preview/<channel>/. Pulling the channel from the auto-
+  // generated registry keeps this component, the synced docs, and the
+  // compiled styles guaranteed to agree.
+  const stylesHref = useBaseUrl(`/appkit-preview/${APPKIT_CHANNEL}/styles.css`);
 
   const height = useAutoHeight(iframeRef, customHeight);
   useDarkModeSync(iframeRef);

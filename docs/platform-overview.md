@@ -5,32 +5,22 @@ description: How Databricks Apps, AppKit, Lakebase, and Agent Bricks fit togethe
 
 # Platform overview
 
-Apps, AppKit, Lakebase Postgres, and Agent Bricks are four layers that make up a full-stack Databricks application. Unity Catalog and AI Gateway are workspace services they connect to.
+Apps, AppKit, Lakebase Postgres, and Agent Bricks are layers of a full-stack Databricks application running inside your workspace. New to building on Databricks? See [Start here](/docs/start-here) first.
 
 <img src="/img/docs/platform-overview.svg" alt="Architecture diagram showing Apps containing AppKit, Lakebase, and Agents, with Unity Catalog and AI Gateway as workspace services" width="100%" />
 
-| Layer                 | What it is                                                                                                                                                                                      |
-| --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Apps**              | The hosting layer. Your app runs as a managed workspace resource with a fixed URL, built-in auth, and managed compute. Deploy with `databricks apps deploy`.                                    |
-| **AppKit**            | The TypeScript SDK for building apps on Databricks Apps. Provides auth, pre-built React UI components (data tables, charts, dialogs), and a plugin system for connecting to workspace services. |
-| **Lakebase Postgres** | The database layer. Managed Postgres for OLTP, co-located with your Lakehouse. Autoscales on demand, scales to zero when idle, and supports branching for development environments.             |
-| **Agent Bricks**      | The AI layer. Call Knowledge Assistants, Supervisor Agents, and governed LLM endpoints via the Model Serving plugin. Query Unity Catalog tables in natural language via the Genie plugin.       |
+| Layer                 | What it is                                                                                                                                                                                                           |
+| --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Apps**              | The hosting layer. Your app runs as a managed workspace resource with a fixed URL, built-in auth, and managed compute. Deploy with `databricks apps deploy`.                                                         |
+| **AppKit**            | The TypeScript SDK for building apps on Databricks Apps. Built-in Databricks OAuth handling, pre-built React UI components (data tables, charts, dialogs), and a plugin system for connecting to workspace services. |
+| **Lakebase Postgres** | The database layer. Managed Postgres for OLTP, co-located with your Lakehouse. Autoscales on demand, scales to zero when idle, and supports branching for development environments.                                  |
+| **Agent Bricks**      | The AI layer. Call Knowledge Assistants, Supervisor Agents, and governed LLM endpoints via the Model Serving plugin. Query Unity Catalog tables in natural language via the Genie plugin.                            |
 
 **[Unity Catalog](https://docs.databricks.com/aws/en/data-governance/)** and **[AI Gateway](/docs/agents/ai-gateway)** are workspace-level services your app connects to for data governance and model serving.
 
-## Pick a template
+## How a request flows
 
-Templates are agent-ready prompts organized by use case. Here are a few common starting points. The [templates catalog](/templates) has the full list.
-
-All templates assume the [Databricks CLI](/docs/tools/databricks-cli) is installed and [authenticated](/docs/tools/databricks-cli#authenticate) against your workspace.
-
-| Resource                                          | Type     | Best for                                   |
-| ------------------------------------------------- | -------- | ------------------------------------------ |
-| [Hello World App](/templates/hello-world-app)     | Template | Simple apps, static pages, getting started |
-| [AI Chat App](/templates/ai-chat-app)             | Template | Conversational AI, chatbots, assistants    |
-| [App with Lakebase](/templates/app-with-lakebase) | Template | CRUD apps with persistent storage          |
-
-More templates are in the [templates catalog](/templates).
+A user opens the app, and Databricks Apps authenticates them via workspace SSO. The relevant AppKit plugin then queries Lakebase, a Genie space, or a serving endpoint on their behalf, using either the app's service principal or the user's forwarded token.
 
 ## Where to next
 

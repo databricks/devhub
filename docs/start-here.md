@@ -1,26 +1,27 @@
 ---
 title: Start here
-description: Build web apps, databases, and AI agents inside your Databricks workspace with Databricks Apps, Lakebase Postgres, and Agent Bricks.
+description: Build internal apps on the Databricks workspace your company already runs on. DevHub provides templates, the AppKit SDK, and companion docs.
 ---
 
 # Start here
 
-Build web apps, databases, and AI agents that run inside your Databricks workspace. DevHub provides the templates, SDKs, and companion docs to do it.
+This site is for building internal apps on Databricks. Pick a template, scaffold with [AppKit](/docs/appkit/v0), deploy, and iterate.
 
-## What you can build
+## Your workspace is the foundation
 
-- **Databricks Apps**: host your web app inside your workspace with a fixed URL, built-in auth, and direct data access. Build the frontend and backend with AppKit, an open-source Node.js and React SDK.
-- **Lakebase Postgres**: managed Postgres co-located with your workspace, with instant branching and scale-to-zero for development and production.
-- **Agent Bricks**: Databricks' agent platform. Build with Knowledge Assistants, governed model endpoints, and Genie spaces. Agents are hosted on Databricks Apps.
+Your company already has a **Databricks workspace**: a URL like `https://<your-org>.cloud.databricks.com` your team signs in to. For the internal app you're about to build, it determines **who** can sign in, **what** data the app can read or write (Unity Catalog tables and Lakebase Postgres), and **where** the app runs. Hosting, auth, and networking are handled for you. From your local machine, you connect to it with the [Databricks CLI](/docs/tools/databricks-cli).
 
-## Templates
+## What you'll build
 
-Templates are agent-ready prompts organized by use case. Copy a [template](/templates) into your coding agent to scaffold and deploy, or read one as a step-by-step guide if you're building manually.
+- **[Databricks Apps](/docs/apps/overview)**: where your internal app runs. Built for interactive internal tools, not static dashboards. Managed hosting and workspace SSO. Build it with [AppKit](/docs/appkit/v0), the open-source TypeScript SDK that wires up auth, plugins, and pre-built React components.
+- **[Lakebase Postgres](/docs/lakebase/overview)**: managed Postgres for OLTP storage co-located with your workspace data. Use it for sessions, app state, conversation history, or any data your app reads and writes at low latency.
+- **[Agent Bricks](/docs/agents/overview)**: Databricks' enterprise agent platform, unifying model access, execution, governance, and context. Use it for AI features in your app: chat with internal docs (Knowledge Assistants), ask-your-data in plain English (Genie), foundation-model calls, or custom Python agents.
 
-These companion docs go deeper on each platform layer when you need more context.
+See [Platform overview](/docs/platform-overview) for how these layers fit together.
 
 ## Where to start
 
-1. **Set up your environment**: [Install the Databricks CLI](/docs/tools/databricks-cli) to authenticate against your workspace, and install [agent skills](/docs/tools/ai-tools/agent-skills) to give your coding agent Databricks context.
-2. **Pick a product**: read the overview for context or go straight to the quickstart. Choose from [Databricks Apps](/docs/apps/overview), [Lakebase Postgres](/docs/lakebase/overview), or [Agent Bricks](/docs/agents/overview).
-3. **Start building**: copy a [template](/templates) into your coding agent. Each template includes scaffolding, auth wiring, and a deployment step. You don't write any of it.
+1. **Note your workspace URL** (looks like `https://<id>.cloud.databricks.com`).
+2. **Install and authenticate the [Databricks CLI](/docs/tools/databricks-cli).** Required for every guide on this site.
+3. **Install [agent skills](/docs/tools/ai-tools/agent-skills)** so your coding agent has Databricks platform context.
+4. **Pick a [template](/templates)** that matches your internal app. Browse [Apps overview](/docs/apps/overview) first if you want the conceptual picture.

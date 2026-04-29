@@ -4,7 +4,6 @@ import { toast } from "sonner";
 import {
   ClipboardCopyIcon,
   CodeIcon,
-  ExternalLinkIcon,
   ServerIcon,
   ChevronDownIcon,
 } from "lucide-react";
@@ -35,9 +34,9 @@ type AIExportMenuProps = {
   /** Extra markdown appended after the main content (e.g. code snippets, links). */
   additionalMarkdown?: string;
   /**
-   * When set, Copy Markdown / Send to ChatGPT / Open in Claude use exactly
-   * `about-devhub + --- + this string`, ignoring frontmatter and raw/additional
-   * markdown (e.g. example pages align with the Get started "Copy prompt" button).
+   * When set, Copy Markdown uses exactly `about-devhub + --- + this string`,
+   * ignoring frontmatter and raw/additional markdown (e.g. example pages align
+   * with the Get started "Copy prompt" button).
    */
   agentBodyAfterAbout?: string;
   /**
@@ -151,20 +150,6 @@ export function AIExportMenu({
     window.open(mdUrl, "_blank");
   }, [fullUrl]);
 
-  const handleSendToChatGPT = useCallback(() => {
-    const md = buildAIMarkdown();
-    const encoded = encodeURIComponent(
-      `Read this documentation and help me with it:\n\n${md}`,
-    );
-    window.open(`https://chatgpt.com/?q=${encoded}`, "_blank");
-  }, [buildAIMarkdown]);
-
-  const handleSendToClaude = useCallback(() => {
-    const md = buildAIMarkdown();
-    const encoded = encodeURIComponent(md);
-    window.open(`https://claude.ai/new?q=${encoded}`, "_blank");
-  }, [buildAIMarkdown]);
-
   const handleCopyMCP = useCallback(() => {
     const mcpConfig = JSON.stringify(
       {
@@ -215,17 +200,6 @@ export function AIExportMenu({
           <DropdownMenuItem onSelect={handleViewRawMarkdown}>
             <CodeIcon />
             View Raw Markdown
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuItem onSelect={handleSendToChatGPT}>
-            <ExternalLinkIcon />
-            Send to ChatGPT
-          </DropdownMenuItem>
-          <DropdownMenuItem onSelect={handleSendToClaude}>
-            <ExternalLinkIcon />
-            Open in Claude
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />

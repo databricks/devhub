@@ -2,9 +2,9 @@
 
 Persist chat sessions and messages in Lakebase so users can resume history across requests and deployments.
 
-This recipe uses a simplified relational shape inspired by common production chat schemas (`chat` plus `message`) and adapts it to Databricks AppKit + Lakebase.
+This template uses a simplified relational shape inspired by common production chat schemas (`chat` plus `message`) and adapts it to Databricks AppKit + Lakebase.
 
-This recipe assumes you have already completed the [Create a Lakebase Instance](/templates/app-with-lakebase#create-a-lakebase-instance) and [Lakebase Data Persistence](/templates/app-with-lakebase#lakebase-data-persistence) recipes (Lakebase project creation, scaffolding, environment variables, `databricks.yml` config, and initial deploy).
+This template assumes you have already completed the [Create a Lakebase Instance](/templates/app-with-lakebase#create-a-lakebase-instance) and [Lakebase Data Persistence](/templates/app-with-lakebase#lakebase-data-persistence) templates (Lakebase project creation, scaffolding, environment variables, `databricks.yml` config, and initial deploy).
 
 ### 1. Create chat tables
 

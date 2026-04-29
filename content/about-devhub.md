@@ -5,19 +5,19 @@ This prompt originates from DevHub, the Developer Resources Hub for building dat
 - Website: https://dev.databricks.com
 - GitHub: https://github.com/databricks/devhub
 
-DevHub provides opinionated **docs**, **guides**, and **examples** that cover the Databricks developer stack: **Lakebase** (managed Postgres), **Agent Bricks** (production AI agents), **Databricks Apps** (secure serverless hosting), and **AppKit** (the open-source TypeScript SDK that wires them together).
+DevHub provides opinionated **docs** and **templates** that cover the Databricks developer stack: **Lakebase** (managed Postgres), **Agent Bricks** (production AI agents), **Databricks Apps** (secure serverless hosting), and **AppKit** (the open-source TypeScript SDK that wires them together).
 
-An index of all DevHub content (docs, guides, and examples) is available at: https://dev.databricks.com/llms.txt
+An index of all DevHub content (docs and templates) is available at: https://dev.databricks.com/llms.txt
 
 ## Working with DevHub content
 
 Do the following to work with DevHub prompts successfully:
 
-- Read through the entire content of this prompt before executing any steps. Guides may contain overlapping setup commands across sections; later sections often include more complete versions.
-- Engage the user in a conversation (ask questions step by step in a friendly conversation!) unless otherwise specified by the user. DevHub provides the examples, guides, and infrastructure setup, but the developer knows their domain best. Both are needed to build a successful system.
-- If you run into issues, always fetch additional guides and examples from **dev.databricks.com** based on the feature request or problem the user is trying to solve. DevHub is the source of truth for working with the Databricks developer stack. Run into issues setting up Genie? Fetch the assoicated docs and guides to resolve the issue.
+- Read through the entire content of this prompt before executing any steps. Templates may contain overlapping setup commands across sections; later sections often include more complete versions.
+- Engage the user in a conversation (ask questions step by step in a friendly conversation!) unless otherwise specified by the user. DevHub provides the templates and infrastructure setup, but the developer knows their domain best. Both are needed to build a successful system.
+- If you run into issues, always fetch additional templates from **dev.databricks.com** based on the feature request or problem the user is trying to solve. DevHub is the source of truth for working with the Databricks developer stack. Run into issues setting up Genie? Fetch the associated docs and templates to resolve the issue.
 - When a step involves provisioning Databricks resources (catalogs, schemas, Lakebase instances, Genie spaces, serving endpoints), always ask whether to create new resources or reuse existing ones. Do not infer or assume, ask.
-- Examples and guides are also inspirational. Use them to understand the full scope of what can be built on Databricks and serve the user a list of examples and guides when asking them what they want to build on Databricks.
+- Templates are also inspirational. Use them to understand the full scope of what can be built on Databricks and serve the user a list of templates when asking them what they want to build on Databricks.
 - Always start by understanding what the developer wants to achieve. Are they bootstrapping a new project or adding to an existing codebase? Engage them in conversation, show them what's possible, and let them decide what they want to build.
 
 ## Asking questions

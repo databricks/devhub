@@ -178,7 +178,7 @@ function readTemplateMarkdown(rootDir: string, slug: string): string {
   throw new Error(`Template not found: "${slug}"`);
 }
 
-/** Markdown index served at /templates.md — lists all cookbooks, recipes, and examples. */
+/** Markdown index served at /templates.md — lists every template in one flat catalog. */
 function readTemplatesIndex(): string {
   const includeDrafts = showDrafts();
   const includeExamples = examplesEnabled();
@@ -188,36 +188,23 @@ function readTemplatesIndex(): string {
     ? filterPublished(examples, includeDrafts)
     : [];
 
+  const allTemplates = [
+    ...publishedCookbooks,
+    ...publishedRecipes,
+    ...publishedExamples,
+  ];
+
   const lines: string[] = [
     "# Templates",
     "",
-    "Templates for building on Databricks.",
+    "Opinionated, copy-pasteable templates for building on Databricks.",
     "",
   ];
 
-  if (publishedCookbooks.length > 0) {
-    lines.push("## Cookbooks", "");
-    for (const t of publishedCookbooks) {
-      lines.push(`- [${t.name}](/templates/${t.id}.md): ${t.description}`);
-    }
-    lines.push("");
+  for (const t of allTemplates) {
+    lines.push(`- [${t.name}](/templates/${t.id}.md): ${t.description}`);
   }
-
-  if (publishedRecipes.length > 0) {
-    lines.push("## Recipes", "");
-    for (const r of publishedRecipes) {
-      lines.push(`- [${r.name}](/templates/${r.id}.md): ${r.description}`);
-    }
-    lines.push("");
-  }
-
-  if (publishedExamples.length > 0) {
-    lines.push("## Examples", "");
-    for (const e of publishedExamples) {
-      lines.push(`- [${e.name}](/templates/${e.id}.md): ${e.description}`);
-    }
-    lines.push("");
-  }
+  lines.push("");
 
   return lines.join("\n");
 }

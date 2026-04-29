@@ -189,10 +189,10 @@ function generateLlmsTxt(baseUrl: string, docsDir: string): string {
     lines.push("");
   }
 
-  // Templates — flat list of cookbooks, recipes, and examples. They all live
-  // at /templates/<id> on DevHub, so we present them as one consolidated
-  // catalog rather than three subsections. Order is cookbooks → recipes →
-  // examples (most composed first, atomic snippets last).
+  // Templates — flat list of every entry in the template catalog. Internally
+  // these are cookbooks, recipes, and examples, but outward-facing they're
+  // all just "templates". Order is cookbooks → recipes → examples (most
+  // composed first, atomic snippets last).
   const allTemplates = [
     ...publishedCookbooks.map((t) => ({
       name: t.name,
@@ -214,8 +214,7 @@ function generateLlmsTxt(baseUrl: string, docsDir: string): string {
   lines.push(
     "## Templates",
     "",
-    "Cookbooks, recipes, and example apps for building on Databricks. All available at " +
-      `${baseUrl}/templates.`,
+    `Opinionated, copy-pasteable templates for building on Databricks. Browse the catalog at ${baseUrl}/templates.`,
     "",
     `- [All Templates](${baseUrl}/templates.md): Browse all templates`,
     ...allTemplates.map(

@@ -30,7 +30,7 @@ Common AI Gateway endpoint names:
 - `databricks-gemini-3-1-flash-lite`
 - `databricks-dbrx-instruct`
 
-> **Note**: When using this recipe with a coding agent, specify which endpoint to use based on what's available in your workspace. Endpoint names may vary.
+> **Note**: When using this template with a coding agent, specify which endpoint to use based on what's available in your workspace. Endpoint names may vary.
 
 > **Important**: Endpoint availability varies by workspace. Always run `databricks serving-endpoints list` to check what's available before configuring your app.
 
@@ -92,13 +92,13 @@ const result = streamText({
 result.pipeTextStreamToResponse(res);
 ```
 
-> **Auth for streaming**: The streaming example above requires a bearer token for `createOpenAI()`. See the [Streaming AI Chat recipe](#streaming-ai-chat-with-model-serving) for the full auth helper pattern using `@databricks/sdk-experimental`.
+> **Auth for streaming**: The streaming example above requires a bearer token for `createOpenAI()`. See the [Streaming AI Chat template](#streaming-ai-chat-with-model-serving) for the full auth helper pattern using `@databricks/sdk-experimental`.
 
 > **Note**: This pattern works with OpenAI-compatible models (`databricks-gpt-5-4-mini`, `databricks-gpt-oss-120b`). Native Databricks models use the MLflow unified API.
 >
 > **Workspace ID**: AppKit auto-discovers this at runtime. For explicit setup, run `databricks api get /api/2.1/unity-catalog/current-metastore-assignment --profile <PROFILE>` and use the `workspace_id` field.
 
-See the [Streaming AI Chat recipe](/templates/ai-chat-app#streaming-ai-chat-with-model-serving) for a complete implementation.
+See the [Streaming AI Chat template](/templates/ai-chat-app#streaming-ai-chat-with-model-serving) for a complete implementation.
 
 ### 6. Test the endpoint
 

@@ -63,10 +63,11 @@ describe("buildIncludedTemplatesPreamble", () => {
   test("explains templates mirror the code and points to DevHub for extra context", () => {
     const text = buildIncludedTemplatesPreamble();
     expect(text).toContain("**templates**");
-    expect(text).toContain("recipes");
     expect(text).toContain("template code");
     expect(text).toContain("`template/README.md`");
     expect(text).toContain("DevHub");
+    expect(text).not.toMatch(/\b[Rr]ecipes?\b/);
+    expect(text).not.toMatch(/\b[Cc]ookbooks?\b/);
   });
 });
 

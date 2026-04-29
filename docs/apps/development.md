@@ -439,7 +439,7 @@ Or use a pre-configured profile:
 databricks apps deploy --profile ci-profile
 ```
 
-See the [Databricks CLI authentication guide](/docs/tools/databricks-cli#authenticate) for all auth methods.
+See the [Databricks CLI authentication docs](/docs/tools/databricks-cli#authenticate) for all auth methods.
 
 ## Troubleshooting
 
@@ -453,7 +453,7 @@ For additional troubleshooting, see [Deploy apps](https://docs.databricks.com/aw
 
 ## AppKit docs
 
-Access the AppKit API reference, component docs, and plugin guides from the terminal:
+Access the AppKit API reference, component docs, and plugin docs from the terminal:
 
 ```bash
 npx @databricks/appkit docs                        # browse the documentation index

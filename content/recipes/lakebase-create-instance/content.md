@@ -1,6 +1,6 @@
 ## Create a Lakebase Instance
 
-Provision a managed Lakebase Postgres project on Databricks and collect the connection values needed by downstream recipes.
+Provision a managed Lakebase Postgres project on Databricks and collect the connection values needed by downstream templates.
 
 ### 1. Create a Lakebase project
 
@@ -30,7 +30,7 @@ databricks postgres list-databases \
 
 ### 3. Note the connection values
 
-Record these values from the command output above. They are required by the Lakebase Data Persistence recipe and other Lakebase-dependent recipes:
+Record these values from the command output above. They are required by the Lakebase Data Persistence template and other Lakebase-dependent templates:
 
 | Value                    | JSON path                     | Used for                                              |
 | ------------------------ | ----------------------------- | ----------------------------------------------------- |

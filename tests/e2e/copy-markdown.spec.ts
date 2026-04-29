@@ -167,7 +167,7 @@ test.describe("copy markdown exports raw markdown on example pages", () => {
     expect(copied).toContain("**`template/README.md`**");
     expect(copied).toContain("## Included templates");
     expect(copied).toContain(
-      "These **templates** (multi-recipe cookbooks and standalone recipes) informed how this example was built",
+      "These **templates** informed how this example was built",
     );
     expect(copied).toContain(
       "### 1. Clone locally and follow `template/README.md`",

@@ -71,12 +71,12 @@ test.describe("templates page service filter", () => {
 });
 
 test.describe("templates page type filter", () => {
-  test("Examples filter shows only examples, Guides & Recipes filter hides examples", async ({
+  test("Example apps filter shows only examples, Walkthroughs filter hides examples", async ({
     page,
   }) => {
     await page.goto("/templates");
 
-    await page.getByRole("checkbox", { name: "Examples" }).check();
+    await page.getByRole("checkbox", { name: "Example apps" }).check();
     await expect(
       page.locator('a[href="/templates/agentic-support-console"]'),
     ).toBeVisible();
@@ -84,8 +84,8 @@ test.describe("templates page type filter", () => {
       page.locator('a[href="/templates/hello-world-app"]'),
     ).toBeHidden();
 
-    await page.getByRole("checkbox", { name: "Examples" }).uncheck();
-    await page.getByRole("checkbox", { name: "Guides & Recipes" }).check();
+    await page.getByRole("checkbox", { name: "Example apps" }).uncheck();
+    await page.getByRole("checkbox", { name: "Walkthroughs" }).check();
     await expect(
       page.locator('a[href="/templates/databricks-local-bootstrap"]'),
     ).toBeVisible();

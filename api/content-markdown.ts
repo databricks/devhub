@@ -19,7 +19,7 @@ import {
   cookbooks,
 } from "../src/lib/recipes/recipes";
 import { showDrafts, examplesEnabled } from "../src/lib/feature-flags-server";
-import { solutions } from "../src/lib/solutions/solutions";
+import { solutions, isLinkedSolution } from "../src/lib/solutions/solutions";
 
 export type MarkdownSection =
   | "docs"
@@ -232,7 +232,9 @@ function readSolutionsIndex(): string {
   ];
 
   for (const s of solutions) {
-    lines.push(`- [${s.title}](/solutions/${s.id}.md): ${s.description}`);
+    const target = isLinkedSolution(s) ? s.url : `/solutions/${s.id}.md`;
+    const suffix = isLinkedSolution(s) ? ` (${s.source})` : "";
+    lines.push(`- [${s.title}](${target}): ${s.description}${suffix}`);
   }
   lines.push("");
 

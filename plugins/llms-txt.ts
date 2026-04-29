@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import type { LoadContext, Plugin } from "@docusaurus/types";
-import { solutions } from "../src/lib/solutions/solutions";
+import { solutions, isLinkedSolution } from "../src/lib/solutions/solutions";
 import {
   cookbooks,
   recipesInOrder,
@@ -242,10 +242,12 @@ function generateLlmsTxt(baseUrl: string, docsDir: string): string {
     "Databricks use-case solutions built on Lakebase, Agent Bricks, and Databricks Apps.",
     "",
     `- [All Solutions](${baseUrl}/solutions.md): Overview of Databricks developer solutions`,
-    ...solutions.map(
-      (s) =>
-        `- [${s.title}](${baseUrl}/solutions/${s.id}.md): ${s.description}`,
-    ),
+    ...solutions.map((s) => {
+      if (isLinkedSolution(s)) {
+        return `- [${s.title}](${s.url}): ${s.description} (${s.source})`;
+      }
+      return `- [${s.title}](${baseUrl}/solutions/${s.id}.md): ${s.description}`;
+    }),
     "",
   );
 

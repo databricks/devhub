@@ -15,7 +15,7 @@ import {
   filterPublished,
 } from "../src/lib/recipes/recipes";
 import { showDrafts, examplesEnabled } from "../src/lib/feature-flags-server";
-import { solutions } from "../src/lib/solutions/solutions";
+import { nativeSolutions } from "../src/lib/solutions/solutions";
 
 function assertNoDuplicateSlugs(): void {
   const all: Array<{ id: string; type: string }> = [
@@ -139,7 +139,7 @@ function getRegistrySlugs(entryType: EntryType): string[] {
       .map((example) => example.id)
       .sort();
   }
-  return solutions.map((solution) => solution.id).sort();
+  return nativeSolutions.map((solution) => solution.id).sort();
 }
 
 function getAllRegistrySlugs(entryType: EntryType): string[] {
@@ -149,7 +149,7 @@ function getAllRegistrySlugs(entryType: EntryType): string[] {
   if (entryType === "example") {
     return examples.map((example) => example.id).sort();
   }
-  return solutions.map((solution) => solution.id).sort();
+  return nativeSolutions.map((solution) => solution.id).sort();
 }
 
 function assertSlugParity(entryType: EntryType, contentSlugs: string[]): void {

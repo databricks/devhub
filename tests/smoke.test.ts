@@ -93,6 +93,18 @@ describe("production build smoke tests", () => {
     expect(text).toContain("/solutions.md");
   });
 
+  test("llms.txt links to native solutions internally and to linked solutions externally", () => {
+    const text = readBuildFile("llms.txt");
+    expect(text).toContain("/solutions/devhub-launch.md");
+    expect(text).toContain(
+      "https://www.databricks.com/blog/how-build-production-ready-data-and-ai-apps-databricks-apps-and-lakebase",
+    );
+    expect(text).toContain(
+      "https://www.databricks.com/blog/database-branching-postgres-git-style-workflows-databricks-lakebase",
+    );
+    expect(text).toContain("(Databricks Blog)");
+  });
+
   test("llms.txt section order: Start Here before Templates before Solutions", () => {
     const text = readBuildFile("llms.txt");
     const startHereIdx = text.indexOf("## Start Here");

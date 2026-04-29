@@ -2,9 +2,9 @@
 
 A streaming AI chat app on Databricks: a user sends a message, the server authenticates with the Databricks CLI profile (or a service-principal token in production), calls an AI Gateway chat endpoint via the OpenAI-compatible provider, and streams the answer back token-by-token. Chat sessions and messages are persisted in Lakebase Postgres so conversations survive page refreshes and redeploys.
 
-### How the recipes fit together
+### How the steps fit together
 
-Work through the recipes in the order below. Each one adds one concrete piece; by the end you have a deployable app.
+Work through the steps in the order below. Each one adds one concrete piece; by the end you have a deployable app.
 
 1. **Databricks Local App Development Bootstrap** — install the CLI, authenticate, and scaffold an AppKit project.
 2. **Query AI Gateway Endpoints** — pick a chat model (e.g. `databricks-gpt-5-4-mini`) and wire up `createOpenAI()` with the AI Gateway base URL.
@@ -15,4 +15,4 @@ Work through the recipes in the order below. Each one adds one concrete piece; b
 
 ### Before you start
 
-Every recipe below lists its own workspace-feature checks. Combined, the app needs a Databricks CLI profile that can reach Model Serving (AI Gateway foundation-model endpoints), Lakebase Postgres, and Databricks Apps. Run each recipe's prerequisite checks upfront so you do not hit gated features mid-build.
+Every step below lists its own workspace-feature checks. Combined, the app needs a Databricks CLI profile that can reach Model Serving (AI Gateway foundation-model endpoints), Lakebase Postgres, and Databricks Apps. Run each step's prerequisite checks upfront so you do not hit gated features mid-build.

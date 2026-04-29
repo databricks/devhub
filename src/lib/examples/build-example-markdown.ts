@@ -33,7 +33,7 @@ function isInitCommand(initCommand: string): boolean {
 /** Intro copy for the included templates list (Copy as Markdown and Copy prompt). */
 export function buildIncludedTemplatesPreamble(): string {
   return [
-    "These **templates** (multi-recipe cookbooks and standalone recipes) informed how this example was built; their patterns are reflected in the template code, bundles, and workflows.",
+    "These **templates** informed how this example was built; their patterns are reflected in the template code, bundles, and workflows.",
     "",
     "Review them on DevHub when you need more context on a technique than `template/README.md` alone provides.",
   ].join("\n");

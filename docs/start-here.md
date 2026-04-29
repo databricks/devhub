@@ -22,6 +22,6 @@ See [Platform overview](/docs/platform-overview) for how these layers fit togeth
 ## Where to start
 
 1. **Note your workspace URL** (looks like `https://<id>.cloud.databricks.com`).
-2. **Install and authenticate the [Databricks CLI](/docs/tools/databricks-cli).** Required for every guide on this site.
+2. **Install and authenticate the [Databricks CLI](/docs/tools/databricks-cli).** Required for every template on this site.
 3. **Install [agent skills](/docs/tools/ai-tools/agent-skills)** so your coding agent has Databricks platform context.
 4. **Pick a [template](/templates)** that matches your internal app. Browse [Apps overview](/docs/apps/overview) first if you want the conceptual picture.

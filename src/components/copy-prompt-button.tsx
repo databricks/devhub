@@ -37,7 +37,7 @@ export function CopyPromptButton({
   description,
   permalink,
   disabled = false,
-  disabledTooltip = "select recipe to copy",
+  disabledTooltip = "select a template to copy",
 }: CopyPromptButtonProps) {
   const { siteConfig } = useDocusaurusContext();
   const buildSiteUrl = siteConfig.url.replace(/\/$/, "");

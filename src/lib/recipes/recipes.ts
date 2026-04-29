@@ -147,7 +147,7 @@ export const recipes: Recipe[] = [
     id: "lakebase-create-instance",
     name: "Create a Lakebase Instance",
     description:
-      "Provision a managed Lakebase Postgres project on Databricks and collect the connection values needed by downstream recipes.",
+      "Provision a managed Lakebase Postgres project on Databricks and collect the connection values needed by downstream templates.",
     tags: ["Lakebase", "Postgres", "Setup"],
     services: ["Lakebase"],
     prerequisites: ["databricks-local-bootstrap"],

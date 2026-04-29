@@ -1,6 +1,6 @@
-Verify these Databricks workspace features are enabled before starting. Lakehouse Sync is a Beta feature and has stricter workspace requirements than most other recipes.
+Verify these Databricks workspace features are enabled before starting. Lakehouse Sync is a Beta feature and has stricter workspace requirements than most other templates.
 
 - **Databricks CLI authenticated.** Run `databricks auth profiles` and confirm at least one profile shows `Valid: YES`. If none do, authenticate with `databricks auth login --host <workspace-url> --profile <PROFILE>`.
 - **AWS workspace in an Autoscaling region.** Lakehouse Sync is currently available in **Beta on AWS only**. Azure is not yet supported. Confirm your workspace host is `*.cloud.databricks.com` (AWS) rather than `*.azuredatabricks.net` (Azure).
-- **A Lakebase Autoscaling project with tables.** Run `databricks postgres list-projects --profile <PROFILE>` and confirm your Autoscaling project appears. A `not enabled` error means Lakebase is unavailable to this identity. This recipe does not cover project creation — see [Create a Lakebase Instance](/templates/lakebase-create-instance) if you need one.
+- **A Lakebase Autoscaling project with tables.** Run `databricks postgres list-projects --profile <PROFILE>` and confirm your Autoscaling project appears. A `not enabled` error means Lakebase is unavailable to this identity. This template does not cover project creation — see [Create a Lakebase Instance](/templates/lakebase-create-instance) if you need one.
 - **Unity Catalog access.** Run `databricks catalogs list --profile <PROFILE>` and confirm the destination catalog and schema you want to replicate into are present. You will select them when enabling Lakehouse Sync in Step 3.

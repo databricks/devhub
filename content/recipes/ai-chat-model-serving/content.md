@@ -2,9 +2,9 @@
 
 Build a streaming AI chat experience in a Databricks App using Vercel AI SDK with Databricks Model Serving and OpenAI-compatible endpoints.
 
-### 1. Follow the prerequisite recipes first
+### 1. Follow the prerequisite templates first
 
-Complete these recipes before adding chat:
+Complete these templates before adding chat:
 
 - [`Databricks Local Bootstrap`](/templates/hello-world-app#databricks-local-bootstrap)
 - [`Query AI Gateway Endpoints`](/templates/ai-chat-app#query-ai-gateway-endpoints)
@@ -31,7 +31,7 @@ If you run `npm run dev` before deploying, your user creates schemas that the de
 npm install ai@6 @ai-sdk/react@3 @ai-sdk/openai @databricks/sdk-experimental
 ```
 
-> **Version note**: This recipe uses AI SDK v6 APIs (`TextStreamChatTransport`, `sendMessage({ text })`, transport-based `useChat`). Tested with `ai@6.1`, `@ai-sdk/react@3.1`, and `@ai-sdk/openai@3.x`.
+> **Version note**: This template uses AI SDK v6 APIs (`TextStreamChatTransport`, `sendMessage({ text })`, transport-based `useChat`). Tested with `ai@6.1`, `@ai-sdk/react@3.1`, and `@ai-sdk/openai@3.x`.
 
 > **Note**: `@databricks/sdk-experimental` is included in the scaffolded `package.json`. It is listed here for reference if adding AI chat to an existing project.
 
@@ -41,7 +41,7 @@ npm install ai@6 @ai-sdk/react@3 @ai-sdk/openai @databricks/sdk-experimental
 > npx shadcn@latest init
 > ```
 >
-> This basic recipe works without AI Elements. They are optional prebuilt components.
+> This basic template works without AI Elements. They are optional prebuilt components.
 
 ### 3. Configure environment variables for AI Gateway
 
@@ -67,7 +67,7 @@ env:
 
 > **Workspace ID**: AppKit auto-discovers this at runtime. For explicit setup, run `databricks api get /api/2.1/unity-catalog/current-metastore-assignment --profile <PROFILE>` and use the `workspace_id` field.
 
-> **Model compatibility**: This recipe uses OpenAI-compatible models served via Databricks AI Gateway, which support the AI SDK's streaming API. The AI Gateway URL uses the `/mlflow/v1` path (not `/openai/v1`).
+> **Model compatibility**: This template uses OpenAI-compatible models served via Databricks AI Gateway, which support the AI SDK's streaming API. The AI Gateway URL uses the `/mlflow/v1` path (not `/openai/v1`).
 
 > **Find your endpoint**: Run `databricks serving-endpoints list --profile <PROFILE>` to see available models. Common endpoints include `databricks-meta-llama-3-3-70b-instruct` and `databricks-claude-sonnet-4`, but availability varies by workspace.
 

@@ -8,8 +8,8 @@ const ALL_TEMPLATE_TYPES: ReadonlyArray<{
   type: TemplateType;
   label: string;
 }> = [
-  { type: "examples", label: "Examples" },
-  { type: "cookbooks", label: "Guides & Recipes" },
+  { type: "examples", label: "Example apps" },
+  { type: "cookbooks", label: "Walkthroughs" },
 ];
 
 export function TemplateFilters({

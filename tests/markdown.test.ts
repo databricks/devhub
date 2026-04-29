@@ -63,7 +63,7 @@ describe("detail markdown resolver", () => {
     const prereqIdx = markdown.indexOf("## Prerequisites");
     expect(introIdx).toBeGreaterThanOrEqual(0);
     expect(introIdx).toBeLessThan(prereqIdx);
-    expect(markdown).toContain("How the recipes fit together");
+    expect(markdown).toContain("How the steps fit together");
   });
 
   test("rejects path traversal", () => {
@@ -101,12 +101,15 @@ describe("templates section resolves recipes, examples, and cookbooks", () => {
 });
 
 describe("empty-slug index pages", () => {
-  test("templates index contains headings and .md links", () => {
+  test("templates index is one flat list of every template", () => {
     const markdown = getDetailMarkdown("templates", "");
     expect(markdown).toContain("# Templates");
-    expect(markdown).toContain("## Cookbooks");
-    expect(markdown).toContain("## Recipes");
+    expect(markdown).not.toContain("## Cookbooks");
+    expect(markdown).not.toContain("## Recipes");
+    expect(markdown).not.toContain("## Examples");
     expect(markdown).toMatch(/\(\/templates\/[\w-]+\.md\)/);
+    expect(markdown).toContain("/templates/hello-world-app.md");
+    expect(markdown).toContain("/templates/databricks-local-bootstrap.md");
   });
 
   test("solutions index contains heading and .md links", () => {

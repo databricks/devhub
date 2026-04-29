@@ -63,7 +63,7 @@ export function AIExportMenu({
   description,
   permalink,
   disabled = false,
-  disabledTooltip = "select recipe to copy",
+  disabledTooltip = "select a template to copy",
 }: AIExportMenuProps) {
   const { siteConfig } = useDocusaurusContext();
   const buildSiteUrl = siteConfig.url.replace(/\/$/, "");

@@ -1,17 +1,17 @@
 # DevHub
 
-**[dev.databricks.com](https://dev.databricks.com)** is the home for developers building data and AI applications on Databricks. It is opinionated documentation, runnable guides and examples, and copy-paste-friendly resources so you—and your coding agents—can go from idea to deployed app in minutes not months.
+**[dev.databricks.com](https://dev.databricks.com)** is the home for developers building data and AI applications on Databricks. It is opinionated documentation and copy-paste-friendly templates so you—and your coding agents—can go from idea to deployed app in minutes not months.
 
 ## Why build on Databricks?
 
-Databricks brings **operational data**, **AI agents**, and **apps** together on one platform: **Lakebase** for Postgres that lives next to your lakehouse, **Agent Bricks** for governed, production-grade agents on your data, and **Databricks Apps** for secure, serverless frontends and APIs. DevHub is where we show you how those pieces fit into real workflows—not slides, but guides, templates, and full examples you can run.
+Databricks brings **operational data**, **AI agents**, and **apps** together on one platform: **Lakebase** for Postgres that lives next to your lakehouse, **Agent Bricks** for governed, production-grade agents on your data, and **Databricks Apps** for secure, serverless frontends and APIs. DevHub is where we show you how those pieces fit into real workflows—not slides, but documentation and templates you can run.
 
-The easiest way to get started building on Databricks is **AppKit**. [AppKit](https://github.com/databricks/appkit) is the open-source TypeScript SDK for building those apps: React UI, Express server, Databricks Asset Bundle integration, and plugins (Lakebase, Genie, analytics, and more). DevHub guides and examples are built with AppKit.
+The easiest way to get started building on Databricks is **AppKit**. [AppKit](https://github.com/databricks/appkit) is the open-source TypeScript SDK for building those apps: React UI, Express server, Databricks Asset Bundle integration, and plugins (Lakebase, Genie, analytics, and more). DevHub templates are built with AppKit.
 
-## How to use DevHub guides and examples
+## How to use DevHub
 
-1. **Browse [Templates](https://dev.databricks.com/templates)** — Filter **Guides** (step-by-step prompts) or **Examples** (full example apps with step-by-step instructions).
-2. **Copy** — Use **Copy as Markdown** on a resource page so your agent gets recipes, commands, and context in one paste.
+1. **Browse [Templates](https://dev.databricks.com/templates)** — Filter **Walkthroughs** (step-by-step prompts) or **Example apps** (full example codebases with step-by-step instructions).
+2. **Copy** — Use **Copy as Markdown** on a template page so your agent gets steps, commands, and context in one paste.
 3. **Give it to your coding agent** — Paste into Cursor, Claude Code, Codex, or your usual tool. Add a short brief: domain, data, UX, and what “done” looks like.
 4. **Build end to end** — Work with your agent on application code, Databricks Asset Bundles, Lakebase, and platform wiring until you have a **production-ready agentic application**: secure, deployable, and aligned with how Apps and Agents are meant to run on Databricks—not a one-off script.
 

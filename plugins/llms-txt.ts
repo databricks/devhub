@@ -189,51 +189,39 @@ function generateLlmsTxt(baseUrl: string, docsDir: string): string {
     lines.push("");
   }
 
-  // Templates — grouped by type
+  // Templates — flat list of every entry in the template catalog. Internally
+  // these are cookbooks, recipes, and examples, but outward-facing they're
+  // all just "templates". Order is cookbooks → recipes → examples (most
+  // composed first, atomic snippets last).
+  const allTemplates = [
+    ...publishedCookbooks.map((t) => ({
+      name: t.name,
+      id: t.id,
+      description: t.description,
+    })),
+    ...publishedRecipes.map((r) => ({
+      name: r.name,
+      id: r.id,
+      description: r.description,
+    })),
+    ...publishedExamples.map((e) => ({
+      name: e.name,
+      id: e.id,
+      description: e.description,
+    })),
+  ];
+
   lines.push(
     "## Templates",
     "",
-    "Templates and examples for building on Databricks.",
+    `Opinionated, copy-pasteable templates for building on Databricks. Browse the catalog at ${baseUrl}/templates.`,
     "",
     `- [All Templates](${baseUrl}/templates.md): Browse all templates`,
+    ...allTemplates.map(
+      (t) => `- [${t.name}](${baseUrl}/templates/${t.id}.md): ${t.description}`,
+    ),
     "",
   );
-
-  if (publishedCookbooks.length > 0) {
-    lines.push(
-      "### Cookbooks",
-      "",
-      ...publishedCookbooks.map(
-        (t) =>
-          `- [${t.name}](${baseUrl}/templates/${t.id}.md): ${t.description}`,
-      ),
-      "",
-    );
-  }
-
-  if (publishedRecipes.length > 0) {
-    lines.push(
-      "### Recipes",
-      "",
-      ...publishedRecipes.map(
-        (r) =>
-          `- [${r.name}](${baseUrl}/templates/${r.id}.md): ${r.description}`,
-      ),
-      "",
-    );
-  }
-
-  if (publishedExamples.length > 0) {
-    lines.push(
-      "### Examples",
-      "",
-      ...publishedExamples.map(
-        (e) =>
-          `- [${e.name}](${baseUrl}/templates/${e.id}.md): ${e.description}`,
-      ),
-      "",
-    );
-  }
 
   // Solutions last — least actionable
   lines.push(

@@ -148,8 +148,8 @@ export default function SolutionsPage(): ReactNode {
               Solutions
             </p>
             <h1 className="mb-4 max-w-3xl text-4xl leading-[1.06] font-medium tracking-tight text-black dark:text-white md:text-5xl">
-              <span className="text-db-lava">Developer-first</span> guides for
-              building on Databricks.
+              <span className="text-db-lava">Developer-first</span> perspectives
+              on building on Databricks.
             </h1>
             <p className="mb-12 max-w-2xl text-lg text-black/68 dark:text-white/68">
               Deep-dives, launch announcements, and opinionated perspectives on

@@ -92,9 +92,10 @@ function LinkedSolutionCard({
   return (
     <a
       href={solution.url}
+      target="_blank"
       rel="noopener noreferrer"
       className="no-underline"
-      aria-label={`${solution.title} on ${solution.source}`}
+      aria-label={`${solution.title} on ${solution.source} (opens in new tab)`}
     >
       <Card className={cardClasses}>
         <div className="relative aspect-[1.91/1] overflow-hidden border-b border-black/10 bg-[#f1ede4] dark:border-white/10 dark:bg-[#0f1c22]">

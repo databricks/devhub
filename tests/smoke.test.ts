@@ -115,15 +115,33 @@ describe("production build smoke tests", () => {
     expect(solutionsIdx).toBeGreaterThan(templatesIdx);
   });
 
-  test("llms.txt templates have subheadings", () => {
+  test("llms.txt Templates section is flat (no Cookbooks/Recipes/Examples subheadings)", () => {
     const text = readBuildFile("llms.txt");
-    expect(text).toContain("### Cookbooks");
-    expect(text).toContain("### Recipes");
+    expect(text).not.toContain("### Cookbooks");
+    expect(text).not.toContain("### Recipes");
+    expect(text).not.toContain("### Examples");
+  });
+
+  test("llms.txt Templates section lists cookbooks, recipes, and examples in one flat list", () => {
+    const text = readBuildFile("llms.txt");
+
+    const templatesIdx = text.indexOf("## Templates");
+    const solutionsIdx = text.indexOf("## Solutions");
+    expect(templatesIdx).toBeGreaterThan(-1);
+    expect(solutionsIdx).toBeGreaterThan(templatesIdx);
+    const templatesBlock = text.slice(templatesIdx, solutionsIdx);
+
+    expect(templatesBlock).toContain("/templates/hello-world-app.md");
+    expect(templatesBlock).toContain("/templates/ai-chat-app.md");
+    expect(templatesBlock).toContain(
+      "/templates/databricks-local-bootstrap.md",
+    );
+    expect(templatesBlock).toContain("/templates/foundation-models-api.md");
     if (
       process.env.EXAMPLES_FEATURE === "true" ||
       process.env.EXAMPLES_FEATURE === "1"
     ) {
-      expect(text).toContain("### Examples");
+      expect(templatesBlock).toContain("/templates/agentic-support-console.md");
     }
   });
 

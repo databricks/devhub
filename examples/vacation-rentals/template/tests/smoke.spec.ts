@@ -4,7 +4,7 @@ import { join } from 'node:path';
 
 // ── Templated configuration (resolved by `databricks apps init`) ────────────
 const APP_CONFIG = {
-  name: 'wanderbricks-ops',
+  name: 'vacation-rentals',
   plugins: ['analytics', 'lakebase', 'genie'],
 } as const;
 

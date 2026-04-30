@@ -8,7 +8,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b px-6 py-3">
-        <h1 className="text-lg font-semibold text-foreground">wanderbricks-ops</h1>
+        <h1 className="text-lg font-semibold text-foreground">vacation-rentals</h1>
         <p className="text-sm text-muted-foreground">Vacation rental marketplace operations console</p>
       </header>
 

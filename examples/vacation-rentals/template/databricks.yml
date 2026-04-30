@@ -1,5 +1,5 @@
 bundle:
-  name: wanderbricks-ops
+  name: vacation-rentals
 
 variables:
   sql_warehouse_id:
@@ -16,7 +16,7 @@ variables:
 resources:
   apps:
     app:
-      name: 'wanderbricks-ops'
+      name: 'vacation-rentals'
       description: 'A Databricks App powered by AppKit'
       source_code_path: ./
       user_api_scopes:

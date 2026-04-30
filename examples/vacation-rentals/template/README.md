@@ -1,4 +1,4 @@
-# wanderbricks-ops
+# vacation-rentals
 
 A Databricks App powered by [AppKit](https://databricks.github.io/appkit/), featuring React, TypeScript, and Tailwind CSS.
 

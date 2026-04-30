@@ -1,4 +1,4 @@
-Build and deploy a Databricks AppKit application called "wanderbricks-ops".
+Build and deploy a Databricks AppKit application called "vacation-rentals".
 
 Complete every step without asking the user for input, with one exception:
 in step 0, if multiple Databricks CLI profiles are configured, ask the user
@@ -66,17 +66,17 @@ that step 2 wrote:
 set -a; source .env; set +a
 
 databricks apps init \
-  --name wanderbricks-ops \
+  --name vacation-rentals \
   --features=analytics,genie,lakebase \
   --set analytics.sql-warehouse.id="$DATABRICKS_WAREHOUSE_ID" \
   --set genie.genie-space.id="$DATABRICKS_GENIE_SPACE_ID" \
   --set lakebase.postgres.branch="$LAKEBASE_BRANCH" \
   --set lakebase.postgres.database="$LAKEBASE_DATABASE"
 
-# apps init writes its own .env inside wanderbricks-ops/ -- replace it with the
+# apps init writes its own .env inside vacation-rentals/ -- replace it with the
 # one configure_env.sh wrote, which has the resolved Lakebase host/endpoint.
-mv .env wanderbricks-ops/.env
-cd wanderbricks-ops && npm install
+mv .env vacation-rentals/.env
+cd vacation-rentals && npm install
 ```
 
 ## 4. Application code
@@ -179,7 +179,7 @@ Use `@databricks/appkit` for the server and `@databricks/appkit-ui/react` for th
 
 ## 5. Verify and deploy
 
-From inside `wanderbricks-ops/`:
+From inside `vacation-rentals/`:
 
 1. Local smoke test:
 
@@ -205,7 +205,7 @@ From inside `wanderbricks-ops/`:
 
 3. Fetch the deployed URL:
    ```bash
-   APP_URL=$(databricks apps get wanderbricks-ops --output json | jq -r '.url')
+   APP_URL=$(databricks apps get vacation-rentals --output json | jq -r '.url')
    echo "$APP_URL"
    ```
 

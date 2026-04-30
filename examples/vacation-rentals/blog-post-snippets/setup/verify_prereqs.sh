@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Verify prerequisites for the wanderbricks-ops AppKit walkthrough.
+# Verify prerequisites for the vacation-rentals AppKit walkthrough.
 #
 # Runs best-effort checks against your local tools and Databricks workspace,
 # then prints a checklist. "Can I create X?" permissions can't be probed via

@@ -1,9 +1,5 @@
 import type { ReactNode } from "react";
-import { useCallback, useRef, useState } from "react";
-import { Check, Clipboard, LoaderCircle } from "lucide-react";
-import { track } from "@vercel/analytics";
-import { Button } from "@/components/ui/button";
-import { getBootstrapPromptApiPath } from "@/lib/bootstrap-prompt";
+import { BootstrapCopyButton } from "@/components/home/bootstrap-copy-button";
 
 type WizardStep = {
   number: string;
@@ -561,72 +557,6 @@ function ShipVisual(): ReactNode {
   );
 }
 
-function CopyPromptButton(): ReactNode {
-  const [copyState, setCopyState] = useState<
-    "idle" | "copying" | "copied" | "error"
-  >("idle");
-  const resetTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
-
-  const handleCopy = useCallback(async () => {
-    setCopyState("copying");
-    try {
-      const response = await fetch(getBootstrapPromptApiPath());
-      if (!response.ok) throw new Error(`Failed to fetch: ${response.status}`);
-      const text = await response.text();
-      if (!text.trim()) throw new Error("Empty prompt");
-
-      if (navigator?.clipboard?.writeText) {
-        await navigator.clipboard.writeText(text);
-      } else {
-        const textArea = document.createElement("textarea");
-        textArea.value = text;
-        textArea.setAttribute("readonly", "");
-        textArea.style.position = "fixed";
-        textArea.style.top = "-9999px";
-        document.body.append(textArea);
-        textArea.select();
-        document.execCommand("copy");
-        textArea.remove();
-      }
-
-      setCopyState("copied");
-      track("copy_bootstrap_prompt", { source: "wizard" });
-    } catch {
-      setCopyState("error");
-    } finally {
-      clearTimeout(resetTimerRef.current);
-      resetTimerRef.current = setTimeout(() => setCopyState("idle"), 2500);
-    }
-  }, []);
-
-  return (
-    <Button
-      className="mt-5 h-10 rounded-full px-5 text-sm font-medium shadow-[0_8px_24px_-8px_rgba(255,54,33,0.5)] transition-transform hover:-translate-y-0.5"
-      onClick={handleCopy}
-      disabled={copyState === "copying"}
-    >
-      {copyState === "copying" ? (
-        <span className="inline-flex items-center gap-2">
-          <LoaderCircle className="h-4 w-4 animate-spin" />
-          Copying…
-        </span>
-      ) : copyState === "copied" ? (
-        <span className="inline-flex items-center gap-2">
-          <Check className="h-4 w-4" />
-          Copied — now paste into your agent
-        </span>
-      ) : copyState === "error" ? (
-        "Failed to copy — try again"
-      ) : (
-        <span className="inline-flex items-center gap-2">
-          <Clipboard className="h-4 w-4" />
-          Copy prompt for your agent
-        </span>
-      )}
-    </Button>
-  );
-}
-
 const steps: WizardStep[] = [
   {
     number: "01",
@@ -635,7 +565,12 @@ const steps: WizardStep[] = [
     description:
       "One click copies everything your coding agent needs to build and deploy on Databricks.",
     visual: <ClipboardVisual />,
-    action: <CopyPromptButton />,
+    action: (
+      <BootstrapCopyButton
+        source="wizard"
+        className="mt-5 h-10 rounded-full px-5 text-sm font-medium shadow-[0_8px_24px_-8px_rgba(255,54,33,0.5)] transition-transform hover:-translate-y-0.5"
+      />
+    ),
   },
   {
     number: "02",

@@ -6,7 +6,7 @@ export type CookbookRecipeInput = {
   sections: ContentSections;
 };
 
-export type CookbookCompositionInput = {
+type CookbookCompositionInput = {
   cookbookName: string;
   cookbookDescription: string;
   intro?: string;

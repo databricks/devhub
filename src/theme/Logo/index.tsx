@@ -42,7 +42,7 @@ function LogoThemedImage({
   return imageClassName ? <div className={imageClassName}>{image}</div> : image;
 }
 
-export function Logo(props: Props): ReactNode {
+function Logo(props: Props): ReactNode {
   const {
     siteConfig: { title },
   } = useDocusaurusContext();

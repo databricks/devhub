@@ -1,5 +1,5 @@
 /** Allowed file names inside each content/<recipes|examples>/<slug>/ folder. */
-export const CONTENT_SECTION_FILES = [
+const CONTENT_SECTION_FILES = [
   "content",
   "prerequisites",
   "deployment",

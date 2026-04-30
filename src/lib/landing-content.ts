@@ -1,5 +1,3 @@
-import { Bot, Database, Server } from "lucide-react";
-import type { ComponentType } from "react";
 import {
   examples,
   filterPublished,
@@ -7,14 +5,6 @@ import {
   cookbooks,
   type Service,
 } from "@/lib/recipes/recipes";
-
-export type Pillar = {
-  title: string;
-  subtitle: string;
-  description: string;
-  link: string;
-  icon?: ComponentType<{ className?: string }>;
-};
 
 export type LandingTemplateItem = {
   id: string;
@@ -27,33 +17,6 @@ export type LandingTemplateItem = {
   previewImageLightUrl?: string;
   previewImageDarkUrl?: string;
 };
-
-export const pillars: Pillar[] = [
-  {
-    title: "Lakebase",
-    subtitle: "Managed Postgres, colocated with your Lakehouse.",
-    description:
-      "Provision with the CLI, connect like any Postgres. Instant branching, scales to zero, and change data feed to Unity Catalog.",
-    link: "/docs/lakebase/overview",
-    icon: Database,
-  },
-  {
-    title: "Agent Bricks",
-    subtitle: "Managed AI agents and governed LLM endpoints.",
-    description:
-      "Connect Knowledge Assistants, Genie spaces, and foundation models to your AppKit app. AI Gateway handles rate limits, cost attribution, and content safety.",
-    link: "/docs/agents/overview",
-    icon: Bot,
-  },
-  {
-    title: "Databricks Apps",
-    subtitle: "Web apps that run inside your workspace.",
-    description:
-      "One CLI command to deploy. Fixed URL, built-in OAuth, and direct access to your workspace data \u2014 no separate hosting service.",
-    link: "/docs/apps/overview",
-    icon: Server,
-  },
-];
 
 export function buildLandingTemplates(
   includeDrafts: boolean,

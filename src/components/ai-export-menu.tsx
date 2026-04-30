@@ -1,5 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
-import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
+import { useCallback } from "react";
 import { toast } from "sonner";
 import {
   ClipboardCopyIcon,
@@ -23,127 +22,33 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import {
-  buildAboutDevhubForBrowserCopy,
-  buildMarkdownWithAboutDevhubLeadIn,
-  useAboutDevhubBody,
-} from "@/lib/copy-about-devhub";
+  useAgentMarkdown,
+  type AgentMarkdownInput,
+} from "@/lib/use-agent-markdown";
 
-type AIExportMenuProps = {
-  rawMarkdown?: string;
-  rawMarkdownUrl?: string;
-  /** Extra markdown appended after the main content (e.g. code snippets, links). */
-  additionalMarkdown?: string;
-  /**
-   * When set, Copy Markdown uses exactly `about-devhub + --- + this string`,
-   * ignoring frontmatter and raw/additional markdown (e.g. example pages align
-   * with the Get started "Copy prompt" button).
-   */
-  agentBodyAfterAbout?: string;
-  /**
-   * When true, the About DevHub preamble is omitted from copy/send actions
-   * (used on reference docs pages — agents only need the doc body itself, the
-   * preamble is already part of resource prompts that link to the doc).
-   */
-  omitAboutDevhubPreamble?: boolean;
-  title: string;
-  description: string;
-  permalink: string;
+type AIExportMenuProps = AgentMarkdownInput & {
   disabled?: boolean;
   disabledTooltip?: string;
 };
 
 export function AIExportMenu({
-  rawMarkdown,
-  rawMarkdownUrl,
-  additionalMarkdown,
-  agentBodyAfterAbout,
-  omitAboutDevhubPreamble = false,
-  title,
-  description,
-  permalink,
   disabled = false,
   disabledTooltip = "select a template to copy",
+  ...input
 }: AIExportMenuProps) {
-  const { siteConfig } = useDocusaurusContext();
-  const buildSiteUrl = siteConfig.url.replace(/\/$/, "");
-  const baseUrl =
-    typeof window !== "undefined" ? window.location.origin : buildSiteUrl;
-  const fullUrl = baseUrl + permalink;
+  const { baseUrl, fullUrl, buildAIMarkdown, ensureFetched } =
+    useAgentMarkdown(input);
   const mcpUrl = baseUrl + "/api/mcp";
-  const aboutDevhubBody = useAboutDevhubBody();
-  const fetchedMarkdownRef = useRef<string | null>(null);
 
-  useEffect(() => {
-    if (rawMarkdown || !rawMarkdownUrl) return;
-    fetch(rawMarkdownUrl)
-      .then((res) => (res.ok ? res.text() : null))
-      .then((text) => {
-        fetchedMarkdownRef.current = text;
-      })
-      .catch(() => {});
-  }, [rawMarkdown, rawMarkdownUrl]);
-
-  const resolveContent = useCallback((): string => {
-    if (rawMarkdown) return rawMarkdown;
-    if (fetchedMarkdownRef.current) return fetchedMarkdownRef.current;
-    return "";
-  }, [rawMarkdown]);
-
-  const buildAIMarkdown = useCallback((): string => {
-    const originForCopy = baseUrl || buildSiteUrl;
-    const llmsUrl = `${originForCopy}/llms.txt`;
-
-    if (agentBodyAfterAbout !== undefined) {
-      return buildMarkdownWithAboutDevhubLeadIn(
-        aboutDevhubBody,
-        llmsUrl,
-        agentBodyAfterAbout,
-      );
-    }
-
-    const rawContent = resolveContent();
-    const escapedTitle = title.replace(/"/g, '\\"');
-    const escapedDescription = description.replace(/"/g, '\\"');
-
-    let md = "";
-    if (!omitAboutDevhubPreamble) {
-      md += `${buildAboutDevhubForBrowserCopy(aboutDevhubBody, llmsUrl)}\n\n`;
-    }
-    md += `---\ntitle: "${escapedTitle}"\nurl: ${fullUrl}\nsummary: "${escapedDescription}"\n---\n\n`;
-    if (rawContent) md += `${rawContent}\n\n`;
-    if (additionalMarkdown) md += `${additionalMarkdown}\n\n`;
-    return md;
-  }, [
-    agentBodyAfterAbout,
-    aboutDevhubBody,
-    omitAboutDevhubPreamble,
-    resolveContent,
-    additionalMarkdown,
-    title,
-    description,
-    fullUrl,
-    baseUrl,
-    buildSiteUrl,
-  ]);
-
-  const handleCopyMarkdown = useCallback(() => {
-    if (rawMarkdownUrl && !rawMarkdown && !fetchedMarkdownRef.current) {
-      fetch(rawMarkdownUrl)
-        .then((res) => (res.ok ? res.text() : ""))
-        .then((text) => {
-          fetchedMarkdownRef.current = text;
-          const md = buildAIMarkdown();
-          return navigator.clipboard.writeText(md);
-        })
-        .then(() => toast.success("Markdown copied"))
-        .catch(() => toast.error("Failed to copy markdown"));
-      return;
-    }
-    const md = buildAIMarkdown();
-    navigator.clipboard.writeText(md).then(() => {
+  const handleCopyMarkdown = useCallback(async () => {
+    try {
+      await ensureFetched();
+      await navigator.clipboard.writeText(buildAIMarkdown());
       toast.success("Markdown copied");
-    });
-  }, [rawMarkdown, rawMarkdownUrl, buildAIMarkdown]);
+    } catch {
+      toast.error("Failed to copy markdown");
+    }
+  }, [ensureFetched, buildAIMarkdown]);
 
   const handleViewRawMarkdown = useCallback(() => {
     const mdUrl = fullUrl.replace(/\/$/, "") + ".md";

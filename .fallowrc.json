@@ -1,0 +1,28 @@
+{
+  "$schema": "https://raw.githubusercontent.com/fallow-rs/fallow/main/schema.json",
+  "ignorePatterns": ["examples/**", "content/**", ".docusaurus/**", "build/**"],
+  "ignoreDependencies": [
+    "@modelcontextprotocol/sdk",
+    "@docusaurus/module-type-aliases",
+    "@docusaurus/tsconfig",
+    "mdast",
+    "mdast-util-mdx",
+    "unified",
+    "unist",
+    "unist-util-visit",
+    "prism-react-renderer"
+  ],
+  "ignoreExports": [
+    {
+      "file": "api/mcp.ts",
+      "exports": ["GET", "POST", "DELETE"]
+    },
+    {
+      "file": "src/components/ui/**",
+      "exports": ["*"]
+    }
+  ],
+  "rules": {
+    "unused-dependencies": "warn"
+  }
+}

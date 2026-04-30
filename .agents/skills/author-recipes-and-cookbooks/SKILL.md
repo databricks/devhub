@@ -61,7 +61,7 @@ All three are registered in `src/lib/recipes/recipes.ts`, share a flat `/templat
    - add an entry to `cookbooks` with `id`, `name`, `description`, `recipeIds`
    - rely on `createCookbook()` to derive `tags` and `services`
 4. Create `src/pages/templates/<slug>.tsx` following the existing pattern:
-   - import `CookbookDetail`, `cookbooks`, `useAllRawRecipeMarkdown`
+   - import `CookbookDetail`, `cookbooks`, `useAllRecipeSections`, `useCookbookIntro`, and `composeCookbookMarkdown`
    - import each recipe markdown module from `@site/content/recipes/<slug>/content.md`
    - select the cookbook with `cookbooks.find((c) => c.id === "<slug>")`
    - build `rawMarkdown` from `cookbook.recipeIds` joined with `\n\n---\n\n`

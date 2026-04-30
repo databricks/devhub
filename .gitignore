@@ -39,3 +39,4 @@ examples/**/.databricks/
 # Screenshots
 /screenshots
 .vercel
+.fallow/

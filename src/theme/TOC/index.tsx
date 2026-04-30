@@ -8,7 +8,7 @@ const LINK_CLASS_NAME =
 
 const LINK_ACTIVE_CLASS_NAME = "toc-link-active";
 
-export function TOC({ className, ...props }: Props): ReactNode {
+function TOC({ className, ...props }: Props): ReactNode {
   return (
     <div
       className={clsx(

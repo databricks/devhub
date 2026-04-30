@@ -37,5 +37,3 @@ export default function robotsTxtPlugin(context: LoadContext): Plugin {
     },
   };
 }
-
-export { buildRobotsTxt };

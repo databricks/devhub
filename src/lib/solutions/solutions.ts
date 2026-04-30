@@ -1,10 +1,8 @@
-export type SolutionTag = string;
-
 type SolutionBase = {
   id: string;
   title: string;
   description: string;
-  tags: SolutionTag[];
+  tags: string[];
 };
 
 /**

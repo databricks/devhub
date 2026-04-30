@@ -39,6 +39,19 @@ export function buildIncludedTemplatesPreamble(): string {
   ].join("\n");
 }
 
+function buildIncludedTemplateLinks(
+  includedCookbooks: ContentRef[],
+  includedRecipes: ContentRef[],
+  baseUrl: string,
+): string[] {
+  const renderLink = (item: ContentRef) =>
+    `- [${item.name}](${baseUrl}/templates/${item.id}.md) - ${item.description}`;
+  return [
+    ...includedCookbooks.map(renderLink),
+    ...includedRecipes.map(renderLink),
+  ];
+}
+
 /** Get started body for Copy as Markdown exports (includes init or clone command + README pointer). */
 export function buildExportGetStartedSection(example: Example): string {
   if (isInitCommand(example.initCommand)) {
@@ -168,16 +181,11 @@ export function buildFullPrompt(
 
   lines.push("", `## Source Code`, "", `GitHub: ${githubUrl}`);
 
-  const includedTemplateLinks = [
-    ...includedCookbooks.map(
-      (c) =>
-        `- [${c.name}](${baseUrl}/templates/${c.id}.md) - ${c.description}`,
-    ),
-    ...includedRecipes.map(
-      (r) =>
-        `- [${r.name}](${baseUrl}/templates/${r.id}.md) - ${r.description}`,
-    ),
-  ];
+  const includedTemplateLinks = buildIncludedTemplateLinks(
+    includedCookbooks,
+    includedRecipes,
+    baseUrl,
+  );
   if (includedTemplateLinks.length > 0) {
     lines.push(
       "",
@@ -200,16 +208,11 @@ export function buildAdditionalMarkdown(opts: ExampleMarkdownOptions): string {
   sections.push(buildExportGetStartedSection(example));
   sections.push(`## Source Code\n\nGitHub: ${githubUrl}`);
 
-  const links = [
-    ...includedCookbooks.map(
-      (c) =>
-        `- [${c.name}](${baseUrl}/templates/${c.id}.md) - ${c.description}`,
-    ),
-    ...includedRecipes.map(
-      (r) =>
-        `- [${r.name}](${baseUrl}/templates/${r.id}.md) - ${r.description}`,
-    ),
-  ];
+  const links = buildIncludedTemplateLinks(
+    includedCookbooks,
+    includedRecipes,
+    baseUrl,
+  );
   if (links.length > 0) {
     sections.push(
       "## Included templates",

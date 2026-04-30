@@ -5,10 +5,10 @@ import { ABOUT_DEVHUB_SLUG } from "../src/lib/bootstrap-prompt";
 import {
   hasContentSlug,
   hasSolutionSlug,
-  joinContentSections,
   readContentSections,
   readCookbookIntro,
 } from "../src/lib/content-markdown";
+import { joinContentSections } from "../src/lib/content-sections";
 import { buildCookbookMarkdownDocument } from "../src/lib/cookbook-composition";
 import { expandMdxImports } from "../src/lib/expand-mdx";
 import {

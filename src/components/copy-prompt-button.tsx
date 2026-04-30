@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { track } from "@vercel/analytics";
-import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import { toast } from "sonner";
 import { Check, Clipboard, LoaderCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -11,107 +10,41 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import {
-  buildAboutDevhubForBrowserCopy,
-  buildMarkdownWithAboutDevhubLeadIn,
-  useAboutDevhubBody,
-} from "@/lib/copy-about-devhub";
+  useAgentMarkdown,
+  type AgentMarkdownInput,
+} from "@/lib/use-agent-markdown";
 
-type CopyPromptButtonProps = {
-  rawMarkdown?: string;
-  rawMarkdownUrl?: string;
-  additionalMarkdown?: string;
-  agentBodyAfterAbout?: string;
-  title: string;
-  description: string;
-  permalink: string;
+type CopyPromptButtonProps = AgentMarkdownInput & {
   disabled?: boolean;
   disabledTooltip?: string;
 };
 
 export function CopyPromptButton({
-  rawMarkdown,
-  rawMarkdownUrl,
-  additionalMarkdown,
-  agentBodyAfterAbout,
-  title,
-  description,
-  permalink,
   disabled = false,
   disabledTooltip = "select a template to copy",
+  ...input
 }: CopyPromptButtonProps) {
-  const { siteConfig } = useDocusaurusContext();
-  const buildSiteUrl = siteConfig.url.replace(/\/$/, "");
-  const baseUrl =
-    typeof window !== "undefined" ? window.location.origin : buildSiteUrl;
-  const fullUrl = baseUrl + permalink;
-  const aboutDevhubBody = useAboutDevhubBody();
-  const fetchedMarkdownRef = useRef<string | null>(null);
+  const { buildAIMarkdown, ensureFetched } = useAgentMarkdown(input);
   const [copyState, setCopyState] = useState<
     "idle" | "copying" | "copied" | "error"
   >("idle");
   const resetTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
-  useEffect(() => {
-    if (rawMarkdown || !rawMarkdownUrl) return;
-    fetch(rawMarkdownUrl)
-      .then((res) => (res.ok ? res.text() : null))
-      .then((text) => {
-        fetchedMarkdownRef.current = text;
-      })
-      .catch(() => {});
-  }, [rawMarkdown, rawMarkdownUrl]);
-
-  const resolveContent = useCallback((): string => {
-    if (rawMarkdown) return rawMarkdown;
-    if (fetchedMarkdownRef.current) return fetchedMarkdownRef.current;
-    return "";
-  }, [rawMarkdown]);
-
-  const buildAIMarkdown = useCallback((): string => {
-    const originForCopy = baseUrl || buildSiteUrl;
-    const llmsUrl = `${originForCopy}/llms.txt`;
-
-    if (agentBodyAfterAbout !== undefined) {
-      return buildMarkdownWithAboutDevhubLeadIn(
-        aboutDevhubBody,
-        llmsUrl,
-        agentBodyAfterAbout,
-      );
-    }
-
-    const rawContent = resolveContent();
-    const escapedTitle = title.replace(/"/g, '\\"');
-    const escapedDescription = description.replace(/"/g, '\\"');
-
-    const about = buildAboutDevhubForBrowserCopy(aboutDevhubBody, llmsUrl);
-    let md = `${about}\n\n`;
-    md += `---\ntitle: "${escapedTitle}"\nurl: ${fullUrl}\nsummary: "${escapedDescription}"\n---\n\n`;
-    if (rawContent) md += `${rawContent}\n\n`;
-    if (additionalMarkdown) md += `${additionalMarkdown}\n\n`;
-    return md;
-  }, [
-    agentBodyAfterAbout,
-    aboutDevhubBody,
-    resolveContent,
-    additionalMarkdown,
-    title,
-    description,
-    fullUrl,
-    baseUrl,
-    buildSiteUrl,
-  ]);
+  useEffect(
+    () => () => {
+      clearTimeout(resetTimerRef.current);
+    },
+    [],
+  );
 
   const handleCopy = useCallback(async () => {
     setCopyState("copying");
     try {
-      if (rawMarkdownUrl && !rawMarkdown && !fetchedMarkdownRef.current) {
-        const res = await fetch(rawMarkdownUrl);
-        fetchedMarkdownRef.current = res.ok ? await res.text() : "";
-      }
+      await ensureFetched();
       const md = buildAIMarkdown();
       await navigator.clipboard.writeText(md);
       setCopyState("copied");
-      track("copy_prompt", { title, permalink });
+      track("copy_prompt", { title: input.title, permalink: input.permalink });
       toast.success("Prompt copied");
     } catch {
       setCopyState("error");
@@ -120,7 +53,7 @@ export function CopyPromptButton({
       clearTimeout(resetTimerRef.current);
       resetTimerRef.current = setTimeout(() => setCopyState("idle"), 2500);
     }
-  }, [rawMarkdown, rawMarkdownUrl, buildAIMarkdown]);
+  }, [ensureFetched, buildAIMarkdown, input.title, input.permalink]);
 
   if (disabled) {
     return (

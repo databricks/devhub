@@ -24,88 +24,85 @@ const COOKBOOK_ALLOWED_FILES = new Set(["intro.md"]);
 /** @type {string[]} */
 const errors = [];
 
-for (const section of RESOURCE_SECTIONS) {
-  const sectionDir = resolve(ROOT, "content", section);
-  const entries = readdirSync(sectionDir);
-
-  for (const entry of entries) {
+/**
+ * Validate every entry in a content section folder. Each entry must be a
+ * directory whose direct children are markdown files from `allowedFiles`,
+ * with `requiredFile` present when set.
+ *
+ * @param {object} opts
+ * @param {string} opts.sectionPath  e.g. "content/recipes" — used in error messages
+ * @param {string} opts.sectionDir   absolute filesystem path to the section
+ * @param {Set<string>} opts.allowedFiles  whitelist of allowed direct-child filenames
+ * @param {string=} opts.requiredFile  filename that must be present (omit for none)
+ * @param {string} opts.emptyHint  trailing instruction appended to the "is empty" error
+ * @param {string} opts.flatHint   trailing instruction appended to the "is not a directory" error
+ */
+function validateContentFolder({
+  sectionPath,
+  sectionDir,
+  allowedFiles,
+  requiredFile,
+  emptyHint,
+  flatHint,
+}) {
+  for (const entry of readdirSync(sectionDir)) {
     const entryPath = resolve(sectionDir, entry);
     const stats = statSync(entryPath);
 
     if (!stats.isDirectory()) {
-      errors.push(
-        `content/${section}/${entry} is not a directory. Flat files are not allowed. Move to content/${section}/${entry.replace(/\.md$/, "")}/content.md.`,
-      );
+      errors.push(`${sectionPath}/${entry} is not a directory. ${flatHint}`);
       continue;
     }
 
     const files = readdirSync(entryPath);
     if (files.length === 0) {
-      errors.push(`content/${section}/${entry}/ is empty. Add content.md.`);
+      errors.push(`${sectionPath}/${entry}/ is empty. ${emptyHint}`);
       continue;
     }
 
     for (const file of files) {
       const childPath = resolve(entryPath, file);
-      const childStats = statSync(childPath);
-      if (!childStats.isFile()) {
+      if (!statSync(childPath).isFile()) {
         errors.push(
-          `content/${section}/${entry}/${file} is a directory. Only markdown files are allowed.`,
+          `${sectionPath}/${entry}/${file} is a directory. Only markdown files are allowed.`,
         );
         continue;
       }
-      if (!RESOURCE_ALLOWED_FILES.has(file)) {
+      if (!allowedFiles.has(file)) {
         errors.push(
-          `content/${section}/${entry}/${file} is not an allowed filename. Allowed: ${[...RESOURCE_ALLOWED_FILES].sort().join(", ")}.`,
+          `${sectionPath}/${entry}/${file} is not an allowed filename. Allowed: ${[...allowedFiles].sort().join(", ")}.`,
         );
       }
     }
 
-    if (!files.includes(RESOURCE_REQUIRED_FILE)) {
+    if (requiredFile && !files.includes(requiredFile)) {
       errors.push(
-        `content/${section}/${entry}/ is missing the required ${RESOURCE_REQUIRED_FILE}.`,
+        `${sectionPath}/${entry}/ is missing the required ${requiredFile}.`,
       );
     }
   }
 }
 
+for (const section of RESOURCE_SECTIONS) {
+  validateContentFolder({
+    sectionPath: `content/${section}`,
+    sectionDir: resolve(ROOT, "content", section),
+    allowedFiles: RESOURCE_ALLOWED_FILES,
+    requiredFile: RESOURCE_REQUIRED_FILE,
+    emptyHint: "Add content.md.",
+    flatHint: `Flat files are not allowed. Move to content/${section}/<slug>/content.md.`,
+  });
+}
+
 const cookbooksDir = resolve(ROOT, "content", "cookbooks");
 if (existsSync(cookbooksDir)) {
-  for (const entry of readdirSync(cookbooksDir)) {
-    const entryPath = resolve(cookbooksDir, entry);
-    const stats = statSync(entryPath);
-
-    if (!stats.isDirectory()) {
-      errors.push(
-        `content/cookbooks/${entry} is not a directory. Cookbook content lives under content/cookbooks/<template-id>/.`,
-      );
-      continue;
-    }
-
-    const files = readdirSync(entryPath);
-    if (files.length === 0) {
-      errors.push(
-        `content/cookbooks/${entry}/ is empty. Add at least intro.md or remove the folder.`,
-      );
-      continue;
-    }
-
-    for (const file of files) {
-      const childPath = resolve(entryPath, file);
-      const childStats = statSync(childPath);
-      if (!childStats.isFile()) {
-        errors.push(
-          `content/cookbooks/${entry}/${file} is a directory. Only markdown files are allowed.`,
-        );
-        continue;
-      }
-      if (!COOKBOOK_ALLOWED_FILES.has(file)) {
-        errors.push(
-          `content/cookbooks/${entry}/${file} is not an allowed filename. Allowed: ${[...COOKBOOK_ALLOWED_FILES].sort().join(", ")}.`,
-        );
-      }
-    }
-  }
+  validateContentFolder({
+    sectionPath: "content/cookbooks",
+    sectionDir: cookbooksDir,
+    allowedFiles: COOKBOOK_ALLOWED_FILES,
+    emptyHint: "Add at least intro.md or remove the folder.",
+    flatHint: "Cookbook content lives under content/cookbooks/<template-id>/.",
+  });
 }
 
 if (errors.length > 0) {

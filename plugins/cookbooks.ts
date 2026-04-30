@@ -5,7 +5,7 @@ import {
 } from "../src/lib/content-markdown";
 import { cookbooks } from "../src/lib/recipes/recipes";
 
-export type CookbooksGlobalData = {
+type CookbooksGlobalData = {
   /** Raw `content/cookbooks/<slug>/intro.md` bodies keyed by cookbook id. */
   introsBySlug: Record<string, string>;
 };

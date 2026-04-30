@@ -23,7 +23,7 @@ export type Service = (typeof SERVICES)[number];
  *   - PNG / JPG / WEBP (rasters). SVGs are not valid preview images.
  *   - Provide both light and dark variants (or neither, to fall back).
  */
-export type PreviewImages = {
+type PreviewImages = {
   previewImageLightUrl?: string;
   previewImageDarkUrl?: string;
 };

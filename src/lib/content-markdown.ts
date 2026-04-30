@@ -6,15 +6,8 @@ import {
   type ContentSections,
 } from "./content-sections";
 
-export {
-  CONTENT_SECTION_FILES,
-  REQUIRED_CONTENT_SECTION_FILE,
-  joinContentSections,
-} from "./content-sections";
-export type { ContentSectionFile, ContentSections } from "./content-sections";
-
-export type ContentMarkdownSection = "recipes" | "solutions" | "examples";
-export type FolderContentSection = "recipes" | "examples";
+type ContentMarkdownSection = "recipes" | "solutions" | "examples";
+type FolderContentSection = "recipes" | "examples";
 
 function markdownDirectory(
   rootDir: string,
@@ -62,7 +55,7 @@ export function hasContentSlug(
 }
 
 /** Read a single section file for a slug; returns undefined when an optional file is absent. */
-export function readContentSection(
+function readContentSection(
   rootDir: string,
   section: FolderContentSection,
   slug: string,
@@ -76,10 +69,6 @@ export function readContentSection(
   if (!existsSync(filePath)) return undefined;
   return readFileSync(filePath, "utf-8");
 }
-
-/** Cookbooks only accept an optional intro.md today; folders with other files are rejected by the validator. */
-export const COOKBOOK_FILES = ["intro"] as const;
-export type CookbookFile = (typeof COOKBOOK_FILES)[number];
 
 function cookbookDirectory(rootDir: string): string {
   return resolve(rootDir, "content", "cookbooks");

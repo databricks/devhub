@@ -17,22 +17,6 @@ export function useRawRecipeMarkdown(slug: string): string | undefined {
   return data.rawMarkdownBySlug[slug];
 }
 
-export function useAllRawRecipeMarkdown(): Record<string, string> {
-  const data = usePluginData(
-    "docusaurus-plugin-content-entries",
-    "recipes",
-  ) as ContentEntriesGlobalData;
-  return data.rawMarkdownBySlug;
-}
-
-export function useRecipeSections(slug: string): ContentSections | undefined {
-  const data = usePluginData(
-    "docusaurus-plugin-content-entries",
-    "recipes",
-  ) as ContentEntriesGlobalData;
-  return data.sectionsBySlug[slug];
-}
-
 export function useAllRecipeSections(): Record<string, ContentSections> {
   const data = usePluginData(
     "docusaurus-plugin-content-entries",
@@ -58,14 +42,6 @@ export function useCookbookIntro(slug: string): string | undefined {
     "docusaurus-plugin-cookbooks",
   ) as CookbooksGlobalData;
   return data.introsBySlug[slug];
-}
-
-export function useRawExampleMarkdown(slug: string): string {
-  const data = usePluginData(
-    "docusaurus-plugin-content-entries",
-    "examples",
-  ) as ContentEntriesGlobalData;
-  return data.rawMarkdownBySlug[slug] ?? "";
 }
 
 export function useExampleSections(slug: string): ContentSections | undefined {

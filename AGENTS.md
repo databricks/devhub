@@ -16,6 +16,7 @@ For every change to DevHub, do the following:
 - run `npm run fmt` to format the code
 - run `npm run typecheck` to verify types are correct
 - run `npm run verify:images` to verify example/resource images (16:9, ≥1600x900) when you've added or changed anything under `static/img/examples/`
+- run `npx fallow dead-code` and `npx fallow dupes` to check for dead code and duplication after your changes (see "Dead Code & Duplication" below)
 - use agent-browser to verify the changes
 - use the `seo-audit` skill to verify all changes are SEO-friendly
 - use the `frontend-design` skill to verify all changes adhere to the design principles
@@ -58,6 +59,35 @@ This repository uses **npm** exclusively. Do not use bun, yarn, or pnpm. All scr
 - Avoid `@apply` in favor of inline Tailwind classes
 - Use brand colors and avoid raw color values
 - Always use shadcn/ui components as the foundation for all UI
+
+## Dead Code & Duplication
+
+After making changes, always run [fallow](https://github.com/fallow-rs/fallow) to keep the codebase clean:
+
+```bash
+npx fallow dead-code
+npx fallow dupes
+```
+
+Then reason from first principles before acting on the report — do not blindly delete or merge:
+
+### Dead code (`fallow dead-code`)
+
+For every flagged item, decide between two options:
+
+- **Remove it** if the code is genuinely unreachable, no longer referenced, or was scaffolding that never got wired up.
+- **Wire it up** if the code is something the change you just made should actually be using (e.g. you wrote a parallel implementation and forgot the existing helper). In that case, leverage the existing code instead of duplicating it.
+
+Always prefer the simpler outcome: a smaller codebase with no orphaned exports.
+
+### Duplication (`fallow dupes`)
+
+Duplication reports are a hint, not a verdict. For each cluster:
+
+- **Ignore it** when the matches are not _real_ duplicates — e.g. similar shapes that happen to look alike, generated code, fixtures, or two functions that share a structure but model genuinely different concepts. Some repetition is good; premature abstraction is worse than a little copy-paste.
+- **Unify it** only when the matches are clearly the same type, the same function, or the same logic expressed twice. In that case, extract a shared helper / type / component and replace the call sites.
+
+When in doubt, leave it alone and write a short note in the PR explaining why the duplication is intentional.
 
 ## Browser Automation
 

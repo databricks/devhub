@@ -4,10 +4,12 @@ import type { LoadContext, Plugin } from "@docusaurus/types";
 import {
   getContentSlugs,
   getSolutionSlugs,
-  joinContentSections,
   readContentSections,
-  type ContentSections,
 } from "../src/lib/content-markdown";
+import {
+  joinContentSections,
+  type ContentSections,
+} from "../src/lib/content-sections";
 import {
   recipes,
   examples,

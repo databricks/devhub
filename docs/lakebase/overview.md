@@ -42,7 +42,7 @@ The plugin handles OAuth token refresh and connection pooling automatically. Whe
 - Your app needs low-latency reads and writes: user state, sessions, conversation history, or transactional records.
 - You're building AI agents that need persistent memory: conversation history, workflow state, or tool results across requests.
 - You want isolated database branches for feature development or CI testing.
-- You're syncing data between your OLTP workload and the Lakehouse via change data capture.
+- You're syncing data between your OLTP workload and the [Data Lakehouse](/docs/lakehouse/overview) via change data capture.
 
 ## When not to use it
 

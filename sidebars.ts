@@ -204,6 +204,16 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: "category",
+      label: "Data Lakehouse",
+      items: [
+        "lakehouse/overview",
+        "lakehouse/analytical-reads",
+        "lakehouse/jobs",
+        "lakehouse/pipelines",
+      ],
+    },
+    {
+      type: "category",
       label: "Agent Bricks",
       items: [
         "agents/overview",

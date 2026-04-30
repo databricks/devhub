@@ -15,6 +15,7 @@ Your company already has a **Databricks workspace**: a URL like `https://<your-o
 
 - **[Databricks Apps](/docs/apps/overview)**: where your internal app runs. Built for interactive internal tools, not static dashboards. Managed hosting and workspace SSO. Build it with [AppKit](/docs/appkit/v0), the open-source TypeScript SDK that wires up auth, plugins, and pre-built React components.
 - **[Lakebase Postgres](/docs/lakebase/overview)**: managed Postgres for OLTP storage co-located with your workspace data. Use it for sessions, app state, conversation history, or any data your app reads and writes at low latency.
+- **[Data Lakehouse](/docs/lakehouse/overview)**: governed analytical data in Unity Catalog. Use it to read company data, trigger Lakeflow Jobs from a handler, and surface freshness in your UI.
 - **[Agent Bricks](/docs/agents/overview)**: Databricks' enterprise agent platform, unifying model access, execution, governance, and context. Use it for AI features in your app: chat with internal docs (Knowledge Assistants), ask-your-data in plain English (Genie), foundation-model calls, or custom Python agents.
 
 See [Platform overview](/docs/platform-overview) for how these layers fit together.

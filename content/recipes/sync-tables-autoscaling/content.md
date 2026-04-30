@@ -147,3 +147,4 @@ Example costs (181M rows, 1 CU, $2.80/hr DLT rate):
 - [Synced tables (Autoscaling)](https://docs.databricks.com/aws/en/oltp/projects/sync-tables)
 - [Change Data Feed](https://docs.databricks.com/aws/en/delta/delta-change-data-feed)
 - [Lakebase Autoscaling](https://docs.databricks.com/aws/en/oltp/projects/)
+- [DevHub: Data Lakehouse overview](/docs/lakehouse/overview)

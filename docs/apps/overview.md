@@ -18,14 +18,14 @@ AppKit uses a three-layer architecture with plugins that register capabilities a
 - **Server**: Express HTTP server with Databricks OAuth built in. Plugins attach routes and middleware at this layer.
 - **Data**: Plugin-based access to Databricks resources. Each plugin wraps a resource type and exposes a typed API on the `AppKit` object.
 
-| Plugin                                             | What it adds                                                                                                                 |
-| -------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| [**server**](/docs/appkit/v0/plugins/server)       | Express HTTP server, static file serving, Vite dev mode (always included)                                                    |
-| [**lakebase**](/docs/appkit/v0/plugins/lakebase)   | Postgres connection pool for [Lakebase Postgres](/docs/lakebase/quickstart) with automatic OAuth token refresh               |
-| [**analytics**](/docs/appkit/v0/plugins/analytics) | SQL query execution against [Databricks SQL Warehouses](https://docs.databricks.com/aws/en/compute/sql-warehouse/index.html) |
-| [**genie**](/docs/appkit/v0/plugins/genie)         | [Genie space](/docs/agents/genie) integration for natural-language data queries                                              |
-| [**serving**](/docs/appkit/v0/plugins/serving)     | Authenticated proxy to [Model Serving](/docs/agents/ai-gateway) endpoints with streaming support                             |
-| [**files**](/docs/appkit/v0/plugins/files)         | File operations against [Unity Catalog Volumes](https://docs.databricks.com/aws/en/files/index.html)                         |
+| Plugin                                             | What it adds                                                                                                                                                                            |
+| -------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [**server**](/docs/appkit/v0/plugins/server)       | Express HTTP server, static file serving, Vite dev mode (always included)                                                                                                               |
+| [**lakebase**](/docs/appkit/v0/plugins/lakebase)   | Postgres connection pool for [Lakebase Postgres](/docs/lakebase/quickstart) with automatic OAuth token refresh                                                                          |
+| [**analytics**](/docs/appkit/v0/plugins/analytics) | SQL query execution against [Databricks SQL Warehouses](https://docs.databricks.com/aws/en/compute/sql-warehouse/index.html). See [Analytical reads](/docs/lakehouse/analytical-reads). |
+| [**genie**](/docs/appkit/v0/plugins/genie)         | [Genie space](/docs/agents/genie) integration for natural-language data queries                                                                                                         |
+| [**serving**](/docs/appkit/v0/plugins/serving)     | Authenticated proxy to [Model Serving](/docs/agents/ai-gateway) endpoints with streaming support                                                                                        |
+| [**files**](/docs/appkit/v0/plugins/files)         | File operations against [Unity Catalog Volumes](https://docs.databricks.com/aws/en/files/index.html)                                                                                    |
 
 ## How auth works
 

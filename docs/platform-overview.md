@@ -14,6 +14,7 @@ Apps, AppKit, Lakebase Postgres, and Agent Bricks are layers of a full-stack Dat
 | **Apps**              | The hosting layer. Your app runs as a managed workspace resource with a fixed URL, built-in auth, and managed compute. Deploy with `databricks apps deploy`.                                                         |
 | **AppKit**            | The TypeScript SDK for building apps on Databricks Apps. Built-in Databricks OAuth handling, pre-built React UI components (data tables, charts, dialogs), and a plugin system for connecting to workspace services. |
 | **Lakebase Postgres** | The database layer. Managed Postgres for OLTP, co-located with your Lakehouse. Autoscales on demand, scales to zero when idle, and supports branching for development environments.                                  |
+| **Data Lakehouse**    | The analytical data tier. Unity Catalog tables, materialized views, and streaming tables populated by Lakeflow. Read with the Analytics plugin. Trigger Lakeflow Jobs from your app.                                 |
 | **Agent Bricks**      | The AI layer. Call Knowledge Assistants, Supervisor Agents, and governed LLM endpoints via the Model Serving plugin. Query Unity Catalog tables in natural language via the Genie plugin.                            |
 
 **[Unity Catalog](https://docs.databricks.com/aws/en/data-governance/)** and **[AI Gateway](/docs/agents/ai-gateway)** are workspace-level services your app connects to for data governance and model serving.
@@ -28,6 +29,7 @@ These docs go deeper on each platform layer:
 
 - **[Web apps (Databricks Apps)](/docs/apps/quickstart)**: Scaffold and deploy an AppKit app (TypeScript) or a Python app on Databricks Apps.
 - **[Lakebase Postgres](/docs/lakebase/quickstart)**: Provision a Lakebase Postgres project and connect it to an app.
+- **[Data Lakehouse](/docs/lakehouse/overview)**: Read Unity Catalog tables with the Analytics plugin, trigger Lakeflow Jobs, and surface data freshness.
 - **[Agent Bricks](/docs/agents/overview)**: Governed model endpoints ([AI Gateway](/docs/agents/ai-gateway)), natural-language data queries ([Genie](/docs/agents/genie)), and custom agent endpoints ([Custom agents](/docs/agents/custom-agents)).
 - **[Set up your environment](/docs/tools/databricks-cli)**: Databricks CLI, agent skills, and MCP server.
 - **[AppKit Reference](/docs/appkit/v0)**: Component library, plugin API, and TypeScript SDK reference.

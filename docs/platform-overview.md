@@ -14,10 +14,8 @@ Apps, AppKit, Lakebase Postgres, and Agent Bricks are layers of a full-stack Dat
 | **Apps**              | The hosting layer. Your app runs as a managed workspace resource with a fixed URL, built-in auth, and managed compute. Deploy with `databricks apps deploy`.                                                         |
 | **AppKit**            | The TypeScript SDK for building apps on Databricks Apps. Built-in Databricks OAuth handling, pre-built React UI components (data tables, charts, dialogs), and a plugin system for connecting to workspace services. |
 | **Lakebase Postgres** | The database layer. Managed Postgres for OLTP, co-located with your Lakehouse. Autoscales on demand, scales to zero when idle, and supports branching for development environments.                                  |
-| **Data Lakehouse**    | The analytical data tier. Unity Catalog tables, materialized views, and streaming tables populated by Lakeflow. Read with the Analytics plugin. Trigger Lakeflow Jobs from your app.                                 |
 | **Agent Bricks**      | The AI layer. Call Knowledge Assistants, Supervisor Agents, and governed LLM endpoints via the Model Serving plugin. Query Unity Catalog tables in natural language via the Genie plugin.                            |
-
-**[Unity Catalog](https://docs.databricks.com/aws/en/data-governance/)** and **[AI Gateway](/docs/agents/ai-gateway)** are workspace-level services your app connects to for data governance and model serving.
+| **Data Lakehouse**    | The analytical data tier. Unity Catalog tables, materialized views, and streaming tables populated by Lakeflow. Read with the Analytics plugin. Trigger Lakeflow Jobs from your app.                                 |
 
 ## How a request flows
 

@@ -39,9 +39,7 @@ The scaffolded Lakebase sample uses `lakebase` in route names and file paths to 
 
 The following changes match what `apps init --features=lakebase` generates. Apply them to an existing scaffolded AppKit app.
 
-:::tip[Get the latest template code]
-The code below may be outdated. To get the latest, clone `https://github.com/databricks/appkit` and look in the `template/` directory. Search for `{{if .plugins.lakebase}}` to find all lakebase-conditional files and blocks. Files entirely wrapped in that conditional are lakebase-only; shared files like `App.tsx` and `server.ts` contain conditional blocks you can extract.
-:::
+> **Tip:** The code below may be outdated. To get the latest, clone `https://github.com/databricks/appkit` and look in the `template/` directory. Search for `{{if .plugins.lakebase}}` to find all lakebase-conditional files and blocks. Files entirely wrapped in that conditional are lakebase-only; shared files like `App.tsx` and `server.ts` contain conditional blocks you can extract.
 
 #### Update `server/server.ts`
 
@@ -195,25 +193,11 @@ export async function setupRoutes(appkit: AppKitWithLakebase) {
 }
 ```
 
-:::warning[Deploy first to avoid schema ownership errors]
-Lakebase tables are owned by the identity that creates them. If you create the `app` schema locally, your user owns it and the deployed service principal gets `permission denied for schema app`.
+**Important: Deploy first to avoid schema ownership errors**
 
-**Recommended workflow:** Deploy the app first so the service principal creates and owns the schema. Then grant yourself access for local development:
+Run `databricks apps deploy` at least once before `npm run dev`. The deployed service principal must create and own the `app` schema — if `npm run dev` runs first, the deployed app hits `permission denied for schema app`. See [Lakebase local setup](/docs/lakebase/development#local-setup) for access setup and recovery steps.
 
-```bash
-databricks psql --project <project-name> --branch production --endpoint primary --profile <PROFILE> -- -c "
-  CREATE EXTENSION IF NOT EXISTS databricks_auth;
-  SELECT databricks_create_role('<your-email>', 'USER');
-  GRANT databricks_superuser TO \"<your-email>\";
-"
-```
-
-If you are the Lakebase project owner, `databricks_create_role` may fail with `role already exists` and `GRANT databricks_superuser` may fail with `permission denied to grant role`. Both errors are safe to ignore; the project owner already has the necessary access.
-
-This gives you DML access (read/write) but not DDL (create/alter). The service principal remains the schema owner.
-
-If you already created tables locally, drop and recreate the schema so the service principal owns it, or add tables in a separate schema (the [Chat Persistence template](/templates/ai-chat-app#lakebase-chat-persistence) uses a `chat` schema for this reason).
-:::
+If you already created tables locally in a different schema, use a separate schema instead (the [Chat Persistence template](/templates/ai-chat-app#lakebase-chat-persistence) uses a `chat` schema for this reason).
 
 #### Create `client/src/pages/ItemsPage.tsx`
 
@@ -462,4 +446,4 @@ databricks apps logs <app-name> --profile <PROFILE>
 
 - [Lakebase plugin docs](/docs/appkit/v0/plugins/lakebase)
 - [Lakebase database permissions](/docs/appkit/v0/plugins/lakebase#database-permissions)
-- [What is a Lakebase?](/solutions/what-is-a-lakebase)
+- [What is Lakebase?](/docs/lakebase/overview)

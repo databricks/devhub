@@ -1,4 +1,4 @@
-## Create a Databricks Model Serving endpoint
+## Create a Databricks Model Serving Endpoint
 
 Create and validate a Databricks Model Serving endpoint for AI chat inference.
 

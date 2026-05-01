@@ -41,5 +41,5 @@ Record these values from the command output above. They are required by the Lake
 
 #### References
 
-- [What is a Lakebase?](/solutions/what-is-a-lakebase)
+- [What is Lakebase?](/docs/lakebase/overview)
 - [CLI reference for Lakebase](https://docs.databricks.com/aws/en/oltp/projects/cli)

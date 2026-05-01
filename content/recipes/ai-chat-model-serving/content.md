@@ -9,22 +9,6 @@ Complete these templates before adding chat:
 - [`Set Up Your Local Dev Environment`](/templates/set-up-your-local-dev-environment)
 - [`Query AI Gateway Endpoints`](/templates/ai-chat-app#query-ai-gateway-endpoints)
 
-:::tip[Deploy before local development]
-Lakebase tables are owned by the identity that creates them. Deploy the app first so the service principal creates and owns the schemas. Then grant yourself local dev access:
-
-```bash
-databricks psql --project <project-name> --branch production --endpoint primary --profile <PROFILE> -- -c "
-  CREATE EXTENSION IF NOT EXISTS databricks_auth;
-  SELECT databricks_create_role('<your-email>', 'USER');
-  GRANT databricks_superuser TO \"<your-email>\";
-"
-```
-
-> **Note**: If you are the Lakebase project owner, `databricks_create_role` may fail with `role already exists` and `GRANT databricks_superuser` may fail with `permission denied to grant role`. Both errors are safe to ignore; the project owner already has the necessary access.
-
-If you run `npm run dev` before deploying, your user creates schemas that the deployed service principal cannot access. `CREATE SCHEMA IF NOT EXISTS` appears to succeed even on schemas you don't own, but subsequent `CREATE TABLE` fails with `permission denied`.
-:::
-
 ### 2. Install AI SDK packages
 
 ```bash

@@ -1,4 +1,4 @@
-## Lakebase Env Management for Off-Platform Apps
+## Lakebase Environment Management for Off-Platform Apps
 
 Define and validate the environment variables needed to connect to Lakebase from apps deployed outside Databricks App Platform (for example on AWS, Vercel, or Netlify).
 

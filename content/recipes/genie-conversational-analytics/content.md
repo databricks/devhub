@@ -2,11 +2,10 @@
 
 Embed a Databricks AI/BI Genie chat interface so users can explore data through natural language. Configure a Genie space, wire up the server and client plugins, declare app resources, and deploy.
 
-:::info[Choose your path]
-
-- **New app** — follow steps 1 → 2 → 8.
-- **Adding Genie to an existing AppKit app** — follow steps 1 → 3 → 4 → 5 → 6 → 7 → 8.
-  :::
+> **Choose your path:**
+>
+> - **New app** — follow steps 1 → 2 → 8.
+> - **Adding Genie to an existing AppKit app** — follow steps 1 → 3 → 4 → 5 → 6 → 7 → 8.
 
 ### 1. Create a Genie space and set your profile
 
@@ -20,7 +19,8 @@ databricks genie list-spaces -o json --profile <PROFILE>
 
 Use the `space_id` value wherever a space ID is required (scaffold `--set`, `.env`, and `databricks.yml`).
 
-:::tip[Avoid repeating `--profile` on every command]
+**Tip: Avoid repeating `--profile` on every command**
+
 Add your profile to the bundle's `databricks.yml` under the target — then `bundle deploy` and `apps` commands pick it up automatically:
 
 ```yaml
@@ -31,7 +31,6 @@ targets:
 ```
 
 This is more reliable than `export DATABRICKS_CONFIG_PROFILE` since it persists across shells and works for agents running commands in subshells.
-:::
 
 ### 2. New app: scaffold with the Genie feature
 
@@ -52,7 +51,8 @@ databricks apps init \
 
 **App name:** Use at most 26 characters, **lowercase letters, digits, and hyphens only** (no underscores). Example: `my-genie-app`, not `my_genie_app`.
 
-:::warning[Fix generated `databricks.yml` before deploying]
+**Warning: Fix generated `databricks.yml` before deploying**
+
 The scaffold generates a `genie_space_name` variable and references it as `name: ${var.genie_space_name}`, but never assigns a value. `bundle deploy` will fail with _no value assigned to required variable genie_space_name_.
 
 Your `variables:` block should look like this after the fix — only `genie_space_id`, no `genie_space_name`:
@@ -73,7 +73,6 @@ genie_space:
 ```
 
 The `name: genie-space` is an internal label used by `app.yaml` (`valueFrom: genie-space`), not the Genie space display title.
-:::
 
 Skip to step 8 to deploy.
 
@@ -83,9 +82,7 @@ Skip to step 8 to deploy.
 
 The following steps match what `apps init --features=genie` generates. Apply them to an existing scaffolded AppKit app.
 
-:::tip[Get the latest template code]
-The code below may be outdated. To get the latest, clone `https://github.com/databricks/appkit` and look in the `template/` directory. Search for `{{if .plugins.genie}}` to find all genie-conditional files and blocks.
-:::
+> **Tip:** The code below may be outdated. To get the latest, clone `https://github.com/databricks/appkit` and look in the `template/` directory. Search for `{{if .plugins.genie}}` to find all genie-conditional files and blocks.
 
 In `server/server.ts`, add `genie` to the import and plugins array:
 

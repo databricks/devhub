@@ -1,4 +1,9 @@
-Verify these Databricks workspace features are enabled before starting. If any check fails, ask your workspace admin to enable the feature.
+Complete these prerequisite templates first:
+
+- [Set Up Your Local Dev Environment](/templates/set-up-your-local-dev-environment) — install the Databricks CLI and authenticate a profile.
+- [Query AI Gateway Endpoints](/templates/ai-chat-app#query-ai-gateway-endpoints) — confirm your workspace exposes a chat endpoint via the AI Gateway.
+
+Then verify these Databricks workspace features are enabled. If any check fails, ask your workspace admin to enable the feature.
 
 - **Databricks CLI authenticated.** Run `databricks auth profiles` and confirm at least one profile shows `Valid: YES`. If none do, authenticate with `databricks auth login --host <workspace-url> --profile <PROFILE>`.
 - **An OpenAI-compatible chat endpoint in Model Serving.** Run `databricks serving-endpoints list --profile <PROFILE>` and confirm at least one OpenAI-compatible chat endpoint is listed (e.g. `databricks-gpt-5-4-mini`, `databricks-meta-llama-3-3-70b-instruct`, or `databricks-claude-sonnet-4`). Endpoint availability varies by workspace and region; note the one you plan to set as `DATABRICKS_ENDPOINT`.

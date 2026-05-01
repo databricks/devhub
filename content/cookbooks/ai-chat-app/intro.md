@@ -11,7 +11,7 @@ Work through the steps in the order below. Each one adds one concrete piece; by 
 3. **Streaming AI Chat with Model Serving** — add the `/api/chat` route with `streamText()` and a `useChat` UI backed by `TextStreamChatTransport`.
 4. **Create a Lakebase Instance** — provision a managed Postgres project, branch, and endpoint; capture the connection values.
 5. **Lakebase Data Persistence** — add the `lakebase()` plugin, schema setup, and CRUD plumbing against your new project.
-6. **Lakebase Chat Persistence** — create the `chat.chats` and `chat.messages` tables and persist each turn of every conversation.
+6. **Lakebase Agent Memory** — create the `chat.chats` and `chat.messages` tables and persist each turn of every conversation.
 
 ### Before you start
 

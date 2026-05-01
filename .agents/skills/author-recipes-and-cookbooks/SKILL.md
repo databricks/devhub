@@ -61,6 +61,17 @@ All three are registered in `src/lib/recipes/recipes.ts`, share a flat `/templat
    - place it in `recipesInOrder`
 8. Keep registry metadata aligned with the markdown (name, scope, intent must match).
 
+### Prerequisites Belong In `prerequisites.md` — Never In `content.md`
+
+Prerequisites have a single home: `content/<recipes|examples>/<slug>/prerequisites.md`. The route plugin renders that file under a `## Prerequisites` H2 above the content body and the agent-prompt composer attaches it ahead of the steps. Putting prerequisite text inside `content.md` duplicates the section, breaks step numbering when the duplicate is removed later, and produces noisy "Copy as Markdown" payloads.
+
+Rules:
+
+- **Do not** add `### Prerequisites`, `:::info[Prerequisites]`, `### N. Follow the prerequisite templates first`, or any equivalent block to `content.md`. Move that content into `prerequisites.md` instead.
+- `content.md` step numbering starts at `### 1.` with the first real action — never with a "do these other templates first" preamble.
+- When a recipe depends on completing another template first, list it as a bullet inside `prerequisites.md` with a link to `/templates/<slug>` (relative — see [Link Style](#link-style-use-relative-urls-for-devhub-pages)).
+- Workspace-feature checks (CLI auth, Lakebase enabled, Apps enabled, Genie enabled, etc.) belong in `prerequisites.md` as `databricks` CLI commands the user can run to verify each capability — not as prose in `content.md`.
+
 ## Author A `cookbook`
 
 1. Confirm the cookbook covers a full end-to-end use case.
@@ -255,6 +266,33 @@ databricks apps get <app-name> --profile <PROFILE>
 
 After verifying the deployed app works, delete `../../demos/<slug>/`. Optionally tear down test resources if they were created just for testing.
 
+## Author A `solution`
+
+Solutions live at `dev.databricks.com/solutions/<slug>` and are launch posts, deep-dive write-ups, or curated perspectives on the Databricks developer stack. They sit alongside the linked Databricks Blog posts that the registry hand-picks.
+
+A native (DevHub-authored) solution has two pieces:
+
+- **A registry entry in `src/lib/solutions/solutions.ts`** with `id`, `title`, `description`, `tags`, `authors`, and `publishedAt`. This is the **single source of truth** for the page title, summary, byline, and date — every render path (detail page, served `.md`, frontmatter for MCP consumers) reads from here.
+- **A flat markdown file at `content/solutions/<slug>.md`** that contains only the article body.
+
+### Solution Markdown Body Rules
+
+The detail page (`src/components/solutions/solution-detail.tsx`) renders `solution.title` as the page H1 and the description below it from the registry, then renders the markdown body underneath. To keep the rendered page from showing two stacked titles and to keep the registry as the single source of truth:
+
+- **Do not start `content/solutions/<slug>.md` with a `# ` H1 heading.** The first line of the file must be the opening paragraph (lede).
+- **Do not use a setext H1 (`===` underline).** Same reason.
+- **Section headings start at `## `** and may go deeper (`###`, `####`).
+- **Do not include frontmatter.** `prependSolutionFrontmatter` (in `api/content-markdown.ts`) builds the served frontmatter entirely from the registry whenever the markdown is fetched as `.md` or via the docs MCP server. Any frontmatter in the source file is stripped before serving, so embedding it just creates drift.
+
+These rules are enforced mechanically by `scripts/validate-content.mjs`, which fails the pre-commit hook if any solution markdown contains a `# ` ATX heading or a setext H1 underline.
+
+### Authoring Steps
+
+1. Add the registry entry in `src/lib/solutions/solutions.ts` with `type: "native"`, the canonical `title` / `description`, `tags`, `authors` (IDs from `src/lib/solutions/authors.ts`), and an ISO `publishedAt` (`YYYY-MM-DD`).
+2. Author `content/solutions/<slug>.md`. Open with the lede paragraph (no heading), then organize the rest with `## ` and deeper headings.
+3. Use root-relative DevHub links (see [Link Style](#link-style-use-relative-urls-for-devhub-pages)) — the same rule that applies to recipes and docs.
+4. Run `npm run validate:content && npm run typecheck && npm run build` to confirm the registry, slug, and H1 rule all pass before committing.
+
 ## URL Structure
 
 All templates share a flat URL hierarchy:
@@ -278,22 +316,42 @@ Slugs must be globally unique. The plugin throws at build time if any collision 
 - Keep cookbook narrative coherent from setup through final verification.
 - Keep example markdown focused on what makes the example unique (data flow, architecture, adaptation points) — the included templates cover the how-to details.
 
+### Link Style: Use Relative URLs For DevHub Pages
+
+When linking to another DevHub page (`/templates/...`, `/docs/...`, `/solutions/...`) from any markdown content (`content/**/*.md`, `docs/**/*.md`, intent files, dev-guidelines, about), use a **root-relative** path. Never hardcode `https://dev.databricks.com/<path>` inside markdown link or autolink syntax.
+
+- Good: `[Spin Up a Databricks App](/templates/spin-up-databricks-app)`
+- Bad: `[Spin Up a Databricks App](https://dev.databricks.com/templates/spin-up-databricks-app)`
+- Good: `</llms.txt>` and `[ref]: /docs/start-here`
+- Bad: `<https://dev.databricks.com/llms.txt>` and `[ref]: https://dev.databricks.com/docs/start-here`
+
+`absolutizeMarkdown` in `src/lib/copy-preamble.ts` rewrites every root-relative link to the caller's origin when a page or markdown payload is served (Vercel functions, MCP server, in-browser "Copy as Markdown"), so relative links work transparently in `localhost:3001`, preview deployments, and production. Hardcoding the canonical origin makes in-site navigation a full reload and sends local-dev visitors to prod.
+
+`scripts/validate-content.mjs` enforces this rule and fails the build on `https://dev.databricks.com/(templates|docs|solutions)/...` references inside markdown link, autolink, or reference-definition syntax.
+
+Allowed exceptions (the validator skips these):
+
+- Bare textual URLs in prose that identify the site or are agent fetch directives (e.g. `Website: https://dev.databricks.com`, "fetch the index from `https://dev.databricks.com/llms.txt`"). `rewriteOrigin` substitutes the canonical origin at copy time, so these still resolve correctly.
+- URLs inside fenced code blocks (e.g. `npx add-mcp https://dev.databricks.com/api/mcp` — the install command must be canonical).
+- External links (`github.com/...`, `docs.databricks.com/...`, etc.) — always absolute.
+
 ## Validate Before Finishing
 
 1. Verify every referenced template id exists in the registry.
 2. Verify every markdown import path resolves.
 3. For cookbooks: verify `recipeIds` order matches the rendered JSX order.
 4. Verify prerequisites are only used on recipes.
-5. Verify title, description, and tags are specific (not generic) and do **not** contain the words "recipe", "cookbook", or "guide".
-6. Verify commands are runnable and do not skip required auth/profile context.
-7. Verify no slug collisions across recipes, cookbooks, and examples.
-8. Verify the output reads cleanly as both:
+5. Verify no `content.md` file contains a `Prerequisites` heading, admonition, or "follow these templates first" step — that content lives only in `prerequisites.md`.
+6. Verify title, description, and tags are specific (not generic) and do **not** contain the words "recipe", "cookbook", or "guide".
+7. Verify commands are runnable and do not skip required auth/profile context.
+8. Verify no slug collisions across recipes, cookbooks, and examples.
+9. Verify the output reads cleanly as both:
    - a prompt for an AI coding agent
    - a human step-by-step walkthrough
-9. Run `npm run fmt && npm run typecheck && npm run build && npm run test`.
-10. For examples: verify `examples/<slug>/` contains only `REPLACE_ME` placeholders — no real workspace hosts, warehouse IDs, Lakebase project names, or Genie space IDs.
-11. For examples: verify `examples/<slug>/template/README.md` covers provisioning (manual vs SQL), seeding, pipeline deploys, and app deploy end-to-end.
-12. For examples: verify the dry-run deploy succeeded and the app is functional before considering the example complete.
+10. Run `npm run validate:content && npm run fmt && npm run typecheck && npm run build && npm run test`.
+11. For examples: verify `examples/<slug>/` contains only `REPLACE_ME` placeholders — no real workspace hosts, warehouse IDs, Lakebase project names, or Genie space IDs.
+12. For examples: verify `examples/<slug>/template/README.md` covers provisioning (manual vs SQL), seeding, pipeline deploys, and app deploy end-to-end.
+13. For examples: verify the dry-run deploy succeeded and the app is functional before considering the example complete.
 
 ## References
 

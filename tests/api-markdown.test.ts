@@ -90,6 +90,33 @@ describe("/api/markdown about-devhub preamble policy", () => {
     expect(result.body).toContain("Introducing dev.databricks.com");
   });
 
+  test("solution frontmatter url is absolute and reflects the request host", () => {
+    const result = call({
+      section: "solutions",
+      slug: "devhub-launch",
+      host: "localhost:3001",
+    });
+    expect(result.statusCode).toBe(200);
+    expect(result.body).toMatch(
+      /^url:\s+http:\/\/localhost:3001\/solutions\/devhub-launch$/m,
+    );
+    expect(result.body).not.toMatch(/^url:\s+\/solutions\//m);
+  });
+
+  test("solution frontmatter is built from solutions.ts, not the .md file", () => {
+    const result = call({
+      section: "solutions",
+      slug: "devhub-launch",
+      host: "dev.databricks.com",
+    });
+    expect(result.body).toMatch(
+      /^title:\s+"Introducing dev\.databricks\.com"$/m,
+    );
+    expect(result.body).toMatch(/^summary:\s+".+"$/m);
+    expect(result.body).toMatch(/^publishedAt:\s*2026-05-04$/m);
+    expect(result.body).toMatch(/^authors:$/m);
+  });
+
   test("solutions index does NOT include the preamble", () => {
     const result = call({ section: "solutions", slug: "" });
     expect(result.statusCode).toBe(200);

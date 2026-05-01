@@ -1,11 +1,11 @@
 export const SERVICES = [
-  "Agent Bricks",
-  "AI Gateway",
   "Databricks Apps",
+  "Lakebase Postgres",
+  "Agent Bricks",
   "Genie",
-  "Lakebase",
+  "AI Gateway",
+  "Data Lakehouse",
   "Lakeflow Pipelines",
-  "Model Serving",
   "Unity Catalog",
 ] as const;
 
@@ -97,8 +97,8 @@ export const recipes: Recipe[] = [
     name: "Streaming AI Chat with Model Serving",
     description:
       "Build a streaming AI chat experience using AI SDK and Databricks Model Serving endpoints.",
-    tags: ["Agent Bricks", "AI", "Chat", "AI SDK", "Model Serving"],
-    services: ["Databricks Apps", "Model Serving"],
+    tags: ["Agent Bricks", "AI", "Chat", "AI SDK", "AI Gateway"],
+    services: ["Databricks Apps", "AI Gateway"],
     previewImageLightUrl: "/img/guides/ai-chat-model-serving-preview-light.png",
     previewImageDarkUrl: "/img/guides/ai-chat-model-serving-preview-dark.png",
     prerequisites: [
@@ -134,14 +134,8 @@ export const recipes: Recipe[] = [
     name: "Create a Databricks Model Serving endpoint",
     description:
       "Create and validate a Databricks Model Serving endpoint for AI chat inference in Databricks Apps.",
-    tags: [
-      "Agent Bricks",
-      "Model Serving",
-      "AI Gateway",
-      "Endpoints",
-      "Inference",
-    ],
-    services: ["Model Serving", "AI Gateway"],
+    tags: ["Agent Bricks", "AI Gateway", "Endpoints", "Inference"],
+    services: ["AI Gateway"],
     prerequisites: ["set-up-your-local-dev-environment"],
     previewImageLightUrl:
       "/img/guides/model-serving-endpoint-creation-preview-light.png",
@@ -149,17 +143,15 @@ export const recipes: Recipe[] = [
       "/img/guides/model-serving-endpoint-creation-preview-dark.png",
   },
   {
-    id: "lakebase-chat-persistence",
-    name: "Lakebase Chat Persistence",
+    id: "lakebase-agent-memory",
+    name: "Lakebase Agent Memory",
     description:
-      "Persist chat sessions and messages in Lakebase so users can resume chat history across requests and deployments.",
+      "Persist your AI agent's chat sessions and messages in Lakebase so users can resume conversations and your agent can reason over prior turns across deploys.",
     tags: ["Lakebase", "Postgres", "Chat", "Persistence"],
-    services: ["Lakebase", "Databricks Apps"],
+    services: ["Lakebase Postgres", "Databricks Apps"],
     prerequisites: ["lakebase-data-persistence", "ai-chat-model-serving"],
-    previewImageLightUrl:
-      "/img/guides/lakebase-chat-persistence-preview-light.png",
-    previewImageDarkUrl:
-      "/img/guides/lakebase-chat-persistence-preview-dark.png",
+    previewImageLightUrl: "/img/guides/lakebase-agent-memory-preview-light.png",
+    previewImageDarkUrl: "/img/guides/lakebase-agent-memory-preview-dark.png",
   },
   {
     id: "lakebase-create-instance",
@@ -167,7 +159,7 @@ export const recipes: Recipe[] = [
     description:
       "Provision a managed Lakebase Postgres project on Databricks and collect the connection values needed by downstream templates.",
     tags: ["Lakebase", "Postgres", "Setup"],
-    services: ["Lakebase"],
+    services: ["Lakebase Postgres"],
     prerequisites: ["set-up-your-local-dev-environment"],
     previewImageLightUrl:
       "/img/guides/lakebase-create-instance-preview-light.png",
@@ -180,7 +172,7 @@ export const recipes: Recipe[] = [
     description:
       "Add a managed Postgres database to your Databricks app using the Lakebase plugin. Covers schema setup, table creation, and full CRUD REST API routes.",
     tags: ["Lakebase", "Postgres", "CRUD", "Data"],
-    services: ["Lakebase", "Databricks Apps"],
+    services: ["Lakebase Postgres", "Databricks Apps"],
     prerequisites: [
       "set-up-your-local-dev-environment",
       "lakebase-create-instance",
@@ -196,7 +188,7 @@ export const recipes: Recipe[] = [
     description:
       "Enable vector similarity search in Lakebase using the pgvector extension. Covers extension setup, vector table design, insert and cosine retrieval helpers, and IVFFlat/HNSW index options.",
     tags: ["Lakebase", "Postgres", "pgvector", "Vector Search", "Embeddings"],
-    services: ["Lakebase"],
+    services: ["Lakebase Postgres"],
     prerequisites: [
       "set-up-your-local-dev-environment",
       "lakebase-create-instance",
@@ -213,11 +205,12 @@ export const recipes: Recipe[] = [
       "Lakebase",
       "Lakehouse Sync",
       "Unity Catalog",
+      "Data Lakehouse",
       "Lakebase Change Data Feed",
       "CDC",
       "Delta",
     ],
-    services: ["Lakebase", "Unity Catalog"],
+    services: ["Lakebase Postgres", "Unity Catalog", "Data Lakehouse"],
     prerequisites: ["set-up-your-local-dev-environment"],
     previewImageLightUrl:
       "/img/guides/lakebase-change-data-feed-autoscaling-preview-light.png",
@@ -229,8 +222,15 @@ export const recipes: Recipe[] = [
     name: "Sync Tables: Unity Catalog to Lakebase (Autoscaling)",
     description:
       "Sync Unity Catalog tables into Lakebase Autoscaling Postgres as synced tables for sub-10ms application queries, with snapshot, triggered, or continuous modes.",
-    tags: ["Lakebase", "Sync Tables", "Unity Catalog", "Synced Tables", "CDF"],
-    services: ["Lakebase", "Unity Catalog"],
+    tags: [
+      "Lakebase",
+      "Sync Tables",
+      "Unity Catalog",
+      "Data Lakehouse",
+      "Synced Tables",
+      "CDF",
+    ],
+    services: ["Lakebase Postgres", "Unity Catalog", "Data Lakehouse"],
     prerequisites: ["set-up-your-local-dev-environment"],
     previewImageLightUrl:
       "/img/guides/sync-tables-autoscaling-preview-light.png",
@@ -241,7 +241,7 @@ export const recipes: Recipe[] = [
     name: "Genie Conversational Analytics",
     description:
       "Embed a Databricks AI/BI Genie chat interface so users can explore data through natural language. Configure a Genie space, wire up server and client plugins, declare app resources, and deploy.",
-    tags: ["Genie", "AI/BI", "Natural Language", "Analytics"],
+    tags: ["Agent Bricks", "Genie", "AI/BI", "Natural Language", "Analytics"],
     services: ["Genie", "Databricks Apps"],
     prerequisites: ["set-up-your-local-dev-environment"],
     previewImageLightUrl:
@@ -254,8 +254,14 @@ export const recipes: Recipe[] = [
     name: "Set Up Unity Catalog with External Storage",
     description:
       "Create a Unity Catalog catalog backed by an external S3 bucket with storage credentials, external location, and a schema ready for lakehouse tables.",
-    tags: ["Unity Catalog", "S3", "External Storage", "Setup"],
-    services: ["Unity Catalog"],
+    tags: [
+      "Unity Catalog",
+      "Data Lakehouse",
+      "S3",
+      "External Storage",
+      "Setup",
+    ],
+    services: ["Unity Catalog", "Data Lakehouse"],
     prerequisites: ["set-up-your-local-dev-environment"],
     previewImageLightUrl: "/img/guides/unity-catalog-setup-preview-light.png",
     previewImageDarkUrl: "/img/guides/unity-catalog-setup-preview-dark.png",
@@ -265,7 +271,7 @@ export const recipes: Recipe[] = [
     name: "Genie Multi-Space Selector",
     description:
       "Add a space selector so users can switch between multiple AI/BI Genie spaces from a single page. Covers multi-alias server config, per-space bundle resources, and automatic conversation cleanup on space switch and redeployment.",
-    tags: ["Genie", "AI/BI", "Natural Language", "Data"],
+    tags: ["Agent Bricks", "Genie", "AI/BI", "Natural Language", "Data"],
     services: ["Genie"],
     prerequisites: ["genie-conversational-analytics"],
     previewImageLightUrl: "/img/guides/genie-multi-space-preview-light.png",
@@ -278,13 +284,14 @@ export const recipes: Recipe[] = [
       "Transform Lakehouse Sync CDC history tables into a medallion architecture with silver (current state) and gold (aggregations) layers using Lakeflow Declarative Pipelines.",
     tags: [
       "Medallion Architecture",
+      "Data Lakehouse",
       "CDC",
       "Lakeflow Pipelines",
       "Silver",
       "Gold",
       "Analytics",
     ],
-    services: ["Lakeflow Pipelines"],
+    services: ["Lakeflow Pipelines", "Data Lakehouse"],
     prerequisites: ["set-up-your-local-dev-environment"],
     previewImageLightUrl:
       "/img/guides/medallion-architecture-from-cdc-preview-light.png",
@@ -297,7 +304,7 @@ export const recipes: Recipe[] = [
     description:
       "Define and validate cross-platform environment variables for Lakebase-backed apps deployed outside Databricks App Platform.",
     tags: ["Lakebase", "Environment Variables", "AWS", "Vercel", "Netlify"],
-    services: ["Lakebase"],
+    services: ["Lakebase Postgres"],
     previewImageLightUrl:
       "/img/guides/lakebase-off-platform-env-management-preview-light.png",
     previewImageDarkUrl:
@@ -309,7 +316,7 @@ export const recipes: Recipe[] = [
     description:
       "Implement cached workspace and Lakebase credential token flows for secure Postgres access in off-platform deployments.",
     tags: ["Lakebase", "OAuth", "Tokens", "Security"],
-    services: ["Lakebase"],
+    services: ["Lakebase Postgres"],
     prerequisites: ["lakebase-off-platform-env-management"],
     previewImageLightUrl:
       "/img/guides/lakebase-token-management-preview-light.png",
@@ -322,7 +329,7 @@ export const recipes: Recipe[] = [
     description:
       "Connect Drizzle ORM to Lakebase with pg password callbacks and migration-time temporary DATABASE_URL credentials.",
     tags: ["Lakebase", "Drizzle", "Postgres", "ORM"],
-    services: ["Lakebase"],
+    services: ["Lakebase Postgres"],
     prerequisites: ["lakebase-token-management"],
     previewImageLightUrl:
       "/img/guides/lakebase-drizzle-off-platform-preview-light.png",
@@ -334,8 +341,15 @@ export const recipes: Recipe[] = [
     name: "Volume File Manager",
     description:
       "Add file upload, browsing, download, delete, file type validation, and CSV row preview to your Databricks app using Unity Catalog Volumes.",
-    tags: ["Volumes", "Unity Catalog", "Files", "Upload", "CSV"],
-    services: ["Unity Catalog"],
+    tags: [
+      "Volumes",
+      "Unity Catalog",
+      "Data Lakehouse",
+      "Files",
+      "Upload",
+      "CSV",
+    ],
+    services: ["Unity Catalog", "Data Lakehouse"],
     prerequisites: ["set-up-your-local-dev-environment"],
     previewImageLightUrl: "/img/guides/volume-file-upload-preview-light.png",
     previewImageDarkUrl: "/img/guides/volume-file-upload-preview-dark.png",
@@ -357,7 +371,7 @@ export const recipesInOrder: Recipe[] = [
   "embeddings-generation",
   "model-serving-endpoint-creation",
   "ai-chat-model-serving",
-  "lakebase-chat-persistence",
+  "lakebase-agent-memory",
   "lakebase-change-data-feed-autoscaling",
   "sync-tables-autoscaling",
   "unity-catalog-setup",
@@ -428,7 +442,7 @@ export const cookbooks: Cookbook[] = [
       "ai-chat-model-serving",
       "lakebase-create-instance",
       "lakebase-data-persistence",
-      "lakebase-chat-persistence",
+      "lakebase-agent-memory",
     ],
     previewImageLightUrl: "/img/guides/ai-chat-app-preview-light.png",
     previewImageDarkUrl: "/img/guides/ai-chat-app-preview-dark.png",
@@ -655,7 +669,7 @@ export const examples: Example[] = [
     initCommand:
       'databricks apps init \\\n  --template https://github.com/databricks/devhub/tree/main/examples/rag-chat/template \\\n  --name rag-chat-app \\\n  --set lakebase.postgres.branch="$BRANCH_NAME" \\\n  --set lakebase.postgres.database="$DATABASE_NAME"',
     cookbookIds: ["ai-chat-app"],
-    recipeIds: ["ai-chat-model-serving", "lakebase-chat-persistence"],
+    recipeIds: ["ai-chat-model-serving", "lakebase-agent-memory"],
     previewImageLightUrl: "/img/examples/rag-chat-preview-light.png",
     previewImageDarkUrl: "/img/examples/rag-chat-preview-dark.png",
   }),

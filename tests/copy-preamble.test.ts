@@ -2,6 +2,7 @@ import { describe, expect, test } from "vitest";
 import {
   ABOUT_DEVHUB_CANONICAL_SITE_URL,
   composeAgentPrompt,
+  rewriteRelativeLinks,
   substituteAboutDevhubLlmsUrl,
   type AgentPromptParts,
 } from "../src/lib/copy-preamble";
@@ -99,17 +100,16 @@ describe("composeAgentPrompt — recipe / cookbook / example", () => {
       parts: fixtureParts,
       kind: "recipe",
       siteOrigin: "https://dev.databricks.com",
-      templateName: "Lakebase Chat Persistence",
-      templateUrl:
-        "https://dev.databricks.com/templates/lakebase-chat-persistence",
-      templateBody: "# Lakebase Chat Persistence\n\nbody body",
+      templateName: "Lakebase Agent Memory",
+      templateUrl: "https://dev.databricks.com/templates/lakebase-agent-memory",
+      templateBody: "# Lakebase Agent Memory\n\nbody body",
     });
 
     expect(out.split("\n---\n").length).toBe(5);
     expect(out).toContain("# About DevHub");
     expect(out).toContain("# Working with DevHub prompts");
     expect(out).toContain(
-      "# Recipe intent Lakebase Chat Persistence (https://dev.databricks.com/templates/lakebase-chat-persistence)",
+      "# Recipe intent Lakebase Agent Memory (https://dev.databricks.com/templates/lakebase-agent-memory)",
     );
     expect(out).toContain("# Verify your local Databricks dev environment");
     expect(out).toContain("# The recipe the user copied");
@@ -164,5 +164,103 @@ describe("composeAgentPrompt — recipe / cookbook / example", () => {
         templateBody: "body",
       }),
     ).toThrow("templateName and templateUrl");
+  });
+
+  test("rewrites root-relative links inside the template body", () => {
+    const out = composeAgentPrompt({
+      parts: fixtureParts,
+      kind: "recipe",
+      siteOrigin: "http://localhost:3001",
+      templateName: "Lakebase Data Persistence",
+      templateUrl: "http://localhost:3001/templates/lakebase-data-persistence",
+      templateBody:
+        "See [Create a Lakebase Instance](/templates/lakebase-create-instance) for setup.",
+    });
+    expect(out).toContain(
+      "[Create a Lakebase Instance](http://localhost:3001/templates/lakebase-create-instance)",
+    );
+    expect(out).not.toContain("](/templates/lakebase-create-instance)");
+  });
+});
+
+describe("rewriteRelativeLinks", () => {
+  test("rewrites inline markdown links with root-relative paths", () => {
+    expect(
+      rewriteRelativeLinks(
+        "See [docs](/docs/start-here) for more.",
+        "https://example.com",
+      ),
+    ).toBe("See [docs](https://example.com/docs/start-here) for more.");
+  });
+
+  test("preserves the link title when present", () => {
+    expect(
+      rewriteRelativeLinks('[home](/ "DevHub home")', "https://example.com"),
+    ).toBe('[home](https://example.com/ "DevHub home")');
+  });
+
+  test("rewrites links pointing at .md files (used for raw markdown URLs)", () => {
+    expect(
+      rewriteRelativeLinks(
+        "- [App with Lakebase](/templates/app-with-lakebase.md): description",
+        "http://localhost:3001",
+      ),
+    ).toBe(
+      "- [App with Lakebase](http://localhost:3001/templates/app-with-lakebase.md): description",
+    );
+  });
+
+  test("rewrites bare autolinks", () => {
+    expect(
+      rewriteRelativeLinks("Visit </llms.txt>.", "https://example.com"),
+    ).toBe("Visit <https://example.com/llms.txt>.");
+  });
+
+  test("rewrites reference-style link definitions", () => {
+    expect(
+      rewriteRelativeLinks("[ref]: /templates/foo", "https://example.com"),
+    ).toBe("[ref]: https://example.com/templates/foo");
+  });
+
+  test("leaves absolute URLs untouched", () => {
+    const input =
+      "[GitHub](https://github.com/databricks/devhub) and [docs](/docs/start)";
+    expect(rewriteRelativeLinks(input, "https://example.com")).toBe(
+      "[GitHub](https://github.com/databricks/devhub) and [docs](https://example.com/docs/start)",
+    );
+  });
+
+  test("leaves anchor-only links untouched", () => {
+    expect(rewriteRelativeLinks("[Top](#section)", "https://example.com")).toBe(
+      "[Top](#section)",
+    );
+  });
+
+  test("leaves protocol-relative links untouched", () => {
+    expect(
+      rewriteRelativeLinks("[cdn](//cdn.example.com/x)", "https://example.com"),
+    ).toBe("[cdn](//cdn.example.com/x)");
+  });
+
+  test("leaves links with relative (non-root) paths untouched", () => {
+    expect(
+      rewriteRelativeLinks("[next](./other.md)", "https://example.com"),
+    ).toBe("[next](./other.md)");
+  });
+
+  test("rewrites every occurrence in a single string", () => {
+    const out = rewriteRelativeLinks(
+      "[a](/x) [b](/y) [c](/z)",
+      "https://example.com",
+    );
+    expect(out).toBe(
+      "[a](https://example.com/x) [b](https://example.com/y) [c](https://example.com/z)",
+    );
+  });
+
+  test("normalizes trailing slash on origin", () => {
+    expect(rewriteRelativeLinks("[a](/x)", "https://example.com/")).toBe(
+      "[a](https://example.com/x)",
+    );
   });
 });

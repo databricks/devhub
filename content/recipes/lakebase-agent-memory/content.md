@@ -1,8 +1,8 @@
-## Lakebase Chat Persistence
+## Lakebase Agent Memory
 
-Persist chat sessions and messages in Lakebase so users can resume history across requests and deployments.
+Save your AI agent's chat conversations to Lakebase so users can come back to a session, scroll their full message history, and let your agent reason over previous turns across requests, deploys, and machines.
 
-This template uses a simplified relational shape inspired by common production chat schemas (`chat` plus `message`) and adapts it to Databricks AppKit + Lakebase.
+The schema is a simplified, production-shaped relational layout (`chat` plus `message`) wired to Databricks AppKit + Lakebase. Once it's in place every chat turn — user input, assistant reply, tool call — is durably persisted in managed Postgres next to the rest of your operational data.
 
 This template assumes you have already completed the [Create a Lakebase Instance](/templates/app-with-lakebase#create-a-lakebase-instance) and [Lakebase Data Persistence](/templates/app-with-lakebase#lakebase-data-persistence) templates (Lakebase project creation, scaffolding, environment variables, `databricks.yml` config, and initial deploy).
 

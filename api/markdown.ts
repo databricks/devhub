@@ -5,6 +5,7 @@ import {
   resolveTemplateKind,
   type MarkdownSection,
 } from "./content-markdown";
+import { absolutizeMarkdown } from "../src/lib/copy-preamble";
 import { resolveSiteUrlForRequest } from "../src/lib/site-url";
 
 function parseSection(section: unknown): MarkdownSection {
@@ -39,7 +40,8 @@ export default function handler(req: VercelRequest, res: VercelResponse): void {
 
   try {
     const parsed = parseSection(req.query.section);
-    const markdown = getDetailMarkdown(parsed, slug);
+    const siteUrl = resolveSiteUrlForRequest(req.headers.host);
+    const markdown = getDetailMarkdown(parsed, slug, process.cwd(), siteUrl);
 
     // Only template-style pages with a concrete slug get wrapped in the
     // copy-prompt preamble (about + guidelines + intent + local-bootstrap).
@@ -49,7 +51,6 @@ export default function handler(req: VercelRequest, res: VercelResponse): void {
     // `/solutions.md`) have no copy button — they are agent-discoverable
     // tables of contents, not prompts, so they stay raw.
     const kindInfo = resolveTemplateKind(parsed, slug);
-    const siteUrl = resolveSiteUrlForRequest(req.headers.host);
     const body = kindInfo
       ? composeTemplateAgentPrompt({
           body: markdown,
@@ -57,7 +58,7 @@ export default function handler(req: VercelRequest, res: VercelResponse): void {
           slug,
           siteOrigin: siteUrl,
         })
-      : markdown;
+      : absolutizeMarkdown(markdown, siteUrl);
 
     const filename = slug ? `${slug.replace(/\//g, "-")}.md` : `${parsed}.md`;
     res.setHeader("Content-Type", "text/markdown; charset=utf-8");

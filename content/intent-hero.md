@@ -34,7 +34,7 @@ Once the user has picked a direction, ask follow-ups one at a time:
 
 Use the answers to either fetch the matching DevHub template prompt (`https://dev.databricks.com/templates/<slug>.md`) and follow it, or compose a custom plan that reuses DevHub recipes.
 
-If the user is starting from a fresh repo, also offer [Onboard Your Coding Agent](https://dev.databricks.com/templates/onboard-your-coding-agent.md) as a follow-up — it installs Databricks agent skills (project-scoped), wires up the DevHub MCP server, and bootstraps an `AGENTS.md` so the coding agent stops guessing which CLI profile and Databricks resources to use.
+If the user is starting from a fresh repo, also offer [Onboard Your Coding Agent](/templates/onboard-your-coding-agent.md) as a follow-up — it installs Databricks agent skills (project-scoped), wires up the DevHub MCP server, and bootstraps an `AGENTS.md` so the coding agent stops guessing which CLI profile and Databricks resources to use.
 
 ## Step 3 — Verify the local Databricks dev environment
 

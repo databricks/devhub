@@ -10,8 +10,8 @@ import LakebaseCreateInstancePrereqs from "@site/content/recipes/lakebase-create
 import LakebaseCreateInstanceContent from "@site/content/recipes/lakebase-create-instance/content.md";
 import LakebaseDataPersistencePrereqs from "@site/content/recipes/lakebase-data-persistence/prerequisites.md";
 import LakebaseDataPersistenceContent from "@site/content/recipes/lakebase-data-persistence/content.md";
-import LakebaseChatPersistencePrereqs from "@site/content/recipes/lakebase-chat-persistence/prerequisites.md";
-import LakebaseChatPersistenceContent from "@site/content/recipes/lakebase-chat-persistence/content.md";
+import LakebaseAgentMemoryPrereqs from "@site/content/recipes/lakebase-agent-memory/prerequisites.md";
+import LakebaseAgentMemoryContent from "@site/content/recipes/lakebase-agent-memory/content.md";
 
 export default function AiChatAppPage(): ReactNode {
   const { cookbook, rawMarkdown } = useCookbookMarkdown("ai-chat-app");
@@ -24,7 +24,7 @@ export default function AiChatAppPage(): ReactNode {
       <AiChatModelServingPrereqs />
       <LakebaseCreateInstancePrereqs />
       <LakebaseDataPersistencePrereqs />
-      <LakebaseChatPersistencePrereqs />
+      <LakebaseAgentMemoryPrereqs />
       <hr />
       <FoundationModelsApiContent />
       <hr />
@@ -34,7 +34,7 @@ export default function AiChatAppPage(): ReactNode {
       <hr />
       <LakebaseDataPersistenceContent />
       <hr />
-      <LakebaseChatPersistenceContent />
+      <LakebaseAgentMemoryContent />
     </CookbookDetail>
   );
 }

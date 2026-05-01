@@ -49,8 +49,8 @@ type ComposeAgentPromptInput = {
 export function composeAgentPrompt(input: ComposeAgentPromptInput): string {
   const blocks: string[] = [];
 
-  blocks.push(rewriteOrigin(input.parts.about, input.siteOrigin));
-  blocks.push(rewriteOrigin(input.parts.guidelines, input.siteOrigin));
+  blocks.push(absolutizeMarkdown(input.parts.about, input.siteOrigin));
+  blocks.push(absolutizeMarkdown(input.parts.guidelines, input.siteOrigin));
   blocks.push(buildIntentBlock(input));
   blocks.push(buildLocalBootstrapBlock(input.parts.localBootstrap));
 
@@ -60,7 +60,12 @@ export function composeAgentPrompt(input: ComposeAgentPromptInput): string {
         `composeAgentPrompt: kind="${input.kind}" requires a non-empty templateBody.`,
       );
     }
-    blocks.push(buildTemplateBlock(input.kind, input.templateBody));
+    blocks.push(
+      buildTemplateBlock(
+        input.kind,
+        absolutizeMarkdown(input.templateBody, input.siteOrigin),
+      ),
+    );
   }
 
   return blocks.map((block) => block.trim()).join("\n\n---\n\n") + "\n";
@@ -68,7 +73,7 @@ export function composeAgentPrompt(input: ComposeAgentPromptInput): string {
 
 function buildIntentBlock(input: ComposeAgentPromptInput): string {
   const intentRaw = pickIntentBody(input.parts, input.kind);
-  const withOrigin = rewriteOrigin(intentRaw, input.siteOrigin);
+  const withOrigin = absolutizeMarkdown(intentRaw, input.siteOrigin);
   if (input.kind === "hero") return withOrigin;
 
   if (!input.templateName || !input.templateUrl) {
@@ -136,6 +141,55 @@ function rewriteOrigin(markdown: string, siteOrigin: string): string {
   const normalized = siteOrigin.replace(/\/$/, "");
   if (normalized === ABOUT_DEVHUB_CANONICAL_SITE_URL) return markdown;
   return markdown.replaceAll(ABOUT_DEVHUB_CANONICAL_SITE_URL, normalized);
+}
+
+/**
+ * Rewrites root-relative markdown links (`](/foo)`) to absolute URLs using the
+ * caller's site origin. Without this, copied markdown payloads contain
+ * unresolvable links once pasted into an agent: the agent has no way to know
+ * which host they belong to. Protocol-relative (`//cdn`), absolute
+ * (`http://`), anchor-only (`#section`), and email/tel links are deliberately
+ * left untouched.
+ *
+ * Covers the three markdown link forms that show up in DevHub content:
+ *   - inline:           `[text](/path)` and `[text](/path "title")`
+ *   - bare autolinks:   `</path>`
+ *   - reference defs:   `[id]: /path` (optionally with a title)
+ */
+export function rewriteRelativeLinks(
+  markdown: string,
+  siteOrigin: string,
+): string {
+  const origin = siteOrigin.replace(/\/$/, "");
+  if (!origin) return markdown;
+
+  return markdown
+    .replace(
+      /(\]\()(\/(?!\/)[^)\s]*)((?:\s+"[^"]*")?\))/g,
+      (_match, open: string, path: string, close: string) =>
+        `${open}${origin}${path}${close}`,
+    )
+    .replace(
+      /(<)(\/(?!\/)[^>\s]*)(>)/g,
+      (_match, open: string, path: string, close: string) =>
+        `${open}${origin}${path}${close}`,
+    )
+    .replace(
+      /(^\[[^\]]+\]:\s+)(\/(?!\/)\S+)/gm,
+      (_match, prefix: string, path: string) => `${prefix}${origin}${path}`,
+    );
+}
+
+/**
+ * Combined origin + relative-link rewrite applied to every markdown block we
+ * emit for "Copy as Markdown" / agent-prompt flows. Centralized so callers
+ * never forget one half of the substitution.
+ */
+export function absolutizeMarkdown(
+  markdown: string,
+  siteOrigin: string,
+): string {
+  return rewriteRelativeLinks(rewriteOrigin(markdown, siteOrigin), siteOrigin);
 }
 
 /**

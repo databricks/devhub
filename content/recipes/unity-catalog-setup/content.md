@@ -10,13 +10,6 @@ Create a Unity Catalog catalog backed by an external S3 bucket. For most use cas
 - You want to control the S3 bucket location, encryption, and lifecycle policies
 - You need cross-account or cross-workspace access to the underlying data
 
-### Prerequisites
-
-- A Databricks workspace with Unity Catalog enabled
-- An S3 bucket in the same AWS region as your workspace
-- An IAM role with read/write access to the S3 bucket (defined in the same AWS account as the bucket)
-- `CREATE_CATALOG` and `CREATE STORAGE CREDENTIAL` privileges on the metastore
-
 ### 1. Create an IAM role for the storage credential
 
 Create an IAM role in AWS that grants Databricks access to your S3 bucket. The trust policy must allow the Databricks account to assume the role.

@@ -13,19 +13,51 @@ describe("detail markdown resolver", () => {
 
   test("resolves solution markdown", () => {
     const markdown = getDetailMarkdown("solutions", "devhub-launch");
-    expect(markdown).toContain("# Introducing dev.databricks.com");
+    expect(markdown).toContain("Hello World, dev.databricks.com!");
+    expect(markdown).not.toMatch(/^# /m);
   });
 
-  test("solution markdown frontmatter carries author and publishedAt", () => {
-    const markdown = getDetailMarkdown("solutions", "devhub-launch");
+  test("solution markdown frontmatter is built from the registry, not the .md file", () => {
+    const markdown = getDetailMarkdown(
+      "solutions",
+      "devhub-launch",
+      process.cwd(),
+      "https://dev.databricks.com",
+    );
     const frontmatter = markdown.match(/^---\n([\s\S]*?)\n---/);
     expect(frontmatter).not.toBeNull();
     if (!frontmatter) return;
     const block = frontmatter[1];
+    expect(block).toMatch(/^title:\s+"Introducing dev\.databricks\.com"$/m);
+    expect(block).toMatch(
+      /^url:\s+https:\/\/dev\.databricks\.com\/solutions\/devhub-launch$/m,
+    );
+    expect(block).toMatch(/^summary:\s+".+"$/m);
     expect(block).toMatch(/^publishedAt:\s*2026-05-04$/m);
     expect(block).toMatch(/^authors:$/m);
     expect(block).toContain("name: Andre Landgraf");
     expect(block).toContain("role: Staff Developer Advocate, Databricks");
+  });
+
+  test("solution frontmatter url is absolute and uses the supplied site origin", () => {
+    const markdown = getDetailMarkdown(
+      "solutions",
+      "devhub-launch",
+      process.cwd(),
+      "http://localhost:3001",
+    );
+    const frontmatter = markdown.match(/^---\n([\s\S]*?)\n---/);
+    expect(frontmatter).not.toBeNull();
+    if (!frontmatter) return;
+    expect(frontmatter[1]).toMatch(
+      /^url:\s+http:\/\/localhost:3001\/solutions\/devhub-launch$/m,
+    );
+  });
+
+  test("source .md file no longer carries its own frontmatter (registry is the source of truth)", () => {
+    const markdown = getDetailMarkdown("solutions", "devhub-launch");
+    const frontmatterCount = (markdown.match(/^---$/gm) ?? []).length;
+    expect(frontmatterCount).toBe(2);
   });
 
   test("resolves recipe markdown", () => {
@@ -46,7 +78,7 @@ describe("detail markdown resolver", () => {
   test("resolves template markdown", () => {
     const markdown = getDetailMarkdown("templates", "ai-chat-app");
     expect(markdown).toContain("# AI Chat App");
-    expect(markdown).toContain("## Lakebase Chat Persistence");
+    expect(markdown).toContain("## Lakebase Agent Memory");
   });
 
   test("template markdown no longer embeds the local dev environment recipe (now injected by the meta-prompt)", () => {
@@ -65,9 +97,7 @@ describe("detail markdown resolver", () => {
     const foundationContentIdx = firstLineStart(
       /^## Query AI Gateway Endpoints$/m,
     );
-    const lakebaseContentIdx = firstLineStart(
-      /^## Lakebase Chat Persistence$/m,
-    );
+    const lakebaseContentIdx = firstLineStart(/^## Lakebase Agent Memory$/m);
 
     expect(prereqIdx).toBeGreaterThanOrEqual(0);
     expect(prereqIdx).toBeLessThan(foundationContentIdx);
@@ -75,7 +105,7 @@ describe("detail markdown resolver", () => {
     // Only one combined `## Prerequisites` heading, with demoted H3 per recipe.
     expect(markdown.match(/^## Prerequisites$/gm)?.length).toBe(1);
     expect(markdown).toMatch(/^### Query AI Gateway Endpoints$/m);
-    expect(markdown).toMatch(/^### Lakebase Chat Persistence$/m);
+    expect(markdown).toMatch(/^### Lakebase Agent Memory$/m);
   });
 
   test("template markdown includes cookbook intro.md above Prerequisites when present", () => {
@@ -111,7 +141,7 @@ describe("templates section resolves recipes, examples, and cookbooks", () => {
   test("resolves a cookbook slug via templates", () => {
     const markdown = getDetailMarkdown("templates", "ai-chat-app");
     expect(markdown).toContain("# AI Chat App");
-    expect(markdown).toContain("## Lakebase Chat Persistence");
+    expect(markdown).toContain("## Lakebase Agent Memory");
   });
 
   test("throws for unknown template slug", () => {
@@ -171,18 +201,18 @@ describe("composeTemplateAgentPrompt wraps template bodies in the agent prompt",
   const ABOUT_START = "# About DevHub";
 
   test("recipe wraps with about + guidelines + recipe intent + bootstrap + body", () => {
-    const body = getDetailMarkdown("recipes", "lakebase-chat-persistence");
+    const body = getDetailMarkdown("recipes", "lakebase-agent-memory");
     const result = composeTemplateAgentPrompt({
       body,
       section: "recipes",
-      slug: "lakebase-chat-persistence",
+      slug: "lakebase-agent-memory",
       siteOrigin: "https://dev.databricks.com",
     });
     expect(result.startsWith(ABOUT_START)).toBe(true);
     expect(result).toContain("# Working with DevHub prompts");
     expect(result).toContain("# Verify your local Databricks dev environment");
     expect(result).toContain("# The recipe the user copied");
-    expect(result).toContain("Lakebase Chat Persistence");
+    expect(result).toContain("Lakebase Agent Memory");
   });
 
   test("example wraps with example intent and example label", () => {

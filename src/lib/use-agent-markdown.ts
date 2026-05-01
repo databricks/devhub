@@ -4,6 +4,7 @@ import {
   buildTemplateAgentMarkdown,
   useAgentPromptParts,
 } from "@/lib/copy-about-devhub";
+import { absolutizeMarkdown } from "@/lib/copy-preamble";
 
 /**
  * Discriminator for the "Copy as Markdown" / "Copy prompt" flows. Every
@@ -96,7 +97,7 @@ export function useAgentMarkdown(
     });
 
     if (kind === "doc" || kind === "solution") {
-      return frontmatterBody;
+      return absolutizeMarkdown(frontmatterBody, siteOrigin);
     }
 
     const templateBody =

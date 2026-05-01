@@ -2,7 +2,7 @@
 
 Install the Databricks CLI, authenticate a profile, and verify the handshake. Every other DevHub template assumes this has already passed.
 
-The official CLI reference for these steps is on DevHub at [Databricks CLI](https://dev.databricks.com/docs/tools/databricks-cli). Use it whenever a step here is unclear.
+The official CLI reference for these steps is on DevHub at [Databricks CLI](/docs/tools/databricks-cli). Use it whenever a step here is unclear.
 
 ### 1. Check the installed CLI version
 
@@ -69,7 +69,7 @@ databricks auth login --host <workspace-url> --profile <PROFILE>
 
 `<PROFILE>` is the label you will pass on subsequent commands as `--profile <PROFILE>`. If you skip `--profile`, the CLI uses the `DEFAULT` profile.
 
-For CI/CD, OAuth client credentials or a personal access token are better fits — see the [authentication section of the CLI doc](https://dev.databricks.com/docs/tools/databricks-cli#authenticate) for the non-interactive flows.
+For CI/CD, OAuth client credentials or a personal access token are better fits — see the [authentication section of the CLI doc](/docs/tools/databricks-cli#authenticate) for the non-interactive flows.
 
 ### 4. Verify the handshake
 

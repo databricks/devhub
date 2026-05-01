@@ -144,4 +144,132 @@ describe("validate-content script", () => {
     expect(result.stderr).toContain("content/cookbooks/my-cookbook/content.md");
     expect(result.stderr).toContain("not an allowed filename");
   });
+
+  test("fails on absolute DevHub markdown links inside templates and docs", () => {
+    seedFixture(workDir, {
+      "content/recipes/bad/content.md": [
+        "## Bad",
+        "",
+        "See [docs](https://dev.databricks.com/docs/start-here) for setup.",
+        "",
+      ].join("\n"),
+      "docs/bad-doc.md": [
+        "# Bad doc",
+        "",
+        "<https://dev.databricks.com/templates/foo>",
+        "",
+        "[ref]: https://dev.databricks.com/solutions/baz",
+        "",
+      ].join("\n"),
+    });
+
+    const result = runValidator(workDir);
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain(
+      "content/recipes/bad/content.md: absolute DevHub markdown link",
+    );
+    expect(result.stderr).toContain(
+      '"https://dev.databricks.com/docs/start-here"',
+    );
+    expect(result.stderr).toContain(
+      "docs/bad-doc.md: absolute DevHub autolink",
+    );
+    expect(result.stderr).toContain(
+      "docs/bad-doc.md: absolute DevHub reference definition",
+    );
+  });
+
+  test("allows bare prose URLs and code-block URLs that mention dev.databricks.com", () => {
+    seedFixture(workDir, {
+      "content/recipes/ok/content.md": [
+        "## OK",
+        "",
+        "Website: https://dev.databricks.com.",
+        "",
+        "Fetch the index from https://dev.databricks.com/llms.txt before guessing.",
+        "",
+        "```bash",
+        "npx add-mcp https://dev.databricks.com/api/mcp --name devhub-docs",
+        "```",
+        "",
+        "External link: [GitHub](https://github.com/databricks/devhub).",
+        "",
+      ].join("\n"),
+    });
+
+    const result = runValidator(workDir);
+    expect(result.status).toBe(0);
+    expect(result.stdout).toContain("validation passed");
+  });
+
+  test("fails when a solution markdown contains a `# ` ATX H1 heading", () => {
+    seedFixture(workDir, {
+      "content/solutions/bad-launch.md": [
+        "# Should not have an H1",
+        "",
+        "Body paragraph.",
+        "",
+      ].join("\n"),
+    });
+
+    const result = runValidator(workDir);
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain(
+      "content/solutions/bad-launch.md:1: solution markdown must not contain an H1 heading.",
+    );
+  });
+
+  test("fails when a solution markdown uses a setext H1 (`===` underline)", () => {
+    seedFixture(workDir, {
+      "content/solutions/setext.md": [
+        "Title that should be in the registry",
+        "===",
+        "",
+        "Body paragraph.",
+        "",
+      ].join("\n"),
+    });
+
+    const result = runValidator(workDir);
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain(
+      "content/solutions/setext.md:2: solution markdown must not contain a setext H1",
+    );
+  });
+
+  test("passes when a solution markdown opens with a body paragraph and uses `## ` for sections", () => {
+    seedFixture(workDir, {
+      "content/solutions/launch.md": [
+        "Hello World, dev.databricks.com!",
+        "",
+        "Lede paragraph that does the work an H1 would have done.",
+        "",
+        "## Why we built this",
+        "",
+        "Section body.",
+        "",
+      ].join("\n"),
+    });
+
+    const result = runValidator(workDir);
+    expect(result.status).toBe(0);
+    expect(result.stdout).toContain("solutions H1 audit");
+  });
+
+  test("ignores `# ` heading look-alikes inside fenced code blocks", () => {
+    seedFixture(workDir, {
+      "content/solutions/fenced.md": [
+        "Lede paragraph.",
+        "",
+        "```bash",
+        "# Should not be allowed (but is, in code)",
+        "echo hi",
+        "```",
+        "",
+      ].join("\n"),
+    });
+
+    const result = runValidator(workDir);
+    expect(result.status).toBe(0);
+  });
 });

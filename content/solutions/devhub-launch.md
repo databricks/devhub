@@ -1,10 +1,4 @@
----
-title: "Introducing dev.databricks.com"
-url: /solutions/devhub-launch
-summary: "A developer hub for building internal apps on the Databricks workspace your company already runs on: templates, the AppKit SDK, agent skills, and docs written for builders."
----
-
-# Introducing dev.databricks.com
+Hello World, dev.databricks.com!
 
 We're launching **dev.databricks.com**, a site for developers building internal apps on the Databricks workspace your company already runs on.
 
@@ -78,7 +72,7 @@ A workflow that works well:
 
 ## Get started
 
-Head to the [landing page](https://dev.databricks.com) and copy the intro prompt. From there, your agent will guide you through an end-to-end development workflow across Databricks Apps, Lakebase, and Agent Bricks.
+Head to the [landing page](/) and copy the intro prompt. From there, your agent will guide you through an end-to-end development workflow across Databricks Apps, Lakebase, and Agent Bricks.
 
 We're actively expanding the site. If you're building on Databricks and there's a pattern you want to see covered, [open an issue on GitHub](https://github.com/databricks/devhub/issues) — we read every one. You can also join the conversation with other Databricks developers on the [r/databricks subreddit](https://www.reddit.com/r/databricks).
 

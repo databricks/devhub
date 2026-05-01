@@ -10,6 +10,7 @@ import {
 } from "../src/lib/recipes/recipes";
 import { expandMdxImports } from "../src/lib/expand-mdx";
 import { showDrafts } from "../src/lib/feature-flags-server";
+import { absolutizeMarkdown } from "../src/lib/copy-preamble";
 
 type Section = {
   title: string;
@@ -239,7 +240,18 @@ function generateLlmsTxt(baseUrl: string, docsDir: string): string {
   return lines.join("\n");
 }
 
-function copyRawDocs(docsDir: string, destDir: string): void {
+/**
+ * Mirrors `docs/` into `static/raw-docs/` so coding agents can fetch any doc
+ * page as plain markdown via `/raw-docs/<slug>.md`. We strip frontmatter
+ * (Docusaurus metadata is not useful to the agent) and rewrite root-relative
+ * links to absolute URLs against the build's site origin so the markdown is
+ * portable when fetched and pasted into another context.
+ */
+function copyRawDocs(
+  docsDir: string,
+  destDir: string,
+  siteOrigin: string,
+): void {
   if (!fs.existsSync(destDir)) {
     fs.mkdirSync(destDir, { recursive: true });
   }
@@ -247,12 +259,12 @@ function copyRawDocs(docsDir: string, destDir: string): void {
     const srcPath = path.join(docsDir, entry.name);
     const dstPath = path.join(destDir, entry.name);
     if (entry.isDirectory()) {
-      copyRawDocs(srcPath, dstPath);
+      copyRawDocs(srcPath, dstPath, siteOrigin);
     } else if (entry.name.endsWith(".md") || entry.name.endsWith(".mdx")) {
       const raw = fs.readFileSync(srcPath, "utf-8");
       const expanded = expandMdxImports(raw, srcPath);
       const stripped = expanded.replace(/^---\n[\s\S]*?\n---\n*/, "");
-      fs.writeFileSync(dstPath, stripped);
+      fs.writeFileSync(dstPath, absolutizeMarkdown(stripped, siteOrigin));
     }
   }
 }
@@ -275,7 +287,7 @@ export default function llmsTxtPlugin(context: LoadContext): Plugin {
     path.join(staticDir, "llms.txt"),
     generateLlmsTxt(baseUrl, docsDir),
   );
-  copyRawDocs(docsDir, path.join(staticDir, "raw-docs"));
+  copyRawDocs(docsDir, path.join(staticDir, "raw-docs"), baseUrl);
 
   return {
     name: "docusaurus-llms-txt",
@@ -286,7 +298,7 @@ export default function llmsTxtPlugin(context: LoadContext): Plugin {
         path.join(outDir, "llms.txt"),
         generateLlmsTxt(buildBaseUrl, docsDir),
       );
-      copyRawDocs(docsDir, path.join(outDir, "raw-docs"));
+      copyRawDocs(docsDir, path.join(outDir, "raw-docs"), buildBaseUrl);
     },
   };
 }

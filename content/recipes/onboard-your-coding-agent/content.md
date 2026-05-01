@@ -4,8 +4,8 @@ Make a Databricks repo agent-ready in four steps: install Databricks platform sk
 
 References:
 
-- [Agent skills](https://dev.databricks.com/docs/tools/ai-tools/agent-skills) — what the Databricks skills give your agent and the full `databricks experimental aitools` flag matrix.
-- [Docs MCP Server](https://dev.databricks.com/docs/tools/ai-tools/docs-mcp-server) — what the DevHub MCP server exposes and how to verify it is connected.
+- [Agent skills](/docs/tools/ai-tools/agent-skills) — what the Databricks skills give your agent and the full `databricks experimental aitools` flag matrix.
+- [Docs MCP Server](/docs/tools/ai-tools/docs-mcp-server) — what the DevHub MCP server exposes and how to verify it is connected.
 
 ### 1. Install Databricks agent skills (project-scoped)
 
@@ -31,7 +31,7 @@ Verify what got installed:
 databricks experimental aitools list --project
 ```
 
-`databricks experimental aitools install --help` is the source of truth for the flag list — DevHub mirrors it on the [agent skills page](https://dev.databricks.com/docs/tools/ai-tools/agent-skills) but the CLI is authoritative.
+`databricks experimental aitools install --help` is the source of truth for the flag list — DevHub mirrors it on the [agent skills page](/docs/tools/ai-tools/agent-skills) but the CLI is authoritative.
 
 ### 2. Wire up the DevHub Docs MCP server
 
@@ -55,7 +55,7 @@ Verify the connection:
 
 1. Confirm `devhub-docs` shows up in the agent's tool list.
 2. Ask the agent to call `list_docs_resources` — it should return the DevHub markdown index.
-3. Ask the agent to call `get_doc_resource(slug: "start-here")` — it should return the [start-here doc](https://dev.databricks.com/docs/start-here) as markdown.
+3. Ask the agent to call `get_doc_resource(slug: "start-here")` — it should return the [start-here doc](/docs/start-here) as markdown.
 
 ### 3. Bootstrap an `AGENTS.md` with this repo's Databricks defaults
 
@@ -154,6 +154,6 @@ The agent should answer correctly without needing to fetch any extra context —
 
 ### Where to next
 
-- [Templates catalog](https://dev.databricks.com/templates) — pick a template, copy the prompt, and the agent now has full Databricks context to execute against your workspace defaults.
-- [DevHub Docs MCP Server reference](https://dev.databricks.com/docs/tools/ai-tools/docs-mcp-server) — full tool list and connection troubleshooting.
-- [Agent skills reference](https://dev.databricks.com/docs/tools/ai-tools/agent-skills) — the full skill catalog plus `--global` / `--project` / `--agents` / `--skills` flag matrix.
+- [Templates catalog](/templates) — pick a template, copy the prompt, and the agent now has full Databricks context to execute against your workspace defaults.
+- [DevHub Docs MCP Server reference](/docs/tools/ai-tools/docs-mcp-server) — full tool list and connection troubleshooting.
+- [Agent skills reference](/docs/tools/ai-tools/agent-skills) — the full skill catalog plus `--global` / `--project` / `--agents` / `--skills` flag matrix.

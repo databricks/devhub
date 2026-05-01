@@ -2,15 +2,15 @@
 
 Generate a working AppKit Databricks App from scratch in a couple of minutes. This template runs `databricks apps init` to scaffold the project, runs it locally, and deploys it to your workspace.
 
-The full CLI surface — every `--features`, `--set`, `--target`, and the post-deploy management commands — lives on DevHub at [App development](https://dev.databricks.com/docs/apps/development) and [Apps quickstart](https://dev.databricks.com/docs/apps/quickstart). Use those whenever a flag below is unclear.
+The full CLI surface — every `--features`, `--set`, `--target`, and the post-deploy management commands — lives on DevHub at [App development](/docs/apps/development) and [Apps quickstart](/docs/apps/quickstart). Use those whenever a flag below is unclear.
 
 ### 1. Decide what plugins (`--features`) the app needs
 
 `databricks apps init` produces a working app on its own, but most real apps want one or more AppKit plugins wired in from the start. Pick what you need before running init:
 
-- `lakebase` — managed Postgres for persistent app data. See [Lakebase Quickstart](https://dev.databricks.com/docs/lakebase/quickstart).
+- `lakebase` — managed Postgres for persistent app data. See [Lakebase Quickstart](/docs/lakebase/quickstart).
 - `analytics` — query a SQL Warehouse from the app server.
-- `genie` — embed AI/BI Genie conversational analytics. See [Genie spaces](https://dev.databricks.com/docs/agents/genie).
+- `genie` — embed AI/BI Genie conversational analytics. See [Genie spaces](/docs/agents/genie).
 - `model-serving` — call Databricks-hosted LLMs and ML endpoints.
 
 If you are unsure, list every available plugin and the resource fields each one needs:
@@ -43,7 +43,7 @@ Notable flags:
 - `--run none` — do not run dev or deploy automatically; we will do those steps explicitly below.
 - `--profile <PROFILE>` — only needed if `<PROFILE>` is not your `DEFAULT`.
 
-For the full flag list and `--set` syntax for resources that need explicit branch/database fields, see [Scaffold options](https://dev.databricks.com/docs/apps/development#scaffold-options).
+For the full flag list and `--set` syntax for resources that need explicit branch/database fields, see [Scaffold options](/docs/apps/development#scaffold-options).
 
 ### 3. Install dependencies and run locally
 
@@ -55,7 +55,7 @@ npm run dev
 
 `npm run dev` reads from `.env` (copy `.env.example` and fill in resource IDs if you used `--features`) and serves the app on `http://localhost:3000` by default.
 
-For Lakebase-backed apps the local user also needs `databricks_superuser` so they can read the schemas the deployed service principal owns — see [Apps development → Local setup](https://dev.databricks.com/docs/apps/development#local-setup).
+For Lakebase-backed apps the local user also needs `databricks_superuser` so they can read the schemas the deployed service principal owns — see [Apps development → Local setup](/docs/apps/development#local-setup).
 
 ### 4. Build the UI before running locally
 
@@ -102,6 +102,6 @@ Open the URL from `apps get` (signed in to Databricks) to confirm the app respon
 
 ### Where to next
 
-- [Onboard Your Coding Agent](https://dev.databricks.com/templates/onboard-your-coding-agent) — install Databricks skills (project-scoped) and the DevHub MCP server so your editor's AI assistant has the same context the human does.
-- [App development reference](https://dev.databricks.com/docs/apps/development) — all `apps init` / `apps deploy` flags, environment configuration, the pre-deploy checklist, and troubleshooting.
-- [Templates catalog](https://dev.databricks.com/templates) — fully composed templates (AI chat, app + Lakebase, Genie analytics, operational analytics) when the bare scaffold is not what you want.
+- [Onboard Your Coding Agent](/templates/onboard-your-coding-agent) — install Databricks skills (project-scoped) and the DevHub MCP server so your editor's AI assistant has the same context the human does.
+- [App development reference](/docs/apps/development) — all `apps init` / `apps deploy` flags, environment configuration, the pre-deploy checklist, and troubleshooting.
+- [Templates catalog](/templates) — fully composed templates (AI chat, app + Lakebase, Genie analytics, operational analytics) when the bare scaffold is not what you want.

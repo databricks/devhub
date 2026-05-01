@@ -30,6 +30,7 @@ import {
   type NativeSolution,
 } from "../src/lib/solutions/solutions";
 import { getAuthor } from "../src/lib/solutions/authors";
+import { resolveSiteUrl } from "../src/lib/site-url";
 
 export type MarkdownSection =
   | "docs"
@@ -92,7 +93,11 @@ function readDocsMarkdown(rootDir: string, slug: string): string {
   throw new Error(`Doc page not found: "${slug}"`);
 }
 
-function readSolutionMarkdown(rootDir: string, slug: string): string {
+function readSolutionMarkdown(
+  rootDir: string,
+  slug: string,
+  siteOrigin: string,
+): string {
   if (!hasSolutionSlug(rootDir, slug)) {
     throw new Error(`Solution page not found: "${slug}"`);
   }
@@ -112,15 +117,30 @@ function readSolutionMarkdown(rootDir: string, slug: string): string {
   if (!native) {
     return content;
   }
-  return injectSolutionFrontmatter(content, native);
+  return prependSolutionFrontmatter(content, native, siteOrigin);
 }
 
-const FRONTMATTER_PATTERN = /^---\n([\s\S]*?)\n---\n?/;
+const FRONTMATTER_PATTERN = /^---\n[\s\S]*?\n---\n?/;
 
-function injectSolutionFrontmatter(
+/**
+ * Builds the solution markdown payload by prepending a frontmatter block
+ * derived entirely from `solutions.ts`. Any frontmatter that may still be
+ * present in the source `.md` file is stripped first so the registry stays
+ * the single source of truth for solution metadata.
+ *
+ * The `url` field is emitted as an absolute URL using the resolved site
+ * origin, so the frontmatter is portable when the markdown is fetched and
+ * pasted into an agent context outside the originating host.
+ */
+function prependSolutionFrontmatter(
   content: string,
   solution: NativeSolution,
+  siteOrigin: string,
 ): string {
+  const stripped = content.replace(FRONTMATTER_PATTERN, "").trimStart();
+  const origin = siteOrigin.replace(/\/$/, "");
+  const escapedTitle = solution.title.replace(/"/g, '\\"');
+  const escapedSummary = solution.description.replace(/"/g, '\\"');
   const authorBlock = solution.authors
     .map((id) => {
       const author = getAuthor(id);
@@ -129,24 +149,19 @@ function injectSolutionFrontmatter(
       );
     })
     .join("\n");
-  const injected = [
+
+  const frontmatter = [
+    "---",
+    `title: "${escapedTitle}"`,
+    `url: ${origin}/solutions/${solution.id}`,
+    `summary: "${escapedSummary}"`,
     `publishedAt: ${solution.publishedAt}`,
     `authors:`,
     authorBlock,
+    "---",
   ].join("\n");
 
-  const match = content.match(FRONTMATTER_PATTERN);
-  if (!match) {
-    return `---\n${injected}\n---\n\n${content}`;
-  }
-  const existing = match[1];
-  const filtered = existing
-    .split("\n")
-    .filter((line) => !/^(authors|publishedAt)\s*:/i.test(line))
-    .join("\n")
-    .trimEnd();
-  const merged = filtered.length > 0 ? `${filtered}\n${injected}` : injected;
-  return `---\n${merged}\n---\n${content.slice(match[0].length)}`;
+  return `${frontmatter}\n\n${stripped}`;
 }
 
 function readRecipeMarkdown(rootDir: string, slug: string): string {
@@ -288,6 +303,7 @@ export function getDetailMarkdown(
   section: MarkdownSection,
   rawSlug: string,
   rootDir = process.cwd(),
+  siteOrigin: string = resolveSiteUrl(),
 ): string {
   const slug = normalizeSlug(rawSlug);
 
@@ -306,7 +322,7 @@ export function getDetailMarkdown(
     case "recipes":
       return readRecipeMarkdown(rootDir, slug);
     case "solutions":
-      return readSolutionMarkdown(rootDir, slug);
+      return readSolutionMarkdown(rootDir, slug, siteOrigin);
     case "examples":
       return readExampleMarkdown(rootDir, slug);
     case "templates":

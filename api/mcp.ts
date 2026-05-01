@@ -3,6 +3,7 @@ import { z } from "zod";
 import { readFileSync, existsSync } from "fs";
 import { resolve } from "path";
 import { expandMdxImports } from "../src/lib/expand-mdx";
+import { absolutizeMarkdown } from "../src/lib/copy-preamble";
 import { resolveSiteUrl } from "../src/lib/site-url";
 
 const DOCS_DIR = resolve(__dirname, "..", "docs");
@@ -76,7 +77,14 @@ const handler = createMcpHandler(
         if (!content) {
           throw new Error(`Doc page not found: "${slug}"`);
         }
-        return { content: [{ type: "text" as const, text: content }] };
+        return {
+          content: [
+            {
+              type: "text" as const,
+              text: absolutizeMarkdown(content, resolveSiteUrl()),
+            },
+          ],
+        };
       },
     );
   },

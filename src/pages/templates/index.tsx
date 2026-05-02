@@ -17,6 +17,7 @@ import {
 import {
   examples,
   filterPublished,
+  matchesTemplateFilter,
   recipesInOrder,
   cookbooks,
   type Service,
@@ -61,27 +62,17 @@ export default function TemplatesPage(): ReactNode {
     [includeDrafts],
   );
 
-  const filteredItems = useMemo(() => {
-    const query = searchQuery.toLowerCase().trim();
-    return ALL_ITEMS.filter((item) => {
-      if (selectedServices.size > 0) {
-        const itemServices = item.data.services;
-        if (!itemServices.some((s) => selectedServices.has(s))) return false;
-      }
-
-      if (activeTags.size > 0) {
-        if (!item.data.tags.some((t) => activeTags.has(t))) return false;
-      }
-
-      if (query) {
-        const name = item.data.name.toLowerCase();
-        const desc = item.data.description.toLowerCase();
-        if (!name.includes(query) && !desc.includes(query)) return false;
-      }
-
-      return true;
-    });
-  }, [searchQuery, selectedServices, activeTags, ALL_ITEMS]);
+  const filteredItems = useMemo(
+    () =>
+      ALL_ITEMS.filter((item) =>
+        matchesTemplateFilter(item.data, {
+          searchQuery,
+          selectedServices,
+          activeTags,
+        }),
+      ),
+    [searchQuery, selectedServices, activeTags, ALL_ITEMS],
+  );
 
   const handleToggleService = useCallback((service: Service) => {
     setSelectedServices((prev) => {

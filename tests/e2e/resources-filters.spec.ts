@@ -48,6 +48,29 @@ test.describe("templates page search", () => {
     await page.getByRole("searchbox").fill("");
     await expect(page.getByText(TOTAL_TEMPLATES)).toBeVisible();
   });
+
+  test("search matches terms that only appear in tags or services", async ({
+    page,
+  }) => {
+    await page.goto("/templates");
+    await expect(page.getByText(TOTAL_TEMPLATES)).toBeVisible();
+
+    await page.getByRole("searchbox").fill("postgres");
+    await expect(
+      page.locator('a[href="/templates/lakebase-pgvector"]'),
+    ).toBeVisible();
+    await expect(
+      page.locator('a[href="/templates/lakebase-token-management"]'),
+    ).toBeVisible();
+    await expect(
+      page.locator('a[href="/templates/genie-conversational-analytics"]'),
+    ).toBeHidden();
+
+    await page.getByRole("searchbox").fill("appkit");
+    await expect(
+      page.locator('a[href="/templates/spin-up-databricks-app"]'),
+    ).toBeVisible();
+  });
 });
 
 test.describe("templates page service filter", () => {
@@ -57,7 +80,9 @@ test.describe("templates page service filter", () => {
     await page.goto("/templates");
     await expect(page.getByText(TOTAL_TEMPLATES)).toBeVisible();
 
-    await page.getByRole("checkbox", { name: "Lakebase", exact: true }).check();
+    await page
+      .getByRole("checkbox", { name: "Lakebase Postgres", exact: true })
+      .check();
 
     const count = page.getByText(
       new RegExp(`^\\d+ of ${TEMPLATE_COUNT} templates$`),
@@ -80,7 +105,9 @@ test.describe("templates page clear all filters", () => {
     await page.goto("/templates");
 
     await page.getByRole("searchbox").fill("lakebase");
-    await page.getByRole("checkbox", { name: "Lakebase", exact: true }).check();
+    await page
+      .getByRole("checkbox", { name: "Lakebase Postgres", exact: true })
+      .check();
     await expect(page.getByRole("button", { name: "Clear all" })).toBeVisible();
 
     await page.getByRole("button", { name: "Clear all" }).click();

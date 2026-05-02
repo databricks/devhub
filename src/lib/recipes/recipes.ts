@@ -684,3 +684,51 @@ export function filterPublished<T extends Draftable>(
   if (includeDrafts) return items;
   return items.filter((item) => !item.isDraft);
 }
+
+type SearchableTemplate = {
+  name: string;
+  description: string;
+  tags: string[];
+  services: Service[];
+};
+
+type TemplateFilter = {
+  searchQuery?: string;
+  selectedServices?: ReadonlySet<Service> | Service[];
+  activeTags?: ReadonlySet<string> | string[];
+};
+
+function asSet<T>(input: ReadonlySet<T> | T[] | undefined): ReadonlySet<T> {
+  if (!input) return new Set();
+  return input instanceof Set ? input : new Set(input);
+}
+
+export function matchesTemplateFilter(
+  item: SearchableTemplate,
+  filter: TemplateFilter,
+): boolean {
+  const services = asSet(filter.selectedServices);
+  if (services.size > 0 && !item.services.some((s) => services.has(s))) {
+    return false;
+  }
+
+  const tags = asSet(filter.activeTags);
+  if (tags.size > 0 && !item.tags.some((t) => tags.has(t))) {
+    return false;
+  }
+
+  const query = filter.searchQuery?.toLowerCase().trim() ?? "";
+  if (!query) return true;
+
+  const haystack = [item.name, item.description, ...item.tags, ...item.services]
+    .join(" ")
+    .toLowerCase();
+  return haystack.includes(query);
+}
+
+export function filterTemplates<T extends SearchableTemplate>(
+  items: T[],
+  filter: TemplateFilter,
+): T[] {
+  return items.filter((item) => matchesTemplateFilter(item, filter));
+}

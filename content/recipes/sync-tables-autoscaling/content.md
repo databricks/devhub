@@ -1,4 +1,4 @@
-## Sync Tables: Sync a Unity Catalog Table to Lakebase (Autoscaling)
+## Sync a Unity Catalog Table to Lakebase
 
 Serve lakehouse data through Lakebase Autoscaling Postgres so your applications can query it with sub-10ms latency. This creates a synced table, a managed copy of your Unity Catalog table in Lakebase that stays up to date automatically.
 

@@ -1,4 +1,4 @@
-## Drizzle + Lakebase in an Off-Platform App
+## Drizzle ORM with Lakebase in an Off-Platform App
 
 Connect Drizzle ORM to Lakebase in any Node.js server outside Databricks App Platform. Uses a `pg` Pool with a password callback for automatic credential refresh.
 

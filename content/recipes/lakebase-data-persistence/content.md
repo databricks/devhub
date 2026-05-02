@@ -39,9 +39,7 @@ The scaffolded Lakebase sample uses `lakebase` in route names and file paths to 
 
 The following changes match what `apps init --features=lakebase` generates. Apply them to an existing scaffolded AppKit app.
 
-:::tip[Get the latest template code]
-The code below may be outdated. To get the latest, clone `https://github.com/databricks/appkit` and look in the `template/` directory. Search for `{{if .plugins.lakebase}}` to find all lakebase-conditional files and blocks. Files entirely wrapped in that conditional are lakebase-only; shared files like `App.tsx` and `server.ts` contain conditional blocks you can extract.
-:::
+> **Tip:** The code below may be outdated. To get the latest, clone `https://github.com/databricks/appkit` and look in the `template/` directory. Search for `{{if .plugins.lakebase}}` to find all lakebase-conditional files and blocks. Files entirely wrapped in that conditional are lakebase-only; shared files like `App.tsx` and `server.ts` contain conditional blocks you can extract.
 
 #### Update `server/server.ts`
 
@@ -462,4 +460,4 @@ databricks apps logs <app-name> --profile <PROFILE>
 
 - [Lakebase plugin docs](/docs/appkit/v0/plugins/lakebase)
 - [Lakebase database permissions](/docs/appkit/v0/plugins/lakebase#database-permissions)
-- [What is a Lakebase?](/solutions/what-is-a-lakebase)
+- [What is Lakebase?](/docs/lakebase/overview)

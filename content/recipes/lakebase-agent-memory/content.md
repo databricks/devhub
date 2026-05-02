@@ -107,9 +107,9 @@ Add REST endpoints for your chat UI:
 
 ### 6. Update the client to load and resume chats
 
-- keep selected `chatId` in state or URL
-- fetch history with `GET /api/chats/:chatId/messages` and call `setMessages()` from the `useChat` return value to load it into the chat (AI SDK v6 uses `messages` in `ChatInit`, not `initialMessages`)
-- send `chatId` in every `/api/chat` request by passing it via a custom `fetch` wrapper on the `TextStreamChatTransport` constructor (there is no `onResponse` option on the transport; use the custom `fetch` to read response headers like `X-Chat-Id`)
+- Keep selected `chatId` in state or URL
+- Fetch history with `GET /api/chats/:chatId/messages` and call `setMessages()` from the `useChat` return value to load it into the chat (AI SDK v6 uses `messages` in `ChatInit`, not `initialMessages`)
+- Send `chatId` in every `/api/chat` request by passing it via a custom `fetch` wrapper on the `TextStreamChatTransport` constructor (there is no `onResponse` option on the transport; use the custom `fetch` to read response headers like `X-Chat-Id`)
 
 ### 7. Verify persistence end-to-end
 

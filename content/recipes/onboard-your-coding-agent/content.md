@@ -1,6 +1,6 @@
 ## Onboard Your Coding Agent
 
-Make a Databricks repo agent-ready in three moves: install Databricks platform skills into the user's coding agent (project-scoped, so the rules ride with the repo), wire up the DevHub Docs MCP server so the agent can fetch any DevHub page on demand, and bootstrap an `AGENTS.md` (with a symlinked `CLAUDE.md`) that pins the workspace defaults this codebase should use.
+Make a Databricks repo agent-ready in four steps: install Databricks platform skills into the user's coding agent (project-scoped, so the rules ride with the repo), wire up the DevHub Docs MCP server so the agent can fetch any DevHub page on demand, and bootstrap an `AGENTS.md` (with a symlinked `CLAUDE.md`) that pins the workspace defaults this codebase should use.
 
 References:
 
@@ -35,7 +35,7 @@ databricks experimental aitools list --project
 
 ### 2. Wire up the DevHub Docs MCP server
 
-The DevHub MCP server gives coding agents read access to every page on `dev.databricks.com` (docs, recipes, cookbooks, examples) without leaving the editor. The agent can call `list_docs_resources` to see the index and `get_doc_resource(slug)` to fetch any page as markdown.
+The DevHub MCP server gives coding agents read access to every page on `dev.databricks.com` (docs, templates, and examples) without leaving the editor. The agent can call `list_docs_resources` to see the index and `get_doc_resource(slug)` to fetch any page as markdown.
 
 Install at project scope so the server is bound to this repo (drop `-g` if you want it user-wide):
 
@@ -76,7 +76,7 @@ ls AGENTS.md CLAUDE.md 2>/dev/null
 
 #### 3b. Ask the user for this repo's defaults
 
-Before generating `AGENTS.md`, walk through these questions one at a time (using a multiple-choice tool when available, per the dev-guidelines block above). Leave any answer blank with `TODO:` if the user does not know yet — you can fill it in later as the project develops. Do not infer or invent values.
+Before generating `AGENTS.md`, walk through these questions one at a time (using a multiple-choice tool when available). Leave any answer blank with `TODO:` if the user does not know yet — you can fill it in later as the project develops. Do not infer or invent values.
 
 - **CLI profile** for this repo (e.g. `DEFAULT`, `my-prod-workspace`). Get the list with `databricks auth profiles`.
 - **Workspace URL** (the `Host` column from `databricks auth profiles` for the chosen profile).
@@ -152,7 +152,7 @@ Open a fresh chat with the user's coding agent and ask it:
 
 The agent should answer correctly without needing to fetch any extra context — that confirms the agent is reading `AGENTS.md` and the Databricks skills are loaded. If it cannot, re-check that the skill install step ran in the project directory (`databricks experimental aitools list --project`) and that `AGENTS.md` is at the repo root.
 
-## Where to next
+### Where to next
 
 - [Templates catalog](/templates) — pick a template, copy the prompt, and the agent now has full Databricks context to execute against your workspace defaults.
 - [DevHub Docs MCP Server reference](/docs/tools/ai-tools/docs-mcp-server) — full tool list and connection troubleshooting.

@@ -1,6 +1,6 @@
 ## Spin Up a Databricks App
 
-Generate a working AppKit Databricks App from scratch in a couple of minutes. This recipe runs `databricks apps init` to scaffold the project, runs it locally, and deploys it to your workspace.
+Generate a working AppKit Databricks App from scratch in a couple of minutes. This template runs `databricks apps init` to scaffold the project, runs it locally, and deploys it to your workspace.
 
 The full CLI surface — every `--features`, `--set`, `--target`, and the post-deploy management commands — lives on DevHub at [App development](/docs/apps/development) and [Apps quickstart](/docs/apps/quickstart). Use those whenever a flag below is unclear.
 
@@ -100,8 +100,8 @@ databricks apps logs <app-name> --profile <PROFILE>
 
 Open the URL from `apps get` (signed in to Databricks) to confirm the app responds, then iterate: edit code, redeploy.
 
-## Where to next
+### Where to next
 
 - [Onboard Your Coding Agent](/templates/onboard-your-coding-agent) — install Databricks skills (project-scoped) and the DevHub MCP server so your editor's AI assistant has the same context the human does.
 - [App development reference](/docs/apps/development) — all `apps init` / `apps deploy` flags, environment configuration, the pre-deploy checklist, and troubleshooting.
-- [Templates catalog](/templates) — fully composed cookbooks (AI chat, app + Lakebase, Genie analytics, operational analytics) when the bare scaffold is not what you want.
+- [Templates catalog](/templates) — fully composed templates (AI chat, app + Lakebase, Genie analytics, operational analytics) when the bare scaffold is not what you want.

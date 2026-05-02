@@ -1,4 +1,4 @@
-## Lakebase pgvector
+## Vector Search with Lakebase and pgvector
 
 Enable vector similarity search in Lakebase using the pgvector extension.
 

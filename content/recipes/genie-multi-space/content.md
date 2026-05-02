@@ -10,7 +10,8 @@ List your spaces:
 databricks genie list-spaces -o json --profile <PROFILE>
 ```
 
-:::tip[Avoid repeating `--profile` on every command]
+**Tip: Avoid repeating `--profile` on every command**
+
 Add your profile to the bundle's `databricks.yml` under the target — then `bundle deploy` and `apps` commands pick it up automatically:
 
 ```yaml
@@ -21,7 +22,6 @@ targets:
 ```
 
 This is more reliable than `export DATABRICKS_CONFIG_PROFILE` since it persists across shells and works for agents running commands in subshells.
-:::
 
 Note the `space_id` and `title` for each space. Decide on a short lowercase alias for each (e.g. `sales`, `support`) — these become the keys in the server `spaces` map and in the `SPACES` array on the client. They must match exactly.
 

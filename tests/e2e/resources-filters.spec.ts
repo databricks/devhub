@@ -96,6 +96,40 @@ test.describe("templates page service filter", () => {
       page.locator('a[href="/templates/query-ai-gateway-endpoints"]'),
     ).toBeHidden();
   });
+
+  test("selecting multiple services narrows results (AND)", async ({
+    page,
+  }) => {
+    await page.goto("/templates");
+    await expect(page.getByText(TOTAL_TEMPLATES)).toBeVisible();
+
+    const countLocator = page.getByText(
+      new RegExp(`^(\\d+) of ${TEMPLATE_COUNT} templates$`),
+    );
+
+    await page
+      .getByRole("checkbox", { name: "Databricks Apps", exact: true })
+      .check();
+    const afterFirst = (await countLocator.textContent()) ?? "";
+    const firstCount = Number(afterFirst.split(" ")[0]);
+
+    await page
+      .getByRole("checkbox", { name: "Lakebase Postgres", exact: true })
+      .check();
+    await expect(countLocator).not.toHaveText(afterFirst);
+    const afterSecond = (await countLocator.textContent()) ?? "";
+    const secondCount = Number(afterSecond.split(" ")[0]);
+
+    expect(secondCount).toBeLessThan(firstCount);
+    expect(secondCount).toBeGreaterThan(0);
+
+    await expect(
+      page.locator('a[href="/templates/lakebase-data-persistence"]'),
+    ).toBeVisible();
+    await expect(
+      page.locator('a[href="/templates/lakebase-pgvector"]'),
+    ).toBeHidden();
+  });
 });
 
 test.describe("templates page clear all filters", () => {

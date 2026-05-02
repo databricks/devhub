@@ -708,13 +708,15 @@ export function matchesTemplateFilter(
   filter: TemplateFilter,
 ): boolean {
   const services = asSet(filter.selectedServices);
-  if (services.size > 0 && !item.services.some((s) => services.has(s))) {
-    return false;
+  const itemServices = new Set(item.services);
+  for (const required of services) {
+    if (!itemServices.has(required)) return false;
   }
 
   const tags = asSet(filter.activeTags);
-  if (tags.size > 0 && !item.tags.some((t) => tags.has(t))) {
-    return false;
+  const itemTags = new Set(item.tags);
+  for (const required of tags) {
+    if (!itemTags.has(required)) return false;
   }
 
   const query = filter.searchQuery?.toLowerCase().trim() ?? "";

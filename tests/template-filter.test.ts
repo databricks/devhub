@@ -6,6 +6,7 @@ import {
   cookbooks,
   examples,
   type Recipe,
+  type Service,
 } from "../src/lib/recipes/recipes";
 
 const lakebasePostgresRecipe: Recipe = {
@@ -93,6 +94,31 @@ describe("matchesTemplateFilter", () => {
     ).toBe(true);
   });
 
+  test("multiple selected services AND together (item must have every selected service)", () => {
+    const lakebaseApp: Recipe = {
+      id: "lakebase-app",
+      name: "Lakebase App",
+      description: "An app on Lakebase",
+      tags: [],
+      services: ["Lakebase Postgres", "Databricks Apps"],
+    };
+    const lakebaseOnly: Recipe = {
+      id: "lakebase-only",
+      name: "Lakebase Only",
+      description: "Standalone Lakebase",
+      tags: [],
+      services: ["Lakebase Postgres"],
+    };
+
+    const both = new Set<Service>(["Lakebase Postgres", "Databricks Apps"]);
+    expect(matchesTemplateFilter(lakebaseApp, { selectedServices: both })).toBe(
+      true,
+    );
+    expect(
+      matchesTemplateFilter(lakebaseOnly, { selectedServices: both }),
+    ).toBe(false);
+  });
+
   test("respects activeTags filter", () => {
     expect(
       matchesTemplateFilter(lakebasePostgresRecipe, {
@@ -104,6 +130,26 @@ describe("matchesTemplateFilter", () => {
         activeTags: new Set(["Postgres"]),
       }),
     ).toBe(true);
+  });
+
+  test("multiple active tags AND together", () => {
+    const item: Recipe = {
+      id: "x",
+      name: "X",
+      description: "x",
+      tags: ["Lakebase", "Postgres", "Setup"],
+      services: ["Lakebase Postgres"],
+    };
+    expect(
+      matchesTemplateFilter(item, {
+        activeTags: new Set(["Lakebase", "Postgres"]),
+      }),
+    ).toBe(true);
+    expect(
+      matchesTemplateFilter(item, {
+        activeTags: new Set(["Lakebase", "AppKit"]),
+      }),
+    ).toBe(false);
   });
 
   test("combines search query with service filter (AND)", () => {
@@ -182,6 +228,31 @@ describe("filterTemplates against real recipe data", () => {
     expect(matched.length).toBeGreaterThan(0);
     for (const r of matched) {
       expect(r.services).toContain("Genie");
+    }
+  });
+
+  test("selecting multiple services narrows results (AND, not OR)", () => {
+    const allItems = [...recipesInOrder, ...cookbooks, ...examples];
+
+    const databricksApps = filterTemplates(allItems, {
+      selectedServices: new Set<Service>(["Databricks Apps"]),
+    });
+    const lakebase = filterTemplates(allItems, {
+      selectedServices: new Set<Service>(["Lakebase Postgres"]),
+    });
+    const both = filterTemplates(allItems, {
+      selectedServices: new Set<Service>([
+        "Databricks Apps",
+        "Lakebase Postgres",
+      ]),
+    });
+
+    expect(both.length).toBeLessThanOrEqual(databricksApps.length);
+    expect(both.length).toBeLessThanOrEqual(lakebase.length);
+    expect(both.length).toBeGreaterThan(0);
+    for (const item of both) {
+      expect(item.services).toContain("Databricks Apps");
+      expect(item.services).toContain("Lakebase Postgres");
     }
   });
 });

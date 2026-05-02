@@ -1,5 +1,5 @@
 import Layout from "@theme/Layout";
-import { FilterIcon } from "lucide-react";
+import { ArrowUpRight, FilterIcon, TerminalIcon } from "lucide-react";
 import { useCallback, useMemo, useState, type ReactNode } from "react";
 import { ActiveFilters } from "@/components/templates/active-filters";
 import type { TemplateItem } from "@/components/templates/template-card";
@@ -23,6 +23,48 @@ import {
   type Service,
 } from "@/lib/recipes/recipes";
 import { useFeatureFlags } from "@/lib/feature-flags";
+
+function OfficialTemplatesCallout(): ReactNode {
+  return (
+    <a
+      href="https://github.com/databricks/app-templates"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="group mt-10 block no-underline"
+      aria-label="Browse databricks/app-templates on GitHub (opens in new tab)"
+    >
+      <div className="relative overflow-hidden rounded-xl border border-db-cyan/30 bg-gradient-to-br from-white via-white to-db-cyan/5 p-6 transition-colors duration-200 hover:border-db-cyan/45 dark:border-db-cyan/25 dark:from-[#102127] dark:via-[#102127] dark:to-db-cyan/10 dark:hover:border-db-cyan/40 md:p-7">
+        <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between md:gap-8">
+          <div className="min-w-0 flex-1">
+            <p className="mb-2 inline-flex items-center gap-2 text-[10px] font-semibold tracking-[0.12em] text-black/60 uppercase dark:text-white/60">
+              <span className="text-db-lava">&#9658;</span>
+              More templates on GitHub
+            </p>
+            <h2 className="mb-2 text-xl leading-tight font-medium text-black dark:text-white md:text-2xl">
+              Looking for Streamlit, Dash, Gradio, Shiny, Flask, or FastAPI
+              starters?
+            </h2>
+            <p className="m-0 max-w-2xl text-sm leading-relaxed text-black/68 dark:text-white/68">
+              Find more pre-built templates for Databricks Apps at{" "}
+              <span className="text-black/85 dark:text-white/85">
+                databricks/app-templates
+              </span>
+              .
+            </p>
+          </div>
+          <div className="flex shrink-0 items-center gap-2 self-start rounded-lg border border-black/10 bg-white px-4 py-2.5 text-sm font-medium text-db-navy transition-colors duration-200 group-hover:border-db-lava/50 group-hover:text-db-lava dark:border-white/10 dark:bg-white/5 dark:text-white dark:group-hover:border-db-lava-light/55 dark:group-hover:text-db-lava-light md:self-center">
+            <TerminalIcon aria-hidden="true" className="size-4" />
+            <span>Browse on GitHub</span>
+            <ArrowUpRight
+              aria-hidden="true"
+              className="size-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+            />
+          </div>
+        </div>
+      </div>
+    </a>
+  );
+}
 
 function buildTemplateItems(includeDrafts: boolean): TemplateItem[] {
   const publishedExamples = filterPublished(examples, includeDrafts);
@@ -204,6 +246,7 @@ export default function TemplatesPage(): ReactNode {
                 <p className="mt-6 text-center text-xs text-black/40 dark:text-white/40">
                   {filteredItems.length} of {ALL_ITEMS.length} templates
                 </p>
+                <OfficialTemplatesCallout />
               </div>
             </div>
           </div>

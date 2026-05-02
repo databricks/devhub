@@ -2,6 +2,7 @@ import MDXComponents from "@theme-original/MDXComponents";
 import type { MDXComponentsObject } from "@theme/MDXComponents";
 import CodeBlock from "@theme/CodeBlock";
 import useBrokenLinks from "@docusaurus/useBrokenLinks";
+import Heading from "@theme/Heading";
 import type { ComponentPropsWithoutRef } from "react";
 
 import { cn } from "@/lib/utils";
@@ -28,11 +29,10 @@ function H1({ className, id, ...props }: ComponentPropsWithoutRef<"h1">) {
   );
 }
 
-function H2({ className, id, ...props }: ComponentPropsWithoutRef<"h2">) {
-  useAnchor(id);
+function H2({ className, ...props }: ComponentPropsWithoutRef<"h2">) {
   return (
-    <h2
-      id={id}
+    <Heading
+      as="h2"
       className={cn(
         "mt-10 mb-3 scroll-m-24 border-b border-db-border pb-2.5 text-2xl font-bold tracking-tight text-db-navy first:mt-8 dark:text-white",
         className,
@@ -42,11 +42,10 @@ function H2({ className, id, ...props }: ComponentPropsWithoutRef<"h2">) {
   );
 }
 
-function H3({ className, id, ...props }: ComponentPropsWithoutRef<"h3">) {
-  useAnchor(id);
+function H3({ className, ...props }: ComponentPropsWithoutRef<"h3">) {
   return (
-    <h3
-      id={id}
+    <Heading
+      as="h3"
       className={cn(
         "mt-8 mb-2.5 scroll-m-24 text-xl font-semibold tracking-tight text-db-navy dark:text-white",
         className,
@@ -56,11 +55,10 @@ function H3({ className, id, ...props }: ComponentPropsWithoutRef<"h3">) {
   );
 }
 
-function H4({ className, id, ...props }: ComponentPropsWithoutRef<"h4">) {
-  useAnchor(id);
+function H4({ className, ...props }: ComponentPropsWithoutRef<"h4">) {
   return (
-    <h4
-      id={id}
+    <Heading
+      as="h4"
       className={cn(
         "mt-6 mb-2 scroll-m-24 text-lg font-semibold tracking-tight text-db-navy dark:text-white",
         className,
@@ -70,11 +68,10 @@ function H4({ className, id, ...props }: ComponentPropsWithoutRef<"h4">) {
   );
 }
 
-function H5({ className, id, ...props }: ComponentPropsWithoutRef<"h5">) {
-  useAnchor(id);
+function H5({ className, ...props }: ComponentPropsWithoutRef<"h5">) {
   return (
-    <h5
-      id={id}
+    <Heading
+      as="h5"
       className={cn(
         "mt-5 mb-1.5 scroll-m-24 text-base font-semibold tracking-tight text-db-navy dark:text-white",
         className,
@@ -84,11 +81,10 @@ function H5({ className, id, ...props }: ComponentPropsWithoutRef<"h5">) {
   );
 }
 
-function H6({ className, id, ...props }: ComponentPropsWithoutRef<"h6">) {
-  useAnchor(id);
+function H6({ className, ...props }: ComponentPropsWithoutRef<"h6">) {
   return (
-    <h6
-      id={id}
+    <Heading
+      as="h6"
       className={cn(
         "mt-4 mb-1.5 scroll-m-24 text-sm font-semibold tracking-tight text-db-navy/90 dark:text-white/90",
         className,

@@ -2,14 +2,7 @@
 
 Build a streaming AI chat experience in a Databricks App using Vercel AI SDK with Databricks Model Serving and OpenAI-compatible endpoints.
 
-### 1. Follow the prerequisite templates first
-
-Complete these templates before adding chat:
-
-- [`Set Up Your Local Dev Environment`](/templates/set-up-your-local-dev-environment)
-- [`Query AI Gateway Endpoints`](/templates/ai-chat-app#query-ai-gateway-endpoints)
-
-### 2. Install AI SDK packages
+### 1. Install AI SDK packages
 
 ```bash
 npm install ai@6 @ai-sdk/react@3 @ai-sdk/openai @databricks/sdk-experimental
@@ -27,7 +20,7 @@ npm install ai@6 @ai-sdk/react@3 @ai-sdk/openai @databricks/sdk-experimental
 >
 > This basic template works without AI Elements. They are optional prebuilt components.
 
-### 3. Configure environment variables for AI Gateway
+### 2. Configure environment variables for AI Gateway
 
 Configure your Databricks workspace ID and model endpoint:
 
@@ -55,7 +48,7 @@ env:
 
 > **Find your endpoint**: Run `databricks serving-endpoints list --profile <PROFILE>` to see available models. Common endpoints include `databricks-meta-llama-3-3-70b-instruct` and `databricks-claude-sonnet-4`, but availability varies by workspace.
 
-### 4. Configure authentication helper
+### 3. Configure authentication helper
 
 Create a helper function that works for both local development and deployed apps:
 
@@ -89,7 +82,7 @@ This function uses the Databricks SDK auth chain, which reads ~/.databrickscfg p
 
 > **User identity in deployed apps**: Databricks Apps injects user identity via request headers. Extract it with `req.header("x-forwarded-email")` or `req.header("x-forwarded-user")`. Use this for chat persistence and access control.
 
-### 5. Add `/api/chat` route with streaming
+### 4. Add `/api/chat` route with streaming
 
 Create a server route using the AI SDK's streaming support:
 
@@ -143,7 +136,7 @@ app.post("/api/chat", async (req, res) => {
 });
 ```
 
-### 6. Render the streaming chat UI
+### 5. Render the streaming chat UI
 
 Use `useChat` from the AI SDK with `TextStreamChatTransport` for streaming support:
 
@@ -206,7 +199,7 @@ export function ChatPage() {
 }
 ```
 
-### 7. Deploy and verify
+### 6. Deploy and verify
 
 ```bash
 databricks apps deploy --profile <PROFILE>

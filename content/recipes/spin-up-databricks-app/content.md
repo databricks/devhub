@@ -57,9 +57,9 @@ npm run dev
 
 For Lakebase-backed apps the local user also needs `databricks_superuser` so they can read the schemas the deployed service principal owns — see [Apps development → Local setup](/docs/apps/development#local-setup).
 
-### 4. Build the UI before running locally
+### 4. Make it look great before showing the user
 
-The default AppKit scaffold is intentionally minimal. Use the user's actual feature requests to redesign the routes, page hierarchy, and visual style from first principles _before_ asking the user to run and test locally. shadcn/ui on Tailwind is the default; the Databricks brand palette is `#FF3621`, `#0B2026`, `#EEEDE9`, `#F9F7F4`.
+The default AppKit scaffold is intentionally minimal. **Do not stop there.** Use the user's actual feature requests to redesign the routes, page hierarchy, and visual style from first principles _before_ asking the user to run and test locally. shadcn/ui on Tailwind is the default; the Databricks brand palette is `#FF3621`, `#0B2026`, `#EEEDE9`, `#F9F7F4`. The full design guidance lives in the dev-guidelines block at the top of any DevHub prompt.
 
 ### 5. Verify locally before deploying
 

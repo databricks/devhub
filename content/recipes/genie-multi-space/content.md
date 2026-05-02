@@ -2,8 +2,6 @@
 
 Upgrade a single-space Genie app to let users switch between multiple AI/BI Genie spaces from a dropdown. Each space gets a named alias; switching spaces remounts `<GenieChat>` and clears stale conversation state automatically.
 
-> **Prerequisites:** You need a scaffolded AppKit app with the Genie feature already wired up. If you don't have one yet, follow the [Genie Conversational Analytics](/templates/genie-conversational-analytics) template first, then return here.
-
 ### 1. List all Genie spaces you want to include
 
 List your spaces:

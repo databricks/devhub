@@ -113,10 +113,6 @@ Add REST endpoints for your chat UI:
 
 ### 7. Verify persistence end-to-end
 
-**Important: Deploy before running locally**
-
-Run `databricks apps deploy` at least once before `npm run dev`. The deployed service principal must create and own the `chat` schema — if `npm run dev` runs first, the deployed app hits `permission denied for schema chat`. See [Lakebase local setup](/docs/lakebase/development#local-setup) for access setup and recovery steps.
-
 ```bash
 databricks apps deploy --profile <PROFILE>
 databricks apps logs <app-name> --profile <PROFILE>

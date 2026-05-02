@@ -282,6 +282,6 @@ Open `<app-url>/genie` while signed in to Databricks and verify:
 
 #### References
 
-- [Genie plugin docs](https://databricks.github.io/appkit/docs/plugins/genie)
-- [GenieChat component](https://databricks.github.io/appkit/docs/api/appkit-ui/genie/GenieChat)
+- [Genie plugin docs](/docs/appkit/v0/plugins/genie)
+- [GenieChat component](/docs/appkit/v0/api/appkit-ui/genie/GenieChat)
 - [AI/BI Genie documentation](https://docs.databricks.com/en/genie/index.html)

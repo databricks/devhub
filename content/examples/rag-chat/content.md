@@ -21,7 +21,7 @@ Unlike the other templates, **this template is designed to be consumed via `data
 - Writes `DATABRICKS_CONFIG_PROFILE` or `DATABRICKS_HOST` based on your Databricks CLI configuration.
 - Drops you into a ready-to-run project directory named by `--name`.
 
-This validates the [AppKit templates system](https://databricks.github.io/appkit/docs/development/templates) as a way to ship DevHub templates — see `appkit.plugins.json` and `.env.tmpl` in the template for how it works.
+This validates the [AppKit templates system](/docs/appkit/v0/development/templates) as a way to ship DevHub templates — see `appkit.plugins.json` and `.env.tmpl` in the template for how it works.
 
 ### What to Adapt
 

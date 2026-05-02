@@ -26,7 +26,7 @@ GRANT databricks_superuser TO "<your-email>";
 
 See [Lakebase Development](/docs/lakebase/development#local-development) for the full local access workflow.
 
-For testing against production data without redeploying, see the [remote bridge](https://databricks.github.io/appkit/docs/development/remote-bridge).
+For testing against production data without redeploying, see the [remote bridge](/docs/appkit/v0/development/remote-bridge).
 
 ## Add a plugin
 

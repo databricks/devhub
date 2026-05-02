@@ -200,6 +200,6 @@ For implementing each layer, the following Databricks agent skills provide detai
 
 - [Medallion architecture](https://docs.databricks.com/aws/en/lakehouse/medallion)
 - [Lakeflow Declarative Pipelines](https://docs.databricks.com/aws/en/delta-live-tables/)
-- [Materialized views](https://docs.databricks.com/aws/en/delta-live-tables/materialized-views)
+- [Materialized views](https://docs.databricks.com/aws/en/ldp/materialized-views)
 - [Lakehouse Sync](https://docs.databricks.com/aws/en/oltp/projects/lakehouse-sync)
 - [DevHub: Pipelines and freshness](/docs/lakehouse/pipelines)

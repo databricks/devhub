@@ -45,7 +45,7 @@ export function buildExportGetStartedSection(example: Example): string {
     return [
       "## Get started",
       "",
-      "Run the command below to scaffold this example into a new directory using the [AppKit template system](https://databricks.github.io/appkit/docs/development/templates). The CLI will prompt you for required resources (e.g. Lakebase branch, database), auto-resolve connection details into your local `.env`, and drop you into a ready-to-run project.",
+      "Run the command below to scaffold this example into a new directory using the [AppKit template system](/docs/appkit/v0/development/templates). The CLI will prompt you for required resources (e.g. Lakebase branch, database), auto-resolve connection details into your local `.env`, and drop you into a ready-to-run project.",
       "",
       "**Before running, make sure you have a valid Databricks CLI profile.** The init flow calls the workspace API to resolve connection details, so it fails immediately without auth. Run `databricks auth profiles` — if no profile shows `Valid: YES`, authenticate one with `databricks auth login --profile <name> --host <workspace-url>`. If `DEFAULT` is not valid, pass the profile you want to use via `--profile <name>` appended to the init command below.",
       "",
@@ -125,7 +125,7 @@ export function buildFullPrompt(
     lines.push(
       `### ${initStepNumber}. Scaffold the project with \`databricks apps init\``,
       "",
-      "Run the command below to scaffold this example into a new directory using the [AppKit template system](https://databricks.github.io/appkit/docs/development/templates). It creates the app in your workspace, binds required resources, and writes a local `.env` with connection details resolved by the AppKit plugins.",
+      "Run the command below to scaffold this example into a new directory using the [AppKit template system](/docs/appkit/v0/development/templates). It creates the app in your workspace, binds required resources, and writes a local `.env` with connection details resolved by the AppKit plugins.",
       "",
       "```bash",
       example.initCommand,

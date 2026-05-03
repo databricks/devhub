@@ -3,7 +3,7 @@ import type { MDXComponentsObject } from "@theme/MDXComponents";
 import CodeBlock from "@theme/CodeBlock";
 import useBrokenLinks from "@docusaurus/useBrokenLinks";
 import Heading from "@theme/Heading";
-import type { ComponentPropsWithoutRef } from "react";
+import React, { type ComponentPropsWithoutRef } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -282,15 +282,54 @@ function Td({ className, ...props }: ComponentPropsWithoutRef<"td">) {
   );
 }
 
-function Details({ className, ...props }: ComponentPropsWithoutRef<"details">) {
+function ChevronRight({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="m9 18 6-6-6-6" />
+    </svg>
+  );
+}
+
+function Details({
+  className,
+  children,
+  ...props
+}: ComponentPropsWithoutRef<"details">) {
+  const items = React.Children.toArray(children);
+  const summaryItem = items.find(
+    (child) =>
+      React.isValidElement(child) &&
+      (child.type === "summary" ||
+        (child.type as { name?: string })?.name === "Summary"),
+  );
+  const rest = items.filter((child) => child !== summaryItem);
+
   return (
     <details
       className={cn(
-        "my-6 rounded-xl border border-db-border bg-db-card px-4 py-3 shadow-sm",
+        "group/details my-6 rounded-xl border border-db-border bg-db-card px-4 py-3 shadow-sm",
         className,
       )}
       {...props}
-    />
+    >
+      {summaryItem && (
+        <summary className="flex cursor-pointer list-none items-center gap-2 text-base font-semibold text-db-navy dark:text-white [&::-webkit-details-marker]:hidden">
+          <ChevronRight className="h-4 w-4 shrink-0 text-db-lava transition-transform group-open/details:rotate-90" />
+          {React.isValidElement<{ children?: React.ReactNode }>(summaryItem)
+            ? summaryItem.props.children
+            : null}
+        </summary>
+      )}
+      {rest}
+    </details>
   );
 }
 
@@ -298,7 +337,7 @@ function Summary({ className, ...props }: ComponentPropsWithoutRef<"summary">) {
   return (
     <summary
       className={cn(
-        "cursor-pointer text-base font-semibold text-db-navy marker:text-db-lava dark:text-white",
+        "flex cursor-pointer list-none items-center gap-2 text-base font-semibold text-db-navy dark:text-white [&::-webkit-details-marker]:hidden",
         className,
       )}
       {...props}
@@ -397,6 +436,7 @@ const components: MDXComponentsObject = {
   th: Th,
   td: Td,
   details: Details,
+  Details: Details,
   summary: Summary,
   kbd: Kbd,
   mark: Mark,

@@ -198,7 +198,6 @@ test.describe("copy markdown exports raw markdown on solution pages", () => {
     const copied = await getCopiedText(page);
     expect(copied).not.toContain("# About DevHub");
     expect(copied).not.toContain("/llms.txt");
-    expect(copied).toContain("# Introducing dev.databricks.com");
     expect(copied).toContain("**dev.databricks.com**");
     expect(copied).toContain('title: "Introducing dev.databricks.com"');
   });

@@ -12,10 +12,10 @@ Use it for the data your apps actively write and read at low latency: user state
 
 ## What makes it different from running your own Postgres
 
-- **Co-located with your workspace**: no VPC peering, no cross-cloud credential management, no added latency from network boundaries. Your app and your data are in the same place.
-- **Instant branching**: create isolated database copies in seconds using copy-on-write storage, similar to git branches. Branches share unchanged data, so they're cheap to create and maintain.
-- **Autoscales with your workload**: compute scales up under load and back down when demand drops, within a configured min/max range. No capacity planning or manual resize.
-- **Scales to zero**: the database pauses when idle and resumes on the next query. No cost for idle compute. Development branches suspend by default after five minutes.
+- **Runs inside your workspace**, eliminating VPC peering, cross-cloud credential management, and network latency.
+- **Instant branching** via copy-on-write storage creates isolated database copies in seconds, similar to git branches. Branches share unchanged data so they're cheap to create and maintain.
+- **Autoscales** with your workload, scaling up under load and back down when demand drops, within a configured min/max range. No capacity planning or manual resize.
+- **Scales to zero** when idle and resumes on the next query. No cost for idle compute. Development branches suspend by default after five minutes.
 
 ## How AppKit wires it up
 
@@ -47,7 +47,7 @@ The plugin handles OAuth token refresh and connection pooling automatically. Whe
 ## When not to use it
 
 - Pure analytics: read-only queries against large datasets belong in Unity Catalog, not Lakebase Postgres.
-- Apps with no other Databricks workspace dependencies. The colocation advantage doesn't apply, and auth is your responsibility.
+- Apps with no other Databricks workspace dependencies. The colocation advantage doesn't apply, and auth becomes your responsibility (Databricks does not inject credentials or refresh tokens for apps running outside the workspace).
 
 ## Where to next
 

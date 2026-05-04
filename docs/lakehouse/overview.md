@@ -6,7 +6,7 @@ description: The data tier of the Databricks Data Intelligence Platform. Governe
 
 # What is the Data Lakehouse?
 
-The Data Lakehouse is the analytical tier of your Databricks workspace: tables and views governed by Unity Catalog and populated by Lakeflow. Lakeflow is Databricks's data engineering family, covering ingestion, pipelines, and jobs. From an AppKit app, you read its tables, trigger Lakeflow Jobs, and show "last updated" timestamps from the pipelines that populated them.
+The Data Lakehouse is the analytical tier of your Databricks workspace: tables and views governed by Unity Catalog and populated by Lakeflow. Lakeflow is Databricks' suite of data engineering services covering ingestion, orchestration, and pipeline management. From an AppKit app, you read its tables, trigger Lakeflow Jobs, and show "last updated" timestamps from the pipelines that populated them.
 
 The [Analytics plugin](/docs/appkit/v0/plugins/analytics) handles SQL warehouse reads (see [Analytical reads](/docs/lakehouse/analytical-reads) and [Pipelines and freshness](/docs/lakehouse/pipelines)). The [Jobs plugin](/docs/appkit/v0/plugins/jobs) handles run triggering and progress (see [Lakeflow Jobs](/docs/lakehouse/jobs)).
 

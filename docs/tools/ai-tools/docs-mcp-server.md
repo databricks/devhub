@@ -8,13 +8,21 @@ The DevHub Docs MCP Server gives coding agents and IDE assistants read access to
 
 ## Install
 
-Add the server to any supported coding agent (Cursor, Claude Code, VS Code, Codex, and more) with a single command:
+Add the server to any supported coding agent (Cursor, Claude Code, VS Code, Codex, and more) with a single command.
+
+Global install (user-level, available across all projects):
+
+```bash
+npx add-mcp https://dev.databricks.com/api/mcp --name devhub-docs -g
+```
+
+Project-level install (current directory only):
 
 ```bash
 npx add-mcp https://dev.databricks.com/api/mcp --name devhub-docs
 ```
 
-Use `-g` to install globally (user-level) instead of project-level, and `-a` to target a specific agent:
+To target a specific agent, add `-a`:
 
 ```bash
 npx add-mcp https://dev.databricks.com/api/mcp --name devhub-docs -g -a cursor

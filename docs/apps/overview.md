@@ -40,7 +40,7 @@ Apps are about **interactivity**, not only analytics. A dashboard is great for r
 ## When not to use it
 
 - **Static sites with no Databricks data access.** Host these anywhere.
-- **Public-facing or customer-facing apps.** Users have to be authenticated as identities in your Databricks account, so anyone outside your enterprise directory can't sign in.
+- **Public-facing or customer-facing apps.** By default, users must be authenticated identities in your Databricks workspace. For external or customer-facing access, see [App Users](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/key-concepts/#app-users).
 - **Pure read-only dashboards** that AI/BI [Dashboards](https://docs.databricks.com/aws/en/dashboards/) already cover. Use a dashboard until you need to persist user input or run custom logic on top of it.
 
 ## Where to next

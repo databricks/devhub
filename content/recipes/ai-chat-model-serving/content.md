@@ -213,4 +213,4 @@ Open the app URL while signed in to Databricks, send a message, and verify strea
 
 - [Model Serving Overview](https://docs.databricks.com/aws/en/machine-learning/model-serving/)
 - [Serving Endpoints](https://docs.databricks.com/aws/en/machine-learning/model-serving/create-foundation-model-endpoints)
-- [AI Elements docs](https://ui.shadcn.com/docs/registry/ai-elements)
+- [AI Elements docs](https://elements.ai-sdk.dev/docs)

@@ -571,7 +571,7 @@ databricks apps logs <app-name> --profile <PROFILE>
 
 #### References
 
-- [Files plugin docs](https://databricks.github.io/appkit/docs/plugins/files)
+- [Files plugin docs](/docs/appkit/v0/plugins/files)
 - [Unity Catalog Volumes](https://docs.databricks.com/en/connect/unity-catalog/volumes.html)
-- [DirectoryList component](https://databricks.github.io/appkit/docs/api/appkit-ui/files/DirectoryList)
-- [FilePreviewPanel component](https://databricks.github.io/appkit/docs/api/appkit-ui/files/FilePreviewPanel)
+- [DirectoryList component](/docs/appkit/v0/api/appkit-ui/files/DirectoryList)
+- [FilePreviewPanel component](/docs/appkit/v0/api/appkit-ui/files/FilePreviewPanel)

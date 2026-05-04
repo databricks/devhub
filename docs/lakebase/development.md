@@ -73,6 +73,13 @@ For collaborators and other identities that need local read/write access, add th
 
 [Postgres password authentication](https://docs.databricks.com/aws/en/oltp/projects/authentication#overview) is a simpler alternative that avoids OAuth role setup. Set a password in the Branch Overview page and use it as `PGPASSWORD` in `.env`.
 
+You can also generate a short-lived credential for use with any PostgreSQL client (DBeaver, pgAdmin, DataGrip, or a language driver):
+
+```bash
+databricks postgres generate-database-credential \
+  projects/my-project/branches/production/endpoints/primary
+```
+
 The [AppKit plugin docs: local development](/docs/appkit/v0/plugins/lakebase#local-development) cover fine-grained permission alternatives for teams that need schema-scoped access.
 
 ## Feature branches

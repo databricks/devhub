@@ -43,14 +43,14 @@ For server logic outside a route handler, call `AppKit.serving("alias").asUser(r
 
 You could call a serving endpoint directly with `fetch` and a token. The plugin isn't doing something you can't do yourself. It's doing these things so you don't have to:
 
-- **Per-user permissions for free.** Both the Model Serving plugin and Genie plugin routes run as the authenticated user by default. Your users only see endpoints and data they are already allowed to see. No OAuth code on your side. See [Execution context](/docs/appkit/v0/plugins/execution-context) for the details.
-- **Streaming plumbing done.** SSE parsing, abort on unmount, token accumulation, error handling. `useServingStream` and `useGenieChat` handle these.
-- **No secrets in the frontend.** The plugin proxies through your server. Tokens stay on the backend. No PAT in the React bundle.
-- **Typed endpoint aliases.** If your serving endpoint publishes an OpenAPI schema, AppKit generates TypeScript types for request and response per alias. Autocomplete for chunk shapes, not `unknown`.
+- Routes run as the authenticated user, so **per-user permissions** apply automatically. Your users only see endpoints and data they're already allowed to see. No OAuth code on your side. See [Execution context](/docs/appkit/v0/plugins/execution-context) for the details.
+- All **streaming** is handled for you. SSE parsing, abort on unmount, token accumulation, and error handling. `useServingStream` and `useGenieChat` do this.
+- No **secrets** in the frontend. The plugin proxies through your server and tokens stay on the backend. No PAT in the React bundle.
+- When your serving endpoint publishes an OpenAPI schema, AppKit generates **typed endpoint aliases** with TypeScript types for request and response per alias. Autocomplete for chunk shapes, not `unknown`.
 
-:::note[Authoring a custom agent]
+:::note[Creating a custom agent]
 
-Authoring a custom agent from scratch is a Python workflow: the `ResponsesAgent` interface, an agent framework (OpenAI Agents SDK, LangGraph, LlamaIndex), and MLflow for tracing. See [Create an AI agent](https://docs.databricks.com/aws/en/generative-ai/agent-framework/create-agent) on docs.databricks.com for that track.
+Creating a custom agent is a Python workflow: the `ResponsesAgent` interface, an agent framework (OpenAI Agents SDK, LangGraph, LlamaIndex), and MLflow for tracing. See [Create an AI agent](https://docs.databricks.com/aws/en/generative-ai/agent-framework/create-agent) on docs.databricks.com for that track.
 
 :::
 

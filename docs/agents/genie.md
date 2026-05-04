@@ -18,11 +18,11 @@ Give your users a chat box that queries your data. No text-to-SQL, no schema map
 
 ## Why Genie
 
-Genie does three things that otherwise take a team of engineers to build:
+From question to result, Genie:
 
-- **Understands your schema.** Trained on Unity Catalog tables plus a knowledge store of synonyms, example SQL, and column descriptions.
-- **Generates SQL.** A compound AI system turns natural-language questions into executable queries, with follow-up clarifications when the prompt is ambiguous.
-- **Runs the query.** Databricks executes against the warehouse and returns tabular results ready to render.
+- **Understands your schema** from Unity Catalog tables, synonyms, example SQL, and column descriptions.
+- **Generates SQL** from natural-language questions, with follow-up clarifications when the prompt is ambiguous.
+- **Runs the query** against your warehouse and returns tabular results ready to render.
 
 The [`genie` plugin](/docs/appkit/v0/plugins/genie) wires all of that to your chat UI with SSE streaming, auth, and conversation replay handled.
 

@@ -22,15 +22,33 @@ describe("vercel rewrites", () => {
   test("serves DevHub from /devhub while preserving Docusaurus baseUrl links", () => {
     expectRewrite("/devhub", "/");
     expectRewrite("/devhub/", "/");
-    expectRewrite("/devhub/(.*)", "/$1");
+    expectRewrite("/devhub/docs/(.*)", "/docs/$1");
+    expectRewrite("/devhub/templates/(.*)", "/templates/$1");
+    expectRewrite("/devhub/solutions/(.*)", "/solutions/$1");
   });
 
   test("serves DevHub API functions under /devhub/api", () => {
     expectRewrite("/devhub/api/(.*)", "/api/$1");
   });
 
+  test("serves production static assets under /devhub without stripping dev-server assets", () => {
+    expectRewrite("/devhub/assets/(.*)", "/assets/$1");
+    expectRewrite("/devhub/img/(.*)", "/img/$1");
+    expectRewrite("/devhub/appkit-preview/(.*)", "/appkit-preview/$1");
+    expectRewrite("/devhub/raw-docs/(.*)", "/raw-docs/$1");
+    expectRewrite("/devhub/sitemap.xml", "/sitemap.xml");
+    expectRewrite("/devhub/robots.txt", "/robots.txt");
+    expectRewrite("/devhub/search-doc(.*).json", "/search-doc$1.json");
+    expectRewrite("/devhub/lunr-index(.*).json", "/lunr-index$1.json");
+    expect(config.rewrites).not.toContainEqual({
+      source: "/devhub/(.*)",
+      destination: "/$1",
+    });
+  });
+
   test("keeps markdown export routes working under /devhub", () => {
-    expectRewrite("/devhub/docs/llms.txt", "/llms.txt");
+    expectRewrite("/devhub/docs/llms.txt", "/api/llms");
+    expectRewrite("/devhub/llms.txt", "/api/llms");
     expectRewrite(
       "/devhub/docs/(.+)\\.md",
       "/api/markdown?section=docs&slug=$1",

@@ -94,7 +94,9 @@ export function resolveSiteUrlForRequest(
   env: Env = process.env,
 ): string {
   if (host && host.trim() !== "") {
-    const protocol = host.startsWith("localhost") ? "http" : "https";
+    const protocol = /^(localhost|127\.0\.0\.1)(:\d+)?$/.test(host.trim())
+      ? "http"
+      : "https";
     return siteUrlFromConfig(
       `${protocol}://${host.trim()}`,
       resolveSiteBaseUrl(env),

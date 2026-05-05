@@ -12,6 +12,10 @@
     "api/bootstrap-prompt.ts": {
       "includeFiles": "{content/about-devhub.md,content/recipes/**/*.md}",
       "maxDuration": 10
+    },
+    "api/llms.ts": {
+      "includeFiles": "docs/**",
+      "maxDuration": 10
     }
   },
   "rewrites": [
@@ -29,7 +33,11 @@
     },
     {
       "source": "/devhub/docs/llms.txt",
-      "destination": "/llms.txt"
+      "destination": "/api/llms"
+    },
+    {
+      "source": "/devhub/llms.txt",
+      "destination": "/api/llms"
     },
     {
       "source": "/devhub/docs/(.+)\\.md",
@@ -56,8 +64,48 @@
       "destination": "/api/markdown?section=docs&slug=$1"
     },
     {
-      "source": "/devhub/(.*)",
-      "destination": "/$1"
+      "source": "/devhub/docs/(.*)",
+      "destination": "/docs/$1"
+    },
+    {
+      "source": "/devhub/templates/(.*)",
+      "destination": "/templates/$1"
+    },
+    {
+      "source": "/devhub/solutions/(.*)",
+      "destination": "/solutions/$1"
+    },
+    {
+      "source": "/devhub/assets/(.*)",
+      "destination": "/assets/$1"
+    },
+    {
+      "source": "/devhub/img/(.*)",
+      "destination": "/img/$1"
+    },
+    {
+      "source": "/devhub/appkit-preview/(.*)",
+      "destination": "/appkit-preview/$1"
+    },
+    {
+      "source": "/devhub/raw-docs/(.*)",
+      "destination": "/raw-docs/$1"
+    },
+    {
+      "source": "/devhub/sitemap.xml",
+      "destination": "/sitemap.xml"
+    },
+    {
+      "source": "/devhub/robots.txt",
+      "destination": "/robots.txt"
+    },
+    {
+      "source": "/devhub/search-doc(.*).json",
+      "destination": "/search-doc$1.json"
+    },
+    {
+      "source": "/devhub/lunr-index(.*).json",
+      "destination": "/lunr-index$1.json"
     },
     {
       "source": "/docs/llms.txt",

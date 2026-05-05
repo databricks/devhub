@@ -137,7 +137,7 @@ function readDoc(
   return undefined;
 }
 
-function generateLlmsTxt(baseUrl: string, docsDir: string): string {
+export function generateLlmsTxt(baseUrl: string, docsDir: string): string {
   const includeDrafts = showDrafts();
   const publishedCookbooks = filterPublished(cookbooks, includeDrafts);
   const publishedRecipes = filterPublished(recipesInOrder, includeDrafts);

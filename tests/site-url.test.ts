@@ -150,6 +150,9 @@ describe("resolveSiteUrlForRequest", () => {
     expect(resolveSiteUrlForRequest("localhost:3001", {})).toBe(
       "http://localhost:3001",
     );
+    expect(resolveSiteUrlForRequest("127.0.0.1:3001", {})).toBe(
+      "http://127.0.0.1:3001",
+    );
   });
 
   test("preserves configured SITE_URL base path with request host", () => {

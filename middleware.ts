@@ -1,4 +1,5 @@
 import { rewrite } from "@vercel/functions";
+import { resolveSiteBaseUrl, resolveSiteUrl } from "./src/lib/site-url";
 
 /**
  * Content negotiation: when a client sends Accept: text/markdown or
@@ -21,11 +22,18 @@ const BARE_SECTIONS: Record<string, string> = {
 };
 
 export default function middleware(request: Request): Response | undefined {
+  const url = new URL(request.url);
+  const baseUrl = resolveSiteBaseUrl();
+  if (url.pathname === "/" && baseUrl !== "/") {
+    const redirectUrl = new URL(resolveSiteUrl());
+    redirectUrl.search = url.search;
+    return Response.redirect(redirectUrl, 307);
+  }
+
   const accept = request.headers.get("accept") ?? "";
   if (!accept.includes("text/markdown") && !accept.includes("text/plain"))
     return undefined;
 
-  const url = new URL(request.url);
   const path = url.pathname;
 
   let section: string | undefined;
@@ -57,5 +65,5 @@ export default function middleware(request: Request): Response | undefined {
 }
 
 export const config = {
-  matcher: ["/docs/:path*", "/templates/:path*", "/solutions/:path*"],
+  matcher: ["/", "/docs/:path*", "/templates/:path*", "/solutions/:path*"],
 };

@@ -27,8 +27,10 @@ import { joinContentSections } from "@/lib/content-sections";
 import { TemplateImageCarousel } from "@/components/examples/template-image-carousel";
 import { TemplatePreviewImage } from "@/components/examples/template-preview-image";
 import { FallbackCardArt } from "@/components/examples/fallback-card-art";
+import { siteUrlFromConfig } from "@/lib/site-url";
+import { BaseUrlAnchor } from "@/components/base-url-anchor";
 
-const mdxComponents = { pre: RecipePre };
+const mdxComponents = { a: BaseUrlAnchor, pre: RecipePre };
 
 const GITHUB_BASE = "https://github.com/databricks/devhub/tree/main";
 
@@ -128,6 +130,7 @@ export function ExampleDetail({
   children,
 }: ExampleDetailProps): ReactNode {
   const { siteConfig } = useDocusaurusContext();
+  const siteUrl = siteUrlFromConfig(siteConfig.url, siteConfig.baseUrl);
   const contentRef = useRef<HTMLDivElement>(null);
   const permalink = `/templates/${example.id}`;
   const githubUrl = `${GITHUB_BASE}/${example.githubPath}/template`;
@@ -148,7 +151,7 @@ export function ExampleDetail({
     githubUrl,
     includedCookbooks,
     includedRecipes,
-    baseUrl: siteConfig.url,
+    baseUrl: siteUrl,
   };
   const additionalMarkdown = buildAdditionalMarkdown(mdOpts);
   const fullPrompt = buildFullPrompt({ ...mdOpts, sections });

@@ -5,6 +5,7 @@ import useBrokenLinks from "@docusaurus/useBrokenLinks";
 import Heading from "@theme/Heading";
 import React, { type ComponentPropsWithoutRef } from "react";
 
+import { BaseUrlAnchor } from "@/components/base-url-anchor";
 import { cn } from "@/lib/utils";
 
 // Custom heading components must register their anchors with the broken link
@@ -106,13 +107,14 @@ function P({ className, ...props }: ComponentPropsWithoutRef<"p">) {
   );
 }
 
-function A({ className, ...props }: ComponentPropsWithoutRef<"a">) {
+function A({ className, href, ...props }: ComponentPropsWithoutRef<"a">) {
   return (
-    <a
+    <BaseUrlAnchor
       className={cn(
         "font-medium text-db-lava underline decoration-db-lava/35 underline-offset-4 transition-colors hover:text-db-lava-dark dark:text-db-lava-light dark:hover:text-db-lava-lightest",
         className,
       )}
+      href={href}
       {...props}
     />
   );

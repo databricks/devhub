@@ -5,6 +5,7 @@ import {
   useAgentPromptParts,
 } from "@/lib/copy-about-devhub";
 import { absolutizeMarkdown } from "@/lib/copy-preamble";
+import { toSiteRelativePath, withSiteBaseUrl } from "@/lib/site-paths";
 import { siteUrlFromConfig } from "@/lib/site-url";
 
 /**
@@ -138,36 +139,6 @@ export function useAgentMarkdown(
   ]);
 
   return { baseUrl, fullUrl, buildAIMarkdown, ensureFetched };
-}
-
-function toSiteRelativePath(path: string, baseUrl: string): string {
-  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
-  const basePath = baseUrl.replace(/\/$/, "");
-  if (
-    basePath !== "" &&
-    (normalizedPath === basePath || normalizedPath.startsWith(`${basePath}/`))
-  ) {
-    const withoutBasePath = normalizedPath.slice(basePath.length);
-    return withoutBasePath === "" ? "/" : withoutBasePath;
-  }
-  return normalizedPath;
-}
-
-function withSiteBaseUrl(path: string, baseUrl: string): string {
-  if (/^[a-z][a-z0-9+.-]*:\/\//i.test(path) || path.startsWith("//")) {
-    return path;
-  }
-
-  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
-  const basePath = baseUrl.replace(/\/$/, "");
-  if (basePath === "") return normalizedPath;
-  if (
-    normalizedPath === basePath ||
-    normalizedPath.startsWith(`${basePath}/`)
-  ) {
-    return normalizedPath;
-  }
-  return `${basePath}${normalizedPath}`;
 }
 
 function buildFrontmatterBody(input: {

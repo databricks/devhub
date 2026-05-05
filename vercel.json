@@ -16,6 +16,50 @@
   },
   "rewrites": [
     {
+      "source": "/devhub",
+      "destination": "/"
+    },
+    {
+      "source": "/devhub/",
+      "destination": "/"
+    },
+    {
+      "source": "/devhub/api/(.*)",
+      "destination": "/api/$1"
+    },
+    {
+      "source": "/devhub/docs/llms.txt",
+      "destination": "/llms.txt"
+    },
+    {
+      "source": "/devhub/docs/(.+)\\.md",
+      "destination": "/api/markdown?section=docs&slug=$1"
+    },
+    {
+      "source": "/devhub/templates.md",
+      "destination": "/api/markdown?section=templates&slug="
+    },
+    {
+      "source": "/devhub/solutions.md",
+      "destination": "/api/markdown?section=solutions&slug="
+    },
+    {
+      "source": "/devhub/solutions/(.+)\\.md",
+      "destination": "/api/markdown?section=solutions&slug=$1"
+    },
+    {
+      "source": "/devhub/templates/(.+)\\.md",
+      "destination": "/api/markdown?section=templates&slug=$1"
+    },
+    {
+      "source": "/devhub/(.+)\\.md",
+      "destination": "/api/markdown?section=docs&slug=$1"
+    },
+    {
+      "source": "/devhub/(.*)",
+      "destination": "/$1"
+    },
+    {
       "source": "/docs/llms.txt",
       "destination": "/llms.txt"
     },
@@ -47,6 +91,13 @@
   "headers": [
     {
       "source": "/api/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "SAMEORIGIN" }
+      ]
+    },
+    {
+      "source": "/devhub/api/(.*)",
       "headers": [
         { "key": "X-Content-Type-Options", "value": "nosniff" },
         { "key": "X-Frame-Options", "value": "SAMEORIGIN" }

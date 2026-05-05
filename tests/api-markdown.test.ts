@@ -61,6 +61,20 @@ function call(args: { section: string; slug?: string; host?: string }) {
   return res._result;
 }
 
+function withSiteUrl<T>(siteUrl: string, run: () => T): T {
+  const previous = process.env.SITE_URL;
+  process.env.SITE_URL = siteUrl;
+  try {
+    return run();
+  } finally {
+    if (previous === undefined) {
+      delete process.env.SITE_URL;
+    } else {
+      process.env.SITE_URL = previous;
+    }
+  }
+}
+
 describe("/api/markdown about-devhub preamble policy", () => {
   test("docs responses do NOT include the About DevHub preamble", () => {
     const result = call({ section: "docs", slug: "start-here" });
@@ -173,6 +187,48 @@ describe("/api/markdown about-devhub preamble policy", () => {
     });
     expect(result.body).toContain(`${resolveSiteUrlForRequest(host)}/llms.txt`);
     expect(result.body).not.toContain("https://dev.databricks.com/llms.txt");
+  });
+
+  test("request-host URLs include configured SITE_URL base path", () => {
+    withSiteUrl("https://stage.databricks.com/devhub", () => {
+      const host = "localhost:3001";
+
+      const solution = call({
+        section: "solutions",
+        slug: "devhub-launch",
+        host,
+      });
+      expect(solution.body).toContain(
+        "url: http://localhost:3001/devhub/solutions/devhub-launch",
+      );
+
+      const template = call({
+        section: "templates",
+        slug: "ai-chat-app",
+        host,
+      });
+      expect(template.body).toContain("http://localhost:3001/devhub/llms.txt");
+      expect(template.body).toContain(
+        "http://localhost:3001/devhub/templates/ai-chat-app",
+      );
+    });
+  });
+
+  test("not-found markdown links include configured SITE_URL base path", () => {
+    withSiteUrl("https://stage.databricks.com/devhub", () => {
+      const result = call({
+        section: "docs",
+        slug: "not-a-real-doc",
+        host: "localhost:3001",
+      });
+
+      expect(result.statusCode).toBe(404);
+      expect(result.body).toContain("http://localhost:3001/devhub/llms.txt");
+      expect(result.body).toContain(
+        "http://localhost:3001/devhub/templates.md",
+      );
+      expect(result.body).not.toContain("](/llms.txt)");
+    });
   });
 
   test("invalid section returns 400-level error JSON", () => {

@@ -7,8 +7,9 @@ import { TemplateUsageBanner } from "@/components/template-usage-banner";
 import { RecipePre } from "@/components/cookbooks/recipe-code-block";
 import { RecipeToc } from "@/components/cookbooks/recipe-toc";
 import type { Cookbook } from "@/lib/recipes/recipes";
+import { BaseUrlAnchor } from "@/components/base-url-anchor";
 
-const recipeComponents = { pre: RecipePre };
+const recipeComponents = { a: BaseUrlAnchor, pre: RecipePre };
 
 type CookbookDetailProps = {
   cookbook: Cookbook;

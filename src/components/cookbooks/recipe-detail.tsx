@@ -7,8 +7,9 @@ import { RecipePre } from "@/components/cookbooks/recipe-code-block";
 import { RecipeToc } from "@/components/cookbooks/recipe-toc";
 import { recipes } from "@/lib/recipes/recipes";
 import { useRawRecipeMarkdown } from "@/lib/use-raw-content-markdown";
+import { BaseUrlAnchor } from "@/components/base-url-anchor";
 
-const recipeComponents = { pre: RecipePre };
+const recipeComponents = { a: BaseUrlAnchor, pre: RecipePre };
 
 type RecipeDetailProps = {
   recipeId: string;

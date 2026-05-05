@@ -11,11 +11,12 @@ import {
   AuthorBioCard,
   SolutionByline,
 } from "@/components/solutions/author-bio";
+import { BaseUrlAnchor } from "@/components/base-url-anchor";
 import { getAuthor } from "@/lib/solutions/authors";
 import { isNativeSolution, solutions } from "@/lib/solutions/solutions";
 import { useRawSolutionMarkdown } from "@/lib/use-raw-content-markdown";
 
-const recipeComponents = { pre: RecipePre };
+const recipeComponents = { a: BaseUrlAnchor, pre: RecipePre };
 
 type SolutionDetailProps = {
   solutionId: string;

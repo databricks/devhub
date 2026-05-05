@@ -75,6 +75,20 @@ describe("production build smoke tests", () => {
     }
   });
 
+  test("sitemap.xml includes plugin-generated detail routes under the resolved site URL", () => {
+    const text = readBuildFile("sitemap.xml");
+    const expectedSiteUrl = resolveExpectedSiteUrl();
+    const locs = Array.from(text.matchAll(/<loc>([^<]+)<\/loc>/g), (m) => m[1]);
+
+    expect(locs).toContain(`${expectedSiteUrl}/solutions/devhub-launch`);
+    expect(locs).toContain(
+      `${expectedSiteUrl}/templates/agentic-support-console`,
+    );
+    expect(locs).toContain(
+      `${expectedSiteUrl}/templates/set-up-your-local-dev-environment`,
+    );
+  });
+
   test("homepage HTML uses resolved site URL in JSON-LD (no hardcoded dev.databricks.com when overridden)", () => {
     const html = readBuildFile("index.html");
     const expectedSiteUrl = resolveExpectedSiteUrl();
@@ -82,6 +96,27 @@ describe("production build smoke tests", () => {
     expect(html).toContain(
       `"logo":"${expectedSiteUrl}/img/databricks-logo.svg"`,
     );
+  });
+
+  test("rendered MDX internal links stay under the configured base path", () => {
+    const basePath = new URL(resolveExpectedSiteUrl()).pathname.replace(
+      /\/$/,
+      "",
+    );
+    if (!basePath) return;
+
+    const renderedHtml = [
+      readBuildFile("docs/start-here/index.html"),
+      readBuildFile("docs/tools/ai-tools/docs-mcp-server/index.html"),
+      readBuildFile("templates/ai-chat-app/index.html"),
+      readBuildFile("solutions/devhub-launch/index.html"),
+    ].join("\n");
+
+    expect(renderedHtml).not.toMatch(
+      /href="\/(?:docs|templates|solutions|api|llms\.txt)(?:[/"#?]|$)/,
+    );
+    expect(renderedHtml).toContain(`href="${basePath}/docs/start-here"`);
+    expect(renderedHtml).toContain(`href="${basePath}/templates`);
   });
 
   test("llms.txt links use .md suffix", () => {
@@ -255,6 +290,12 @@ describe("production build smoke tests", () => {
     const text = readBuildFile("raw-docs/start-here.md");
     expect(text).not.toMatch(/^---\n/);
     expect(text).toMatch(/^# Start here/);
+  });
+
+  test("raw-docs preserve closing HTML tags inside code examples", () => {
+    const text = readBuildFile("raw-docs/lakehouse/analytical-reads.md");
+    expect(text).toContain("if (loading) return <p>Loading...</p>;");
+    expect(text).not.toMatch(/https?:\/\/[^)\s]+\/(?:p|li|ul)>/);
   });
 
   test("raw-docs preserve CLI tab code blocks for markdown export", () => {

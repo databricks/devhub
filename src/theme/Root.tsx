@@ -6,6 +6,7 @@ import useBaseUrl from "@docusaurus/useBaseUrl";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import { Analytics } from "@vercel/analytics/react";
 import { Toaster } from "sonner";
+import { toSiteRelativePath } from "@/lib/site-paths";
 
 // Keep in sync with middleware.ts matcher and vercel.json rewrites
 // TODO: centralize content section definitions into a shared module
@@ -24,18 +25,6 @@ function MarkdownAlternate(): ReactNode {
       <link rel="alternate" type="text/markdown" href={mdHref} />
     </Head>
   );
-}
-
-function toSiteRelativePath(pathname: string, baseUrl: string): string {
-  const basePath = baseUrl.replace(/\/$/, "");
-  if (
-    basePath !== "" &&
-    (pathname === basePath || pathname.startsWith(`${basePath}/`))
-  ) {
-    const withoutBasePath = pathname.slice(basePath.length);
-    return withoutBasePath === "" ? "/" : withoutBasePath;
-  }
-  return pathname;
 }
 
 function SonnerToaster() {

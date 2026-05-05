@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AlertCircle, Check, Clipboard, LoaderCircle } from "lucide-react";
 import { track } from "@vercel/analytics";
+import useBaseUrl from "@docusaurus/useBaseUrl";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { getBootstrapPromptApiPath } from "@/lib/bootstrap-prompt";
@@ -44,8 +45,8 @@ async function copyTextToClipboard(text: string): Promise<boolean> {
   return fallbackCopyTextToClipboard(text);
 }
 
-async function fetchBootstrapPrompt(): Promise<string> {
-  const response = await fetch(getBootstrapPromptApiPath());
+async function fetchBootstrapPrompt(apiPath: string): Promise<string> {
+  const response = await fetch(apiPath);
   if (!response.ok) {
     throw new Error(`Failed to fetch markdown: ${response.status}`);
   }
@@ -123,6 +124,7 @@ export function BootstrapCopyButton({
   source,
   className,
 }: BootstrapCopyButtonProps): ReactNode {
+  const apiPath = useBaseUrl(getBootstrapPromptApiPath());
   const [copyState, setCopyState] = useState<CopyState>("idle");
   const resetTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
   const spinnerDelayTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
@@ -158,7 +160,7 @@ export function BootstrapCopyButton({
     };
 
     try {
-      const bootstrapPrompt = await fetchBootstrapPrompt();
+      const bootstrapPrompt = await fetchBootstrapPrompt(apiPath);
       const copied = await copyTextToClipboard(bootstrapPrompt);
       if (!copied) throw new Error("Clipboard copy failed");
 
@@ -171,7 +173,7 @@ export function BootstrapCopyButton({
       clearTimeout(resetTimerRef.current);
       resetTimerRef.current = setTimeout(() => setCopyState("idle"), 2500);
     }
-  }, [source]);
+  }, [apiPath, source]);
 
   return (
     <Button

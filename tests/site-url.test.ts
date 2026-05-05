@@ -1,9 +1,12 @@
 import { describe, expect, test } from "vitest";
 import {
   PRODUCTION_FALLBACK_SITE_URL,
+  resolveSiteBaseUrl,
+  resolveSiteOrigin,
   resolveSiteUrl,
   resolveSiteUrlForRequest,
   siteHost,
+  siteUrlFromConfig,
 } from "../src/lib/site-url";
 
 describe("resolveSiteUrl", () => {
@@ -29,11 +32,17 @@ describe("resolveSiteUrl", () => {
     expect(resolveSiteUrl({ SITE_URL: "https://example.com///" })).toBe(
       "https://example.com",
     );
+    expect(resolveSiteUrl({ SITE_URL: "https://example.com/devhub/" })).toBe(
+      "https://example.com/devhub",
+    );
   });
 
   test("prepends https:// when missing", () => {
     expect(resolveSiteUrl({ SITE_URL: "example.com" })).toBe(
       "https://example.com",
+    );
+    expect(resolveSiteUrl({ SITE_URL: "example.com/devhub" })).toBe(
+      "https://example.com/devhub",
     );
   });
 
@@ -97,6 +106,39 @@ describe("resolveSiteUrl", () => {
   });
 });
 
+describe("resolveSiteOrigin", () => {
+  test("returns only the origin even when SITE_URL includes a path", () => {
+    expect(
+      resolveSiteOrigin({ SITE_URL: "https://stage.databricks.com/devhub" }),
+    ).toBe("https://stage.databricks.com");
+  });
+});
+
+describe("resolveSiteBaseUrl", () => {
+  test("returns root when SITE_URL has no path", () => {
+    expect(resolveSiteBaseUrl({ SITE_URL: "https://dev.databricks.com" })).toBe(
+      "/",
+    );
+  });
+
+  test("returns the configured path with a trailing slash", () => {
+    expect(
+      resolveSiteBaseUrl({ SITE_URL: "https://stage.databricks.com/devhub" }),
+    ).toBe("/devhub/");
+  });
+});
+
+describe("siteUrlFromConfig", () => {
+  test("recombines Docusaurus url and baseUrl", () => {
+    expect(siteUrlFromConfig("https://stage.databricks.com", "/devhub/")).toBe(
+      "https://stage.databricks.com/devhub",
+    );
+    expect(siteUrlFromConfig("https://dev.databricks.com", "/")).toBe(
+      "https://dev.databricks.com",
+    );
+  });
+});
+
 describe("resolveSiteUrlForRequest", () => {
   test("uses request host with https for non-localhost", () => {
     expect(resolveSiteUrlForRequest("dev.databricks.com", {})).toBe(
@@ -108,6 +150,14 @@ describe("resolveSiteUrlForRequest", () => {
     expect(resolveSiteUrlForRequest("localhost:3001", {})).toBe(
       "http://localhost:3001",
     );
+  });
+
+  test("preserves configured SITE_URL base path with request host", () => {
+    expect(
+      resolveSiteUrlForRequest("stage.databricks.com", {
+        SITE_URL: "https://stage.databricks.com/devhub",
+      }),
+    ).toBe("https://stage.databricks.com/devhub");
   });
 
   test("falls back to resolveSiteUrl when no host header", () => {
@@ -132,6 +182,9 @@ describe("siteHost", () => {
   test("returns the hostname without scheme", () => {
     expect(siteHost({ SITE_URL: "https://dev.databricks.com" })).toBe(
       "dev.databricks.com",
+    );
+    expect(siteHost({ SITE_URL: "https://stage.databricks.com/devhub" })).toBe(
+      "stage.databricks.com",
     );
     expect(siteHost({ SITE_URL: "http://localhost:3001" })).toBe(
       "localhost:3001",

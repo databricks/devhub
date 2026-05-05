@@ -170,7 +170,7 @@ export function rewriteRelativeLinks(
         `${open}${origin}${path}${close}`,
     )
     .replace(
-      /(<)(\/(?!\/)[^>\s]*)(>)/g,
+      /(<)(\/(?!\/)(?=[^>\s]*(?:[./?#]))[^>\s]*)(>)/g,
       (_match, open: string, path: string, close: string) =>
         `${open}${origin}${path}${close}`,
     )

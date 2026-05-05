@@ -37,10 +37,10 @@ export default function handler(req: VercelRequest, res: VercelResponse): void {
   const section = String(req.query.section || "");
   const slug = String(req.query.slug || "");
   const requestedPath = slug ? `/${section}/${slug}.md` : `/${section}.md`;
+  const siteUrl = resolveSiteUrlForRequest(req.headers.host);
 
   try {
     const parsed = parseSection(req.query.section);
-    const siteUrl = resolveSiteUrlForRequest(req.headers.host);
     const markdown = getDetailMarkdown(parsed, slug, process.cwd(), siteUrl);
 
     // Only template-style pages with a concrete slug get wrapped in the
@@ -68,24 +68,21 @@ export default function handler(req: VercelRequest, res: VercelResponse): void {
     res.setHeader("Content-Disposition", `inline; filename="${filename}"`);
     res.status(200).send(body);
   } catch {
+    const body = [
+      "# Page not found",
+      "",
+      `\`${requestedPath}\` does not exist.`,
+      "",
+      "- [Site index](/llms.txt): Table of contents for all documentation and templates",
+      "- [All templates](/templates.md): Templates for building on Databricks",
+      "- [All solutions](/solutions.md): Use-case solutions",
+      "- [Start here](/docs/start-here.md): Site orientation and getting started",
+      "",
+    ].join("\n");
     res.setHeader("Content-Type", "text/markdown; charset=utf-8");
     res.setHeader("Vary", "Accept");
     res.setHeader("X-Robots-Tag", "noindex");
     res.setHeader("Content-Disposition", 'inline; filename="not-found.md"');
-    res
-      .status(404)
-      .send(
-        [
-          "# Page not found",
-          "",
-          `\`${requestedPath}\` does not exist.`,
-          "",
-          "- [Site index](/llms.txt): Table of contents for all documentation and templates",
-          "- [All templates](/templates.md): Templates for building on Databricks",
-          "- [All solutions](/solutions.md): Use-case solutions",
-          "- [Start here](/docs/start-here.md): Site orientation and getting started",
-          "",
-        ].join("\n"),
-      );
+    res.status(404).send(absolutizeMarkdown(body, siteUrl));
   }
 }

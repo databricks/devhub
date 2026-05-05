@@ -216,6 +216,15 @@ describe("rewriteRelativeLinks", () => {
     ).toBe("Visit <https://example.com/llms.txt>.");
   });
 
+  test("does not rewrite closing HTML tags in code examples", () => {
+    expect(
+      rewriteRelativeLinks(
+        "if (loading) return <p>Loading...</p>;",
+        "https://example.com",
+      ),
+    ).toBe("if (loading) return <p>Loading...</p>;");
+  });
+
   test("rewrites reference-style link definitions", () => {
     expect(
       rewriteRelativeLinks("[ref]: /templates/foo", "https://example.com"),

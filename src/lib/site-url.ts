@@ -12,7 +12,9 @@
  *   4. PRODUCTION_FALLBACK_SITE_URL — safe default so that anything we ship
  *      (e.g. social cards, llms.txt fetched offline) stays on the prod domain.
  *
- * Always returns an https/http origin without trailing slash.
+ * Always returns an https/http URL without trailing slash. If SITE_URL includes
+ * a path (for example https://stage.databricks.com/devhub), the path is kept so
+ * the same build can be configured for either root or subpath deployments.
  */
 
 export const PRODUCTION_FALLBACK_SITE_URL = "https://dev.databricks.com";
@@ -32,31 +34,60 @@ function stripTrailingSlash(url: string): string {
   return url.replace(/\/+$/, "");
 }
 
+function normalizeSiteUrl(siteUrl: string): string {
+  const url = new URL(withProtocol(siteUrl.trim()));
+  const pathname = stripTrailingSlash(url.pathname);
+  return pathname === "" ? url.origin : `${url.origin}${pathname}`;
+}
+
+function normalizeBaseUrlPath(pathname: string): string {
+  const withoutTrailingSlash = stripTrailingSlash(pathname);
+  if (withoutTrailingSlash === "") return "/";
+  return `${withoutTrailingSlash}/`;
+}
+
 /** Pure resolver — easy to unit-test with synthetic envs. */
 export function resolveSiteUrl(env: Env = process.env): string {
   if (env.SITE_URL && env.SITE_URL.trim() !== "") {
-    return stripTrailingSlash(withProtocol(env.SITE_URL.trim()));
+    return normalizeSiteUrl(env.SITE_URL);
   }
   if (
     env.VERCEL_ENV === "production" &&
     env.VERCEL_PROJECT_PRODUCTION_URL &&
     env.VERCEL_PROJECT_PRODUCTION_URL.trim() !== ""
   ) {
-    return stripTrailingSlash(
-      withProtocol(env.VERCEL_PROJECT_PRODUCTION_URL.trim()),
-    );
+    return normalizeSiteUrl(env.VERCEL_PROJECT_PRODUCTION_URL);
   }
   if (env.VERCEL_URL && env.VERCEL_URL.trim() !== "") {
-    return stripTrailingSlash(withProtocol(env.VERCEL_URL.trim()));
+    return normalizeSiteUrl(env.VERCEL_URL);
   }
   return PRODUCTION_FALLBACK_SITE_URL;
+}
+
+export function resolveSiteOrigin(env: Env = process.env): string {
+  return new URL(resolveSiteUrl(env)).origin;
+}
+
+export function resolveSiteBaseUrl(env: Env = process.env): string {
+  return siteBaseUrlFromSiteUrl(resolveSiteUrl(env));
+}
+
+function siteBaseUrlFromSiteUrl(siteUrl: string): string {
+  return normalizeBaseUrlPath(new URL(withProtocol(siteUrl)).pathname);
+}
+
+export function siteUrlFromConfig(url: string, baseUrl: string): string {
+  const origin = normalizeSiteUrl(url);
+  const normalizedBaseUrl = normalizeBaseUrlPath(baseUrl);
+  const basePath = stripTrailingSlash(normalizedBaseUrl);
+  return basePath === "" ? origin : `${origin}${basePath}`;
 }
 
 /**
  * Resolves the site origin for a request handler. Prefers the request's own
  * Host header (so requests to `dev-databricks.vercel.app` link back to that
- * host instead of bouncing to the canonical SITE_URL), and falls back to the
- * statically resolved site URL when no header is available.
+ * host instead of bouncing to the canonical SITE_URL), and combines it with
+ * SITE_URL's path when one is configured.
  */
 export function resolveSiteUrlForRequest(
   host: string | undefined,
@@ -64,12 +95,15 @@ export function resolveSiteUrlForRequest(
 ): string {
   if (host && host.trim() !== "") {
     const protocol = host.startsWith("localhost") ? "http" : "https";
-    return stripTrailingSlash(`${protocol}://${host.trim()}`);
+    return siteUrlFromConfig(
+      `${protocol}://${host.trim()}`,
+      resolveSiteBaseUrl(env),
+    );
   }
   return resolveSiteUrl(env);
 }
 
 /** Returns just the hostname (no scheme, no trailing slash) for cases that need it. */
 export function siteHost(env: Env = process.env): string {
-  return resolveSiteUrl(env).replace(/^https?:\/\//, "");
+  return new URL(resolveSiteUrl(env)).host;
 }

@@ -1,5 +1,6 @@
 import { describe, expect, test } from "vitest";
 import handler from "../api/markdown";
+import { resolveSiteUrlForRequest } from "../src/lib/site-url";
 
 type RawHeaders = Record<string, string | undefined>;
 
@@ -91,14 +92,15 @@ describe("/api/markdown about-devhub preamble policy", () => {
   });
 
   test("solution frontmatter url is absolute and reflects the request host", () => {
+    const host = "localhost:3001";
     const result = call({
       section: "solutions",
       slug: "devhub-launch",
-      host: "localhost:3001",
+      host,
     });
     expect(result.statusCode).toBe(200);
-    expect(result.body).toMatch(
-      /^url:\s+http:\/\/localhost:3001\/solutions\/devhub-launch$/m,
+    expect(result.body).toContain(
+      `url: ${resolveSiteUrlForRequest(host)}/solutions/devhub-launch`,
     );
     expect(result.body).not.toMatch(/^url:\s+\/solutions\//m);
   });
@@ -131,7 +133,9 @@ describe("/api/markdown about-devhub preamble policy", () => {
     });
     expect(result.statusCode).toBe(200);
     expect(result.body.startsWith("# About DevHub")).toBe(true);
-    expect(result.body).toContain("https://dev.databricks.com/llms.txt");
+    expect(result.body).toContain(
+      `${resolveSiteUrlForRequest("dev.databricks.com")}/llms.txt`,
+    );
   });
 
   test("template responses DO include the About DevHub preamble", () => {
@@ -161,12 +165,13 @@ describe("/api/markdown about-devhub preamble policy", () => {
   });
 
   test("preamble URL reflects the request Host header", () => {
+    const host = "localhost:3001";
     const result = call({
       section: "templates",
       slug: "ai-chat-app",
-      host: "localhost:3001",
+      host,
     });
-    expect(result.body).toContain("http://localhost:3001/llms.txt");
+    expect(result.body).toContain(`${resolveSiteUrlForRequest(host)}/llms.txt`);
     expect(result.body).not.toContain("https://dev.databricks.com/llms.txt");
   });
 

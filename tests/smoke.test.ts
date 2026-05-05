@@ -1,6 +1,7 @@
 import { readFileSync } from "fs";
 import { resolve } from "path";
 import { describe, test, expect } from "vitest";
+import { resolveSiteUrl } from "../src/lib/site-url";
 
 const BUILD_DIR = resolve(__dirname, "..", "build");
 
@@ -8,19 +9,12 @@ function readBuildFile(filePath: string): string {
   return readFileSync(resolve(BUILD_DIR, filePath), "utf-8");
 }
 
-/** Mirrors src/lib/site-url.ts → resolveSiteUrl for asserting build outputs. */
-function resolveExpectedOrigin(): string {
-  if (process.env.SITE_URL && process.env.SITE_URL.trim() !== "") {
-    return process.env.SITE_URL.replace(/\/$/, "");
-  }
-  if (
-    process.env.VERCEL_ENV === "production" &&
-    process.env.VERCEL_PROJECT_PRODUCTION_URL
-  ) {
-    return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
-  }
-  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
-  return "https://dev.databricks.com";
+function escapeRegex(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function resolveExpectedSiteUrl(): string {
+  return resolveSiteUrl(process.env);
 }
 
 describe("production build smoke tests", () => {
@@ -41,7 +35,7 @@ describe("production build smoke tests", () => {
     const sitemapMatch = text.match(/^Sitemap:\s*(\S+)\s*$/m);
     expect(sitemapMatch).not.toBeNull();
     const sitemapUrl = sitemapMatch![1];
-    expect(sitemapUrl).toBe(`${resolveExpectedOrigin()}/sitemap.xml`);
+    expect(sitemapUrl).toBe(`${resolveExpectedSiteUrl()}/sitemap.xml`);
   });
 
   test("llms.txt has correct H1 and description", () => {
@@ -52,37 +46,41 @@ describe("production build smoke tests", () => {
 
   test("llms.txt internal links use the resolved site URL", () => {
     const text = readBuildFile("llms.txt");
-    const expectedOrigin = resolveExpectedOrigin();
+    const expectedSiteUrl = resolveExpectedSiteUrl();
+    const expectedSiteUrlPattern = escapeRegex(expectedSiteUrl);
     // Internal links in llms.txt are absolute URLs whose path starts with
     // /docs, /templates, /solutions, or ends in .md.
     const internalLinks = Array.from(
       text.matchAll(
-        /\((https?:\/\/[^)\s]+\/(?:docs|templates|solutions)[^)\s]*)\)/g,
+        new RegExp(
+          `\\((${expectedSiteUrlPattern}/(?:docs|templates|solutions)[^)\\s]*)\\)`,
+          "g",
+        ),
       ),
       (m) => m[1],
     );
     expect(internalLinks.length).toBeGreaterThan(0);
     for (const link of internalLinks) {
-      expect(link.startsWith(`${expectedOrigin}/`)).toBe(true);
+      expect(link.startsWith(`${expectedSiteUrl}/`)).toBe(true);
     }
   });
 
   test("sitemap.xml uses the resolved site URL for <loc> entries", () => {
     const text = readBuildFile("sitemap.xml");
-    const expectedOrigin = resolveExpectedOrigin();
+    const expectedSiteUrl = resolveExpectedSiteUrl();
     const locs = Array.from(text.matchAll(/<loc>([^<]+)<\/loc>/g), (m) => m[1]);
     expect(locs.length).toBeGreaterThan(0);
     for (const loc of locs) {
-      expect(loc.startsWith(expectedOrigin)).toBe(true);
+      expect(loc.startsWith(expectedSiteUrl)).toBe(true);
     }
   });
 
   test("homepage HTML uses resolved site URL in JSON-LD (no hardcoded dev.databricks.com when overridden)", () => {
     const html = readBuildFile("index.html");
-    const expectedOrigin = resolveExpectedOrigin();
-    expect(html).toContain(`"url":"${expectedOrigin}"`);
+    const expectedSiteUrl = resolveExpectedSiteUrl();
+    expect(html).toContain(`"url":"${expectedSiteUrl}"`);
     expect(html).toContain(
-      `"logo":"${expectedOrigin}/img/databricks-logo.svg"`,
+      `"logo":"${expectedSiteUrl}/img/databricks-logo.svg"`,
     );
   });
 

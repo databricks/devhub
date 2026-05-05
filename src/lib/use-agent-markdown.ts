@@ -5,6 +5,7 @@ import {
   useAgentPromptParts,
 } from "@/lib/copy-about-devhub";
 import { absolutizeMarkdown } from "@/lib/copy-preamble";
+import { siteUrlFromConfig } from "@/lib/site-url";
 
 /**
  * Discriminator for the "Copy as Markdown" / "Copy prompt" flows. Every
@@ -62,28 +63,38 @@ export function useAgentMarkdown(
   } = input;
 
   const { siteConfig } = useDocusaurusContext();
-  const buildSiteUrl = siteConfig.url.replace(/\/$/, "");
+  const buildSiteUrl = siteUrlFromConfig(siteConfig.url, siteConfig.baseUrl);
+  const browserBasePath = siteConfig.baseUrl.replace(/\/$/, "");
   const baseUrl =
-    typeof window !== "undefined" ? window.location.origin : buildSiteUrl;
-  const fullUrl = baseUrl + permalink;
+    typeof window !== "undefined"
+      ? `${window.location.origin}${browserBasePath}`
+      : buildSiteUrl;
+  const siteRelativePermalink = toSiteRelativePath(
+    permalink,
+    siteConfig.baseUrl,
+  );
+  const fullUrl = baseUrl + siteRelativePermalink;
+  const fetchMarkdownUrl = rawMarkdownUrl
+    ? withSiteBaseUrl(rawMarkdownUrl, siteConfig.baseUrl)
+    : undefined;
   const parts = useAgentPromptParts();
   const fetchedMarkdownRef = useRef<string | null>(null);
 
   useEffect(() => {
-    if (rawMarkdown || !rawMarkdownUrl) return;
-    fetch(rawMarkdownUrl)
+    if (rawMarkdown || !fetchMarkdownUrl) return;
+    fetch(fetchMarkdownUrl)
       .then((res) => (res.ok ? res.text() : null))
       .then((text) => {
         fetchedMarkdownRef.current = text;
       })
       .catch(() => {});
-  }, [rawMarkdown, rawMarkdownUrl]);
+  }, [rawMarkdown, fetchMarkdownUrl]);
 
   const ensureFetched = useCallback(async (): Promise<void> => {
-    if (rawMarkdown || !rawMarkdownUrl || fetchedMarkdownRef.current) return;
-    const res = await fetch(rawMarkdownUrl);
+    if (rawMarkdown || !fetchMarkdownUrl || fetchedMarkdownRef.current) return;
+    const res = await fetch(fetchMarkdownUrl);
     fetchedMarkdownRef.current = res.ok ? await res.text() : "";
-  }, [rawMarkdown, rawMarkdownUrl]);
+  }, [rawMarkdown, fetchMarkdownUrl]);
 
   const buildAIMarkdown = useCallback((): string => {
     const siteOrigin = baseUrl || buildSiteUrl;
@@ -127,6 +138,36 @@ export function useAgentMarkdown(
   ]);
 
   return { baseUrl, fullUrl, buildAIMarkdown, ensureFetched };
+}
+
+function toSiteRelativePath(path: string, baseUrl: string): string {
+  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+  const basePath = baseUrl.replace(/\/$/, "");
+  if (
+    basePath !== "" &&
+    (normalizedPath === basePath || normalizedPath.startsWith(`${basePath}/`))
+  ) {
+    const withoutBasePath = normalizedPath.slice(basePath.length);
+    return withoutBasePath === "" ? "/" : withoutBasePath;
+  }
+  return normalizedPath;
+}
+
+function withSiteBaseUrl(path: string, baseUrl: string): string {
+  if (/^[a-z][a-z0-9+.-]*:\/\//i.test(path) || path.startsWith("//")) {
+    return path;
+  }
+
+  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+  const basePath = baseUrl.replace(/\/$/, "");
+  if (basePath === "") return normalizedPath;
+  if (
+    normalizedPath === basePath ||
+    normalizedPath.startsWith(`${basePath}/`)
+  ) {
+    return normalizedPath;
+  }
+  return `${basePath}${normalizedPath}`;
 }
 
 function buildFrontmatterBody(input: {

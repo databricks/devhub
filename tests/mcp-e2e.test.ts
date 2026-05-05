@@ -10,6 +10,15 @@ let SITE_PORT = 4174;
 let MCP_PORT = 3002;
 let MCP_URL = `http://localhost:${MCP_PORT}/api/mcp`;
 
+function localSiteUrl(port: number): string {
+  if (!process.env.SITE_URL || process.env.SITE_URL.trim() === "") {
+    return `http://127.0.0.1:${port}`;
+  }
+  const configured = new URL(process.env.SITE_URL);
+  const basePath = configured.pathname.replace(/\/$/, "");
+  return `http://127.0.0.1:${port}${basePath}`;
+}
+
 async function getFreePort(): Promise<number> {
   return await new Promise((resolvePort, reject) => {
     const server = createServer();
@@ -79,6 +88,7 @@ describe("MCP server e2e (mcporter)", () => {
     SITE_PORT = await getFreePort();
     MCP_PORT = await getFreePort();
     MCP_URL = `http://127.0.0.1:${MCP_PORT}/api/mcp`;
+    const siteUrl = localSiteUrl(SITE_PORT);
 
     siteServer = spawn(
       "npx",
@@ -99,12 +109,12 @@ describe("MCP server e2e (mcporter)", () => {
       stdio: "pipe",
       env: {
         ...process.env,
-        SITE_URL: `http://127.0.0.1:${SITE_PORT}`,
+        SITE_URL: siteUrl,
         PORT: String(MCP_PORT),
       },
     });
 
-    await waitForServer(`http://127.0.0.1:${SITE_PORT}/llms.txt`, 20_000, true);
+    await waitForServer(`${siteUrl}/llms.txt`, 20_000, true);
     await waitForServer(MCP_URL, 15_000);
   }, 45_000);
 

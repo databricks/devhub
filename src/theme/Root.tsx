@@ -2,24 +2,40 @@ import type { ReactNode } from "react";
 import Head from "@docusaurus/Head";
 import { useLocation } from "@docusaurus/router";
 import BrowserOnly from "@docusaurus/BrowserOnly";
+import useBaseUrl from "@docusaurus/useBaseUrl";
+import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import { Analytics } from "@vercel/analytics/react";
 import { Toaster } from "sonner";
 
-// Keep in sync with middleware.ts matcher and vercel.json headers/rewrites
+// Keep in sync with middleware.ts matcher and vercel.json rewrites
 // TODO: centralize content section definitions into a shared module
 const MD_PREFIXES = ["/docs/", "/templates", "/solutions"];
 
 /** Injects <link rel="alternate" type="text/markdown"> so agents discover the .md variant. */
 function MarkdownAlternate(): ReactNode {
   const { pathname } = useLocation();
-  const hasMarkdown = MD_PREFIXES.some((p) => pathname.startsWith(p));
+  const { siteConfig } = useDocusaurusContext();
+  const sitePath = toSiteRelativePath(pathname, siteConfig.baseUrl);
+  const hasMarkdown = MD_PREFIXES.some((p) => sitePath.startsWith(p));
+  const mdHref = useBaseUrl(sitePath.replace(/\/$/, "") + ".md");
   if (!hasMarkdown) return null;
-  const mdHref = pathname.replace(/\/$/, "") + ".md";
   return (
     <Head>
       <link rel="alternate" type="text/markdown" href={mdHref} />
     </Head>
   );
+}
+
+function toSiteRelativePath(pathname: string, baseUrl: string): string {
+  const basePath = baseUrl.replace(/\/$/, "");
+  if (
+    basePath !== "" &&
+    (pathname === basePath || pathname.startsWith(`${basePath}/`))
+  ) {
+    const withoutBasePath = pathname.slice(basePath.length);
+    return withoutBasePath === "" ? "/" : withoutBasePath;
+  }
+  return pathname;
 }
 
 function SonnerToaster() {

@@ -178,6 +178,12 @@ function assertSlugParity(entryType: EntryType, contentSlugs: string[]): void {
   );
 }
 
+function withBaseUrl(baseUrl: string, routePath: string): string {
+  const basePath = baseUrl.replace(/\/$/, "");
+  if (basePath === "") return routePath;
+  return `${basePath}${routePath}`;
+}
+
 export default function contentEntriesPlugin(
   context: LoadContext,
   options: ContentEntriesPluginOptions,
@@ -249,7 +255,10 @@ export default function contentEntriesPlugin(
         );
 
         addRoute({
-          path: `${options.routeBasePath}/${slug}`,
+          path: withBaseUrl(
+            context.siteConfig.baseUrl,
+            `${options.routeBasePath}/${slug}`,
+          ),
           component: modulePath,
           exact: true,
         });

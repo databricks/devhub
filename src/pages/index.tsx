@@ -6,10 +6,11 @@ import { DecisionMakerCta } from "@/components/home/decision-maker-cta";
 import { HeroSection } from "@/components/home/hero-section";
 import { TemplatePreview } from "@/components/home/template-preview";
 import { WizardFlow } from "@/components/home/wizard-flow";
+import { siteUrlFromConfig } from "@/lib/site-url";
 
 export default function Home(): ReactNode {
   const { siteConfig } = useDocusaurusContext();
-  const siteUrl = siteConfig.url.replace(/\/$/, "");
+  const siteUrl = siteUrlFromConfig(siteConfig.url, siteConfig.baseUrl);
   return (
     <Layout
       title="Databricks Developer"

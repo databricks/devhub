@@ -11,6 +11,7 @@ import {
 import { expandMdxImports } from "../src/lib/expand-mdx";
 import { showDrafts } from "../src/lib/feature-flags-server";
 import { absolutizeMarkdown } from "../src/lib/copy-preamble";
+import { siteUrlFromConfig } from "../src/lib/site-url";
 
 type Section = {
   title: string;
@@ -270,17 +271,22 @@ function copyRawDocs(
 }
 
 /**
- * The canonical site URL is already resolved in docusaurus.config.ts from
- * SITE_URL / VERCEL_PROJECT_PRODUCTION_URL / VERCEL_URL (see src/lib/site-url.ts).
- * We just normalize the trailing slash here.
+ * The canonical site URL is already split into Docusaurus `url` + `baseUrl`.
+ * Recombine them here because `llms.txt` needs absolute public URLs.
  */
-function normalizeBaseUrl(configUrl: string): string {
-  return configUrl.replace(/\/$/, "");
+function resolvePublicSiteUrl(
+  configUrl: string,
+  configBaseUrl: string,
+): string {
+  return siteUrlFromConfig(configUrl, configBaseUrl);
 }
 
 export default function llmsTxtPlugin(context: LoadContext): Plugin {
   const docsDir = path.resolve(__dirname, "..", "docs");
-  const baseUrl = normalizeBaseUrl(context.siteConfig.url);
+  const baseUrl = resolvePublicSiteUrl(
+    context.siteConfig.url,
+    context.siteConfig.baseUrl,
+  );
 
   const staticDir = path.resolve(__dirname, "..", "static");
   fs.writeFileSync(
@@ -293,7 +299,10 @@ export default function llmsTxtPlugin(context: LoadContext): Plugin {
     name: "docusaurus-llms-txt",
 
     async postBuild({ siteConfig, outDir }) {
-      const buildBaseUrl = normalizeBaseUrl(siteConfig.url);
+      const buildBaseUrl = resolvePublicSiteUrl(
+        siteConfig.url,
+        siteConfig.baseUrl,
+      );
       fs.writeFileSync(
         path.join(outDir, "llms.txt"),
         generateLlmsTxt(buildBaseUrl, docsDir),

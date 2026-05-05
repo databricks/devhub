@@ -46,13 +46,6 @@
   ],
   "headers": [
     {
-      "source": "/(docs|templates|solutions)(.*)",
-      "headers": [
-        { "key": "Link", "value": "</llms.txt>; rel=\"llms-txt\"" },
-        { "key": "X-LLMs-Txt", "value": "/llms.txt" }
-      ]
-    },
-    {
       "source": "/api/(.*)",
       "headers": [
         { "key": "X-Content-Type-Options", "value": "nosniff" },

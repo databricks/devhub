@@ -155,12 +155,17 @@ describe("resolveSiteUrlForRequest", () => {
     );
   });
 
-  test("preserves configured SITE_URL base path with request host", () => {
+  test("prefers configured SITE_URL over request host", () => {
     expect(
       resolveSiteUrlForRequest("stage.databricks.com", {
-        SITE_URL: "https://stage.databricks.com/devhub",
+        SITE_URL: "https://databricks.com/devhub",
       }),
-    ).toBe("https://stage.databricks.com/devhub");
+    ).toBe("https://databricks.com/devhub");
+    expect(
+      resolveSiteUrlForRequest("dev-databricks.vercel.app", {
+        SITE_URL: "https://databricks.com/devhub",
+      }),
+    ).toBe("https://databricks.com/devhub");
   });
 
   test("falls back to resolveSiteUrl when no host header", () => {

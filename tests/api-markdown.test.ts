@@ -199,7 +199,7 @@ describe("/api/markdown about-devhub preamble policy", () => {
         host,
       });
       expect(solution.body).toContain(
-        "url: http://localhost:3001/devhub/solutions/devhub-launch",
+        "url: https://stage.databricks.com/devhub/solutions/devhub-launch",
       );
 
       const template = call({
@@ -207,9 +207,11 @@ describe("/api/markdown about-devhub preamble policy", () => {
         slug: "ai-chat-app",
         host,
       });
-      expect(template.body).toContain("http://localhost:3001/devhub/llms.txt");
       expect(template.body).toContain(
-        "http://localhost:3001/devhub/templates/ai-chat-app",
+        "https://stage.databricks.com/devhub/llms.txt",
+      );
+      expect(template.body).toContain(
+        "https://stage.databricks.com/devhub/templates/ai-chat-app",
       );
     });
   });
@@ -223,9 +225,11 @@ describe("/api/markdown about-devhub preamble policy", () => {
       });
 
       expect(result.statusCode).toBe(404);
-      expect(result.body).toContain("http://localhost:3001/devhub/llms.txt");
       expect(result.body).toContain(
-        "http://localhost:3001/devhub/templates.md",
+        "https://stage.databricks.com/devhub/llms.txt",
+      );
+      expect(result.body).toContain(
+        "https://stage.databricks.com/devhub/templates.md",
       );
       expect(result.body).not.toContain("](/llms.txt)");
     });

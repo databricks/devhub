@@ -78,12 +78,14 @@ describe("/api/llms", () => {
     withSiteUrl("https://stage.databricks.com/devhub", () => {
       const result = call("127.0.0.1:4182");
       expect(result.body).toContain(
-        "http://127.0.0.1:4182/devhub/docs/start-here.md",
+        "https://stage.databricks.com/devhub/docs/start-here.md",
       );
       expect(result.body).toContain(
-        "http://127.0.0.1:4182/devhub/templates/ai-chat-app.md",
+        "https://stage.databricks.com/devhub/templates/ai-chat-app.md",
       );
-      expect(result.body).not.toContain("http://127.0.0.1:4182/templates/");
+      expect(result.body).not.toContain(
+        "https://stage.databricks.com/templates/",
+      );
     });
   });
 });

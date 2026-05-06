@@ -84,15 +84,18 @@ export function siteUrlFromConfig(url: string, baseUrl: string): string {
 }
 
 /**
- * Resolves the site origin for a request handler. Prefers the request's own
- * Host header (so requests to `dev-databricks.vercel.app` link back to that
- * host instead of bouncing to the canonical SITE_URL), and combines it with
- * SITE_URL's path when one is configured.
+ * Resolves the public site URL for a request handler. SITE_URL is canonical
+ * when configured, because upstream rewrites can reach Vercel with the
+ * deployment host instead of the public databricks.com host.
  */
 export function resolveSiteUrlForRequest(
   host: string | undefined,
   env: Env = process.env,
 ): string {
+  if (env.SITE_URL && env.SITE_URL.trim() !== "") {
+    return resolveSiteUrl(env);
+  }
+
   if (host && host.trim() !== "") {
     const protocol = /^(localhost|127\.0\.0\.1)(:\d+)?$/.test(host.trim())
       ? "http"

@@ -7,11 +7,20 @@ import contentEntriesPlugin from "./plugins/content-entries";
 import cookbooksPlugin from "./plugins/cookbooks";
 import llmsTxtPlugin from "./plugins/llms-txt";
 import remarkCliTabs from "./plugins/remark-cli-tabs";
+import remarkSiteUrl from "./plugins/remark-site-url";
 import robotsTxtPlugin from "./plugins/robots-txt";
 import { showDrafts } from "./src/lib/feature-flags-server";
-import { resolveSiteBaseUrl, resolveSiteOrigin } from "./src/lib/site-url";
+import {
+  resolveSiteBaseUrl,
+  resolveSiteOrigin,
+  siteUrlFromConfig,
+} from "./src/lib/site-url";
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
+
+const siteOrigin = resolveSiteOrigin();
+const siteBaseUrl = resolveSiteBaseUrl();
+const publicSiteUrl = siteUrlFromConfig(siteOrigin, siteBaseUrl);
 
 const config: Config = {
   title: "Databricks Developer",
@@ -28,10 +37,10 @@ const config: Config = {
 
   // Resolved at build time from SITE_URL / VERCEL_PROJECT_PRODUCTION_URL /
   // VERCEL_URL, falling back to the production domain. See src/lib/site-url.ts.
-  url: resolveSiteOrigin(),
+  url: siteOrigin,
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: resolveSiteBaseUrl(),
+  baseUrl: siteBaseUrl,
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
@@ -61,7 +70,10 @@ const config: Config = {
       {
         docs: {
           sidebarPath: "./sidebars.ts",
-          remarkPlugins: [remarkCliTabs],
+          remarkPlugins: [
+            remarkCliTabs,
+            [remarkSiteUrl, { siteUrl: publicSiteUrl }],
+          ],
         },
         blog: false,
         theme: {

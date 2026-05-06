@@ -81,10 +81,6 @@ test.describe("footer navigation", () => {
       href: "https://www.databricks.com/legal/supplemental-privacy-notice-california-residents",
       label: "California Privacy",
     },
-    {
-      href: "https://www.databricks.com/#yourprivacychoices",
-      label: "Your Privacy Choices",
-    },
   ];
 
   const EXPECTED_FOOTER_HREFS = [
@@ -105,7 +101,6 @@ test.describe("footer navigation", () => {
     "https://www.databricks.com/legal/terms-of-use",
     "https://www.databricks.com/legal/modern-slavery-policy-statement",
     "https://www.databricks.com/legal/supplemental-privacy-notice-california-residents",
-    "https://www.databricks.com/#yourprivacychoices",
   ];
 
   test("footer renders every expected link in order", async ({ page }) => {

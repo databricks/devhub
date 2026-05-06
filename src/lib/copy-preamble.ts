@@ -144,8 +144,9 @@ function buildTemplateBlock(kind: AgentPromptKind, body: string): string {
  */
 function rewriteOrigin(markdown: string, siteOrigin: string): string {
   const normalized = siteOrigin.replace(/\/$/, "");
-  if (normalized === ABOUT_DEVHUB_CANONICAL_SITE_URL) return markdown;
-  return markdown.replaceAll(ABOUT_DEVHUB_CANONICAL_SITE_URL, normalized);
+  return markdown
+    .replaceAll("__DEVHUB_SITE_URL__", normalized)
+    .replaceAll(ABOUT_DEVHUB_CANONICAL_SITE_URL, normalized);
 }
 
 /**

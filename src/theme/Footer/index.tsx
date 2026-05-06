@@ -32,10 +32,6 @@ const LEGAL_LINKS: FooterItem[] = [
     label: "California Privacy",
     href: "https://www.databricks.com/legal/supplemental-privacy-notice-california-residents",
   },
-  {
-    label: "Your Privacy Choices",
-    href: "https://www.databricks.com/#yourprivacychoices",
-  },
 ];
 
 const FOOTER_SECTIONS: FooterSection[] = [

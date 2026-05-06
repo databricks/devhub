@@ -60,10 +60,12 @@ async function fetchBootstrapPrompt(apiPath: string): Promise<string> {
 }
 
 type CopyState = "idle" | "copying" | "copied" | "error";
+type BootstrapCopyButtonSize = "default" | "compact";
 
 type BootstrapCopyButtonProps = {
   /** Analytics tag distinguishing call sites (e.g. "hero", "wizard"). */
   source: string;
+  size?: BootstrapCopyButtonSize;
   className?: string;
 };
 
@@ -80,6 +82,17 @@ const SPINNER_DELAY_MS = 400;
  * response that finishes just after 400ms would still flicker.
  */
 const SPINNER_MIN_VISIBLE_MS = 800;
+
+const bootstrapCopyButtonBaseClassName =
+  "rounded-full bg-db-lava font-medium text-white shadow-none transition-none hover:bg-db-lava active:bg-db-lava";
+
+const bootstrapCopyButtonSizeClassNames: Record<
+  BootstrapCopyButtonSize,
+  string
+> = {
+  default: "h-12 px-7 text-[0.95rem]",
+  compact: "h-10 px-5 text-sm",
+};
 
 function wait(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -117,11 +130,12 @@ function StateLabel({
 
 /**
  * Copy-the-bootstrap-prompt button used on the home page hero and inside the
- * wizard step. Shares the same fetch → clipboard → animated state machine; the
- * visual differences live entirely in `className`.
+ * wizard step. Shares the same fetch → clipboard → animated state machine and
+ * keeps the CTA styling consistent across landing-page placements.
  */
 export function BootstrapCopyButton({
   source,
+  size = "default",
   className,
 }: BootstrapCopyButtonProps): ReactNode {
   const apiPath = useBaseUrl(getBootstrapPromptApiPath());
@@ -177,7 +191,11 @@ export function BootstrapCopyButton({
 
   return (
     <Button
-      className={className}
+      className={cn(
+        bootstrapCopyButtonBaseClassName,
+        bootstrapCopyButtonSizeClassNames[size],
+        className,
+      )}
       onClick={handleCopy}
       disabled={copyState === "copying"}
       title="Copies instructions you can paste into Cursor, Claude Code, Codex, or your favorite coding agent"

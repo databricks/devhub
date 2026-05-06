@@ -35,6 +35,10 @@ test.describe("navbar navigation", () => {
 test.describe("footer navigation", () => {
   const FOOTER_INTERNAL_LINKS = [
     {
+      href: "/",
+      label: "Databricks logo",
+    },
+    {
       href: "/docs/start-here",
       label: "Start Here",
     },
@@ -45,12 +49,89 @@ test.describe("footer navigation", () => {
     { href: "/solutions", label: "Solutions" },
   ];
 
+  const FOOTER_EXTERNAL_LINKS = [
+    {
+      href: "https://www.databricks.com/product/databricks-apps",
+      label: "Databricks Apps product",
+    },
+    {
+      href: "https://www.databricks.com/product/lakebase",
+      label: "Lakebase product",
+    },
+    {
+      href: "https://www.databricks.com/product/artificial-intelligence/agent-bricks",
+      label: "Agent Bricks product",
+    },
+    { href: "https://databricks.com", label: "Databricks" },
+    { href: "https://databricks.com/signup", label: "Sign Up" },
+    { href: "https://help.databricks.com", label: "Support" },
+    {
+      href: "https://www.databricks.com/legal/privacynotice",
+      label: "Privacy Notice",
+    },
+    {
+      href: "https://www.databricks.com/legal/terms-of-use",
+      label: "Terms of Use",
+    },
+    {
+      href: "https://www.databricks.com/legal/modern-slavery-policy-statement",
+      label: "Modern Slavery Statement",
+    },
+    {
+      href: "https://www.databricks.com/legal/supplemental-privacy-notice-california-residents",
+      label: "California Privacy",
+    },
+    {
+      href: "https://www.databricks.com/#yourprivacychoices",
+      label: "Your Privacy Choices",
+    },
+  ];
+
+  const EXPECTED_FOOTER_HREFS = [
+    "/",
+    "https://www.databricks.com/product/databricks-apps",
+    "https://www.databricks.com/product/lakebase",
+    "https://www.databricks.com/product/artificial-intelligence/agent-bricks",
+    "/templates",
+    "/solutions",
+    "/docs/start-here",
+    "/docs/apps/overview",
+    "/docs/lakebase/overview",
+    "/docs/agents/overview",
+    "https://databricks.com",
+    "https://databricks.com/signup",
+    "https://help.databricks.com",
+    "https://www.databricks.com/legal/privacynotice",
+    "https://www.databricks.com/legal/terms-of-use",
+    "https://www.databricks.com/legal/modern-slavery-policy-statement",
+    "https://www.databricks.com/legal/supplemental-privacy-notice-california-residents",
+    "https://www.databricks.com/#yourprivacychoices",
+  ];
+
+  test("footer renders every expected link in order", async ({ page }) => {
+    await page.goto("/");
+    const hrefs = await page
+      .locator("footer a")
+      .evaluateAll((links) => links.map((link) => link.getAttribute("href")));
+    expect(hrefs).toEqual(EXPECTED_FOOTER_HREFS);
+  });
+
   for (const { href, label } of FOOTER_INTERNAL_LINKS) {
     test(`footer "${label}" navigates to ${href}`, async ({ page }) => {
-      await page.goto("/");
+      await page.goto(href === "/" ? "/templates" : "/");
       await page.locator(`footer a[href="${href}"]`).click();
-      await page.waitForURL(`**${href}`);
+      await page.waitForURL((url) => url.pathname === href);
       expect(new URL(page.url()).pathname).toBe(href);
+    });
+  }
+
+  for (const { href, label } of FOOTER_EXTERNAL_LINKS) {
+    test(`footer "${label}" links to ${href}`, async ({ page }) => {
+      await page.goto("/");
+      const link = page.locator(`footer a[href="${href}"]`);
+      await expect(link).toHaveCount(1);
+      await expect(link).toHaveAttribute("target", "_blank");
+      await expect(link).toHaveAttribute("rel", "noopener noreferrer");
     });
   }
 });

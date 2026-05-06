@@ -3,6 +3,9 @@ import { ArrowRight } from "lucide-react";
 import Link from "@docusaurus/Link";
 import { BootstrapCopyButton } from "@/components/home/bootstrap-copy-button";
 
+const secondaryCtaClassName =
+  "inline-flex items-center gap-2 rounded-full border border-black/15 bg-white px-5 py-2 text-sm font-medium text-black/80 no-underline dark:border-white/15 dark:bg-white/8 dark:text-white/80";
+
 export function HeroSection(): ReactNode {
   return (
     <section className="relative bg-db-oat-medium text-black dark:bg-black dark:text-white">
@@ -18,10 +21,7 @@ export function HeroSection(): ReactNode {
             it will walk you through building a complete app, step by step.
           </p>
           <div className="mt-9 flex flex-col items-center gap-3">
-            <BootstrapCopyButton
-              source="hero"
-              className="h-12 rounded-full px-7 text-[0.95rem] font-medium shadow-[0_10px_30px_-10px_rgba(255,54,33,0.55)] transition-shadow duration-200 ease-out hover:shadow-[0_14px_36px_-10px_rgba(255,54,33,0.7)] active:shadow-[0_4px_14px_-6px_rgba(255,54,33,0.55)]"
-            />
+            <BootstrapCopyButton source="hero" />
             <div className="mt-4 flex items-center gap-3">
               <button
                 type="button"
@@ -30,15 +30,12 @@ export function HeroSection(): ReactNode {
                     .getElementById("wizard-flow")
                     ?.scrollIntoView({ behavior: "smooth" });
                 }}
-                className="group inline-flex cursor-pointer items-center gap-2 rounded-full border border-black/15 bg-white/70 px-5 py-2 text-sm font-medium text-black/80 backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:border-black/25 hover:text-black dark:border-white/15 dark:bg-white/8 dark:text-white/80 dark:hover:border-white/25 dark:hover:text-white"
+                className={secondaryCtaClassName}
               >
                 How it works
-                <ArrowRight className="h-4 w-4 rotate-90 transition-transform group-hover:translate-y-0.5" />
+                <ArrowRight className="h-4 w-4 rotate-90" />
               </button>
-              <Link
-                to="/templates"
-                className="group inline-flex items-center gap-2 rounded-full border border-black/15 bg-white/70 px-5 py-2 text-sm font-medium text-black/80 no-underline backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:border-black/25 hover:text-black dark:border-white/15 dark:bg-white/8 dark:text-white/80 dark:hover:border-white/25 dark:hover:text-white"
-              >
+              <Link to="/templates" className={secondaryCtaClassName}>
                 Browse templates
               </Link>
             </div>

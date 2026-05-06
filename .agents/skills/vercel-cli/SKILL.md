@@ -1,11 +1,11 @@
 ---
 name: vercel-cli
-description: Deploy, manage, and develop projects on Vercel from the command line
+description: "Deploy, manage, and develop projects on Vercel from the command line. Use when the user asks to deploy to Vercel, configure environment variables, manage domains, check deployment status, link projects, set up local dev with Vercel, or run Vercel CLI commands like 'vercel deploy', 'vercel dev', 'vercel env', or 'vercel domains'."
 ---
 
 # Vercel CLI Skill
 
-The Vercel CLI (`vercel` or `vc`) deploys, manages, and develops projects on the Vercel platform from the command line. Use `vercel <command> -h` for full flag details on any command.
+Use `vercel <command> -h` for full flag details on any command.
 
 ## Critical: Project Linking
 
@@ -31,6 +31,8 @@ vercel dev        # local development
 vercel deploy     # preview deployment
 vercel --prod     # production deployment
 ```
+
+**Verify setup**: After `vercel link`, confirm `.vercel/project.json` (or `repo.json`) exists. After `vercel deploy`, check the returned URL to confirm success.
 
 ## Decision Tree
 

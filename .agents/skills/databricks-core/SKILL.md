@@ -1,6 +1,6 @@
 ---
 name: "databricks-core"
-description: "Databricks CLI operations: auth, profiles, data exploration, and bundles. Contains up-to-date guidelines for Databricks-related CLI tasks."
+description: "Use when the user asks about Databricks CLI commands, authentication setup, workspace configuration, profile management, data exploration via Unity Catalog, or Databricks Asset Bundle (DAB) deployment. Configures Databricks auth and profiles, explores catalog/schema/table data, and deploys bundles."
 compatibility: Requires databricks CLI (>= v0.292.0)
 metadata:
   version: "0.1.0"

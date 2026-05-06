@@ -213,6 +213,8 @@ describe("/api/markdown about-devhub preamble policy", () => {
       expect(template.body).toContain(
         "https://stage.databricks.com/devhub/templates/ai-chat-app",
       );
+      expect(template.body).not.toContain("](/docs/");
+      expect(template.body).not.toContain("](/templates/");
     });
   });
 

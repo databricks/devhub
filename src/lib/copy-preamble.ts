@@ -52,7 +52,9 @@ export function composeAgentPrompt(input: ComposeAgentPromptInput): string {
   blocks.push(absolutizeMarkdown(input.parts.about, input.siteOrigin));
   blocks.push(absolutizeMarkdown(input.parts.guidelines, input.siteOrigin));
   blocks.push(buildIntentBlock(input));
-  blocks.push(buildLocalBootstrapBlock(input.parts.localBootstrap));
+  blocks.push(
+    buildLocalBootstrapBlock(input.parts.localBootstrap, input.siteOrigin),
+  );
 
   if (input.kind !== "hero") {
     if (!input.templateBody || !input.templateBody.trim()) {
@@ -102,13 +104,16 @@ function pickIntentBody(
   }
 }
 
-function buildLocalBootstrapBlock(localBootstrap: string): string {
+function buildLocalBootstrapBlock(
+  localBootstrap: string,
+  siteOrigin: string,
+): string {
   return [
     "# Verify your local Databricks dev environment",
     "",
     "A working Databricks CLI profile is the prerequisite for every step that follows. Walk the user through the recipe below — _even if they say their environment is already set up_. The verification steps are quick and prevent confusing failures further down.",
     "",
-    localBootstrap.trim(),
+    absolutizeMarkdown(localBootstrap.trim(), siteOrigin),
   ].join("\n");
 }
 

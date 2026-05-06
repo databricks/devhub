@@ -172,7 +172,9 @@ export function generateLlmsTxt(baseUrl: string, docsDir: string): string {
   if (startHere) {
     lines.push(`## ${startHere.title}`, "", startHere.description, "");
     for (const doc of startHere.docs) {
-      const desc = doc.description ? `: ${doc.description}` : "";
+      const desc = doc.description
+        ? `: ${absolutizeMarkdown(doc.description, baseUrl)}`
+        : "";
       lines.push(`- [${doc.title}](${baseUrl}/docs/${doc.slug}.md)${desc}`);
     }
     lines.push("");
@@ -182,7 +184,9 @@ export function generateLlmsTxt(baseUrl: string, docsDir: string): string {
   for (const section of refSections) {
     lines.push(`## ${section.title}`, "", section.description, "");
     for (const doc of section.docs) {
-      const desc = doc.description ? `: ${doc.description}` : "";
+      const desc = doc.description
+        ? `: ${absolutizeMarkdown(doc.description, baseUrl)}`
+        : "";
       lines.push(`- [${doc.title}](${baseUrl}/docs/${doc.slug}.md)${desc}`);
     }
     lines.push("");

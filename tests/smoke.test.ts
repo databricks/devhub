@@ -63,6 +63,9 @@ describe("production build smoke tests", () => {
     for (const link of internalLinks) {
       expect(link.startsWith(`${expectedSiteUrl}/`)).toBe(true);
     }
+    expect(text).not.toMatch(
+      /\]\(\/(?:docs|templates|solutions|api|llms\.txt)[^)]+\)/,
+    );
   });
 
   test("sitemap.xml uses the resolved site URL for <loc> entries", () => {

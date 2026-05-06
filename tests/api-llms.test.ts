@@ -86,6 +86,9 @@ describe("/api/llms", () => {
       expect(result.body).not.toContain(
         "https://stage.databricks.com/templates/",
       );
+      expect(result.body).not.toMatch(
+        /\]\(\/(?:docs|templates|solutions|api|llms\.txt)[^)]+\)/,
+      );
     });
   });
 });

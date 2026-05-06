@@ -97,6 +97,21 @@ describe("/api/markdown about-devhub preamble policy", () => {
     expect(result.body).toContain("Quickstart");
   });
 
+  test("docs MCP install commands use the configured site URL", () => {
+    withSiteUrl("https://stage.databricks.com/devhub", () => {
+      const result = call({
+        section: "docs",
+        slug: "tools/ai-tools/docs-mcp-server",
+      });
+
+      expect(result.statusCode).toBe(200);
+      expect(result.body).toContain(
+        "npx add-mcp https://stage.databricks.com/devhub/api/mcp --name devhub-docs -g",
+      );
+      expect(result.body).not.toContain("https://dev.databricks.com/api/mcp");
+    });
+  });
+
   test("solution responses do NOT include the About DevHub preamble", () => {
     const result = call({ section: "solutions", slug: "devhub-launch" });
     expect(result.statusCode).toBe(200);

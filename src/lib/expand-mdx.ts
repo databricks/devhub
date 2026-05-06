@@ -1,5 +1,6 @@
 import { existsSync, readFileSync } from "fs";
 import { resolve, dirname } from "path";
+import { buildDevhubMcpCommand } from "./devhub-mcp-command";
 
 type ImportEntry = {
   name: string;
@@ -25,6 +26,18 @@ function resolveImportContent(
   const resolved = resolve(fileDir, source);
   if (!existsSync(resolved)) return undefined;
   return readFileSync(resolved, "utf-8").trim();
+}
+
+function replaceKnownComponents(content: string): string {
+  return content.replace(
+    /^[ \t]*<DevhubMcpCommand\s+variant="(global|project|cursor)"\s*\/>[ \t]*$/gm,
+    (_match, variant: "global" | "project" | "cursor") =>
+      [
+        "```bash",
+        buildDevhubMcpCommand("https://dev.databricks.com", variant),
+        "```",
+      ].join("\n"),
+  );
 }
 
 /**
@@ -80,6 +93,8 @@ export function expandMdxImports(content: string, filePath: string): string {
     const withChildren = new RegExp(`<${name}\\s*>[\\s\\S]*?</${name}>`, "g");
     result = result.replace(withChildren, replacement);
   }
+
+  result = replaceKnownComponents(result);
 
   result = result.replace(/^[ \t]*<[A-Z]\w*(?:\s[^>]*)?\/>\s*$/gm, "");
   result = result.replace(/^[ \t]*<[A-Z]\w*(?:\s[^>]*)?>[ \t]*$/gm, (match) => {

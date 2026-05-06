@@ -122,6 +122,17 @@ describe("production build smoke tests", () => {
     expect(renderedHtml).toContain(`href="${basePath}/templates`);
   });
 
+  test("rendered Docs MCP install commands use the resolved site URL", () => {
+    const html = readBuildFile(
+      "docs/tools/ai-tools/docs-mcp-server/index.html",
+    );
+    const expectedSiteUrl = resolveExpectedSiteUrl();
+    expect(html).toContain(`npx add-mcp ${expectedSiteUrl}/api/mcp`);
+    if (expectedSiteUrl !== "https://dev.databricks.com") {
+      expect(html).not.toContain("https://dev.databricks.com/api/mcp");
+    }
+  });
+
   test("llms.txt links use .md suffix", () => {
     const text = readBuildFile("llms.txt");
     expect(text).toContain("/docs/start-here.md");

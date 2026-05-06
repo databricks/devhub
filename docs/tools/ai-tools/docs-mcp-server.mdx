@@ -2,6 +2,8 @@
 title: Docs MCP Server
 ---
 
+import { DevhubMcpCommand } from "@site/src/components/docs/devhub-mcp-command";
+
 # Docs MCP Server
 
 The DevHub Docs MCP Server gives coding agents and IDE assistants read access to all Databricks developer documentation on dev.databricks.com. Agents can discover available pages and fetch individual docs as markdown without leaving the editor.
@@ -12,21 +14,15 @@ Add the server to any supported coding agent (Cursor, Claude Code, VS Code, Code
 
 Global install (user-level, available across all projects):
 
-```bash
-npx add-mcp https://dev.databricks.com/api/mcp --name devhub-docs -g
-```
+<DevhubMcpCommand variant="global" />
 
 Project-level install (current directory only):
 
-```bash
-npx add-mcp https://dev.databricks.com/api/mcp --name devhub-docs
-```
+<DevhubMcpCommand variant="project" />
 
 To target a specific agent, add `-a`:
 
-```bash
-npx add-mcp https://dev.databricks.com/api/mcp --name devhub-docs -g -a cursor
-```
+<DevhubMcpCommand variant="cursor" />
 
 Restart your editor after adding the server. Some editors like Cursor require you to navigate to the MCP settings page and toggle the new server as enabled.
 

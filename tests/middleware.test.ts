@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import middleware from "../middleware";
+import middleware, { config } from "../middleware";
 
 function withSiteUrl<T>(siteUrl: string | undefined, run: () => T): T {
   const previous = process.env.SITE_URL;
@@ -59,6 +59,32 @@ describe("middleware root redirect", () => {
     withSiteUrl("https://stage.databricks.com/devhub", () => {
       expect(
         middleware(new Request("https://dev-databricks.vercel.app/devhub")),
+      ).toBeUndefined();
+    });
+  });
+});
+
+describe("middleware base-path API routing", () => {
+  test("matches every path so configured base-path API requests can be normalized", () => {
+    expect(config.matcher).toContain("/:path*");
+  });
+
+  test("rewrites configured base-path API requests to the root API function", () => {
+    withSiteUrl("https://stage.databricks.com/devhub", () => {
+      const response = middleware(
+        new Request("https://stage.databricks.com/devhub/api/mcp?transport=1"),
+      );
+
+      expect(response?.headers.get("x-middleware-rewrite")).toBe(
+        "https://stage.databricks.com/api/mcp?transport=1",
+      );
+    });
+  });
+
+  test("leaves root API requests alone when SITE_URL has no base path", () => {
+    withSiteUrl("https://dev.databricks.com", () => {
+      expect(
+        middleware(new Request("https://dev.databricks.com/api/mcp")),
       ).toBeUndefined();
     });
   });

@@ -1,4 +1,5 @@
 import { rewrite } from "@vercel/functions";
+import { toSiteRelativePath } from "./src/lib/site-paths";
 import { resolveSiteBaseUrl, resolveSiteUrl } from "./src/lib/site-url";
 
 /**
@@ -28,6 +29,13 @@ export default function middleware(request: Request): Response | undefined {
     const redirectUrl = new URL(resolveSiteUrl());
     redirectUrl.search = url.search;
     return Response.redirect(redirectUrl, 307);
+  }
+
+  const sitePath = toSiteRelativePath(url.pathname, baseUrl);
+  if (sitePath !== url.pathname && sitePath.startsWith("/api/")) {
+    const dest = new URL(url);
+    dest.pathname = sitePath;
+    return rewrite(dest);
   }
 
   const accept = request.headers.get("accept") ?? "";
@@ -65,5 +73,5 @@ export default function middleware(request: Request): Response | undefined {
 }
 
 export const config = {
-  matcher: ["/", "/docs/:path*", "/templates/:path*", "/solutions/:path*"],
+  matcher: ["/:path*"],
 };

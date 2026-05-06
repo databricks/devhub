@@ -4,7 +4,8 @@ import { readFileSync, existsSync } from "fs";
 import { resolve } from "path";
 import { expandMdxImports } from "../src/lib/expand-mdx";
 import { absolutizeMarkdown } from "../src/lib/copy-preamble";
-import { resolveSiteUrl } from "../src/lib/site-url";
+import { toSiteRelativePath } from "../src/lib/site-paths";
+import { resolveSiteBaseUrl, resolveSiteUrl } from "../src/lib/site-url";
 
 const DOCS_DIR = resolve(__dirname, "..", "docs");
 
@@ -34,7 +35,19 @@ function readDocFile(slug: string): string | undefined {
   return undefined;
 }
 
-const handler = createMcpHandler(
+function normalizeMcpRequestPath(request: Request): Request {
+  const url = new URL(request.url);
+  const sitePath = toSiteRelativePath(url.pathname, resolveSiteBaseUrl());
+
+  if (sitePath === url.pathname || !sitePath.startsWith("/api/")) {
+    return request;
+  }
+
+  url.pathname = sitePath;
+  return new Request(url, request);
+}
+
+const mcpHandler = createMcpHandler(
   (server) => {
     server.registerTool(
       "list_docs_resources",
@@ -91,5 +104,9 @@ const handler = createMcpHandler(
   { serverInfo: { name: "devhub-docs", version: "1.0.0" } },
   { basePath: "/api", disableSse: true, maxDuration: 30 },
 );
+
+async function handler(request: Request): Promise<Response> {
+  return mcpHandler(normalizeMcpRequestPath(request));
+}
 
 export { handler as GET, handler as POST, handler as DELETE };

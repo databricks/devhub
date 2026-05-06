@@ -61,6 +61,12 @@ describe("toSiteRelativePath", () => {
     ).toBe("/templates/ai-chat-app");
   });
 
+  test("strips multi-segment baseUrl values before composing API URLs", () => {
+    expect(
+      toSiteRelativePath("/preview/devhub/api/mcp", "/preview/devhub/"),
+    ).toBe("/api/mcp");
+  });
+
   test("returns the site root for the baseUrl itself", () => {
     expect(toSiteRelativePath("/devhub", "/devhub/")).toBe("/");
   });

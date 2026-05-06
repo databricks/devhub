@@ -60,7 +60,7 @@ Start at [/docs/start-here](/docs/start-here) if you want the guided tour.
 The way developers ship software is changing, and the content we read have to work for our agents too. Every template (and docs page) on the site is:
 
 - **Copy-pastable markdown** meant to be used by a coding agent.
-- **Available as raw markdown** by appending `.md` to any URL (e.g. `https://dev.databricks.com/templates/ai-chat-app.md`).
+- **Available as raw markdown** by appending `.md` to any URL.
 - **Reachable via our [docs MCP server](/docs/tools/ai-tools/docs-mcp-server)** for IDEs that speak Model Context Protocol.
 
 A workflow that works well:

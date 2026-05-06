@@ -77,19 +77,15 @@ The initial snapshot runs automatically on creation. For **Snapshot** and **Trig
 
 > **Note:** Table-update triggers for sync pipelines are not yet available via CLI and must be configured through the Databricks UI: **Workflows** → create/open a job → add a **Database Table Sync pipeline** task → **Schedules & Triggers** → add a **Table update** trigger pointing to your source table.
 
-Trigger a sync update programmatically via the Databricks SDK:
+Trigger a sync update programmatically via the Databricks CLI. Look up the pipeline ID for the synced table, then start an update:
 
-```python
-from databricks.sdk import WorkspaceClient
+```bash
+PIPELINE_ID=$(databricks database get-synced-database-table \
+  <CATALOG>.<SCHEMA>.<SYNCED_TABLE_NAME> \
+  --output json --profile <PROFILE> \
+  | jq -r '.data_synchronization_status.pipeline_id')
 
-w = WorkspaceClient()
-
-table = w.database.get_synced_database_table(
-    name="<CATALOG>.<SCHEMA>.<SYNCED_TABLE_NAME>"
-)
-pipeline_id = table.data_synchronization_status.pipeline_id
-
-w.pipelines.start_update(pipeline_id=pipeline_id)
+databricks pipelines start-update "$PIPELINE_ID" --profile <PROFILE>
 ```
 
 ### 4. Query the synced data in Postgres

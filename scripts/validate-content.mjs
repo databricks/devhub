@@ -15,6 +15,7 @@ const RESOURCE_ALLOWED_FILES = new Set([
   "content.md",
   "prerequisites.md",
   "deployment.md",
+  "replit-prompt.md",
 ]);
 const RESOURCE_REQUIRED_FILE = "content.md";
 const RESOURCE_SECTIONS = /** @type {const} */ (["recipes", "examples"]);

@@ -3,6 +3,7 @@ const CONTENT_SECTION_FILES = [
   "content",
   "prerequisites",
   "deployment",
+  "replit-prompt",
 ] as const;
 export type ContentSectionFile = (typeof CONTENT_SECTION_FILES)[number];
 
@@ -13,6 +14,7 @@ export type ContentSections = {
   content: string;
   prerequisites?: string;
   deployment?: string;
+  replitPrompt?: string;
 };
 
 /** Joins present sections in display order (prerequisites → content → deployment). */

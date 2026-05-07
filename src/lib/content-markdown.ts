@@ -116,8 +116,15 @@ export function readContentSections(
     "prerequisites",
   );
   const deployment = readContentSection(rootDir, section, slug, "deployment");
+  const replitPrompt = readContentSection(
+    rootDir,
+    section,
+    slug,
+    "replit-prompt",
+  );
   const sections: ContentSections = { content };
   if (prerequisites !== undefined) sections.prerequisites = prerequisites;
   if (deployment !== undefined) sections.deployment = deployment;
+  if (replitPrompt !== undefined) sections.replitPrompt = replitPrompt;
   return sections;
 }

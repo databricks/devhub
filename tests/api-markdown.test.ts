@@ -117,7 +117,7 @@ describe("/api/markdown about-devhub preamble policy", () => {
     expect(result.statusCode).toBe(200);
     expect(result.body).not.toContain("# About DevHub");
     expect(result.body).not.toContain("/llms.txt");
-    expect(result.body).toContain("Introducing dev.databricks.com");
+    expect(result.body).toContain("Introducing DevHub");
   });
 
   test("solution frontmatter url is absolute and reflects the request host", () => {
@@ -140,9 +140,7 @@ describe("/api/markdown about-devhub preamble policy", () => {
       slug: "devhub-launch",
       host: "dev.databricks.com",
     });
-    expect(result.body).toMatch(
-      /^title:\s+"Introducing dev\.databricks\.com"$/m,
-    );
+    expect(result.body).toMatch(/^title:\s+"Introducing DevHub"$/m);
     expect(result.body).toMatch(/^summary:\s+".+"$/m);
     expect(result.body).toMatch(/^publishedAt:\s*2026-05-04$/m);
     expect(result.body).toMatch(/^authors:$/m);

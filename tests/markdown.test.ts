@@ -28,7 +28,7 @@ describe("detail markdown resolver", () => {
     expect(frontmatter).not.toBeNull();
     if (!frontmatter) return;
     const block = frontmatter[1];
-    expect(block).toMatch(/^title:\s+"Introducing dev\.databricks\.com"$/m);
+    expect(block).toMatch(/^title:\s+"Introducing DevHub"$/m);
     expect(block).toMatch(
       /^url:\s+https:\/\/dev\.databricks\.com\/solutions\/devhub-launch$/m,
     );

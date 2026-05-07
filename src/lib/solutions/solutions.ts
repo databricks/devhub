@@ -55,7 +55,7 @@ export const solutions: Solution[] = [
   {
     type: "native",
     id: "devhub-launch",
-    title: "Introducing dev.databricks.com",
+    title: "Introducing DevHub",
     description:
       "A new developer hub for building on Databricks: opinionated, copy-pasteable templates and agent-ready documentation for software engineers.",
     tags: ["Launch", "Developer Experience", "Agent-Led Development"],

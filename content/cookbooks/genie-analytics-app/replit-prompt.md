@@ -47,7 +47,7 @@ Explain:
 
 `DATABRICKS_WAREHOUSE_ID` is the SQL Warehouse ID.
 
-`DATABRICKS_GENIE_SPACE_ID` is the Genie space ID to use for conversational analytics.
+`DATABRICKS_GENIE_SPACE_ID` is the Genie space ID to use for conversational analytics. The user can list their Genie spaces with the Databricks CLI — for example, `databricks api get /api/2.0/genie/spaces` — and copy the ID of the space they want to use.
 
 Use the SQL Statement Execution API for table previews and direct Genie API calls for conversations when available.
 

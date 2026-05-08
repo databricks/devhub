@@ -38,7 +38,7 @@ If the native connector or Genie integration is unavailable, ask the user to add
 - `DATABRICKS_TOKEN`
 - `DATABRICKS_WAREHOUSE_ID`
 
-Ask the user for Genie space IDs and store them in code or secrets according to their preference.
+Ask the user for Genie space IDs and store them in code or secrets according to their preference. The user can list their Genie spaces with the Databricks CLI — for example, `databricks api get /api/2.0/genie/spaces` — and copy the IDs of the spaces they want to include.
 
 Explain:
 

@@ -67,3 +67,35 @@ export function useExampleSections(slug: string): ContentSections | undefined {
   ) as ContentEntriesGlobalData;
   return data.sectionsBySlug[slug];
 }
+
+export function useAllExampleSections(): Record<string, ContentSections> {
+  const data = usePluginData(
+    "docusaurus-plugin-content-entries",
+    "examples",
+  ) as ContentEntriesGlobalData;
+  return data.sectionsBySlug;
+}
+
+/**
+ * IDs of every template (example, recipe, or cookbook) that ships a
+ * `replit-prompt.md`. Used by the templates page to power the "Replit Apps"
+ * filter without requiring authors to mirror that fact in `recipes.ts`.
+ */
+export function useReplitTemplateIds(): ReadonlySet<string> {
+  const exampleSections = useAllExampleSections();
+  const recipeSections = useAllRecipeSections();
+  const cookbookData = usePluginData(
+    "docusaurus-plugin-cookbooks",
+  ) as CookbooksGlobalData;
+  const ids = new Set<string>();
+  for (const [slug, sections] of Object.entries(exampleSections)) {
+    if (sections.replitPrompt) ids.add(slug);
+  }
+  for (const [slug, sections] of Object.entries(recipeSections)) {
+    if (sections.replitPrompt) ids.add(slug);
+  }
+  for (const slug of Object.keys(cookbookData.replitPromptsBySlug)) {
+    ids.add(slug);
+  }
+  return ids;
+}

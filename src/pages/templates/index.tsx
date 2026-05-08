@@ -23,6 +23,7 @@ import {
   type Service,
 } from "@/lib/recipes/recipes";
 import { useFeatureFlags } from "@/lib/feature-flags";
+import { useReplitTemplateIds } from "@/lib/use-raw-content-markdown";
 
 function OfficialTemplatesCallout(): ReactNode {
   return (
@@ -95,9 +96,11 @@ export default function TemplatesPage(): ReactNode {
     new Set(),
   );
   const [activeTags, setActiveTags] = useState<Set<string>>(new Set());
+  const [replitOnly, setReplitOnly] = useState(false);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   const { showDrafts: includeDrafts } = useFeatureFlags();
+  const replitTemplateIds = useReplitTemplateIds();
 
   const ALL_ITEMS = useMemo(
     () => buildTemplateItems(includeDrafts),
@@ -106,14 +109,22 @@ export default function TemplatesPage(): ReactNode {
 
   const filteredItems = useMemo(
     () =>
-      ALL_ITEMS.filter((item) =>
-        matchesTemplateFilter(item.data, {
+      ALL_ITEMS.filter((item) => {
+        if (replitOnly && !replitTemplateIds.has(item.data.id)) return false;
+        return matchesTemplateFilter(item.data, {
           searchQuery,
           selectedServices,
           activeTags,
-        }),
-      ),
-    [searchQuery, selectedServices, activeTags, ALL_ITEMS],
+        });
+      }),
+    [
+      searchQuery,
+      selectedServices,
+      activeTags,
+      replitOnly,
+      replitTemplateIds,
+      ALL_ITEMS,
+    ],
   );
 
   const handleToggleService = useCallback((service: Service) => {
@@ -133,18 +144,26 @@ export default function TemplatesPage(): ReactNode {
     });
   }, []);
 
+  const handleToggleReplitOnly = useCallback(() => {
+    setReplitOnly((prev) => !prev);
+  }, []);
+
   const handleClearAllFilters = useCallback(() => {
     setSelectedServices(new Set());
     setActiveTags(new Set());
     setSearchQuery("");
+    setReplitOnly(false);
   }, []);
 
-  const hasActiveFilters = activeTags.size > 0 || selectedServices.size > 0;
+  const hasActiveFilters =
+    activeTags.size > 0 || selectedServices.size > 0 || replitOnly;
 
   const filtersSidebar = (
     <TemplateFilters
       selectedServices={selectedServices}
       onToggleService={handleToggleService}
+      replitOnly={replitOnly}
+      onToggleReplitOnly={handleToggleReplitOnly}
     />
   );
 
@@ -183,7 +202,9 @@ export default function TemplatesPage(): ReactNode {
                 Filters
                 {hasActiveFilters && (
                   <Badge className="ml-0.5 size-5 justify-center rounded-full p-0 text-[10px]">
-                    {selectedServices.size + activeTags.size}
+                    {selectedServices.size +
+                      activeTags.size +
+                      (replitOnly ? 1 : 0)}
                   </Badge>
                 )}
               </Button>
@@ -200,6 +221,8 @@ export default function TemplatesPage(): ReactNode {
                   onRemoveTag={handleRemoveTag}
                   selectedServices={selectedServices}
                   onRemoveService={handleToggleService}
+                  replitOnly={replitOnly}
+                  onRemoveReplitOnly={handleToggleReplitOnly}
                   onClearAll={handleClearAllFilters}
                 />
               </div>

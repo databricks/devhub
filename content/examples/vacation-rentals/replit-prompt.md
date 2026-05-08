@@ -1,6 +1,6 @@
-# Build a SaaS Subscription Tracker with Databricks on Replit
+# Build a Vacation Rentals Operations Console with Databricks on Replit
 
-You are Replit Agent. Help the user build a Databricks-backed SaaS Subscription Tracker: an internal app for tracking SaaS tools, owners, costs, billing cycles, status, categories, and renewal dates.
+You are Replit Agent. Help the user build a Databricks-backed vacation rentals operations console: an internal app for tracking bookings, revenue, occupancy, property issues, guest notes, and operational follow-ups.
 
 This template is optimized for Replit Enterprise users with the native Databricks connector enabled. If the connector is unavailable, guide the user through the fallback paths below.
 
@@ -30,22 +30,25 @@ Ask for:
 Create or reuse this table:
 
 ```sql
-CREATE TABLE IF NOT EXISTS <catalog>.<schema>.subscriptions (
-  id STRING,
-  name STRING,
-  vendor STRING,
-  category STRING,
-  owner STRING,
-  cost DOUBLE,
-  billing_cycle STRING,
+CREATE TABLE IF NOT EXISTS <catalog>.<schema>.vacation_rental_bookings (
+  booking_id STRING,
+  property_id STRING,
+  property_name STRING,
+  market STRING,
+  guest_name STRING,
+  check_in DATE,
+  check_out DATE,
+  nights INT,
+  revenue DOUBLE,
+  channel STRING,
   status STRING,
-  renewal_date DATE,
-  notes STRING,
-  created_at TIMESTAMP
+  issue_status STRING,
+  owner_note STRING,
+  updated_at TIMESTAMP
 );
 ```
 
-If the table is empty, offer to seed it with realistic demo subscriptions.
+If the table is empty, offer to seed it with realistic demo bookings across multiple markets and channels.
 
 ## PAT Fallback Path
 
@@ -71,15 +74,13 @@ If the user wants the native connector instead, tell them it requires Replit Ent
 
 Build a polished full-stack web app with:
 
-- Dashboard showing total monthly spend, annualized spend, renewals due soon, active subscriptions, and spend by category
-- Genie-powered conversational analytics panel for questions like "Which renewals are coming up this month?" and "Which teams have the highest SaaS spend?"
-- Subscription table with search and filters
-- Add/edit/delete subscription flow
-- Renewal timeline
-- Category breakdown chart
-- Owner breakdown chart
-- Empty states and loading states
-- Clear error handling for Databricks connection, SQL permissions, missing tables, and unavailable warehouses
+- Operations dashboard showing revenue, occupancy, average daily rate, open issues, and upcoming check-ins
+- Booking queue with search, filters, status updates, issue status updates, and owner notes
+- Property performance table by market and property
+- Calendar-style upcoming arrivals and departures panel
+- Revenue and occupancy charts powered by SQL Warehouse queries
+- Genie-powered analytics panel for questions like "Which markets are underperforming?" and "Which properties have the most open issues?"
+- Empty states, loading states, and clear connection/permission errors
 
 Use a modern UI with Tailwind/shadcn-style components. Use the Databricks palette where appropriate:
 
@@ -96,26 +97,23 @@ If SQL fails because the connector or PAT lacks permission:
 - Ask whether to use an existing table, switch to read-only mode, or request Databricks permissions
 - Do not silently switch to local-only storage
 
-The source of truth for subscription data should remain Databricks.
+The source of truth for booking and operations data should remain Databricks.
 
 ## Build Order
 
 1. Resolve Databricks access using the connector or PAT fallback.
 2. Verify warehouse access with a simple query like `SELECT current_user()`.
 3. Ask for catalog and schema.
-4. Create or verify the `subscriptions` table.
+4. Create or verify the `vacation_rental_bookings` table.
 5. Seed demo data if needed.
-6. Build the app UI.
-7. Wire CRUD operations to Databricks SQL.
-8. Build the analytics dashboard.
-9. Add Genie conversational analytics when available.
-10. Run the app in Replit Preview.
-11. Help the user deploy with Replit Deployments.
+6. Build the operations dashboard and booking queue.
+7. Wire updates and analytics queries to Databricks SQL.
+8. Add Genie conversational analytics when available.
+9. Run the app in Replit Preview.
+10. Help the user deploy with Replit Deployments.
 
 ## Scope Notes
 
-This Replit template uses Databricks SQL Warehouse access through Replit's connector or PAT fallback.
-
-Use Genie when Replit's Databricks Genie integration is available. If Genie is unavailable, keep the SQL dashboard functional and ask whether the user wants to configure Genie access, continue without conversational analytics, or switch to the original Databricks DevHub workflow.
+This Replit template uses Databricks SQL Warehouse access through Replit's connector or PAT fallback, plus Genie when Replit's Databricks Genie integration is available.
 
 Do not use the Databricks CLI, Databricks Apps, AppKit, Lakebase, or Databricks Asset Bundles for this Replit version unless the user explicitly asks to switch to the original Databricks DevHub workflow.

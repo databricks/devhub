@@ -97,6 +97,20 @@ export function readCookbookIntro(
   return readFileSync(filePath, "utf-8");
 }
 
+/** Reads `content/cookbooks/<slug>/replit-prompt.md` if present. */
+export function readCookbookReplitPrompt(
+  rootDir: string,
+  slug: string,
+): string | undefined {
+  const filePath = resolve(
+    cookbookDirectory(rootDir),
+    slug,
+    "replit-prompt.md",
+  );
+  if (!existsSync(filePath)) return undefined;
+  return readFileSync(filePath, "utf-8");
+}
+
 /** Reads all present section files; throws when the required content.md is missing. */
 export function readContentSections(
   rootDir: string,

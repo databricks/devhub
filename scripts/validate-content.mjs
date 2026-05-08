@@ -20,7 +20,7 @@ const RESOURCE_ALLOWED_FILES = new Set([
 const RESOURCE_REQUIRED_FILE = "content.md";
 const RESOURCE_SECTIONS = /** @type {const} */ (["recipes", "examples"]);
 
-const COOKBOOK_ALLOWED_FILES = new Set(["intro.md"]);
+const COOKBOOK_ALLOWED_FILES = new Set(["intro.md", "replit-prompt.md"]);
 
 /** @type {string[]} */
 const errors = [];

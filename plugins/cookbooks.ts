@@ -2,12 +2,15 @@ import type { LoadContext, Plugin } from "@docusaurus/types";
 import {
   getCookbookSlugs,
   readCookbookIntro,
+  readCookbookReplitPrompt,
 } from "../src/lib/content-markdown";
 import { cookbooks } from "../src/lib/recipes/recipes";
 
 type CookbooksGlobalData = {
   /** Raw `content/cookbooks/<slug>/intro.md` bodies keyed by cookbook id. */
   introsBySlug: Record<string, string>;
+  /** Raw `content/cookbooks/<slug>/replit-prompt.md` bodies keyed by cookbook id. */
+  replitPromptsBySlug: Record<string, string>;
 };
 
 function assertCookbookSlugParity(contentSlugs: string[]): void {
@@ -28,14 +31,22 @@ export default function cookbooksPlugin(context: LoadContext): Plugin<void> {
       assertCookbookSlugParity(contentSlugs);
 
       const introsBySlug: Record<string, string> = {};
+      const replitPromptsBySlug: Record<string, string> = {};
       for (const slug of contentSlugs) {
         const intro = readCookbookIntro(context.siteDir, slug);
         if (intro) {
           introsBySlug[slug] = intro;
         }
+        const replitPrompt = readCookbookReplitPrompt(context.siteDir, slug);
+        if (replitPrompt) {
+          replitPromptsBySlug[slug] = replitPrompt;
+        }
       }
 
-      actions.setGlobalData({ introsBySlug } satisfies CookbooksGlobalData);
+      actions.setGlobalData({
+        introsBySlug,
+        replitPromptsBySlug,
+      } satisfies CookbooksGlobalData);
     },
   };
 }

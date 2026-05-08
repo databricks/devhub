@@ -1,6 +1,6 @@
-# Build a SaaS Subscription Tracker with Databricks on Replit
+# Build a Medallion Analytics App from CDC Tables with Databricks on Replit
 
-You are Replit Agent. Help the user build a Databricks-backed SaaS Subscription Tracker: an internal app for tracking SaaS tools, owners, costs, billing cycles, status, categories, and renewal dates.
+You are Replit Agent. Help the user build a Replit app over Databricks medallion tables produced from CDC history: a dashboard for exploring current-state silver tables and aggregated gold tables.
 
 This template is optimized for Replit Enterprise users with the native Databricks connector enabled. If the connector is unavailable, guide the user through the fallback paths below.
 
@@ -24,28 +24,11 @@ Use the Databricks connector to execute SQL against the user's Databricks SQL Wa
 Ask for:
 
 - Unity Catalog catalog name
-- Unity Catalog schema name
+- silver schema or table name
+- gold schema or aggregate table name
 - SQL Warehouse, if not already configured by the connector
 
-Create or reuse this table:
-
-```sql
-CREATE TABLE IF NOT EXISTS <catalog>.<schema>.subscriptions (
-  id STRING,
-  name STRING,
-  vendor STRING,
-  category STRING,
-  owner STRING,
-  cost DOUBLE,
-  billing_cycle STRING,
-  status STRING,
-  renewal_date DATE,
-  notes STRING,
-  created_at TIMESTAMP
-);
-```
-
-If the table is empty, offer to seed it with realistic demo subscriptions.
+If the user does not have medallion tables yet, offer to create demo silver and gold tables so the app can run immediately.
 
 ## PAT Fallback Path
 
@@ -71,15 +54,13 @@ If the user wants the native connector instead, tell them it requires Replit Ent
 
 Build a polished full-stack web app with:
 
-- Dashboard showing total monthly spend, annualized spend, renewals due soon, active subscriptions, and spend by category
-- Genie-powered conversational analytics panel for questions like "Which renewals are coming up this month?" and "Which teams have the highest SaaS spend?"
-- Subscription table with search and filters
-- Add/edit/delete subscription flow
-- Renewal timeline
-- Category breakdown chart
-- Owner breakdown chart
-- Empty states and loading states
-- Clear error handling for Databricks connection, SQL permissions, missing tables, and unavailable warehouses
+- Overview dashboard showing row counts, freshness, recent change volume, and gold aggregate health
+- Silver current-state table browser with search, filters, and change timestamp columns
+- Gold metrics dashboard with trend charts and grouped aggregates
+- Data freshness and pipeline status cards based on table timestamps
+- SQL query inspector showing the silver and gold queries used by the app
+- Genie-powered analytics panel for questions like "What changed most recently?" and "Which aggregates changed the most this week?"
+- Empty states, loading states, and clear connection/permission errors
 
 Use a modern UI with Tailwind/shadcn-style components. Use the Databricks palette where appropriate:
 
@@ -93,29 +74,26 @@ Use a modern UI with Tailwind/shadcn-style components. Use the Databricks palett
 If SQL fails because the connector or PAT lacks permission:
 
 - Explain the failed operation
-- Ask whether to use an existing table, switch to read-only mode, or request Databricks permissions
+- Ask whether to use existing tables, switch to read-only mode, or request Databricks permissions
 - Do not silently switch to local-only storage
 
-The source of truth for subscription data should remain Databricks.
+The source of truth for CDC-derived data should remain Databricks.
 
 ## Build Order
 
 1. Resolve Databricks access using the connector or PAT fallback.
 2. Verify warehouse access with a simple query like `SELECT current_user()`.
-3. Ask for catalog and schema.
-4. Create or verify the `subscriptions` table.
-5. Seed demo data if needed.
-6. Build the app UI.
-7. Wire CRUD operations to Databricks SQL.
-8. Build the analytics dashboard.
-9. Add Genie conversational analytics when available.
-10. Run the app in Replit Preview.
-11. Help the user deploy with Replit Deployments.
+3. Ask for catalog, silver table, and gold table.
+4. Inspect available columns and timestamp fields.
+5. Create demo silver/gold tables only if the user wants a sandbox.
+6. Build the medallion dashboard and table browser.
+7. Wire analytics queries to Databricks SQL.
+8. Add Genie conversational analytics when available.
+9. Run the app in Replit Preview.
+10. Help the user deploy with Replit Deployments.
 
 ## Scope Notes
 
-This Replit template uses Databricks SQL Warehouse access through Replit's connector or PAT fallback.
+This Replit template visualizes medallion tables that already exist, or demo tables created through SQL.
 
-Use Genie when Replit's Databricks Genie integration is available. If Genie is unavailable, keep the SQL dashboard functional and ask whether the user wants to configure Genie access, continue without conversational analytics, or switch to the original Databricks DevHub workflow.
-
-Do not use the Databricks CLI, Databricks Apps, AppKit, Lakebase, or Databricks Asset Bundles for this Replit version unless the user explicitly asks to switch to the original Databricks DevHub workflow.
+It does not create Lakeflow Declarative Pipelines, Lakehouse Sync, CDC replication, or Databricks Asset Bundles unless the user explicitly asks to switch to the original Databricks DevHub workflow.

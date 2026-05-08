@@ -25,6 +25,14 @@ export function useAllRecipeSections(): Record<string, ContentSections> {
   return data.sectionsBySlug;
 }
 
+export function useRecipeSections(slug: string): ContentSections | undefined {
+  const data = usePluginData(
+    "docusaurus-plugin-content-entries",
+    "recipes",
+  ) as ContentEntriesGlobalData;
+  return data.sectionsBySlug[slug];
+}
+
 export function useRawSolutionMarkdown(slug: string): string | undefined {
   const data = usePluginData(
     "docusaurus-plugin-content-entries",
@@ -35,6 +43,7 @@ export function useRawSolutionMarkdown(slug: string): string | undefined {
 
 type CookbooksGlobalData = {
   introsBySlug: Record<string, string>;
+  replitPromptsBySlug: Record<string, string>;
 };
 
 export function useCookbookIntro(slug: string): string | undefined {
@@ -42,6 +51,13 @@ export function useCookbookIntro(slug: string): string | undefined {
     "docusaurus-plugin-cookbooks",
   ) as CookbooksGlobalData;
   return data.introsBySlug[slug];
+}
+
+export function useCookbookReplitPrompt(slug: string): string | undefined {
+  const data = usePluginData(
+    "docusaurus-plugin-cookbooks",
+  ) as CookbooksGlobalData;
+  return data.replitPromptsBySlug[slug];
 }
 
 export function useExampleSections(slug: string): ContentSections | undefined {

@@ -63,6 +63,7 @@ Unless instructed otherwise, follow this workflow:
 5. Make it look great (see "Make it look great" below).
 6. Run and test locally.
 7. Deploy to production.
+8. Run and test deployed app (see "Run and test deployed app" below).
 
 ## Make it look great
 
@@ -76,6 +77,14 @@ Unless the user has specified a design preference, use these defaults:
 - Databricks brand palette: `#FF3621`, `#0B2026`, `#EEEDE9`, `#F9F7F4`.
 
 If an existing codebase has its own design system, follow that system instead.
+
+## Run and test deployed app
+
+- If the `databricks-apps` skill is available, follow its `agent-browser` reference to load the deployed app and test it; otherwise install `agent-browser` (`npm install -g agent-browser`) and drive the deployed URL with it directly.
+- If anything is off, fix it.
+- Inspect the app logs via the Databricks CLI and fix any errors.
+- Redeploy and repeat until all issues are resolved.
+- Report back to the user once the deployed app is verified.
 
 ## When you run into issues
 

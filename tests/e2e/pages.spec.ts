@@ -5,7 +5,7 @@ const PAGES = [
   { path: "/solutions", title: "Solutions" },
   {
     path: "/solutions/devhub-launch",
-    title: "Introducing dev.databricks.com",
+    title: "Introducing DevHub",
   },
   { path: "/templates", title: "Templates" },
   { path: "/templates/ai-chat-app", title: "AI Chat App" },

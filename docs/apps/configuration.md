@@ -58,19 +58,55 @@ This runs automatically during `npm run dev` and `npm run build`. Commit it alon
 
 ## Resources
 
-Apps access Databricks services through declared resources. Declare resources in `databricks.yml` and bind them to environment variables in `app.yaml` using `valueFrom`. Common resource types used in AppKit templates:
+Apps access Databricks services through declared resources. Each resource has a `name` in `databricks.yml`. Use that name as the `valueFrom` value in `app.yaml`.
 
-| Resource                                                                             | `valueFrom` key    | What it provides               |
-| ------------------------------------------------------------------------------------ | ------------------ | ------------------------------ |
-| [Lakebase Postgres](/docs/lakebase/quickstart)                                       | `postgres`         | PostgreSQL connection          |
-| [SQL Warehouse](https://docs.databricks.com/aws/en/compute/sql-warehouse/index.html) | `sql-warehouse`    | SQL query execution            |
-| [Model Serving](/docs/agents/ai-gateway)                                             | `serving-endpoint` | AI model inference             |
-| [Genie space](/docs/agents/genie)                                                    | `genie-space`      | Natural language data queries  |
-| [Job](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/resources)        | `job`              | Scheduled or triggered job     |
-| [UC Volumes](https://docs.databricks.com/aws/en/files/index.html)                    | `volume`           | File storage                   |
-| [Secrets](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/secrets)      | `secret`           | Sensitive configuration values |
+AppKit templates use conventional names for plugin-managed resources:
+
+| Resource                                                                             | Resource name      | What it provides              |
+| ------------------------------------------------------------------------------------ | ------------------ | ----------------------------- |
+| [Lakebase Postgres](/docs/lakebase/quickstart)                                       | `postgres`         | PostgreSQL connection         |
+| [SQL Warehouse](https://docs.databricks.com/aws/en/compute/sql-warehouse/index.html) | `sql-warehouse`    | SQL query execution           |
+| [Model Serving](/docs/agents/ai-gateway)                                             | `serving-endpoint` | AI model inference            |
+| [Genie space](/docs/agents/genie)                                                    | `genie-space`      | Natural language data queries |
+| [Job](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/resources)        | `job`              | Scheduled or triggered job    |
+| [UC Volumes](https://docs.databricks.com/aws/en/files/index.html)                    | `volume`           | File storage                  |
 
 Additional resource types (Unity Catalog tables, connections, vector search indexes, MLflow experiments, and others) are listed in the [official resources documentation](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/resources).
+
+### Secrets
+
+Neither config file contains the secret value. `databricks.yml` declares a resource pointing to a [secret scope](https://docs.databricks.com/aws/en/security/secrets) and key that you define, and `app.yaml` references that resource by name. The platform injects the decrypted value at runtime.
+
+1. Store the secret value using the Databricks CLI:
+
+   ```bash
+   databricks secrets create-scope my-app-secrets
+   databricks secrets put-secret my-app-secrets MY_SECRET --string-value "..."
+   ```
+
+2. Declare the secret resource in `databricks.yml`:
+
+   ```yaml
+   resources:
+     apps:
+       my-app:
+         resources:
+           - name: my-secret # label for this resource (user-defined)
+             secret:
+               scope: my-app-secrets # Databricks secret scope name
+               key: MY_SECRET # key within that scope
+               permission: READ
+   ```
+
+3. Bind it to an environment variable in `app.yaml`:
+
+   ```yaml
+   env:
+     - name: MY_SECRET
+       valueFrom: my-secret # references the resource name above, not the secret value
+   ```
+
+At runtime, `MY_SECRET` contains the decrypted secret value. Neither file contains the value itself.
 
 ## Environment variables
 
@@ -85,7 +121,7 @@ The platform injects these variables automatically at runtime:
 | `DATABRICKS_CLIENT_SECRET` | Service principal client secret |
 | `DATABRICKS_WORKSPACE_ID`  | Workspace ID                    |
 
-Custom variables go in `app.yaml` under `env`. Use `value` for plain values, `valueFrom` for resource bindings and secrets. Never put secrets in `value`.
+Custom variables go in `app.yaml` under `env`. Use `value` for plain text, `valueFrom` for [resource names](#resources). Never put secrets in `value`.
 
 ## Auth model
 

@@ -198,9 +198,6 @@ const sidebars: SidebarsConfig = {
           type: "category",
           label: "AppKit",
           collapsed: true,
-          ...(appKitIndexDocId
-            ? { link: { type: "doc" as const, id: appKitIndexDocId } }
-            : {}),
           items: appKitItems,
         },
       ],

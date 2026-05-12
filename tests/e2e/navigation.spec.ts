@@ -397,6 +397,7 @@ test.describe("docs sidebar navigation", () => {
     await page.goto("/docs/start-here");
     const sidebar = page.getByRole("navigation", { name: "Docs sidebar" });
     await sidebar.getByRole("button", { name: "Databricks Apps" }).click();
+    await sidebar.getByRole("button", { name: "AppKit" }).click();
     const appKitReferenceLink = page
       .locator(
         'nav[aria-label="Docs sidebar"] a.menu__link[href*="/docs/appkit/"]',

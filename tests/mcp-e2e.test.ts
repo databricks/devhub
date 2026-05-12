@@ -63,21 +63,35 @@ async function waitForServer(
 }
 
 async function mcporter(...args: string[]): Promise<string> {
-  const { stdout } = await execFileAsync(
-    "npx",
-    [
-      "--yes",
-      "mcporter",
-      ...args,
-      "--http-url",
-      MCP_URL,
-      "--allow-http",
-      "--name",
-      "devhub",
-    ],
-    { cwd: ROOT, encoding: "utf-8", timeout: 30_000 },
-  );
-  return stdout.trim();
+  // mcporter exits non-zero when a tool returns `isError: true`, but still
+  // prints the error text to stdout. Tool errors are a normal MCP response
+  // here, so we capture stdout regardless of exit code.
+  try {
+    const { stdout } = await execFileAsync(
+      "npx",
+      [
+        "--yes",
+        "mcporter",
+        ...args,
+        "--http-url",
+        MCP_URL,
+        "--allow-http",
+        "--name",
+        "devhub",
+      ],
+      { cwd: ROOT, encoding: "utf-8", timeout: 30_000 },
+    );
+    return stdout.trim();
+  } catch (err) {
+    const e = err as NodeJS.ErrnoException & {
+      stdout?: string;
+      stderr?: string;
+    };
+    if (typeof e.stdout === "string" && e.stdout.length > 0) {
+      return e.stdout.trim();
+    }
+    throw err;
+  }
 }
 
 describe("MCP server e2e (mcporter)", () => {

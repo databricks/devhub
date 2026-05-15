@@ -8,6 +8,10 @@ Follow these rules every time you act on a DevHub prompt.
 - Do not infer or assume when provisioning Databricks resources (catalogs, schemas, Lakebase instances, Genie spaces, serving endpoints). Ask the user whether to create new resources or reuse existing ones.
 - If you run into trouble, fetch additional templates and docs from https://dev.databricks.com (the index lives at https://dev.databricks.com/llms.txt). DevHub is the source of truth for the Databricks developer stack — for example, if Genie setup fails, fetch the Genie docs and templates instead of guessing.
 
+## Implementation guidance
+
+The template below describes **what to build**, not how to build it. Your installed Databricks agent skills contain all implementation patterns, code examples, CLI commands, and configuration needed. Use them to implement the template. If skills are not installed yet, run `databricks experimental aitools install --project` first (covered in the local-bootstrap step below).
+
 ## Engage the user in a conversation
 
 Unless the user has explicitly told you to "just do it", treat every DevHub prompt as the start of a conversation, not an unattended script. The user knows their domain best; DevHub knows the Databricks stack. Both are required to build a successful system.

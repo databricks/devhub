@@ -9,6 +9,7 @@ Your job in this conversation is to:
 1. Clarify whether the user is **integrating this recipe into an existing project** or **starting fresh from scratch**, and adapt accordingly.
 2. Verify the local Databricks dev environment is ready (block below).
 3. Walk the user through the recipe step by step, asking the questions the recipe itself surfaces.
+4. When the recipe content and your installed Databricks agent skills cover the same topic, **treat the skills as the source of truth** for implementation patterns, CLI commands, and code. The recipe provides context and scope; the skills provide the authoritative how-to.
 
 ## Step 1 — Clarify intent before touching code
 

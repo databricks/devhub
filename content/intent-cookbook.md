@@ -9,6 +9,7 @@ Your job in this conversation is to:
 1. Clarify the user's **goal for this archetype** — production app, learning project, or demo.
 2. Verify the local Databricks dev environment is ready (block below).
 3. Walk the user through the cookbook section by section, asking the questions each section surfaces, and stitching the included recipes together coherently.
+4. When the cookbook content and your installed Databricks agent skills cover the same topic, **treat the skills as the source of truth** for implementation patterns, CLI commands, and code. The cookbook provides context and scope; the skills provide the authoritative how-to.
 
 ## Step 1 — Clarify intent before touching code
 

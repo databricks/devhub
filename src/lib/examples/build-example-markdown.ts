@@ -93,37 +93,13 @@ export function buildFullPrompt(
   if (isInitCommand(example.initCommand)) {
     const hasPrereqs = Boolean(sections.prerequisites);
     const hasDeployBlock = Boolean(sections.deployment);
-    const initStepNumber = hasPrereqs ? 3 : 2;
-
-    lines.push(
-      "### 1. Verify Databricks CLI auth",
-      "",
-      "The init flow calls the workspace API to resolve connection details, so it fails immediately without a valid Databricks CLI profile. Before running init, check auth:",
-      "",
-      "```bash",
-      "databricks auth profiles",
-      "```",
-      "",
-      "If no profile shows `Valid: YES`, authenticate one first:",
-      "",
-      "```bash",
-      "databricks auth login --profile <name> --host <workspace-url>",
-      "```",
-      "",
-      "If `DEFAULT` is not the profile you want to use, export the one you want so subsequent commands pick it up:",
-      "",
-      "```bash",
-      "export DATABRICKS_CONFIG_PROFILE=<profile>",
-      "```",
-      "",
-    );
 
     if (hasPrereqs) {
       lines.push(sections.prerequisites!, "");
     }
 
     lines.push(
-      `### ${initStepNumber}. Scaffold the project with \`databricks apps init\``,
+      "### Scaffold the project",
       "",
       "Run the command below to scaffold this example into a new directory using the [AppKit template system](/docs/appkit/v0/development/templates). It creates the app in your workspace, binds required resources, and writes a local `.env` with connection details resolved by the AppKit plugins.",
       "",
@@ -143,7 +119,7 @@ export function buildFullPrompt(
     }
   } else {
     lines.push(
-      "### 1. Clone locally and follow `template/README.md`",
+      "### Clone and follow `template/README.md`",
       "",
       "Run the command below to clone the DevHub repository locally and enter this example's **`template/`** directory.",
       "",

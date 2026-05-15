@@ -93,18 +93,12 @@ describe("buildFullPrompt", () => {
   test("includes get started steps", () => {
     const prompt = buildFullPrompt({ ...baseOpts, sections: emptySections });
     expect(prompt).toContain("## Get started");
-    expect(prompt).toContain(
-      "### 1. Clone locally and follow `template/README.md`",
-    );
+    expect(prompt).toContain("### Clone and follow `template/README.md`");
     expect(prompt).toContain(minimalExample.initCommand);
     expect(prompt).toContain("template/README.md");
     expect(prompt).toContain(
       "databricks apps init --template https://github.com/databricks/devhub/tree/main/examples/test-example",
     );
-    expect(prompt).not.toContain(
-      "### 2. Provision or link existing Databricks resources",
-    );
-    expect(prompt).not.toContain("### 3. Deploy the application");
   });
 
   test("includes content section body", () => {
@@ -122,7 +116,7 @@ describe("buildFullPrompt", () => {
       ...baseOpts,
       sections: contentOnlySections,
     });
-    const getStartedIdx = prompt.indexOf("### 1. Clone locally");
+    const getStartedIdx = prompt.indexOf("### Clone and follow");
     const rawIdx = prompt.indexOf("This is the example overview");
     const sourceIdx = prompt.indexOf("## Source Code");
     expect(getStartedIdx).toBeLessThan(rawIdx);
@@ -257,14 +251,12 @@ describe("example Get started: full prompt (Copy prompt) vs export markdown (Cop
     const full = buildFullPrompt({ ...baseOpts, sections: emptySections });
     const exportMd = buildAdditionalMarkdown(baseOpts);
 
-    expect(full).toContain(
-      "### 1. Clone locally and follow `template/README.md`",
-    );
+    expect(full).toContain("### Clone and follow `template/README.md`");
     expect(full).toContain("```bash");
     expect(full).toContain(minimalExample.initCommand);
 
     expect(exportMd).toContain(buildExportGetStartedSection(minimalExample));
-    expect(exportMd).not.toContain("### 1. Clone locally");
+    expect(exportMd).not.toContain("### Clone and follow");
     expect(exportMd).toContain("```bash");
     expect(exportMd).toContain(minimalExample.initCommand);
   });
@@ -312,30 +304,21 @@ describe("init-style examples (databricks apps init)", () => {
     expect(authIdx).toBeLessThan(initIdx);
   });
 
-  test("full prompt has auth verification as step 1 before scaffold step 2", () => {
+  test("full prompt has scaffold section without duplicate auth verification", () => {
     const prompt = buildFullPrompt({ ...initOpts, sections: emptySections });
-    expect(prompt).toContain("### 1. Verify Databricks CLI auth");
-    expect(prompt).toContain(
-      "### 2. Scaffold the project with `databricks apps init`",
-    );
-    expect(prompt).toContain("databricks auth profiles");
-    expect(prompt).toContain("databricks auth login --profile");
-    expect(prompt).not.toContain(
-      "### 1. Clone locally and follow `template/README.md`",
-    );
+    expect(prompt).toContain("### Scaffold the project");
+    expect(prompt).not.toContain("Verify Databricks CLI auth");
+    expect(prompt).not.toContain("databricks auth profiles");
+    expect(prompt).not.toContain("databricks auth login --profile");
+    expect(prompt).not.toContain("### Clone and follow `template/README.md`");
     expect(prompt).toContain(initExample.initCommand);
-    const authIdx = prompt.indexOf("### 1. Verify Databricks CLI auth");
-    const scaffoldIdx = prompt.indexOf(
-      "### 2. Scaffold the project with `databricks apps init`",
-    );
-    expect(authIdx).toBeLessThan(scaffoldIdx);
   });
 
-  test("prereq section is injected as step 2 and scaffold becomes step 3", () => {
+  test("prereq section is injected before scaffold", () => {
     const sections: ExampleSections = {
       content: "",
       prerequisites: [
-        "### 2. Create the Lakebase Postgres prerequisites",
+        "### Create the Lakebase Postgres prerequisites",
         "",
         "```bash",
         "databricks postgres create-project my-proj",
@@ -346,20 +329,13 @@ describe("init-style examples (databricks apps init)", () => {
       ...initOpts,
       sections,
     });
-    expect(prompt).toContain("### 1. Verify Databricks CLI auth");
-    expect(prompt).toContain(
-      "### 2. Create the Lakebase Postgres prerequisites",
-    );
-    expect(prompt).toContain(
-      "### 3. Scaffold the project with `databricks apps init`",
-    );
+    expect(prompt).toContain("### Create the Lakebase Postgres prerequisites");
+    expect(prompt).toContain("### Scaffold the project");
     expect(prompt).toContain("databricks postgres create-project my-proj");
     const prereqIdx = prompt.indexOf(
-      "### 2. Create the Lakebase Postgres prerequisites",
+      "### Create the Lakebase Postgres prerequisites",
     );
-    const scaffoldIdx = prompt.indexOf(
-      "### 3. Scaffold the project with `databricks apps init`",
-    );
+    const scaffoldIdx = prompt.indexOf("### Scaffold the project");
     expect(prereqIdx).toBeLessThan(scaffoldIdx);
   });
 
@@ -367,7 +343,7 @@ describe("init-style examples (databricks apps init)", () => {
     const sections: ExampleSections = {
       content: "",
       deployment: [
-        "### 3. Install and deploy",
+        "### Install and deploy",
         "",
         "```bash",
         "npm install",
@@ -379,7 +355,7 @@ describe("init-style examples (databricks apps init)", () => {
       ...initOpts,
       sections,
     });
-    expect(prompt).toContain("### 3. Install and deploy");
+    expect(prompt).toContain("### Install and deploy");
     expect(prompt).toContain("npm run deploy");
     expect(prompt).not.toContain(
       "A **`README.md`** ships inside the scaffolded project",

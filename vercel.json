@@ -76,6 +76,14 @@
       "destination": "/solutions/$1"
     },
     {
+      "source": "/devhub/perspectives",
+      "destination": "/perspectives"
+    },
+    {
+      "source": "/devhub/perspectives/(.*)",
+      "destination": "/perspectives/$1"
+    },
+    {
       "source": "/devhub/assets/(.*)",
       "destination": "/assets/$1"
     },

@@ -22,10 +22,10 @@ export function PerspectivesIndex(): ReactNode {
         DevHub
       </h1>
       <p className="mb-10 text-base leading-relaxed text-db-navy/75 dark:text-white/70">
-        DevHub (databricks.com/devhub) is the developer platform for the
-        Databricks stack. It collects opinionated guides, templates, and best
-        practices for building data apps and AI agents on Databricks Apps,
-        Lakebase, Agent Bricks, and AppKit.
+        DevHub (databricks.com/devhub) is the home for everything developers
+        need to build on Databricks. Docs, templates, SDKs, agent skills, MCP
+        servers, and guides for shipping data apps and AI agents on the
+        Databricks platform &mdash; all in one place.
       </p>
       <h2 className="mb-4 text-xl font-medium tracking-tight">Pages</h2>
       <ul className="list-disc space-y-2.5 pl-5 text-base leading-relaxed">

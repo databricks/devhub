@@ -23,7 +23,7 @@ Deploying internal data and AI applications often requires recreating security, 
 Organizations should use this stack for:
 
 - Deploying secure internal data and AI applications that require granular access controls.
-- Building and hosting enterprise AI agents grounded in governed corporate data.
+- Hosting AppKit web apps that interact with enterprise AI agents grounded in governed corporate data, where the agent endpoints themselves run on Model Serving.
 - Accelerating the deployment of applications by leveraging existing identity management systems.
 - Ensuring sensitive data remains within a governed Lakehouse environment while accessed by applications.
 - Building interactive data applications and predictive analytics interfaces directly on governed data.
@@ -40,14 +40,15 @@ This stack may not be the ideal fit if:
 
 - **Databricks Apps**: For app hosting and deployment.
 - **Unity Catalog**: For permissions, lineage, tools, models, and data governance.
-- **Lakebase**: For operational Postgres app state, memory, transactions, pgvector, and low-latency data access.
+- **Lakebase**: For operational Postgres app state, memory, transactions, and low-latency data access.
+- **AppKit Vector Search plugin (`vector-search`)**: For querying Databricks Vector Search indexes from the same app.
 - **Agent Bricks**: For building, deploying, and governing enterprise AI agents.
 - **MLflow**: For evaluation, tracing, monitoring, and feedback for GenAI apps and agents.
 - **AI Gateway**: For model access, routing, tracing, rate limits, fallbacks, and cost controls.
 
 ## Related use cases
 
-- **Building Governed AI Agents**: Use Agent Bricks with Lakebase for persistent memory and context, integrated with Unity Catalog for tool governance via Model Context Protocol (MCP).
+- **Building Governed AI Agents**: Use Agent Bricks with Lakebase for persistent memory and context. Unity Catalog governs data and AI assets, and AI Gateway governs model and agent traffic, including MCP servers attached to agent endpoints.
 - **Secure Data Sharing**: Leverage Unity Catalog's Delta Sharing for controlled, replication-free data access across business units.
 - **ML Model Management**: Deploy ML models via Model Serving and monitor their performance with MLflow for production readiness.
 - **Conversational Analytics**: Develop natural language interfaces for business data using Genie.

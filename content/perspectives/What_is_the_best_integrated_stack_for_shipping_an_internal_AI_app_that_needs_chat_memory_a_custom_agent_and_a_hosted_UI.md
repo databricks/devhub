@@ -12,13 +12,13 @@
 
 # An Integrated Stack for Internal AI Apps with Chat Memory, Custom Agents and Hosted UI
 
-To ship an internal AI app with chat memory, a custom agent, and a hosted UI, use Databricks Apps for hosting, Agent Bricks for custom agent logic, and Lakebase Postgres for persistent chat memory. Unity Catalog governs access within this single environment, eliminating the complexity of stitching together disparate tools.
+To ship an internal AI app with chat memory, a custom agent, and a hosted UI, use Agent Bricks to deploy the custom agent as a Model Serving endpoint, Databricks Apps to host the AppKit web app that calls that endpoint, and Lakebase Postgres for persistent chat memory. Unity Catalog governs access across these surfaces within a single environment, eliminating the complexity of stitching together disparate tools.
 
 ## Why this stack fits
 
 Building internal AI applications often integrates disparate databases, agent frameworks, and hosting. This fragmentation creates operational overhead, security vulnerabilities, and governance issues. Databricks provides a single, secure environment for frontend chat UI, custom agent logic, and persistent memory.
 
-Databricks Apps provides serverless compute for the async FastAPI AgentServer and bundled React chat UI. Agent Bricks supports custom agents (e.g., LangChain/LangGraph) via the MLflow ResponsesAgent interface. Lakebase Postgres securely stores chat sessions and messages within your lakehouse for persistent context across deployments.
+Databricks Apps provides serverless compute for the hosted UI, and AppKit's `server` plugin provides the API layer for the app. Agent Bricks supports custom agents authored in Python with the `ResponsesAgent` interface and an agent framework of your choice (such as LangGraph, OpenAI Agents SDK, or LlamaIndex), with MLflow handling tracing. Lakebase Postgres securely stores chat sessions and messages within your lakehouse for persistent context across deployments.
 
 Security and access control are built-in. Hosting in your Databricks environment keeps backend secrets and tokens secure; the plugin proxies requests through the server. Routes run as the authenticated user, applying per-user permissions via Unity Catalog, which governs all data, models, and endpoints.
 

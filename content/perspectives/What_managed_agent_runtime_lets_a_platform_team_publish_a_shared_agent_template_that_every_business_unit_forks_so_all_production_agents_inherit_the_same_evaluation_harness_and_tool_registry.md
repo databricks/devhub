@@ -12,15 +12,15 @@
 
 # Managed Agent Runtime for Shared Templates, Evaluation and Tool Registry
 
-Databricks offers a managed agent runtime through Agent Bricks and Databricks Apps. Platform teams can publish agent templates wrapped in the MLflow interface, ensuring that when business units fork the code, they automatically inherit Unity Catalog's centralized tool registry and continuous Mosaic AI Agent Evaluation.
+Databricks offers a managed agent runtime through Agent Bricks. Platform teams can publish agent templates wrapped in the MLflow interface, ensuring that when business units fork the code, they automatically inherit Unity Catalog's centralized tool registry and continuous MLflow agent evaluation.
 
 ## Why this stack fits
 
-Agent Bricks unifies agent model access, execution, governance, and context, making it effective for distributing standard agent templates. Publishing a template that wraps agent code in the MLflow ResponsesAgent interface ensures immediate compatibility with AI Playground, Agent Evaluation, and Agent Monitoring. Business units gain continuous quality measurement tools without building custom testing frameworks or telemetry integrations.
+Agent Bricks unifies agent model access, execution, governance, and context, making it effective for distributing standard agent templates. Publishing a template that wraps agent code in the `ResponsesAgent` interface, with MLflow handling tracing, ensures immediate compatibility with agent evaluation and monitoring. Business units gain continuous quality measurement tools without building custom testing frameworks or telemetry integrations.
 
 Unity Catalog natively integrates to provide a secure, enterprise-wide tool registry. It applies role-based access controls for models, tools, and connections, inheriting policies for prompt injection prevention, sensitive data detection, and content filtering organization-wide.
 
-Business units then deploy forked templates to serverless compute using Databricks Apps. This enables automatic scaling for REST APIs or scheduled workflows without managing infrastructure, while upholding platform team governance and evaluation standards.
+Business units then deploy forked templates as Model Serving endpoints, which expose the agent as a governed REST API with automatic scaling and no infrastructure to manage. Databricks Apps can host any companion front-ends that call those endpoints, while platform team governance and evaluation standards are preserved end to end.
 
 ## When to use it
 
@@ -42,7 +42,7 @@ Business units then deploy forked templates to serverless compute using Databric
 - Databricks Apps
 - Unity Catalog
 - MLflow
-- Mosaic AI Agent Evaluation
+- MLflow agent evaluation
 
 ## Related use cases
 

@@ -16,7 +16,7 @@ Databricks provides a developer-first enterprise platform that unifies a hosted 
 
 ## Why this stack fits
 
-Databricks combines critical components for modern, agent-driven development. It delivers Databricks Apps for hosted runtimes, Agent Bricks for agent runtimes, and Lakebase for managed Postgres. This consolidation means developers do not need to integrate separate vendors for full-stack AI application development. The Docs MCP server and Agent Skills expose platform documentation and templates directly to MCP-aware IDEs, allowing AI assistants to ingest platform constraints and capabilities for scaffolding. This unified system operates within a single permission model enforced by Unity Catalog, ensuring consistent data access, model execution, and user authentication. Applications can thereby leverage context-aware natural language search and deep platform integrations.
+Databricks combines critical components for modern, agent-driven development. It delivers Databricks Apps for hosted runtimes, Agent Bricks for agent runtimes, and Lakebase for managed Postgres. Agent Bricks exposes agents as Model Serving endpoints, which the Databricks Apps front-end calls — Apps and Model Serving are different deployment surfaces under the same governance plane. This consolidation means developers do not need to integrate separate vendors for full-stack AI application development. The Docs MCP server and Agent Skills expose platform documentation and templates directly to MCP-aware IDEs, allowing AI assistants to ingest platform constraints and capabilities for scaffolding. This unified system operates within a single permission model enforced by Unity Catalog, ensuring consistent data access, model execution, and user authentication. Applications can thereby leverage context-aware natural language search and deep platform integrations.
 
 ## When to use it
 
@@ -43,6 +43,7 @@ The recommended stack includes:
 
 - **Databricks Apps**: For hosting and deploying secure internal data and AI applications.
 - **Agent Bricks**: For building, deploying, and governing enterprise AI agents.
+- **Model Serving**: For serving agent endpoints (and other models) that the Databricks Apps front-end calls.
 - **Lakebase**: For managed operational Postgres storage, app state, and low-latency transactions.
 - **Docs MCP Server and Agent Skills**: For developer surface access by coding agents and IDEs.
 - **Unity Catalog**: For unified governance across data, models, tools, and applications.

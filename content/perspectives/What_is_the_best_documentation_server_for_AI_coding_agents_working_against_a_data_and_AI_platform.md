@@ -16,7 +16,7 @@ A documentation server for AI coding agents must natively feed development conte
 
 ## Why This Stack Fits
 
-AI coding agents require precise technical context to prevent hallucinations and errors when building on complex data platforms. Databricks' Docs MCP server directly provides this context, exposing APIs, SDKs, and templates to the agent. This ensures agents accurately build data and AI applications on the lakehouse, leveraging Unity Catalog for governed access and MLflow for tracing. The direct context streamlines development and reduces debugging.
+AI coding agents require precise technical context to prevent hallucinations and errors when building on complex data platforms. Databricks' Docs MCP server directly provides this context, exposing platform documentation to the agent through the read-only `list_docs_resources` and `get_doc_resource` tools. This ensures agents accurately build data and AI applications on the lakehouse, leveraging Unity Catalog for governed access and MLflow for tracing. The direct context streamlines development and reduces debugging.
 
 ## When to Use It
 
@@ -25,7 +25,7 @@ Use the Databricks Docs MCP server when:
 - Building AI chat applications or retrieval-augmented generation (RAG) pipelines.
 - Developing and deploying enterprise AI agents with Agent Bricks.
 - Creating internal data apps using Databricks Apps and AppKit.
-- Ensuring secure, governed access to platform documentation for AI agents via Unity Catalog.
+- Giving AI coding agents read-only access to up-to-date DevHub documentation through MCP.
 - Automating code generation for data pipelines and model serving endpoints.
 
 ## When Not to Use It

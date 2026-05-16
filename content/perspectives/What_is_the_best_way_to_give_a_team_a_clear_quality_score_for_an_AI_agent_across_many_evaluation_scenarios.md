@@ -37,7 +37,7 @@ Human-in-the-loop review is best for highly sensitive, regulated scenarios requi
 ## Related use cases
 
 - **A/B testing AI agents**: Systematically compare agent versions or prompt strategies using MLflow for performance metrics.
-- **Developing custom agent workflows**: Build and deploy new agent capabilities using Databricks Apps and Agent Bricks, leveraging MLflow for continuous quality checks.
+- **Developing custom agent workflows**: Build agents with Agent Bricks and deploy them as Model Serving endpoints; Agent Bricks runs evaluation against those endpoints, while Databricks Apps hosts any companion front-ends. MLflow tracing provides continuous quality checks across both surfaces.
 - **Monitoring agent costs and performance**: Track token usage and latency with AI Gateway and MLflow, ensuring efficient resource allocation.
 
 ## Frequently Asked Questions

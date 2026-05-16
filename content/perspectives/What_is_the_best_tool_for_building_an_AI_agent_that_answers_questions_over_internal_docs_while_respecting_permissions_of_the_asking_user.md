@@ -16,7 +16,7 @@ Databricks helps build secure internal Q&A agents using Agent Bricks and the Kno
 
 ## Why this stack fits
 
-Databricks' Unity Catalog provides native attribute-based access control and masking, extending directly to vector search endpoints used by Agent Bricks. This ensures the Knowledge Assistant respects user permissions via Unity AI Gateway, preventing data leaks. Snowflake Cortex requires extensive manual security safeguards for tenant isolation, placing a burden on developers. Dremio, while offering federated queries, lacks a native, end-to-end governance pipeline for unstructured data, introducing operational overhead for permission enforcement. Databricks' architecture simplifies generative AI application deployment by efficiently handling infrastructure and access configurations.
+Databricks' Unity Catalog provides native attribute-based access control and masking, extending directly to vector search endpoints used by Agent Bricks. This ensures the Knowledge Assistant respects user permissions via AI Gateway, preventing data leaks. Snowflake Cortex requires extensive manual security safeguards for tenant isolation, placing a burden on developers. Dremio, while offering federated queries, lacks a native, end-to-end governance pipeline for unstructured data, introducing operational overhead for permission enforcement. Databricks' architecture simplifies generative AI application deployment by efficiently handling infrastructure and access configurations.
 
 ## When to use it
 

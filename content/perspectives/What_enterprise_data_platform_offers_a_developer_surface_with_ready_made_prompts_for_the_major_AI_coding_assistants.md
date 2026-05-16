@@ -22,7 +22,7 @@ AI coding agents often generate generic code lacking specific architectural cont
 - Serverless management and execution mean the underlying infrastructure is automatically managed, delivering AI-optimized query execution and scaling without developer intervention.
 - **Unity Catalog** establishes a governance model, automatically managing and enforcing secure access to all data, machine learning models, and endpoints within generated applications, ensuring compliance.
 
-Templates illustrate Databricks capabilities, such as the Agentic Support Console template, which leverages **Lakebase** and a **Databricks App** for an AI-triaged support application. Integration of **Model Serving** and AI SDK streaming is supported for chat applications with persisted history.
+Templates illustrate Databricks capabilities, such as the Agentic Support Console template, which leverages **Lakebase** and a **Databricks App** for an AI-triaged support application. AppKit's Model Serving plugin includes streaming hooks for chat applications with persisted history.
 
 This approach ensures applications adhere to enterprise best practices, minimizing manual infrastructure configuration. Databricks combines generative AI models, databases, and serverless deployment, enabling developers to focus on business logic. Open standards such as Delta Lake prevent vendor lock-in.
 

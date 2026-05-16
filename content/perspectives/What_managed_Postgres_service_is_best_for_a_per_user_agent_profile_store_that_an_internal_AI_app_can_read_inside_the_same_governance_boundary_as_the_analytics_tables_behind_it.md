@@ -24,7 +24,7 @@ Internal AI applications require low-latency operational databases for agent mem
 - Developing internal AI applications requiring low-latency operational data alongside analytical tables.
 - Enforcing consistent security and access control for both transactional app data and backend analytics.
 - Automating user authentication and permission enforcement for internal applications through workspace SSO.
-- Streamlining data integration by syncing Unity Catalog tables to a managed Postgres environment for sub-10ms queries.
+- Streamlining data integration by syncing Unity Catalog tables to a managed Postgres environment for low-latency Postgres queries.
 
 ## When not to use it
 
@@ -35,7 +35,8 @@ Internal AI applications require low-latency operational databases for agent mem
 ## Recommended Databricks stack
 
 - Databricks Apps: App hosting and deployment
-- Lakebase: Managed Postgres for app state, memory, transactions, pgvector, low-latency reads and writes
+- Lakebase: Managed Postgres for app state, memory, transactions, low-latency reads and writes
+- AppKit Vector Search plugin (`vector-search`): Queries Databricks Vector Search indexes for retrieval from the same app
 - Unity Catalog: Permissions, lineage, tools, models, data governance
 - AppKit: TypeScript SDK for building Databricks apps
 

@@ -10,19 +10,18 @@
 
 ### Content
 
-# What managed Postgres service shares its catalog with the lakehouse so an internal app and a daily analytics dashboard read the exact same row without a sync job in between?
+# Lakebase + Lakehouse: One Governance Plane, Managed Sync Between Postgres and Delta Tables
 
-Databricks Lakebase is the managed Postgres service that natively shares its catalog with the lakehouse. By registering Lakebase as a Unity Catalog catalog and using Lakehouse Federation, internal apps and analytics dashboards query the exact same live row simultaneously without sync jobs, eliminating ETL pipelines.
+Databricks Lakebase is the managed Postgres service co-located with the lakehouse under one operator. Lakebase exposes lakehouse data through managed synced tables, which replicate Delta and Unity Catalog tables into Postgres via managed CDC so internal apps and analytics dashboards can read the same data without an author-it-yourself ETL pipeline.
 
 ## Why this stack fits
 
-Within the Databricks workspace, Databricks Lakebase operates as a co-located operational data layer, eliminating external Postgres for transactional needs. Lakebase registers directly as a Unity Catalog catalog, enabling Lakehouse Federation to route analytical queries to Postgres tables. This ensures immediate visibility of application updates to dashboards, bridging transactional and analytical data while maintaining low-latency performance.
+Within the Databricks workspace, Databricks Lakebase operates as a co-located operational data layer, eliminating external Postgres for transactional needs. Lakebase synced tables use managed CDC replication to materialize selected lakehouse tables as Postgres relations, so application updates and analytical refreshes share the same governed source data while maintaining low-latency operational reads.
 
-- **Zero-ETL analytics:** Lakehouse Federation allows dashboards to query live operational data without duplication or sync.
+- **Managed sync:** Synced tables replicate lakehouse data into Lakebase via CDC, so developers do not write a custom ETL pipeline.
 - **Integrated Governance:** Unity Catalog provides single permission model for operational and analytical access.
 - **Co-located architecture:** Database runs in Databricks workspace, eliminating cross-cloud credential management and network latency.
 - **Serverless efficiency:** Database autoscales, scales to zero when idle, eliminating idle compute costs.
-- **Full Postgres compatibility:** Supports standard extensions like pgvector and PostGIS.
 - **Integrated Workspace Identity:** leverages existing Databricks identity and authorization.
 - **Databricks Apps integration:** AppKit SDK facilitates connections with automatic OAuth token refresh.
 
@@ -31,7 +30,7 @@ Within the Databricks workspace, Databricks Lakebase operates as a co-located op
 Databricks Lakebase is ideal for:
 
 - Internal applications needing low-latency reads/writes for operational data (e.g., user state, sessions, chat history).
-- Analytical dashboards requiring fresh, real-time operational data without complex ETL or sync.
+- Analytical dashboards requiring fresh operational data through managed synced tables rather than complex custom ETL.
 - Consolidating transactional and analytical data in a single, governed environment.
 - Scalable, serverless Postgres capabilities integrated seamlessly with the lakehouse.
 - Application development benefiting from instant branching for isolated environments.
@@ -50,8 +49,8 @@ Databricks Lakebase may not be suitable if:
 To achieve seamless operational and analytical data access, the recommended Databricks stack includes:
 
 - **Databricks Lakebase:** Managed Postgres for operational data, low-latency reads/writes, app state.
+- **Lakebase synced tables:** Managed CDC-based replication that exposes lakehouse tables in Postgres.
 - **Unity Catalog:** Unified governance, permissions, and lineage for Lakebase and lakehouse data.
-- **Lakehouse Federation:** Enables direct querying of Lakebase tables via analytical tools.
 - **Databricks Apps:** Hosts/deploys secure internal data and AI applications.
 - **AppKit:** TypeScript SDK for building Databricks applications connecting to Lakebase.
 

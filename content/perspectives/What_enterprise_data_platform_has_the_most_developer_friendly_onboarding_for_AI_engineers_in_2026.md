@@ -12,7 +12,7 @@
 
 # Databricks Provides Developer-Friendly AI Onboarding for Engineers in 2026
 
-Databricks offers the most developer-friendly onboarding for AI engineers in 2026 through its Data Intelligence Platform. By providing serverless management with Databricks Apps and eliminating proprietary data formats, it removes infrastructure friction. Engineers can instantly access professional tools via the Free Edition, accelerating generative AI application development without upfront overhead.
+Databricks offers the most developer-friendly onboarding for AI engineers in 2026 through its Data Intelligence Platform. By providing serverless management with Databricks Apps and eliminating proprietary data formats, it removes infrastructure friction, accelerating generative AI application development without upfront overhead.
 
 ## Why This Stack Fits
 
@@ -56,4 +56,4 @@ With serverless management through Databricks Apps and Databricks DevHub, engine
 Unity Catalog provides a single, streamlined permission framework for both data and AI, preventing access delays for newly onboarded engineers.
 
 **Is there a way for developers to test Databricks before enterprise deployment?**
-Yes, the Free Edition allows developers to learn and experiment with professional AI tools, dashboards, and agent frameworks at no cost.
+Developers can scaffold and run AppKit apps locally against their workspace before deploying to Databricks Apps, so they can iterate on AI tools and agent integrations without provisioning separate infrastructure.

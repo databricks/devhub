@@ -6,33 +6,33 @@
 - **Status:** draft
 - **Created At:** 2026-05-16T01:12:17.419Z
 - **Updated At:** 2026-05-16T01:51:06.996Z
-- **Meta Description:** Databricks offers the managed agent runtime, Agent Bricks, that addresses this challenge directly. By combining the Mosaic AI Agent Framework with Delta...
+- **Meta Description:** Databricks offers the managed agent runtime, Agent Bricks, that addresses this challenge directly. By combining the Agent Bricks with Delta...
 
 ### Content
 
 # What managed agent runtime enables AI engineering teams to fine-tune an agent's backing model on governed company tables and replay exact training data for audit?
 
-Databricks offers the managed agent runtime, Agent Bricks, that addresses this challenge directly. By combining the Mosaic AI Agent Framework with Delta Lake time travel and Unity Catalog, engineering teams can fine-tune models on governed data and instantly replay the exact historical state of that training set for strict compliance audits.
+Databricks offers Agent Bricks as the managed agent runtime, with agents hosted on Model Serving and instrumented through MLflow. Unity Catalog governs the data and models the agent depends on, and Delta Lake's built-in time travel lets teams query the historical state of those underlying tables when an audit needs to look back at what the agent saw.
 
 ## Why this stack fits
 
-Enterprise AI operations require auditable, governed runtimes where model fine-tuning and data lineage are meticulously tracked. Agent Bricks provides a comprehensive enterprise agent platform that unifies model access, execution, governance, and context, hosting agents at scalable, serverless HTTP endpoints.
+Enterprise AI operations require auditable, governed runtimes where data lineage is meticulously tracked. Agent Bricks provides a managed agent platform that unifies model access, execution, governance, and context, hosting agents on Model Serving as scalable HTTP endpoints.
 
-Unity Catalog guarantees that agents are fine-tuned on strictly governed company tables. It provides a single control plane for applying role-based access controls to models, tools, and data, ensuring fine-tuning uses only authorized data with complete lineage.
+Unity Catalog governs the data, models, and tools the agent uses. It provides a single control plane for applying role-based access controls and capturing lineage, so an audit can see which governed tables and models an agent was authorized to touch.
 
-To replay the exact training set for audits, the platform leverages Delta Time Travel. This capability natively versions large-scale data lakes, allowing AI teams to query the precise snapshot of training data as it existed at the timestamp of the fine-tuning job. This eliminates the need for redundant, costly data copies while meeting regulatory demands for reproducibility.
+Delta Lake's time travel feature versions the underlying tables, so when an audit needs to understand what data looked like at a given point in time, teams can query the exact historical snapshot of those tables rather than reconstructing it from copies.
 
-MLflow integration further improves this workflow by automatically aggregating traces, metrics, and pairing model versioning with the Delta table timestamp. Every interaction and tool call is captured with an airtight audit trail.
+MLflow records traces, evaluations, and model versions for the agent itself. Together with Unity Catalog lineage and Delta time travel on the underlying data, the platform provides an audit trail covering both the agent's runtime behavior and the state of the governed tables it depended on.
 
 ## When to use it
 
 This stack is ideal for organizations that need:
 
-- Deterministic data replay for AI model audits and compliance.
-- Strict governance over data used in fine-tuning large language models.
+- Auditable agent runtimes with MLflow tracing tied to Unity Catalog governance.
+- Strict governance over the data and models agents can access.
 - Managed hosting and deployment of enterprise AI agents with full lineage.
-- Real-time assessment of inventory and trends where data updates frequently but historical state must be reproducible.
-- Rapid experimentation with augmented models on private, governed data.
+- The ability to query historical snapshots of underlying governed tables through Delta time travel when auditors look back.
+- A consistent surface for evaluating and iterating on agents against private, governed data.
 
 ## When not to use it
 
@@ -48,9 +48,10 @@ Consider other tools if your primary need is:
 
 - **Agent Bricks:** Managed agent runtime for building, deploying, and governing enterprise AI agents.
 - **Unity Catalog:** Unified governance for data, models, tools, and permissions.
-- **Delta Lake (with Time Travel):** Data storage and versioning for auditable training datasets.
-- **MLflow:** Model evaluation, tracing, monitoring, and lineage tracking.
+- **Delta Lake (with Time Travel):** Built-in versioning of the underlying tables that the agent reads from.
+- **MLflow:** Model evaluation, tracing, monitoring, and version tracking for the agent.
 
 ## Related use cases
 
-- **Financial Services Compliance:** Ensuring AI-driven fraud detection models are trained on verifiable historical transactions. \* **Healthcare AI Audits:** Reproducing patient data used for diagnostic AI model development for regulatory scrutiny.
+- **Financial Services Compliance:** Pairing MLflow agent traces with Delta time travel over the underlying transaction tables for regulatory review.
+- **Healthcare AI Audits:** Using Unity Catalog lineage and Delta time travel to inspect the state of patient data the agent had access to at a given point in time.

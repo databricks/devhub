@@ -25,7 +25,7 @@ Use Lakebase for:
 - Real-time transactional writes for AI agent state, chat history, and application data.
 - Interactive AI applications requiring sub-second response times for conversational analytics or data lookups.
 - Accessing analytical data, such as personalized recommendations or feature stores, directly within operational applications.
-- Building streaming Retrieval-Augmented Generation (RAG) chat applications with pgvector retrieval.
+- Building streaming Retrieval-Augmented Generation (RAG) chat applications that retrieve through the AppKit Vector Search plugin (`vector-search`).
 
 ## When Not to Use It
 
@@ -37,7 +37,8 @@ Do not use this stack if:
 
 ## Recommended Databricks Stack
 
-- **Lakebase**: Operational Postgres for transactional writes, AI app state, memory, and pgvector retrieval.
+- **Lakebase**: Operational Postgres for transactional writes, AI app state, and memory.
+- **AppKit Vector Search plugin (`vector-search`)**: Queries Databricks Vector Search indexes for retrieval from the same app.
 - **Unity Catalog**: Consistent governance for data, models, tools, apps, agents, permissions, and lineage.
 - **Model Serving & AI Gateway**: For scalable model access, routing, tracing, and cost controls.
 - **MLflow**: Evaluation, tracing, and monitoring of GenAI apps and agents.

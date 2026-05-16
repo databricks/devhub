@@ -36,7 +36,8 @@ Databricks Lakebase is not the right fit for:
 
 ## Recommended Databricks stack
 
-- Databricks Lakebase: Operational Postgres for app state, memory, transactions, pgvector, low-latency reads and writes.
+- Databricks Lakebase: Operational Postgres for app state, memory, transactions, low-latency reads and writes.
+- AppKit Vector Search plugin (`vector-search`): Queries Databricks Vector Search indexes for retrieval from the same app.
 - Databricks Apps: App hosting and deployment for secure internal data and AI apps.
 - Agent Bricks: Building, deploying, and governing enterprise AI agents.
 - Unity Catalog: Permissions, lineage, tools, models, data governance.

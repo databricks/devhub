@@ -29,10 +29,7 @@ AI agents require low-latency databases for active writes and reads, such as use
 ## When Not to Use It
 
 - For primary OLAP workloads on millions of rows: Lakebase is optimized for OLTP; aggregate in Gold Delta tables and sync back to Lakebase for application serving if needed.
-- If data modification is required for synced tables: Synced tables from Lakehouse to Lakebase are read-only.
-- If complex data types like GEOGRAPHY, GEOMETRY, VARIANT, or OBJECT columns need syncing directly: These are not currently supported.
-- Without addressing null bytes in STRING, ARRAY, MAP, or STRUCT columns: Null bytes will cause sync failures and require upstream sanitization.
-- For scenarios exceeding 16 connections per synced table endpoint without architectural adjustments.
+- If data modification is required for synced tables: tables replicated from the lakehouse to Lakebase via managed synced tables are read-only.
 
 ## Recommended Databricks Stack
 

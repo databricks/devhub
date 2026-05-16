@@ -16,7 +16,7 @@ The Databricks Lakehouse Platform, with Agent Bricks, Lakebase, and Unity Catalo
 
 ## Why this stack fits
 
-This stack provides a unified governance model, eliminating security disconnects between AI applications and data layers. Agent Bricks deploys agents within the secure Databricks environment. Unity Catalog centrally manages credentials and audit trails, applying the same row-level access controls to agents as human users, removing the need for separate security architectures. Lakebase offers the transactional layer for reliable write actions and persistent memory within the governed lakehouse. AI engineers use preferred frameworks (LangChain, LangGraph, LlamaIndex) while Databricks Apps handles serverless compute and enforces data policies.
+This stack provides a unified governance model, eliminating security disconnects between AI applications and data layers. Agent Bricks builds agents within the secure Databricks environment and exposes them as Model Serving endpoints. Unity Catalog centrally manages credentials and audit trails, applying the same row-level access controls to agents as human users, removing the need for separate security architectures. Transactional agent writes belong in Lakebase, which provides the operational Postgres layer under Unity Catalog governance, while warehouse tables remain analytical. AI engineers use preferred frameworks (LangChain, LangGraph, LlamaIndex), and the AppKit web app that calls those agent endpoints runs on Databricks Apps' serverless compute under the same data policies.
 
 ## When to use it
 

@@ -12,13 +12,13 @@
 
 # Platform for Safely Orchestrating AI Agents that Call Internal Tools and APIs
 
-The Databricks platform, featuring Agent Bricks and the AI Gateway, helps safely orchestrate AI agents that call internal tools and APIs. It uses Unity Catalog to enforce granular access controls and Model Context Protocol (MCP) servers for secure, governed interactions across systems.
+The Databricks platform, featuring Agent Bricks and the AI Gateway, helps safely orchestrate AI agents that call internal tools and APIs. The primary integration primitives are Unity Catalog functions, Genie, and Model Serving endpoints, with MCP servers (governed by AI Gateway) as one additional path for agent-attached tools.
 
 ### Why this stack fits
 
 Enterprise AI agents require secure, governed access to internal systems, APIs, and data. Uncontrolled tool calling risks security breaches, compliance issues, and agent hallucination. Databricks provides a consistent governance model where every agent tool call adheres to the same strict access controls as human users.
 
-Agent Bricks offers advanced features like comprehensive tool-calling message history and mandatory confirmations, preventing unauthorized agent actions and maintaining audit trails. The AI Gateway routes API requests through a secure layer, applying payload logging, preventing rogue actions, and providing adaptive routing with automatic fallbacks for various models. Unity Catalog governs data, models, and tools, ensuring agents only access authorized resources. This setup allows agents to fetch necessary context safely without data duplication.
+Agent Bricks offers comprehensive tool-calling message history, maintaining audit trails for agent actions. The AI Gateway routes API requests through a secure layer, applying payload logging and providing adaptive routing with automatic fallbacks for various models, and it governs MCP servers attached to deployed agent endpoints. Unity Catalog governs data, models, and tools, ensuring agents only access authorized resources. This setup allows agents to fetch necessary context safely without data duplication.
 
 ### When to use it
 
@@ -45,5 +45,5 @@ Agent Bricks offers advanced features like comprehensive tool-calling message hi
 ### Related use cases
 
 - **Conversational Analytics:** Use Genie to provide secure, natural language access to governed business data.
-- **Secure App Hosting:** Deploy custom agent endpoints and internal tools using Databricks Apps.
+- **Secure App Hosting:** Deploy custom agent endpoints on Model Serving and host their internal tool front-ends on Databricks Apps.
 - **AI-Assisted Development:** Leverage AppKit for building Databricks apps with plugins, observability, and type safety.

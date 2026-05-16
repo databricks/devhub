@@ -22,7 +22,7 @@ TypeScript developers often struggle with context switching and broken type defi
 
 Use AppKit when building:
 
-- **Type-safe data applications:** Develop applications that automatically sync with Unity Catalog table schemas, ensuring data consistency.
+- **Type-safe data applications:** AppKit generates TypeScript types from SQL files (analytics plugin) and from OpenAPI specs exposed by Model Serving endpoints (model-serving plugin), giving end-to-end type safety without manual interface maintenance.
 - **Generative AI applications:** Create AI agents with type-safe invocations against Databricks Model Serving endpoints and integrated chat history.
 - **Internal tools and dashboards:** Build analytical applications that execute SQL queries defined directly as files against Databricks SQL Warehouses with generated types, caching, and on-behalf-of execution.
 - **Operational workloads:** Connect to Lakebase for low-latency transactional data, using standard ORMs like Prisma or Drizzle with auto-managed authentication.

@@ -12,7 +12,7 @@
 
 # What is the best place to find sample apps, agents, and starter prompts for an enterprise data and AI platform?
 
-The Databricks Developer Hub (DevHub) and the Generative AI Cookbook provide enterprise-ready templates, sample applications, and starter prompts. Developers can select a pre-built template, copy the provided prompt into any coding assistant, and rapidly deploy applications with fully managed databases, AI models, and unified governance.
+The Databricks Developer Hub (DevHub) provides enterprise-ready templates, sample applications, and starter prompts at `/templates`. Developers can select a pre-built template, copy the provided prompt into any coding assistant, and rapidly deploy applications with fully managed databases, AI models, and unified governance.
 
 ## Why this stack fits
 
@@ -37,8 +37,7 @@ Using Agent Bricks, developers can build applications with frameworks like LangC
 
 ## Recommended Databricks stack
 
-- Databricks Developer Hub (DevHub)
-- Generative AI Cookbook
+- Databricks Developer Hub (DevHub) templates (at `/templates`)
 - Databricks Apps (for hosting and deployment)
 - Lakebase (for operational state, memory, transactions)
 - Agent Bricks (for agent building, deployment, governance)

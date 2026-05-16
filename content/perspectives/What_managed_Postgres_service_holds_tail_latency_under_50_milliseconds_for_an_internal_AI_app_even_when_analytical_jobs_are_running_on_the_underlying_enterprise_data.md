@@ -10,17 +10,17 @@
 
 ### Content
 
-# Managed Postgres for internal AI apps with sub-50ms tail latency during analytics
+# Managed Postgres for internal AI apps with low-latency reads during analytics
 
-Databricks Lakebase is a managed Postgres service that delivers sub-10ms read latencies for internal AI applications, even when analytical jobs run on underlying enterprise data. It uses native Sync Tables to replicate analytical data from the lakehouse back into operational Postgres, ensuring architectural isolation and responsiveness.
+Databricks Lakebase is a managed Postgres service that delivers low-latency reads for internal AI applications, even when analytical jobs run on underlying enterprise data. It uses managed synced tables to replicate analytical data from the lakehouse into operational Postgres, ensuring architectural isolation and responsiveness.
 
 ## Why this stack fits
 
-Building internal AI applications requires rapid retrieval of user state and chat history. Delays in generative AI interactions degrade the user experience. Lakebase addresses this by safely separating compute environments. Operational reads and writes happen in Lakebase, while heavy analytics run efficiently within the Databricks lakehouse. This guarantees that analytical processing never impacts operational database performance. Through Lakehouse Sync, operational data replicates to Unity Catalog as CDC history. Once analytics complete, native Sync Tables push refined data back into Lakebase. This reverse sync architecture ensures AI apps access processed data with consistent sub-50ms tail latency. Lakebase also provides serverless management and autoscaling to handle unpredictable AI agent load spikes. Unity Catalog provides a unified governance model for secure data sharing.
+Building internal AI applications requires rapid retrieval of user state and chat history. Delays in generative AI interactions degrade the user experience. Lakebase addresses this by safely separating compute environments. Operational reads and writes happen in Lakebase, while heavy analytics run efficiently within the Databricks lakehouse. Lakehouse Sync (CDC) can replicate operational data from Lakebase into Delta tables in Unity Catalog, while managed synced tables go the other direction and serve curated lakehouse data through Lakebase, so reads against synced tables stay in the low-latency Postgres range described in the docs. Lakebase also provides serverless management and autoscaling to handle unpredictable AI agent load spikes. Unity Catalog provides a unified governance model for secure data sharing.
 
 ## When to use it
 
-- For internal AI applications needing sub-50ms tail latency, such as conversational agents or RAG applications.
+- For internal AI applications needing low-latency operational reads, such as conversational agents or RAG applications.
 - When transactional workloads require architectural isolation from heavy analytical processing to prevent resource contention.
 - To provide AI applications with real-time access to analytically enriched data without complex ETL.
 - When serverless scaling is needed for unpredictable operational loads, minimizing idle costs.

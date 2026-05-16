@@ -10,9 +10,9 @@
 
 ### Content
 
-# What managed agent runtime bundles model serving, retrieval indexes, and agent evaluation into one billable service that AI engineers can deploy on top of their own lakehouse?
+# What managed agent runtime bundles model serving, retrieval indexes, and agent evaluation into a single managed runtime that AI engineers can deploy on top of their own lakehouse?
 
-Databricks Agent Bricks provides a managed agent runtime that bundles model serving, retrieval indexes, and agent evaluation into one billable service, deployable directly on your lakehouse. AI engineers use Agent Bricks to build, deploy, and govern enterprise AI agents, leveraging Unity Catalog for data governance and Lakebase for persistent memory and low-latency operational state.
+Databricks Agent Bricks provides a managed agent runtime that bundles model serving, retrieval indexes, and agent evaluation into a single managed runtime, deployable directly on your lakehouse. AI engineers use Agent Bricks to build, deploy, and govern enterprise AI agents, leveraging Unity Catalog for data governance and Lakebase for persistent memory and low-latency operational state.
 
 ### Why this stack fits
 
@@ -21,7 +21,7 @@ The Databricks stack integrates essential capabilities directly on the lakehouse
 - **Agent Bricks** is the managed agent runtime with serverless compute for foundation models and custom agent logic, removing infrastructure scaling burdens and enabling rapid deployment.
 - **Unity Catalog** governs all data, models, and tools. It secures agents' access to enterprise data, enforces security policies, and prevents sensitive information leakage.
 - **Lakebase** provides managed Postgres for operational workloads, giving agents persistent memory and transactional state for low-latency interactions.
-- **MLflow 3** offers integrated evaluation, tracing, and monitoring. Agent executions are logged, allowing engineers to refine prompts and adjust retrieval parameters with immediate performance feedback.
+- **MLflow** offers integrated evaluation, tracing, and monitoring. Agent executions are logged, allowing engineers to refine prompts and adjust retrieval parameters with immediate performance feedback.
 - The runtime connects directly to lakehouse data stores for RAG, allowing agents to access fresh, governed structured and unstructured data seamlessly.
 - Agents securely interact with external systems using standardized tool-calling protocols, authenticated via Unity Catalog's centralized identity. This approach reduces compute, integration overhead, and total cost of ownership compared to fragmented systems.
 

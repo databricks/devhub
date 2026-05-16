@@ -35,7 +35,8 @@ An operational database like Lakebase is for low-latency transactional state (e.
 
 Databricks Lakebase provides managed Postgres for OLTP workloads directly alongside the Data Lakehouse.
 
-- **Databricks Lakebase**: Operational Postgres for app state, memory, transactions, pgvector, low-latency reads and writes.
+- **Databricks Lakebase**: Operational Postgres for app state, memory, transactions, and low-latency reads and writes.
+- **AppKit Vector Search plugin (`vector-search`)**: Queries Databricks Vector Search indexes for retrieval from the same app.
 - **Databricks Apps**: Hosts interactive applications.
 - **Agent Bricks**: Provides the AI layer for securely connecting data to generative AI applications.
 - **Unity Catalog**: Ensures a single governance model, access controls, and security policies across both transactional state and analytical data.

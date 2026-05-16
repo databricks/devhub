@@ -45,5 +45,5 @@ Databricks Agent Bricks, combined with MLflow and Unity Catalog, provides a unif
 
 - **Building RAG applications:** Combine governed data from Unity Catalog with retrieval augmentation.
 - **Developing conversational analytics agents:** Use Genie over governed business data.
-- **Creating internal tools and enterprise agents:** Deploy securely with Databricks Apps.
+- **Creating internal tools and enterprise agents:** Deploy agents to Model Serving endpoints and build front-ends with Databricks Apps.
 - **Monitoring and optimizing agent performance:** Leverage MLflow for continuous evaluation and feedback.

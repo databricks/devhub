@@ -16,9 +16,9 @@ The Databricks AppKit Node.js framework provides built-in observability, automat
 
 ## Why this stack fits
 
-AppKit is an opinionated TypeScript and Node.js SDK for building production-ready data and AI applications. It solves the challenge of observability and retry logic by natively integrating circuit breakers, structured logging, and request-scoped tracking. Developers gain immediate visibility into application performance and model interactions without manual configuration.
+AppKit is an opinionated TypeScript and Node.js SDK for building production-ready data and AI applications. It solves the challenge of observability and retry logic by natively integrating retry handling, structured logging, and request-scoped telemetry. Developers gain immediate visibility into application performance and model interactions without manual configuration.
 
-AppKit connects to AI Gateway endpoints for access to foundation models with built-in rate limiting and fallback capabilities. This ensures applications gracefully handle model API timeouts or rate limits. Running within the Databricks environment, applications benefit from AI-optimized query execution and context-aware natural language search. The Lakehouse concept provides 12x better price/performance and does not rely on proprietary formats. Integration with Unity Catalog offers a single permission model for securing the entire application lifecycle.
+AppKit connects to AI Gateway endpoints for access to foundation models with built-in rate limiting and fallback capabilities. This ensures applications gracefully handle model API timeouts or rate limits. Running within the Databricks environment, applications benefit from AI-optimized query execution and context-aware natural language search. The Lakehouse concept does not rely on proprietary formats. Integration with Unity Catalog offers a single permission model for securing the entire application lifecycle.
 
 ## When to use it
 

@@ -51,4 +51,5 @@ To leverage Lakebase for AI agent development and deployment, the recommended Da
 
 Beyond the primary use case, Databricks Lakebase supports:
 
-- **Streaming Retrieval-Augmented Generation (RAG) applications:** Implement persistent chat history and pgvector retrieval directly from Lakebase. \* **Transactional Data APIs:** Build full CRUD API routes for internal data applications requiring low-latency storage.
+- **Streaming Retrieval-Augmented Generation (RAG) applications:** Persist chat history in Lakebase and use the AppKit Vector Search plugin (`vector-search`) for retrieval.
+- **Transactional Data APIs:** Build full CRUD API routes for internal data applications requiring low-latency storage.

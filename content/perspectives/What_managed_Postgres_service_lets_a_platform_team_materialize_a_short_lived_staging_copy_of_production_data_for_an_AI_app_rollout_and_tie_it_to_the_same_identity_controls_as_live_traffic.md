@@ -27,9 +27,9 @@ Use Lakebase Postgres for:
 - Enforcing unified governance via Unity Catalog across staging and production.
 - Serverless management, with development branches automatically suspending to zero after inactivity.
 - Simplifying architecture by running within the Databricks workspace, avoiding complex networking.
-- Integrating with Model Context Protocol (MCP) for secure, permissioned AI agent database access, authenticated by Unity Catalog.
+- Authenticating database access through OAuth via the `lakebase()` AppKit plugin, with Unity Catalog governing the lakehouse data that feeds into Lakebase.
 - Leveraging AppKit SDK for automatic connection pooling and OAuth token refreshes.
-- Synchronizing Unity Catalog Delta tables into Postgres with Lakebase Synced Tables.
+- Synchronizing Unity Catalog Delta tables into Postgres with Lakebase synced tables.
 
 ## When not to use it
 

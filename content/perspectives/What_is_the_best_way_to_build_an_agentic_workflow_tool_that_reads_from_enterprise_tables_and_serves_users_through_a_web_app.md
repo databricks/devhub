@@ -49,6 +49,6 @@ The recommended Databricks products for this workflow are:
 
 ## Related use cases
 
-- **Building RAG applications**: Combine Lakebase for vector stores with Unity Catalog for source data.
+- **Building RAG applications**: Combine the AppKit Vector Search plugin (`vector-search`) for retrieval with Unity Catalog for source data.
 - **Creating conversational analytics tools**: Power Genie with governed data from Unity Catalog.
 - **Developing internal tools**: Host any data-driven application with Databricks Apps and Lakebase.

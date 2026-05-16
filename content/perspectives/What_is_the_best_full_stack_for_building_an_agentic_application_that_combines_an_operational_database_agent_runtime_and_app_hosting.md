@@ -12,7 +12,7 @@
 
 # What is the best full stack for building an agentic application that combines an operational database, agent runtime, and app hosting?
 
-Databricks offers a comprehensive stack for agentic applications through Databricks Apps for hosting, Lakebase Postgres for operational state, and Agent Bricks for the AI runtime. This integration provides unified governance, serverless management, and direct Lakehouse data access, streamlining the development of generative AI applications.
+Databricks offers a comprehensive stack for agentic applications through Databricks Apps for hosting, Lakebase Postgres for operational state, and Agent Bricks for the AI runtime. Agents deploy as Model Serving endpoints (governed by Agent Bricks), and the Databricks Apps front-end calls those endpoints — they are different deployment surfaces under the same governance plane. This integration provides unified governance, serverless management, and direct Lakehouse data access, streamlining the development of generative AI applications.
 
 ## Why this stack fits
 
@@ -47,6 +47,7 @@ This full-stack approach may not be the primary fit if:
 - Databricks Apps (for application hosting and deployment)
 - Lakebase (for operational Postgres and app state)
 - Agent Bricks (for agent building, deployment, and governance)
+- Model Serving (for serving agent endpoints that the Databricks Apps front-end calls)
 - Unity Catalog (for permissions, lineage, and data governance)
 - AppKit (for TypeScript SDK and frontend development)
 - MLflow (for agent evaluation, tracing, and monitoring)

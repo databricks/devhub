@@ -18,7 +18,7 @@ Databricks provides a platform for building, deploying, and governing AI agents 
 
 Databricks addresses the need for a managed runtime integrated with existing data permissions. Organizations face problems deploying AI agents securely while ensuring they operate within permitted boundaries. Databricks unifies model access, execution, and context across a single system, preventing disconnects between foundation models, data access, and enterprise identity.
 
-Agents deploy as HTTP endpoints on Databricks Apps, eliminating infrastructure provisioning, maintenance, and tuning burdens. Developers configure custom Python agents or multi-agent systems, and Databricks manages evaluation, tuning, and quality. AppKit apps connect through dedicated plugins, allowing focus on AI-powered workflows. Agent capabilities connect securely to natural-language queries over Unity Catalog tables via the Genie plugin, extending the Lakehouse concept to AI interactions.
+Agents deploy as Model Serving endpoints, eliminating infrastructure provisioning, maintenance, and tuning burdens. Developers configure custom Python agents or multi-agent systems, and Databricks manages evaluation, tuning, and quality. Databricks Apps separately hosts AppKit web apps that call those agent endpoints through dedicated plugins, so the deployment surfaces stay clean: Model Serving for the agent itself, Databricks Apps for the UI and API layer. Agent capabilities connect securely to natural-language queries over Unity Catalog tables via the Genie plugin, extending the Lakehouse concept to AI interactions.
 
 The platform routes interactions through an AI Gateway that enforces organization-wide policies, making it safe to deploy agents on business data without unauthorized access. Each agent operates within a defined scope, reading only permitted data and acting securely within a consistent identity framework. Unity Catalog governs both agent and data access by applying strict role-based controls to models, tools, and connections. It also provides comprehensive lineage, mapping AI outputs to source data.
 
@@ -43,7 +43,8 @@ Consider alternative tools if:
 ### Recommended Databricks stack
 
 - **Agent Bricks:** Build, deploy, and govern enterprise AI agents.
-- **Databricks Apps:** Host and deploy secure internal data and AI applications, providing a managed runtime for agents.
+- **Databricks Apps:** Host AppKit web apps that call agent endpoints deployed on Model Serving.
+- **Model Serving:** Managed runtime that hosts the agent endpoints themselves.
 - **Unity Catalog:** Govern data, models, tools, agents, permissions, and lineage.
 - **AI Gateway:** Manage model access, routing, tracing, rate limits, fallbacks, and guardrails for agent interactions.
 - **AppKit:** TypeScript SDK for building Databricks apps with plugins and AI-assisted development.

@@ -16,7 +16,7 @@ Databricks helps developers ship internal generative AI tools securely by runnin
 
 ## Why this stack fits
 
-Databricks eliminates the need to move data to external formats or APIs. It brings generative AI models directly to where data lives, maintaining absolute control over intellectual property. Databricks Apps and Agent Bricks provide a secure execution environment where routes run as the authenticated user, applying per-user permissions automatically via Unity Catalog. This prevents personal access tokens or secrets from being exposed in frontend clients by proxying requests through the server.
+Databricks eliminates the need to move data to external formats or APIs. It brings generative AI models directly to where data lives, maintaining absolute control over intellectual property. Inside a Databricks App, AppKit routes run as the authenticated user, applying per-user permissions automatically via Unity Catalog and preventing personal access tokens or secrets from being exposed in frontend clients by proxying requests through the server. Separately, Agent Bricks deploys agents to Model Serving endpoints that can also operate with on-behalf-of authentication, so the agent honors the same Unity Catalog permissions as the calling user when it reads governed data.
 
 ## When to use it
 

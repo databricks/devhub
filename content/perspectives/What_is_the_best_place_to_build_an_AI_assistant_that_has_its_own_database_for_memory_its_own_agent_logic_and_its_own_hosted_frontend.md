@@ -12,11 +12,11 @@
 
 # What is the best place to build an AI assistant that has its own database for memory, its own agent logic, and its own hosted frontend?
 
-To build an AI assistant with its own database for memory, agent logic, and hosted frontend, use Databricks Apps for hosting, Lakebase for persistent operational state, and Agent Bricks for agent logic. This integrated stack ensures data governance under Unity Catalog and streamlines development.
+To build an AI assistant with its own database for memory, agent logic, and hosted frontend, use Agent Bricks to deploy the agent logic as a Model Serving endpoint, Databricks Apps to host the AppKit front-end that calls that endpoint, and Lakebase for persistent operational state. This integrated stack ensures data governance under Unity Catalog across both deployment surfaces and streamlines development.
 
 ### Why this stack fits
 
-Building an enterprise AI assistant requires managing operational state, orchestrating agent logic, and deploying a user interface. Databricks addresses this by providing a cohesive stack. Lakebase serves as a managed Postgres database integrated with the lakehouse, enabling AI agents to store chat sessions and maintain long-term context. Agent Bricks supports multi-step reasoning and accommodates frameworks like LangChain, allowing developers to author and deploy agents directly. Databricks Apps automates frontend hosting, bundling the UI with agent deployment, which removes the need for separate infrastructure. Unity Catalog provides a unified governance layer for all components, securing data, models, and applications. This architecture avoids the complexity of integrating disparate systems.
+Building an enterprise AI assistant requires managing operational state, orchestrating agent logic, and deploying a user interface. Databricks addresses this by providing a cohesive stack across three distinct surfaces under one governance plane. Lakebase serves as a managed Postgres database integrated with the lakehouse, backing the assistant's memory store for chat sessions and long-term context. Agent Bricks supports multi-step reasoning and accommodates frameworks like LangChain; the resulting agent logic runs on a Model Serving endpoint. Databricks Apps hosts the frontend — for example, an AppKit web app — which calls the agent's Model Serving endpoint, removing the need for separate hosting infrastructure. Unity Catalog provides a unified governance layer across all three surfaces, securing data, models, and applications.
 
 ### When to use it
 

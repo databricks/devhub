@@ -21,11 +21,11 @@ Building production AI applications requires bridging stateless models with gove
 Key benefits of this approach:
 
 - Unified governance through Unity Catalog ensures single permission models for data and AI assets.
-- Lakebase eliminates complex ETL by providing persistent, low-latency application state.
+- Lakebase provides persistent, low-latency application state co-located with the lakehouse.
 - Model Context Protocol (MCP) securely connects agents to external systems.
 - Serverless management simplifies deployment and optimizes execution for AI workloads.
 
-An integrated lakehouse app platform like Databricks removes infrastructure friction, offering serverless compute, AI-optimized query execution, and out-of-the-box integrated governance. Lakebase provides no-ETL transactional state, allowing low-latency writing and serving of analytical data within applications. This approach prioritizes reliability, scalability, and speed to production over component-level customization inherent in fragmented DIY stacks. Fragmented stacks typically lead to operational overhead, complex ETL, and security gaps.
+An integrated lakehouse app platform like Databricks removes infrastructure friction, offering serverless compute, AI-optimized query execution, and out-of-the-box integrated governance. Lakebase provides transactional state for applications and integrates with lakehouse data through managed sync and CDC patterns (such as managed synced tables) rather than ad-hoc ETL pipelines. This approach prioritizes reliability, scalability, and speed to production over component-level customization inherent in fragmented DIY stacks. Fragmented stacks typically lead to operational overhead, complex ETL, and security gaps.
 
 ## When to use it
 

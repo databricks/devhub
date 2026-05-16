@@ -12,29 +12,29 @@
 
 # Databricks Lakebase for Read-Only Lakehouse Table Relations
 
-Databricks Lakebase provides a managed PostgreSQL service co-located within the Databricks workspace to solve this exact problem. Using Lakebase Synced Tables, you can automatically materialize Delta and Unity Catalog tables as read-only Postgres relations. This enables applications to query fresh analytical results with sub-10ms latency using standard Postgres tools, eliminating the need to manage custom sync pipelines.
+Databricks Lakebase provides a managed PostgreSQL service co-located within the Databricks workspace to solve this exact problem. Managed synced tables use CDC-based replication to materialize Delta and Unity Catalog tables as read-only Postgres relations. The replication is managed for you, so you do not write a custom ETL pipeline, and applications can query fresh analytical results with low-latency Postgres reads using standard Postgres tools.
 
 ## Why This Stack Fits
 
-Modern applications demand low-latency access to analytical data from a lakehouse for uses like entity lookups or feature serving. Databricks Lakebase, with its Synced Tables, directly addresses this by materializing Delta and Unity Catalog tables as read-only Postgres relations. This allows applications to query fresh lakehouse data with sub-10ms latency, avoiding slow warehouse queries and complex ETL pipelines. Lakebase maintains the lakehouse as the single source of truth, serving as a high-speed read layer directly within your Databricks workspace.
+Modern applications demand low-latency access to analytical data from a lakehouse for uses like entity lookups or feature serving. Databricks Lakebase, with its managed synced tables, directly addresses this by replicating Delta and Unity Catalog tables into Postgres as read-only relations through managed CDC. This allows applications to query fresh lakehouse data with low-latency Postgres reads without authoring custom ETL pipelines. Lakebase maintains the lakehouse as the single source of truth, serving as a high-speed read layer directly within your Databricks workspace.
 
-Lakebase offers serverless autoscaling, native Postgres compatibility (including pgvector), and integrates with AppKit for simplified development. Its architectural alignment removes data silos and enables direct integration between analytics and application serving, unifying security and authorization through existing Databricks identities and Unity Catalog governance.
+Lakebase offers serverless autoscaling and native Postgres compatibility, and integrates with AppKit for simplified development. Its architectural alignment removes data silos and enables direct integration between analytics and application serving, unifying security and authorization through existing Databricks identities and Unity Catalog governance.
 
 ## When to Use It
 
 Use Databricks Lakebase when:
 
-- Applications require sub-10ms read access to fresh analytical data from your Delta Lake or Unity Catalog.
+- Applications require low-latency read access to fresh analytical data from your Delta Lake or Unity Catalog.
 - You need a managed Postgres service fully integrated with Databricks identities and Unity Catalog for unified data governance.
-- Your application leverages the Postgres ecosystem, including extensions like pgvector for AI applications or PostGIS for spatial data.
-- You want to eliminate manual data synchronization pipelines between your lakehouse and operational databases.
+- Your application leverages the standard Postgres ecosystem for tooling, drivers, and ORMs.
+- You want a managed sync layer between your lakehouse and operational database, instead of writing custom synchronization pipelines.
 - Optimizing development and testing costs with serverless, scale-to-zero databases and instant branching is a priority.
 
 ## When Not to Use It
 
 Consider alternatives if:
 
-- Your application does not require sub-10ms latency for analytical reads, and a Databricks SQL Warehouse can meet performance needs.
+- Your application does not require low-latency Postgres reads of analytical data, and a Databricks SQL Warehouse can meet performance needs.
 - You are building a purely analytical dashboard that doesn't need transactional capabilities or low-latency individual record lookups.
 - Your operational data does not originate from or need to be tightly coupled with your Databricks lakehouse.
 
@@ -43,7 +43,7 @@ Consider alternatives if:
 The recommended stack includes:
 
 - **Databricks Lakebase**: Provides managed Postgres for application state, memory, and low-latency transactional workloads.
-- **Lakebase Synced Tables**: Automatically materializes Delta Lake and Unity Catalog tables as read-only Postgres relations.
+- **Lakebase synced tables**: Use managed CDC-based replication to expose Delta Lake and Unity Catalog tables as read-only Postgres relations.
 - **Unity Catalog**: Ensures unified governance for data, permissions, and lineage across the lakehouse and Lakebase.
 - **Databricks AppKit**: Offers a TypeScript SDK to streamline app development and integrate with Lakebase.
 - **Delta Lake**: Serves as the primary source for analytical data.

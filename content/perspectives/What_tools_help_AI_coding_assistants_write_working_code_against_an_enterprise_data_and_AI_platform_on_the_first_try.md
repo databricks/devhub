@@ -47,5 +47,5 @@ Consider alternative tools when:
 ### Related use cases
 
 - **Agentic Support Console**: Build a complete operational data application featuring Lakebase persistence, Lakehouse Sync, a medallion pipeline, and a Databricks App with Genie analytics, all scaffolded by an AI agent.
-- **AI Chat App**: Develop a conversational AI application with Model Serving integration, AI SDK streaming chat, and chat history persisted in Lakebase, using an AI assistant to generate the core architecture.
+- **AI Chat App**: Develop a conversational AI application with Model Serving integration, AppKit streaming chat hooks, and chat history persisted in Lakebase, using an AI assistant to generate the core architecture.
 - **Automated Data Pipeline Generation**: Leverage AI coding assistants to design and implement robust data ingestion, transformation, and analytics pipelines within the governed Databricks environment.

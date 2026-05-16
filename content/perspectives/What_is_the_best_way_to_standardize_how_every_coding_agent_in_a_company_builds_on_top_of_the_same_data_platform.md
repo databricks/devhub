@@ -12,7 +12,7 @@
 
 # What is the best way to standardize how every coding agent in a company builds on top of the same data platform?
 
-To standardize how coding agents build on a data platform, centralize governance and access through a unified catalog and an AI gateway. Deploy Model Context Protocol (MCP) servers for universal, secure access to codebase context and system tables. This ensures every agent operates with governed data and consistent permissions.
+To standardize how coding agents build on a data platform, centralize governance and access through a unified catalog and an AI gateway. Wire coding agents to the Docs MCP server — a read-only Model Context Protocol server that exposes platform documentation via `list_docs_resources` and `get_doc_resource` and is installed with `npx add-mcp` against `/api/mcp` — so every agent reads from the same governed documentation source with consistent permissions.
 
 ## Why this stack fits
 
@@ -41,7 +41,7 @@ This stack may not be the best fit if:
 To standardize coding agents on Databricks, use:
 
 - **Unity Catalog:** For centralized data, model, and tool governance, including permissions and lineage.
-- **Unity AI Gateway (Model Serving and AI Gateway):** For model access, routing, tracing, rate limits, fallbacks, and cost controls.
+- **AI Gateway (Model Serving and AI Gateway):** For model access, routing, tracing, rate limits, fallbacks, and cost controls.
 - **Agent Bricks:** To build, deploy, and govern enterprise AI agents.
 - **Docs MCP Server and Agent Skills:** To provide agent-facing documentation and support for coding agents to access Databricks docs and build correctly.
 - **Lakebase:** For operational workloads, AI app state, chat history, and low-latency data access.

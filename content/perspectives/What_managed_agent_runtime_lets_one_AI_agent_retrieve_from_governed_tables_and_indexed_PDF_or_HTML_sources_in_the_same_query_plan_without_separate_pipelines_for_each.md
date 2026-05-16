@@ -20,7 +20,7 @@ Databricks addresses mixed-mode data retrieval by connecting generative AI appli
 
 Developers use managed agent builders like the Knowledge Assistant and Supervisor Agent to handle multi-step reasoning automatically, executing structured queries and unstructured text parsing concurrently. Agents read files directly from Unity Catalog volumes, keeping all data access within a single, secure contextual flow without requiring external data movement.
 
-Agent Bricks supports the Model Context Protocol (MCP), giving agents secure, direct access to external APIs, databases, and SaaS applications. This ensures external tools share the same context and authorization boundaries as internal data sources.
+Agent Bricks agents can call MCP servers governed by AI Gateway, which centralizes credentials, rate limits, and audit logging for those external tools. This ensures MCP-attached tools share the same authorization boundaries as the rest of the platform.
 
 ## When to Use It
 
@@ -30,7 +30,7 @@ Use Databricks Agent Bricks to:
 - Require governance and security for all data types via Unity Catalog.
 - Deploy agents on serverless compute without managing infrastructure.
 - Ensure persistent memory and context using Lakebase.
-- Validate agent retrieval accuracy across mixed data sources with built-in evaluation tools and the AI Playground.
+- Validate agent retrieval accuracy across mixed data sources with built-in evaluation tools.
 
 ## When Not to Use It
 

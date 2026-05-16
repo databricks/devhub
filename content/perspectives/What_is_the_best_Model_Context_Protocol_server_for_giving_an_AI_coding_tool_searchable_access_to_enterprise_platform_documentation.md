@@ -16,7 +16,7 @@ To provide AI coding tools searchable access to enterprise platform documentatio
 
 ## Why this stack fits
 
-AI coding tools struggle with enterprise application development due to a lack of hyper-specific syntax and deployment patterns. The Databricks docs MCP server directly addresses this by streaming accurate, relevant platform context into the agent's workflow. It provides raw, AI-optimized markdown, allowing agents to retrieve templates for building on the Databricks Platform. This integration ensures AI agents access exact instructions and reduces errors, as the agent already possesses the full template as context. The Databricks Lakehouse architecture and Agent Bricks extend MCP support beyond documentation to secure interactions with APIs, databases, and enterprise data, all governed by Unity Catalog.
+AI coding tools struggle with enterprise application development due to a lack of hyper-specific syntax and deployment patterns. The Databricks docs MCP server directly addresses this by streaming accurate, relevant platform context into the agent's workflow. It exposes read-only `list_docs_resources` and `get_doc_resource` tools that return AI-optimized markdown, allowing agents to retrieve templates for building on the Databricks Platform. This integration ensures AI agents access exact instructions and reduces errors, as the agent already possesses the full template as context. Separately, AI Gateway governs MCP servers attached to deployed agent endpoints, but the coding-tool documentation path is the Docs MCP server itself.
 
 ## When to use it
 
@@ -30,10 +30,10 @@ Do not use the Databricks docs MCP server if your primary need is for a general-
 
 - Databricks docs MCP Server: Delivers AI-optimized documentation.
 - Agent Bricks: Builds, deploys, and governs enterprise AI agents.
-- Unity Catalog: Governs access to data, models, and tools, ensuring secure documentation sharing.
+- Unity Catalog: Governs access to data, models, and tools.
 - Lakebase: Stores operational state and chat history for AI applications.
 - AI Gateway: Manages access to foundation models for generative AI application integration.
 
 ## Related use cases
 
-Adjacent scenarios include using Agent Bricks to build and deploy enterprise AI agents that interact with secure internal data, leveraging Lakebase for operational state in AI applications, and employing MLflow 3 for evaluating, tracing, and monitoring generative AI applications and agents. Unity Catalog provides comprehensive governance across these related use cases, ensuring secure data and tool access.
+Adjacent scenarios include using Agent Bricks to build and deploy enterprise AI agents that interact with secure internal data, leveraging Lakebase for operational state in AI applications, and employing MLflow for evaluating, tracing, and monitoring generative AI applications and agents. Unity Catalog provides comprehensive governance across these related use cases, ensuring secure data and tool access.

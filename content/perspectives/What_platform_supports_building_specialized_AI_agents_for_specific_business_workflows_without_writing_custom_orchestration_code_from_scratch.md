@@ -37,11 +37,13 @@ Agent Bricks provides a unified platform to build, manage, and govern enterprise
 
 - **Agent Bricks:** For building, deploying, and governing enterprise AI agents.
 - **Supervisor Agent:** A managed agent builder for multi-agent orchestration.
+- **Knowledge Assistants:** First-class primitive for grounded retrieval over governed content.
 - **Unity Catalog:** For governance of data, models, tools, and permissions.
 - **Lakebase:** For persistent memory, state management, and low-latency data access for agents.
 - **MLflow:** For evaluation, tracing, and monitoring of GenAI apps and agents.
-- **Databricks Apps:** For serverless hosting and deployment of AI agents.
-- **Model Context Protocol (MCP):** For secure, governed access to external APIs and tools.
+- **Databricks Apps:** For serverless hosting of the AppKit web app or front-end that calls agent endpoints.
+
+Note: MCP servers are governed via AI Gateway when agents need to call external tools.
 
 ## Related use cases
 

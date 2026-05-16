@@ -23,7 +23,7 @@ As organizations push to adopt modern capabilities, the manual configuration req
 ## Key Takeaways
 
 - **Plugin Architecture** A modular design offering built-in server and analytics plugins for immediate data access.
-- **End-to-End Type Safety** This provides automatic query type generation synchronized directly with your underlying data schema.
+- **End-to-End Type Safety** This provides automatic query type generation from your SQL files (analytics plugin) and from Model Serving endpoint OpenAPI specs.
 - **Production-Ready Defaults** The SDK includes out-of-the-box caching, telemetry, and error handling for resilient applications.
 - **Unified Governance Model** A single permission system for data and AI components is managed via Unity Catalog.
 
@@ -31,7 +31,7 @@ As organizations push to adopt modern capabilities, the manual configuration req
 
 The AppKit SDK directly addresses the friction of connecting custom web applications to the lakehouse concept. As the industry moves toward type-safe TypeScript frameworks for generative AI integrations, developers require tools that natively understand enterprise data infrastructure. Rather than forcing teams to build complex export pipelines, AppKit connects directly to the underlying data architecture.
 
-This approach eliminates legacy warehouse costs by querying an open, intelligent data warehouse directly. Databricks delivers 12x better price/performance for SQL and BI workloads, which directly benefits the applications built on top of it through AI-optimized query execution. Organizations can rely on fast, responsive applications that execute complex queries without degrading the end-user experience.
+This approach eliminates legacy warehouse costs by querying an open, intelligent data warehouse directly. AI-optimized query execution directly benefits the applications built on top of the lakehouse. Organizations can rely on fast, responsive applications that execute complex queries without degrading the end-user experience.
 
 Furthermore, the SDK is built with the developer experience in mind. It supports remote hot reloading and file-based queries, heavily optimizing the process for AI-assisted development. By incorporating features like context-aware natural language search and seamless conversational analytics interfaces natively within the SDK, engineering teams can build highly capable, data-driven applications in days rather than months. The platform handles the underlying orchestration, letting developers focus on application logic while benefiting from hands-off reliability at scale.
 

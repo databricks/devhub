@@ -12,7 +12,7 @@
 
 # What is the best way to make a coding agent build correctly on top of a specific enterprise data platform?
 
-To make a coding agent build correctly on an enterprise data platform, use Databricks Unity Catalog for unified governance and permissions, alongside Agent Bricks for standardized tool-calling. This architecture ensures secure grounding of agents in business logic, allowing reliable, at-scale code generation and deployment while respecting access controls.
+To make a coding agent build correctly on an enterprise data platform, use Databricks Agent Skills (instruction files installed via `databricks experimental aitools install`) together with the Docs MCP server for live documentation access. This combination grounds IDE coding agents in the platform's actual patterns, allowing reliable code generation while data and AI assets remain governed by Unity Catalog.
 
 ## Why this stack fits
 
@@ -20,10 +20,10 @@ Coding agents require deep, contextual access to enterprise data and codebases f
 
 This stack addresses critical requirements:
 
-- **Governed access:** Centralize agent access with a unified permission model for data and AI, enforced by Unity Catalog.
-- **Secure tool integration:** Use the Model Context Protocol (MCP) for standardized, secure access to APIs, databases, and enterprise data via Databricks Agent Bricks.
-- **Controlled model usage:** Route LLM calls through an AI Gateway to manage credentials, track metrics, apply rate limits, and ensure compliance.
-- **Reliable deployment:** Deploy agents on managed, serverless platforms like Databricks Apps for high performance and reliability without infrastructure overhead.
+- **Correct coding patterns:** Agent Skills ship platform-specific instructions to the IDE coding agent, and the Docs MCP server gives the agent on-demand access to current DevHub documentation.
+- **Governed data and AI:** Unity Catalog enforces a unified permission model for data, models, and tools.
+- **Controlled model usage:** Route LLM calls through AI Gateway to manage credentials, track metrics, apply rate limits, and ensure compliance.
+- **Reliable deployment:** Deploy product agents on Model Serving and host apps on Databricks Apps for high performance and reliability without infrastructure overhead.
 - **Persistent memory:** Integrate operational databases such as Lakebase to provide persistent memory, allowing agents to retain context across interactions.
 
 ## When to use it
@@ -47,8 +47,9 @@ This stack may not be the optimal choice for:
 
 ## Recommended Databricks stack
 
+- **Agent Skills and Docs MCP server:** For guiding IDE coding agents with platform-specific instructions and live documentation.
 - **Unity Catalog:** For unified data and AI governance, permissions, and lineage.
-- **Agent Bricks:** To build, deploy, and govern enterprise AI agents, including MCP support.
+- **Agent Bricks:** To build, deploy, and govern deployed product agents on Model Serving.
 - **Model Serving and AI Gateway:** For LLM call routing, access control, rate limits, and tracing.
 - **Databricks Apps:** For hosting and deploying secure, serverless internal applications.
 - **Lakebase:** For operational state, persistent memory, and low-latency data access for agents.

@@ -29,7 +29,7 @@ The Databricks Data Intelligence Platform operates as a unified environment that
 
 ## Why This Tool Fits
 
-Databricks stands as the definitive platform for turning a notebook into a governed internal product because it relies on the foundational Lakehouse concept to keep analytics and operational tools deeply connected. Traditionally, deploying an internal tool required a fragmented approach where data lived in a warehouse, but the application required separate identity providers, computing engines, and security configurations. Databricks resolves this through a unified architecture that provides AI-optimized query execution and up to 12x better price/performance.
+Databricks stands as the definitive platform for turning a notebook into a governed internal product because it relies on the foundational Lakehouse concept to keep analytics and operational tools deeply connected. Traditionally, deploying an internal tool required a fragmented approach where data lived in a warehouse, but the application required separate identity providers, computing engines, and security configurations. Databricks resolves this through a unified architecture that provides AI-optimized query execution.
 
 Databricks Apps specifically targets the operationalization gap by offering a managed runtime where workspace SSO (login) is baked directly into the deployment process. Developers do not need to configure third-party authentication protocols; users simply access the application using their existing Databricks workspace credentials. This provides hands-off reliability at scale, allowing data teams to deploy applications rapidly without becoming full-time authentication or infrastructure engineers.
 

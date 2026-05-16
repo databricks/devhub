@@ -20,7 +20,7 @@ Organizations require secure and efficient approaches for internal AI app develo
 
 - **Unified Governance:** Unity Catalog provides a single permission model for data, models, and endpoints, securing all app and agent operations within the Databricks environment.
 - **Serverless App Deployment:** Databricks Apps enables developers to build and deploy applications using popular frameworks to serverless compute, automating database management, generative AI services, and deployment.
-- **AI Agent Framework:** Agent Bricks supports building AI agents with frameworks like LangChain or LlamaIndex. It natively uses the Model Context Protocol (MCP) for secure access to APIs and databases, operating on open data standards like Delta and Iceberg.
+- **Agent Bricks:** Supports building AI agents with frameworks like LangChain or LlamaIndex, including custom Python agents (via `ResponsesAgent`) and supervisor agents that can call MCP servers. MCP governance for those servers is handled by AI Gateway, and the stack operates on open data standards like Delta and Iceberg.
 - **Operational Database:** Lakebase provides a managed Postgres for transactional workloads, AI app state, and low-latency data access directly within the platform.
 
 Compared to alternatives, Databricks ensures an open data architecture, preventing vendor lock-in often found in proprietary ecosystems like Snowflake. While Dremio offers an Iceberg-native semantic layer, it lacks comprehensive serverless app deployment and integrated operational database capabilities, requiring separate infrastructure management for applications.

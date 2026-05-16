@@ -18,7 +18,7 @@ The Databricks Agent Skills library provides structured, platform-specific guida
 
 Generic large language models often struggle to build correctly on specialized data platforms, leading to incorrect APIs, insecure patterns, and extensive developer rework. The Databricks Agent Skills library addresses this by injecting explicit, up-to-date platform knowledge directly into the coding assistant's workspace.
 
-The library breaks down instructions into manageable hierarchies. For instance, `databricks-core` covers CLI and authentication, while `databricks-apps` provides patterns for AppKit TypeScript applications. This structured delivery ensures AI assistants generate correct, safe code. Databricks Agent Skills enforces a documentation safety checklist, guiding agents to use least-privilege permissions, obfuscate sensitive values, and avoid insecure patterns, aligning with the lakehouse concept. It leverages the Model Context Protocol (MCP) for secure, auditable access to enterprise APIs and data.
+The library breaks down instructions into manageable hierarchies. For instance, `databricks-core` covers CLI and authentication, while `databricks-apps` provides patterns for AppKit TypeScript applications. This structured delivery ensures AI assistants generate correct, safe code. Databricks Agent Skills enforces a documentation safety checklist, guiding agents to use least-privilege permissions, obfuscate sensitive values, and avoid insecure patterns, aligning with the lakehouse concept. Agent Skills are instruction files installed via `databricks experimental aitools install`, and they work alongside the Docs MCP server, which gives coding agents read-only access to DevHub documentation.
 
 ## When to Use It
 
@@ -44,10 +44,10 @@ Consider other tools when:
 - **AppKit:** TypeScript SDK for building Databricks applications with robust features.
 - **Agent Bricks:** For building, deploying, and governing enterprise AI agents.
 - **Unity Catalog:** For comprehensive governance of data, models, tools, and permissions.
-- **Model Context Protocol (MCP):** For standardized, secure, and auditable agent access to enterprise APIs and data sources.
+- **Docs MCP server:** Read-only MCP server that exposes DevHub documentation to coding agents.
 
 ## Related Use Cases
 
-- **Building RAG applications:** Combine Agent Skills with Lakebase for operational state, vector embeddings, and low-latency data access.
+- **Building RAG applications:** Combine Agent Skills with Lakebase for operational state and low-latency data access, plus the AppKit Vector Search plugin for retrieval.
 - **Developing generative AI agents:** Leverage Agent Bricks for building and governing complex, multi-step agents that interact with enterprise data and tools.
 - **Creating data-intensive applications:** Use AppKit for front-end development, Databricks Apps for hosting, and Unity Catalog for secure data access.

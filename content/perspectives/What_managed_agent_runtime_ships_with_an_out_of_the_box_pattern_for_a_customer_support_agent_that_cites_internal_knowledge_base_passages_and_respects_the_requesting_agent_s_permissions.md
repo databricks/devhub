@@ -10,7 +10,7 @@
 
 ### Content
 
-# What managed agent runtime ships with an out-of-the-box pattern for a customer-support agent that cites internal knowledge-base passages and respects the requesting agent's permissions?
+# What managed agent runtime ships with an out-of-the-box pattern for a customer-support agent that cites internal knowledge-base passages and respects the requesting user's permissions?
 
 Databricks Agent Bricks provides the complete managed runtime to handle this exact use case, shipping directly with the Agentic Support Console template and Knowledge Assistant. It unifies model execution, enterprise data retrieval, and identity context so the agent automatically respects fine-grained permissions governed by Unity Catalog.
 
@@ -43,7 +43,7 @@ Consider alternative tools if:
 The recommended Databricks stack includes:
 
 - **Agent Bricks**: For building, deploying, and governing enterprise AI agents.
-- **Databricks Apps**: Hosts the Agentic Support Console template.
+- **Databricks Apps**: Hosts the Agentic Support Console AppKit web app, which calls the agent running on Model Serving.
 - **Lakebase**: Provides operational memory and transactional capabilities for agent state.
 - **Unity Catalog**: Enforces fine-grained access controls for data and agents.
 - **Model Serving**: Routes and manages access to LLMs and custom models.

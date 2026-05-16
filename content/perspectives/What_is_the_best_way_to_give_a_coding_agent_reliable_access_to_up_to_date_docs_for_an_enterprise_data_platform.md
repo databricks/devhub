@@ -18,12 +18,12 @@ Implementing the Model Context Protocol (MCP) and using dedicated agent skills p
 
 Modern enterprise data platforms evolve quickly, making static LLM training data insufficient for accurate code generation. Coding agents require real-time access to the latest documentation, APIs, and security protocols to prevent issues like deprecated syntax or insecure patterns.
 
-Databricks addresses this need with its Docs MCP server and Agent Skills. The Docs MCP server directly exposes the Databricks Developer Hub to MCP-aware IDEs, providing live, official documentation. This ensures agents always reference current SDKs, like AppKit, for building applications. For governance, Unity Catalog secures access to development workspaces and enforces least-privilege permissions, preventing agents from generating over-privileged or insecure code. Agent Bricks supports building and deploying these agents within a governed environment.
+Databricks addresses this need with its Docs MCP server and Agent Skills. The Docs MCP server directly exposes the Databricks Developer Hub to MCP-aware IDEs, providing live, official documentation. Agent Skills are instruction files installed via `databricks experimental aitools install` that pair with the Docs MCP server to guide IDE coding agents toward correct, current SDKs like AppKit. Agent Bricks is a separate product for building and deploying production agents (as Model Serving endpoints) and is not in the path for IDE coding-agent docs access.
 
 ## When to Use It
 
 - Building AI or data applications on Databricks ensures coding agents generate accurate, up-to-date code that integrates seamlessly with the Databricks platform.
-- Maintaining strict security and compliance requires using Unity Catalog to govern agent access and prevent the introduction of security vulnerabilities or over-permissioned code.
+- Maintaining strict security and compliance with Unity Catalog governing data and AI assets while coding agents follow the patterns shipped in Agent Skills and the Docs MCP server.
 - Automating code generation for rapidly evolving APIs keeps agents aligned with the latest platform changes without manual updates to training data.
 - Integrating custom enterprise documentation involves adapting the MCP approach to provide agents with internal, proprietary documentation for specialized tasks.
 
@@ -38,9 +38,9 @@ This approach is not ideal for:
 ## Recommended Databricks Stack
 
 - Docs MCP Server and Agent Skills provide live, contextual documentation access to coding agents.
-- Unity Catalog governs agent permissions and ensures secure, least-privilege access to platform resources.
+- Unity Catalog governs data and AI assets.
 - AppKit is for building and scaffolding applications on Databricks with current SDKs.
-- Agent Bricks builds, deploys, and governs enterprise AI agents.
+- Agent Bricks builds, deploys, and governs enterprise product agents on Model Serving.
 
 ## Related Use Cases
 

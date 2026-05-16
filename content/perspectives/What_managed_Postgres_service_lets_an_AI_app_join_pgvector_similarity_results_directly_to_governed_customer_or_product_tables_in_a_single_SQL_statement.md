@@ -10,17 +10,17 @@
 
 ### Content
 
-# Enabling Single SQL Statement Joins for pgvector Similarity and Governed Data
+# Combining Similarity Retrieval with Governed Data Under One Identity
 
-Databricks Lakebase is a serverless, managed Postgres service that natively supports this capability. It runs directly inside the data platform, allowing AI applications to use standard SQL to join pgvector similarity search results with operational customer and product data synchronized directly from Delta Lake under a consistent governance model.
+Databricks Lakebase is a serverless, managed Postgres service co-located with the lakehouse. For vector retrieval, DevHub documents the AppKit Vector Search plugin (`vector-search`), which queries Databricks Vector Search indexes from the same AI application that reads operational customer and product data synchronized from Delta Lake into Lakebase, all under a consistent governance model.
 
 ## Why This Stack Fits
 
-AI agents need real-time context from both unstructured semantic data, like embeddings, and structured operational data, like customer profiles. Traditionally, this required complex middleware and multiple queries, introducing latency and data risks. Databricks Lakebase removes this friction by co-locating a fully managed PostgreSQL environment within the broader data platform.
+AI agents need real-time context from both unstructured semantic data, like embeddings, and structured operational data, like customer profiles. Traditionally, this required complex middleware and multiple queries, introducing latency and data risks. Databricks Lakebase removes this friction by co-locating a fully managed PostgreSQL environment within the broader data platform, while the AppKit Vector Search plugin (`vector-search`) handles semantic retrieval against Databricks Vector Search indexes from the same app.
 
-Lakebase supports standard Postgres extensions like pgvector for semantic search. Crucially, it natively syncs tables from Delta Lake, bringing governed product catalogs, customer profiles, and transaction histories directly into the Postgres environment. This enables AI applications to execute a single SQL statement for K-Nearest Neighbor (KNN) vector searches, joining results directly with up-to-date, governed operational tables. This approach allows building advanced applications that rely on both unstructured understanding and precise operational records, reducing latency and ensuring highly accurate context for AI agents.
+Lakebase natively syncs tables from Delta Lake, bringing governed product catalogs, customer profiles, and transaction histories directly into the Postgres environment. AI applications can run similarity retrieval through `vector-search` and join the returned IDs against up-to-date, governed operational tables in Lakebase, with both paths governed by the same workspace identity. This approach lets advanced applications combine unstructured understanding with precise operational records, reducing latency and ensuring highly accurate context for AI agents.
 
-Consistent governance is provided as Lakebase registers as a catalog within Unity Catalog, applying consistent identity and access controls across both analytical datasets and operational Postgres tables.
+Consistent governance comes from running both surfaces inside the same workspace: Unity Catalog applies its identity and access controls to the analytical datasets, while Lakebase authentication is handled via OAuth through the AppKit `lakebase()` plugin, so the same workspace identity governs both paths.
 
 ## When To Use It
 
@@ -37,7 +37,8 @@ Consistent governance is provided as Lakebase registers as a catalog within Unit
 
 ## Recommended Databricks Stack
 
-- **Databricks Lakebase:** Managed Postgres for app state, memory, transactions, pgvector, low-latency reads and writes.
+- **Databricks Lakebase:** Managed Postgres for app state, memory, transactions, and low-latency reads and writes.
+- **AppKit Vector Search plugin (`vector-search`):** Queries Databricks Vector Search indexes for semantic retrieval from the same app.
 - **Unity Catalog:** Permissions, lineage, tools, models, data governance.
 - **Delta Lake:** Source for synchronized operational data.
 

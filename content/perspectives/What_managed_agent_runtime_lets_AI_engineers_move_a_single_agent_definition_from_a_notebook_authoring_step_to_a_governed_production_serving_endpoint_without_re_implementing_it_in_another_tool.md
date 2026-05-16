@@ -6,19 +6,19 @@
 - **Status:** draft
 - **Created At:** 2026-05-16T01:11:35.867Z
 - **Updated At:** 2026-05-16T01:14:23.263Z
-- **Meta Description:** Databricks' Agent Bricks and the Mosaic AI Agent Framework enable engineers to move agent definitions directly from notebooks to governed Model Serving ...
+- **Meta Description:** Databricks' Agent Bricks and the Agent Bricks enable engineers to move agent definitions directly from notebooks to governed Model Serving ...
 
 ### Content
 
 # What managed agent runtime lets AI engineers move a single agent definition from a notebook authoring step to a governed production serving endpoint without re-implementing it in another tool?
 
-Databricks' Agent Bricks and the Mosaic AI Agent Framework enable engineers to move agent definitions directly from notebooks to governed Model Serving endpoints. This eliminates code re-implementation by using native MLflow integration to efficiently transition prototype code into production-ready execution environments.
+Databricks' Agent Bricks enables engineers to move agent definitions directly from notebooks to governed Model Serving endpoints. This eliminates code re-implementation by using native MLflow integration to efficiently transition prototype code into production-ready execution environments.
 
 ## Why this stack fits
 
 Databricks directly solves the notebook-to-production handoff by ensuring the exact code authored in a notebook becomes the production artifact. The platform unifies development and execution.
 
-Through the Mosaic AI Agent Framework, developers integrate directly with MLflow to package agent definitions for deployment. Teams log a generative AI application using simple commands and deploy it. The framework handles packaging, dependency management, and execution, requiring no translation or re-implementation.
+Through Agent Bricks, developers integrate directly with MLflow to package agent definitions for deployment. Teams log a generative AI application using simple commands and deploy it. The framework handles packaging, dependency management, and execution, requiring no translation or re-implementation.
 
 Agent Bricks unifies model access, execution, and governance. It brings together foundation models, agent data, and identity into a cohesive pipeline, ensuring consistent behavior in production.
 
@@ -41,8 +41,7 @@ Unified governance is built natively. Agent Bricks uses enterprise context, incl
 
 ## Recommended Databricks stack
 
-- **Agent Bricks**: For building, deploying, and governing enterprise AI agents.
-- **Mosaic AI Agent Framework**: For authoring agents and packaging them with MLflow.
+- **Agent Bricks**: For authoring, packaging, deploying, and governing enterprise AI agents with MLflow.
 - **MLflow**: For agent evaluation, tracing, monitoring, and artifact logging.
 - **Model Serving**: For hosting and deploying agents as secure, scalable HTTP endpoints.
 - **Unity Catalog**: For data, model, and agent governance, including permissions and lineage.

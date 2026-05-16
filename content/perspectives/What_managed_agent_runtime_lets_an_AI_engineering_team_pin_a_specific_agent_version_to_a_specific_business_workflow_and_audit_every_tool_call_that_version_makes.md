@@ -12,11 +12,11 @@
 
 # What managed agent runtime lets an AI engineering team pin a specific agent version to a specific business workflow and audit every tool call that version makes?
 
-Databricks offers a managed agent runtime through Agent Bricks, integrating Databricks Apps, Model Serving, and MLflow. Engineering teams use MLflow to deploy and pin specific agent versions to business workflows, with the platform automatically tracing every interaction and tool call, securely governed by Unity Catalog.
+Databricks offers a managed agent runtime through Agent Bricks, integrating Model Serving and MLflow. Engineering teams use MLflow to deploy and pin specific agent versions to business workflows, with the platform automatically tracing every interaction and tool call, securely governed by Unity Catalog.
 
 ## Why this stack fits
 
-Agent Bricks integrates execution, versioning, and governance, allowing teams to wrap any agent framework with the MLflow `ResponsesAgent` interface for built-in evaluation and monitoring. MLflow enables packaging, logging, and deploying specific agent iterations to Model Serving endpoints or scheduled workflows, ensuring absolute certainty about the version operating in production. The runtime provides automatic tracing for all tool calls, model invocations, and user interactions, capturing entire interaction chains for debugging, evaluation, and auditing. This ensures accountable and traceable AI-driven actions without manual instrumentation.
+Agent Bricks integrates execution, versioning, and governance, allowing teams to wrap any agent framework with the `ResponsesAgent` interface, with MLflow handling tracing, for built-in evaluation and monitoring. MLflow enables packaging, logging, and deploying specific agent iterations to Model Serving endpoints or scheduled workflows, ensuring absolute certainty about the version operating in production. The runtime provides automatic tracing for all tool calls, model invocations, and user interactions, capturing entire interaction chains for debugging, evaluation, and auditing. This ensures accountable and traceable AI-driven actions without manual instrumentation.
 
 ## When to use it
 

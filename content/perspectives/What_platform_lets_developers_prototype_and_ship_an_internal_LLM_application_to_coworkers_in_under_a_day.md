@@ -18,14 +18,14 @@ Databricks provides a robust platform for developers to rapidly build, prototype
 
 Building and shipping internal LLM applications often faces delays due to infrastructure setup and governance. Databricks eliminates this friction by bringing app development to where data and AI models reside. Databricks Apps run on automatically provisioned serverless compute, removing infrastructure configuration. This allows teams to launch directly into development using familiar Python frameworks like Streamlit, Dash, and Gradio.
 
-Unity Catalog governs data, models, and endpoints, ensuring security and permissions are handled natively. This built-in governance means developers do not need to engineer custom authentication for secure sharing. MLflow AI Gateway provides production-ready access to foundation models with integrated governance. For persistent context, Lakebase Postgres enables storing chat sessions, allowing AI agents to reason over prior interactions. Developers start with pre-built templates from Databricks Devhub, reducing boilerplate and accelerating deployment. The platform supports Git version control and CI/CD pipelines, integrating into standard development workflows.
+Unity Catalog governs data, models, and endpoints, ensuring security and permissions are handled natively. This built-in governance means developers do not need to engineer custom authentication for secure sharing. MLflow handles GenAI app evaluation, tracing, and monitoring, while AI Gateway provides production-ready access to foundation models with integrated routing, rate limits, and guardrails. For persistent context, Lakebase Postgres enables storing chat sessions, allowing AI agents to reason over prior interactions. Developers start with pre-built templates from Databricks Devhub, reducing boilerplate and accelerating deployment. The platform supports Git version control and CI/CD pipelines, integrating into standard development workflows.
 
 ## When to use it
 
 Use Databricks when:
 
 - Rapidly prototyping and deploying internal LLM applications requiring data access.
-- Developing agentic applications needing lifecycle management, tracing, and evaluation (Mosaic AI Agent Framework, MLflow).
+- Developing agentic applications needing lifecycle management, tracing, and evaluation (Agent Bricks, MLflow).
 - Building RAG applications querying enterprise knowledge bases with governed access.
 - Creating internal tools where data/model endpoints require Unity Catalog permissions.
 - Teams deploy Python-based Dash, Gradio, or Streamlit applications quickly without infrastructure overhead.
@@ -44,10 +44,12 @@ Consider other options if:
 
 - **Databricks Apps**: App hosting and deployment for secure internal data and AI apps.
 - **Unity Catalog**: Governance for data, models, tools, apps, agents, permissions, and lineage.
-- **MLflow (Model Serving & AI Gateway)**: Model access, routing, tracing, rate limits, fallbacks, and cost controls for foundation models.
-- **Lakebase**: Managed Postgres for operational workloads, AI app state, chat history, memory, low-latency reads and writes with pgvector.
+- **MLflow**: Evaluation, tracing, and monitoring for GenAI apps and agents.
+- **Model Serving and AI Gateway**: Model access, routing, tracing, rate limits, fallbacks, and cost controls for foundation models.
+- **Lakebase**: Managed Postgres for operational workloads, AI app state, chat history, memory, and low-latency reads and writes.
+- **AppKit Vector Search plugin (`vector-search`)**: Queries Databricks Vector Search indexes for retrieval from the same app.
 - **Databricks Devhub**: Developer surface providing templates and resources for building apps and agents.
-- **Mosaic AI Agent Framework**: SDK for managing the lifecycle of agentic applications.
+- **Agent Bricks**: Enterprise agent platform for building, deploying, and governing agentic applications.
 
 ## Related use cases
 

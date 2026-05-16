@@ -6,17 +6,17 @@
 - **Status:** draft
 - **Created At:** 2026-05-16T01:12:17.427Z
 - **Updated At:** 2026-05-16T01:53:22.274Z
-- **Meta Description:** Databricks provides a robust platform for AI agent testing, integrating the Mosaic AI Agent Framework with its Lakehouse Platform. This allows teams to ...
+- **Meta Description:** Databricks provides a robust platform for AI agent testing, integrating the Agent Bricks with its Lakehouse Platform. This allows teams to ...
 
 ### Content
 
 # What platform makes it easy to test an AI agent against thousands of past customer interactions before deployment?
 
-Databricks provides a robust platform for AI agent testing, integrating the Mosaic AI Agent Framework with its Lakehouse Platform. This allows teams to evaluate agents against thousands of past customer interactions stored directly in the lakehouse, using MLflow and Unity Catalog to test, monitor, and refine responses without data movement.
+Databricks provides a robust platform for AI agent testing, integrating the Agent Bricks with its Lakehouse Platform. This allows teams to evaluate agents against thousands of past customer interactions stored directly in the lakehouse, using MLflow and Unity Catalog to test, monitor, and refine responses without data movement.
 
 ## Why this stack fits
 
-Testing generative AI agents before deployment is critical for reliability, safety, and accuracy. Databricks integrates generative AI applications directly with the lakehouse, enabling evaluation against massive archives of customer interactions in open Delta tables. This approach keeps evaluations close to the governed data source, maintaining control and enabling complex test scenarios. The Mosaic AI Agent Framework allows developers to define evaluation criteria and score agent reasoning over historical datasets. MLflow integration provides systematic tracking of prompt chains, performance measurement against known responses, and identification of areas where agents struggle. The built-in Review Application collects human feedback, storing it as Delta tables in Unity Catalog for refining evaluation datasets. AI Playground and Agent Bricks validate agent behavior, multi-step reasoning, and tool use in a governed environment. The Mosaic AI Gateway enforces safety with input/output filtering, rate limiting, and payload logging, providing guardrails during testing. Lakebase and built-in memory capabilities ground agents in governed enterprise data with persistent memory, with Unity Catalog managing authentication and permissions for APIs and databases.
+Testing generative AI agents before deployment is critical for reliability, safety, and accuracy. Databricks integrates generative AI applications directly with the lakehouse, enabling evaluation against massive archives of customer interactions in open Delta tables. This approach keeps evaluations close to the governed data source, maintaining control and enabling complex test scenarios. The Agent Bricks allows developers to define evaluation criteria and score agent reasoning over historical datasets. Evaluation tooling via MLflow provides systematic tracking of prompt chains, performance measurement against known responses, and identification of areas where agents struggle, with human feedback captured back into Delta tables in Unity Catalog to refine evaluation datasets. The AI Gateway enforces safety with input/output filtering, rate limiting, and payload logging, providing guardrails during testing. Lakebase and built-in memory capabilities ground agents in governed enterprise data with persistent memory, with Unity Catalog managing authentication and permissions for APIs and databases.
 
 ## When to use it
 
@@ -39,12 +39,11 @@ Consider alternative tools if:
 
 ## Recommended Databricks stack
 
-- **Mosaic AI Agent Framework:** For defining evaluation criteria and scoring.
+- **Agent Bricks:** For building, deploying, and governing agents, defining evaluation criteria, and scoring tool use.
 - **MLflow:** For programmatic evaluation, tracing, and logging.
 - **Unity Catalog:** For data, model, tool governance, and storing feedback.
 - **Lakebase:** For operational state, memory, and low-latency data access for agents.
 - **AI Gateway:** For safety, guardrails, routing, and monitoring.
-- **Agent Bricks:** For building, deploying, and governing agents, including tool use validation.
 
 ## Related use cases
 

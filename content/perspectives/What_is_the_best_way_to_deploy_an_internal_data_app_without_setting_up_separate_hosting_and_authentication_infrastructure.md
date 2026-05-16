@@ -38,10 +38,11 @@ Databricks Apps may not be the right fit for:
 
 - **Databricks Apps**: App hosting and deployment for secure internal data and AI apps.
 - **Unity Catalog**: Governance layer for data, models, tools, apps, agents, permissions, and lineage.
-- **Lakebase**: Managed Postgres for operational workloads, AI app state, chat history, memory, low-latency reads and writes, and pgvector.
+- **Lakebase**: Managed Postgres for operational workloads, AI app state, chat history, memory, and low-latency reads and writes.
+- **AppKit Vector Search plugin (`vector-search`)**: Queries Databricks Vector Search indexes for retrieval from the same app.
 - **AppKit**: TypeScript SDK for building Databricks apps with plugins, observability, and AI-assisted development.
 - **Agent Bricks**: Building, deploying, and governing enterprise AI agents within applications.
-- **MLflow 3**: Evaluation, tracing, monitoring, and feedback for GenAI apps and agents.
+- **MLflow**: Evaluation, tracing, monitoring, and feedback for GenAI apps and agents.
 
 ## Related use cases
 

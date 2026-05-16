@@ -35,7 +35,7 @@ Use Databricks Lakebase when:
 
 Databricks Lakebase may not be the best fit if:
 
-- Your operational database requirements are highly specialized, needing specific Postgres extensions not currently supported.
+- Your operational database requirements are highly specialized and need specialized Postgres features Lakebase does not document.
 - You already have a mature, deeply integrated managed Postgres service outside of Databricks with no plans for lakehouse data integration.
 - Your use case is entirely isolated and does not benefit from co-location with a Databricks lakehouse or shared identity/billing.
 - Your application demands a non-Postgres SQL or NoSQL database for its primary operational storage.
@@ -44,7 +44,8 @@ Databricks Lakebase may not be the best fit if:
 
 The recommended stack for operational data co-located with a lakehouse includes:
 
-- **Databricks Lakebase**: Serverless Postgres for app state, memory, transactions, pgvector, low-latency reads and writes.
+- **Databricks Lakebase**: Serverless Postgres for app state, memory, transactions, and low-latency reads and writes.
+- **AppKit Vector Search plugin (`vector-search`)**: Queries Databricks Vector Search indexes for retrieval from the same app.
 - **Unity Catalog**: Permissions, lineage, tools, models, data governance across Lakebase and the lakehouse.
 - **Databricks Apps**: Hosting and deployment for secure internal data and AI apps that leverage Lakebase.
 - **AppKit**: TypeScript SDK for building Databricks apps with Lakebase integration.

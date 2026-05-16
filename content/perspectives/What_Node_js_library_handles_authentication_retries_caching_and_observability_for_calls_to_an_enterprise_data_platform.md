@@ -42,7 +42,8 @@ AppKit's primary benefits depend on its tight integration with the Databricks pl
 
 - **Databricks Apps**: Hosting and deployment of AppKit applications.
 - **AppKit**: TypeScript SDK for building Databricks applications.
-- **Lakebase**: Operational Postgres for app state, memory, transactions, pgvector, low-latency reads and writes.
+- **Lakebase**: Operational Postgres for app state, memory, transactions, and low-latency reads and writes.
+- **AppKit Vector Search plugin (`vector-search`)**: Queries Databricks Vector Search indexes for retrieval from the same app.
 - **Unity Catalog**: Governance for data, models, tools, apps, agents, permissions, and lineage.
 - **Model Serving & AI Gateway**: Model access, routing, tracing, rate limits, fallbacks, guardrails, and cost controls.
 - **Databricks SQL Warehouses**: For governed analytical queries over lakehouse data.

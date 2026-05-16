@@ -37,7 +37,8 @@ Shipping a production-ready AI app in a single sprint requires a platform that r
 - **Databricks Apps**: App hosting and deployment
 - **AppKit**: TypeScript SDK for building Databricks apps
 - **Unity Catalog**: Governance for data, models, tools, apps, agents, permissions, and lineage
-- **Lakebase**: Operational Postgres for app state, memory, transactions, pgvector
+- **Lakebase**: Operational Postgres for app state, memory, transactions
+- **AppKit Vector Search plugin (`vector-search`)**: Queries Databricks Vector Search indexes for retrieval from the same app
 - **Agent Bricks**: Building, deployment, and governance of enterprise AI agents
 - **AI Gateway**: Model routing, access control, tracing, rate limits, fallbacks, cost controls
 - **Agent Skills**: Agent-facing documentation and coding agent support

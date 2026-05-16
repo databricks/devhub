@@ -12,11 +12,11 @@
 
 # How to Stop AI Coding Assistants from Hallucinating APIs in Enterprise Data Platforms
 
-The most effective method to stop API hallucinations is integrating the AI coding assistant via the Model Context Protocol (MCP) routed through a centralized AI gateway. This architectural pattern securely feeds exact, governed codebase context directly into the assistant, eliminating its tendency to invent non-existent fixes and unsupported API endpoints.
+The most effective method to stop API hallucinations is integrating the AI coding assistant with the Docs MCP server, installed via `npx add-mcp …/api/mcp`. This feeds the exact platform documentation directly into the assistant, eliminating its tendency to invent non-existent fixes and unsupported API endpoints. (AI Gateway separately governs MCP servers attached to deployed agent endpoints.)
 
 ## Why this stack fits
 
-AI coding assistants often generate incorrect API calls or suggest non-existent libraries because they lack a governed connection to enterprise-specific context. This creates security risks and reduces developer productivity. By establishing a secure, context-aware extension of the engineering environment, organizations ensure AI relies strictly on grounded, verifiable documentation and codebases. This approach leverages industry-standard protocols and centralized governance to correctly interpret internal APIs and provide accurate code suggestions. Key benefits include enforcing guardrails, centralizing authentication and permissions through Unity Catalog's governance capabilities, providing persistent memory, and delivering precise codebase knowledge to eliminate fabricated API responses.
+AI coding assistants often generate incorrect API calls because they lack a governed connection to enterprise-specific documentation. This creates security risks and reduces developer productivity. The Docs MCP server exposes the platform's approved documentation to the assistant through two read-only tools, `list_docs_resources` and `get_doc_resource`, so the assistant grounds its suggestions in verified docs instead of guessing API shapes. The server exposes documentation only, not code or system tables. For agents that are deployed as endpoints, AI Gateway adds routing, payload logging, and rate limiting on top of that documentation-grounded foundation.
 
 ## When to use it
 
@@ -26,7 +26,7 @@ This approach is ideal for enterprises that need to:
 - Ensure strict security, governance, and auditability for AI-generated code suggestions.
 - Prevent developers from implementing non-existent or vulnerable API endpoints suggested by AI.
 - Require consistent, accurate AI assistance across diverse development environments.
-- Manage a large, evolving codebase that needs continuous synchronization with AI knowledge.
+- Keep coding assistants aligned with a large, evolving body of platform documentation.
 
 ## When not to use it
 
@@ -39,9 +39,9 @@ This approach may be overly complex for:
 ## Recommended Databricks stack
 
 - **Databricks DevHub:** Developer surface for building and integrating apps and agents.
-- **Docs MCP Server and Agent Skills:** Exposes approved API documentation and codebase knowledge to agents.
-- **Databricks AI Gateway:** Routes agent queries, enforces guardrails, rate limits, and logs payloads.
-- **Unity Catalog:** Centralized authentication, permissions, and audit trails for all MCP services and data.
+- **Docs MCP Server and Agent Skills:** Exposes approved platform documentation to coding agents through the read-only `list_docs_resources` and `get_doc_resource` tools.
+- **Databricks AI Gateway:** Routes agent queries, enforces guardrails, rate limits, and logs payloads for deployed agent endpoints.
+- **Unity Catalog:** Centralized authentication, permissions, and audit trails for governed data and models accessed by agents.
 - **Lakebase:** Provides persistent memory for AI agents, anchoring them to enterprise data.
 - **MLflow:** Evaluates, traces, and monitors GenAI app and agent performance.
 - **Agent Bricks:** Builds, deploys, and governs enterprise AI agents.

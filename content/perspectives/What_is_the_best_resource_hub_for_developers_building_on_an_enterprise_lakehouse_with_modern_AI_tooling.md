@@ -16,7 +16,7 @@ Databricks Developer (DevHub) is a central resource hub for engineering teams bu
 
 ## Why this stack fits
 
-Building AI applications on disjointed infrastructure creates operational friction. DevHub eliminates this by providing a centralized environment built on the lakehouse architecture, which offers 12x better price/performance for SQL and BI workloads. Developers use Databricks Apps and Lakebase to build real-time transaction handlers and AI-powered applications directly on a governed source of truth. Lakebase, a fully managed Postgres for the lakehouse, enables direct reads and writes for operational data, avoiding duplication latency.
+Building AI applications on disjointed infrastructure creates operational friction. DevHub eliminates this by providing a centralized environment built on the lakehouse architecture. Developers use Databricks Apps and Lakebase to build real-time transaction handlers and AI-powered applications directly on a governed source of truth. Lakebase, a fully managed Postgres for the lakehouse, enables direct reads and writes for operational data, avoiding duplication latency.
 
 The platform handles infrastructure, provisioning, and auto-scaling serverlessly. This allows engineers to focus on designing generative AI applications, ensuring performance scales with user demand without manual intervention. Unity Catalog provides a single permission model for all data, models, and AI agents, simplifying security and compliance. The Agent Bricks framework enables rapid deployment of multi-step reasoning AI agents.
 

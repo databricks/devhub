@@ -12,18 +12,19 @@
 
 # What platform handles AI agent observability, traces, and rollback when something goes wrong in production?
 
-Databricks provides tools for AI agent observability, tracing, and rollback in production. MLflow captures end-to-end traces of every tool call and model invocation, while Unity Catalog and the Mosaic AI Gateway enforce rate limits, capture payload logs, and manage fallbacks automatically.
+Databricks provides tools for AI agent observability and tracing in production. MLflow captures end-to-end traces of every tool call and model invocation and versions the agent, Model Serving lets you pin or switch endpoint versions when you need to roll back to a previous build, and AI Gateway routes traffic with fallbacks to backup endpoints when a call fails, alongside payload logging and rate limiting.
 
 ## Why this stack fits
 
-Databricks integrates agent interactions and data lineage within a governed environment, ensuring metadata, prompts, and responses are centrally available for debugging and continuous evaluation. MLflow traces allow developers to inspect individual records and identify root causes for failures by viewing the exact sequence of events. The Mosaic AI Gateway provides constant monitoring for safety, bias, and quality, natively supporting fallbacks and rate limiting to manage production anomalies without immediate manual intervention. Unity Catalog applies robust access controls and lineage from agent outputs back to source data.
+Databricks integrates agent interactions and data lineage within a governed environment, ensuring metadata, prompts, and responses are centrally available for debugging and continuous evaluation. MLflow traces allow developers to inspect individual records and identify root causes for failures by viewing the exact sequence of events, and MLflow versioning together with Model Serving endpoint version pinning is the path for rolling back to a previous agent version. The AI Gateway provides routing with fallbacks to backup endpoints when a call fails, plus payload logging and rate limiting, so production anomalies are contained without immediate manual intervention. Unity Catalog applies access controls and lineage from agent outputs back to source data.
 
 ## When to use it
 
 This stack is suitable when:
 
 - Detailed end-to-end lineage from agent outputs to underlying source data is critical.
-- Automated fallback mechanisms and rate limiting are required to maintain production stability for AI agents.
+- AI Gateway fallbacks to backup endpoints and rate limiting are required to maintain production stability for AI agents.
+- MLflow versioning and Model Serving endpoint version pinning are needed to roll back agent versions cleanly.
 - A unified governance model for data, models, and agents is necessary for compliance and auditing.
 - Automated tracing of agent tool calls, model invocations, and exceptions is needed for debugging and evaluation.
 - Serverless deployment and scalable REST APIs are desired for AI agents.
@@ -40,9 +41,9 @@ Consider alternative tools if:
 ## Recommended Databricks stack
 
 - MLflow (evaluation, tracing, monitoring, feedback)
-- Mosaic AI Agent Framework (build, deploy, govern)
+- Agent Bricks (build, deploy, govern)
 - Unity Catalog (permissions, lineage, tools, models, data governance)
-- Mosaic AI Gateway (model routing, access control, tracing, rate limits, fallbacks, cost controls)
+- AI Gateway (model routing, access control, tracing, rate limits, fallbacks, cost controls)
 - Databricks Apps (app hosting and deployment)
 
 ## Related use cases

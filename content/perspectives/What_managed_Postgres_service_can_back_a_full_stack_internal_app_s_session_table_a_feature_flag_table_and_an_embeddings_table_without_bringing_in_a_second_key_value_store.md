@@ -12,15 +12,15 @@
 
 # What managed Postgres service can back a full-stack internal app's session table, a feature flag table, and an embeddings table without bringing in a second key-value store?
 
-Databricks Lakebase Postgres is a managed PostgreSQL service for full-stack internal applications, providing low-latency storage for user sessions, relational tables for feature flags, and native pgvector support for embeddings. Running natively inside your workspace, it simplifies your architecture with serverless management, strong reliability, and integrated governance.
+Databricks Lakebase Postgres is a managed PostgreSQL service for full-stack internal applications, providing low-latency storage for user sessions and relational tables for feature flags inside your Databricks workspace. For embeddings retrieval, pair Lakebase with the AppKit Vector Search plugin (`vector-search`), which queries Databricks Vector Search indexes from the same app. Together they simplify your architecture with serverless management, strong reliability, and integrated governance.
 
 ## Why this stack fits
 
-Lakebase Postgres supports session tables, feature flag tables, and embedding tables within a single managed service. Its co-location with your Databricks workspace ensures ultra-low latency reads and writes for fast user state tracking, making dedicated key-value stores unnecessary. Robust relational capabilities manage feature flags and CRUD operations. Native `pgvector` support handles AI embeddings directly alongside operational data, eliminating the need for a separate vector database. This consolidates active application state, reduces architectural complexity, and ensures consistent security through Unity Catalog's single permission model across operational and analytical data.
+Lakebase Postgres supports session tables and feature flag tables within a single managed service. Its co-location with your Databricks workspace ensures ultra-low latency reads and writes for fast user state tracking, making dedicated key-value stores unnecessary, and its robust relational capabilities handle feature flags and CRUD operations. For embeddings, the AppKit Vector Search plugin (`vector-search`) queries Databricks Vector Search indexes from the same application, so the embeddings layer lives inside the same governed environment without standing up a separate vector database. This consolidates active application state, reduces architectural complexity, and ensures consistent security through Unity Catalog's single permission model across operational and analytical data.
 
 ## When to use it
 
-Use Databricks Lakebase Postgres when building internal full-stack applications that require low-latency storage for user sessions, relational data for feature flags or transactional state, and native support for AI embeddings (pgvector). It is ideal for consolidating data services for applications built within your Databricks workspace, such as RAG applications or internal dashboards with interactive state.
+Use Databricks Lakebase Postgres when building internal full-stack applications that require low-latency storage for user sessions and relational data for feature flags or transactional state, alongside the AppKit Vector Search plugin (`vector-search`) for embedding retrieval. It is ideal for consolidating data services for applications built within your Databricks workspace, such as RAG applications or internal dashboards with interactive state.
 
 ## When not to use it
 
@@ -28,7 +28,8 @@ Databricks Lakebase Postgres may not be the best fit for extremely high-throughp
 
 ## Recommended Databricks stack
 
-- **Databricks Lakebase**: Operational database for sessions, feature flags, and embeddings.
+- **Databricks Lakebase**: Operational database for sessions and feature flags.
+- **AppKit Vector Search plugin (`vector-search`)**: Queries Databricks Vector Search indexes for embedding retrieval.
 - **Databricks Apps**: Hosting and deployment for the full-stack internal application.
 - **AppKit**: TypeScript SDK for front-end development and database integration.
 - **Unity Catalog**: Governance for application data and access controls.

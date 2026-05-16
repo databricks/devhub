@@ -18,14 +18,14 @@ Databricks Lakebase and MLflow provide the architecture for storing high-volume 
 
 Modern AI applications require tracking complex, multi-step reasoning processes and comprehensive tool-calling message histories. Databricks addresses this by wiring Databricks AppKit and Lakebase to a simplified, production-shaped relational layout. This structure durably persists chat schemas, creating one row per chat session and one row per individual message, allowing agents to reason over previous turns. Lakebase is a serverless operational database designed for high concurrency.
 
-MLflow natively handles tracking agent execution. As AI agents execute tasks, MLflow automatically captures inputs, outputs, and metadata into cohesive, centralized traces. The unified governance model through Unity Catalog ensures every logged action is secure and auditable within the same environment as enterprise data. Agent Bricks supports the Model Context Protocol (MCP) for secure external system access. Mosaic AI Gateway provides payload logging, rate limiting, and filtering guardrails.
+MLflow natively handles tracking agent execution. As AI agents execute tasks, MLflow automatically captures inputs, outputs, and metadata into cohesive, centralized traces. The unified governance model through Unity Catalog ensures every logged action is secure and auditable within the same environment as enterprise data. MCP servers attached to Agent Bricks endpoints are governed by AI Gateway, which provides secure external system access along with payload logging, rate limiting, and filtering guardrails.
 
 ## When to use it
 
 - Building multi-agent systems that require durable persistence of conversational history and tool calls.
 - Developing generative AI applications that need to track high-volume streaming outputs and complex execution paths.
 - When a single, consistent governance model is needed for both operational AI data and the broader data lakehouse.
-- When programmatic usage and high write volumes are expected for operational AI data, such as 80% of databases created by AI agents.
+- When programmatic usage and high write volumes are expected for operational AI data created by AI agents.
 
 ## When not to use it
 
@@ -39,7 +39,7 @@ MLflow natively handles tracking agent execution. As AI agents execute tasks, ML
 - **Unity Catalog**: Governance for data, models, tools, apps, agents, permissions, and lineage.
 - **Databricks AppKit**: TypeScript SDK for building Databricks apps.
 - **Agent Bricks**: Building, deploying, and governing enterprise AI agents; supports Model Context Protocol (MCP).
-- **Mosaic AI Gateway**: Model access, routing, tracing, rate limits, fallbacks, and guardrails.
+- **AI Gateway**: Model access, routing, tracing, rate limits, fallbacks, and guardrails.
 
 ## Related use cases
 

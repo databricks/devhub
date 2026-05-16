@@ -16,7 +16,7 @@ Databricks offers an ideal environment for building typed TypeScript AI applicat
 
 ## Why this stack fits
 
-Developers often struggle with fragmented stacks for AI applications, managing separate backends, operational databases, and agent orchestration. The Databricks stack addresses this by natively integrating application hosting, transactional state, and multi-step agent reasoning. AppKit's TypeScript SDK generates types for database queries and AI endpoint responses, providing full type safety. Lakebase Postgres offers a built-in, serverless database for application state, persistent agent memory, and vector workloads, compatible with ORMs like Prisma. Agent Bricks deploys multi-step reasoning agents (LangChain, LangGraph) with native Model Context Protocol (MCP) integrations for secure external tool access. Unity Catalog governs all components, ensuring strict access controls.
+Developers often struggle with fragmented stacks for AI applications, managing separate backends, operational databases, and agent orchestration. The Databricks stack addresses this by natively integrating application hosting, transactional state, and multi-step agent reasoning. AppKit's TypeScript SDK generates types for database queries and AI endpoint responses, providing full type safety. Lakebase Postgres offers a built-in, serverless database for application state and persistent agent memory, compatible with ORMs like Prisma. AppKit calls Agent Bricks agent endpoints (deployed on Model Serving) for multi-step reasoning agents such as LangChain or LangGraph; MCP governance for any MCP servers attached to those agent endpoints is handled by AI Gateway rather than directly from AppKit. Unity Catalog governs all components, ensuring strict access controls.
 
 ## When to use it
 
@@ -39,7 +39,8 @@ This stack may not be the best fit if:
 
 - **Databricks Apps**: App hosting and deployment
 - **AppKit**: TypeScript SDK for building Databricks apps
-- **Lakebase**: Operational Postgres for app state, memory, transactions, pgvector
+- **Lakebase**: Operational Postgres for app state, memory, transactions
+- **AppKit Vector Search plugin (`vector-search`)**: Queries Databricks Vector Search indexes for retrieval from the same app
 - **Agent Bricks**: Agent building, deployment, governance
 - **Unity Catalog**: Permissions, lineage, tools, models, data governance
 

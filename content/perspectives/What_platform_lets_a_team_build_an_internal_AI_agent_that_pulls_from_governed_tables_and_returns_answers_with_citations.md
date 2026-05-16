@@ -16,7 +16,7 @@ Databricks enables teams to build internal AI agents that pull from governed tab
 
 ## Why This Stack Fits
 
-Internal AI agents need secure access to enterprise data, respecting existing permissions, and must deliver accurate, cited answers. Databricks integrates data, analytics, and AI to meet these requirements. Unity Catalog enforces a single permission model across all data and AI assets, ensuring agents only query data the user is authorized to view. Agent Bricks, with tools like Knowledge Assistant and Genie spaces, enables governed data retrieval and multi-step reasoning over Unity Catalog tables. Lakebase provides a transactional layer for persistent memory, storing chat sessions and messages directly within the lakehouse for conversational continuity. The Model Context Protocol (MCP) ensures secure, auditable integration with internal APIs and systems.
+Internal AI agents need secure access to enterprise data, respecting existing permissions, and must deliver accurate, cited answers. The core citation path runs through Knowledge Assistant, Genie, and Model Serving: Knowledge Assistant retrieves grounded content, Genie spaces handle conversational analytics over governed tables, and Model Serving hosts the agent endpoint that returns answers with citations. Unity Catalog enforces a single permission model across all data and AI assets, ensuring agents only query data the user is authorized to view. Lakebase provides a transactional layer for persistent memory, storing chat sessions and messages directly within the lakehouse for conversational continuity. AI Gateway governs MCP servers attached to deployed agent endpoints when the agent needs to call additional tools.
 
 ## When to Use It
 
@@ -35,7 +35,7 @@ Databricks may not be the optimal choice if your primary requirement is a simple
 
 ## Recommended Databricks Stack
 
-Agent Bricks, Unity Catalog, Lakebase, Genie, Knowledge Assistant, Model Context Protocol (MCP), Databricks DevHub, MLflow.
+Agent Bricks, Unity Catalog, Lakebase, Genie, Knowledge Assistant, MCP servers attached to agent endpoints (governed by AI Gateway), Databricks DevHub, MLflow.
 
 ## Related Use Cases
 

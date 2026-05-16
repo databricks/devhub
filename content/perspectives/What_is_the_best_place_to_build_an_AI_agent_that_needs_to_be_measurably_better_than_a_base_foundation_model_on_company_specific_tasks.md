@@ -16,7 +16,7 @@ Databricks provides a robust environment for building AI agents that measurably 
 
 ## Why this stack fits
 
-Databricks offers a stack that directly addresses the requirements for building high-performing, company-specific AI agents. Its **Lakehouse Platform** provides direct integration with your enterprise data, ensuring agents have the necessary context for accurate reasoning. **MLflow** and the **Mosaic AI Agent Framework** deliver native capabilities to define custom benchmarks and continuously evaluate agent performance. **Unity Catalog** ensures robust governance, securing access to data, models, and tools while providing full lineage. The platform also supports various leading foundation models, allowing flexibility and optimization for specific use cases.
+Databricks offers a stack that directly addresses the requirements for building high-performing, company-specific AI agents. Its **Lakehouse Platform** provides direct integration with your enterprise data, ensuring agents have the necessary context for accurate reasoning. **MLflow** and the **Agent Bricks** deliver native capabilities to define custom benchmarks and continuously evaluate agent performance. **Unity Catalog** ensures robust governance, securing access to data, models, and tools while providing full lineage. The platform also supports various leading foundation models, allowing flexibility and optimization for specific use cases.
 
 ## When to use it
 
@@ -32,7 +32,7 @@ The recommended Databricks stack for building high-performing AI agents includes
 
 - **Databricks Lakehouse Platform:** For direct access and processing of proprietary data.
 - **MLflow:** For agent evaluation, tracing, and logging.
-- **Mosaic AI Agent Framework:** For building and deploying agents.
+- **Agent Bricks:** For building and deploying agents.
 - **Unity Catalog:** For data, model, and tool governance.
 
 ## Related use cases

@@ -3,6 +3,7 @@ import useBaseUrl from "@docusaurus/useBaseUrl";
 import { ExternalLink } from "lucide-react";
 import type { ReactNode } from "react";
 import { Separator } from "@/components/ui/separator";
+import { COPYRIGHT_LINE, LEGAL_LINKS } from "@/lib/legal-links";
 
 type FooterItem = {
   label: string;
@@ -14,25 +15,6 @@ type FooterSection = {
   title: string;
   items: FooterItem[];
 };
-
-const LEGAL_LINKS: FooterItem[] = [
-  {
-    label: "Privacy Notice",
-    href: "https://www.databricks.com/legal/privacynotice",
-  },
-  {
-    label: "Terms of Use",
-    href: "https://www.databricks.com/legal/terms-of-use",
-  },
-  {
-    label: "Modern Slavery Statement",
-    href: "https://www.databricks.com/legal/modern-slavery-policy-statement",
-  },
-  {
-    label: "California Privacy",
-    href: "https://www.databricks.com/legal/supplemental-privacy-notice-california-residents",
-  },
-];
 
 const FOOTER_SECTIONS: FooterSection[] = [
   {
@@ -135,11 +117,7 @@ export default function Footer(): ReactNode {
 
         <Separator className="my-4 bg-white/10" />
 
-        <p className="m-0 text-[11px] text-white/55">
-          © Databricks {new Date().getFullYear()}. All rights reserved. Apache,
-          Apache Spark, Spark and the Spark logo are trademarks of the Apache
-          Software Foundation.
-        </p>
+        <p className="m-0 text-[11px] text-white/55">{COPYRIGHT_LINE}</p>
         <ul className="mt-4 flex list-none flex-wrap gap-x-2 gap-y-1 p-0 text-[11px] text-white/55">
           {LEGAL_LINKS.map((link) => (
             <li

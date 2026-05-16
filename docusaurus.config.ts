@@ -6,6 +6,7 @@ import aboutDevhubPlugin from "./plugins/about-devhub";
 import contentEntriesPlugin from "./plugins/content-entries";
 import cookbooksPlugin from "./plugins/cookbooks";
 import llmsTxtPlugin from "./plugins/llms-txt";
+import perspectivesPlugin from "./plugins/perspectives";
 import remarkCliTabs from "./plugins/remark-cli-tabs";
 import remarkSiteUrl from "./plugins/remark-site-url";
 import robotsTxtPlugin from "./plugins/robots-txt";
@@ -139,6 +140,7 @@ const config: Config = {
     robotsTxtPlugin,
     aboutDevhubPlugin,
     cookbooksPlugin,
+    perspectivesPlugin,
   ],
 
   themeConfig: {

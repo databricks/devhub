@@ -108,6 +108,10 @@
       "destination": "/robots.txt"
     },
     {
+      "source": "/devhub/BingSiteAuth.xml",
+      "destination": "/BingSiteAuth.xml"
+    },
+    {
       "source": "/devhub/search-doc(.*).json",
       "destination": "/search-doc$1.json"
     },

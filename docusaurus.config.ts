@@ -71,6 +71,13 @@ const config: Config = {
         content: "r9cgLLCpOwLqma0I_MXet4Ix8AK6v_UNHMe1CHsfNr8",
       },
     },
+    {
+      tagName: "meta",
+      attributes: {
+        name: "msvalidate.01",
+        content: "0C5475E83E2478D4C86B252C1F3756BC",
+      },
+    },
   ],
 
   themes: ["@docusaurus/theme-mermaid"],

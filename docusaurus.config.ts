@@ -63,6 +63,16 @@ const config: Config = {
     mermaid: true,
   },
 
+  headTags: [
+    {
+      tagName: "meta",
+      attributes: {
+        name: "google-site-verification",
+        content: "r9cgLLCpOwLqma0I_MXet4Ix8AK6v_UNHMe1CHsfNr8",
+      },
+    },
+  ],
+
   themes: ["@docusaurus/theme-mermaid"],
 
   presets: [

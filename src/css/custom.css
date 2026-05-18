@@ -637,26 +637,28 @@
 
   /* Perspectives pages render a self-contained minimal shell with its own
      home link + theme toggle, so the standard Docusaurus chrome must step
-     aside. The body class is applied via <Head><body className="..."/> from
-     PerspectivesShell. */
-  body.perspectives-page .navbar,
-  body.perspectives-page .navbar-sidebar,
-  body.perspectives-page .navbar-sidebar__backdrop {
+     aside. Scope off the `html.plugin-<name>` class that Docusaurus emits
+     statically for every plugin route — it's part of the SSR render and
+     never touched by react-helmet-async hydration, so the navbar stays
+     hidden across the first paint + hydration window with no flicker. */
+  html.plugin-perspectives .navbar,
+  html.plugin-perspectives .navbar-sidebar,
+  html.plugin-perspectives .navbar-sidebar__backdrop {
     display: none !important;
   }
 
-  body.perspectives-page .main-wrapper {
+  html.plugin-perspectives .main-wrapper {
     margin-top: 0;
   }
 
   /* Infima styles every anchor with --ifm-link-color (lava) at the same
      specificity as Tailwind's text-* utilities, so the perspectives footer
      legal links need an explicitly scoped rule to read as muted body text. */
-  body.perspectives-page .perspectives-legal-link {
+  html.plugin-perspectives .perspectives-legal-link {
     color: var(--muted-foreground);
   }
 
-  body.perspectives-page .perspectives-legal-link:hover {
+  html.plugin-perspectives .perspectives-legal-link:hover {
     color: var(--foreground);
   }
 

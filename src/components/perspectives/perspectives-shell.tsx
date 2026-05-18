@@ -1,4 +1,3 @@
-import Head from "@docusaurus/Head";
 import Link from "@docusaurus/Link";
 import { useColorMode } from "@docusaurus/theme-common";
 import Layout from "@theme/Layout";
@@ -45,9 +44,6 @@ export function PerspectivesShell({
 }: PerspectivesShellProps): ReactNode {
   return (
     <Layout title={title} description={description} noFooter>
-      <Head>
-        <body className="perspectives-page" />
-      </Head>
       <div className="perspectives-root flex min-h-screen flex-col bg-white text-db-navy dark:bg-[#0d1518] dark:text-white">
         <header className="border-b border-black/8 dark:border-white/10">
           <div className="mx-auto flex max-w-3xl items-center justify-between px-6 py-4">

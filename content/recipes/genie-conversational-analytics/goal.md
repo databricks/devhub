@@ -1,5 +1,3 @@
-## Genie Conversational Analytics
-
 Embed a Databricks AI/BI Genie chat interface in your app so users can explore data through natural language.
 
 When done, you will have:

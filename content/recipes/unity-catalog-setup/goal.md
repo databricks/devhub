@@ -1,5 +1,3 @@
-## Set Up Unity Catalog with External Storage
-
 Create a Unity Catalog catalog backed by an external S3 bucket for scenarios that require custom storage control.
 
 When done, you will have:

@@ -1,5 +1,3 @@
-## Genie Multi-Space Selector
-
 Upgrade a single-space Genie app to let users switch between multiple AI/BI Genie spaces from a dropdown.
 
 When done, you will have:

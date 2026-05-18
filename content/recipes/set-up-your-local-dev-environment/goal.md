@@ -1,5 +1,3 @@
-## Set Up Your Local Dev Environment
-
 Install the Databricks CLI, authenticate a profile, and verify the handshake. Every other DevHub template assumes this has already passed.
 
 After this step you will have:

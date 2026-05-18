@@ -1,5 +1,3 @@
-## RAG Chat App
-
 This template demonstrates a Retrieval-Augmented Generation chat app built on Databricks: a user question is embedded, similar documents are retrieved from a pgvector store in Lakebase Postgres, and the retrieved context is injected into a Model Serving call that streams the answer back. Conversations and sources are persisted per chat in Lakebase.
 
 ### Data Flow

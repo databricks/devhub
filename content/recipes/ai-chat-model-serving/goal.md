@@ -1,5 +1,3 @@
-## Streaming AI Chat with Model Serving
-
 Build a streaming AI chat experience in a Databricks App using Databricks Model Serving with OpenAI-compatible endpoints.
 
 When done, you will have:

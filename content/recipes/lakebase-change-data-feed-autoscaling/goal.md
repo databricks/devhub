@@ -1,5 +1,3 @@
-## Replicate Lakebase Tables to Unity Catalog with Lakehouse Sync
-
 Replicate Lakebase Autoscaling Postgres tables into Unity Catalog as managed Delta tables using Lakehouse Sync, capturing every row-level change as SCD Type 2 history.
 
 When done, you will have:

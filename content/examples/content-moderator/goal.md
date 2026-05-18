@@ -1,5 +1,3 @@
-## Content Moderator
-
 This template demonstrates an internal content moderation tool built on Databricks: authors submit content for different channels (company blog, LinkedIn, Twitter, newsletter, press releases), moderators maintain per-channel guidelines, and an LLM scores each submission against those guidelines before a human reviewer makes the final call.
 
 ### Data Flow

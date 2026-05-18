@@ -1,5 +1,3 @@
-## Onboard Your Coding Agent
-
 Make a Databricks repo agent-ready so your coding agent understands the Databricks platform and can fetch DevHub documentation on demand.
 
 When done, you will have:

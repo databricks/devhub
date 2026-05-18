@@ -1,5 +1,3 @@
-## Lakebase Data Persistence
-
 Add a managed Postgres database to your Databricks App using the Lakebase plugin, with schema setup, table creation, and full CRUD REST API routes.
 
 When done, you will have:

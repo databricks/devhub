@@ -1,5 +1,3 @@
-## Lakebase Agent Memory
-
 Persist AI agent chat conversations to Lakebase so users can resume sessions, view full message history, and let the agent reason over previous turns across requests and deploys.
 
 When done, you will have:

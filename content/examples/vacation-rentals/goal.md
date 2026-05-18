@@ -1,5 +1,3 @@
-## Vacation Rentals Operations Console
-
 This template demonstrates an internal operations console for a vacation rentals platform ("Wanderbricks"). Operators see revenue performance by destination, work through a booking queue with per-booking flags and agent notes, and ask natural-language questions about the business through an embedded Genie chat panel.
 
 ### Data Flow

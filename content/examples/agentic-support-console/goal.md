@@ -1,5 +1,3 @@
-## Agentic Support Console
-
 This template brings together the full Databricks developer stack into a single operational data application: an AI-powered support console where every customer message is automatically triaged by an LLM, and support agents review, approve, or override the suggestion from a purpose-built internal tool.
 
 ### Data Flow

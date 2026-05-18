@@ -1,5 +1,3 @@
-## Generate Embeddings with AI Gateway
-
 Generate text embeddings from a Databricks AI Gateway endpoint using the Databricks SDK.
 
 When done, you will have:

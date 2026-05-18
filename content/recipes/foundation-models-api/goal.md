@@ -1,5 +1,3 @@
-## Query AI Gateway Endpoints
-
 Access Databricks foundation models through AI Gateway endpoints with built-in governance, monitoring, and streaming support.
 
 When done, you will have:

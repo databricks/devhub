@@ -1,5 +1,3 @@
-## Spin Up a Databricks App
-
 Generate a working AppKit Databricks App from scratch and deploy it to your workspace.
 
 When done, you will have:

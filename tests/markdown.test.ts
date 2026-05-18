@@ -65,14 +65,14 @@ describe("detail markdown resolver", () => {
       "recipes",
       "set-up-your-local-dev-environment",
     );
-    expect(markdown).toContain("Set Up Your Local Dev Environment");
-    // Agent prompt now returns goal.md content, not full implementation
+    // Agent prompt returns goal.md content (no heading, just description)
+    expect(markdown).toContain("Install the Databricks CLI");
     expect(markdown).toContain("authenticated CLI profile");
   });
 
   test("resolves example markdown", () => {
     const markdown = getDetailMarkdown("examples", "agentic-support-console");
-    expect(markdown).toContain("## Agentic Support Console");
+    expect(markdown).toContain("AI-powered support console");
     expect(markdown).toContain("Data Flow");
   });
 
@@ -120,12 +120,12 @@ describe("templates section resolves recipes, examples, and cookbooks", () => {
       "templates",
       "set-up-your-local-dev-environment",
     );
-    expect(markdown).toContain("## Set Up Your Local Dev Environment");
+    expect(markdown).toContain("Install the Databricks CLI");
   });
 
   test("resolves an example slug via templates", () => {
     const markdown = getDetailMarkdown("templates", "agentic-support-console");
-    expect(markdown).toContain("## Agentic Support Console");
+    expect(markdown).toContain("AI-powered support console");
   });
 
   test("resolves a cookbook slug via templates", () => {
@@ -271,7 +271,7 @@ describe("slug normalization strips .md extension", () => {
       "recipes",
       "set-up-your-local-dev-environment.md",
     );
-    expect(markdown).toContain("## Set Up Your Local Dev Environment");
+    expect(markdown).toContain("Install the Databricks CLI");
   });
 
   test("templates slug with .md extension resolves", () => {
@@ -279,6 +279,6 @@ describe("slug normalization strips .md extension", () => {
       "templates",
       "agentic-support-console.md",
     );
-    expect(markdown).toContain("## Agentic Support Console");
+    expect(markdown).toContain("AI-powered support console");
   });
 });

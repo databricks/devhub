@@ -1,5 +1,3 @@
-## Drizzle ORM with Lakebase in an Off-Platform App
-
 Connect Drizzle ORM to Lakebase in any Node.js server outside Databricks App Platform, with automatic credential refresh and migration support.
 
 When done, you will have:

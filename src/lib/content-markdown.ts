@@ -30,6 +30,10 @@ export function hasSolutionSlug(rootDir: string, slug: string): boolean {
 }
 
 /** Recipes and examples live in `content/<section>/<slug>/` folders with a required content.md. */
+/**
+ * Recipes and examples live in `content/<section>/<slug>/` folders.
+ * A folder is published if it has either goal.md or content.md (or both).
+ */
 export function getContentSlugs(
   rootDir: string,
   section: FolderContentSection,
@@ -39,8 +43,9 @@ export function getContentSlugs(
     .filter((entry) => {
       const fullPath = resolve(directory, entry);
       if (!statSync(fullPath).isDirectory()) return false;
-      return existsSync(
-        resolve(fullPath, `${REQUIRED_CONTENT_SECTION_FILE}.md`),
+      return (
+        existsSync(resolve(fullPath, "goal.md")) ||
+        existsSync(resolve(fullPath, `${REQUIRED_CONTENT_SECTION_FILE}.md`))
       );
     })
     .sort();
@@ -97,16 +102,27 @@ export function readCookbookIntro(
   return readFileSync(filePath, "utf-8");
 }
 
-/** Reads all present section files; throws when the required content.md is missing. */
+/** Reads `content/cookbooks/<slug>/goal.md` if present. */
+export function readCookbookGoal(
+  rootDir: string,
+  slug: string,
+): string | undefined {
+  const filePath = resolve(cookbookDirectory(rootDir), slug, "goal.md");
+  if (!existsSync(filePath)) return undefined;
+  return readFileSync(filePath, "utf-8");
+}
+
+/** Reads all present section files; throws when neither goal.md nor content.md exists. */
 export function readContentSections(
   rootDir: string,
   section: FolderContentSection,
   slug: string,
 ): ContentSections {
+  const goal = readContentSection(rootDir, section, slug, "goal");
   const content = readContentSection(rootDir, section, slug, "content");
-  if (content === undefined) {
+  if (goal === undefined && content === undefined) {
     throw new Error(
-      `Missing required content.md for ${section} "${slug}" at content/${section}/${slug}/content.md`,
+      `Missing required goal.md or content.md for ${section} "${slug}" at content/${section}/${slug}/`,
     );
   }
   const prerequisites = readContentSection(
@@ -116,7 +132,9 @@ export function readContentSections(
     "prerequisites",
   );
   const deployment = readContentSection(rootDir, section, slug, "deployment");
-  const sections: ContentSections = { content };
+  const sections: ContentSections = {};
+  if (goal !== undefined) sections.goal = goal;
+  if (content !== undefined) sections.content = content;
   if (prerequisites !== undefined) sections.prerequisites = prerequisites;
   if (deployment !== undefined) sections.deployment = deployment;
   return sections;

@@ -1,4 +1,4 @@
-import type { ContentSections } from "@/lib/content-sections";
+import { goalOnly, type ContentSections } from "@/lib/content-sections";
 
 export type CookbookRecipeInput = {
   id: string;
@@ -6,11 +6,15 @@ export type CookbookRecipeInput = {
   sections: ContentSections;
 };
 
+export type CookbookCompositionMode = "agent" | "human";
+
 type CookbookCompositionInput = {
   cookbookName: string;
   cookbookDescription: string;
+  goal?: string;
   intro?: string;
   recipes: CookbookRecipeInput[];
+  mode?: CookbookCompositionMode;
 };
 
 /** Strips a leading `## Prerequisites` heading (and any blank line that follows) from a prereqs body. */
@@ -34,18 +38,36 @@ function wrapRecipeDeployment(recipe: CookbookRecipeInput): string | undefined {
 }
 
 /**
- * Reshuffles a cookbook into: intro → combined Prerequisites → all recipe content bodies →
- * optional combined Deployment. Recipe content.md bodies keep their own `## <Recipe>` title
- * so they land as peer sections; prereqs are demoted to H3 under one shared H2.
+ * Composes a cookbook from its constituent recipes.
+ *
+ * mode="human" (default): intro/goal → combined Prerequisites → all recipe
+ * content bodies → optional combined Deployment.
+ *
+ * mode="agent": cookbook goal/intro → each recipe's goal under a
+ * "## Component: <Name>" heading. No prerequisites, content bodies, or deployment.
  */
 export function composeCookbookMarkdown(
   input: CookbookCompositionInput,
 ): string {
-  const { intro, recipes } = input;
+  const mode = input.mode ?? "human";
+  const introText = input.goal ?? input.intro;
+  const { recipes } = input;
   const parts: string[] = [];
 
-  if (intro && intro.trim()) {
-    parts.push(intro.trim());
+  if (introText && introText.trim()) {
+    parts.push(introText.trim());
+  }
+
+  if (mode === "agent") {
+    for (const recipe of recipes) {
+      const recipeGoal = goalOnly(recipe.sections);
+      if (recipeGoal.trim()) {
+        parts.push(
+          `${heading(2, `Component: ${recipe.name}`)}\n\n${recipeGoal.trim()}`,
+        );
+      }
+    }
+    return parts.join("\n\n");
   }
 
   const prereqBlocks = recipes
@@ -56,8 +78,8 @@ export function composeCookbookMarkdown(
   }
 
   const contentBlocks = recipes
-    .map((recipe) => recipe.sections.content.trim())
-    .filter((block) => Boolean(block));
+    .map((recipe) => recipe.sections.content?.trim())
+    .filter((block): block is string => Boolean(block));
   if (contentBlocks.length > 0) {
     parts.push(contentBlocks.join("\n\n---\n\n"));
   }

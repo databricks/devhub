@@ -12,14 +12,16 @@ if (!existsSync(resolve(ROOT, "content"))) {
 }
 
 const RESOURCE_ALLOWED_FILES = new Set([
+  "goal.md",
   "content.md",
   "prerequisites.md",
   "deployment.md",
 ]);
-const RESOURCE_REQUIRED_FILE = "content.md";
+/** A folder must have at least one of these to be published. */
+const RESOURCE_REQUIRED_FILES = ["goal.md", "content.md"];
 const RESOURCE_SECTIONS = /** @type {const} */ (["recipes", "examples"]);
 
-const COOKBOOK_ALLOWED_FILES = new Set(["intro.md"]);
+const COOKBOOK_ALLOWED_FILES = new Set(["goal.md", "intro.md"]);
 
 /** @type {string[]} */
 const errors = [];
@@ -33,7 +35,7 @@ const errors = [];
  * @param {string} opts.sectionPath  e.g. "content/recipes" — used in error messages
  * @param {string} opts.sectionDir   absolute filesystem path to the section
  * @param {Set<string>} opts.allowedFiles  whitelist of allowed direct-child filenames
- * @param {string=} opts.requiredFile  filename that must be present (omit for none)
+ * @param {string[]=} opts.requiredFiles  at least one of these must be present (omit for none)
  * @param {string} opts.emptyHint  trailing instruction appended to the "is empty" error
  * @param {string} opts.flatHint   trailing instruction appended to the "is not a directory" error
  */
@@ -41,7 +43,7 @@ function validateContentFolder({
   sectionPath,
   sectionDir,
   allowedFiles,
-  requiredFile,
+  requiredFiles,
   emptyHint,
   flatHint,
 }) {
@@ -75,9 +77,13 @@ function validateContentFolder({
       }
     }
 
-    if (requiredFile && !files.includes(requiredFile)) {
+    if (
+      requiredFiles &&
+      requiredFiles.length > 0 &&
+      !requiredFiles.some((f) => files.includes(f))
+    ) {
       errors.push(
-        `${sectionPath}/${entry}/ is missing the required ${requiredFile}.`,
+        `${sectionPath}/${entry}/ is missing a required file. Need at least one of: ${requiredFiles.join(", ")}.`,
       );
     }
   }
@@ -88,8 +94,8 @@ for (const section of RESOURCE_SECTIONS) {
     sectionPath: `content/${section}`,
     sectionDir: resolve(ROOT, "content", section),
     allowedFiles: RESOURCE_ALLOWED_FILES,
-    requiredFile: RESOURCE_REQUIRED_FILE,
-    emptyHint: "Add content.md.",
+    requiredFiles: RESOURCE_REQUIRED_FILES,
+    emptyHint: "Add goal.md or content.md.",
     flatHint: `Flat files are not allowed. Move to content/${section}/<slug>/content.md.`,
   });
 }

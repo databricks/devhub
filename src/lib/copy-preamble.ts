@@ -111,7 +111,7 @@ function buildLocalBootstrapBlock(
   return [
     "# Verify your local Databricks dev environment",
     "",
-    "A working Databricks CLI profile is the prerequisite for every step that follows. Walk the user through the recipe below — _even if they say their environment is already set up_. The verification steps are quick and prevent confusing failures further down.",
+    "A working Databricks CLI profile is the prerequisite for every step that follows. The goal below describes what a ready environment looks like. Use your installed Databricks agent skills to verify and set up the environment — _even if the user says their environment is already set up_.",
     "",
     absolutizeMarkdown(localBootstrap.trim(), siteOrigin),
   ].join("\n");
@@ -127,7 +127,7 @@ function buildTemplateBlock(kind: AgentPromptKind, body: string): string {
   return [
     `# The ${label} the user copied`,
     "",
-    `The full ${label} prompt is below. This is what the user wants to focus on today. Once the local-bootstrap above passes and the intent questions are answered, work through this content step by step.`,
+    `The ${label} goal is below — it describes what the user wants to build. Once the local-bootstrap above passes and the intent questions are answered, use your installed Databricks agent skills to implement it.`,
     "",
     body.trim(),
   ].join("\n");

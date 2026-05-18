@@ -23,7 +23,7 @@ import {
 import type { Example } from "@/lib/recipes/recipes";
 import { cookbooks, recipes } from "@/lib/recipes/recipes";
 import { useExampleSections } from "@/lib/use-raw-content-markdown";
-import { joinContentSections } from "@/lib/content-sections";
+import { goalOnly } from "@/lib/content-sections";
 import { TemplateImageCarousel } from "@/components/examples/template-image-carousel";
 import { TemplatePreviewImage } from "@/components/examples/template-preview-image";
 import { FallbackCardArt } from "@/components/examples/fallback-card-art";
@@ -136,7 +136,7 @@ export function ExampleDetail({
   const githubUrl = `${GITHUB_BASE}/${example.githubPath}/template`;
 
   const sections = useExampleSections(example.id) ?? { content: "" };
-  const rawMarkdown = joinContentSections(sections);
+  const rawMarkdown = goalOnly(sections);
 
   const includedCookbooks = example.cookbookIds
     .map((id) => cookbooks.find((c) => c.id === id))

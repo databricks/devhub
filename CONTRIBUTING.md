@@ -38,6 +38,23 @@ SHOW_DRAFTS=true
 
 A flag is **enabled only when its value is exactly `"true"`** — any other value (empty, `"1"`, `"yes"`) is treated as disabled.
 
+### Hackathon Banner
+
+The site-wide announcement bar that points visitors at [`/hackathon`](./src/pages/hackathon.tsx) is driven by env vars at build time and resolved by `src/lib/hackathon-banner-server.ts`. The banner uses Docusaurus' built-in `themeConfig.announcementBar` so it shows above the navbar on every page (docs, templates, solutions, MDX). It's intentionally **non-dismissible** so the banner stays as the only on-site entry point to `/hackathon` for the full event window.
+
+| Env var                    | Purpose                                                                                                                                                                                                                                                                 |
+| -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `HACKATHON_BANNER_ENABLED` | Escape hatch. `"true"` forces the banner on, `"false"` forces it off. Anything else (including unset) falls through to dates.                                                                                                                                           |
+| `HACKATHON_START`          | ISO date `YYYY-MM-DD`. Required (along with `HACKATHON_END`) for date-driven activation.                                                                                                                                                                                |
+| `HACKATHON_END`            | ISO date `YYYY-MM-DD`. Inclusive through 23:59:59.999 UTC of the given day.                                                                                                                                                                                             |
+| `HACKATHON_BANNER_TEXT`    | Optional override for the **lead-in text only** (HTML allowed). The "See resources" link to `/hackathon` is always appended, so a misconfigured override can never strand visitors on a banner with no way in. Defaults to `"Databricks Developer Hackathon is live."`. |
+
+Precedence: `HACKATHON_BANNER_ENABLED` wins. Otherwise the banner is active if both dates are set, parseable, `start <= end`, and "now" is within the window.
+
+The `/hackathon` page itself is always live (and discoverable in `sitemap.xml`) so the URL is shareable ahead of the event. It is not linked from the navbar or the footer — the banner is the only on-site entry point, and it only appears while the banner is active.
+
+Flipping the banner on Vercel is "edit env var → redeploy", the same model as `SHOW_DRAFTS`. Bump the `id` in `getHackathonBannerConfig` per event so prior dismissals (stored in `localStorage`) are reset for returning visitors.
+
 ### Site URL Resolution
 
 Anywhere we need an absolute URL — `llms.txt`, `sitemap.xml`, `robots.txt`, JSON-LD, `/api/markdown`, `/api/bootstrap-prompt`, `/api/mcp`, the `Copy prompt` / `Copy Markdown` buttons — we resolve the site origin in this order (see `src/lib/site-url.ts`):

@@ -1348,3 +1348,30 @@
 .db-docs-article .theme-doc-markdown th code {
   overflow-wrap: break-word;
 }
+
+/* Hackathon announcement bar — taller + a touch larger text than the
+ * Docusaurus defaults (30px / 14px). The height variable is the documented
+ * Docusaurus override; the font/padding rules target `.theme-announcement-bar`
+ * (a stable, unhashed Docusaurus theme class) so we don't depend on the
+ * hashed CSS Module class name. Mobile keeps `auto` height so wrapped text
+ * isn't clipped. */
+@media (min-width: 997px) {
+  :root {
+    --docusaurus-announcement-bar-height: 44px;
+  }
+}
+
+.theme-announcement-bar {
+  font-size: 0.9375rem;
+  line-height: 1.4;
+  font-weight: 500;
+  padding-block: 0.5rem;
+}
+
+.theme-announcement-bar a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  /* Breathing room between the lead text and the "See resources" CTA. */
+  margin-left: 0.25rem;
+}

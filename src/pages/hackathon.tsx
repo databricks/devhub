@@ -64,21 +64,21 @@ const TIMELINE = [
   {
     label: "Registration opens",
     date: "June 14, 2026",
-    detail: "Sign up on the event page \u2014 link coming soon.",
+    detail: "Sign up \u2014 more info coming soon.",
   },
   {
     label: "Hacking begins",
-    date: "June 15, 2026",
-    detail: "Kickoff livestream + prompts dropped.",
+    date: "June 15, 2026 \u00b7 8:00am",
+    detail: "Kickoff + prompts dropped.",
   },
   {
     label: "Submissions close",
-    date: "June 16, 2026 \u00b7 11:59pm PT",
-    detail: "Submit your repo, demo video, and one-paragraph writeup.",
+    date: "June 16, 2026 \u00b7 5:00pm",
+    detail: "Submit your completed app.",
   },
   {
-    label: "Winners announced",
-    date: "June 18, 2026",
+    label: "Judging + Winners announced",
+    date: "June 16, 2026 \u00b7 5:00pm - 9:00pm",
     detail: "Judging by Databricks engineering and DevRel.",
   },
 ];
@@ -108,7 +108,7 @@ const JUDGING_CRITERIA = [
 const FAQ = [
   {
     q: "Do I need a Databricks account to participate?",
-    a: "Yes. The free trial is enough for most submissions \u2014 sign up at databricks.com/signup.",
+    a: "Yes. A free edition account is enough for most submissions \u2014 sign up at databricks.com/learn/free-edition.",
   },
   {
     q: "Can I work in a team?",

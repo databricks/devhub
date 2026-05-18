@@ -84,6 +84,14 @@
       "destination": "/perspectives/$1"
     },
     {
+      "source": "/devhub/hackathon",
+      "destination": "/hackathon"
+    },
+    {
+      "source": "/devhub/hackathon/(.*)",
+      "destination": "/hackathon/$1"
+    },
+    {
       "source": "/devhub/assets/(.*)",
       "destination": "/assets/$1"
     },

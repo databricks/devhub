@@ -11,6 +11,7 @@ import remarkCliTabs from "./plugins/remark-cli-tabs";
 import remarkSiteUrl from "./plugins/remark-site-url";
 import robotsTxtPlugin from "./plugins/robots-txt";
 import { showDrafts } from "./src/lib/feature-flags-server";
+import { getHackathonBannerConfig } from "./src/lib/hackathon-banner-server";
 import {
   resolveSiteBaseUrl,
   resolveSiteOrigin,
@@ -22,6 +23,7 @@ import {
 const siteOrigin = resolveSiteOrigin();
 const siteBaseUrl = resolveSiteBaseUrl();
 const publicSiteUrl = siteUrlFromConfig(siteOrigin, siteBaseUrl);
+const hackathonBanner = getHackathonBannerConfig();
 
 const config: Config = {
   title: "Databricks Developer",
@@ -161,6 +163,7 @@ const config: Config = {
   ],
 
   themeConfig: {
+    ...(hackathonBanner && { announcementBar: hackathonBanner }),
     image: "img/databricks-social-card.svg",
     colorMode: {
       respectPrefersColorScheme: true,

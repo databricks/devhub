@@ -43,7 +43,7 @@ async function clickCopyPromptAndWaitForToast(
 }
 
 test.describe("copy markdown exports raw markdown on recipe pages", () => {
-  test("recipe detail page copies actual markdown with code fences", async ({
+  test("recipe detail page copies goal content with agent prompt wrapper", async ({
     page,
   }) => {
     await setupClipboardMock(page);
@@ -53,9 +53,8 @@ test.describe("copy markdown exports raw markdown on recipe pages", () => {
 
     const copied = await getCopiedText(page);
     expect(copied).toContain("# About DevHub");
-    expect(copied).toContain("## Set Up Your Local Dev Environment");
-    expect(copied).toContain("```bash");
-    expect(copied).toContain("databricks -v");
+    expect(copied).toContain("Install the Databricks CLI");
+    expect(copied).toContain("authenticated CLI profile");
     expect(copied).toContain("llms.txt");
   });
 });
@@ -75,14 +74,15 @@ test.describe("copy markdown exports raw markdown on template pages", () => {
     expect(copied).toContain("# Working with DevHub prompts");
     expect(copied).toContain("# What the user just did");
     expect(copied).toContain("# Verify your local Databricks dev environment");
-    expect(copied).toContain("## Set Up Your Local Dev Environment");
+    expect(copied).toContain("Install the Databricks CLI");
     // Cookbook body comes after the meta-prompt, with its own frontmatter:
     expect(copied).toContain('title: "AI Chat App"');
     expect(copied).toContain("# The cookbook the user copied");
-    expect(copied).toContain("```bash");
+    // Agent mode: recipe goals as components
+    expect(copied).toContain("## Component:");
   });
 
-  test("multi-recipe cookbook body no longer embeds the local-dev-environment recipe", async ({
+  test("multi-recipe cookbook body uses agent mode with component headings", async ({
     page,
   }) => {
     await setupClipboardMock(page);
@@ -92,13 +92,8 @@ test.describe("copy markdown exports raw markdown on template pages", () => {
 
     const copied = await getCopiedText(page);
     expect(copied).toContain("# About DevHub");
-    // The local-dev-environment recipe heading is present exactly once —
-    // injected by the meta-prompt, NOT duplicated inside the cookbook body.
-    const bootstrapHeadings = copied.match(
-      /^## Set Up Your Local Dev Environment$/gm,
-    );
-    expect(bootstrapHeadings?.length).toBe(1);
-    expect(copied).toContain("## Lakebase Data Persistence");
+    // Agent mode: recipe goals appear as labeled components, not full content
+    expect(copied).toContain("## Component: Lakebase Data Persistence");
     expect(copied).toContain("---");
   });
 });
@@ -112,7 +107,7 @@ test.describe("copy markdown exports raw markdown on example pages", () => {
 
     const copied = await getCopiedText(page);
     expect(copied).toContain("# About DevHub");
-    expect(copied).toContain("## Agentic Support Console");
+    expect(copied).toContain("# Agentic Support Console");
     expect(copied).toContain("Data Flow");
     expect(copied).toContain("Lakehouse Sync");
   });
@@ -125,7 +120,7 @@ test.describe("copy markdown exports raw markdown on example pages", () => {
 
     const copied = await getCopiedText(page);
     expect(copied).toContain("# About DevHub");
-    expect(copied).toContain("## SaaS Subscription Tracker");
+    expect(copied).toContain("# SaaS Subscription Tracker");
     expect(copied).toContain("Data Flow");
   });
 
@@ -152,12 +147,10 @@ test.describe("copy markdown exports raw markdown on example pages", () => {
     expect(copied).toContain(
       "These **templates** informed how this example was built",
     );
-    expect(copied).toContain(
-      "### 1. Clone locally and follow `template/README.md`",
-    );
+    expect(copied).toContain("### Clone and follow `template/README.md`");
   });
 
-  test("Banner Copy prompt copies full prompt with bash and ### substeps", async ({
+  test("Banner Copy prompt copies full prompt with bash and clone substeps", async ({
     page,
   }) => {
     await setupClipboardMock(page);
@@ -168,9 +161,7 @@ test.describe("copy markdown exports raw markdown on example pages", () => {
     const copied = await getCopiedText(page);
     expect(copied).toContain("# About DevHub");
     expect(copied).toContain("\n---\n\n# ");
-    expect(copied).toContain(
-      "### 1. Clone locally and follow `template/README.md`",
-    );
+    expect(copied).toContain("### Clone and follow `template/README.md`");
     expect(copied).toContain("```bash");
     expect(copied).toContain(
       "git clone --depth 1 https://github.com/databricks/devhub.git",

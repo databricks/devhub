@@ -45,13 +45,6 @@ export function useCookbookGoal(slug: string): string | undefined {
   return data.goalsBySlug[slug];
 }
 
-export function useCookbookIntro(slug: string): string | undefined {
-  const data = usePluginData(
-    "docusaurus-plugin-cookbooks",
-  ) as CookbooksGlobalData;
-  return data.introsBySlug[slug];
-}
-
 export function useExampleSections(slug: string): ContentSections | undefined {
   const data = usePluginData(
     "docusaurus-plugin-content-entries",

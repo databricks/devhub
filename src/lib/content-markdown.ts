@@ -29,7 +29,6 @@ export function hasSolutionSlug(rootDir: string, slug: string): boolean {
   return getSolutionSlugs(rootDir).includes(slug);
 }
 
-/** Recipes and examples live in `content/<section>/<slug>/` folders with a required content.md. */
 /**
  * Recipes and examples live in `content/<section>/<slug>/` folders.
  * A folder is published if it has either goal.md or content.md (or both).

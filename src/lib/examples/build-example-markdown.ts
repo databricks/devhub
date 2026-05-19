@@ -93,43 +93,25 @@ export function buildFullPrompt(
   lines.push("## Get started", "");
 
   if (isInitCommand(example.initCommand)) {
-    if (!hasGoal) {
-      const hasPrereqs = Boolean(sections.prerequisites);
-      const hasDeployBlock = Boolean(sections.deployment);
+    if (!hasGoal && sections.prerequisites) {
+      lines.push(sections.prerequisites, "");
+    }
 
-      if (hasPrereqs) {
-        lines.push(sections.prerequisites!, "");
-      }
+    lines.push(
+      "### Scaffold the project",
+      "",
+      "Run the command below to scaffold this example into a new directory using the [AppKit template system](/docs/appkit/v0/development/templates). It creates the app in your workspace, binds required resources, and writes a local `.env` with connection details resolved by the AppKit plugins.",
+      "",
+      "```bash",
+      example.initCommand,
+      "```",
+      "",
+    );
 
-      lines.push(
-        "### Scaffold the project",
-        "",
-        "Run the command below to scaffold this example into a new directory using the [AppKit template system](/docs/appkit/v0/development/templates). It creates the app in your workspace, binds required resources, and writes a local `.env` with connection details resolved by the AppKit plugins.",
-        "",
-        "```bash",
-        example.initCommand,
-        "```",
-        "",
-      );
-
-      if (hasDeployBlock) {
-        lines.push(sections.deployment!, "");
-      } else {
-        lines.push(
-          "A **`README.md`** ships inside the scaffolded project. Follow it end to end to configure, run, and deploy the app.",
-          "",
-        );
-      }
+    if (!hasGoal && sections.deployment) {
+      lines.push(sections.deployment, "");
     } else {
       lines.push(
-        "### Scaffold the project",
-        "",
-        "Run the command below to scaffold this example into a new directory using the [AppKit template system](/docs/appkit/v0/development/templates). It creates the app in your workspace, binds required resources, and writes a local `.env` with connection details resolved by the AppKit plugins.",
-        "",
-        "```bash",
-        example.initCommand,
-        "```",
-        "",
         "A **`README.md`** ships inside the scaffolded project. Follow it end to end to configure, run, and deploy the app.",
         "",
       );

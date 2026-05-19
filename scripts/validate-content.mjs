@@ -142,7 +142,7 @@ if (existsSync(cookbooksDir)) {
     sectionPath: "content/cookbooks",
     sectionDir: cookbooksDir,
     allowedFiles: COOKBOOK_ALLOWED_FILES,
-    emptyHint: "Add at least intro.md or remove the folder.",
+    emptyHint: "Add goal.md or intro.md, or remove the folder.",
     flatHint: "Cookbook content lives under content/cookbooks/<template-id>/.",
   });
 }

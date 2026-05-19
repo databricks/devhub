@@ -9,21 +9,18 @@ The code examples below use a generic `items` resource as a placeholder. Replace
 ### 1. New app: scaffold with the Lakebase feature
 
 ```bash
-databricks apps init \
-  --name <app-name> \
-  --version latest \
-  --features=lakebase \
-  --set 'lakebase.postgres.branch=projects/<project-name>/branches/production' \
-  --set 'lakebase.postgres.database=projects/<project-name>/branches/production/databases/<db-name>' \
-  --set 'lakebase.postgres.databaseName=<postgres-database-name>' \
-  --set 'lakebase.postgres.endpointPath=projects/<project-name>/branches/production/endpoints/primary' \
-  --set 'lakebase.postgres.host=<endpoint-host>' \
-  --set 'lakebase.postgres.port=5432' \
-  --set 'lakebase.postgres.sslmode=require' \
+databricks apps init --name <app-name> --features lakebase \
+  --set "lakebase.postgres.branch=<BRANCH_NAME>" \
+  --set "lakebase.postgres.database=<DATABASE_NAME>" \
   --run none --profile <PROFILE>
 ```
 
-Use the values returned by `list-databases` and `list-endpoints`. The generated template currently requires all postgres fields together during non-interactive scaffolding.
+Where `<BRANCH_NAME>` is the full branch resource name (e.g. `projects/<PROJECT_ID>/branches/<BRANCH_ID>`) and `<DATABASE_NAME>` is the full database resource name (e.g. `projects/<PROJECT_ID>/branches/<BRANCH_ID>/databases/<DB_ID>`). Get these from:
+
+```bash
+databricks postgres list-branches projects/<PROJECT_ID> --profile <PROFILE>
+databricks postgres list-databases projects/<PROJECT_ID>/branches/<BRANCH_ID> --profile <PROFILE>
+```
 
 This scaffolds a complete app with Lakebase already wired up, including a sample CRUD app. Skip to step 3 to configure environment variables, then step 5 to deploy.
 
@@ -37,7 +34,7 @@ The scaffolded Lakebase sample uses `lakebase` in route names and file paths to 
 
 ### 2. Existing app: add Lakebase manually
 
-The following changes match what `apps init --features=lakebase` generates. Apply them to an existing scaffolded AppKit app.
+The following changes match what `apps init --features lakebase` generates. Apply them to an existing scaffolded AppKit app.
 
 > **Tip:** The code below may be outdated. To get the latest, clone `https://github.com/databricks/appkit` and look in the `template/` directory. Search for `{{if .plugins.lakebase}}` to find all lakebase-conditional files and blocks. Files entirely wrapped in that conditional are lakebase-only; shared files like `App.tsx` and `server.ts` contain conditional blocks you can extract.
 

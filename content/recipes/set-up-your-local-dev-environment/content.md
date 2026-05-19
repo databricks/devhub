@@ -53,6 +53,8 @@ databricks -v
 
 ### 3. Authenticate a profile
 
+Always use OAuth for local development. Personal Access Tokens (PATs) are for CI/CD or non-interactive environments only.
+
 Browser-based OAuth is the default for local use:
 
 ```bash

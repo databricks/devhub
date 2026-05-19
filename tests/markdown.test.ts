@@ -92,7 +92,7 @@ describe("detail markdown resolver", () => {
   test("template markdown for cookbook uses agent mode (goals only, no prereqs or full content)", () => {
     const markdown = getDetailMarkdown("templates", "ai-chat-app");
     // Agent mode: cookbook goal + recipe goals as components
-    expect(markdown).toContain("What you are building");
+    expect(markdown).toContain("streaming AI chat app on Databricks");
     expect(markdown).toContain("## Component:");
     // Agent mode should NOT include prerequisites section
     expect(markdown).not.toContain("## Prerequisites");
@@ -100,7 +100,7 @@ describe("detail markdown resolver", () => {
 
   test("template markdown includes cookbook goal.md above recipe goals", () => {
     const markdown = getDetailMarkdown("templates", "ai-chat-app");
-    const goalIdx = markdown.indexOf("## What you are building");
+    const goalIdx = markdown.indexOf("streaming AI chat app on Databricks");
     const componentIdx = markdown.indexOf("## Component:");
     expect(goalIdx).toBeGreaterThanOrEqual(0);
     expect(goalIdx).toBeLessThan(componentIdx);

@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { CookbookDetail } from "@/components/cookbooks/cookbook-detail";
 import { useCookbookMarkdown } from "@/lib/use-cookbook-markdown";
+import Goal from "@site/content/cookbooks/operational-data-analytics/goal.md";
 import UnityCatalogSetupPrereqs from "@site/content/recipes/unity-catalog-setup/prerequisites.md";
 import UnityCatalogSetupContent from "@site/content/recipes/unity-catalog-setup/content.md";
 import LakebaseCreateInstancePrereqs from "@site/content/recipes/lakebase-create-instance/prerequisites.md";
@@ -19,6 +20,7 @@ export default function OperationalDataAnalyticsPage(): ReactNode {
 
   return (
     <CookbookDetail cookbook={cookbook} rawMarkdown={rawMarkdown}>
+      <Goal />
       <h2 id="prerequisites">Prerequisites</h2>
       <UnityCatalogSetupPrereqs />
       <LakebaseCreateInstancePrereqs />

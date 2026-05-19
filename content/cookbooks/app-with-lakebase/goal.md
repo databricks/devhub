@@ -1,5 +1,3 @@
-## What you are building
-
 A Databricks App with Lakebase Postgres for persistent data storage. The app has schema setup, full CRUD API routes, and deploys to the Databricks Apps platform.
 
 ### Components

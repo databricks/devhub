@@ -1,7 +1,7 @@
 import { cookbooks, recipes, type Cookbook } from "@/lib/recipes/recipes";
 import {
   useAllRecipeSections,
-  useCookbookIntro,
+  useCookbookGoal,
 } from "@/lib/use-raw-content-markdown";
 import { composeCookbookMarkdown } from "@/lib/cookbook-composition";
 
@@ -11,10 +11,9 @@ type UseCookbookMarkdownResult = {
 };
 
 /**
- * Resolves a cookbook by id and assembles its agent-ready markdown by joining
- * each child recipe's sections via `composeCookbookMarkdown`. Throws on
- * missing cookbook, recipe, or recipe sections so config typos surface at
- * page render time rather than producing silently empty exports.
+ * Resolves a cookbook by id and assembles its agent-ready markdown using
+ * goal-only mode: the cookbook's goal.md + each recipe's goal.md as
+ * labeled components. Skills handle implementation.
  */
 export function useCookbookMarkdown(
   cookbookId: string,
@@ -23,7 +22,7 @@ export function useCookbookMarkdown(
   if (!cookbook) throw new Error(`Cookbook ${cookbookId} not found`);
 
   const sectionsBySlug = useAllRecipeSections();
-  const intro = useCookbookIntro(cookbookId);
+  const goal = useCookbookGoal(cookbookId);
 
   const recipeInputs = cookbook.recipeIds.map((id) => {
     const recipe = recipes.find((r) => r.id === id);
@@ -37,8 +36,9 @@ export function useCookbookMarkdown(
   const rawMarkdown = composeCookbookMarkdown({
     cookbookName: cookbook.name,
     cookbookDescription: cookbook.description,
-    intro,
+    goal,
     recipes: recipeInputs,
+    mode: "agent",
   });
 
   return { cookbook, rawMarkdown };

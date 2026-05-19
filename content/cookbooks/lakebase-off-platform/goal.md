@@ -1,5 +1,3 @@
-## What you are building
-
 A connection from an app hosted outside the Databricks Apps platform (for example on AWS, Vercel, or Netlify) to Lakebase Postgres. The app uses portable environment configuration, token management with automatic credential refresh, and Drizzle ORM for type-safe database access.
 
 ### Components

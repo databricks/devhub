@@ -1,5 +1,3 @@
-## What you are building
-
 An end-to-end operational data analytics pipeline: data flows from an OLTP database (Lakebase Postgres) through CDC replication into Unity Catalog, gets transformed through a medallion architecture (bronze/silver/gold layers), and is ready for dashboards and downstream consumers.
 
 ### Components

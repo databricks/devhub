@@ -7,7 +7,10 @@ const CONTENT_SECTION_FILES = [
 ] as const;
 export type ContentSectionFile = (typeof CONTENT_SECTION_FILES)[number];
 
-/** Required file in every content folder — without it the slug is not published. */
+/**
+ * Legacy constant for backward compat. Slug detection in content-markdown.ts
+ * now accepts either goal.md or content.md as the required file.
+ */
 export const REQUIRED_CONTENT_SECTION_FILE: ContentSectionFile = "content";
 
 export type ContentSections = {
@@ -31,17 +34,6 @@ export function goalOnly(sections: ContentSections): string {
 /** Joins present sections in display order (prerequisites → content → deployment). */
 export function joinContentSections(sections: ContentSections): string {
   const parts = [
-    sections.prerequisites,
-    sections.content,
-    sections.deployment,
-  ].filter((part): part is string => Boolean(part && part.trim()));
-  return parts.map((part) => part.trim()).join("\n\n");
-}
-
-/** Joins goal + content for human pages. Falls back to joinContentSections(). */
-export function joinGoalAndContent(sections: ContentSections): string {
-  const parts = [
-    sections.goal,
     sections.prerequisites,
     sections.content,
     sections.deployment,

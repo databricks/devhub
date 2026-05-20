@@ -6,10 +6,7 @@ import {
   getSolutionSlugs,
   readContentSections,
 } from "../src/lib/content-markdown";
-import {
-  joinContentSections,
-  type ContentSections,
-} from "../src/lib/content-sections";
+import { goalOnly, type ContentSections } from "../src/lib/content-sections";
 import { routePathWithBaseUrl } from "../src/lib/site-paths";
 import {
   recipes,
@@ -53,12 +50,21 @@ function createFolderRouteModuleSource(
   sections: ContentSections,
 ): string {
   const section = entryType === "recipe" ? "recipes" : "examples";
+  const hasGoal = sections.goal !== undefined;
   const hasPrereqs = sections.prerequisites !== undefined;
   const hasDeploy = sections.deployment !== undefined;
 
-  const imports: string[] = [
-    `import Content from "@site/content/${section}/${slug}/content.md";`,
-  ];
+  const imports: string[] = [];
+  if (hasGoal) {
+    imports.push(
+      `import Goal from "@site/content/${section}/${slug}/goal.md";`,
+    );
+  }
+  if (sections.content !== undefined) {
+    imports.push(
+      `import Content from "@site/content/${section}/${slug}/content.md";`,
+    );
+  }
   if (hasPrereqs) {
     imports.push(
       `import Prerequisites from "@site/content/${section}/${slug}/prerequisites.md";`,
@@ -77,7 +83,11 @@ function createFolderRouteModuleSource(
     ? '      <h2 id="deployment">Deployment</h2>\n      <Deployment />'
     : null;
 
-  const children = [prereqsBlock, "      <Content />", deployBlock]
+  const goalBlock = hasGoal ? "      <Goal />" : null;
+  const contentBlock =
+    sections.content !== undefined ? "      <Content />" : null;
+
+  const children = [goalBlock, prereqsBlock, contentBlock, deployBlock]
     .filter(Boolean)
     .join("\n");
 
@@ -214,7 +224,7 @@ export default function contentEntriesPlugin(
             slug,
           );
           sectionsBySlug[slug] = sections;
-          rawMarkdownBySlug[slug] = joinContentSections(sections);
+          rawMarkdownBySlug[slug] = goalOnly(sections);
         } else {
           const filePath = resolve(
             context.siteDir,

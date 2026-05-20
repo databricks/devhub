@@ -2,7 +2,7 @@ import { readFileSync } from "fs";
 import { resolve } from "path";
 import type { LoadContext, Plugin } from "@docusaurus/types";
 import { ABOUT_DEVHUB_SLUG } from "../src/lib/bootstrap-prompt";
-import { joinContentSections } from "../src/lib/content-sections";
+import { goalOnly } from "../src/lib/content-sections";
 import { readContentSections } from "../src/lib/content-markdown";
 import type { AgentPromptParts } from "../src/lib/copy-preamble";
 
@@ -29,7 +29,7 @@ function readMarkdownFile(siteDir: string, slug: string): string {
 }
 
 function readLocalBootstrap(siteDir: string): string {
-  return joinContentSections(
+  return goalOnly(
     readContentSections(siteDir, "recipes", LOCAL_BOOTSTRAP_SLUG),
   );
 }

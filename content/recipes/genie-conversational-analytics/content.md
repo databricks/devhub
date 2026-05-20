@@ -53,26 +53,32 @@ databricks apps init \
 
 **Warning: Fix generated `databricks.yml` before deploying**
 
-The scaffold generates a `genie_space_name` variable and references it as `name: ${var.genie_space_name}`, but never assigns a value. `bundle deploy` will fail with _no value assigned to required variable genie_space_name_.
+The scaffold generates a `genie_space_name` variable and references it as `name: ${var.genie_space_name}`, but never assigns a value in `targets:`. `bundle deploy` will fail with _no value assigned to required variable genie_space_name_.
 
-Your `variables:` block should look like this after the fix — only `genie_space_id`, no `genie_space_name`:
+Assign both variables in your `targets:` block:
 
 ```yaml
 variables:
   genie_space_id:
-    description: Default Genie Space ID
+    description: Genie Space ID
+  genie_space_name:
+    description: Genie Space name
+
+targets:
+  default:
+    variables:
+      genie_space_id: <your-space-id>
+      genie_space_name: <your-space-display-name>
 ```
 
-And the `genie_space` resource block should use a hardcoded label:
+The `genie_space` resource block should reference both variables:
 
 ```yaml
 genie_space:
-  name: genie-space
+  name: ${var.genie_space_name}
   space_id: ${var.genie_space_id}
   permission: CAN_RUN
 ```
-
-The `name: genie-space` is an internal label used by `app.yaml` (`valueFrom: genie-space`), not the Genie space display title.
 
 Skip to step 8 to deploy.
 

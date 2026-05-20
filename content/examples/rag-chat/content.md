@@ -1,36 +1,21 @@
-## RAG Chat App
+### 2. Create the Lakebase Postgres prerequisites
 
-This template demonstrates a Retrieval-Augmented Generation chat app built on Databricks: a user question is embedded, similar documents are retrieved from a pgvector store in Lakebase Postgres, and the retrieved context is injected into a Model Serving call that streams the answer back. Conversations and sources are persisted per chat in Lakebase.
+The template's AppKit Lakebase plugin requires an existing Postgres **branch** and **database**. `databricks postgres create-project` automatically provisions a default branch named `production` and a default database on it, so one command is all you need. Pick a short lowercase project id and export the resolved resource names — the next step's `databricks apps init` command reads them as shell variables.
 
-### Data Flow
+```bash
+PROJECT_ID=rag-chat
 
-All retrieval and chat state live in Lakebase Postgres; generation uses AI Gateway:
+databricks postgres create-project "$PROJECT_ID"
 
-1. **Seeding** pulls a handful of Wikipedia articles on startup, chunks them by paragraph, embeds each chunk through the AI Gateway embeddings endpoint (`databricks-gte-large-en` by default), and writes rows into `rag.documents` with a `vector(1024)` column.
-2. **User turns** are embedded with the same endpoint. The server runs a pgvector cosine-similarity search to retrieve the top-k matching chunks.
-3. **Context injection**: the retrieved chunks are prepended as a system message before the user's conversation history is sent to the chat completion endpoint (`databricks-gpt-5-4-mini` by default) via AI Gateway.
-4. **Streaming**: `streamText` streams tokens back to the client while an `onFinish` callback appends the assistant turn to Lakebase.
-5. **Chat history**: every user and assistant turn is persisted in `chat.messages`, keyed by `chat_id`, so conversations can be resumed.
+export BRANCH_NAME="projects/$PROJECT_ID/branches/production"
+export DATABASE_NAME=$(databricks api get "/api/2.0/postgres/$BRANCH_NAME/databases" -o json | \
+  python3 -c "import json,sys; print(json.load(sys.stdin)['databases'][0]['name'])")
 
-### Template Approach
+echo "Branch:   $BRANCH_NAME"
+echo "Database: $DATABASE_NAME"
+```
 
-Unlike the other templates, **this template is designed to be consumed via `databricks apps init`**, not `git clone`. The init flow:
+`create-project` is long-running; the CLI waits for it to finish by default. **If it reports `already exists`:**
 
-- Prompts for the Lakebase Postgres branch and database resource names.
-- Auto-resolves `PGHOST`, `PGDATABASE`, and `LAKEBASE_ENDPOINT` into your local `.env` by calling the Lakebase APIs.
-- Writes `DATABRICKS_CONFIG_PROFILE` or `DATABRICKS_HOST` based on your Databricks CLI configuration.
-- Drops you into a ready-to-run project directory named by `--name`.
-
-This validates the [AppKit templates system](/docs/appkit/v0/development/templates) as a way to ship DevHub templates — see `appkit.plugins.json` and `.env.tmpl` in the template for how it works.
-
-### What to Adapt
-
-Setup and provisioning are documented in the repository's **`template/README.md`**.
-
-To make this template your own:
-
-- **Lakebase**: Point the bundle at your own Lakebase project, branch, and database (prompted at init time).
-- **Model Serving endpoint**: Override `DATABRICKS_ENDPOINT` for a different chat model (e.g. `databricks-claude-sonnet-4`).
-- **Embeddings endpoint**: Override `DATABRICKS_EMBEDDING_ENDPOINT` if you want a different embedding model. Make sure the `vector(N)` dimension in `server/lib/rag-store.ts` matches.
-- **Seed data**: Replace the Wikipedia article list in `server/lib/seed-data.ts` with your own corpus. The chunking function splits on paragraph boundaries — adapt if your source has different structure.
-- **Retrieval**: The default top-k is 5 and the similarity metric is cosine. Tune in `retrieveSimilar()`.
+- **Prefer picking a different `PROJECT_ID`** (e.g. append a short suffix) and re-export `BRANCH_NAME` / `DATABASE_NAME` from the new id. Lakebase projects can hold data that other apps and pipelines depend on, so do **not** run `databricks postgres delete-project` on an existing project without explicit confirmation from the user that nothing else uses it.
+- **Eventual-consistency exception:** if you just deleted a project with this id in the same session and `databricks postgres list-projects` no longer shows it, wait 30–60s and retry `create-project` — the control plane is briefly inconsistent after deletion.

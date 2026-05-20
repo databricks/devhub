@@ -96,7 +96,7 @@ describe("validate-content script", () => {
     const result = runValidator(workDir);
     expect(result.status).toBe(1);
     expect(result.stderr).toContain("no-content");
-    expect(result.stderr).toContain("missing the required content.md");
+    expect(result.stderr).toContain("missing a required file");
   });
 
   test("fails when a folder contains a disallowed filename", () => {

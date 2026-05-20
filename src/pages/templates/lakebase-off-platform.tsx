@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { CookbookDetail } from "@/components/cookbooks/cookbook-detail";
 import { useCookbookMarkdown } from "@/lib/use-cookbook-markdown";
+import Goal from "@site/content/cookbooks/lakebase-off-platform/goal.md";
 import LakebaseCreateInstancePrereqs from "@site/content/recipes/lakebase-create-instance/prerequisites.md";
 import LakebaseCreateInstanceContent from "@site/content/recipes/lakebase-create-instance/content.md";
 import LakebaseOffPlatformEnvManagementPrereqs from "@site/content/recipes/lakebase-off-platform-env-management/prerequisites.md";
@@ -17,6 +18,7 @@ export default function LakebaseOffPlatformPage(): ReactNode {
 
   return (
     <CookbookDetail cookbook={cookbook} rawMarkdown={rawMarkdown}>
+      <Goal />
       <h2 id="prerequisites">Prerequisites</h2>
       <LakebaseCreateInstancePrereqs />
       <LakebaseOffPlatformEnvManagementPrereqs />

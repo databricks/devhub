@@ -60,25 +60,27 @@ describe("detail markdown resolver", () => {
     expect(frontmatterCount).toBe(2);
   });
 
-  test("resolves recipe markdown", () => {
+  test("resolves recipe markdown (returns goal when goal.md exists)", () => {
     const markdown = getDetailMarkdown(
       "recipes",
       "set-up-your-local-dev-environment",
     );
-    expect(markdown).toContain("## Set Up Your Local Dev Environment");
-    expect(markdown).toContain("databricks -v");
+    // Agent prompt returns goal.md content (no heading, just description)
+    expect(markdown).toContain("Install the Databricks CLI");
+    expect(markdown).toContain("authenticated CLI profile");
   });
 
   test("resolves example markdown", () => {
     const markdown = getDetailMarkdown("examples", "agentic-support-console");
-    expect(markdown).toContain("## Agentic Support Console");
+    expect(markdown).toContain("AI-powered support console");
     expect(markdown).toContain("Data Flow");
   });
 
-  test("resolves template markdown", () => {
+  test("resolves template markdown (cookbook in agent mode)", () => {
     const markdown = getDetailMarkdown("templates", "ai-chat-app");
     expect(markdown).toContain("# AI Chat App");
-    expect(markdown).toContain("## Lakebase Agent Memory");
+    // Agent mode uses "Component:" headings
+    expect(markdown).toContain("Component: Lakebase Agent Memory");
   });
 
   test("template markdown no longer embeds the local dev environment recipe (now injected by the meta-prompt)", () => {
@@ -87,33 +89,21 @@ describe("detail markdown resolver", () => {
     expect(markdown).not.toMatch(/^### Set Up Your Local Dev Environment$/m);
   });
 
-  test("template markdown hoists all recipe prereqs before any recipe content", () => {
+  test("template markdown for cookbook uses agent mode (goals only, no prereqs or full content)", () => {
     const markdown = getDetailMarkdown("templates", "ai-chat-app");
-
-    const firstLineStart = (pattern: RegExp): number =>
-      markdown.search(pattern);
-
-    const prereqIdx = firstLineStart(/^## Prerequisites$/m);
-    const foundationContentIdx = firstLineStart(
-      /^## Query AI Gateway Endpoints$/m,
-    );
-    const lakebaseContentIdx = firstLineStart(/^## Lakebase Agent Memory$/m);
-
-    expect(prereqIdx).toBeGreaterThanOrEqual(0);
-    expect(prereqIdx).toBeLessThan(foundationContentIdx);
-    expect(foundationContentIdx).toBeLessThan(lakebaseContentIdx);
-    // Only one combined `## Prerequisites` heading, with demoted H3 per recipe.
-    expect(markdown.match(/^## Prerequisites$/gm)?.length).toBe(1);
-    expect(markdown).toMatch(/^### Query AI Gateway Endpoints$/m);
-    expect(markdown).toMatch(/^### Lakebase Agent Memory$/m);
+    // Agent mode: cookbook goal + recipe goals as components
+    expect(markdown).toContain("streaming AI chat app on Databricks");
+    expect(markdown).toContain("## Component:");
+    // Agent mode should NOT include prerequisites section
+    expect(markdown).not.toContain("## Prerequisites");
   });
 
-  test("template markdown includes cookbook intro.md above Prerequisites when present", () => {
+  test("template markdown includes cookbook goal.md above recipe goals", () => {
     const markdown = getDetailMarkdown("templates", "ai-chat-app");
-    const introIdx = markdown.indexOf("## What you are building");
-    const prereqIdx = markdown.indexOf("## Prerequisites");
-    expect(introIdx).toBeGreaterThanOrEqual(0);
-    expect(introIdx).toBeLessThan(prereqIdx);
+    const goalIdx = markdown.indexOf("streaming AI chat app on Databricks");
+    const componentIdx = markdown.indexOf("## Component:");
+    expect(goalIdx).toBeGreaterThanOrEqual(0);
+    expect(goalIdx).toBeLessThan(componentIdx);
     expect(markdown).toContain("How the steps fit together");
   });
 
@@ -130,18 +120,18 @@ describe("templates section resolves recipes, examples, and cookbooks", () => {
       "templates",
       "set-up-your-local-dev-environment",
     );
-    expect(markdown).toContain("## Set Up Your Local Dev Environment");
+    expect(markdown).toContain("Install the Databricks CLI");
   });
 
   test("resolves an example slug via templates", () => {
     const markdown = getDetailMarkdown("templates", "agentic-support-console");
-    expect(markdown).toContain("## Agentic Support Console");
+    expect(markdown).toContain("AI-powered support console");
   });
 
   test("resolves a cookbook slug via templates", () => {
     const markdown = getDetailMarkdown("templates", "ai-chat-app");
     expect(markdown).toContain("# AI Chat App");
-    expect(markdown).toContain("## Lakebase Agent Memory");
+    expect(markdown).toContain("Component: Lakebase Agent Memory");
   });
 
   test("throws for unknown template slug", () => {
@@ -281,7 +271,7 @@ describe("slug normalization strips .md extension", () => {
       "recipes",
       "set-up-your-local-dev-environment.md",
     );
-    expect(markdown).toContain("## Set Up Your Local Dev Environment");
+    expect(markdown).toContain("Install the Databricks CLI");
   });
 
   test("templates slug with .md extension resolves", () => {
@@ -289,6 +279,6 @@ describe("slug normalization strips .md extension", () => {
       "templates",
       "agentic-support-console.md",
     );
-    expect(markdown).toContain("## Agentic Support Console");
+    expect(markdown).toContain("AI-powered support console");
   });
 });

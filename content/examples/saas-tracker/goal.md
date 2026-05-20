@@ -1,5 +1,3 @@
-## SaaS Subscription Tracker
-
 This template demonstrates a straightforward internal CRUD tool built on Databricks: a SaaS subscription tracker where teams log the tools they use, who owns each subscription, what it costs, and when it renews. A Genie space provides self-serve analytics over the subscription data.
 
 ### Data Flow

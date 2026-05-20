@@ -179,7 +179,7 @@ describe("/api/markdown about-devhub preamble policy", () => {
     });
     expect(result.statusCode).toBe(200);
     expect(result.body.startsWith("# About DevHub")).toBe(true);
-    expect(result.body).toContain("## Agentic Support Console");
+    expect(result.body).toContain("Agentic Support Console");
   });
 
   test("templates index does NOT include the preamble", () => {

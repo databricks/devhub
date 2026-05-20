@@ -37,30 +37,47 @@ Autoscaling CUs are physically 8x smaller than Provisioned CUs, so per-CU throug
 
 ### 1. Create a synced table
 
+> Your Lakebase database must be registered as a UC catalog first (one-time setup per project). If not already done:
+>
+> ```bash
+> databricks postgres create-catalog <CATALOG_NAME> \
+>   --json '{
+>     "spec": {
+>       "postgres_database": "<POSTGRES_DATABASE>",
+>       "branch": "projects/<PROJECT_ID>/branches/<BRANCH_ID>"
+>     }
+>   }' --profile <PROFILE>
+> ```
+
 ```bash
-databricks database create-synced-database-table \
+databricks postgres create-synced-table <LAKEBASE_CATALOG>.<SCHEMA>.<SYNCED_TABLE_NAME> \
   --json '{
-    "name": "<CATALOG>.<SCHEMA>.<SYNCED_TABLE_NAME>",
-    "database_instance_name": "<INSTANCE_NAME>",
-    "logical_database_name": "<POSTGRES_DATABASE>",
     "spec": {
       "source_table_full_name": "<CATALOG>.<SCHEMA>.<SOURCE_TABLE>",
       "primary_key_columns": ["<PRIMARY_KEY_COLUMN>"],
       "scheduling_policy": "<SNAPSHOT|TRIGGERED|CONTINUOUS>",
-      "create_database_objects_if_missing": true
+      "branch": "projects/<PROJECT_ID>/branches/<BRANCH_ID>",
+      "postgres_database": "databricks_postgres",
+      "create_database_objects_if_missing": true,
+      "new_pipeline_spec": {
+        "storage_catalog": "<REGULAR_UC_CATALOG>",
+        "storage_schema": "default"
+      }
     }
   }' --profile <PROFILE>
 ```
 
-> If your Lakebase database is **registered as a Unity Catalog catalog**, you can omit `database_instance_name` and `logical_database_name`.
+`new_pipeline_spec.storage_catalog` must be a **regular** UC catalog for DLT pipeline metadata, not the Lakebase catalog. Long-running operation; the CLI waits by default. Use `--no-wait` to return immediately.
+
+> **DABs:** Do not use `synced_database_tables` in DABs with Autoscaling projects — it maps to the Provisioned Terraform resource and may create unintended Provisioned instances. DAB support for Autoscaling synced tables is not yet available. Use the CLI commands above.
 
 Verify:
 
 ```bash
-databricks database get-synced-database-table <CATALOG>.<SCHEMA>.<SYNCED_TABLE_NAME> --profile <PROFILE>
+databricks postgres get-synced-table \
+  "synced_tables/<LAKEBASE_CATALOG>.<SCHEMA>.<SYNCED_TABLE_NAME>" \
+  --profile <PROFILE>
 ```
-
-> **Important:** If your Autoscaling project was created via the `/postgres/` API (not `/database/`), programmatic synced table creation is not yet available via CLI. Use the Databricks UI as a fallback. In **Catalog**, select the source table → **Create synced table**, then choose your Lakebase project, branch, sync mode, and pipeline. This gap is expected to close soon.
 
 ### 2. Configure pipeline reuse
 
@@ -80,8 +97,8 @@ The initial snapshot runs automatically on creation. For **Snapshot** and **Trig
 Trigger a sync update programmatically via the Databricks CLI. Look up the pipeline ID for the synced table, then start an update:
 
 ```bash
-PIPELINE_ID=$(databricks database get-synced-database-table \
-  <CATALOG>.<SCHEMA>.<SYNCED_TABLE_NAME> \
+PIPELINE_ID=$(databricks postgres get-synced-table \
+  "synced_tables/<LAKEBASE_CATALOG>.<SCHEMA>.<SYNCED_TABLE_NAME>" \
   --output json --profile <PROFILE> \
   | jq -r '.data_synchronization_status.pipeline_id')
 

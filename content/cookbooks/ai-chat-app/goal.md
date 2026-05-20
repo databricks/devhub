@@ -1,5 +1,3 @@
-## What you are building
-
 A streaming AI chat app on Databricks: a user sends a message, the server authenticates with the Databricks CLI profile (or a service-principal token in production), calls an AI Gateway chat endpoint via the OpenAI-compatible provider, and streams the answer back token-by-token. Chat sessions and messages are persisted in Lakebase Postgres so conversations survive page refreshes and redeploys.
 
 ### How the steps fit together

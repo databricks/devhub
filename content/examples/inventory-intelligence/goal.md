@@ -1,5 +1,3 @@
-## Inventory Intelligence
-
 This template builds a full retail inventory management system on the Databricks stack: a React app where store managers monitor stock health, review AI-generated replenishment recommendations, and approve purchase orders — all powered by a live medallion pipeline and pluggable demand forecast job.
 
 ### Data Flow

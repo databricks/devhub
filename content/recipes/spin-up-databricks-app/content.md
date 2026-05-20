@@ -73,7 +73,11 @@ agent-browser open http://localhost:3000
 
 Otherwise share the localhost URL with the user and ask them to click through the key flows. Do not deploy until the local app behaves as intended — Databricks Apps deploys are not free and a broken local build will not magically fix itself in production.
 
-### 6. Validate and deploy
+### 6. Update smoke tests
+
+Before validating, update `tests/smoke.spec.ts` to match your app's actual content. The default selectors look for "Minimal Databricks App" and "hello world" text, which will fail on any customized app. Use `getByRole`, `getByText`, or `getByPlaceholder` — never `getByLabelText` (that is a React Testing Library method, not Playwright). Keep result sets under the 1 MB analytics-event payload cap — queries returning thousands of rows cause `INVALID_REQUEST: Event exceeds max size`. Use `LIMIT` or aggregated queries.
+
+### 7. Validate and deploy
 
 Run the project validator first (build + typecheck + lint) so the deploy does not fail on something that would have been caught locally:
 
@@ -89,7 +93,7 @@ databricks apps deploy --profile <PROFILE>
 
 The CLI uploads the project, builds it on Databricks, and starts the app. On success it prints the workspace URL.
 
-### 7. Verify the deployed app
+### 8. Verify the deployed app
 
 ```bash
 databricks apps get <app-name> --profile <PROFILE> -o json

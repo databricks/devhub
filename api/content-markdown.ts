@@ -10,9 +10,10 @@ import {
   hasContentSlug,
   hasSolutionSlug,
   readContentSections,
+  readCookbookGoal,
   readCookbookIntro,
 } from "../src/lib/content-markdown";
-import { joinContentSections } from "../src/lib/content-sections";
+import { goalOnly } from "../src/lib/content-sections";
 import { buildCookbookMarkdownDocument } from "../src/lib/cookbook-composition";
 import { expandMdxImports } from "../src/lib/expand-mdx";
 import {
@@ -168,7 +169,7 @@ function readRecipeMarkdown(rootDir: string, slug: string): string {
   if (!hasContentSlug(rootDir, "recipes", slug)) {
     throw new Error(`Recipe page not found: "${slug}"`);
   }
-  return joinContentSections(readContentSections(rootDir, "recipes", slug));
+  return goalOnly(readContentSections(rootDir, "recipes", slug));
 }
 
 function readExampleMarkdown(rootDir: string, slug: string): string {
@@ -176,9 +177,7 @@ function readExampleMarkdown(rootDir: string, slug: string): string {
     throw new Error(`Example page not found: "${slug}"`);
   }
 
-  const content = joinContentSections(
-    readContentSections(rootDir, "examples", slug),
-  );
+  const content = goalOnly(readContentSections(rootDir, "examples", slug));
 
   const example = examples.find((e) => e.id === slug);
   if (!example) {
@@ -230,11 +229,14 @@ function readCookbookMarkdown(rootDir: string, slug: string): string {
     };
   });
 
+  const goal = readCookbookGoal(rootDir, slug);
   return buildCookbookMarkdownDocument({
     cookbookName: cookbook.name,
     cookbookDescription: cookbook.description,
-    intro: readCookbookIntro(rootDir, slug),
+    goal,
+    intro: goal ? undefined : readCookbookIntro(rootDir, slug),
     recipes: recipeInputs,
+    mode: "agent",
   });
 }
 
@@ -345,7 +347,7 @@ export function loadAgentPromptParts(
     intentRecipe: readContent("intent-recipe"),
     intentCookbook: readContent("intent-cookbook"),
     intentExample: readContent("intent-example"),
-    localBootstrap: joinContentSections(
+    localBootstrap: goalOnly(
       readContentSections(rootDir, "recipes", LOCAL_BOOTSTRAP_SLUG),
     ),
   };

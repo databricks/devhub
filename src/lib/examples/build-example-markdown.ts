@@ -80,22 +80,21 @@ export function buildFullPrompt(
     includedRecipes,
     baseUrl,
   } = opts;
+  const hasGoal = Boolean(sections.goal);
   const cliTemplateUrl = `https://github.com/databricks/devhub/tree/main/${example.githubPath}`;
-  const lines: string[] = [
-    `# ${example.name}`,
-    "",
-    example.description,
-    "",
-    "## Get started",
-    "",
-  ];
+  const lines: string[] = [`# ${example.name}`, "", example.description, ""];
+
+  // When goal.md exists, use it as the body and skip prerequisites/content/deployment.
+  // The agent gets the outcome description + scaffold entry point; skills handle implementation.
+  if (hasGoal) {
+    lines.push(sections.goal!.trim(), "");
+  }
+
+  lines.push("## Get started", "");
 
   if (isInitCommand(example.initCommand)) {
-    const hasPrereqs = Boolean(sections.prerequisites);
-    const hasDeployBlock = Boolean(sections.deployment);
-
-    if (hasPrereqs) {
-      lines.push(sections.prerequisites!, "");
+    if (!hasGoal && sections.prerequisites) {
+      lines.push(sections.prerequisites, "");
     }
 
     lines.push(
@@ -109,8 +108,8 @@ export function buildFullPrompt(
       "",
     );
 
-    if (hasDeployBlock) {
-      lines.push(sections.deployment!, "");
+    if (!hasGoal && sections.deployment) {
+      lines.push(sections.deployment, "");
     } else {
       lines.push(
         "A **`README.md`** ships inside the scaffolded project. Follow it end to end to configure, run, and deploy the app.",
@@ -138,7 +137,7 @@ export function buildFullPrompt(
     );
   }
 
-  if (sections.content) {
+  if (!hasGoal && sections.content) {
     lines.push("", sections.content);
   }
 

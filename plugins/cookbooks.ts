@@ -1,12 +1,15 @@
 import type { LoadContext, Plugin } from "@docusaurus/types";
 import {
   getCookbookSlugs,
+  readCookbookGoal,
   readCookbookIntro,
 } from "../src/lib/content-markdown";
 import { cookbooks } from "../src/lib/recipes/recipes";
 
 type CookbooksGlobalData = {
-  /** Raw `content/cookbooks/<slug>/intro.md` bodies keyed by cookbook id. */
+  /** Raw `content/cookbooks/<slug>/goal.md` bodies keyed by cookbook id. Falls back to intro.md. */
+  goalsBySlug: Record<string, string>;
+  /** @deprecated Use goalsBySlug. Kept for backward compat during transition. */
   introsBySlug: Record<string, string>;
 };
 
@@ -27,15 +30,22 @@ export default function cookbooksPlugin(context: LoadContext): Plugin<void> {
       const contentSlugs = getCookbookSlugs(context.siteDir);
       assertCookbookSlugParity(contentSlugs);
 
+      const goalsBySlug: Record<string, string> = {};
       const introsBySlug: Record<string, string> = {};
       for (const slug of contentSlugs) {
+        const goal = readCookbookGoal(context.siteDir, slug);
         const intro = readCookbookIntro(context.siteDir, slug);
-        if (intro) {
-          introsBySlug[slug] = intro;
+        const text = goal ?? intro;
+        if (text) {
+          goalsBySlug[slug] = text;
+          introsBySlug[slug] = text;
         }
       }
 
-      actions.setGlobalData({ introsBySlug } satisfies CookbooksGlobalData);
+      actions.setGlobalData({
+        goalsBySlug,
+        introsBySlug,
+      } satisfies CookbooksGlobalData);
     },
   };
 }

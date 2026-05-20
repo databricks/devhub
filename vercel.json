@@ -6,11 +6,11 @@
       "maxDuration": 30
     },
     "api/markdown.ts": {
-      "includeFiles": "{docs/**,content/*.md,content/solutions/**,content/recipes/**/*.md,content/examples/**/*.md,content/cookbooks/**/*.md}",
+      "includeFiles": "{docs/**,content/about-devhub.md,content/solutions/**,content/recipes/**/*.md,content/examples/**/*.md}",
       "maxDuration": 30
     },
     "api/bootstrap-prompt.ts": {
-      "includeFiles": "{content/*.md,content/recipes/**/*.md}",
+      "includeFiles": "{content/about-devhub.md,content/recipes/**/*.md}",
       "maxDuration": 10
     },
     "api/llms.ts": {

@@ -334,38 +334,6 @@ export function getDetailMarkdown(
   }
 }
 
-const STATIC_PROMPT_PART_SLUGS = {
-  about: ABOUT_DEVHUB_SLUG,
-  guidelines: "dev-guidelines",
-  intentHero: "intent-hero",
-  intentRecipe: "intent-recipe",
-  intentCookbook: "intent-cookbook",
-  intentExample: "intent-example",
-} as const satisfies Record<
-  keyof Omit<AgentPromptParts, "localBootstrap">,
-  string
->;
-
-/**
- * Every content file `loadAgentPromptParts` reads on a hot path. This is the
- * source of truth that `vercel.json`'s `includeFiles` glob has to match for
- * any function that composes the agent prompt (today: api/bootstrap-prompt.ts
- * and api/markdown.ts). Enforced by tests/vercel-config.test.ts so a new
- * prompt-part file can't ship without also being bundled into the function.
- *
- * Paths are repo-root-relative and use POSIX separators because that's what
- * Vercel's micromatch glob expects.
- */
-export const AGENT_PROMPT_STATIC_CONTENT_FILES: readonly string[] = [
-  ...Object.values(STATIC_PROMPT_PART_SLUGS).map(
-    (slug) => `content/${slug}.md`,
-  ),
-  // `readContentSections` looks for goal.md first and falls back to content.md.
-  // Ship both so the bundle is safe regardless of which file is present.
-  `content/recipes/${LOCAL_BOOTSTRAP_SLUG}/goal.md`,
-  `content/recipes/${LOCAL_BOOTSTRAP_SLUG}/content.md`,
-];
-
 /** Reads all preamble blocks from disk for the server-side composer. */
 export function loadAgentPromptParts(
   rootDir: string = process.cwd(),
@@ -373,12 +341,12 @@ export function loadAgentPromptParts(
   const readContent = (slug: string): string =>
     readFileSync(resolve(rootDir, "content", `${slug}.md`), "utf-8");
   return {
-    about: readContent(STATIC_PROMPT_PART_SLUGS.about),
-    guidelines: readContent(STATIC_PROMPT_PART_SLUGS.guidelines),
-    intentHero: readContent(STATIC_PROMPT_PART_SLUGS.intentHero),
-    intentRecipe: readContent(STATIC_PROMPT_PART_SLUGS.intentRecipe),
-    intentCookbook: readContent(STATIC_PROMPT_PART_SLUGS.intentCookbook),
-    intentExample: readContent(STATIC_PROMPT_PART_SLUGS.intentExample),
+    about: readContent(ABOUT_DEVHUB_SLUG),
+    guidelines: readContent("dev-guidelines"),
+    intentHero: readContent("intent-hero"),
+    intentRecipe: readContent("intent-recipe"),
+    intentCookbook: readContent("intent-cookbook"),
+    intentExample: readContent("intent-example"),
     localBootstrap: goalOnly(
       readContentSections(rootDir, "recipes", LOCAL_BOOTSTRAP_SLUG),
     ),

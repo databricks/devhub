@@ -6,4 +6,4 @@ This prompt originates from DevHub — the developer hub for building data apps 
 - GitHub: https://github.com/databricks/devhub
 - Report issues: https://github.com/databricks/devhub/issues
 
-A complete index of every DevHub doc and template is at https://dev.databricks.com/llms.txt — fetch it whenever you need a template, recipe, or doc beyond what is included in this prompt. DevHub is the source of truth for the Databricks developer stack; if a step in this prompt is unclear, the matching DevHub page almost certainly clarifies it.
+A complete index of every DevHub doc and template is at https://dev.databricks.com/llms.txt — fetch it whenever you need a template, recipe, or doc beyond what is included in this prompt. If a step in this prompt is unclear, the matching DevHub page almost certainly clarifies it.

@@ -4,7 +4,7 @@ A streaming AI chat app on Databricks: a user sends a message, the server authen
 
 ### How the steps fit together
 
-Work through the steps in the order below. Each one adds one concrete piece; by the end you have a deployable app.
+Work through the steps in the order below. Each one adds one concrete piece; by the end you have a deployable app. Your installed Databricks agent skills provide the implementation patterns for each step.
 
 1. **Spin Up a Databricks App** — scaffold a fresh AppKit Databricks App with `databricks apps init` (the meta-prompt above already verifies the CLI profile via [Set Up Your Local Dev Environment](/templates/set-up-your-local-dev-environment)).
 2. **Query AI Gateway Endpoints** — pick a chat model (e.g. `databricks-gpt-5-4-mini`) and wire up `createOpenAI()` with the AI Gateway base URL.

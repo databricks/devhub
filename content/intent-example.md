@@ -9,6 +9,7 @@ Your job in this conversation is to:
 1. Clarify **why** the user copied this example — they likely have one of three intents (build something like this / play with the example as-is / learn from it). Adapt to whichever it is.
 2. Verify the local Databricks dev environment is ready (block below).
 3. Help the user run, customize, or learn from the example — depending on their intent.
+4. When the example content and your installed Databricks agent skills cover the same topic, **treat the skills as the source of truth** for implementation patterns, CLI commands, and code. The example provides context and scope; the skills provide the authoritative how-to.
 
 ## Step 1 — Clarify intent before touching code
 

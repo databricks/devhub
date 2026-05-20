@@ -2,12 +2,14 @@ import { cookbooks, recipes, type Cookbook } from "@/lib/recipes/recipes";
 import {
   useAllRecipeSections,
   useCookbookIntro,
+  useCookbookReplitPrompt,
 } from "@/lib/use-raw-content-markdown";
 import { composeCookbookMarkdown } from "@/lib/cookbook-composition";
 
 type UseCookbookMarkdownResult = {
   cookbook: Cookbook;
   rawMarkdown: string;
+  replitPrompt?: string;
 };
 
 /**
@@ -24,6 +26,7 @@ export function useCookbookMarkdown(
 
   const sectionsBySlug = useAllRecipeSections();
   const intro = useCookbookIntro(cookbookId);
+  const replitPrompt = useCookbookReplitPrompt(cookbookId);
 
   const recipeInputs = cookbook.recipeIds.map((id) => {
     const recipe = recipes.find((r) => r.id === id);
@@ -41,5 +44,5 @@ export function useCookbookMarkdown(
     recipes: recipeInputs,
   });
 
-  return { cookbook, rawMarkdown };
+  return { cookbook, rawMarkdown, replitPrompt };
 }

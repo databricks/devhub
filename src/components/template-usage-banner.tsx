@@ -1,12 +1,27 @@
 import type { ComponentProps } from "react";
 import { useCallback, useRef } from "react";
-import { ArrowDown, Bot, BookOpen, Info } from "lucide-react";
+import { ArrowDown, Bot, BookOpen, Info, Play } from "lucide-react";
+import { compressToEncodedURIComponent } from "lz-string";
 import { Button } from "@/components/ui/button";
 import { CopyPromptButton } from "@/components/copy-prompt-button";
 
 type CopyPromptProps = ComponentProps<typeof CopyPromptButton>;
 
-export function TemplateUsageBanner(copyPromptProps: CopyPromptProps) {
+type TemplateUsageBannerProps = CopyPromptProps & {
+  replitPrompt?: string;
+};
+
+function buildReplitUrl(prompt: string) {
+  const encoded = compressToEncodedURIComponent(prompt);
+  const utm =
+    "utm_source=devhub&utm_medium=docs&utm_campaign=run-on-replit&utm_content=template-usage-banner";
+  return `https://replit.com/?prompt=${encoded}&referrer=devhub&${utm}`;
+}
+
+export function TemplateUsageBanner({
+  replitPrompt,
+  ...copyPromptProps
+}: TemplateUsageBannerProps) {
   const bannerRef = useRef<HTMLDivElement>(null);
 
   const handleScrollToContent = useCallback(() => {
@@ -55,8 +70,21 @@ export function TemplateUsageBanner(copyPromptProps: CopyPromptProps) {
               result is exactly what you want
             </li>
           </ol>
-          <div className="mt-auto pt-1">
+          <div className="mt-auto flex flex-wrap items-center gap-2 pt-1">
             <CopyPromptButton {...copyPromptProps} />
+            {replitPrompt && (
+              <Button asChild size="sm" variant="outline">
+                <a
+                  href={buildReplitUrl(replitPrompt)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 no-underline"
+                >
+                  <Play className="h-4 w-4" />
+                  Build it on Replit
+                </a>
+              </Button>
+            )}
           </div>
         </div>
 

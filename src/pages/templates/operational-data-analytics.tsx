@@ -13,12 +13,16 @@ import MedallionArchitectureFromCdcPrereqs from "@site/content/recipes/medallion
 import MedallionArchitectureFromCdcContent from "@site/content/recipes/medallion-architecture-from-cdc/content.md";
 
 export default function OperationalDataAnalyticsPage(): ReactNode {
-  const { cookbook, rawMarkdown } = useCookbookMarkdown(
+  const { cookbook, rawMarkdown, replitPrompt } = useCookbookMarkdown(
     "operational-data-analytics",
   );
 
   return (
-    <CookbookDetail cookbook={cookbook} rawMarkdown={rawMarkdown}>
+    <CookbookDetail
+      cookbook={cookbook}
+      rawMarkdown={rawMarkdown}
+      replitPrompt={replitPrompt}
+    >
       <h2 id="prerequisites">Prerequisites</h2>
       <UnityCatalogSetupPrereqs />
       <LakebaseCreateInstancePrereqs />

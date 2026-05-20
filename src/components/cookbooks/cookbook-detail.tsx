@@ -14,12 +14,14 @@ const recipeComponents = { a: BaseUrlAnchor, pre: RecipePre };
 type CookbookDetailProps = {
   cookbook: Cookbook;
   rawMarkdown: string;
+  replitPrompt?: string;
   children: ReactNode;
 };
 
 export function CookbookDetail({
   cookbook,
   rawMarkdown,
+  replitPrompt,
   children,
 }: CookbookDetailProps): ReactNode {
   const contentRef = useRef<HTMLDivElement>(null);
@@ -47,6 +49,7 @@ export function CookbookDetail({
                   title={cookbook.name}
                   description={cookbook.description}
                   permalink={permalink}
+                  replitPrompt={replitPrompt}
                 />
 
                 <h1 className="mb-3 text-3xl font-bold tracking-tight text-foreground md:text-4xl">

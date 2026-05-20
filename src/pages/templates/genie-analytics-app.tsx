@@ -5,10 +5,16 @@ import GenieConversationalAnalyticsPrereqs from "@site/content/recipes/genie-con
 import GenieConversationalAnalyticsContent from "@site/content/recipes/genie-conversational-analytics/content.md";
 
 export default function GenieAnalyticsAppPage(): ReactNode {
-  const { cookbook, rawMarkdown } = useCookbookMarkdown("genie-analytics-app");
+  const { cookbook, rawMarkdown, replitPrompt } = useCookbookMarkdown(
+    "genie-analytics-app",
+  );
 
   return (
-    <CookbookDetail cookbook={cookbook} rawMarkdown={rawMarkdown}>
+    <CookbookDetail
+      cookbook={cookbook}
+      rawMarkdown={rawMarkdown}
+      replitPrompt={replitPrompt}
+    >
       <h2 id="prerequisites">Prerequisites</h2>
       <GenieConversationalAnalyticsPrereqs />
       <hr />

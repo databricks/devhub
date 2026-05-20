@@ -6,7 +6,10 @@ import { TemplateUsageBanner } from "@/components/template-usage-banner";
 import { RecipePre } from "@/components/cookbooks/recipe-code-block";
 import { RecipeToc } from "@/components/cookbooks/recipe-toc";
 import { recipes } from "@/lib/recipes/recipes";
-import { useRawRecipeMarkdown } from "@/lib/use-raw-content-markdown";
+import {
+  useRawRecipeMarkdown,
+  useRecipeSections,
+} from "@/lib/use-raw-content-markdown";
 import { BaseUrlAnchor } from "@/components/base-url-anchor";
 
 const recipeComponents = { a: BaseUrlAnchor, pre: RecipePre };
@@ -23,6 +26,7 @@ export function RecipeDetail({
   const contentRef = useRef<HTMLDivElement>(null);
   const recipe = recipes.find((item) => item.id === recipeId);
   const rawMarkdown = useRawRecipeMarkdown(recipeId);
+  const sections = useRecipeSections(recipeId);
 
   if (!recipe) {
     throw new Error(`Recipe ${recipeId} not found`);
@@ -49,6 +53,7 @@ export function RecipeDetail({
                   title={recipe.name}
                   description={recipe.description}
                   permalink={`/templates/${recipe.id}`}
+                  replitPrompt={sections?.replitPrompt}
                 />
 
                 <div className="mb-3 flex flex-wrap items-center gap-3">

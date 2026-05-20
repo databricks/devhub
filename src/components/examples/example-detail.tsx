@@ -179,6 +179,7 @@ export function ExampleDetail({
                   title={example.name}
                   description={example.description}
                   permalink={permalink}
+                  replitPrompt={sections.replitPrompt}
                 />
 
                 <h1 className="mb-3 text-3xl font-bold tracking-tight text-foreground md:text-4xl">

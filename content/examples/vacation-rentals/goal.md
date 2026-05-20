@@ -11,7 +11,7 @@ The app composes four Databricks primitives behind a single React UI:
 
 ### What to Adapt
 
-Setup, environment variables, and bundle deployment are documented in the repository's **`template/README.md`**.
+Setup, environment variables, and bundle deployment are documented in the repository's **`README.md`**.
 
 To make this template your own:
 

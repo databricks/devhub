@@ -13,7 +13,7 @@ Content moves through a review pipeline backed by Lakebase and AI Gateway:
 
 ### What to Adapt
 
-Setup and provisioning are documented in the repository’s **`template/README.md`**.
+Setup and provisioning are documented in the repository’s **`README.md`**.
 
 To make this template your own:
 

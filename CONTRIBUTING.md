@@ -97,7 +97,7 @@ DevHub has three internal content tiers that compose into each other:
 
 - **Recipe** — atomic, copy-pasteable agent prompt for one outcome (e.g. "Create a Lakebase instance"). The smallest unit; everything else is built from these.
 - **Cookbook** — composes multiple recipes into a longer end-to-end guide, plus its own meta content (intro, narrative, ordering). No app source.
-- **Example** — a cookbook _plus_ a full deployable `examples/<slug>/template/` codebase. Bundles recipes and cookbook narrative around runnable app code.
+- **Example** — a cookbook _plus_ a full deployable codebase that lives in the [app-templates](https://github.com/databricks/app-templates) repo at `app-templates/<slug>/`. Bundles recipes and cookbook narrative around runnable app code.
 
 So: recipes are the atoms, cookbooks compose recipes with additional context, and examples are cookbooks with shipped code. **User-facing, all three are presented as one thing: a "template"** — the site, navigation, filters, copy-pasted prompts, and `llms.txt` only ever say "template(s)".
 
@@ -105,7 +105,7 @@ So: recipes are the atoms, cookbooks compose recipes with additional context, an
 | ------------ | ------------------------------------------------------------------ | --------------------------------------------------------------------------------- |
 | **Recipe**   | One atomic outcome (e.g. "Create a Lakebase instance")             | `content/recipes/<id>.md` + metadata in `src/lib/recipes/recipes.ts`              |
 | **Cookbook** | End-to-end walkthrough composed from multiple recipes              | Metadata in `src/lib/recipes/recipes.ts` + page in `src/pages/templates/<id>.tsx` |
-| **Example**  | Cookbook + full runnable app template with code, pipelines, deploy | `content/examples/<id>.md` + `examples/<id>/template/` + metadata                 |
+| **Example**  | Cookbook + full runnable app template with code, pipelines, deploy | `content/examples/<id>.md` + `app-templates/<id>/` (separate repo) + metadata     |
 
 All three render at `/templates/<id>` and live in one unified Templates catalog filterable by service. Slugs must be globally unique across all three — the content-entries plugin validates this at build time.
 

@@ -17,7 +17,7 @@ The app should have a **beautiful, polished design** — clean typography, consi
 
 ### What to Adapt
 
-Provisioning (Unity Catalog schemas, Lakebase REPLICA IDENTITY), seeding, pipeline deploys, reverse sync, and app deploy are documented in the repository's **`template/README.md`** alongside the code.
+Provisioning (Unity Catalog schemas, Lakebase REPLICA IDENTITY), seeding, pipeline deploys, reverse sync, and app deploy are documented in the repository's **`README.md`** alongside the code.
 
 To make this template your own:
 

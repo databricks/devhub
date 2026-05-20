@@ -13,7 +13,7 @@ Customer interactions flow from your application's OLTP database (Lakebase Postg
 
 ### What to Adapt
 
-Provisioning (manual steps and SQL), seeding, pipeline deploys, reverse sync, and app deploy are documented in the repository’s **`template/README.md`** alongside the code.
+Provisioning (manual steps and SQL), seeding, pipeline deploys, reverse sync, and app deploy are documented in the repository’s **`README.md`** alongside the code.
 
 To make this template your own:
 

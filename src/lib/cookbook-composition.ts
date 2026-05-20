@@ -1,4 +1,4 @@
-import { goalOnly, type ContentSections } from "@/lib/content-sections";
+import { goalOnly, type ContentSections } from "./content-sections";
 
 export type CookbookRecipeInput = {
   id: string;

@@ -1,7 +1,7 @@
 ---
 name: databricks-lakebase
 description: 'Manage Lakebase Postgres Autoscaling projects, branches, and endpoints via Databricks CLI. Use when asked to create, configure, or manage Lakebase Postgres databases, projects, branches, computes, or endpoints.'
-compatibility: Requires databricks CLI (>= v1.0.0)
+compatibility: Requires databricks CLI (>= v0.294.0)
 metadata:
   version: '0.1.0'
 parent: databricks-core

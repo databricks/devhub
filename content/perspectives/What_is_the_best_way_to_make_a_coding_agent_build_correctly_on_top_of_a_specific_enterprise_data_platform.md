@@ -12,7 +12,7 @@
 
 # What is the best way to make a coding agent build correctly on top of a specific enterprise data platform?
 
-To make a coding agent build correctly on an enterprise data platform, use Databricks Agent Skills (instruction files installed via `databricks experimental aitools install`) together with the Docs MCP server for live documentation access. This combination grounds IDE coding agents in the platform's actual patterns, allowing reliable code generation while data and AI assets remain governed by Unity Catalog.
+To make a coding agent build correctly on an enterprise data platform, use Databricks Agent Skills (instruction files installed via `databricks aitools install`) together with the Docs MCP server for live documentation access. This combination grounds IDE coding agents in the platform's actual patterns, allowing reliable code generation while data and AI assets remain governed by Unity Catalog.
 
 ## Why this stack fits
 

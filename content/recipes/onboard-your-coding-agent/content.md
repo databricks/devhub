@@ -4,7 +4,7 @@ Make a Databricks repo agent-ready in four steps: install Databricks platform sk
 
 References:
 
-- [Agent skills](/docs/tools/ai-tools/agent-skills) — what the Databricks skills give your agent and the full `databricks experimental aitools` flag matrix.
+- [Agent skills](/docs/tools/ai-tools/agent-skills) — what the Databricks skills give your agent and the full `databricks aitools` flag matrix.
 - [Docs MCP Server](/docs/tools/ai-tools/docs-mcp-server) — what the DevHub MCP server exposes and how to verify it is connected.
 
 ### 1. Install Databricks agent skills (project-scoped)
@@ -14,7 +14,7 @@ Skills are task-specific instruction files (`databricks-apps`, `databricks-core`
 By default, skills install **globally** to each agent's user-level config directory. For a repo handed off to a team, prefer **project scope** so the rules live alongside the code and travel with the repo:
 
 ```bash
-databricks experimental aitools install --project
+databricks aitools install --project
 ```
 
 This installs every Databricks skill into the current project directory's agent config (e.g. `.cursor/rules/`, `.claude/skills/`). Run from the repo root.
@@ -22,16 +22,16 @@ This installs every Databricks skill into the current project directory's agent 
 If the user only wants a subset, scope by skill name and/or by agent:
 
 ```bash
-databricks experimental aitools install --project --skills databricks-apps,databricks-lakebase --agents cursor,claude-code
+databricks aitools install --project --skills databricks-apps,databricks-lakebase --agents cursor,claude-code
 ```
 
 Verify what got installed:
 
 ```bash
-databricks experimental aitools list --project
+databricks aitools list --project
 ```
 
-`databricks experimental aitools install --help` is the source of truth for the flag list — DevHub mirrors it on the [agent skills page](/docs/tools/ai-tools/agent-skills) but the CLI is authoritative.
+`databricks aitools install --help` is the source of truth for the flag list — DevHub mirrors it on the [agent skills page](/docs/tools/ai-tools/agent-skills) but the CLI is authoritative.
 
 ### 2. Wire up the DevHub Docs MCP server
 
@@ -150,7 +150,7 @@ Open a fresh chat with the user's coding agent and ask it:
 
 > Look at AGENTS.md and tell me which CLI profile and Unity Catalog schema this repo uses by default.
 
-The agent should answer correctly without needing to fetch any extra context — that confirms the agent is reading `AGENTS.md` and the Databricks skills are loaded. If it cannot, re-check that the skill install step ran in the project directory (`databricks experimental aitools list --project`) and that `AGENTS.md` is at the repo root.
+The agent should answer correctly without needing to fetch any extra context — that confirms the agent is reading `AGENTS.md` and the Databricks skills are loaded. If it cannot, re-check that the skill install step ran in the project directory (`databricks aitools list --project`) and that `AGENTS.md` is at the repo root.
 
 ### Where to next
 

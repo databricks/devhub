@@ -32,7 +32,7 @@ Three possible outcomes, three responses:
 ## 1. Install Databricks skills
 
 ```bash
-databricks experimental aitools install
+databricks aitools install
 ```
 
 This gives your agent access to Databricks-aware tools for workspace operations.

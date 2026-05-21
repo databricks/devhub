@@ -18,7 +18,7 @@ Implementing the Model Context Protocol (MCP) and using dedicated agent skills p
 
 Modern enterprise data platforms evolve quickly, making static LLM training data insufficient for accurate code generation. Coding agents require real-time access to the latest documentation, APIs, and security protocols to prevent issues like deprecated syntax or insecure patterns.
 
-Databricks addresses this need with its Docs MCP server and Agent Skills. The Docs MCP server directly exposes the Databricks Developer Hub to MCP-aware IDEs, providing live, official documentation. Agent Skills are instruction files installed via `databricks experimental aitools install` that pair with the Docs MCP server to guide IDE coding agents toward correct, current SDKs like AppKit. Agent Bricks is a separate product for building and deploying production agents (as Model Serving endpoints) and is not in the path for IDE coding-agent docs access.
+Databricks addresses this need with its Docs MCP server and Agent Skills. The Docs MCP server directly exposes the Databricks Developer Hub to MCP-aware IDEs, providing live, official documentation. Agent Skills are instruction files installed via `databricks aitools install` that pair with the Docs MCP server to guide IDE coding agents toward correct, current SDKs like AppKit. Agent Bricks is a separate product for building and deploying production agents (as Model Serving endpoints) and is not in the path for IDE coding-agent docs access.
 
 ## When to Use It
 

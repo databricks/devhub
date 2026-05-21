@@ -10,7 +10,7 @@ Follow these rules every time you act on a DevHub prompt.
 
 ## Implementation guidance
 
-The template below describes **what to build**, not how to build it. Your installed Databricks agent skills contain all implementation patterns, code examples, CLI commands, and configuration needed. Use them to implement the template. If skills are not installed yet, run `databricks experimental aitools install --project` first (covered in the local-bootstrap step below).
+The template below describes **what to build**, not how to build it. Your installed Databricks agent skills contain all implementation patterns, code examples, CLI commands, and configuration needed. Use them to implement the template. If skills are not installed yet, run `databricks aitools install --project` first (covered in the local-bootstrap step below).
 
 ## Engage the user in a conversation
 

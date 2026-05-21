@@ -6,7 +6,7 @@ title: Quickstart
 
 ## Prerequisites
 
-- Databricks CLI `v0.296+` with an [authenticated profile](/docs/tools/databricks-cli#authenticate)
+- Databricks CLI `v1.0.0+` with an [authenticated profile](/docs/tools/databricks-cli#authenticate)
 - Node.js 22+ (AppKit apps are Node/TypeScript)
 - Databricks workspace with Apps enabled
 
@@ -29,7 +29,7 @@ The [templates catalog](/templates) has the full list, including [Lakebase Postg
 Give your AI assistant Databricks platform context by installing the [agent skills](/docs/tools/ai-tools/agent-skills) before copying in the template:
 
 ```bash
-databricks experimental aitools install
+databricks aitools install
 ```
 
 ## Manual path

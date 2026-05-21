@@ -1,7 +1,7 @@
 ---
 name: 'databricks-core'
 description: 'Databricks CLI operations: auth, profiles, data exploration, and bundles. Contains up-to-date guidelines for Databricks-related CLI tasks.'
-compatibility: Requires databricks CLI (>= v0.292.0)
+compatibility: Requires databricks CLI (>= v1.0.0)
 metadata:
   version: '0.1.0'
 ---
@@ -23,7 +23,7 @@ For specific products, use dedicated skills:
 ## Prerequisites
 
 1. **CLI installed**: Run `databricks --version` to check.
-   - **If the CLI is missing or outdated (< v0.292.0): STOP. Do not proceed or work around a missing CLI.**
+   - **If the CLI is missing or outdated (< v1.0.0): STOP. Do not proceed or work around a missing CLI.**
    - **Read the [CLI Installation](databricks-cli-install.md) reference file and follow the instructions to guide the user through installation.**
    - Note: In sandboxed environments (Cursor IDE, containers), install commands write outside the workspace and may be blocked. Present the install command to the user and ask them to run it in their own terminal.
 
@@ -61,13 +61,13 @@ databricks apps list  # profile not set!
 
 ```bash
 # discover table structure (columns, types, sample data, stats)
-databricks experimental aitools tools discover-schema catalog.schema.table --profile <PROFILE>
+databricks aitools tools discover-schema catalog.schema.table --profile <PROFILE>
 
 # run ad-hoc SQL queries
-databricks experimental aitools tools query "SELECT * FROM table LIMIT 10" --profile <PROFILE>
+databricks aitools tools query "SELECT * FROM table LIMIT 10" --profile <PROFILE>
 
 # find the default warehouse
-databricks experimental aitools tools get-default-warehouse --profile <PROFILE>
+databricks aitools tools get-default-warehouse --profile <PROFILE>
 ```
 
 See [Data Exploration](data-exploration.md) for details.
@@ -100,8 +100,8 @@ databricks tables get <CATALOG>.<SCHEMA>.<TABLE> --profile <PROFILE>
 # databricks schemas list --catalog-name <CATALOG>    ← WILL FAIL
 # databricks tables list --catalog <CATALOG>           ← WILL FAIL
 # databricks sql-warehouses list                       ← doesn't exist, use `warehouses list`
-# databricks execute-statement                         ← doesn't exist, use `experimental aitools tools query`
-# databricks sql execute                               ← doesn't exist, use `experimental aitools tools query`
+# databricks execute-statement                         ← doesn't exist, use `aitools tools query`
+# databricks sql execute                               ← doesn't exist, use `aitools tools query`
 
 # When in doubt, check help:
 # databricks schemas list --help

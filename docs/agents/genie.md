@@ -10,7 +10,7 @@ Give your users a chat box that queries your data. No text-to-SQL, no schema map
 
 ## Prerequisites
 
-- Databricks CLI `v0.296+` with an [authenticated profile](/docs/tools/databricks-cli#authenticate).
+- Databricks CLI `v1.0.0+` with an [authenticated profile](/docs/tools/databricks-cli#authenticate).
 - A running AppKit app. See [Apps quickstart](/docs/apps/quickstart).
 - A Genie space configured on Unity Catalog tables. See [What is a Genie space](https://docs.databricks.com/aws/en/genie/) for setup.
 

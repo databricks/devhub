@@ -11,15 +11,15 @@ Skills tell your coding agent how Databricks works, including CLI conventions, a
 ## Install
 
 ```bash title="Common"
-databricks experimental aitools install
+databricks aitools install
 ```
 
 ```bash title="Specific agents"
-databricks experimental aitools install --agents claude-code,cursor
+databricks aitools install --agents claude-code,cursor
 ```
 
 ```bash title="Project scope"
-databricks experimental aitools install --project
+databricks aitools install --project
 ```
 
 The CLI auto-detects installed coding agents and symlinks skills into each agent's config directory from a shared canonical location (`~/.databricks/aitools/skills/`). Skills install globally by default.
@@ -35,9 +35,9 @@ The CLI auto-detects installed coding agents and symlinks skills into each agent
 ## Manage
 
 ```bash title="List, update, or remove skills"
-databricks experimental aitools list
-databricks experimental aitools update
-databricks experimental aitools uninstall
+databricks aitools list
+databricks aitools update
+databricks aitools uninstall
 ```
 
 `update` fetches the latest release and auto-installs new skills from the manifest. Pass `--check` to preview without downloading, `--no-new` to skip auto-installing new skills, or `--force` to re-download even if versions match. All commands accept `--global` (default) and `--project` to control scope.
@@ -54,7 +54,7 @@ Cursor also supports `/add-plugin databricks-skills` in chat.
 
 ## Available skills
 
-Run `databricks experimental aitools skills list` to see available skills and their install status.
+Run `databricks aitools skills list` to see available skills and their install status.
 
 | Skill                             | Description                                                                                                                                                                     |
 | --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

@@ -16,10 +16,9 @@ const DOC_PATH = resolve(
 const GLOBAL_FLAGS = ["--debug", "--output", "--profile", "--target"];
 
 function getCliFlags(subcommand: string): string[] {
-  const output = execSync(
-    `databricks experimental aitools ${subcommand} --help`,
-    { encoding: "utf-8" },
-  );
+  const output = execSync(`databricks aitools ${subcommand} --help`, {
+    encoding: "utf-8",
+  });
   const flags: string[] = [];
   for (const match of output.matchAll(/--([\w-]+)/gm)) {
     flags.push(`--${match[1]}`);
@@ -47,7 +46,7 @@ describe("agent-skills aitools CLI options", () => {
       for (const flag of cliFlags) {
         expect(
           docFlags.includes(flag),
-          `Flag ${flag} from 'databricks experimental aitools ${subcommand} --help' not found in agent-skills.md`,
+          `Flag ${flag} from 'databricks aitools ${subcommand} --help' not found in agent-skills.md`,
         ).toBe(true);
       }
     });

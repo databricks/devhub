@@ -12,7 +12,7 @@ Authoring jobs is a workspace task done in Databricks or with [Declarative Autom
 
 ## Prerequisites
 
-- Databricks CLI `v0.296+` with an [authenticated profile](/docs/tools/databricks-cli#authenticate).
+- Databricks CLI `v1.0.0+` with an [authenticated profile](/docs/tools/databricks-cli#authenticate).
 - A running AppKit app. See [Apps quickstart](/docs/apps/quickstart).
 - A Lakeflow Job defined in your workspace. See [Create your first job](https://docs.databricks.com/aws/en/jobs/) for setup.
 

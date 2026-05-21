@@ -10,7 +10,7 @@ When your AppKit app needs more than a foundation model response or a Genie-styl
 
 ## Prerequisites
 
-- Databricks CLI `v0.296+` with an [authenticated profile](/docs/tools/databricks-cli#authenticate).
+- Databricks CLI `v1.0.0+` with an [authenticated profile](/docs/tools/databricks-cli#authenticate).
 - A running AppKit app. See [Apps quickstart](/docs/apps/quickstart).
 - A deployed agent endpoint.
 

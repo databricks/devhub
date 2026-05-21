@@ -6,7 +6,7 @@ title: Quickstart
 
 ## Prerequisites
 
-- Databricks CLI `v0.296+` with an [authenticated profile](/docs/tools/databricks-cli#authenticate)
+- Databricks CLI `v1.0.0+` with an [authenticated profile](/docs/tools/databricks-cli#authenticate)
 - `psql` (PostgreSQL client) if using `databricks psql`. Alternatively, use [`generate-database-credential`](/docs/lakebase/development#local-database-access) with any PostgreSQL client.
 - Workspace with Lakebase Postgres access enabled
 

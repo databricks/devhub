@@ -6,13 +6,13 @@ The official CLI reference for these steps is on DevHub at [Databricks CLI](/doc
 
 ### 1. Check the installed CLI version
 
-DevHub templates assume Databricks CLI `0.296+`. Anything older is missing the AppKit `apps init` template registry and several `experimental aitools` flags.
+DevHub templates assume Databricks CLI `1.0.0+`. Anything older is missing the AppKit `apps init` template registry and several `aitools` flags.
 
 ```bash
 databricks -v
 ```
 
-If the command is not found, or the version is below `0.296`, install or upgrade in the next step.
+If the command is not found, or the version is below `1.0.0`, install or upgrade in the next step.
 
 ### 2. Install or upgrade the Databricks CLI
 
@@ -45,7 +45,7 @@ curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.s
 
 On Windows, run this from WSL. If `/usr/local/bin` is not writable, rerun with `sudo`. Re-running the script also upgrades an existing install.
 
-After installing, confirm the version is `0.296+`:
+After installing, confirm the version is `1.0.0+`:
 
 ```bash
 databricks -v

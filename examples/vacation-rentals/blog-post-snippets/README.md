@@ -7,7 +7,7 @@ These files are referenced directly from the blog via raw GitHub URLs. You don't
 ## Quick start (with a coding agent)
 
 ```bash
-databricks experimental aitools install
+databricks aitools install
 curl -sL https://raw.githubusercontent.com/jamesbroadhead/appkit-blog-snippets/master/setup/agent_prompt.md | claude -p
 ```
 

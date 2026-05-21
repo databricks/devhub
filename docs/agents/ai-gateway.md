@@ -10,7 +10,7 @@ description: Call governed LLM endpoints from your AppKit app using the Model Se
 
 ## Prerequisites
 
-- Databricks CLI `v0.296+` with an [authenticated profile](/docs/tools/databricks-cli#authenticate).
+- Databricks CLI `v1.0.0+` with an [authenticated profile](/docs/tools/databricks-cli#authenticate).
 - A running AppKit app. See [Apps quickstart](/docs/apps/quickstart).
 - A serving endpoint your app can query. Most workspaces come with Databricks-hosted [foundation models](https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/) (prefixed `databricks-`, for example `databricks-claude-sonnet-4-6`) preconfigured with AI Gateway. See [List available endpoints](#list-available-endpoints) to confirm.
 

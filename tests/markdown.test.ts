@@ -30,7 +30,7 @@ describe("detail markdown resolver", () => {
     const block = frontmatter[1];
     expect(block).toMatch(/^title:\s+"Introducing DevHub"$/m);
     expect(block).toMatch(
-      /^url:\s+https:\/\/dev\.databricks\.com\/solutions\/devhub-launch$/m,
+      /^url:\s+https:\/\/developers\.databricks\.com\/solutions\/devhub-launch$/m,
     );
     expect(block).toMatch(/^summary:\s+".+"$/m);
     expect(block).toMatch(/^publishedAt:\s*2026-05-04$/m);

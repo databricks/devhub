@@ -180,7 +180,7 @@ function findAbsoluteDevhubOffenders(filePath, source) {
   const body = stripFencedCodeBlocks(stripFrontmatter(source));
 
   const inlineLink =
-    /\]\((https:\/\/dev\.databricks\.com\/([^)\s]*))(?:\s+"[^"]*")?\)/g;
+    /\]\((https:\/\/developers\.databricks\.com\/([^)\s]*))(?:\s+"[^"]*")?\)/g;
   for (const match of body.matchAll(inlineLink)) {
     const [, fullUrl, path] = match;
     if (FORBIDDEN_LINK_PATH.test(path)) {
@@ -192,7 +192,7 @@ function findAbsoluteDevhubOffenders(filePath, source) {
     }
   }
 
-  const autolink = /<(https:\/\/dev\.databricks\.com\/([^>\s]*))>/g;
+  const autolink = /<(https:\/\/developers\.databricks\.com\/([^>\s]*))>/g;
   for (const match of body.matchAll(autolink)) {
     const [, fullUrl, path] = match;
     if (FORBIDDEN_LINK_PATH.test(path)) {
@@ -205,7 +205,7 @@ function findAbsoluteDevhubOffenders(filePath, source) {
   }
 
   const referenceDef =
-    /^\[[^\]]+\]:\s+(https:\/\/dev\.databricks\.com\/(\S*))/gm;
+    /^\[[^\]]+\]:\s+(https:\/\/developers\.databricks\.com\/(\S*))/gm;
   for (const match of body.matchAll(referenceDef)) {
     const [, fullUrl, path] = match;
     if (FORBIDDEN_LINK_PATH.test(path)) {

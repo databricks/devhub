@@ -110,5 +110,5 @@ The first run seeds a handful of Wikipedia articles into the `rag.documents` tab
 
 ## Related DevHub resources
 
-- [Lakebase Agent Memory](https://dev.databricks.com/templates/lakebase-agent-memory)
-- [Streaming AI chat with Model Serving](https://dev.databricks.com/resources/ai-chat-model-serving)
+- [Lakebase Agent Memory](https://developers.databricks.com/templates/lakebase-agent-memory)
+- [Streaming AI chat with Model Serving](https://developers.databricks.com/resources/ai-chat-model-serving)

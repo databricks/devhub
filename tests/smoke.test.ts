@@ -92,7 +92,7 @@ describe("production build smoke tests", () => {
     );
   });
 
-  test("homepage HTML uses resolved site URL in JSON-LD (no hardcoded dev.databricks.com when overridden)", () => {
+  test("homepage HTML uses resolved site URL in JSON-LD (no hardcoded developers.databricks.com when overridden)", () => {
     const html = readBuildFile("index.html");
     const expectedSiteUrl = resolveExpectedSiteUrl();
     expect(html).toContain(`"url":"${expectedSiteUrl}"`);
@@ -128,8 +128,8 @@ describe("production build smoke tests", () => {
     );
     const expectedSiteUrl = resolveExpectedSiteUrl();
     expect(html).toContain(`npx add-mcp ${expectedSiteUrl}/api/mcp`);
-    if (expectedSiteUrl !== "https://dev.databricks.com") {
-      expect(html).not.toContain("https://dev.databricks.com/api/mcp");
+    if (expectedSiteUrl !== "https://developers.databricks.com") {
+      expect(html).not.toContain("https://developers.databricks.com/api/mcp");
     }
   });
 

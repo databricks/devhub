@@ -4,7 +4,7 @@ title: Docs MCP Server
 
 # Docs MCP Server
 
-The DevHub Docs MCP Server gives coding agents and IDE assistants read access to all Databricks developer documentation on dev.databricks.com. Agents can discover available pages and fetch individual docs as markdown without leaving the editor.
+The DevHub Docs MCP Server gives coding agents and IDE assistants read access to all Databricks developer documentation on developers.databricks.com. Agents can discover available pages and fetch individual docs as markdown without leaving the editor.
 
 ## Install
 

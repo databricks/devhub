@@ -150,15 +150,15 @@ describe("validate-content script", () => {
       "content/recipes/bad/content.md": [
         "## Bad",
         "",
-        "See [docs](https://dev.databricks.com/docs/start-here) for setup.",
+        "See [docs](https://developers.databricks.com/docs/start-here) for setup.",
         "",
       ].join("\n"),
       "docs/bad-doc.md": [
         "# Bad doc",
         "",
-        "<https://dev.databricks.com/templates/foo>",
+        "<https://developers.databricks.com/templates/foo>",
         "",
-        "[ref]: https://dev.databricks.com/solutions/baz",
+        "[ref]: https://developers.databricks.com/solutions/baz",
         "",
       ].join("\n"),
     });
@@ -169,7 +169,7 @@ describe("validate-content script", () => {
       "content/recipes/bad/content.md: absolute DevHub markdown link",
     );
     expect(result.stderr).toContain(
-      '"https://dev.databricks.com/docs/start-here"',
+      '"https://developers.databricks.com/docs/start-here"',
     );
     expect(result.stderr).toContain(
       "docs/bad-doc.md: absolute DevHub autolink",
@@ -179,17 +179,17 @@ describe("validate-content script", () => {
     );
   });
 
-  test("allows bare prose URLs and code-block URLs that mention dev.databricks.com", () => {
+  test("allows bare prose URLs and code-block URLs that mention developers.databricks.com", () => {
     seedFixture(workDir, {
       "content/recipes/ok/content.md": [
         "## OK",
         "",
-        "Website: https://dev.databricks.com.",
+        "Website: https://developers.databricks.com.",
         "",
-        "Fetch the index from https://dev.databricks.com/llms.txt before guessing.",
+        "Fetch the index from https://developers.databricks.com/llms.txt before guessing.",
         "",
         "```bash",
-        "npx add-mcp https://dev.databricks.com/api/mcp --name devhub-docs",
+        "npx add-mcp https://developers.databricks.com/api/mcp --name devhub-docs",
         "```",
         "",
         "External link: [GitHub](https://github.com/databricks/devhub).",
@@ -240,7 +240,7 @@ describe("validate-content script", () => {
   test("passes when a solution markdown opens with a body paragraph and uses `## ` for sections", () => {
     seedFixture(workDir, {
       "content/solutions/launch.md": [
-        "Hello World, dev.databricks.com!",
+        "Hello World, developers.databricks.com!",
         "",
         "Lede paragraph that does the work an H1 would have done.",
         "",

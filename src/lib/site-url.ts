@@ -17,7 +17,7 @@
  * the same build can be configured for either root or subpath deployments.
  */
 
-export const PRODUCTION_FALLBACK_SITE_URL = "https://dev.databricks.com";
+export const PRODUCTION_FALLBACK_SITE_URL = "https://developers.databricks.com";
 
 type Env = Record<string, string | undefined>;
 

@@ -1,6 +1,6 @@
 # Contributing to DevHub
 
-DevHub is [dev.databricks.com](https://dev.databricks.com) — the home for developers building data and AI applications on Databricks. Contributions that make the site clearer, more accurate, or more useful for coding agents are very welcome.
+DevHub is [developers.databricks.com](https://developers.databricks.com) — the home for developers building data and AI applications on Databricks. Contributions that make the site clearer, more accurate, or more useful for coding agents are very welcome.
 
 Keep changes small, clear, and easy to review.
 
@@ -23,7 +23,7 @@ npm run dev
 
 AppKit reference docs are fetched automatically on first build or dev start via a shallow git clone of the [appkit](https://github.com/databricks/appkit) repository. Run `npm run sync:appkit-docs` to force a re-sync.
 
-You'll also need the [Vercel CLI](https://vercel.com/docs/cli) (for `vercel dev`) and the [Databricks CLI](https://dev.databricks.com/docs/tools/databricks-cli) if you plan to verify end-to-end flows against a real workspace.
+You'll also need the [Vercel CLI](https://vercel.com/docs/cli) (for `vercel dev`) and the [Databricks CLI](https://developers.databricks.com/docs/tools/databricks-cli) if you plan to verify end-to-end flows against a real workspace.
 
 ### Feature Flags
 
@@ -60,9 +60,9 @@ Flipping the banner on Vercel is "edit env var → redeploy", the same model as 
 Anywhere we need an absolute URL — `llms.txt`, `sitemap.xml`, `robots.txt`, JSON-LD, `/api/markdown`, `/api/bootstrap-prompt`, `/api/mcp`, the `Copy prompt` / `Copy Markdown` buttons — we resolve the site origin in this order (see `src/lib/site-url.ts`):
 
 1. `SITE_URL` (explicit override, e.g. `https://example.com` — useful for one-off builds and tests)
-2. `VERCEL_PROJECT_PRODUCTION_URL` when `VERCEL_ENV=production` (auto-set by Vercel; becomes `dev.databricks.com` once the custom domain is attached, otherwise the project's `*.vercel.app` URL)
+2. `VERCEL_PROJECT_PRODUCTION_URL` when `VERCEL_ENV=production` (auto-set by Vercel; becomes `developers.databricks.com` once the custom domain is attached, otherwise the project's `*.vercel.app` URL)
 3. `VERCEL_URL` (per-deployment URL, used on preview / branch / `vercel dev` deployments)
-4. `https://dev.databricks.com` as a final, safe production fallback
+4. `https://developers.databricks.com` as a final, safe production fallback
 
 So locally it points to `http://localhost:3000`, on preview deployments to the deployment's `*.vercel.app` URL, and in production to whatever production URL Vercel has assigned. No env var setup is required on Vercel.
 

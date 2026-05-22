@@ -85,7 +85,7 @@ describe("composeAgentPrompt — hero", () => {
     });
     expect(out).toContain("http://localhost:3001/llms.txt");
     expect(out).toContain("- Website: http://localhost:3001");
-    expect(out).not.toContain("https://dev.databricks.com");
+    expect(out).not.toContain("https://developers.databricks.com");
   });
 
   test("does not rewrite when origin matches canonical", () => {
@@ -104,9 +104,10 @@ describe("composeAgentPrompt — recipe / cookbook / example", () => {
     const out = composeAgentPrompt({
       parts: fixtureParts,
       kind: "recipe",
-      siteOrigin: "https://dev.databricks.com",
+      siteOrigin: "https://developers.databricks.com",
       templateName: "Lakebase Agent Memory",
-      templateUrl: "https://dev.databricks.com/templates/lakebase-agent-memory",
+      templateUrl:
+        "https://developers.databricks.com/templates/lakebase-agent-memory",
       templateBody: "# Lakebase Agent Memory\n\nbody body",
     });
 
@@ -114,7 +115,7 @@ describe("composeAgentPrompt — recipe / cookbook / example", () => {
     expect(out).toContain("# About DevHub");
     expect(out).toContain("# Working with DevHub prompts");
     expect(out).toContain(
-      "# Recipe intent Lakebase Agent Memory (https://dev.databricks.com/templates/lakebase-agent-memory)",
+      "# Recipe intent Lakebase Agent Memory (https://developers.databricks.com/templates/lakebase-agent-memory)",
     );
     expect(out).toContain("# Verify your local Databricks dev environment");
     expect(out).toContain("# The recipe the user copied");
@@ -125,9 +126,9 @@ describe("composeAgentPrompt — recipe / cookbook / example", () => {
     const out = composeAgentPrompt({
       parts: fixtureParts,
       kind: "cookbook",
-      siteOrigin: "https://dev.databricks.com",
+      siteOrigin: "https://developers.databricks.com",
       templateName: "AI Chat App",
-      templateUrl: "https://dev.databricks.com/templates/ai-chat-app",
+      templateUrl: "https://developers.databricks.com/templates/ai-chat-app",
       templateBody: "# AI Chat App\n\nstuff",
     });
     expect(out).toContain("# Cookbook intent AI Chat App");
@@ -138,9 +139,10 @@ describe("composeAgentPrompt — recipe / cookbook / example", () => {
     const out = composeAgentPrompt({
       parts: fixtureParts,
       kind: "example",
-      siteOrigin: "https://dev.databricks.com",
+      siteOrigin: "https://developers.databricks.com",
       templateName: "Vacation Rentals",
-      templateUrl: "https://dev.databricks.com/templates/vacation-rentals",
+      templateUrl:
+        "https://developers.databricks.com/templates/vacation-rentals",
       templateBody: "# Vacation Rentals\n\napp body",
     });
     expect(out).toContain("# Example intent Vacation Rentals");
@@ -152,9 +154,9 @@ describe("composeAgentPrompt — recipe / cookbook / example", () => {
       composeAgentPrompt({
         parts: fixtureParts,
         kind: "recipe",
-        siteOrigin: "https://dev.databricks.com",
+        siteOrigin: "https://developers.databricks.com",
         templateName: "x",
-        templateUrl: "https://dev.databricks.com/x",
+        templateUrl: "https://developers.databricks.com/x",
         templateBody: "",
       }),
     ).toThrow("non-empty templateBody");
@@ -165,7 +167,7 @@ describe("composeAgentPrompt — recipe / cookbook / example", () => {
       composeAgentPrompt({
         parts: fixtureParts,
         kind: "recipe",
-        siteOrigin: "https://dev.databricks.com",
+        siteOrigin: "https://developers.databricks.com",
         templateBody: "body",
       }),
     ).toThrow("templateName and templateUrl");

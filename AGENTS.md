@@ -1,6 +1,6 @@
 # DevHub
 
-devhub (dev.databricks.com) is the platform for developers to get all they need to build and deploy data apps and AI agents to Databricks. It provides opinonated guides, tools, and best practices for the Databricks developer stack.
+devhub (developers.databricks.com) is the platform for developers to get all they need to build and deploy data apps and AI agents to Databricks. It provides opinonated guides, tools, and best practices for the Databricks developer stack.
 
 ## Contributing
 

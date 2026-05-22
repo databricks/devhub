@@ -6,7 +6,7 @@ Follow these rules every time you act on a DevHub prompt.
 
 - Read the entire prompt before executing any steps. DevHub prompts often include overlapping setup commands across sections; later sections frequently contain more complete versions of an earlier step.
 - Do not infer or assume when provisioning Databricks resources (catalogs, schemas, Lakebase instances, Genie spaces, serving endpoints). Ask the user whether to create new resources or reuse existing ones.
-- If you run into trouble, fetch additional templates and docs from https://dev.databricks.com (the index lives at https://dev.databricks.com/llms.txt). For example, if Genie setup fails, fetch the Genie docs and templates instead of guessing.
+- If you run into trouble, fetch additional templates and docs from https://developers.databricks.com (the index lives at https://developers.databricks.com/llms.txt). For example, if Genie setup fails, fetch the Genie docs and templates instead of guessing.
 
 ## Implementation guidance
 

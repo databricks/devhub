@@ -9,7 +9,7 @@ import { composeAgentPrompt } from "../../src/lib/copy-preamble";
 const BOOTSTRAP_PROMPT_MARKDOWN = composeAgentPrompt({
   parts: loadAgentPromptParts(),
   kind: "hero",
-  siteOrigin: "https://dev.databricks.com",
+  siteOrigin: "https://developers.databricks.com",
 });
 
 test.describe("navbar navigation", () => {
@@ -176,7 +176,7 @@ test.describe("home page link navigation", () => {
       "# Verify your local Databricks dev environment",
     );
     expect(finalCopiedText).toContain("Install the Databricks CLI");
-    expect(finalCopiedText).toContain("dev.databricks.com");
+    expect(finalCopiedText).toContain("developers.databricks.com");
     expect(finalCopiedText).toContain("llms.txt");
   });
 

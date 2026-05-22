@@ -35,18 +35,18 @@ databricks aitools list --project
 
 ### 2. Wire up the DevHub Docs MCP server
 
-The DevHub MCP server gives coding agents read access to every page on `dev.databricks.com` (docs, templates, and examples) without leaving the editor. The agent can call `list_docs_resources` to see the index and `get_doc_resource(slug)` to fetch any page as markdown.
+The DevHub MCP server gives coding agents read access to every page on `developers.databricks.com` (docs, templates, and examples) without leaving the editor. The agent can call `list_docs_resources` to see the index and `get_doc_resource(slug)` to fetch any page as markdown.
 
 Install at project scope so the server is bound to this repo (drop `-g` if you want it user-wide):
 
 ```bash
-npx add-mcp https://dev.databricks.com/api/mcp --name devhub-docs
+npx add-mcp https://developers.databricks.com/api/mcp --name devhub-docs
 ```
 
 To target a specific agent (otherwise the installer auto-detects):
 
 ```bash
-npx add-mcp https://dev.databricks.com/api/mcp --name devhub-docs -a cursor
+npx add-mcp https://developers.databricks.com/api/mcp --name devhub-docs -a cursor
 ```
 
 Restart the editor after installation. Some editors (Cursor) require visiting the MCP settings page and toggling `devhub-docs` to enabled.
@@ -123,7 +123,7 @@ This repo deploys onto a single Databricks workspace. When suggesting CLI comman
 
 - Always run `databricks auth profiles` and confirm `<PROFILE>` shows `Valid: YES` before running anything that hits the workspace.
 - For non-trivial destructive operations (`databricks apps delete`, `DROP TABLE`, etc.), ask the user to confirm before running.
-- DevHub is the source of truth for the Databricks developer stack. When unsure of a CLI flag or a plugin shape, fetch the matching page from <https://dev.databricks.com/llms.txt> via the `devhub-docs` MCP server before guessing.
+- DevHub is the source of truth for the Databricks developer stack. When unsure of a CLI flag or a plugin shape, fetch the matching page from <https://developers.databricks.com/llms.txt> via the `devhub-docs` MCP server before guessing.
 ```
 
 #### 3d. Symlink `CLAUDE.md` → `AGENTS.md`

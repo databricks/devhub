@@ -14,7 +14,8 @@
  */
 
 /** As written in the canonical content/*.md files; substituted to caller's origin. */
-export const ABOUT_DEVHUB_CANONICAL_SITE_URL = "https://dev.databricks.com";
+export const ABOUT_DEVHUB_CANONICAL_SITE_URL =
+  "https://developers.databricks.com";
 
 export type AgentPromptKind = "hero" | "recipe" | "cookbook" | "example";
 
@@ -32,13 +33,13 @@ export type AgentPromptParts = {
 type ComposeAgentPromptInput = {
   parts: AgentPromptParts;
   kind: AgentPromptKind;
-  /** Site origin (e.g. `http://localhost:3001`, `https://dev.databricks.com`). */
+  /** Site origin (e.g. `http://localhost:3001`, `https://developers.databricks.com`). */
   siteOrigin: string;
   /** Required for kind != "hero": the template's display name. */
   templateName?: string;
   /**
    * Required for kind != "hero": the template's permalink (with origin), e.g.
-   * `https://dev.databricks.com/templates/app-with-lakebase`.
+   * `https://developers.databricks.com/templates/app-with-lakebase`.
    */
   templateUrl?: string;
   /** Required for kind != "hero": the full template markdown body to attach last. */
@@ -135,10 +136,10 @@ function buildTemplateBlock(kind: AgentPromptKind, body: string): string {
 
 /**
  * Rewrites every occurrence of the canonical DevHub origin
- * (`https://dev.databricks.com`) to the caller's origin. This covers the
+ * (`https://developers.databricks.com`) to the caller's origin. This covers the
  * `Website:` line in about-devhub.md, the `llms.txt` URL, and any
  * `/templates/<slug>.md` links inside the intent files. We do a literal
- * `replaceAll` rather than a regex so other `dev.databricks.com` mentions
+ * `replaceAll` rather than a regex so other `developers.databricks.com` mentions
  * (e.g. inline mentions without the `https://` prefix, or `github.com`
  * links) are deliberately untouched.
  */
@@ -202,8 +203,8 @@ export function absolutizeMarkdown(
  * Backwards-compatible wrapper kept only for test fixtures and any callers
  * that pre-date the composer. New code should call `composeAgentPrompt`.
  *
- * Accepts either an llms.txt URL (`https://dev.databricks.com/llms.txt`) or a
- * site origin (`https://dev.databricks.com`); both end up rewriting the
+ * Accepts either an llms.txt URL (`https://developers.databricks.com/llms.txt`) or a
+ * site origin (`https://developers.databricks.com`); both end up rewriting the
  * canonical origin to the caller's origin.
  */
 export function substituteAboutDevhubLlmsUrl(

@@ -158,11 +158,11 @@ if (existsSync(cookbooksDir)) {
  *
  * Bare textual URLs in prose and any URL inside a fenced code block are
  * deliberately allowed:
- *   - Bare prose URLs (e.g. "Website: https://dev.databricks.com",
- *     "fetch https://dev.databricks.com/llms.txt") are agent fetch
+ *   - Bare prose URLs (e.g. "Website: https://developers.databricks.com",
+ *     "fetch https://developers.databricks.com/llms.txt") are agent fetch
  *     directives that `rewriteOrigin` handles via canonical-origin
  *     substitution.
- *   - Code-block URLs (e.g. `npx add-mcp https://dev.databricks.com/api/mcp`)
+ *   - Code-block URLs (e.g. `npx add-mcp https://developers.databricks.com/api/mcp`)
  *     are install commands and must remain canonical.
  */
 const FORBIDDEN_LINK_PATH = /(templates|docs|solutions)/;

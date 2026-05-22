@@ -427,7 +427,7 @@ export function resolveTemplateKind(
  * `api/bootstrap-prompt.ts` reuses the same shared composer.
  *
  * `siteOrigin` accepts either a bare host (`localhost:3001`), a host with port
- * (`dev.databricks.com`), or a full origin (`https://dev.databricks.com`).
+ * (`developers.databricks.com`), or a full origin (`https://developers.databricks.com`).
  */
 export function composeTemplateAgentPrompt(input: {
   body: string;

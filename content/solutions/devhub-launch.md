@@ -1,12 +1,12 @@
-Hello World, dev.databricks.com!
+Hello World, developers.databricks.com!
 
-We're launching **dev.databricks.com**, a site for developers building internal apps on the Databricks workspace your company already runs on.
+We're launching **developers.databricks.com**, a site for developers building internal apps on the Databricks workspace your company already runs on.
 
 If your team already has data in Databricks and you want to build something on top of it — a chat over your docs, an agentic internal tool, an analytics frontend — this site is the shortest path from an empty folder to a deployed app.
 
 ## Why we built this
 
-We're engineers, and we wanted the kind of resource we wished we'd had when we started building on Databricks: code-first, opinionated, and short enough to read end to end. The official Databricks documentation is comprehensive and built for a broad audience. dev.databricks.com is the developer-facing companion — copy-pasteable, AI-agent-friendly, and focused on the actual workflows of building, deploying, and iterating on Databricks apps, Lakebase databases, and Agent Bricks AI components.
+We're engineers, and we wanted the kind of resource we wished we'd had when we started building on Databricks: code-first, opinionated, and short enough to read end to end. The official Databricks documentation is comprehensive and built for a broad audience. developers.databricks.com is the developer-facing companion — copy-pasteable, AI-agent-friendly, and focused on the actual workflows of building, deploying, and iterating on Databricks apps, Lakebase databases, and Agent Bricks AI components.
 
 ## Templates
 
@@ -65,7 +65,7 @@ The way developers ship software is changing, and the content we read have to wo
 
 A workflow that works well:
 
-1. Open a template page on dev.databricks.com.
+1. Open a template page on developers.databricks.com.
 2. Hit the **Copy** button to grab the page as markdown.
 3. Paste it into your coding agent and let it walk you through the build.
 4. Iterate in the same chat — the agent already has the full template as context.
@@ -76,4 +76,4 @@ Head to the [landing page](/) and copy the intro prompt. From there, your agent 
 
 We're actively expanding the site. If you're building on Databricks and there's a pattern you want to see covered, [open an issue on GitHub](https://github.com/databricks/devhub/issues) — we read every one. You can also join the conversation with other Databricks developers on the [r/databricks subreddit](https://www.reddit.com/r/databricks).
 
-Welcome to dev.databricks.com.
+Welcome to developers.databricks.com.

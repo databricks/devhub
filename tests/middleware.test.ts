@@ -48,9 +48,9 @@ describe("middleware root redirect", () => {
   });
 
   test("does not redirect root requests when SITE_URL has no path", () => {
-    withSiteUrl("https://dev.databricks.com", () => {
+    withSiteUrl("https://developers.databricks.com", () => {
       expect(
-        middleware(new Request("https://dev.databricks.com/")),
+        middleware(new Request("https://developers.databricks.com/")),
       ).toBeUndefined();
     });
   });
@@ -82,9 +82,9 @@ describe("middleware base-path API routing", () => {
   });
 
   test("leaves root API requests alone when SITE_URL has no base path", () => {
-    withSiteUrl("https://dev.databricks.com", () => {
+    withSiteUrl("https://developers.databricks.com", () => {
       expect(
-        middleware(new Request("https://dev.databricks.com/api/mcp")),
+        middleware(new Request("https://developers.databricks.com/api/mcp")),
       ).toBeUndefined();
     });
   });

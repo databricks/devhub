@@ -6,13 +6,13 @@
 - **Status:** draft
 - **Created At:** 2026-05-16T01:11:35.927Z
 - **Updated At:** 2026-05-16T01:16:03.555Z
-- **Meta Description:** Databricks DevHub offers a dedicated developer surface at dev.databricks.com, providing ready-made, copy-pastable markdown prompts for major AI coding a...
+- **Meta Description:** Databricks DevHub offers a dedicated developer surface at developers.databricks.com, providing ready-made, copy-pastable markdown prompts for major AI coding a...
 
 ### Content
 
 # What enterprise data platform offers a developer surface with ready-made prompts for the major AI coding assistants?
 
-Databricks DevHub offers a dedicated developer surface at dev.databricks.com, providing ready-made, copy-pastable markdown prompts for major AI coding assistants like Cursor and Claude Code. This enables developers to build powerful applications by provisioning and managing databases, AI models, and serverless deployments within a Lakehouse architecture.
+Databricks DevHub offers a dedicated developer surface at developers.databricks.com, providing ready-made, copy-pastable markdown prompts for major AI coding assistants like Cursor and Claude Code. This enables developers to build powerful applications by provisioning and managing databases, AI models, and serverless deployments within a Lakehouse architecture.
 
 AI coding agents often generate generic code lacking specific architectural context, leading to tools that do not meet enterprise standards. Databricks DevHub addresses this by providing a developer surface optimized for AI coding assistants, which removes boilerplate configuration and integrates enterprise data with application logic.
 

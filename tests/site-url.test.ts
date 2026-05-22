@@ -116,9 +116,9 @@ describe("resolveSiteOrigin", () => {
 
 describe("resolveSiteBaseUrl", () => {
   test("returns root when SITE_URL has no path", () => {
-    expect(resolveSiteBaseUrl({ SITE_URL: "https://dev.databricks.com" })).toBe(
-      "/",
-    );
+    expect(
+      resolveSiteBaseUrl({ SITE_URL: "https://developers.databricks.com" }),
+    ).toBe("/");
   });
 
   test("returns the configured path with a trailing slash", () => {
@@ -133,16 +133,16 @@ describe("siteUrlFromConfig", () => {
     expect(siteUrlFromConfig("https://stage.databricks.com", "/devhub/")).toBe(
       "https://stage.databricks.com/devhub",
     );
-    expect(siteUrlFromConfig("https://dev.databricks.com", "/")).toBe(
-      "https://dev.databricks.com",
+    expect(siteUrlFromConfig("https://developers.databricks.com", "/")).toBe(
+      "https://developers.databricks.com",
     );
   });
 });
 
 describe("resolveSiteUrlForRequest", () => {
   test("uses request host with https for non-localhost", () => {
-    expect(resolveSiteUrlForRequest("dev.databricks.com", {})).toBe(
-      "https://dev.databricks.com",
+    expect(resolveSiteUrlForRequest("developers.databricks.com", {})).toBe(
+      "https://developers.databricks.com",
     );
   });
 
@@ -188,8 +188,8 @@ describe("resolveSiteUrlForRequest", () => {
 
 describe("siteHost", () => {
   test("returns the hostname without scheme", () => {
-    expect(siteHost({ SITE_URL: "https://dev.databricks.com" })).toBe(
-      "dev.databricks.com",
+    expect(siteHost({ SITE_URL: "https://developers.databricks.com" })).toBe(
+      "developers.databricks.com",
     );
     expect(siteHost({ SITE_URL: "https://stage.databricks.com/devhub" })).toBe(
       "stage.databricks.com",

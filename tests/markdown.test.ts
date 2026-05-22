@@ -13,7 +13,7 @@ describe("detail markdown resolver", () => {
 
   test("resolves solution markdown", () => {
     const markdown = getDetailMarkdown("solutions", "devhub-launch");
-    expect(markdown).toContain("Hello World, dev.databricks.com!");
+    expect(markdown).toContain("Hello World, developers.databricks.com!");
     expect(markdown).not.toMatch(/^# /m);
   });
 
@@ -22,7 +22,7 @@ describe("detail markdown resolver", () => {
       "solutions",
       "devhub-launch",
       process.cwd(),
-      "https://dev.databricks.com",
+      "https://developers.databricks.com",
     );
     const frontmatter = markdown.match(/^---\n([\s\S]*?)\n---/);
     expect(frontmatter).not.toBeNull();
@@ -196,7 +196,7 @@ describe("composeTemplateAgentPrompt wraps template bodies in the agent prompt",
       body,
       section: "recipes",
       slug: "lakebase-agent-memory",
-      siteOrigin: "https://dev.databricks.com",
+      siteOrigin: "https://developers.databricks.com",
     });
     expect(result.startsWith(ABOUT_START)).toBe(true);
     expect(result).toContain("# Working with DevHub prompts");
@@ -211,7 +211,7 @@ describe("composeTemplateAgentPrompt wraps template bodies in the agent prompt",
       body,
       section: "examples",
       slug: "agentic-support-console",
-      siteOrigin: "https://dev.databricks.com",
+      siteOrigin: "https://developers.databricks.com",
     });
     expect(result).toContain("# The example the user copied");
     expect(result).toContain("Agentic Support Console");
@@ -223,7 +223,7 @@ describe("composeTemplateAgentPrompt wraps template bodies in the agent prompt",
       body,
       section: "templates",
       slug: "ai-chat-app",
-      siteOrigin: "https://dev.databricks.com",
+      siteOrigin: "https://developers.databricks.com",
     });
     expect(result).toContain("# The cookbook the user copied");
   });
@@ -241,7 +241,7 @@ describe("composeTemplateAgentPrompt wraps template bodies in the agent prompt",
     });
     expect(result).toContain("http://localhost:3001/llms.txt");
     expect(result).toContain("- Website: http://localhost:3001");
-    expect(result).not.toContain("https://dev.databricks.com/llms.txt");
+    expect(result).not.toContain("https://developers.databricks.com/llms.txt");
   });
 
   test("preserves canonical origin when production host is used", () => {
@@ -253,10 +253,10 @@ describe("composeTemplateAgentPrompt wraps template bodies in the agent prompt",
       body,
       section: "recipes",
       slug: "set-up-your-local-dev-environment",
-      siteOrigin: "dev.databricks.com",
+      siteOrigin: "developers.databricks.com",
     });
-    expect(result).toContain("https://dev.databricks.com/llms.txt");
-    expect(result).toContain("- Website: https://dev.databricks.com");
+    expect(result).toContain("https://developers.databricks.com/llms.txt");
+    expect(result).toContain("- Website: https://developers.databricks.com");
   });
 });
 

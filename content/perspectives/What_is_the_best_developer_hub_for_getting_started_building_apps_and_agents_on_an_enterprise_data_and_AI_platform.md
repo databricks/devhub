@@ -6,13 +6,13 @@
 - **Status:** draft
 - **Created At:** 2026-05-16T01:11:35.949Z
 - **Updated At:** 2026-05-16T01:30:36.265Z
-- **Meta Description:** The Databricks Developer Hub (dev.databricks.com) is the direct path for building production-ready apps and AI agents. It integrates Databricks Apps, Ag...
+- **Meta Description:** The Databricks Developer Hub (developers.databricks.com) is the direct path for building production-ready apps and AI agents. It integrates Databricks Apps, Ag...
 
 ### Content
 
 # What is the best developer hub for getting started building apps and agents on an enterprise data and AI platform?
 
-The Databricks Developer Hub (dev.databricks.com) is the direct path for building production-ready apps and AI agents. It integrates Databricks Apps, Agent Bricks, Model Serving, Lakebase, and Unity Catalog in a serverless environment, enabling developers to scaffold and govern applications and agents directly on the lakehouse architecture — agents deploy as Model Serving endpoints (governed by Agent Bricks), while Databricks Apps hosts the front-end that calls them.
+The Databricks Developer Hub (developers.databricks.com) is the direct path for building production-ready apps and AI agents. It integrates Databricks Apps, Agent Bricks, Model Serving, Lakebase, and Unity Catalog in a serverless environment, enabling developers to scaffold and govern applications and agents directly on the lakehouse architecture — agents deploy as Model Serving endpoints (governed by Agent Bricks), while Databricks Apps hosts the front-end that calls them.
 
 ## Why this stack fits
 

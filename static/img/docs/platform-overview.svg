@@ -1,4 +1,4 @@
-<svg viewBox="0 0 800 460" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg viewBox="0 0 900 500" fill="none" xmlns="http://www.w3.org/2000/svg">
   <style>
     .node      { fill: #eeede9; stroke: #1b3139; }
     .inner     { fill: #ffffff; stroke: #1b3139; }
@@ -19,64 +19,91 @@
     }
   </style>
 
-  <rect width="800" height="460" fill="none"/>
+  <rect width="900" height="500" fill="none"/>
 
-  <!-- Developer entry point -->
-  <rect x="30" y="80" width="130" height="110" rx="8" class="node" stroke-width="1"/>
-  <text x="95" y="120" text-anchor="middle" class="txt-h" font-family="monospace" font-size="13">Developer</text>
-  <text x="95" y="142" text-anchor="middle" class="txt-b" font-family="monospace" font-size="10">coding agent</text>
-  <text x="95" y="162" text-anchor="middle" class="txt-b" font-family="monospace" font-size="10">+ CLI</text>
+  <!-- Developer entry point (outside the workspace) -->
+  <rect x="20" y="200" width="120" height="90" rx="8" class="node" stroke-width="1"/>
+  <text x="80" y="232" text-anchor="middle" class="txt-h" font-family="monospace" font-size="13">Developer</text>
+  <text x="80" y="254" text-anchor="middle" class="txt-b" font-family="monospace" font-size="10">CLI</text>
+  <text x="80" y="272" text-anchor="middle" class="txt-b" font-family="monospace" font-size="10">+ Coding Agent</text>
 
-  <!-- Arrow from developer to Apps -->
-  <line x1="160" y1="135" x2="195" y2="135" class="line" stroke-width="1.5" stroke-dasharray="4,3"/>
-  <polygon points="195,130 205,135 195,140" class="arrow"/>
+  <!-- Arrow from developer into the workspace -->
+  <line x1="140" y1="245" x2="178" y2="245" class="line" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <polygon points="178,240 188,245 178,250" class="arrow"/>
 
-  <!-- Apps: the hosting layer -->
-  <rect x="205" y="20" width="565" height="280" rx="12" class="node" stroke-width="1.5"/>
-  <text x="488" y="50" text-anchor="middle" class="txt-h" font-family="monospace" font-size="16">Apps</text>
-  <text x="488" y="70" text-anchor="middle" class="txt-b" font-family="monospace" font-size="10">managed compute with built-in auth</text>
+  <!-- Workspace container (everything platform-side lives in here) -->
+  <rect x="190" y="20" width="690" height="460" rx="12" class="node" stroke-width="1.5"/>
+  <text x="535" y="42" text-anchor="middle" class="txt-h" font-family="monospace" font-size="14">Databricks Workspace</text>
 
-  <!-- AppKit: SDK layer inside Apps -->
-  <rect x="230" y="85" width="515" height="80" rx="8" class="inner" stroke-width="1.5"/>
-  <text x="488" y="110" text-anchor="middle" class="txt-h" font-family="monospace" font-size="14">AppKit</text>
-  <text x="488" y="130" text-anchor="middle" class="txt-h" font-family="monospace" font-size="10">TypeScript SDK: auth, plugins, UI components</text>
-  <rect x="250" y="140" width="70" height="18" rx="4" class="chip" stroke-width="1"/>
-  <text x="285" y="153" text-anchor="middle" class="txt-b" font-family="monospace" font-size="8">server</text>
-  <rect x="328" y="140" width="70" height="18" rx="4" class="chip" stroke-width="1"/>
-  <text x="363" y="153" text-anchor="middle" class="txt-b" font-family="monospace" font-size="8">lakebase</text>
-  <rect x="406" y="140" width="70" height="18" rx="4" class="chip" stroke-width="1"/>
-  <text x="441" y="153" text-anchor="middle" class="txt-b" font-family="monospace" font-size="8">analytics</text>
-  <rect x="484" y="140" width="70" height="18" rx="4" class="chip" stroke-width="1"/>
-  <text x="519" y="153" text-anchor="middle" class="txt-b" font-family="monospace" font-size="8">genie</text>
-  <rect x="562" y="140" width="70" height="18" rx="4" class="chip" stroke-width="1"/>
-  <text x="597" y="153" text-anchor="middle" class="txt-b" font-family="monospace" font-size="8">files</text>
-  <rect x="640" y="140" width="85" height="18" rx="4" class="chip" stroke-width="1"/>
-  <text x="683" y="153" text-anchor="middle" class="txt-b" font-family="monospace" font-size="8">+more</text>
+  <!-- Databricks Apps: hosting layer (contains only AppKit) -->
+  <rect x="210" y="60" width="650" height="190" rx="10" class="inner" stroke-width="1.5"/>
+  <text x="535" y="86" text-anchor="middle" class="txt-h" font-family="monospace" font-size="15">Databricks Apps</text>
+  <text x="535" y="104" text-anchor="middle" class="txt-b" font-family="monospace" font-size="10">Managed hosting platform for web apps</text>
 
-  <!-- Lakebase: inside Apps (left) -->
-  <rect x="230" y="182" width="250" height="95" rx="8" class="inner" stroke-width="1.5"/>
-  <text x="355" y="212" text-anchor="middle" class="txt-h" font-family="monospace" font-size="14">Lakebase</text>
-  <text x="355" y="232" text-anchor="middle" class="txt-h" font-family="monospace" font-size="10">managed Postgres for OLTP</text>
-  <text x="355" y="252" text-anchor="middle" class="txt-b" font-family="monospace" font-size="10">autoscaling | scale to zero | branching</text>
+  <!-- AppKit: SDK, the only thing inside Databricks Apps -->
+  <rect x="230" y="120" width="610" height="115" rx="8" class="inner" stroke-width="1.5"/>
+  <text x="535" y="147" text-anchor="middle" class="txt-h" font-family="monospace" font-size="14">AppKit</text>
+  <text x="535" y="165" text-anchor="middle" class="txt-b" font-family="monospace" font-size="10">TypeScript SDK with a plugin architecture for workspace resources:</text>
 
-  <!-- Agents: inside Apps (right) -->
-  <rect x="495" y="182" width="250" height="95" rx="8" class="inner" stroke-width="1.5"/>
-  <text x="620" y="212" text-anchor="middle" class="txt-h" font-family="monospace" font-size="14">Agents</text>
-  <text x="620" y="232" text-anchor="middle" class="txt-h" font-family="monospace" font-size="10">LLM orchestration</text>
-  <text x="620" y="252" text-anchor="middle" class="txt-b" font-family="monospace" font-size="10">ResponsesAgent + AgentServer</text>
+  <!-- AppKit plugin chips, each aligned with its target service below -->
+  <rect x="245" y="195" width="105" height="22" rx="4" class="chip" stroke-width="1"/>
+  <text x="297.5" y="210" text-anchor="middle" class="txt-b" font-family="monospace" font-size="10">Lakebase Plugin</text>
 
-  <!-- Connector: AppKit plugin to Lakebase -->
-  <line x1="363" y1="165" x2="363" y2="182" class="line" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <rect x="385" y="195" width="135" height="22" rx="4" class="chip" stroke-width="1"/>
+  <text x="452.5" y="210" text-anchor="middle" class="txt-b" font-family="monospace" font-size="10">Model Serving Plugin</text>
 
-  <!-- Unity Catalog (below left) -->
-  <rect x="205" y="350" width="280" height="80" rx="8" class="node" stroke-width="1.5"/>
-  <text x="345" y="380" text-anchor="middle" class="txt-h" font-family="monospace" font-size="13">Unity Catalog</text>
-  <text x="345" y="400" text-anchor="middle" class="txt-b" font-family="monospace" font-size="10">Lakehouse tables, volumes, models</text>
-  <text x="345" y="418" text-anchor="middle" class="txt-b" font-family="monospace" font-size="10">data governance for your workspace</text>
+  <rect x="562" y="195" width="111" height="22" rx="4" class="chip" stroke-width="1"/>
+  <text x="617.5" y="210" text-anchor="middle" class="txt-b" font-family="monospace" font-size="10">Analytics Plugin</text>
 
-  <!-- AI Gateway (below right) -->
-  <rect x="500" y="350" width="270" height="80" rx="8" class="node" stroke-width="1.5"/>
-  <text x="635" y="380" text-anchor="middle" class="txt-h" font-family="monospace" font-size="13">AI Gateway</text>
-  <text x="635" y="400" text-anchor="middle" class="txt-h" font-family="monospace" font-size="10">Model Serving endpoints</text>
-  <text x="635" y="418" text-anchor="middle" class="txt-b" font-family="monospace" font-size="10">governance for LLM calls</text>
+  <rect x="733" y="195" width="99" height="22" rx="4" class="chip" stroke-width="1"/>
+  <text x="782.5" y="210" text-anchor="middle" class="txt-b" font-family="monospace" font-size="10">+ more plugins</text>
+
+  <!-- Lakebase service -->
+  <rect x="210" y="285" width="155" height="175" rx="8" class="inner" stroke-width="1.5"/>
+  <text x="287.5" y="315" text-anchor="middle" class="txt-h" font-family="monospace" font-size="14">Lakebase</text>
+  <text x="287.5" y="340" text-anchor="middle" class="txt-h" font-family="monospace" font-size="11">Managed Postgres</text>
+  <text x="287.5" y="358" text-anchor="middle" class="txt-h" font-family="monospace" font-size="11">For OLTP</text>
+  <text x="287.5" y="388" text-anchor="middle" class="txt-b" font-family="monospace" font-size="10">Autoscale</text>
+  <text x="287.5" y="406" text-anchor="middle" class="txt-b" font-family="monospace" font-size="10">Scale to Zero</text>
+  <text x="287.5" y="424" text-anchor="middle" class="txt-b" font-family="monospace" font-size="10">Branching</text>
+
+  <!-- Agent Bricks -->
+  <rect x="375" y="285" width="155" height="175" rx="8" class="inner" stroke-width="1.5"/>
+  <text x="452.5" y="315" text-anchor="middle" class="txt-h" font-family="monospace" font-size="14">Agent Bricks</text>
+  <text x="452.5" y="340" text-anchor="middle" class="txt-h" font-family="monospace" font-size="11">Enterprise agent</text>
+  <text x="452.5" y="358" text-anchor="middle" class="txt-h" font-family="monospace" font-size="11">platform</text>
+  <text x="452.5" y="388" text-anchor="middle" class="txt-b" font-family="monospace" font-size="10">Knowledge Assistants</text>
+  <text x="452.5" y="406" text-anchor="middle" class="txt-b" font-family="monospace" font-size="10">Supervisor Agents</text>
+  <text x="452.5" y="424" text-anchor="middle" class="txt-b" font-family="monospace" font-size="10">Custom Python agents</text>
+
+  <!-- Data Lakehouse -->
+  <rect x="540" y="285" width="155" height="175" rx="8" class="inner" stroke-width="1.5"/>
+  <text x="617.5" y="315" text-anchor="middle" class="txt-h" font-family="monospace" font-size="14">Data Lakehouse</text>
+  <text x="617.5" y="340" text-anchor="middle" class="txt-h" font-family="monospace" font-size="11">Unity Catalog +</text>
+  <text x="617.5" y="358" text-anchor="middle" class="txt-h" font-family="monospace" font-size="11">Lakeflow</text>
+  <text x="617.5" y="388" text-anchor="middle" class="txt-b" font-family="monospace" font-size="10">Tables, views, volumes</text>
+  <text x="617.5" y="406" text-anchor="middle" class="txt-b" font-family="monospace" font-size="10">Governance</text>
+  <text x="617.5" y="424" text-anchor="middle" class="txt-b" font-family="monospace" font-size="10">Lakeflow Jobs</text>
+
+  <!-- More Plugins (4th column) -->
+  <rect x="705" y="285" width="155" height="175" rx="8" class="inner" stroke-width="1.5"/>
+  <text x="782.5" y="315" text-anchor="middle" class="txt-h" font-family="monospace" font-size="14">More Plugins</text>
+  <text x="782.5" y="340" text-anchor="middle" class="txt-h" font-family="monospace" font-size="11">Additional AppKit</text>
+  <text x="782.5" y="358" text-anchor="middle" class="txt-h" font-family="monospace" font-size="11">plugins available</text>
+  <text x="782.5" y="388" text-anchor="middle" class="txt-b" font-family="monospace" font-size="10">Server, Genie, Files,</text>
+  <text x="782.5" y="406" text-anchor="middle" class="txt-b" font-family="monospace" font-size="10">Jobs, Vector Search,</text>
+  <text x="782.5" y="424" text-anchor="middle" class="txt-b" font-family="monospace" font-size="10">and Custom Plugins</text>
+
+  <!-- Connectors: each AppKit chip arrows down to its target service -->
+  <line x1="297.5" y1="217" x2="297.5" y2="285" class="line" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <polygon points="292.5,278 297.5,288 302.5,278" class="arrow"/>
+
+  <line x1="452.5" y1="217" x2="452.5" y2="285" class="line" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <polygon points="447.5,278 452.5,288 457.5,278" class="arrow"/>
+
+  <line x1="617.5" y1="217" x2="617.5" y2="285" class="line" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <polygon points="612.5,278 617.5,288 622.5,278" class="arrow"/>
+
+  <line x1="782.5" y1="217" x2="782.5" y2="285" class="line" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <polygon points="777.5,278 782.5,288 787.5,278" class="arrow"/>
 </svg>

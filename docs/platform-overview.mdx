@@ -7,33 +7,27 @@ import useBaseUrl from "@docusaurus/useBaseUrl";
 
 # Platform overview
 
-Apps, AppKit, Lakebase Postgres, and Agent Bricks are layers of a full-stack Databricks application running inside your workspace. New to building on Databricks? See [Start here](/docs/start-here) first.
+Databricks Apps, Lakebase Postgres, Agent Bricks, and the Data Lakehouse are the four core workspace services that make up a full-stack Databricks application. The diagram below shows how they fit together.
 
 <img
   src={useBaseUrl("/img/docs/platform-overview.svg")}
-  alt="Architecture diagram showing Apps containing AppKit, Lakebase, and Agents, with Unity Catalog and AI Gateway as workspace services"
+  alt="Architecture diagram of the Databricks workspace: Databricks Apps contains AppKit, whose Lakebase, Model Serving, and Analytics plugins connect to Lakebase, Agent Bricks, and the Data Lakehouse as sibling services inside the workspace; a fourth column lists additional AppKit plugins (Server, Genie, Files, Jobs, Vector Search, and Custom Plugins)"
   width="100%"
 />
 
-| Layer                 | What it is                                                                                                                                                                                                           |
-| --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Apps**              | The hosting layer. Your app runs as a managed workspace resource with a fixed URL, built-in auth, and managed compute. Deploy with `databricks apps deploy`.                                                         |
-| **AppKit**            | The TypeScript SDK for building apps on Databricks Apps. Built-in Databricks OAuth handling, pre-built React UI components (data tables, charts, dialogs), and a plugin system for connecting to workspace services. |
-| **Lakebase Postgres** | The database layer. Managed Postgres for OLTP, co-located with your Lakehouse. Autoscales on demand, scales to zero when idle, and supports branching for development environments.                                  |
-| **Agent Bricks**      | The AI layer. Call Knowledge Assistants, Supervisor Agents, and governed LLM endpoints via the Model Serving plugin. Query Unity Catalog tables in natural language via the Genie plugin.                            |
-| **Data Lakehouse**    | The analytical data tier. Unity Catalog tables, materialized views, and streaming tables populated by Lakeflow. Read with the Analytics plugin. Trigger Lakeflow Jobs from your app.                                 |
+- **[Databricks Apps](/docs/apps/overview)**: managed hosting for apps you build with [AppKit](/docs/appkit/v0), the TypeScript SDK for production-ready Databricks applications.
+- **[Lakebase Postgres](/docs/lakebase/overview)**: managed Postgres database for OLTP storage co-located with your workspace data. Use it for sessions, app state, conversation history, or any data your app reads and writes at low latency.
+- **[Agent Bricks](/docs/agents/overview)**: Databricks' enterprise agent platform, unifying model access, execution, governance, and context. Use it for AI features in your app: chat with your company's docs (Knowledge Assistants), ask-your-data in plain English (Genie), foundation-model calls, or custom Python agents.
+- **[Data Lakehouse](/docs/lakehouse/overview)**: governed analytical data in Unity Catalog. Use it to read company data, trigger Lakeflow Jobs, and display data freshness in your UI.
 
 ## How a request flows
 
-A user opens the app, and Databricks Apps authenticates them via workspace SSO. The relevant AppKit plugin then queries Lakebase, a Genie space, or a serving endpoint on their behalf, using either the app's service principal or the user's forwarded token.
+1. A user opens the app at its workspace URL. Databricks Apps authenticates them via workspace SSO.
+2. Each AppKit plugin then handles requests for its service: the Lakebase Plugin queries Lakebase, the Model Serving Plugin calls Agent Bricks, the Analytics Plugin reads the Data Lakehouse.
+3. Each plugin call runs as the app's service principal (by default) or the user's forwarded token (when per-user permissions matter). Workspace permissions and governance apply automatically.
 
 ## Where to next
 
-These docs go deeper on each platform layer:
-
-- **[Web apps (Databricks Apps)](/docs/apps/quickstart)**: Scaffold and deploy an AppKit app (TypeScript) or a Python app on Databricks Apps.
-- **[Lakebase Postgres](/docs/lakebase/quickstart)**: Provision a Lakebase Postgres project and connect it to an app.
-- **[Data Lakehouse](/docs/lakehouse/overview)**: Read Unity Catalog tables with the Analytics plugin, trigger Lakeflow Jobs, and surface data freshness.
-- **[Agent Bricks](/docs/agents/overview)**: Governed model endpoints ([AI Gateway](/docs/agents/ai-gateway)), natural-language data queries ([Genie](/docs/agents/genie)), and custom agent endpoints ([Custom agents](/docs/agents/custom-agents)).
-- **[Set up your environment](/docs/tools/databricks-cli)**: Databricks CLI, agent skills, and MCP server.
-- **[AppKit Reference](/docs/appkit/v0)**: Component library, plugin API, and TypeScript SDK reference.
+- [Set up your environment](/docs/tools/databricks-cli) to start building apps.
+- Already have your environment set up? Use a [template](/templates) to quickly scaffold an app.
+- Dive deeper into each service: [Databricks Apps](/docs/apps/overview), [Lakebase Postgres](/docs/lakebase/overview), [Agent Bricks](/docs/agents/overview), and the [Data Lakehouse](/docs/lakehouse/overview).

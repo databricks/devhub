@@ -5,24 +5,32 @@ description: Build internal apps on the Databricks workspace your company alread
 
 # Start here
 
-This site is for building internal apps on Databricks. Pick a template, scaffold with [AppKit](/docs/appkit/v0), deploy, and iterate.
+## What is DevHub?
+
+DevHub is the developer resource for building **enterprise apps** with Databricks.
+
+## Why enterprise apps on Databricks?
+
+The Databricks platform pairs first-class developer experience with the production readiness and governance large organizations need:
+
+- **Developer experience**: agent-first tooling lets anyone ship real apps fast, with coding agents doing the heavy lifting.
+- **Production readiness**: stable, zero-downtime deployments, horizontal scaling, and stateful sessions out of the box.
+- **Governance & administration**: workspace-level permissions and SSO apply automatically to every app, and per-app scale-to-zero and scale-to-one keep spend under control.
 
 ## Your workspace is the foundation
 
-Everything you build here runs on a **Databricks workspace**. Your workspace URL looks like `https://<your-org>.cloud.databricks.com`. For the app you're building, it determines **who** can sign in, **what** data the app can read or write (Unity Catalog tables and Lakebase Postgres), and **where** the app runs. Hosting, auth, and networking are handled for you. From your local machine, you connect to it with the [Databricks CLI](/docs/tools/databricks-cli).
+Apps built on Databricks run in a **Databricks workspace**.
 
-## What you'll build
+> Not sure what a workspace is? Ask your team's Databricks admin, sign up for a [free trial](https://databricks.com/signup), or check out [Databricks Free Edition](https://databricks.com/learn/free-edition) to create your own workspace.
 
-- **[Databricks Apps](/docs/apps/overview)**: where your app runs. Built for interactive tools, not static dashboards. Managed hosting and workspace SSO. Build it with [AppKit](/docs/appkit/v0), the open-source TypeScript SDK that wires up auth, plugins, and pre-built React components.
-- **[Lakebase Postgres](/docs/lakebase/overview)**: managed Postgres for OLTP storage co-located with your workspace data. Use it for sessions, app state, conversation history, or any data your app reads and writes at low latency.
-- **[Agent Bricks](/docs/agents/overview)**: Databricks' enterprise agent platform, unifying model access, execution, governance, and context. Use it for AI features in your app: chat with your company's docs (Knowledge Assistants), ask-your-data in plain English (Genie), foundation-model calls, or custom Python agents.
-- **[Data Lakehouse](/docs/lakehouse/overview)**: governed analytical data in Unity Catalog. Use it to read company data, trigger Lakeflow Jobs from a handler, and display data freshness in your UI.
+Workspaces are isolated, secure, and governed. For every app you build, the workspace determines who can sign in and what data the app can read and write. Hosting, auth, and networking are all handled for you, so you can focus on your app's core logic instead of the infrastructure.
 
-See [Platform overview](/docs/platform-overview) for how these layers fit together.
+## What you'll build with
 
-## Where to start
+Apps built on Databricks use several workspace services: [Databricks Apps](/docs/apps/overview), [Lakebase Postgres](/docs/lakebase/overview), [Agent Bricks](/docs/agents/overview), and the [Data Lakehouse](/docs/lakehouse/overview). See [Platform overview](/docs/platform-overview) for the diagram and details on each.
 
-1. **Note your workspace URL** (looks like `https://<id>.cloud.databricks.com`).
-2. **Install and authenticate the [Databricks CLI](/docs/tools/databricks-cli).** Required for every template on this site.
-3. **Install [agent skills](/docs/tools/ai-tools/agent-skills)** so your coding agent has Databricks platform context.
-4. **Pick a [template](/templates)** that matches your app. Browse [Apps overview](/docs/apps/overview) first if you want the conceptual picture.
+## Where to go next
+
+- Read the [Platform overview](/docs/platform-overview) to see how the services fit together.
+- [Set up your environment](/docs/tools/databricks-cli) to start building apps.
+- Already have your environment set up? Use a [template](/templates) to quickly scaffold an app.

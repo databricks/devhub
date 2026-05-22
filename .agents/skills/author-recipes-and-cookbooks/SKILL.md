@@ -1,6 +1,6 @@
 ---
 name: author-recipes-and-cookbooks
-description: Author and maintain DevHub templates published at `dev.databricks.com/templates`. A template is the public name for any of three internal entry kinds — atomic snippets, multi-step end-to-end walkthroughs, and full deployable example apps. Use when creating, updating, or reorganizing any template-tier content.
+description: Author and maintain DevHub templates published at `developers.databricks.com/templates`. A template is the public name for any of three internal entry kinds — atomic snippets, multi-step end-to-end walkthroughs, and full deployable example apps. Use when creating, updating, or reorganizing any template-tier content.
 ---
 
 # Author DevHub Templates
@@ -21,7 +21,7 @@ So: recipes are the atoms, cookbooks compose recipes with additional context, an
 
 ## Public Vocabulary
 
-User-facing, all three kinds are presented as one thing: **template**. The site at `dev.databricks.com/templates`, navigation, filters, copy-pasted prompts, `llms.txt`, and the `/templates.md` markdown index all say "template(s)" — never "guide", "recipe", or "cookbook". When you write user-facing or agent-facing copy (titles, descriptions, intros, prerequisites, references), say "template".
+User-facing, all three kinds are presented as one thing: **template**. The site at `developers.databricks.com/templates`, navigation, filters, copy-pasted prompts, `llms.txt`, and the `/templates.md` markdown index all say "template(s)" — never "guide", "recipe", or "cookbook". When you write user-facing or agent-facing copy (titles, descriptions, intros, prerequisites, references), say "template".
 
 ## Internal Implementation Tiers
 
@@ -268,7 +268,7 @@ After verifying the deployed app works, delete `../../demos/<slug>/`. Optionally
 
 ## Author A `solution`
 
-Solutions live at `dev.databricks.com/solutions/<slug>` and are launch posts, deep-dive write-ups, or curated perspectives on the Databricks developer stack. They sit alongside the linked Databricks Blog posts that the registry hand-picks.
+Solutions live at `developers.databricks.com/solutions/<slug>` and are launch posts, deep-dive write-ups, or curated perspectives on the Databricks developer stack. They sit alongside the linked Databricks Blog posts that the registry hand-picks.
 
 A native (DevHub-authored) solution has two pieces:
 
@@ -318,21 +318,21 @@ Slugs must be globally unique. The plugin throws at build time if any collision 
 
 ### Link Style: Use Relative URLs For DevHub Pages
 
-When linking to another DevHub page (`/templates/...`, `/docs/...`, `/solutions/...`) from any markdown content (`content/**/*.md`, `docs/**/*.md`, intent files, dev-guidelines, about), use a **root-relative** path. Never hardcode `https://dev.databricks.com/<path>` inside markdown link or autolink syntax.
+When linking to another DevHub page (`/templates/...`, `/docs/...`, `/solutions/...`) from any markdown content (`content/**/*.md`, `docs/**/*.md`, intent files, dev-guidelines, about), use a **root-relative** path. Never hardcode `https://developers.databricks.com/<path>` inside markdown link or autolink syntax.
 
 - Good: `[Spin Up a Databricks App](/templates/spin-up-databricks-app)`
-- Bad: `[Spin Up a Databricks App](https://dev.databricks.com/templates/spin-up-databricks-app)`
+- Bad: `[Spin Up a Databricks App](https://developers.databricks.com/templates/spin-up-databricks-app)`
 - Good: `</llms.txt>` and `[ref]: /docs/start-here`
-- Bad: `<https://dev.databricks.com/llms.txt>` and `[ref]: https://dev.databricks.com/docs/start-here`
+- Bad: `<https://developers.databricks.com/llms.txt>` and `[ref]: https://developers.databricks.com/docs/start-here`
 
 `absolutizeMarkdown` in `src/lib/copy-preamble.ts` rewrites every root-relative link to the caller's origin when a page or markdown payload is served (Vercel functions, MCP server, in-browser "Copy as Markdown"), so relative links work transparently in `localhost:3001`, preview deployments, and production. Hardcoding the canonical origin makes in-site navigation a full reload and sends local-dev visitors to prod.
 
-`scripts/validate-content.mjs` enforces this rule and fails the build on `https://dev.databricks.com/(templates|docs|solutions)/...` references inside markdown link, autolink, or reference-definition syntax.
+`scripts/validate-content.mjs` enforces this rule and fails the build on `https://developers.databricks.com/(templates|docs|solutions)/...` references inside markdown link, autolink, or reference-definition syntax.
 
 Allowed exceptions (the validator skips these):
 
-- Bare textual URLs in prose that identify the site or are agent fetch directives (e.g. `Website: https://dev.databricks.com`, "fetch the index from `https://dev.databricks.com/llms.txt`"). `rewriteOrigin` substitutes the canonical origin at copy time, so these still resolve correctly.
-- URLs inside fenced code blocks (e.g. `npx add-mcp https://dev.databricks.com/api/mcp` — the install command must be canonical).
+- Bare textual URLs in prose that identify the site or are agent fetch directives (e.g. `Website: https://developers.databricks.com`, "fetch the index from `https://developers.databricks.com/llms.txt`"). `rewriteOrigin` substitutes the canonical origin at copy time, so these still resolve correctly.
+- URLs inside fenced code blocks (e.g. `npx add-mcp https://developers.databricks.com/api/mcp` — the install command must be canonical).
 - External links (`github.com/...`, `docs.databricks.com/...`, etc.) — always absolute.
 
 ## Validate Before Finishing

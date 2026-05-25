@@ -38,7 +38,6 @@ export function useCookbookMarkdown(
     cookbookDescription: cookbook.description,
     goal,
     recipes: recipeInputs,
-    mode: "agent",
   });
 
   return { cookbook, rawMarkdown };

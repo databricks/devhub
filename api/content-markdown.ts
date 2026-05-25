@@ -233,7 +233,6 @@ function readCookbookMarkdown(rootDir: string, slug: string): string {
     goal,
     intro: goal ? undefined : readCookbookIntro(rootDir, slug),
     recipes: recipeInputs,
-    mode: "agent",
   });
 }
 

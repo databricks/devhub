@@ -1,7 +1,6 @@
 import { existsSync, readFileSync, readdirSync, statSync } from "fs";
 import { resolve } from "path";
 import {
-  REQUIRED_CONTENT_SECTION_FILE,
   type ContentSectionFile,
   type ContentSections,
 } from "./content-sections";
@@ -31,7 +30,7 @@ export function hasSolutionSlug(rootDir: string, slug: string): boolean {
 
 /**
  * Recipes and examples live in `content/<section>/<slug>/` folders.
- * A folder is published if it has either goal.md or content.md (or both).
+ * A folder is published if it has goal.md.
  */
 export function getContentSlugs(
   rootDir: string,
@@ -42,10 +41,7 @@ export function getContentSlugs(
     .filter((entry) => {
       const fullPath = resolve(directory, entry);
       if (!statSync(fullPath).isDirectory()) return false;
-      return (
-        existsSync(resolve(fullPath, "goal.md")) ||
-        existsSync(resolve(fullPath, `${REQUIRED_CONTENT_SECTION_FILE}.md`))
-      );
+      return existsSync(resolve(fullPath, "goal.md"));
     })
     .sort();
 }
@@ -111,17 +107,16 @@ export function readCookbookGoal(
   return readFileSync(filePath, "utf-8");
 }
 
-/** Reads all present section files; throws when neither goal.md nor content.md exists. */
+/** Reads all present section files; throws when goal.md is missing. */
 export function readContentSections(
   rootDir: string,
   section: FolderContentSection,
   slug: string,
 ): ContentSections {
   const goal = readContentSection(rootDir, section, slug, "goal");
-  const content = readContentSection(rootDir, section, slug, "content");
-  if (goal === undefined && content === undefined) {
+  if (goal === undefined) {
     throw new Error(
-      `Missing required goal.md or content.md for ${section} "${slug}" at content/${section}/${slug}/`,
+      `Missing required goal.md for ${section} "${slug}" at content/${section}/${slug}/`,
     );
   }
   const prerequisites = readContentSection(
@@ -130,11 +125,7 @@ export function readContentSections(
     slug,
     "prerequisites",
   );
-  const deployment = readContentSection(rootDir, section, slug, "deployment");
-  const sections: ContentSections = {};
-  if (goal !== undefined) sections.goal = goal;
-  if (content !== undefined) sections.content = content;
+  const sections: ContentSections = { goal };
   if (prerequisites !== undefined) sections.prerequisites = prerequisites;
-  if (deployment !== undefined) sections.deployment = deployment;
   return sections;
 }

@@ -2,7 +2,7 @@ import Link from "@docusaurus/Link";
 import Layout from "@theme/Layout";
 import { MDXProvider } from "@mdx-js/react";
 import type { ReactNode } from "react";
-import { CopyPromptButton } from "@/components/copy-prompt-button";
+import { AgentUsageCard } from "@/components/agent-usage-card";
 import { Badge } from "@/components/ui/badge";
 import { RecipePre } from "@/components/cookbooks/recipe-code-block";
 import { recipes } from "@/lib/recipes/recipes";
@@ -56,14 +56,12 @@ export function RecipeDetail({
                   ))}
                 </div>
               )}
-              <CopyPromptButton
+              <AgentUsageCard
                 kind="recipe"
                 rawMarkdown={rawMarkdown}
                 title={recipe.name}
                 description={recipe.description}
                 permalink={`/templates/${recipe.id}`}
-                label="Copy prompt for your agent"
-                className="h-11 rounded-xl px-8 text-sm"
               />
             </div>
 

@@ -14,7 +14,7 @@ import {
   type AgentMarkdownInput,
 } from "@/lib/use-agent-markdown";
 
-type CopyPromptButtonProps = AgentMarkdownInput & {
+export type CopyPromptButtonProps = AgentMarkdownInput & {
   disabled?: boolean;
   disabledTooltip?: string;
   className?: string;

@@ -4,7 +4,7 @@ import Layout from "@theme/Layout";
 import { MDXProvider } from "@mdx-js/react";
 import type { ReactNode } from "react";
 import { Code2, ExternalLink, FolderGit2 } from "lucide-react";
-import { CopyPromptButton } from "@/components/copy-prompt-button";
+import { AgentUsageCard } from "@/components/agent-usage-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -170,7 +170,7 @@ export function ExampleDetail({
               <p className="mb-6 max-w-xl text-base leading-relaxed text-muted-foreground">
                 {example.description}
               </p>
-              <CopyPromptButton
+              <AgentUsageCard
                 kind="example"
                 rawMarkdown={rawMarkdown}
                 additionalMarkdown={additionalMarkdown}
@@ -178,8 +178,6 @@ export function ExampleDetail({
                 title={example.name}
                 description={example.description}
                 permalink={permalink}
-                label="Copy prompt for your agent"
-                className="h-11 rounded-xl px-8 text-sm"
               />
             </div>
 

@@ -3,7 +3,7 @@ import useBaseUrl from "@docusaurus/useBaseUrl";
 import Layout from "@theme/Layout";
 import { MDXProvider } from "@mdx-js/react";
 import type { ReactNode } from "react";
-import { CopyPromptButton } from "@/components/copy-prompt-button";
+import { AgentUsageCard } from "@/components/agent-usage-card";
 import { RecipePre } from "@/components/cookbooks/recipe-code-block";
 import type { Cookbook } from "@/lib/recipes/recipes";
 import { BaseUrlAnchor } from "@/components/base-url-anchor";
@@ -44,14 +44,12 @@ export function CookbookDetail({
               <p className="mb-6 max-w-xl text-base leading-relaxed text-muted-foreground">
                 {cookbook.description}
               </p>
-              <CopyPromptButton
+              <AgentUsageCard
                 kind="cookbook"
                 rawMarkdown={rawMarkdown}
                 title={cookbook.name}
                 description={cookbook.description}
                 permalink={permalink}
-                label="Copy prompt for your agent"
-                className="h-11 rounded-xl px-8 text-sm"
               />
             </div>
 

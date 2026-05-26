@@ -98,6 +98,16 @@ describe("validate-content script", () => {
     expect(result.stderr).toContain("missing a required file");
   });
 
+  test("fails when goal.md is whitespace-only", () => {
+    seedFixture(workDir, {
+      "content/recipes/blank/goal.md": "   \n  \n",
+    });
+
+    const result = runValidator(workDir);
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain("empty or whitespace-only");
+  });
+
   test("fails when a folder contains a disallowed filename", () => {
     seedFixture(workDir, {
       "content/recipes/stray/goal.md": "Build it.\n",

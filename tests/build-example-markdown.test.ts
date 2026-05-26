@@ -5,10 +5,8 @@ import {
   buildExportGetStartedSection,
   buildIncludedTemplatesPreamble,
 } from "../src/lib/examples/build-example-markdown";
-import type {
-  ExampleMarkdownOptions,
-  ExampleSections,
-} from "../src/lib/examples/build-example-markdown";
+import type { ExampleMarkdownOptions } from "../src/lib/examples/build-example-markdown";
+import type { ContentSections } from "../src/lib/content-sections";
 import type { Example } from "../src/lib/recipes/recipes";
 
 const minimalExample: Example = {
@@ -30,8 +28,8 @@ const githubUrl =
 
 const baseUrl = "https://example.com";
 
-const emptySections: ExampleSections = {};
-const goalSections: ExampleSections = {
+const emptySections: ContentSections = {};
+const goalSections: ContentSections = {
   goal: "Build a test example that demonstrates the pattern.",
 };
 

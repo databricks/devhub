@@ -79,6 +79,17 @@ describe("composeCookbookMarkdown", () => {
 });
 
 describe("buildCookbookMarkdownDocument", () => {
+  test("produces header-only document when all recipe goals are empty", () => {
+    const md = buildCookbookMarkdownDocument({
+      cookbookName: "Empty Cookbook",
+      cookbookDescription: "No recipes with goals.",
+      recipes: [recipeNoGoal],
+    });
+    expect(md).toContain('title: "Empty Cookbook"');
+    expect(md).toContain("# Empty Cookbook");
+    expect(md).not.toContain("## Component:");
+  });
+
   test("wraps composed body with frontmatter and title", () => {
     const md = buildCookbookMarkdownDocument({
       cookbookName: "Cookbook X",

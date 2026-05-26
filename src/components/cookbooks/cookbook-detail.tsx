@@ -55,7 +55,7 @@ export function CookbookDetail({
               />
             </div>
 
-            <div className="mb-12 overflow-hidden rounded-xl bg-gradient-to-br from-[#0f172a] to-[#1e293b]">
+            <div className="mb-12 overflow-hidden rounded-xl bg-gradient-to-br from-db-navy to-db-navy-light">
               <img
                 src={heroImageUrl}
                 alt="Template architecture preview"

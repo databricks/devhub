@@ -1,6 +1,5 @@
 /** Allowed file names inside each content/<recipes|examples>/<slug>/ folder. */
-const CONTENT_SECTION_FILES = ["goal", "prerequisites"] as const;
-export type ContentSectionFile = (typeof CONTENT_SECTION_FILES)[number];
+export type ContentSectionFile = "goal" | "prerequisites";
 
 export type ContentSections = {
   goal?: string;

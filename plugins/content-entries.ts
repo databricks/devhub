@@ -221,13 +221,16 @@ export default function contentEntriesPlugin(
       });
 
       for (const slug of publishedSlugs) {
+        const sections = sectionsBySlug[slug];
+        if (folderSection && !sections) {
+          throw new Error(
+            `Missing content sections for ${options.entryType} "${slug}"`,
+          );
+        }
+
         const source =
           options.entryType === "recipe" || options.entryType === "example"
-            ? createFolderRouteModuleSource(
-                options.entryType,
-                slug,
-                sectionsBySlug[slug],
-              )
+            ? createFolderRouteModuleSource(options.entryType, slug, sections)
             : createSolutionRouteModuleSource(slug);
 
         const modulePath = await createData(

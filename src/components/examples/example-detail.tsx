@@ -19,7 +19,7 @@ import {
   buildFullPrompt,
   buildAdditionalMarkdown,
 } from "@/lib/examples/build-example-markdown";
-import type { Example } from "@/lib/recipes/recipes";
+import type { Cookbook, Example, Recipe } from "@/lib/recipes/recipes";
 import { cookbooks, recipes } from "@/lib/recipes/recipes";
 import { useExampleSections } from "@/lib/use-raw-content-markdown";
 import { goalOnly } from "@/lib/content-sections";
@@ -134,11 +134,11 @@ export function ExampleDetail({
 
   const includedCookbooks = example.cookbookIds
     .map((id) => cookbooks.find((c) => c.id === id))
-    .filter(Boolean);
+    .filter((c): c is Cookbook => c !== undefined);
 
   const includedRecipes = example.recipeIds
     .map((id) => recipes.find((r) => r.id === id))
-    .filter(Boolean);
+    .filter((r): r is Recipe => r !== undefined);
 
   const mdOpts = {
     example,

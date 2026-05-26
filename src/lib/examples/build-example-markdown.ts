@@ -11,8 +11,6 @@ export type ExampleMarkdownOptions = {
   baseUrl: string;
 };
 
-export type ExampleSections = ContentSections;
-
 function isInitCommand(initCommand: string): boolean {
   return initCommand.trimStart().startsWith("databricks apps init");
 }
@@ -70,7 +68,7 @@ export function buildExportGetStartedSection(example: Example): string {
 }
 
 export function buildFullPrompt(
-  opts: ExampleMarkdownOptions & { sections: ExampleSections },
+  opts: ExampleMarkdownOptions & { sections: ContentSections },
 ): string {
   const {
     example,

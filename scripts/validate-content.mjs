@@ -81,6 +81,15 @@ function validateContentFolder({
         `${sectionPath}/${entry}/ is missing a required file. Need at least one of: ${requiredFiles.join(", ")}.`,
       );
     }
+
+    if (files.includes("goal.md")) {
+      const goalContent = readFileSync(resolve(entryPath, "goal.md"), "utf-8");
+      if (!goalContent.trim()) {
+        errors.push(
+          `${sectionPath}/${entry}/goal.md is empty or whitespace-only. Add a goal description.`,
+        );
+      }
+    }
   }
 }
 

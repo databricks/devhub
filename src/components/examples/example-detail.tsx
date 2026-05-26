@@ -163,11 +163,11 @@ export function ExampleDetail({
               All templates
             </Link>
 
-            <div className="mb-10 text-center">
+            <div className="mb-10">
               <h1 className="mb-3 text-3xl font-bold tracking-tight text-foreground md:text-4xl">
                 {example.name}
               </h1>
-              <p className="mx-auto mb-6 max-w-xl text-base leading-relaxed text-muted-foreground">
+              <p className="mb-6 max-w-xl text-base leading-relaxed text-muted-foreground">
                 {example.description}
               </p>
               <CopyPromptButton
@@ -179,7 +179,7 @@ export function ExampleDetail({
                 description={example.description}
                 permalink={permalink}
                 label="Copy prompt for your agent"
-                className="h-10 rounded-full px-6 text-sm"
+                className="h-11 rounded-xl px-8 text-sm"
               />
             </div>
 

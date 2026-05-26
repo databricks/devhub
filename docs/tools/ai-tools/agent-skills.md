@@ -19,18 +19,19 @@ databricks aitools install --agents claude-code,cursor
 ```
 
 ```bash title="Project scope"
-databricks aitools install --project
+databricks aitools install --scope=project
 ```
 
 The CLI auto-detects installed coding agents and symlinks skills into each agent's config directory from a shared canonical location (`~/.databricks/aitools/skills/`). Skills install globally by default.
 
-| Option           | Description                                    |
-| ---------------- | ---------------------------------------------- |
-| `--global`       | Install globally (default)                     |
-| `--project`      | Install to project directory                   |
-| `--agents`       | Target specific agents (comma-separated)       |
-| `--skills`       | Install specific skills only (comma-separated) |
-| `--experimental` | Include experimental skills                    |
+| Option            | Description                                          |
+| ----------------- | ---------------------------------------------------- |
+| `--scope=global`  | Install globally (default)                           |
+| `--scope=project` | Install to project directory                         |
+| `--scope=both`    | Apply to both scopes (valid on `update`/`uninstall`) |
+| `--agents`        | Target specific agents (comma-separated)             |
+| `--skills`        | Install specific skills only (comma-separated)       |
+| `--experimental`  | Include experimental skills                          |
 
 ## Manage
 
@@ -40,7 +41,7 @@ databricks aitools update
 databricks aitools uninstall
 ```
 
-`update` fetches the latest release and auto-installs new skills from the manifest. Pass `--check` to preview without downloading, `--no-new` to skip auto-installing new skills, or `--force` to re-download even if versions match. All commands accept `--global` (default) and `--project` to control scope.
+`update` fetches the latest release and auto-installs new skills from the manifest. Pass `--check` to preview without downloading, `--no-new` to skip auto-installing new skills, or `--force` to re-download even if versions match. All commands accept `--scope=global` (default), `--scope=project`, or `--scope=both` to control scope.
 
 ## Other install methods
 

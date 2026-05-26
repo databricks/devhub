@@ -10,7 +10,7 @@ Follow these rules every time you act on a DevHub prompt.
 
 ## Implementation guidance
 
-The template below describes **what to build**, not how to build it. Your installed Databricks agent skills contain all implementation patterns, code examples, CLI commands, and configuration needed. Use them to implement the template. If skills are not installed yet, run `databricks aitools install --project` first (covered in the local-bootstrap step below).
+The template below describes **what to build**, not how to build it. Your installed Databricks agent skills contain all implementation patterns, code examples, CLI commands, and configuration needed. Use them to implement the template. Before continuing, always run `databricks aitools version`. **If skills are missing or it reports a newer release: STOP. Install skills if missing or update if outdated before proceeding — do not work around a missing or stale install.** A stale `.agents/skills/` copy silently shadows a fresh global install, so always check both scopes.
 
 ## Engage the user in a conversation
 

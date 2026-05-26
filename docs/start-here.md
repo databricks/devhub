@@ -33,4 +33,4 @@ Apps built on Databricks use several workspace services: [Databricks Apps](/docs
 
 - Read the [Platform overview](/docs/platform-overview) to see how the services fit together.
 - [Set up your environment](/docs/tools/databricks-cli) to start building apps.
-- Already have your environment set up? Use a [template](/templates) to quickly scaffold an app.
+- Learn what [templates](/docs/templates) are and how they can help you quickly scaffold an app.

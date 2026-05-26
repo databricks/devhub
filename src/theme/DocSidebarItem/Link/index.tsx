@@ -31,7 +31,8 @@ export default function DocSidebarItemLink({
       <Link
         className={clsx(
           "menu__link",
-          "relative !rounded-md !border-none !px-2.5 !py-2 !text-[13.5px] !font-normal !leading-snug transition-colors duration-150",
+          "relative !rounded-md !border-none !px-2.5 !py-2 !text-[13.5px] !leading-snug transition-colors duration-150",
+          level === 1 ? "!font-semibold" : "!font-normal",
           "!text-muted-foreground hover:!text-foreground hover:!bg-db-navy/[0.04] dark:hover:!bg-white/[0.05]",
           "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
           !isInternalLink && "items-center",

@@ -205,8 +205,6 @@ function DocSidebarItemCategoryCollapsible({
     }
   };
 
-  const isTopLevelWithSeparator = level === 1 && index > 0;
-
   return (
     <li
       className={clsx(
@@ -214,7 +212,6 @@ function DocSidebarItemCategoryCollapsible({
         ThemeClassNames.docs.docSidebarItemCategoryLevel(level),
         "menu__list-item my-0",
         collapsed && "menu__list-item--collapsed",
-        isTopLevelWithSeparator && "mt-3 pt-3 border-t border-border",
         className,
       )}
     >
@@ -230,8 +227,7 @@ function DocSidebarItemCategoryCollapsible({
             "!text-muted-foreground hover:!text-foreground hover:!bg-db-navy/[0.04] dark:hover:!bg-white/[0.05]",
             "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
             collapsible && "menu__link--sublist",
-            collapsible &&
-              "!text-[11px] !font-semibold !tracking-[0.06em] !uppercase",
+            collapsible && "!text-[13.5px] !font-semibold",
             !href && collapsible && "menu__link--sublist-caret",
             !href &&
               collapsible &&

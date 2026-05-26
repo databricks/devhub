@@ -180,12 +180,14 @@ const sidebars: SidebarsConfig = {
     {
       type: "category",
       label: "Set up your environment",
+      collapsed: false,
       items: [
         "tools/databricks-cli",
         "tools/ai-tools/agent-skills",
         "tools/ai-tools/docs-mcp-server",
       ],
     },
+    "templates",
     {
       type: "category",
       label: "Databricks Apps",

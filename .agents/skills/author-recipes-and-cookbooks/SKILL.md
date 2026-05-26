@@ -15,7 +15,7 @@ Internally the catalog is built from three kinds of content that compose into ea
 
 - **Recipe** — an atomic, copy-pasteable agent prompt for one outcome (e.g. "Create a Lakebase instance"). The smallest unit; everything else is built from these.
 - **Cookbook** — composes multiple recipes into a longer end-to-end guide, plus its own meta content (intro, narrative, ordering). No app source.
-- **Example** — a cookbook _plus_ a full deployable `examples/<slug>/template/` codebase. Bundles recipes and cookbook narrative around runnable app code.
+- **Example** — a cookbook _plus_ a full deployable codebase that lives in the [app-templates](https://github.com/databricks/app-templates) repo at `app-templates/<slug>/`. Bundles recipes and cookbook narrative around runnable app code.
 
 So: recipes are the atoms, cookbooks compose recipes with additional context, and examples are cookbooks with shipped code.
 

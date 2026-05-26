@@ -53,7 +53,7 @@ test.describe("copy markdown exports raw markdown on recipe pages", () => {
 
     const copied = await getCopiedText(page);
     expect(copied).toContain("# About DevHub");
-    expect(copied).toContain("Install the Databricks CLI");
+    expect(copied).toContain("Databricks CLI");
     expect(copied).toContain("authenticated CLI profile");
     expect(copied).toContain("llms.txt");
   });
@@ -74,7 +74,7 @@ test.describe("copy markdown exports raw markdown on template pages", () => {
     expect(copied).toContain("# Working with DevHub prompts");
     expect(copied).toContain("# What the user just did");
     expect(copied).toContain("# Verify your local Databricks dev environment");
-    expect(copied).toContain("Install the Databricks CLI");
+    expect(copied).toContain("Databricks CLI");
     // Cookbook body comes after the meta-prompt, with its own frontmatter:
     expect(copied).toContain('title: "AI Chat App"');
     expect(copied).toContain("# The cookbook the user copied");

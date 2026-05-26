@@ -1,5 +1,3 @@
-Provision and validate a Databricks Model Serving endpoint for AI chat inference.
-
 When done, you will have:
 
 - A model serving endpoint running in your Databricks workspace

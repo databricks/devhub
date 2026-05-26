@@ -1,5 +1,3 @@
-Provision a managed Lakebase Postgres project on Databricks and collect the connection values needed by downstream recipes.
-
 When done, you will have:
 
 - A managed Postgres cluster running in your Databricks workspace

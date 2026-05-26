@@ -1,5 +1,3 @@
-Install the Databricks CLI, authenticate a profile, and verify the handshake. Every other DevHub template assumes this has already passed.
-
 When done, you will have:
 
 - Databricks CLI `1.0.0+` installed and on `PATH`

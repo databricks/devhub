@@ -1,5 +1,3 @@
-Generate a working AppKit Databricks App from scratch and deploy it to your workspace.
-
 When done, you will have:
 
 - A scaffolded Databricks App project with selected plugins (e.g. Lakebase, analytics, Genie, model serving)

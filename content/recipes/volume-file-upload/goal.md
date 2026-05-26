@@ -1,5 +1,3 @@
-Add file upload, browsing, download, delete, file type validation, and CSV row preview to your Databricks App using Unity Catalog Volumes.
-
 When done, you will have:
 
 - A Unity Catalog Volume configured as file storage

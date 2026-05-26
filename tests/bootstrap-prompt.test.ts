@@ -100,9 +100,7 @@ describe("hero bootstrap prompt composition (matches /api/bootstrap-prompt)", ()
     const bootstrapIdx = combined.indexOf(
       "# Verify your local Databricks dev environment",
     );
-    const localBootstrapBodyIdx = combined.indexOf(
-      "Install the Databricks CLI",
-    );
+    const localBootstrapBodyIdx = combined.indexOf("When done, you will have");
 
     expect(aboutIdx).toBe(0);
     expect(guidelinesIdx).toBeGreaterThan(aboutIdx);
@@ -122,7 +120,7 @@ describe("hero bootstrap prompt composition (matches /api/bootstrap-prompt)", ()
       siteOrigin: "https://developers.databricks.com",
     });
     // goal.md has the outcome description, not CLI commands
-    expect(combined).toContain("Install the Databricks CLI");
+    expect(combined).toContain("Databricks CLI");
     expect(combined).toContain("https://developers.databricks.com/llms.txt");
   });
 
@@ -132,7 +130,7 @@ describe("hero bootstrap prompt composition (matches /api/bootstrap-prompt)", ()
       "set-up-your-local-dev-environment",
     );
     // Agent prompt now returns goal.md content (outcome), not full implementation
-    expect(recipe).toContain("Install the Databricks CLI");
+    expect(recipe).toContain("Databricks CLI");
     expect(recipe).toContain("authenticated CLI profile");
   });
 });

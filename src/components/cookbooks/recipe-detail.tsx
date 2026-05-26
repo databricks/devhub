@@ -3,6 +3,7 @@ import Layout from "@theme/Layout";
 import { MDXProvider } from "@mdx-js/react";
 import type { ReactNode } from "react";
 import { CopyPromptButton } from "@/components/copy-prompt-button";
+import { Badge } from "@/components/ui/badge";
 import { RecipePre } from "@/components/cookbooks/recipe-code-block";
 import { recipes } from "@/lib/recipes/recipes";
 import { useRawRecipeMarkdown } from "@/lib/use-raw-content-markdown";
@@ -43,9 +44,18 @@ export function RecipeDetail({
               <h1 className="mb-3 text-3xl font-bold tracking-tight text-foreground md:text-4xl">
                 {recipe.name}
               </h1>
-              <p className="mx-auto mb-6 max-w-xl text-base leading-relaxed text-muted-foreground">
+              <p className="mx-auto mb-4 max-w-xl text-base leading-relaxed text-muted-foreground">
                 {recipe.description}
               </p>
+              {recipe.services.length > 0 && (
+                <div className="mb-6 flex flex-wrap justify-center gap-2">
+                  {recipe.services.map((service) => (
+                    <Badge key={service} variant="secondary">
+                      {service}
+                    </Badge>
+                  ))}
+                </div>
+              )}
               <CopyPromptButton
                 kind="recipe"
                 rawMarkdown={rawMarkdown}

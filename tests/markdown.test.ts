@@ -66,7 +66,7 @@ describe("detail markdown resolver", () => {
       "set-up-your-local-dev-environment",
     );
     // Agent prompt returns goal.md content (no heading, just description)
-    expect(markdown).toContain("Install the Databricks CLI");
+    expect(markdown).toContain("Databricks CLI");
     expect(markdown).toContain("authenticated CLI profile");
   });
 
@@ -120,7 +120,7 @@ describe("templates section resolves recipes, examples, and cookbooks", () => {
       "templates",
       "set-up-your-local-dev-environment",
     );
-    expect(markdown).toContain("Install the Databricks CLI");
+    expect(markdown).toContain("Databricks CLI");
   });
 
   test("resolves an example slug via templates", () => {
@@ -271,7 +271,7 @@ describe("slug normalization strips .md extension", () => {
       "recipes",
       "set-up-your-local-dev-environment.md",
     );
-    expect(markdown).toContain("Install the Databricks CLI");
+    expect(markdown).toContain("Databricks CLI");
   });
 
   test("templates slug with .md extension resolves", () => {

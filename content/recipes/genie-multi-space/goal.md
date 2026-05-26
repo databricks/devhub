@@ -1,5 +1,3 @@
-Upgrade a single-space Genie app to let users switch between multiple AI/BI Genie spaces from a dropdown.
-
 When done, you will have:
 
 - Multiple Genie spaces accessible from a single app

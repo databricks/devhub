@@ -1,5 +1,3 @@
-Build a streaming AI chat experience in a Databricks App using Vercel AI SDK with Databricks Model Serving and OpenAI-compatible endpoints.
-
 When done, you will have:
 
 - A real-time streaming chat interface in your Databricks App

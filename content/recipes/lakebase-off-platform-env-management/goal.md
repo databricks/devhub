@@ -1,5 +1,3 @@
-Define and validate the environment variables needed to connect to Lakebase from apps deployed outside Databricks App Platform.
-
 When done, you will have:
 
 - All Lakebase connection values collected from the Databricks CLI

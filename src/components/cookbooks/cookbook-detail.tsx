@@ -3,7 +3,7 @@ import useBaseUrl from "@docusaurus/useBaseUrl";
 import Layout from "@theme/Layout";
 import { MDXProvider } from "@mdx-js/react";
 import type { ReactNode } from "react";
-import { TemplateUsageBanner } from "@/components/template-usage-banner";
+import { CopyPromptButton } from "@/components/copy-prompt-button";
 import { RecipePre } from "@/components/cookbooks/recipe-code-block";
 import type { Cookbook } from "@/lib/recipes/recipes";
 import { BaseUrlAnchor } from "@/components/base-url-anchor";
@@ -37,20 +37,23 @@ export function CookbookDetail({
               All templates
             </Link>
 
-            <TemplateUsageBanner
-              kind="cookbook"
-              rawMarkdown={rawMarkdown}
-              title={cookbook.name}
-              description={cookbook.description}
-              permalink={permalink}
-            />
-
-            <h1 className="mb-3 text-3xl font-bold tracking-tight text-foreground md:text-4xl">
-              {cookbook.name}
-            </h1>
-            <p className="mb-8 max-w-2xl text-base leading-relaxed text-muted-foreground">
-              {cookbook.description}
-            </p>
+            <div className="mb-10 text-center">
+              <h1 className="mb-3 text-3xl font-bold tracking-tight text-foreground md:text-4xl">
+                {cookbook.name}
+              </h1>
+              <p className="mx-auto mb-6 max-w-xl text-base leading-relaxed text-muted-foreground">
+                {cookbook.description}
+              </p>
+              <CopyPromptButton
+                kind="cookbook"
+                rawMarkdown={rawMarkdown}
+                title={cookbook.name}
+                description={cookbook.description}
+                permalink={permalink}
+                label="Copy prompt for your agent"
+                className="h-10 rounded-full px-6 text-sm"
+              />
+            </div>
 
             <div className="mb-12 overflow-hidden rounded-xl bg-gradient-to-br from-[#0f172a] to-[#1e293b]">
               <img

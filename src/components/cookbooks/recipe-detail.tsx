@@ -2,7 +2,7 @@ import Link from "@docusaurus/Link";
 import Layout from "@theme/Layout";
 import { MDXProvider } from "@mdx-js/react";
 import type { ReactNode } from "react";
-import { TemplateUsageBanner } from "@/components/template-usage-banner";
+import { CopyPromptButton } from "@/components/copy-prompt-button";
 import { RecipePre } from "@/components/cookbooks/recipe-code-block";
 import { recipes } from "@/lib/recipes/recipes";
 import { useRawRecipeMarkdown } from "@/lib/use-raw-content-markdown";
@@ -39,26 +39,29 @@ export function RecipeDetail({
               All templates
             </Link>
 
-            <TemplateUsageBanner
-              kind="recipe"
-              rawMarkdown={rawMarkdown}
-              title={recipe.name}
-              description={recipe.description}
-              permalink={`/templates/${recipe.id}`}
-            />
-
-            <div className="mb-3 flex flex-wrap items-center gap-3">
-              <h1 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">
+            <div className="mb-10 text-center">
+              <h1 className="mb-3 text-3xl font-bold tracking-tight text-foreground md:text-4xl">
                 {recipe.name}
               </h1>
+              <p className="mx-auto mb-6 max-w-xl text-base leading-relaxed text-muted-foreground">
+                {recipe.description}
+              </p>
+              <CopyPromptButton
+                kind="recipe"
+                rawMarkdown={rawMarkdown}
+                title={recipe.name}
+                description={recipe.description}
+                permalink={`/templates/${recipe.id}`}
+                label="Copy prompt for your agent"
+                className="h-10 rounded-full px-6 text-sm"
+              />
             </div>
-            <p className="mb-8 max-w-2xl text-base leading-relaxed text-muted-foreground">
-              {recipe.description}
-            </p>
 
-            <MDXProvider components={recipeComponents}>
-              <div className="prose-solution">{children}</div>
-            </MDXProvider>
+            <div className="border-t border-border/60 pt-8">
+              <MDXProvider components={recipeComponents}>
+                <div className="prose-solution">{children}</div>
+              </MDXProvider>
+            </div>
           </div>
         </div>
       </main>

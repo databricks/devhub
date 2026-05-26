@@ -1,5 +1,11 @@
+import Link from "@docusaurus/Link";
 import Layout from "@theme/Layout";
-import { ArrowUpRight, FilterIcon, TerminalIcon } from "lucide-react";
+import {
+  ArrowRight,
+  ArrowUpRight,
+  FilterIcon,
+  TerminalIcon,
+} from "lucide-react";
 import { useCallback, useMemo, useState, type ReactNode } from "react";
 import { ActiveFilters } from "@/components/templates/active-filters";
 import type { TemplateItem } from "@/components/templates/template-card";
@@ -165,10 +171,20 @@ export default function TemplatesPage(): ReactNode {
               <span className="text-db-lava">Templates</span> to jumpstart your
               next Databricks app.
             </h1>
-            <p className="mb-10 max-w-2xl text-lg text-black/68 dark:text-white/68">
+            <p className="mb-3 max-w-2xl text-lg text-black/68 dark:text-white/68">
               Use each template step by step, or copy it as a prompt for your
               coding agent to build for you.
             </p>
+            <Link
+              to="/docs/templates"
+              className="group mb-10 inline-flex items-center gap-1.5 text-sm font-medium text-black/60 underline decoration-db-lava decoration-2 underline-offset-4 transition-colors hover:text-db-lava dark:text-white/60 dark:decoration-db-lava-light dark:hover:text-db-lava-light"
+            >
+              New to templates? Learn more here
+              <ArrowRight
+                aria-hidden="true"
+                className="size-3.5 transition-transform duration-200 group-hover:translate-x-0.5"
+              />
+            </Link>
 
             {/* Toolbar: search + actions */}
             <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center">

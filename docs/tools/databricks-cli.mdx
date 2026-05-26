@@ -7,15 +7,13 @@ import TabItem from "@theme/TabItem";
 
 # Databricks CLI
 
-The Databricks CLI is required for every template on this site, which includes CLI commands for scaffolding and deployment. Install and authenticate before you begin.
+The Databricks CLI (command-line interface) allows you to interact with the Databricks platform from your local terminal or via a coding agent. Installation and authentication with the CLI are required for developing apps on Databricks and for running the [templates](/templates) on this site.
 
-Command-line tool for workspace operations, app deployment, and automation. This page covers installation and authentication. Product-specific commands (`databricks apps`, `databricks postgres`, `databricks serving-endpoints`) are covered in each product's docs.
-
-For the full command reference, see the [official CLI docs](https://docs.databricks.com/aws/en/dev-tools/cli/).
+This page covers installation and authentication. For the full command reference, see the [official CLI docs](https://docs.databricks.com/aws/en/dev-tools/cli/).
 
 ## Install or upgrade
 
-DevHub templates assume version `1.0.0+`.
+From your terminal, run the following commands to install or upgrade the CLI:
 
 <Tabs groupId="os">
 <TabItem value="mac-linux" label="macOS / Linux">
@@ -48,29 +46,39 @@ On Windows, use WSL. If `/usr/local/bin` is not writable, rerun with `sudo`. Re-
 </TabItem>
 </Tabs>
 
+:::note
+All DevHub templates assume the Databricks CLI is version `1.0.0+`.
+:::
+
 ## Authenticate
 
-Browser-based OAuth is the default for local use:
+In order to develop apps on Databricks, you need to authenticate with the CLI. This allows the CLI to interact with your Databricks workspace and perform actions on your behalf.
+
+To authenticate, run the following command:
 
 ```bash
 databricks auth login
 ```
 
-Prompts for a profile name (defaults to DEFAULT), then opens a browser to authenticate and select a workspace. Credentials save to `~/.databrickscfg`.
+This will prompt you for a profile name (defaults to DEFAULT), then open a browser to authenticate and select a workspace.
 
-To target a specific workspace and name the profile:
+Once authenticated, credentials are saved to `~/.databrickscfg`.
+
+To authenticate to a specific workspace or to name the profile, use the `--host` and `--profile` flags:
 
 ```bash
 databricks auth login --host <workspace-url> --profile <PROFILE>
 ```
 
-Pass `--profile <PROFILE>` on subsequent commands when using named profiles.
+If you have multiple authenticated profiles, you can pass `--profile <PROFILE>` on subsequent commands to target a specific profile.
 
-List saved profiles:
+To list all saved profiles, run the following command:
 
 ```bash
 databricks auth profiles
 ```
+
+Example output:
 
 ```text
 Name              Host                                             Valid
@@ -78,28 +86,13 @@ DEFAULT           https://adb-1234567890.12.azuredatabricks.net    YES
 my-prod-workspace https://mycompany.cloud.databricks.com           YES
 ```
 
-**Name** is the profile label, **Host** is the workspace URL, and **Valid** is the result of a live authentication check against the workspace. `NO` means the check failed; re-run `databricks auth login --profile <NAME>` to re-authenticate.
+- **Name** is the profile label.
+- **Host** is the workspace URL.
+- **Valid** is the result of a live authentication check against the workspace. `NO` means the check failed; re-run `databricks auth login --profile <NAME>` to re-authenticate.
 
 For CI/CD, use OAuth client credentials or token-based auth (no browser step). See [CLI authentication](https://docs.databricks.com/aws/en/dev-tools/cli/authentication).
 
-## Product commands
-
-Product-specific CLI commands are covered alongside each product:
-
-- `databricks apps`: [Apps development](/docs/apps/development)
-- `databricks postgres`: [Lakebase development](/docs/lakebase/development)
-- `databricks serving-endpoints`: [AI Gateway](/docs/agents/ai-gateway)
-
-## Agent skills
-
-Install [agent skills](/docs/tools/ai-tools/agent-skills) to give AI coding assistants Databricks platform knowledge:
-
-```bash
-databricks aitools install
-```
-
-By default, skills install globally. Pass `--scope=project` to install into the current project directory instead. See the [agent skills page](/docs/tools/ai-tools/agent-skills) for all options.
-
 ## Where to next
 
-With the CLI installed and authenticated, pick a [template](/templates) to start building. New to templates? Read [What are templates?](/docs/templates) first.
+- [Install agent skills](/docs/tools/ai-tools/agent-skills) to give AI coding assistants Databricks platform knowledge.
+- Set up the [DevHub Docs MCP server](/docs/tools/ai-tools/docs-mcp-server) to give AI coding assistants access to DevHub documentation.

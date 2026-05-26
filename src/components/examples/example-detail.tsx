@@ -32,20 +32,16 @@ import { BaseUrlAnchor } from "@/components/base-url-anchor";
 
 const mdxComponents = { a: BaseUrlAnchor, pre: RecipePre };
 
-const GITHUB_BASE = "https://github.com/databricks/devhub/tree/main";
-
 type ExampleDetailProps = {
   example: Example;
   children: ReactNode;
 };
 
-function StarterCodeCard({
-  githubUrl,
-  githubPath,
-}: {
-  githubUrl: string;
-  githubPath: string;
-}) {
+function StarterCodeCard({ templateUrl }: { templateUrl: string }) {
+  const displayPath =
+    templateUrl
+      .replace(/^https:\/\/github\.com\//, "")
+      .replace(/\/tree\/[^/]+\//, "/") + "/";
   return (
     <div className="mb-8 rounded-lg border border-border/80 bg-card">
       <div className="flex items-start gap-3 px-5 pt-5 pb-4">
@@ -67,12 +63,12 @@ function StarterCodeCard({
         <div className="inline-flex min-w-0 items-center gap-2 text-[12px] text-muted-foreground">
           <FolderGit2 className="h-3.5 w-3.5 shrink-0" />
           <code className="truncate rounded bg-muted px-1.5 py-0.5 font-mono">
-            {githubPath}/template/
+            {displayPath}
           </code>
         </div>
         <Button asChild variant="outline" size="sm" className="sm:shrink-0">
           <a
-            href={githubUrl}
+            href={templateUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 no-underline"
@@ -133,7 +129,7 @@ export function ExampleDetail({
   const siteUrl = siteUrlFromConfig(siteConfig.url, siteConfig.baseUrl);
   const contentRef = useRef<HTMLDivElement>(null);
   const permalink = `/templates/${example.id}`;
-  const githubUrl = `${GITHUB_BASE}/${example.githubPath}/template`;
+  const githubUrl = example.templateUrl;
 
   const sections = useExampleSections(example.id) ?? { content: "" };
   const rawMarkdown = goalOnly(sections);
@@ -204,10 +200,7 @@ export function ExampleDetail({
                   </div>
                 )}
 
-                <StarterCodeCard
-                  githubUrl={githubUrl}
-                  githubPath={example.githubPath}
-                />
+                <StarterCodeCard templateUrl={example.templateUrl} />
 
                 <div className="recipe-content-card" ref={contentRef}>
                   <MDXProvider components={mdxComponents}>

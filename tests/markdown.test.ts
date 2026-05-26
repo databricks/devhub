@@ -177,7 +177,7 @@ describe("example markdown includes metadata", () => {
   test("includes GitHub link for examples with one", () => {
     const markdown = getDetailMarkdown("examples", "agentic-support-console");
     expect(markdown).toContain("View source on GitHub");
-    expect(markdown).toContain("github.com/databricks/devhub");
+    expect(markdown).toContain("github.com/databricks/app-templates");
   });
 
   test("includes related recipe and template links", () => {

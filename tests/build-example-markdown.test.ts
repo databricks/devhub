@@ -15,9 +15,10 @@ const minimalExample: Example = {
   id: "test-example",
   name: "Test Example",
   description: "A test example for unit tests.",
-  githubPath: "examples/test-example",
+  templateUrl:
+    "https://github.com/databricks/app-templates/tree/main/test-example",
   initCommand:
-    "git clone --depth 1 https://github.com/databricks/devhub.git\ncd devhub/examples/test-example/template",
+    "git clone --depth 1 https://github.com/databricks/app-templates.git\ncd app-templates/test-example",
   cookbookIds: [],
   recipeIds: [],
   tags: [],
@@ -25,7 +26,7 @@ const minimalExample: Example = {
 };
 
 const githubUrl =
-  "https://github.com/databricks/devhub/tree/main/examples/test-example";
+  "https://github.com/databricks/app-templates/tree/main/test-example";
 
 const baseUrl = "https://example.com";
 
@@ -64,7 +65,7 @@ describe("buildIncludedTemplatesPreamble", () => {
     const text = buildIncludedTemplatesPreamble();
     expect(text).toContain("**templates**");
     expect(text).toContain("template code");
-    expect(text).toContain("`template/README.md`");
+    expect(text).toContain("`README.md`");
     expect(text).toContain("DevHub");
     expect(text).not.toMatch(/\b[Rr]ecipes?\b/);
     expect(text).not.toMatch(/\b[Cc]ookbooks?\b/);
@@ -78,7 +79,7 @@ describe("buildExportGetStartedSection", () => {
     expect(section).toContain("Run the command below");
     expect(section).toContain("```bash");
     expect(section).toContain(minimalExample.initCommand);
-    expect(section).toContain("**`template/README.md`**");
+    expect(section).toContain("**`README.md`**");
     expect(section).toContain("source of truth");
   });
 });
@@ -93,11 +94,11 @@ describe("buildFullPrompt", () => {
   test("includes get started steps", () => {
     const prompt = buildFullPrompt({ ...baseOpts, sections: emptySections });
     expect(prompt).toContain("## Get started");
-    expect(prompt).toContain("### Clone and follow `template/README.md`");
+    expect(prompt).toContain("### Clone and follow `README.md`");
     expect(prompt).toContain(minimalExample.initCommand);
-    expect(prompt).toContain("template/README.md");
+    expect(prompt).toContain("README.md");
     expect(prompt).toContain(
-      "databricks apps init --template https://github.com/databricks/devhub/tree/main/examples/test-example",
+      "databricks apps init --template https://github.com/databricks/app-templates/tree/main/test-example",
     );
   });
 
@@ -183,7 +184,7 @@ describe("buildAdditionalMarkdown", () => {
     expect(md).toContain("Run the command below");
     expect(md).toContain("```bash");
     expect(md).toContain(minimalExample.initCommand);
-    expect(md).toContain("**`template/README.md`**");
+    expect(md).toContain("**`README.md`**");
     expect(md).not.toContain("### 1. Clone locally");
   });
 
@@ -251,7 +252,7 @@ describe("example Get started: full prompt (Copy prompt) vs export markdown (Cop
     const full = buildFullPrompt({ ...baseOpts, sections: emptySections });
     const exportMd = buildAdditionalMarkdown(baseOpts);
 
-    expect(full).toContain("### Clone and follow `template/README.md`");
+    expect(full).toContain("### Clone and follow `README.md`");
     expect(full).toContain("```bash");
     expect(full).toContain(minimalExample.initCommand);
 
@@ -276,7 +277,7 @@ describe("init-style examples (databricks apps init)", () => {
     ...minimalExample,
     id: "init-example",
     initCommand:
-      "databricks apps init \\\n  --template https://github.com/databricks/devhub/tree/main/examples/init-example/template \\\n  --name <app-name>",
+      "databricks apps init \\\n  --template https://github.com/databricks/app-templates/tree/main/init-example \\\n  --name <app-name>",
   };
   const initOpts: ExampleMarkdownOptions = {
     example: initExample,
@@ -290,8 +291,8 @@ describe("init-style examples (databricks apps init)", () => {
     const section = buildExportGetStartedSection(initExample);
     expect(section).toContain("scaffold this example");
     expect(section).toContain("databricks apps init");
-    expect(section).not.toContain("clone the DevHub repository");
-    expect(section).not.toContain("**`template/README.md`**");
+    expect(section).not.toContain("clone the app-templates repository");
+    expect(section).not.toContain("at the root of that folder when you clone");
     expect(section).toContain(initExample.initCommand);
   });
 
@@ -310,7 +311,7 @@ describe("init-style examples (databricks apps init)", () => {
     expect(prompt).not.toContain("Verify Databricks CLI auth");
     expect(prompt).not.toContain("databricks auth profiles");
     expect(prompt).not.toContain("databricks auth login --profile");
-    expect(prompt).not.toContain("### Clone and follow `template/README.md`");
+    expect(prompt).not.toContain("### Clone and follow `README.md`");
     expect(prompt).toContain(initExample.initCommand);
   });
 

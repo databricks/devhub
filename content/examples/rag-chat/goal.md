@@ -23,7 +23,7 @@ This validates the [AppKit templates system](/docs/appkit/v0/development/templat
 
 ### What to Adapt
 
-Setup and provisioning are documented in the repository's **`template/README.md`**.
+Setup and provisioning are documented in the repository's **`README.md`**.
 
 To make this template your own:
 

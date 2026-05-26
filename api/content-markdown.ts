@@ -188,11 +188,8 @@ function readExampleMarkdown(rootDir: string, slug: string): string {
   if (example.initCommand) {
     lines.push("## Quick start", "", "```bash", example.initCommand, "```", "");
   }
-  if (example.githubPath) {
-    lines.push(
-      `[View source on GitHub](https://github.com/databricks/devhub/tree/main/${example.githubPath}/template)`,
-      "",
-    );
+  if (example.templateUrl) {
+    lines.push(`[View source on GitHub](${example.templateUrl})`, "");
   }
   const includedTemplates = [
     ...example.cookbookIds.map((id) => cookbooks.find((c) => c.id === id)),

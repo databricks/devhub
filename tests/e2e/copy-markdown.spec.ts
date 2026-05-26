@@ -140,14 +140,14 @@ test.describe("copy markdown exports raw markdown on example pages", () => {
     expect(copied).toContain("Run the command below");
     expect(copied).toContain("```bash");
     expect(copied).toContain(
-      "git clone --depth 1 https://github.com/databricks/devhub.git",
+      "git clone --depth 1 https://github.com/databricks/app-templates.git",
     );
-    expect(copied).toContain("**`template/README.md`**");
+    expect(copied).toContain("**`README.md`**");
     expect(copied).toContain("## Included templates");
     expect(copied).toContain(
       "These **templates** informed how this example was built",
     );
-    expect(copied).toContain("### Clone and follow `template/README.md`");
+    expect(copied).toContain("### Clone and follow `README.md`");
   });
 
   test("Banner Copy prompt copies full prompt with bash and clone substeps", async ({
@@ -161,15 +161,15 @@ test.describe("copy markdown exports raw markdown on example pages", () => {
     const copied = await getCopiedText(page);
     expect(copied).toContain("# About DevHub");
     expect(copied).toContain("\n---\n\n# ");
-    expect(copied).toContain("### Clone and follow `template/README.md`");
+    expect(copied).toContain("### Clone and follow `README.md`");
     expect(copied).toContain("```bash");
     expect(copied).toContain(
-      "git clone --depth 1 https://github.com/databricks/devhub.git",
+      "git clone --depth 1 https://github.com/databricks/app-templates.git",
     );
     expect(copied).toContain(
-      "databricks apps init --template https://github.com/databricks/devhub/tree/main/examples/agentic-support-console",
+      "databricks apps init --template https://github.com/databricks/app-templates/tree/main/agentic-support-console",
     );
-    expect(copied).toContain("template/README.md");
+    expect(copied).toContain("README.md");
     expect(copied).not.toContain(
       "### 2. Provision or link existing Databricks resources",
     );

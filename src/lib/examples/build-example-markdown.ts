@@ -22,7 +22,7 @@ export function buildIncludedTemplatesPreamble(): string {
   return [
     "These **templates** informed how this example was built; their patterns are reflected in the template code, bundles, and workflows.",
     "",
-    "Review them on DevHub when you need more context on a technique than `template/README.md` alone provides.",
+    "Review them on DevHub when you need more context on a technique than `README.md` alone provides.",
   ].join("\n");
 }
 
@@ -59,13 +59,13 @@ export function buildExportGetStartedSection(example: Example): string {
   return [
     "## Get started",
     "",
-    "Run the command below to clone the DevHub repository locally and `cd` into this example's **`template/`** folder. That directory is the runnable template (AppKit app, Databricks Asset Bundles, and any `pipelines/`, `seed/`, or `provisioning/sql/` shipped with the example).",
+    "Run the command below to clone the app-templates repository locally and `cd` into this example's folder. That directory is the runnable template (AppKit app, Databricks Asset Bundles, and any `pipelines/`, `seed/`, or `provisioning/sql/` shipped with the example).",
     "",
     "```bash",
     example.initCommand,
     "```",
     "",
-    "**`template/README.md`** is included in that folder when you clone. Open it for step-by-step instructions: provision the right infrastructure (catalogs, Lakehouse Sync, Lakebase, warehouses, AI endpoints, and so on), run seeds and pipeline bundles as needed, and deploy the app. Follow that README end to end; it is the source of truth for this example.",
+    "**`README.md`** is included at the root of that folder when you clone. Open it for step-by-step instructions: provision the right infrastructure (catalogs, Lakehouse Sync, Lakebase, warehouses, AI endpoints, and so on), run seeds and pipeline bundles as needed, and deploy the app. Follow that README end to end; it is the source of truth for this example.",
   ].join("\n");
 }
 
@@ -81,7 +81,7 @@ export function buildFullPrompt(
     baseUrl,
   } = opts;
   const hasGoal = Boolean(sections.goal);
-  const cliTemplateUrl = `https://github.com/databricks/devhub/tree/main/${example.githubPath}`;
+  const cliTemplateUrl = example.templateUrl;
   const lines: string[] = [`# ${example.name}`, "", example.description, ""];
 
   // When goal.md exists, use it as the body and skip prerequisites/content/deployment.
@@ -118,17 +118,17 @@ export function buildFullPrompt(
     }
   } else {
     lines.push(
-      "### Clone and follow `template/README.md`",
+      "### Clone and follow `README.md`",
       "",
-      "Run the command below to clone the DevHub repository locally and enter this example's **`template/`** directory.",
+      "Run the command below to clone the app-templates repository locally and enter this example's directory.",
       "",
       "```bash",
       example.initCommand,
       "```",
       "",
-      "**`template/README.md`** ships with that template when you clone. Use it as the runbook: follow the instructions there to provision the right infrastructure pieces, seed data, run pipelines if applicable, and deploy the app.",
+      "**`README.md`** ships at the root of the example. Use it as the runbook: follow the instructions there to provision the right infrastructure pieces, seed data, run pipelines if applicable, and deploy the app.",
       "",
-      "**Optional:** scaffold a standalone project with the CLI instead of cloning the full DevHub repo:",
+      "**Optional:** scaffold a standalone project with the CLI instead of cloning the full app-templates repo:",
       "",
       "```bash",
       `databricks apps init --template ${cliTemplateUrl} --name <app-name>`,

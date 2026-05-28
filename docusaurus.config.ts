@@ -99,6 +99,9 @@ const config: Config = {
         theme: {
           customCss: "./src/css/custom.css",
         },
+        sitemap: {
+          ignorePatterns: ["/hackathon", "/hackathon/"],
+        },
       } satisfies Preset.Options,
     ],
   ],

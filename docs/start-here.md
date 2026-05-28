@@ -11,7 +11,7 @@ DevHub is the developer resource for building **enterprise apps** with Databrick
 
 ## Why enterprise apps on Databricks?
 
-The Databricks platform pairs first-class developer experience with the production readiness and governance large organizations need:
+The Databricks platform combines a first-class developer experience with the production readiness and governance that large organizations need:
 
 - **Developer experience**: agent-first tooling lets anyone ship real apps fast, with coding agents doing the heavy lifting.
 - **Production readiness**: stable, zero-downtime deployments, horizontal scaling, and stateful sessions out of the box.
@@ -23,11 +23,11 @@ Apps built on Databricks run in a **Databricks workspace**.
 
 > Not sure what a workspace is? Ask your team's Databricks admin, sign up for a [free trial](https://databricks.com/signup), or check out [Databricks Free Edition](https://databricks.com/learn/free-edition) to create your own workspace.
 
-Workspaces are isolated, secure, and governed. For every app you build, the workspace determines who can sign in and what data the app can read and write. Hosting, auth, and networking are all handled for you, so you can focus on your app's core logic instead of the infrastructure.
+Workspaces are isolated, secure, and governed. For every app you build, the workspace determines who can sign in and what data the app can read and write. Hosting, authentication, and networking are all handled for you, so you can focus on your app's core logic instead of the infrastructure.
 
 ## What you'll build with
 
-Apps built on Databricks use several workspace services: [Databricks Apps](/docs/apps/overview), [Lakebase Postgres](/docs/lakebase/overview), [Agent Bricks](/docs/agents/overview), and the [Data Lakehouse](/docs/lakehouse/overview). See [Platform overview](/docs/platform-overview) for the diagram and details on each.
+Apps built on Databricks use several workspace services: [Databricks Apps](/docs/apps/overview), [Lakebase Postgres](/docs/lakebase/overview), [Agent Bricks](/docs/agents/overview), and the [Data Lakehouse](/docs/lakehouse/overview). See [Platform overview](/docs/platform-overview) for more details on each service.
 
 ## Where to go next
 

@@ -4,7 +4,7 @@ title: Docs MCP Server
 
 # Docs MCP Server
 
-The DevHub Docs MCP Server gives coding agents and IDE assistants read access to all Databricks developer documentation on developers.databricks.com. Agents can discover available pages and fetch individual docs as markdown without leaving the editor.
+The DevHub Docs MCP Server gives coding agents and IDE assistants read access to all documentation pages on DevHub. Agents can discover available pages and fetch individual docs as markdown without leaving the editor.
 
 ## Install
 
@@ -30,7 +30,20 @@ npx add-mcp __DEVHUB_SITE_URL__/api/mcp --name devhub-docs -g -a cursor
 
 Restart your editor after adding the server. Some editors like Cursor require you to navigate to the MCP settings page and toggle the new server as enabled.
 
-## Tools
+## Verify the connection
+
+After installing, confirm the server is working:
+
+1. Check that `devhub-docs` appears in your tool listings.
+   - Example: "Do you have the devhub-docs mcp installed?"
+2. Ask your agent to call `list_docs_resources` and verify it returns a docs index.
+   - Example: "What are the available docs on devhub?"
+3. Ask your agent to fetch a specific page with `get_doc_resource`.
+   - Example: "What is the content of the start-here page?"
+
+In practice, you don't need to think about calling the tools directly. Just ask your agent to do the work for you and it will call the tools internally.
+
+## Tools reference
 
 The server exposes two read-only tools.
 
@@ -58,14 +71,8 @@ get_doc_resource(slug: "start-here")
 → full markdown content of the requested page
 ```
 
-## Verify the connection
-
-After installing, confirm the server is working:
-
-1. Check that `devhub-docs` appears in your tool listings.
-2. Ask your agent to call `list_docs_resources` and verify it returns a docs index.
-3. Ask your agent to fetch a specific page with `get_doc_resource`.
-
 ## Where to next
 
-With the docs server running, your agent can fetch any page from this site. See [agent skills](/docs/tools/ai-tools/agent-skills) to also install Databricks platform knowledge, or browse the [templates catalog](/templates) to start building.
+With the [Databricks CLI](/docs/tools/databricks-cli), [agent skills](/docs/tools/ai-tools/agent-skills), and Docs MCP Server all installed, your coding agent has everything it needs to build and deploy.
+
+Ready to start building? Read about how [templates](/docs/templates) can help you quickly scaffold your project or jump right in and browse the [templates catalog](/templates).

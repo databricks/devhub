@@ -6,6 +6,19 @@ devhub (developers.databricks.com) is the platform for developers to get all the
 
 Review the [Contributing](./CONTRIBUTING.md) guide for more information on how to contribute to DevHub.
 
+## Agent Skills
+
+Most skills used by this repo are vendored under `.agents/skills/` (with matching `.claude/skills/` symlinks). Four heavily-drifted vendored skills have been removed because they fell far behind their upstream sources — when you need them, install from upstream instead:
+
+| Removed skill                                         | Upstream                                                                                                                                                 |
+| ----------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `databricks-apps`                                     | [databricks/databricks-agent-skills](https://github.com/databricks/databricks-agent-skills) — `databricks aitools install`                               |
+| `databricks-jobs`                                     | [databricks/databricks-agent-skills](https://github.com/databricks/databricks-agent-skills) — `databricks aitools install`                               |
+| `databricks-lakebase`                                 | [databricks/databricks-agent-skills](https://github.com/databricks/databricks-agent-skills) — `databricks aitools install`                               |
+| `databricks` (legacy combined CLI/data/bundles skill) | upstream split into `databricks-core` + `databricks-dabs` in [databricks/databricks-agent-skills](https://github.com/databricks/databricks-agent-skills) |
+
+The remaining vendored skills (e.g. `databricks-core`, `databricks-pipelines`, `agent-browser`, `building-components`, `frontend-design`, `mcp-builder`, `seo-audit`, etc.) are intentional devhub-internal forks — they're close enough to upstream to keep, and shipping them in-tree means a fresh clone has them available without extra setup. The agent-confusion concern (agents misreading vendored skills as something devhub exposes to customers) is mitigated upstream by [vercel-labs/skills#1281](https://github.com/vercel-labs/skills/pull/1281).
+
 ## DevHub Development Workflow
 
 For every change to DevHub, do the following:

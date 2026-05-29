@@ -75,6 +75,10 @@ export const recipes: Recipe[] = [
       "Install the Databricks CLI, authenticate a profile, and verify the handshake. The strict prerequisite for every other DevHub recipe and template.",
     tags: ["Databricks CLI", "Auth", "Setup"],
     services: ["Databricks Apps"],
+    previewImageLightUrl:
+      "/img/guides/set-up-your-local-dev-environment-preview-light.png",
+    previewImageDarkUrl:
+      "/img/guides/set-up-your-local-dev-environment-preview-dark.png",
   },
   {
     id: "spin-up-databricks-app",
@@ -83,6 +87,9 @@ export const recipes: Recipe[] = [
       "Scaffold a fresh AppKit Databricks App with `databricks apps init`, run it locally, and deploy to your workspace.",
     tags: ["Databricks CLI", "AppKit", "Setup"],
     services: ["Databricks Apps"],
+    previewImageLightUrl:
+      "/img/guides/spin-up-databricks-app-preview-light.png",
+    previewImageDarkUrl: "/img/guides/spin-up-databricks-app-preview-dark.png",
   },
   {
     id: "onboard-your-coding-agent",
@@ -91,6 +98,10 @@ export const recipes: Recipe[] = [
       "Install Databricks agent skills (project-scoped), wire up the DevHub Docs MCP server, and bootstrap an AGENTS.md so your coding assistant knows this repo's workspace defaults.",
     tags: ["Agent Skills", "MCP", "AGENTS.md", "Setup"],
     services: ["Databricks Apps"],
+    previewImageLightUrl:
+      "/img/guides/onboard-your-coding-agent-preview-light.png",
+    previewImageDarkUrl:
+      "/img/guides/onboard-your-coding-agent-preview-dark.png",
   },
   {
     id: "ai-chat-model-serving",

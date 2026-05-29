@@ -1,11 +1,12 @@
 import Link from "@docusaurus/Link";
-import useBaseUrl from "@docusaurus/useBaseUrl";
 import Layout from "@theme/Layout";
 import { MDXProvider } from "@mdx-js/react";
 import { useRef, type ReactNode } from "react";
 import { TemplateUsageBanner } from "@/components/template-usage-banner";
 import { RecipePre } from "@/components/cookbooks/recipe-code-block";
 import { RecipeToc } from "@/components/cookbooks/recipe-toc";
+import { TemplatePreviewImage } from "@/components/examples/template-preview-image";
+import { FallbackCardArt } from "@/components/examples/fallback-card-art";
 import type { Cookbook } from "@/lib/recipes/recipes";
 import { BaseUrlAnchor } from "@/components/base-url-anchor";
 
@@ -23,7 +24,6 @@ export function CookbookDetail({
   children,
 }: CookbookDetailProps): ReactNode {
   const contentRef = useRef<HTMLDivElement>(null);
-  const heroImageUrl = useBaseUrl("/img/template-detail-hero.svg");
   const permalink = `/templates/${cookbook.id}`;
 
   return (
@@ -56,12 +56,12 @@ export function CookbookDetail({
                   {cookbook.description}
                 </p>
 
-                <div className="mb-12 overflow-hidden rounded-xl bg-gradient-to-br from-[#0f172a] to-[#1e293b]">
-                  <img
-                    src={heroImageUrl}
-                    alt="Template architecture preview"
-                    className="h-auto w-full object-cover"
-                    loading="lazy"
+                <div className="relative mb-12 aspect-[16/9] w-full overflow-hidden rounded-xl border border-border/60 bg-muted/30">
+                  <TemplatePreviewImage
+                    lightUrl={cookbook.previewImageLightUrl}
+                    darkUrl={cookbook.previewImageDarkUrl}
+                    alt={`${cookbook.name} preview`}
+                    fallback={<FallbackCardArt index={0} />}
                   />
                 </div>
 

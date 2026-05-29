@@ -5,6 +5,8 @@ import { useRef, type ReactNode } from "react";
 import { TemplateUsageBanner } from "@/components/template-usage-banner";
 import { RecipePre } from "@/components/cookbooks/recipe-code-block";
 import { RecipeToc } from "@/components/cookbooks/recipe-toc";
+import { TemplatePreviewImage } from "@/components/examples/template-preview-image";
+import { FallbackCardArt } from "@/components/examples/fallback-card-art";
 import { recipes } from "@/lib/recipes/recipes";
 import { useRawRecipeMarkdown } from "@/lib/use-raw-content-markdown";
 import { BaseUrlAnchor } from "@/components/base-url-anchor";
@@ -59,6 +61,15 @@ export function RecipeDetail({
                 <p className="mb-8 max-w-2xl text-base leading-relaxed text-muted-foreground">
                   {recipe.description}
                 </p>
+
+                <div className="relative mb-12 aspect-[16/9] w-full overflow-hidden rounded-xl border border-border/60 bg-muted/30">
+                  <TemplatePreviewImage
+                    lightUrl={recipe.previewImageLightUrl}
+                    darkUrl={recipe.previewImageDarkUrl}
+                    alt={`${recipe.name} preview`}
+                    fallback={<FallbackCardArt index={0} />}
+                  />
+                </div>
 
                 <div className="recipe-content-card" ref={contentRef}>
                   <MDXProvider components={recipeComponents}>

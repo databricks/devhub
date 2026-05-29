@@ -21,6 +21,7 @@
     "test:e2e": "npx playwright test",
     "test:docs-verify": "vitest run --config vitest.docs-verify.config.ts",
     "verify:images": "node scripts/verify-resource-images.mjs",
+    "optimize:images": "bash scripts/optimize-images.sh",
     "validate:content": "node scripts/validate-content.mjs",
     "prepare": "husky",
     "prebuild": "node scripts/sync-appkit-docs.mjs",

@@ -28,7 +28,7 @@ const hackathonBanner = getHackathonBannerConfig();
 const config: Config = {
   title: "Databricks Developer",
   tagline: "Build intelligent data and AI applications in minutes, not months",
-  favicon: "img/favicon.svg",
+  favicon: "img/favicon.png",
   customFields: {
     showDrafts: showDrafts(),
   },

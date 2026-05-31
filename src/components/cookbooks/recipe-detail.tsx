@@ -5,6 +5,8 @@ import type { ReactNode } from "react";
 import { AgentUsageCard } from "@/components/agent-usage-card";
 import { Badge } from "@/components/ui/badge";
 import { RecipePre } from "@/components/cookbooks/recipe-code-block";
+import { TemplatePreviewImage } from "@/components/examples/template-preview-image";
+import { FallbackCardArt } from "@/components/examples/fallback-card-art";
 import { recipes } from "@/lib/recipes/recipes";
 import { useRawRecipeMarkdown } from "@/lib/use-raw-content-markdown";
 import { BaseUrlAnchor } from "@/components/base-url-anchor";
@@ -62,6 +64,15 @@ export function RecipeDetail({
                 title={recipe.name}
                 description={recipe.description}
                 permalink={`/templates/${recipe.id}`}
+              />
+            </div>
+
+            <div className="relative mb-8 aspect-[16/9] w-full overflow-hidden rounded-xl border border-border/60 bg-muted/30">
+              <TemplatePreviewImage
+                lightUrl={recipe.previewImageLightUrl}
+                darkUrl={recipe.previewImageDarkUrl}
+                alt={`${recipe.name} preview`}
+                fallback={<FallbackCardArt index={0} />}
               />
             </div>
 

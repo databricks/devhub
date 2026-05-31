@@ -11,12 +11,20 @@ if (!existsSync(resolve(ROOT, "content"))) {
   process.exit(1);
 }
 
-const RESOURCE_ALLOWED_FILES = new Set(["goal.md", "prerequisites.md"]);
+const RESOURCE_ALLOWED_FILES = new Set([
+  "goal.md",
+  "prerequisites.md",
+  "replit-prompt.md",
+]);
 /** A folder must have at least one of these to be published. */
 const RESOURCE_REQUIRED_FILES = ["goal.md"];
 const RESOURCE_SECTIONS = /** @type {const} */ (["recipes", "examples"]);
 
-const COOKBOOK_ALLOWED_FILES = new Set(["goal.md", "intro.md"]);
+const COOKBOOK_ALLOWED_FILES = new Set([
+  "goal.md",
+  "intro.md",
+  "replit-prompt.md",
+]);
 
 /** @type {string[]} */
 const errors = [];

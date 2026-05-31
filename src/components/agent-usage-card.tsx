@@ -4,10 +4,23 @@ import {
   CopyPromptButton,
   type CopyPromptButtonProps,
 } from "@/components/copy-prompt-button";
+import { OpenPromptInButton } from "@/components/open-prompt-in-button";
+import { useReplitPrompt } from "@/lib/use-raw-content-markdown";
 
-type AgentUsageCardProps = Omit<CopyPromptButtonProps, "className" | "label">;
+type AgentUsageCardProps = Omit<
+  CopyPromptButtonProps,
+  "className" | "label"
+> & {
+  /** Template slug used to look up the optional Replit prompt. */
+  slug: string;
+};
 
-export function AgentUsageCard(props: AgentUsageCardProps): ReactNode {
+export function AgentUsageCard({
+  slug,
+  ...copyPromptProps
+}: AgentUsageCardProps): ReactNode {
+  const replitPrompt = useReplitPrompt(slug);
+
   return (
     <div className="rounded-lg border border-border/80 bg-card">
       <div className="border-b border-border/60 px-5 py-3">
@@ -32,11 +45,17 @@ export function AgentUsageCard(props: AgentUsageCardProps): ReactNode {
             what you want
           </li>
         </ol>
-        <div>
+        <div className="flex flex-wrap items-center gap-2">
           <CopyPromptButton
-            {...props}
+            {...copyPromptProps}
             label="Copy prompt"
             className="h-10 px-6"
+          />
+          <OpenPromptInButton
+            replitPrompt={replitPrompt}
+            slug={slug}
+            title={copyPromptProps.title}
+            permalink={copyPromptProps.permalink}
           />
         </div>
       </div>

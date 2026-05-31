@@ -60,6 +60,7 @@ export function RecipeDetail({
               )}
               <AgentUsageCard
                 kind="recipe"
+                slug={recipe.id}
                 rawMarkdown={rawMarkdown}
                 title={recipe.name}
                 description={recipe.description}
@@ -67,7 +68,7 @@ export function RecipeDetail({
               />
             </div>
 
-            <div className="relative mb-8 aspect-[16/9] w-full overflow-hidden rounded-xl border border-border/60 bg-muted/30">
+            <div className="relative mb-8 aspect-video w-full overflow-hidden rounded-xl border border-border/60 bg-muted/30">
               <TemplatePreviewImage
                 lightUrl={recipe.previewImageLightUrl}
                 darkUrl={recipe.previewImageDarkUrl}

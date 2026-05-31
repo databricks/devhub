@@ -46,6 +46,7 @@ export function CookbookDetail({
               </p>
               <AgentUsageCard
                 kind="cookbook"
+                slug={cookbook.id}
                 rawMarkdown={rawMarkdown}
                 title={cookbook.name}
                 description={cookbook.description}
@@ -53,7 +54,7 @@ export function CookbookDetail({
               />
             </div>
 
-            <div className="relative mb-12 aspect-[16/9] w-full overflow-hidden rounded-xl border border-border/60 bg-muted/30">
+            <div className="relative mb-12 aspect-video w-full overflow-hidden rounded-xl border border-border/60 bg-muted/30">
               <TemplatePreviewImage
                 lightUrl={cookbook.previewImageLightUrl}
                 darkUrl={cookbook.previewImageDarkUrl}

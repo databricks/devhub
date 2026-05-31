@@ -172,6 +172,7 @@ export function ExampleDetail({
               </p>
               <AgentUsageCard
                 kind="example"
+                slug={example.id}
                 rawMarkdown={rawMarkdown}
                 additionalMarkdown={additionalMarkdown}
                 customTemplateBody={fullPrompt}
@@ -187,7 +188,7 @@ export function ExampleDetail({
                 exampleName={example.name}
               />
             ) : (
-              <div className="relative mb-8 aspect-[16/9] w-full overflow-hidden rounded-xl border border-border/60 bg-muted/30">
+              <div className="relative mb-8 aspect-video w-full overflow-hidden rounded-xl border border-border/60 bg-muted/30">
                 <TemplatePreviewImage
                   lightUrl={example.previewImageLightUrl}
                   darkUrl={example.previewImageDarkUrl}

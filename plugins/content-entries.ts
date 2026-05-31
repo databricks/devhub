@@ -5,6 +5,7 @@ import {
   getContentSlugs,
   getSolutionSlugs,
   readContentSections,
+  readReplitPrompt,
 } from "../src/lib/content-markdown";
 import { goalOnly, type ContentSections } from "../src/lib/content-sections";
 import { routePathWithBaseUrl } from "../src/lib/site-paths";
@@ -191,6 +192,7 @@ export default function contentEntriesPlugin(
 
       const sectionsBySlug: Record<string, ContentSections> = {};
       const rawMarkdownBySlug: Record<string, string> = {};
+      const replitPromptsBySlug: Record<string, string> = {};
 
       for (const slug of publishedSlugs) {
         if (folderSection) {
@@ -201,6 +203,14 @@ export default function contentEntriesPlugin(
           );
           sectionsBySlug[slug] = sections;
           rawMarkdownBySlug[slug] = goalOnly(sections);
+          const replitPrompt = readReplitPrompt(
+            context.siteDir,
+            folderSection,
+            slug,
+          );
+          if (replitPrompt) {
+            replitPromptsBySlug[slug] = replitPrompt;
+          }
         } else {
           const filePath = resolve(
             context.siteDir,
@@ -218,6 +228,7 @@ export default function contentEntriesPlugin(
         slugs: publishedSlugs,
         rawMarkdownBySlug,
         sectionsBySlug,
+        replitPromptsBySlug,
       });
 
       for (const slug of publishedSlugs) {

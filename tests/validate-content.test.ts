@@ -120,6 +120,21 @@ describe("validate-content script", () => {
     expect(result.stderr).toContain("not an allowed filename");
   });
 
+  test("accepts replit-prompt.md alongside goal.md in a resource folder", () => {
+    seedFixture(workDir, {
+      "content/recipes/with-replit/goal.md": "Build it.\n",
+      "content/recipes/with-replit/replit-prompt.md":
+        "You are Replit Agent. Build...\n",
+      "content/examples/also-replit/goal.md": "Build it.\n",
+      "content/examples/also-replit/replit-prompt.md":
+        "You are Replit Agent. Build...\n",
+    });
+
+    const result = runValidator(workDir);
+    expect(result.status).toBe(0);
+    expect(result.stdout).toContain("validation passed");
+  });
+
   test("accepts content/cookbooks/<slug>/intro.md", () => {
     seedFixture(workDir, {
       "content/recipes/r/goal.md": "Build it.\n",
@@ -140,6 +155,20 @@ describe("validate-content script", () => {
     expect(result.status).toBe(1);
     expect(result.stderr).toContain("content/cookbooks/flat.md");
     expect(result.stderr).toContain("not a directory");
+  });
+
+  test("accepts replit-prompt.md alongside intro.md in a cookbook folder", () => {
+    seedFixture(workDir, {
+      "content/recipes/r/goal.md": "Build it.\n",
+      "content/examples/e/goal.md": "Build it.\n",
+      "content/cookbooks/with-replit/intro.md": "## Intro\n",
+      "content/cookbooks/with-replit/replit-prompt.md":
+        "You are Replit Agent. Build...\n",
+    });
+
+    const result = runValidator(workDir);
+    expect(result.status).toBe(0);
+    expect(result.stdout).toContain("validation passed");
   });
 
   test("fails when a cookbook folder has a disallowed filename", () => {

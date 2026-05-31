@@ -107,6 +107,27 @@ export function readCookbookGoal(
   return readFileSync(filePath, "utf-8");
 }
 
+type ReplitPromptTier = "recipes" | "examples" | "cookbooks";
+
+/**
+ * Reads `content/<tier>/<slug>/replit-prompt.md` if present. Replit prompts
+ * are an opt-in export target, not a content section, so they live next to
+ * `goal.md` but stay out of `ContentSections` / `readContentSections`.
+ */
+export function readReplitPrompt(
+  rootDir: string,
+  tier: ReplitPromptTier,
+  slug: string,
+): string | undefined {
+  const dir =
+    tier === "cookbooks"
+      ? cookbookDirectory(rootDir)
+      : markdownDirectory(rootDir, tier);
+  const filePath = resolve(dir, slug, "replit-prompt.md");
+  if (!existsSync(filePath)) return undefined;
+  return readFileSync(filePath, "utf-8");
+}
+
 /** Reads all present section files; throws when goal.md is missing. */
 export function readContentSections(
   rootDir: string,

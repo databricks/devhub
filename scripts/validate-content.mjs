@@ -11,14 +11,9 @@ if (!existsSync(resolve(ROOT, "content"))) {
   process.exit(1);
 }
 
-const RESOURCE_ALLOWED_FILES = new Set([
-  "goal.md",
-  "content.md",
-  "prerequisites.md",
-  "deployment.md",
-]);
+const RESOURCE_ALLOWED_FILES = new Set(["goal.md", "prerequisites.md"]);
 /** A folder must have at least one of these to be published. */
-const RESOURCE_REQUIRED_FILES = ["goal.md", "content.md"];
+const RESOURCE_REQUIRED_FILES = ["goal.md"];
 const RESOURCE_SECTIONS = /** @type {const} */ (["recipes", "examples"]);
 
 const COOKBOOK_ALLOWED_FILES = new Set(["goal.md", "intro.md"]);
@@ -86,6 +81,15 @@ function validateContentFolder({
         `${sectionPath}/${entry}/ is missing a required file. Need at least one of: ${requiredFiles.join(", ")}.`,
       );
     }
+
+    if (files.includes("goal.md")) {
+      const goalContent = readFileSync(resolve(entryPath, "goal.md"), "utf-8");
+      if (!goalContent.trim()) {
+        errors.push(
+          `${sectionPath}/${entry}/goal.md is empty or whitespace-only. Add a goal description.`,
+        );
+      }
+    }
   }
 }
 
@@ -95,8 +99,8 @@ for (const section of RESOURCE_SECTIONS) {
     sectionDir: resolve(ROOT, "content", section),
     allowedFiles: RESOURCE_ALLOWED_FILES,
     requiredFiles: RESOURCE_REQUIRED_FILES,
-    emptyHint: "Add goal.md or content.md.",
-    flatHint: `Flat files are not allowed. Move to content/${section}/<slug>/content.md.`,
+    emptyHint: "Add goal.md.",
+    flatHint: `Flat files are not allowed. Move to content/${section}/<slug>/goal.md.`,
   });
 }
 

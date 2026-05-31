@@ -55,10 +55,10 @@ describe("validate-content script", () => {
     rmSync(workDir, { recursive: true, force: true });
   });
 
-  test("passes for a valid folder layout with only content.md", () => {
+  test("passes for a valid folder layout with goal.md", () => {
     seedFixture(workDir, {
-      "content/recipes/my-recipe/content.md": "## My Recipe\n",
-      "content/examples/my-example/content.md": "## My Example\n",
+      "content/recipes/my-recipe/goal.md": "Build something.\n",
+      "content/examples/my-example/goal.md": "Build an example.\n",
     });
 
     const result = runValidator(workDir);
@@ -66,11 +66,10 @@ describe("validate-content script", () => {
     expect(result.stdout).toContain("validation passed");
   });
 
-  test("passes when optional prerequisites.md and deployment.md are present", () => {
+  test("passes when optional prerequisites.md is present", () => {
     seedFixture(workDir, {
-      "content/examples/full/content.md": "## Full\n",
+      "content/examples/full/goal.md": "Build it.\n",
       "content/examples/full/prerequisites.md": "### Prereqs\n",
-      "content/examples/full/deployment.md": "### Deploy\n",
     });
 
     const result = runValidator(workDir);
@@ -88,33 +87,43 @@ describe("validate-content script", () => {
     expect(result.stderr).toContain("is not a directory");
   });
 
-  test("fails when a folder is missing required content.md", () => {
+  test("fails when a folder is missing required goal.md", () => {
     seedFixture(workDir, {
-      "content/recipes/no-content/prerequisites.md": "### Prereqs\n",
+      "content/recipes/no-goal/prerequisites.md": "### Prereqs\n",
     });
 
     const result = runValidator(workDir);
     expect(result.status).toBe(1);
-    expect(result.stderr).toContain("no-content");
+    expect(result.stderr).toContain("no-goal");
     expect(result.stderr).toContain("missing a required file");
+  });
+
+  test("fails when goal.md is whitespace-only", () => {
+    seedFixture(workDir, {
+      "content/recipes/blank/goal.md": "   \n  \n",
+    });
+
+    const result = runValidator(workDir);
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain("empty or whitespace-only");
   });
 
   test("fails when a folder contains a disallowed filename", () => {
     seedFixture(workDir, {
-      "content/recipes/stray/content.md": "## Stray\n",
-      "content/recipes/stray/steps.md": "### Steps\n",
+      "content/recipes/stray/goal.md": "Build it.\n",
+      "content/recipes/stray/content.md": "## Steps\n",
     });
 
     const result = runValidator(workDir);
     expect(result.status).toBe(1);
-    expect(result.stderr).toContain("steps.md");
+    expect(result.stderr).toContain("content.md");
     expect(result.stderr).toContain("not an allowed filename");
   });
 
   test("accepts content/cookbooks/<slug>/intro.md", () => {
     seedFixture(workDir, {
-      "content/recipes/r/content.md": "## R\n",
-      "content/examples/e/content.md": "## E\n",
+      "content/recipes/r/goal.md": "Build it.\n",
+      "content/examples/e/goal.md": "Build it.\n",
       "content/cookbooks/my-cookbook/intro.md": "## Intro\n",
     });
 
@@ -147,8 +156,8 @@ describe("validate-content script", () => {
 
   test("fails on absolute DevHub markdown links inside templates and docs", () => {
     seedFixture(workDir, {
-      "content/recipes/bad/content.md": [
-        "## Bad",
+      "content/recipes/bad/goal.md": [
+        "Build it.",
         "",
         "See [docs](https://developers.databricks.com/docs/start-here) for setup.",
         "",
@@ -166,7 +175,7 @@ describe("validate-content script", () => {
     const result = runValidator(workDir);
     expect(result.status).toBe(1);
     expect(result.stderr).toContain(
-      "content/recipes/bad/content.md: absolute DevHub markdown link",
+      "content/recipes/bad/goal.md: absolute DevHub markdown link",
     );
     expect(result.stderr).toContain(
       '"https://developers.databricks.com/docs/start-here"',
@@ -181,8 +190,8 @@ describe("validate-content script", () => {
 
   test("allows bare prose URLs and code-block URLs that mention developers.databricks.com", () => {
     seedFixture(workDir, {
-      "content/recipes/ok/content.md": [
-        "## OK",
+      "content/recipes/ok/goal.md": [
+        "Build it.",
         "",
         "Website: https://developers.databricks.com.",
         "",

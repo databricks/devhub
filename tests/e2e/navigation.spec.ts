@@ -175,7 +175,7 @@ test.describe("home page link navigation", () => {
     expect(finalCopiedText).toContain(
       "# Verify your local Databricks dev environment",
     );
-    expect(finalCopiedText).toContain("Install the Databricks CLI");
+    expect(finalCopiedText).toContain("Databricks CLI");
     expect(finalCopiedText).toContain("developers.databricks.com");
     expect(finalCopiedText).toContain("llms.txt");
   });

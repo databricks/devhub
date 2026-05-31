@@ -11,8 +11,6 @@ export type ExampleMarkdownOptions = {
   baseUrl: string;
 };
 
-export type ExampleSections = ContentSections;
-
 function isInitCommand(initCommand: string): boolean {
   return initCommand.trimStart().startsWith("databricks apps init");
 }
@@ -70,7 +68,7 @@ export function buildExportGetStartedSection(example: Example): string {
 }
 
 export function buildFullPrompt(
-  opts: ExampleMarkdownOptions & { sections: ExampleSections },
+  opts: ExampleMarkdownOptions & { sections: ContentSections },
 ): string {
   const {
     example,
@@ -80,23 +78,16 @@ export function buildFullPrompt(
     includedRecipes,
     baseUrl,
   } = opts;
-  const hasGoal = Boolean(sections.goal);
   const cliTemplateUrl = example.templateUrl;
   const lines: string[] = [`# ${example.name}`, "", example.description, ""];
 
-  // When goal.md exists, use it as the body and skip prerequisites/content/deployment.
-  // The agent gets the outcome description + scaffold entry point; skills handle implementation.
-  if (hasGoal) {
-    lines.push(sections.goal!.trim(), "");
+  if (sections.goal) {
+    lines.push(sections.goal.trim(), "");
   }
 
   lines.push("## Get started", "");
 
   if (isInitCommand(example.initCommand)) {
-    if (!hasGoal && sections.prerequisites) {
-      lines.push(sections.prerequisites, "");
-    }
-
     lines.push(
       "### Scaffold the project",
       "",
@@ -106,16 +97,9 @@ export function buildFullPrompt(
       example.initCommand,
       "```",
       "",
+      "A **`README.md`** ships inside the scaffolded project. Follow it end to end to configure, run, and deploy the app.",
+      "",
     );
-
-    if (!hasGoal && sections.deployment) {
-      lines.push(sections.deployment, "");
-    } else {
-      lines.push(
-        "A **`README.md`** ships inside the scaffolded project. Follow it end to end to configure, run, and deploy the app.",
-        "",
-      );
-    }
   } else {
     lines.push(
       "### Clone and follow `README.md`",
@@ -135,10 +119,6 @@ export function buildFullPrompt(
       "```",
       "",
     );
-  }
-
-  if (!hasGoal && sections.content) {
-    lines.push("", sections.content);
   }
 
   lines.push("", `## Source Code`, "", `GitHub: ${githubUrl}`);

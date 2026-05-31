@@ -1,5 +1,3 @@
-Embed a Databricks AI/BI Genie chat interface in your app so users can explore data through natural language.
-
 When done, you will have:
 
 - A configured AI/BI Genie space connected to your data tables

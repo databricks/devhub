@@ -50,46 +50,22 @@ function createFolderRouteModuleSource(
   sections: ContentSections,
 ): string {
   const section = entryType === "recipe" ? "recipes" : "examples";
-  const hasGoal = sections.goal !== undefined;
   const hasPrereqs = sections.prerequisites !== undefined;
-  const hasDeploy = sections.deployment !== undefined;
 
-  const imports: string[] = [];
-  if (hasGoal) {
-    imports.push(
-      `import Goal from "@site/content/${section}/${slug}/goal.md";`,
-    );
-  }
-  if (sections.content !== undefined) {
-    imports.push(
-      `import Content from "@site/content/${section}/${slug}/content.md";`,
-    );
-  }
+  const imports: string[] = [
+    `import Goal from "@site/content/${section}/${slug}/goal.md";`,
+  ];
   if (hasPrereqs) {
     imports.push(
       `import Prerequisites from "@site/content/${section}/${slug}/prerequisites.md";`,
-    );
-  }
-  if (hasDeploy) {
-    imports.push(
-      `import Deployment from "@site/content/${section}/${slug}/deployment.md";`,
     );
   }
 
   const prereqsBlock = hasPrereqs
     ? '      <h2 id="prerequisites">Prerequisites</h2>\n      <Prerequisites />'
     : null;
-  const deployBlock = hasDeploy
-    ? '      <h2 id="deployment">Deployment</h2>\n      <Deployment />'
-    : null;
 
-  const goalBlock = hasGoal ? "      <Goal />" : null;
-  const contentBlock =
-    sections.content !== undefined ? "      <Content />" : null;
-
-  const children = [goalBlock, prereqsBlock, contentBlock, deployBlock]
-    .filter(Boolean)
-    .join("\n");
+  const children = ["      <Goal />", prereqsBlock].filter(Boolean).join("\n");
 
   if (entryType === "recipe") {
     return `import type { ReactNode } from "react";
@@ -245,13 +221,16 @@ export default function contentEntriesPlugin(
       });
 
       for (const slug of publishedSlugs) {
+        const sections = sectionsBySlug[slug];
+        if (folderSection && !sections) {
+          throw new Error(
+            `Missing content sections for ${options.entryType} "${slug}"`,
+          );
+        }
+
         const source =
           options.entryType === "recipe" || options.entryType === "example"
-            ? createFolderRouteModuleSource(
-                options.entryType,
-                slug,
-                sectionsBySlug[slug],
-              )
+            ? createFolderRouteModuleSource(options.entryType, slug, sections)
             : createSolutionRouteModuleSource(slug);
 
         const modulePath = await createData(

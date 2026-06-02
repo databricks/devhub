@@ -31,13 +31,13 @@ Longer prompts that compose multiple recipes into a complete system, ready to ha
 - **[App with Lakebase](/templates/app-with-lakebase)** — a Databricks app with managed Postgres, schema setup, and CRUD routes.
 - **[Genie Analytics App](/templates/genie-analytics-app)** — a Databricks app with embedded conversational analytics powered by AI/BI Genie.
 - **[Lakebase Off-Platform](/templates/lakebase-off-platform)** — using Lakebase from apps hosted outside Databricks (Vercel, Netlify, AWS).
-- **[Operational Data Analytics](/templates/operational-data-analytics)** — Unity Catalog, Lakehouse Sync CDC, and a medallion pipeline from your operational database.
+- **[Operational Data Analytics](/templates/operational-data-analytics)** — Unity Catalog, Lakebase Change Data Feed, and a medallion pipeline from your operational database.
 
 ### Example apps
 
 Walkthroughs that come with a working code base and seed data, so you (and your agent) can start from a real app:
 
-- **[Agentic Support Console](/templates/agentic-support-console)** — Lakebase, Lakehouse Sync, a medallion pipeline, an LLM agent job, and a Databricks app with embedded Genie analytics.
+- **[Agentic Support Console](/templates/agentic-support-console)** — Lakebase, Change Data Feed, a medallion pipeline, an LLM agent job, and a Databricks app with embedded Genie analytics.
 - **[Vacation Rentals Operations Console](/templates/vacation-rentals)** — booking queue with Lakebase-backed flags and agent notes, SQL Warehouse revenue analytics, and an embedded Genie chat panel.
 - **[RAG Chat App](/templates/rag-chat)** — streaming RAG over a Wikipedia seed corpus with pgvector retrieval from Lakebase and Model Serving generation.
 

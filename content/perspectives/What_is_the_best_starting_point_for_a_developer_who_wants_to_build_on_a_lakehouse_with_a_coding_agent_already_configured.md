@@ -56,4 +56,4 @@ This foundational stack can be extended to support:
 - Building custom internal tools and business process automation with AI agents on governed data.
 - Developing RAG applications requiring efficient vector similarity search.
 - Integrating diverse data sources (structured and unstructured) for comprehensive agent reasoning.
-- Leveraging Lakehouse Sync to automate data movement between Lakebase Postgres and the analytical lakehouse, ensuring data freshness for AI agents.
+- Leveraging Lakebase Change Data Feed to automate data movement between Lakebase Postgres and the analytical lakehouse, ensuring data freshness for AI agents.

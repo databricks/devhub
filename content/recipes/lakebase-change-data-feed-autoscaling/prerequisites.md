@@ -1,5 +1,5 @@
-Verify these Databricks workspace features are enabled before starting. Lakehouse Sync is a Beta feature and has stricter workspace requirements than most other templates.
+Verify these Databricks workspace features are enabled before starting. Lakebase Change Data Feed (CDF, formerly Lakehouse Sync) is in Public Preview and has stricter workspace requirements than most other templates.
 
-- **AWS workspace in an Autoscaling region.** Lakehouse Sync is currently available in **Beta on AWS only**. Azure is not yet supported. Confirm your workspace host is `*.cloud.databricks.com` (AWS) rather than `*.azuredatabricks.net` (Azure).
+- **A workspace on AWS or Azure in a Lakebase Autoscaling region.** Change Data Feed is available in Public Preview on both AWS (`*.cloud.databricks.com`) and Azure (`*.azuredatabricks.net`). A workspace admin must first enable the **Lakebase Change Data Feed** preview from the workspace **Previews** page.
 - **A Lakebase Autoscaling project with tables.** Run `databricks postgres list-projects --profile <PROFILE>` and confirm your Autoscaling project appears. A `not enabled` error means Lakebase is unavailable to this identity. This template does not cover project creation — see [Create a Lakebase Instance](/templates/lakebase-create-instance) if you need one.
-- **Unity Catalog access.** Run `databricks catalogs list --profile <PROFILE>` and confirm the destination catalog and schema you want to replicate into are present. You will select them when enabling Lakehouse Sync in Step 3.
+- **Unity Catalog access.** Run `databricks catalogs list --profile <PROFILE>` and confirm the destination catalog and schema you want to replicate into are present. You will select them when enabling Change Data Feed.

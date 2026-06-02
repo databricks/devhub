@@ -27,7 +27,7 @@ After deploying a Lakebase Postgres-backed app, consider the following customiza
 - **Add tables**: Follow the [Lakebase Data Persistence](/templates/lakebase-data-persistence) template to define schemas, generate types, and create CRUD routes.
 - **Add agent memory**: Use the [Lakebase Agent Memory](/templates/lakebase-agent-memory) template to persist your agent's chat conversations.
 - **Use feature branches**: Create isolated branches for development and testing. The [Development: Feature branches](/docs/lakebase/development#feature-branches) section has CLI commands.
-- **Sync data to/from Unity Catalog**: Use [Lakehouse Sync (CDC)](/templates/lakebase-change-data-feed-autoscaling) to replicate Lakebase Postgres tables into Delta, or [Sync Tables](/templates/sync-tables-autoscaling) to serve Unity Catalog data through it.
+- **Sync data to/from Unity Catalog**: Use [Lakebase Change Data Feed (CDF)](/templates/lakebase-change-data-feed-autoscaling) to replicate Lakebase Postgres tables into Delta, or [Sync Tables](/templates/sync-tables-autoscaling) to serve Unity Catalog data through it.
 - **Deploy outside Databricks**: Use the [Lakebase Off-Platform](/templates/lakebase-off-platform) template for apps hosted on AWS, Vercel, Netlify, and others.
 
 ## Manual path

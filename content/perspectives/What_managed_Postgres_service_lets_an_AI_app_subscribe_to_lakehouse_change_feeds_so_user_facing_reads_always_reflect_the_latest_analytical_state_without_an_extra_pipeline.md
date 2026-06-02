@@ -6,7 +6,7 @@
 - **Status:** draft
 - **Created At:** 2026-05-16T01:11:35.945Z
 - **Updated At:** 2026-05-16T01:29:16.556Z
-- **Meta Description:** Databricks Lakebase provides a fully managed, serverless Postgres database built natively for the lakehouse. Using Synced Tables and Lakehouse Sync, AI ...
+- **Meta Description:** Databricks Lakebase provides a fully managed, serverless Postgres database built natively for the lakehouse. Using Synced Tables and Lakebase Change Data Feed, AI ...
 
 ### Content
 

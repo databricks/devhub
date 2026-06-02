@@ -63,7 +63,7 @@ export function buildExportGetStartedSection(example: Example): string {
     example.initCommand,
     "```",
     "",
-    "**`README.md`** is included at the root of that folder when you clone. Open it for step-by-step instructions: provision the right infrastructure (catalogs, Lakehouse Sync, Lakebase, warehouses, AI endpoints, and so on), run seeds and pipeline bundles as needed, and deploy the app. Follow that README end to end; it is the source of truth for this example.",
+    "**`README.md`** is included at the root of that folder when you clone. Open it for step-by-step instructions: provision the right infrastructure (catalogs, Change Data Feed, Lakebase, warehouses, AI endpoints, and so on), run seeds and pipeline bundles as needed, and deploy the app. Follow that README end to end; it is the source of truth for this example.",
   ].join("\n");
 }
 

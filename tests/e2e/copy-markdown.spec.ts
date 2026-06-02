@@ -109,7 +109,7 @@ test.describe("copy markdown exports raw markdown on example pages", () => {
     expect(copied).toContain("# About DevHub");
     expect(copied).toContain("# Agentic Support Console");
     expect(copied).toContain("Data Flow");
-    expect(copied).toContain("Lakehouse Sync");
+    expect(copied).toContain("Lakebase Change Data Feed");
   });
 
   test("saas-tracker example copies markdown content", async ({ page }) => {

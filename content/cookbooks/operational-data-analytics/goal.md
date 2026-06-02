@@ -4,5 +4,5 @@ An end-to-end operational data analytics pipeline: data flows from an OLTP datab
 
 1. **Unity Catalog Setup** — configure Unity Catalog with external S3 storage for your destination catalog and schema.
 2. **Create a Lakebase Instance** — provision a managed Postgres project as the OLTP source.
-3. **Lakehouse Sync CDC** — enable change data capture replication from Lakebase tables to Unity Catalog Delta history tables.
+3. **Lakebase Change Data Feed (CDF)** — enable continuous replication from Lakebase tables to Unity Catalog Delta history tables.
 4. **Medallion Architecture from CDC** — build silver (current-state) and gold (analytical) layers from the CDC history tables using Lakeflow Declarative Pipelines.

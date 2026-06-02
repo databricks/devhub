@@ -28,10 +28,10 @@ You also don't author pipelines, configure Spark, or size clusters. Those are da
 
 Each one combines the wiring on the pages above into a working pattern.
 
-| You want to...                                             | Template                                                            |
-| ---------------------------------------------------------- | ------------------------------------------------------------------- |
-| Replicate a UC table into Lakebase for sub-10ms reads      | [Sync Tables (Autoscaling)](/templates/sync-tables-autoscaling)     |
-| Stand up the full UC + Lakehouse Sync + medallion pipeline | [Operational Data Analytics](/templates/operational-data-analytics) |
+| You want to...                                                        | Template                                                            |
+| --------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| Replicate a UC table into Lakebase for sub-10ms reads                 | [Sync Tables (Autoscaling)](/templates/sync-tables-autoscaling)     |
+| Stand up the full UC + Lakebase Change Data Feed + medallion pipeline | [Operational Data Analytics](/templates/operational-data-analytics) |
 
 ## Where to next
 

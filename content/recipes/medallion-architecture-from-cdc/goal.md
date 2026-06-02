@@ -1,6 +1,6 @@
 When done, you will have:
 
-- A bronze layer provided by the upstream Lakehouse Sync CDC history tables (input to this recipe)
+- A bronze layer provided by the upstream Lakebase Change Data Feed history tables (input to this recipe)
 - A silver layer with deduplicated, current-state materialized views for each entity
 - A gold layer with business aggregations and metrics as materialized views
 - A scheduled Lakeflow Declarative Pipeline refreshing silver and gold layers incrementally

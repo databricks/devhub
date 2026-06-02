@@ -211,7 +211,7 @@ export const recipes: Recipe[] = [
     id: "lakebase-change-data-feed-autoscaling",
     name: "Lakebase Change Data Feed: Sync Lakebase to Unity Catalog (Autoscaling)",
     description:
-      "Replicate Lakebase Autoscaling Postgres tables into Unity Catalog as managed Delta tables using Lakehouse Sync, with CDC and SCD Type 2 history.",
+      "Replicate Lakebase Autoscaling Postgres tables into Unity Catalog as managed Delta tables using Lakebase Change Data Feed (CDF), with full SCD Type 2 history.",
     tags: [
       "Lakebase",
       "Lakehouse Sync",
@@ -292,7 +292,7 @@ export const recipes: Recipe[] = [
     id: "medallion-architecture-from-cdc",
     name: "Medallion Architecture from CDC History Tables",
     description:
-      "Transform Lakehouse Sync CDC history tables into a medallion architecture with silver (current state) and gold (aggregations) layers using Lakeflow Declarative Pipelines.",
+      "Transform Lakebase Change Data Feed history tables into a medallion architecture with silver (current state) and gold (aggregations) layers using Lakeflow Declarative Pipelines.",
     tags: [
       "Medallion Architecture",
       "Data Lakehouse",
@@ -494,7 +494,7 @@ export const cookbooks: Cookbook[] = [
     id: "operational-data-analytics",
     name: "Operational Data Analytics",
     description:
-      "End-to-end setup for analyzing operational database data in the lakehouse: Unity Catalog with external storage, Lakebase provisioning, Lakehouse Sync CDC replication, and a medallion architecture pipeline with silver and gold layers.",
+      "End-to-end setup for analyzing operational database data in the lakehouse: Unity Catalog with external storage, Lakebase provisioning, Lakebase Change Data Feed (CDF) replication, and a medallion architecture pipeline with silver and gold layers.",
     recipeIds: [
       "unity-catalog-setup",
       "lakebase-create-instance",
@@ -601,7 +601,7 @@ export const examples: Example[] = [
     id: "agentic-support-console",
     name: "Agentic Support Console",
     description:
-      "End-to-end AI-powered support console combining Lakebase, Lakehouse Sync, a medallion pipeline, an LLM agent job, reverse sync, and a Databricks App with Genie analytics.",
+      "End-to-end AI-powered support console combining Lakebase, Change Data Feed, a medallion pipeline, an LLM agent job, reverse sync, and a Databricks App with Genie analytics.",
     templateUrl:
       "https://github.com/databricks/app-templates/tree/main/agentic-support-console",
     initCommand:

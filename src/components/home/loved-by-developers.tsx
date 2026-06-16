@@ -142,7 +142,7 @@ function LovedByDevelopers({ className }: { className?: string }) {
           </h2>
         </header>
 
-        {/* <ul className="relative z-10 mt-10 grid gap-10 max-w-360 md:mt-28 md:grid-cols-2 md:gap-8 lg:gap-20 lg:mt-44 xl:mt-46 xl:gap-24 3xl:gap-56">
+        <ul className="relative z-10 mt-10 grid gap-10 max-w-360 md:mt-28 md:grid-cols-2 md:gap-8 lg:gap-20 lg:mt-44 xl:mt-46 xl:gap-24 3xl:gap-56">
           {METRIC_COLUMNS.map(({ title, description, metrics }, index) => (
             <li
               key={`${title}-${index}`}
@@ -184,7 +184,7 @@ function LovedByDevelopers({ className }: { className?: string }) {
               </ul>
             </li>
           ))}
-        </ul> */}
+        </ul>
       </div>
       <div
         className="absolute inset-0 pointer-events-none opacity-30"

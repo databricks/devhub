@@ -12,6 +12,7 @@
     "test": "pnpm build && vitest run && pnpm exec playwright test",
     "test:smoke": "vitest run",
     "test:e2e": "pnpm exec playwright test",
+    "test:critical": "pnpm build && pnpm exec playwright test --config playwright.critical.config.ts",
     "test:docs-verify": "vitest run --config vitest.docs-verify.config.ts",
     "verify:images": "node scripts/verify-resource-images.mjs",
     "optimize:images": "bash scripts/optimize-images.sh",

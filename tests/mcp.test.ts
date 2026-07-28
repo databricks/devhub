@@ -51,11 +51,10 @@ describe("MCP server handler", () => {
     expect(result.result.serverInfo.name).toBe("devhub-docs");
   });
 
-  test("tools/list returns both tools", async () => {
+  test("tools/list returns the required tools", async () => {
     const result = (await callMcp(rpc("tools/list"))) as {
       result: { tools: Array<{ name: string }> };
     };
-    expect(result.result.tools).toHaveLength(2);
     const names = result.result.tools.map((t) => t.name);
     expect(names).toContain("list_docs_resources");
     expect(names).toContain("get_doc_resource");

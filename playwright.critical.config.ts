@@ -32,10 +32,13 @@ export default defineConfig({
   projects: [
     {
       name: "desktop-chromium",
-      use: { ...devices["Desktop Chrome"] },
+      use: {
+        ...devices["Desktop Chrome"],
+        permissions: ["clipboard-read", "clipboard-write"],
+      },
     },
     {
-      name: "mobile-chromium",
+      name: "emulated-pixel-chromium",
       use: { ...devices["Pixel 7"] },
     },
     {
@@ -43,14 +46,14 @@ export default defineConfig({
       use: { ...devices["Desktop Safari"] },
     },
     {
-      name: "mobile-webkit",
+      name: "emulated-iphone-webkit",
       use: { ...devices["iPhone 15"] },
     },
   ],
   webServer: {
     command: `pnpm exec next start -p ${PORT}`,
     port: PORT,
-    reuseExistingServer: true,
+    reuseExistingServer: false,
     timeout: 60_000,
   },
 });

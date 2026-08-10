@@ -18,7 +18,7 @@ type CssVariableProperties = CSSProperties & {
 };
 
 const playerScriptPath = "/js/home-hero-player.js";
-const playerScriptVersion = "20260610";
+const playerScriptVersion = "20260810-3";
 
 function cssVars(vars: CssVariableProperties) {
   return vars;

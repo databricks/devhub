@@ -100,11 +100,6 @@ const nextConfig = {
         destination: latestAppkitDocs,
         permanent: false,
       },
-      {
-        source: "/appkit/",
-        destination: latestAppkitDocs,
-        permanent: false,
-      },
     ];
   },
   async rewrites() {

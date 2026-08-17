@@ -52,14 +52,15 @@ describe("/appkit latest-docs redirect", () => {
     const destination = `/docs/appkit/${installedAppkitDocsChannel()}`;
     const redirects = readRedirects();
 
-    for (const source of ["/appkit", "/appkit/"]) {
-      expect(redirects).toContainEqual(
-        expect.objectContaining({
-          source,
-          destination,
-          statusCode: 307,
-        }),
-      );
-    }
+    expect(redirects).toContainEqual(
+      expect.objectContaining({
+        source: "/appkit",
+        destination,
+        statusCode: 307,
+      }),
+    );
+    expect(redirects).not.toContainEqual(
+      expect.objectContaining({ source: "/appkit/" }),
+    );
   });
 });

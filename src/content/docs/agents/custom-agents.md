@@ -21,7 +21,7 @@ Three Databricks products produce agent endpoints. The table summarizes when to 
 | Builder                                     | Use when                                                                                            | Setup                                                                                                                                                              |
 | ------------------------------------------- | --------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | [Knowledge Assistant](#knowledge-assistant) | You need Q&A over documents (PDFs, Markdown, Office files) with citations                           | Click-through UI in the workspace                                                                                                                                  |
-| [Supervisor Agent](#supervisor-agent)       | You need to coordinate existing Genie Agents, other agents, Unity Catalog functions, or MCP servers | Click-through UI, or the [Supervisor API](https://docs.databricks.com/aws/en/agents/agent-bricks/supervisor-api)                                                   |
+| [Supervisor Agent](#supervisor-agent)       | You need to coordinate existing Genie Agents, other agents, Unity Catalog functions, or MCP servers | Click-through UI (produces a queryable agent endpoint)                                                                                                             |
 | [Custom Python agent](#custom-python-agent) | No builder fits; you need arbitrary orchestration, custom tools, or a proprietary framework         | Write Python with `ResponsesAgent`, deploy to an endpoint via `agents.deploy()` (legacy path — prefer the [agents plugin](/docs/appkit/v0/plugins/agents) on Apps) |
 
 ### Knowledge Assistant
@@ -34,7 +34,7 @@ See [Knowledge Assistant](https://docs.databricks.com/aws/en/agents/agent-bricks
 
 Coordinates subagents (Genie Agents, other agent endpoints, Unity Catalog functions, MCP servers) to complete a task, handling delegation and result synthesis. Good for workflows that span domains, for example searching research reports and querying usage data in the same conversation. Like Knowledge Assistant, the builder produces a single agent endpoint.
 
-See [Supervisor Agent](https://docs.databricks.com/aws/en/agents/agent-bricks/multi-agent-supervisor) and the [Supervisor API](https://docs.databricks.com/aws/en/agents/agent-bricks/supervisor-api) for response shapes and query parameters.
+See [Supervisor Agent](https://docs.databricks.com/aws/en/agents/agent-bricks/multi-agent-supervisor). Query the agent endpoint the builder creates (Playground **Get code**). The [Supervisor API](https://docs.databricks.com/aws/en/agents/agent-bricks/supervisor-api) is a separate Beta product for building a custom agent loop programmatically — not an alternate setup path for Supervisor Agent.
 
 ### Custom Python agent
 
@@ -70,7 +70,7 @@ env:
     valueFrom: serving-endpoint
 ```
 
-When you add the agent endpoint as an app resource (Databricks Apps UI or CLI), Databricks grants your app's service principal `CAN QUERY` on the endpoint.
+When you add the agent endpoint as an app resource (Databricks Apps UI or CLI) with **Can query** selected, Databricks grants your app's service principal `CAN QUERY` on the endpoint.
 
 For the full wiring pattern, including `createApp`, `useServingStream`, and custom route handlers, see [Call a governed endpoint from AppKit](/docs/agents/ai-gateway#call-a-governed-endpoint-from-appkit).
 

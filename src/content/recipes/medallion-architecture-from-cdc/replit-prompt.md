@@ -42,4 +42,4 @@ Build a polished full-stack web app with:
 
 ## Notes
 
-This template visualizes medallion tables that already exist, or demo tables created through SQL. It does not create Lakeflow Spark Declarative Pipelines, Lakehouse Sync, or CDC replication for this Replit version.
+This template visualizes medallion tables that already exist, or demo tables created through SQL. It does not create Lakeflow Spark Declarative Pipelines, Lakebase Change Data Feed (CDF), or CDC replication for this Replit version.

@@ -22,7 +22,7 @@ The [Analytics plugin](/docs/appkit/v0/plugins/analytics) handles SQL warehouse 
 - **Transactional writes from your app** (orders, sessions, audit logs). Use [Lakebase Postgres](/docs/lakebase/overview).
 - **Natural-language Q&A over governed tables**. Use [Genie](/docs/agents/genie).
 
-You also don't author pipelines, configure Spark, or size clusters. Those are data engineering tasks that happen in the Databricks workspace or through [Declarative Automation Bundles](https://docs.databricks.com/aws/en/dev-tools/bundles/).
+You also don't author pipelines, configure Spark, or size clusters. Those are data engineering tasks that happen in the Databricks workspace or through [Declarative Automation Bundles (formerly Databricks Asset Bundles)](https://docs.databricks.com/aws/en/dev-tools/bundles/).
 
 ## Pick a template to start from
 

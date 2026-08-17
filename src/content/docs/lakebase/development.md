@@ -432,7 +432,7 @@ databricks postgres get-operation projects/my-project/operations/<operation-id>
 
 ## Declarative Automation Bundles
 
-Declarative Automation Bundles (DABs) let you define Lakebase Postgres infrastructure as code in `databricks.yml`, versioned alongside your application. A bundle specifies `postgres_projects`, `postgres_branches`, and `postgres_endpoints` under `resources`.
+Declarative Automation Bundles (formerly Databricks Asset Bundles; also called DABs) let you define Lakebase Postgres infrastructure as code in `databricks.yml`, versioned alongside your application. A bundle specifies `postgres_projects`, `postgres_branches`, and `postgres_endpoints` under `resources`.
 
 <details>
 <summary>Example <code>databricks.yml</code> with a project, dev branch, and read-only replica</summary>
@@ -502,7 +502,7 @@ For Databricks Apps configuration issues (resources in `databricks.yml` and `app
 - **`permission denied for schema app` (deployed app)**: `npm run dev` ran before `databricks apps deploy`, so the schema is owned by your personal credentials and the app's service principal can't access it. _(PostgreSQL schema ownership is tied to the role that created it and cannot be reassigned by regular users.)_ If you have data to preserve, export it first (`pg_dump` or copy tables to a temporary schema) before dropping. Then drop the schema and redeploy — the SP recreates it on startup: `databricks psql --project <project-id> -- -c "DROP SCHEMA IF EXISTS app CASCADE;"` then `databricks apps deploy`.
 - **`permission denied for schema app` (local dev, collaborator)**: Only the Lakebase project creator has `databricks_superuser` access automatically. To grant a teammate local access, the project creator opens the branch's **Roles & Databases** tab in the Lakebase UI, clicks **Add role**, selects the teammate's identity on the **OAuth** tab, and checks `databricks_superuser`. Postgres password auth is an alternative: enable password connections under project **Settings** > **Database connections**, create a password role (**Add role** > **Password**), and add the generated password as `PGPASSWORD=<password>` in `.env`.
 - **`Unknown field path in update_mask: 'spec.suspend_timeout_duration'`**: Use `spec.suspension` as the update mask for all endpoint-level suspension changes with `update-endpoint`. To disable scale to zero, pass `{"spec": {"no_suspension": true}}`; to change the timeout, pass `{"spec": {"suspend_timeout_duration": "300s"}}`. Setting `no_suspension: false` is not supported.
-- **Connection refused after period of inactivity**: Lakebase Autoscaling scales to zero when idle. The first connection after inactivity triggers a wake-up and may take a few seconds. If your connection library doesn't retry automatically, add a short retry loop.
+- **Connection refused after period of inactivity**: Lakebase Autoscaling scales to zero when idle. The first connection after inactivity triggers a wake-up that typically takes a few hundred milliseconds. If your connection library doesn't retry automatically, add a short retry loop.
 
 ## AppKit docs
 

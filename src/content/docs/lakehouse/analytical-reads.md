@@ -14,7 +14,7 @@ The tables the warehouse queries are governed by Unity Catalog (UC). UC owns the
 
 - Databricks CLI `v1.0.0+` with an [authenticated profile](/docs/tools/databricks-cli#authenticate).
 - A running AppKit app. See [Apps quickstart](/docs/apps/quickstart).
-- A SQL warehouse declared as an app resource in `databricks.yml`. Your app's service principal gets `CAN_USE` automatically when you bind the resource. End-user permissions are covered [below](#where-403s-come-from).
+- A SQL warehouse declared as an app resource in `databricks.yml` with `permission: CAN_USE` (or higher). Databricks applies that declared permission to your app's service principal when you bind the resource. End-user permissions are covered [below](#where-403s-come-from).
 
 ## What the Analytics plugin reads
 

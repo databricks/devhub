@@ -17,7 +17,7 @@ Lakeflow groups these products:
 - **Lakeflow Connect** for ingestion. Managed connectors for Salesforce, Workday, SQL Server, and others ingest data into Unity Catalog.
 - **Lakeflow Spark Declarative Pipelines** for transformation. Authored in SQL or Python, runs on Databricks Runtime, produces materialized views and streaming tables.
 - **Lakeflow Jobs** for orchestration. See [Lakeflow Jobs](/docs/lakehouse/jobs) for the app-trigger side.
-- **Lakeflow Designer** for no-code visual pipeline building (Public Preview).
+- **Lakeflow Designer** for no-code visual pipeline building.
 
 ## Two freshness signals
 

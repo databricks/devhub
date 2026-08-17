@@ -73,12 +73,10 @@ Project, branch, endpoint, and database IDs must be 1-63 characters, start with 
 
 ## Autoscaling
 
-Computes autoscale between a configured min and max compute unit (CU) range. Default settings by branch type when created via API or CLI:
+Computes autoscale between a configured min and max compute unit (CU) range. Defaults match across the UI, SDK, and CLI:
 
-- **Production branch**: 1 CU (min and max), scale to zero enabled (24-hour default timeout).
-- **Child branches**: 1 CU (min and max), scale to zero enabled (24-hour default timeout).
-
-The Lakebase Postgres UI sets higher defaults: 8–16 CU for production and 2–4 CU for child branches.
+- **New project production compute**: 8–16 CU, scale to zero enabled (24-hour default timeout).
+- **Project compute defaults** (used for subsequently created primary or read-replica computes): 2–4 CU, scale to zero enabled (24-hour default timeout). Override with project **Compute defaults** or `default_endpoint_settings` on create.
 
 [Autoscaling](https://docs.databricks.com/aws/en/oltp/projects/autoscaling) is available for computes up to 64 CU (128 GB). For workloads requiring more than 64 CU, larger fixed-size computes are available. The difference between max and min cannot exceed 16 CU (`max - min <= 16`).
 

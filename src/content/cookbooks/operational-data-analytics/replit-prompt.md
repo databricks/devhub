@@ -55,4 +55,4 @@ Build a polished full-stack web app with:
 
 ## Notes
 
-This template consumes Unity Catalog tables that already exist or demo tables created through SQL. It does not provision external storage, Lakehouse Sync, or Lakeflow Spark Declarative Pipelines for this Replit version.
+This template consumes Unity Catalog tables that already exist or demo tables created through SQL. It does not provision external storage, Lakebase Change Data Feed (CDF), or Lakeflow Spark Declarative Pipelines for this Replit version.

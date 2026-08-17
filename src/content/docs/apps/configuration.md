@@ -136,7 +136,7 @@ Each app gets a dedicated service principal. Databricks injects `DATABRICKS_CLIE
 | Medium | Up to 2 | 6 GB  | 0.5 |
 | Large  | Up to 4 | 12 GB | 1.0 |
 
-Medium is the default. Configure compute size in the workspace UI or with the `--compute-size` flag (`MEDIUM` or `LARGE`) on `databricks apps create` and `databricks apps update`.
+Medium is the default. Configure compute size in the workspace UI or with the `--compute-size` flag (`MEDIUM`, `LARGE`, or `XLARGE`; availability depends on workspace configuration) on `databricks apps create` and `databricks apps update`.
 
 ## Constraints
 

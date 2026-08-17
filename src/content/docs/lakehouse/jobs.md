@@ -8,7 +8,7 @@ description: Trigger and monitor Lakeflow Jobs from your AppKit app with the Job
 
 To offload work that's too slow or too heavy for a request handler, you need a Lakeflow Job, which is Databricks's managed runner for notebooks, SQL, dbt, and Python wheel tasks. Typical work triggered by a user action: model retraining, multi-task ETL, or a long SQL backfill. The [Jobs plugin](/docs/appkit/v0/plugins/jobs) wires your handler to a job: declare it in `databricks.yml`, then call `AppKit.jobs("etl").runNow(params)` to trigger a run or iterate `runAndWait` for streaming progress.
 
-Authoring jobs is a workspace task done in Databricks or with [Declarative Automation Bundles](https://docs.databricks.com/aws/en/dev-tools/bundles/). From an AppKit app, you only trigger them. The plugin handles run polling, SSE (Server-Sent Events) streaming, and parameter validation with Zod.
+Authoring jobs is a workspace task done in Databricks or with [Declarative Automation Bundles (formerly Databricks Asset Bundles)](https://docs.databricks.com/aws/en/dev-tools/bundles/). From an AppKit app, you only trigger them. The plugin handles run polling, SSE (Server-Sent Events) streaming, and parameter validation with Zod.
 
 ## Prerequisites
 

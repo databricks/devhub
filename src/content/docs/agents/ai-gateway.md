@@ -109,7 +109,7 @@ The examples above use **named mode** with an explicit alias. Omit the config to
 
 You might see governance in two places in your workspace:
 
-- **Unity AI Gateway** (recommended; Beta): the current standalone product. An account admin must enable it from the account console **Previews** page. Its **model services** are Unity Catalog objects managed under the **AI Gateway** sidebar entry, and you query them by fully qualified name through the Unity AI Gateway APIs (`https://<workspace>/ai-gateway/openai/v1` and the other provider paths), not through the Model Serving plugin. Usage logs to `system.ai_gateway.usage`.
+- **Unity AI Gateway** (recommended; generally available): the current standalone product. Its **model services** are Unity Catalog objects managed under the **AI Gateway** sidebar entry, and you query them by fully qualified name through the Unity AI Gateway APIs (`https://<workspace>/ai-gateway/openai/v1` and the other provider paths), not through the Model Serving plugin. Usage logs to `system.ai_gateway.usage`. Unity AI Gateway itself does not require a preview; only beta capabilities such as service policies need an account admin to enable **Unity AI Gateway beta features** from the account console **Previews** page.
 - **Previous version of AI Gateway**: features toggled on an existing Model Serving endpoint. Usage logs to `system.serving.endpoint_usage`. The Model Serving plugin calls these endpoints directly by name.
 
 The Model Serving plugin in this guide calls serving endpoints by name, including the Databricks-hosted foundation models (`databricks-` prefix). It does not call Unity AI Gateway model services; to use one, query its OpenAI-compatible API. See [Query model services](https://docs.databricks.com/aws/en/ai-gateway/query-model-services).
@@ -126,14 +126,14 @@ For more detail, see:
 
 AI Gateway features vary by endpoint type. Configure them in the workspace UI or through the REST API (`PUT /api/2.0/serving-endpoints/{name}/ai-gateway`).
 
-| Feature               | What it does                                                         |
-| --------------------- | -------------------------------------------------------------------- |
-| **Usage tracking**    | Records request and token counts to `system.serving.endpoint_usage`  |
-| **Payload logging**   | Logs request and response payloads to Unity Catalog inference tables |
-| **Rate limits**       | QPM and TPM limits per user, group, or service principal             |
-| **AI Guardrails**     | Safety filters (Llama Guard) and PII detection (Presidio)            |
-| **Fallbacks**         | Route to backup endpoints on failure                                 |
-| **Traffic splitting** | Split traffic across multiple served entities                        |
+| Feature               | What it does                                                                   |
+| --------------------- | ------------------------------------------------------------------------------ |
+| **Usage tracking**    | Records request and token counts to `system.serving.endpoint_usage`            |
+| **Payload logging**   | Logs request and response payloads to Unity Catalog inference tables           |
+| **Rate limits**       | QPM and TPM limits per user, group, or service principal                       |
+| **AI Guardrails**     | Safety filters (Llama Guard) and PII detection (Presidio)                      |
+| **Fallbacks**         | On failure, retry other served entities on the endpoint (external models only) |
+| **Traffic splitting** | Split traffic across multiple served entities                                  |
 
 See [Configure AI Gateway on serving endpoints](https://docs.databricks.com/aws/en/ai-gateway/configure-ai-gateway-endpoints) for the full configuration guide, or [Unity AI Gateway](https://docs.databricks.com/aws/en/ai-gateway/) for governing model services.
 

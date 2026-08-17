@@ -452,7 +452,7 @@ For additional troubleshooting, see [Deploy apps](https://docs.databricks.com/aw
 - **401 errors (authentication)**: Verify your token is valid (`databricks auth token --profile <PROFILE>`), hasn't expired, and includes the required OAuth scopes. Your token's scopes must be a superset of the scopes configured for the app's [user authorization](/docs/appkit/v0/plugins/execution-context).
 - **403 errors (permission denied)**: Verify you have `CAN USE` permission on the app. Insufficient OAuth scopes can also cause 403s even with valid permissions.
 - **404 errors (app not found)**: Verify the app name and workspace URL are correct, the app is deployed and running, and the endpoint path exists.
-- **Git deployment fails**: For private repositories, verify the app's service principal has a Git credential configured. If deploying through CLI/API/DABs, create the app first, then add the Git credential.
+- **Git deployment fails**: For private repositories, verify the app's service principal has a Git credential configured. If deploying through CLI/API/Declarative Automation Bundles (formerly Databricks Asset Bundles), create the app first, then add the Git credential.
 
 ## AppKit docs
 

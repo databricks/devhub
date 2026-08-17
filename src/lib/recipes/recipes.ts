@@ -5,7 +5,7 @@ export const SERVICES = [
   "Genie",
   "Unity AI Gateway",
   "Data Lakehouse",
-  "Lakeflow Pipelines",
+  "Lakeflow Spark Declarative Pipelines",
   "Unity Catalog",
 ] as const;
 
@@ -111,7 +111,7 @@ export const recipes: Recipe[] = [
     id: "foundation-models-api",
     name: "Query Foundation Model Endpoints",
     description:
-      "Query Databricks foundation-model endpoints for production-ready access to hosted models with built-in AI Gateway governance.",
+      "Query Databricks foundation-model endpoints for production-ready access to hosted models with Unity AI Gateway usage tracking and optional governance.",
     tags: ["Agent Bricks", "AI", "Unity AI Gateway", "Foundation Models"],
     services: ["Unity AI Gateway"],
     prerequisites: ["set-up-your-local-dev-environment"],
@@ -200,10 +200,9 @@ export const recipes: Recipe[] = [
     id: "lakebase-change-data-feed-autoscaling",
     name: "Lakebase Change Data Feed: Sync Lakebase to Unity Catalog (Autoscaling)",
     description:
-      "Replicate Lakebase Autoscaling Postgres tables into Unity Catalog as managed Delta tables using Lakebase Change Data Feed (CDF), with full SCD Type 2 history.",
+      "Replicate Lakebase Autoscaling Postgres tables into Unity Catalog as managed Delta tables using Lakebase Change Data Feed (CDF), with full row-level change history.",
     tags: [
       "Lakebase",
-      "Lakehouse Sync",
       "Unity Catalog",
       "Data Lakehouse",
       "Lakebase Change Data Feed",
@@ -228,7 +227,6 @@ export const recipes: Recipe[] = [
       "Unity Catalog",
       "Data Lakehouse",
       "Synced Tables",
-      "CDF",
     ],
     services: ["Lakebase Postgres", "Unity Catalog", "Data Lakehouse"],
     prerequisites: ["set-up-your-local-dev-environment"],
@@ -286,12 +284,12 @@ export const recipes: Recipe[] = [
       "Medallion Architecture",
       "Data Lakehouse",
       "CDC",
-      "Lakeflow Pipelines",
+      "Lakeflow Spark Declarative Pipelines",
       "Silver",
       "Gold",
       "Analytics",
     ],
-    services: ["Lakeflow Pipelines", "Data Lakehouse"],
+    services: ["Lakeflow Spark Declarative Pipelines", "Data Lakehouse"],
     prerequisites: ["set-up-your-local-dev-environment"],
     previewImageLightUrl:
       "/img/guides/medallion-architecture-from-cdc-preview-light.png",
@@ -302,7 +300,7 @@ export const recipes: Recipe[] = [
     id: "lakebase-off-platform-env-management",
     name: "Lakebase Env Management for Off-Platform Apps",
     description:
-      "Define and validate cross-platform environment variables for Lakebase-backed apps deployed outside Databricks App Platform.",
+      "Define and validate cross-platform environment variables for Lakebase-backed apps deployed outside Databricks Apps.",
     tags: ["Lakebase", "Environment Variables", "AWS", "Vercel", "Netlify"],
     services: ["Lakebase Postgres"],
     previewImageLightUrl:
@@ -495,7 +493,7 @@ export const cookbooks: Cookbook[] = [
     id: "lakebase-off-platform",
     name: "Lakebase Off-Platform",
     description:
-      "Use Lakebase from apps hosted outside Databricks App Platform (for example on AWS, Vercel, or Netlify) with portable env, token, and Drizzle patterns.",
+      "Use Lakebase from apps hosted outside Databricks Apps (for example on AWS, Vercel, or Netlify) with portable env, token, and Drizzle patterns.",
     recipeIds: [
       "lakebase-create-instance",
       "lakebase-off-platform-env-management",

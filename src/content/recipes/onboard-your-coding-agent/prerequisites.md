@@ -1,6 +1,6 @@
 This template makes a Databricks repo agent-ready: it installs Databricks platform knowledge into the user's coding agent, wires up the DevHub Docs MCP server, and writes an `AGENTS.md` (with a symlinked `CLAUDE.md`) that pins the workspace defaults agents need to do the right thing on this codebase.
 
 - **A repo to onboard the agent into.** Run this from the root of the project the agent will work on. If the user does not have a project yet, run [Spin Up a Databricks App](/templates/spin-up-databricks-app) first and come back here from inside the scaffolded directory.
-- **A coding agent installed locally.** The Databricks aitools installer detects Cursor, Claude Code, Codex CLI, OpenCode, GitHub Copilot, and Antigravity. The DevHub MCP server install via `npx add-mcp` works with the same set plus VS Code.
+- **A coding agent installed locally.** The Databricks aitools installer detects Cursor, Claude Code, Codex CLI, OpenCode, GitHub Copilot, Antigravity, Pi, and Gemini CLI. The DevHub MCP server install via `npx add-mcp` works with the same set plus VS Code.
 - **`npx` available.** The DevHub MCP install runs through `npx add-mcp` — comes with Node.js `18+`.
 - **Knowledge of which Databricks resources this repo will use.** Before writing `AGENTS.md` you'll ask the user which CLI profile, workspace URL, Unity Catalog catalog/schema, Lakebase project/branch, Genie Agent, and Model Serving endpoint to treat as defaults for this repo. It is fine to leave fields blank with a `TODO:` marker if the user does not know yet.

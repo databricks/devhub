@@ -12,7 +12,7 @@ Give your users a chat box that queries your data. No text-to-SQL, no schema map
 
 - Databricks CLI `v1.0.0+` with an [authenticated profile](/docs/tools/databricks-cli#authenticate).
 - A running AppKit app. See [Apps quickstart](/docs/apps/quickstart).
-- A Genie Agent configured on Unity Catalog tables. See [What is a Genie Agent](https://docs.databricks.com/aws/en/genie/) for setup.
+- A Genie Agent configured on Unity Catalog tables. See [Create and manage a Genie Agent](https://docs.databricks.com/aws/en/genie-agents/set-up) for setup.
 
   Attach the agent as a resource in the app's configuration (UI or CLI) with **Can run** selected, and Databricks grants your app's service principal that permission. `app.yaml` then binds the resource to an env var. End-user permissions are covered [below](#permissions-and-data-access).
 

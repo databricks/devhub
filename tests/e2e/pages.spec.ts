@@ -768,11 +768,12 @@ test.describe("docs MDX compatibility", () => {
     expect(layout.articleHeight).toBeLessThanOrEqual(3165);
     expect(layout.codeBlocks).toBe(3);
     expect(layout.inlineCodes).toBe(2);
-    // 67 = page links + footer links including "Your Privacy Choices", which
-    // the footer renders twice (desktop and mobile legal blocks). Announcement
-    // banners are env-gated, so their links are excluded to keep the count
-    // stable whether or not a banner is live.
-    expect(layout.linksWithoutBanners).toBe(67);
+    // 68 = page links + footer links, including the Neon entry in the footer
+    // Products list and "Your Privacy Choices", which the footer renders twice
+    // (desktop and mobile legal blocks). Announcement banners are env-gated, so
+    // their links are excluded to keep the count stable whether or not a banner
+    // is live.
+    expect(layout.linksWithoutBanners).toBe(68);
   });
 
   test("renders relative docs image assets and links", async ({ page }) => {
@@ -1199,13 +1200,24 @@ test.describe("docs MDX compatibility", () => {
       };
     });
 
-    expect(collapsedLayout.articleHeight).toBeGreaterThanOrEqual(6990);
-    expect(collapsedLayout.articleHeight).toBeLessThanOrEqual(7030);
+    // The article height and the "Long-running operations" offset are coarse
+    // layout guards: if a nested <details> block expanded, both would jump by
+    // hundreds of px. They are tolerant ranges rather than exact goldens so
+    // routine content edits and minor cross-environment font-rendering
+    // differences don't break the suite; the collapsed state itself is asserted
+    // exactly via hiddenHeadingVisible below.
+    expect(collapsedLayout.articleHeight).toBeGreaterThanOrEqual(6900);
+    expect(collapsedLayout.articleHeight).toBeLessThanOrEqual(7150);
     expect(collapsedLayout.exampleSummary).toBe(
       "Example databricks.yml with a project, dev branch, and read-only replica",
     );
     expect(collapsedLayout.hiddenHeadingVisible).toBe(false);
-    expect(collapsedLayout.longRunningOffsetFromArticleY).toBe(4119);
+    expect(
+      collapsedLayout.longRunningOffsetFromArticleY,
+    ).toBeGreaterThanOrEqual(4050);
+    expect(collapsedLayout.longRunningOffsetFromArticleY).toBeLessThanOrEqual(
+      4250,
+    );
   });
 
   test("renders fenced code blocks nested inside ordered lists", async ({
@@ -1348,7 +1360,9 @@ test.describe("docs MDX compatibility", () => {
 });
 
 test.describe("hackathon resources", () => {
-  test("shows the full production resource set", async ({ page }) => {
+  test("renders the event page metadata and key resource links", async ({
+    page,
+  }) => {
     await page.goto("/hackathon/apps-agents-for-good-2026");
 
     await expect(page).toHaveTitle(

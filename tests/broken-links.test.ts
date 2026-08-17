@@ -13,6 +13,7 @@ const NON_PAGE_ROUTES = new Set([
   "/docs/llms.txt",
   "/docs",
   "/product/data-lakehouse",
+  "/appkit",
   "/solutions/rss.xml",
   "/templates.md",
   "/solutions.md",

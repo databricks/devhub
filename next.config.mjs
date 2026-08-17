@@ -1,3 +1,5 @@
+import { existsSync, readFileSync } from "node:fs";
+import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import createMDX from "@next/mdx";
@@ -7,6 +9,36 @@ const resolveLocal = (relativePath) =>
 const resolveMdxPlugin = (file) =>
   resolveLocal(`./src/lib/mdx-plugins/${file}`);
 const projectRoot = resolveLocal("./");
+
+function appkitDocsChannel() {
+  const pkgJsonPath = join(
+    projectRoot,
+    "node_modules",
+    "@databricks",
+    "appkit-ui",
+    "package.json",
+  );
+  if (!existsSync(pkgJsonPath)) {
+    throw new Error(
+      "@databricks/appkit-ui is not installed. Run `pnpm install` and retry.",
+    );
+  }
+
+  const pkg = JSON.parse(readFileSync(pkgJsonPath, "utf-8"));
+  const version = pkg.version;
+  if (typeof version !== "string" || version.length === 0) {
+    throw new Error(
+      `Invalid @databricks/appkit-ui version: ${JSON.stringify(version)}`,
+    );
+  }
+
+  const major = version.split(".")[0];
+  if (!/^\d+$/.test(major)) {
+    throw new Error(`Invalid @databricks/appkit-ui version: ${version}`);
+  }
+
+  return `v${major}`;
+}
 const textArtifactCacheHeader = {
   key: "Cache-Control",
   value: "public, max-age=0, s-maxage=600",
@@ -43,6 +75,8 @@ const nextConfig = {
     ],
   },
   async redirects() {
+    const latestAppkitDocs = `/docs/appkit/${appkitDocsChannel()}`;
+
     return [
       {
         source: "/docs",
@@ -58,6 +92,18 @@ const nextConfig = {
         source: "/product/data-lakehouse",
         destination: "/product/lakebase",
         permanent: true,
+      },
+      // /appkit is a moving alias for the current major. A 308 would pin
+      // crawlers to whatever destination this build happened to emit.
+      {
+        source: "/appkit",
+        destination: latestAppkitDocs,
+        permanent: false,
+      },
+      {
+        source: "/appkit/",
+        destination: latestAppkitDocs,
+        permanent: false,
       },
     ];
   },

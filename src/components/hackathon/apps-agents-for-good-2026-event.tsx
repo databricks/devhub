@@ -62,7 +62,6 @@ export const appsAgentsForGood2026Event: HackathonEvent = {
       description:
         "Follow the step-by-step checklist to get set up and start coding.",
       wide: true,
-      showWhenAllResources: true,
     },
     {
       label: "Challenge",
@@ -85,7 +84,6 @@ export const appsAgentsForGood2026Event: HackathonEvent = {
       external: true,
       description:
         "Add the hackathon dataset to your Databricks workspace to start building with it.",
-      showWhenAllResources: true,
     },
     {
       label: "Template",

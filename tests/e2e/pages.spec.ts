@@ -297,6 +297,29 @@ test.describe("product pages", () => {
     await expect(page).toHaveTitle("Lakebase | Databricks Developer");
   });
 
+  test("/appkit redirects to the latest AppKit docs", async ({
+    page,
+    request,
+  }) => {
+    const destinationPath = /^\/docs\/appkit\/v\d+$/;
+    const response = await request.get("/appkit", { maxRedirects: 0 });
+    expect(response.status()).toBe(307);
+    const location = response.headers()["location"];
+    if (!location) {
+      throw new Error("Missing Location header for /appkit");
+    }
+    expect(new URL(location, "http://localhost").pathname).toMatch(
+      destinationPath,
+    );
+
+    await page.goto("/appkit");
+    await expect(page).toHaveURL(/\/docs\/appkit\/v\d+$/);
+    await expect(page).toHaveTitle("Getting started | Databricks Developer");
+
+    await page.goto("/appkit/");
+    await expect(page).toHaveURL(/\/docs\/appkit\/v\d+$/);
+  });
+
   test("uses static testimonial cards on desktop when three testimonials fit", async ({
     page,
   }) => {

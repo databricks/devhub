@@ -1,6 +1,6 @@
 // fallow-ignore-file unused-file
 // Source for the generated public asset at public/js/home-hero-player.js.
-(() => {
+function createDatabricksHeroExportPlayer(root) {
   window.DATABRICKS_EXPORT_MODE = true;
   window.DATABRICKS_USED_FEATURES = {
     powerOn: true,
@@ -396,42 +396,45 @@
     },
   };
 
-  const stage = document.querySelector("#stage");
-  const stagePerspectiveShell = document.querySelector(
-    "#stagePerspectiveShell",
-  );
-  const toolWorkspace = document.querySelector("#toolWorkspace");
-  const stageViewport = document.querySelector("#stageViewport");
-  const preAppScene = document.querySelector("#preAppScene");
-  const installText = document.querySelector("#installText");
-  const installLayer = document.querySelector(".install-copy");
-  const promptLayer = document.querySelector(".prompt-copy");
-  const promptText = document.querySelector("#promptText");
-  const buildLines = [...document.querySelectorAll("[data-build-line]")];
-  const buildStatus = document.querySelector(".build-status");
-  const buildTitle = document.querySelector(".build-title");
-  const buildTitleCopy = document.querySelector(".build-title-copy");
-  const statusRows = [...document.querySelectorAll(".status-row")];
-  const statusValues = [...document.querySelectorAll(".status-value")];
-  const finalStatus = document.querySelector(".final-status");
-  const finalDone = document.querySelector(".final-done");
-  const finalCheck = document.querySelector(".final-check");
-  const finalLink = document.querySelector(".final-link");
-  const finalAscii = document.querySelector("#finalAscii");
-  const finalPrompt = document.querySelector(".final-prompt");
-  const appPreview = document.querySelector("#appPreview");
-  const appPrototypeImage = document.querySelector(".app-prototype-image");
-  const appDoneImage = document.querySelector(".app-done-image");
-  const appChartOverlay = document.querySelector(".app-chart-overlay");
-  const appRevealOverlay = document.querySelector("#appRevealOverlay");
-  const powerOnOverlay = document.querySelector("#powerOnOverlay");
-  const heroLogoReveal = document.querySelector("#heroLogoReveal");
-  const logoSvgHosts = [...document.querySelectorAll("[data-logo-svg]")];
-  const gridCanvas = document.querySelector("#gridCanvas");
+  const eventController = new AbortController();
+  let destroyed = false;
+  const stage = root.querySelector("#stage");
+  const stagePerspectiveShell = root.querySelector("#stagePerspectiveShell");
+  const toolWorkspace = root.querySelector("#toolWorkspace");
+  const stageViewport = root.querySelector("#stageViewport");
+  const preAppScene = root.querySelector("#preAppScene");
+  const installText = root.querySelector("#installText");
+  const installLayer = root.querySelector(".install-copy");
+  const promptLayer = root.querySelector(".prompt-copy");
+  const promptText = root.querySelector("#promptText");
+  const buildLines = [...root.querySelectorAll("[data-build-line]")];
+  const buildStatus = root.querySelector(".build-status");
+  const buildTitle = root.querySelector(".build-title");
+  const buildTitleCopy = root.querySelector(".build-title-copy");
+  const statusRows = [...root.querySelectorAll(".status-row")];
+  const statusValues = [...root.querySelectorAll(".status-value")];
+  const finalStatus = root.querySelector(".final-status");
+  const finalDone = root.querySelector(".final-done");
+  const finalCheck = root.querySelector(".final-check");
+  const finalLink = root.querySelector(".final-link");
+  const finalAscii = root.querySelector("#finalAscii");
+  const finalPrompt = root.querySelector(".final-prompt");
+  const appPreview = root.querySelector("#appPreview");
+  const appPrototypeImage = root.querySelector(".app-prototype-image");
+  const appDoneImage = root.querySelector(".app-done-image");
+  const appChartOverlay = root.querySelector(".app-chart-overlay");
+  const appRevealOverlay = root.querySelector("#appRevealOverlay");
+  const powerOnOverlay = root.querySelector("#powerOnOverlay");
+  const heroLogoReveal = root.querySelector("#heroLogoReveal");
+  const logoSvgHosts = [...root.querySelectorAll("[data-logo-svg]")];
+  const gridCanvas = root.querySelector("#gridCanvas");
   const gridCtx = gridCanvas?.getContext("2d") || null;
-  const shadeMapOverlay = document.querySelector("#shadeMapOverlay");
-  const root =
-    stage?.closest(".db-hero-animation-root") || document.documentElement;
+  const shadeMapOverlay = root.querySelector("#shadeMapOverlay");
+
+  if (!stage || !appPreview) {
+    return () => undefined;
+  }
+
   const rootStyleValueCache = new Map();
   const RENDER_FPS_CAP = 30;
   const RENDER_FRAME_MS = 1000 / RENDER_FPS_CAP;
@@ -3093,9 +3096,15 @@
     setAppDragVars(appWindowDragOffset.x, appWindowDragOffset.y);
     clearAppWindowEchoes();
     addAppWindowDragEcho(true);
-    window.addEventListener("pointermove", moveAppWindowDrag);
-    window.addEventListener("pointerup", releaseAppWindowDrag);
-    window.addEventListener("pointercancel", releaseAppWindowDrag);
+    window.addEventListener("pointermove", moveAppWindowDrag, {
+      signal: eventController.signal,
+    });
+    window.addEventListener("pointerup", releaseAppWindowDrag, {
+      signal: eventController.signal,
+    });
+    window.addEventListener("pointercancel", releaseAppWindowDrag, {
+      signal: eventController.signal,
+    });
   }
 
   function moveAppWindowDrag(event) {
@@ -3126,7 +3135,9 @@
     }
 
     appWindowBar.dataset.dragBound = "true";
-    appWindowBar.addEventListener("pointerdown", startAppWindowDrag);
+    appWindowBar.addEventListener("pointerdown", startAppWindowDrag, {
+      signal: eventController.signal,
+    });
   }
 
   function setParallaxVars(bgX = 0, bgY = 0, appX = 0, appY = 0) {
@@ -3360,7 +3371,12 @@
   }
 
   function schedulePerspectiveFrame() {
-    if (perspectiveFrameRequest || document.hidden || renderIdleSettled) {
+    if (
+      destroyed ||
+      perspectiveFrameRequest ||
+      document.hidden ||
+      renderIdleSettled
+    ) {
       return;
     }
 
@@ -3447,7 +3463,7 @@
     rect.addEventListener(
       "pointerleave",
       () => releaseLogoRectHoverSuppression(rect),
-      { once: true },
+      { once: true, signal: eventController.signal },
     );
   }
 
@@ -3555,10 +3571,14 @@
     [...svg.querySelectorAll(".hero-logo-shapes rect")].forEach(
       (rect, index) => {
         rect.dataset.logoRect = String(index);
-        rect.addEventListener("click", (event) => {
-          event.stopPropagation();
-          runLogoRectWave(svg, rect);
-        });
+        rect.addEventListener(
+          "click",
+          (event) => {
+            event.stopPropagation();
+            runLogoRectWave(svg, rect);
+          },
+          { signal: eventController.signal },
+        );
       },
     );
   }
@@ -5626,35 +5646,43 @@
     setAppRevealCompleteTarget(mode === "polished");
   }
 
-  appChartOverlay?.addEventListener("pointermove", (event) => {
-    updateAppChartHover(event);
-  });
-
-  appPreview?.addEventListener("pointermove", (event) => {
-    if (
-      !appPreview.classList.contains("is-image-backed") ||
-      !appPreview.classList.contains("is-polished")
-    ) {
-      return;
-    }
-
-    const chartStage = appChartOverlay?.querySelector(".app-chart-stage");
-    if (!chartStage) {
-      return;
-    }
-
-    const rect = chartStage.getBoundingClientRect();
-    const overlayRect = appChartOverlay.getBoundingClientRect();
-    const insideOverlay =
-      event.clientX >= overlayRect.left &&
-      event.clientX <= overlayRect.right &&
-      event.clientY >= overlayRect.top &&
-      event.clientY <= overlayRect.bottom;
-
-    if (insideOverlay) {
+  appChartOverlay?.addEventListener(
+    "pointermove",
+    (event) => {
       updateAppChartHover(event);
-    }
-  });
+    },
+    { signal: eventController.signal },
+  );
+
+  appPreview?.addEventListener(
+    "pointermove",
+    (event) => {
+      if (
+        !appPreview.classList.contains("is-image-backed") ||
+        !appPreview.classList.contains("is-polished")
+      ) {
+        return;
+      }
+
+      const chartStage = appChartOverlay?.querySelector(".app-chart-stage");
+      if (!chartStage) {
+        return;
+      }
+
+      const rect = chartStage.getBoundingClientRect();
+      const overlayRect = appChartOverlay.getBoundingClientRect();
+      const insideOverlay =
+        event.clientX >= overlayRect.left &&
+        event.clientX <= overlayRect.right &&
+        event.clientY >= overlayRect.top &&
+        event.clientY <= overlayRect.bottom;
+
+      if (insideOverlay) {
+        updateAppChartHover(event);
+      }
+    },
+    { signal: eventController.signal },
+  );
 
   function getActiveFxSettingsPresets() {
     normalizeGroupFxSettings();
@@ -6485,7 +6513,7 @@
   }
 
   function scheduleRenderFrame(delay = RENDER_FRAME_MS) {
-    if (viewportPaused) {
+    if (destroyed || viewportPaused) {
       return;
     }
 
@@ -6887,6 +6915,10 @@
   }
 
   function setViewportPaused(paused) {
+    if (destroyed) {
+      return;
+    }
+
     if (paused === viewportPaused) {
       return;
     }
@@ -6912,21 +6944,33 @@
     }
   }
 
-  window.addEventListener("db-hero-viewport-change", (event) => {
-    intersectionPaused = event.detail?.isInViewport === false;
-    setViewportPaused(intersectionPaused || documentVisibilityPaused);
-  });
+  window.addEventListener(
+    "db-hero-viewport-change",
+    (event) => {
+      intersectionPaused = event.detail?.isInViewport === false;
+      setViewportPaused(intersectionPaused || documentVisibilityPaused);
+    },
+    { signal: eventController.signal },
+  );
 
-  document.addEventListener("visibilitychange", () => {
-    documentVisibilityPaused = document.hidden;
-    setViewportPaused(intersectionPaused || documentVisibilityPaused);
-  });
+  document.addEventListener(
+    "visibilitychange",
+    () => {
+      documentVisibilityPaused = document.hidden;
+      setViewportPaused(intersectionPaused || documentVisibilityPaused);
+    },
+    { signal: eventController.signal },
+  );
 
-  window.addEventListener("resize", () => {
-    applyStageFit();
-    resizeGridCanvas();
-    drawGrid(performance.now());
-  });
+  window.addEventListener(
+    "resize",
+    () => {
+      applyStageFit();
+      resizeGridCanvas();
+      drawGrid(performance.now());
+    },
+    { signal: eventController.signal },
+  );
 
   function bootExportPlayer() {
     disableUnusedRuntimeFeatures();
@@ -6959,33 +7003,52 @@
         }
         updateParallaxFromPointer(event);
       };
-      stage.addEventListener("mousemove", updateParallaxFromPointer);
+      stage.addEventListener("mousemove", updateParallaxFromPointer, {
+        signal: eventController.signal,
+      });
       window.addEventListener("pointermove", updateFxPointerFromWindow, {
         passive: true,
+        signal: eventController.signal,
       });
-      stage.addEventListener("mouseleave", () => {
-        const config = getGroupFxConfig("parallax");
-        if (config.returnToCenter !== false) {
-          parallaxTargetX = 0;
-          parallaxTargetY = 0;
-        }
-        const perspectiveConfig = getGroupFxConfig("perspective");
-        if (perspectiveConfig.returnToCenter !== false) {
-          perspectiveTargetX = 0;
-          perspectiveTargetY = 0;
-        }
-      });
+      stage.addEventListener(
+        "mouseleave",
+        () => {
+          const config = getGroupFxConfig("parallax");
+          if (config.returnToCenter !== false) {
+            parallaxTargetX = 0;
+            parallaxTargetY = 0;
+          }
+          const perspectiveConfig = getGroupFxConfig("perspective");
+          if (perspectiveConfig.returnToCenter !== false) {
+            perspectiveTargetX = 0;
+            perspectiveTargetY = 0;
+          }
+        },
+        { signal: eventController.signal },
+      );
     }
 
     if (window.DATABRICKS_USED_FEATURES?.shadeMap) {
-      stage.addEventListener("mousemove", updateShadeMapCursorErase);
-      stage.addEventListener("pointermove", updateShadeMapCursorErase);
-      stage.addEventListener("mouseleave", returnShadeMapCursorEraseToCenter);
-      stage.addEventListener("pointerleave", returnShadeMapCursorEraseToCenter);
+      stage.addEventListener("mousemove", updateShadeMapCursorErase, {
+        signal: eventController.signal,
+      });
+      stage.addEventListener("pointermove", updateShadeMapCursorErase, {
+        signal: eventController.signal,
+      });
+      stage.addEventListener("mouseleave", returnShadeMapCursorEraseToCenter, {
+        signal: eventController.signal,
+      });
+      stage.addEventListener(
+        "pointerleave",
+        returnShadeMapCursorEraseToCenter,
+        {
+          signal: eventController.signal,
+        },
+      );
       window.addEventListener(
         "pointermove",
         returnShadeMapCursorEraseToCenterWhenOutside,
-        { passive: true },
+        { passive: true, signal: eventController.signal },
       );
     }
 
@@ -6994,5 +7057,66 @@
     playTimeline(settings.timelineTrimStart, settings.timelineTrimEnd);
   }
 
+  function destroyExportPlayer() {
+    if (destroyed) {
+      return;
+    }
+
+    destroyed = true;
+    runId += 1;
+    logoRunId += 1;
+    finalAsciiRunId += 1;
+    timelineRunning = false;
+    settings.paused = true;
+    eventController.abort();
+    releaseAppWindowDrag();
+    clearWindowBoot();
+    clearAppWindowEchoes();
+
+    logoWaveTimers.forEach((timer) => window.clearTimeout(timer));
+    logoWaveTimers = [];
+    logoHoverSuppressionTimers.forEach((timer) => window.clearTimeout(timer));
+    logoHoverSuppressionTimers.clear();
+
+    if (perspectiveFrameRequest) {
+      window.cancelAnimationFrame(perspectiveFrameRequest);
+      perspectiveFrameRequest = 0;
+    }
+
+    if (shadeMapEraseFrame) {
+      window.cancelAnimationFrame(shadeMapEraseFrame);
+      shadeMapEraseFrame = 0;
+    }
+
+    if (renderFrameTimer) {
+      window.clearTimeout(renderFrameTimer);
+      renderFrameTimer = 0;
+    }
+  }
+
   bootExportPlayer();
-})();
+  return destroyExportPlayer;
+}
+
+window.DatabricksHeroPlayer?.destroy?.();
+var activePlayerCleanup = null;
+window.DatabricksHeroPlayer = {
+  mount(root) {
+    activePlayerCleanup?.();
+    const cleanup = createDatabricksHeroExportPlayer(root);
+    activePlayerCleanup = cleanup;
+
+    return () => {
+      if (activePlayerCleanup !== cleanup) {
+        return;
+      }
+
+      activePlayerCleanup = null;
+      cleanup();
+    };
+  },
+  destroy() {
+    activePlayerCleanup?.();
+    activePlayerCleanup = null;
+  },
+};

@@ -410,6 +410,35 @@ test.describe("current mobile navigation", () => {
 });
 
 test.describe("home hero animation", () => {
+  test("restarts after navigating away and returning home", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/");
+
+    const heroRoot = page.locator(".db-hero-animation-root");
+    const heroStage = heroRoot.locator("#stage");
+    const heroCanvas = heroRoot.locator("#gridCanvas");
+
+    await expect(heroStage).toHaveAttribute("data-current-state", /[1-6]/, {
+      timeout: 30_000,
+    });
+    await expect(heroCanvas).toHaveAttribute("width", /\d+/);
+
+    await page.getByRole("link", { name: "[Docs]" }).click();
+    await expect(page).toHaveURL(/\/docs\/start-here$/);
+    await page
+      .getByRole("link", { name: "Databricks Developer home" })
+      .first()
+      .click();
+    await expect(page).toHaveURL(/\/$/);
+
+    await expect(heroStage).toHaveAttribute("data-current-state", /[1-6]/, {
+      timeout: 30_000,
+    });
+    await expect(heroCanvas).toHaveAttribute("width", /\d+/);
+  });
+
   test("does not create browser selection when dragging the app preview body", async ({
     page,
   }) => {

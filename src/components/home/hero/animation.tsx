@@ -17,8 +17,16 @@ type CssVariableProperties = CSSProperties & {
   [key: `--${string}`]: string | number;
 };
 
+type DbHeroPlayer = {
+  mount: (root: HTMLElement) => () => void;
+};
+
+type DbHeroPlayerWindow = Window & {
+  DatabricksHeroPlayer?: DbHeroPlayer;
+};
+
 const playerScriptPath = "/js/home-hero-player.js";
-const playerScriptVersion = "20260610";
+const playerScriptVersion = "20260817-route-return";
 
 function cssVars(vars: CssVariableProperties) {
   return vars;
@@ -565,6 +573,7 @@ function DbHeroPlayerScene() {
 
 export function DbHeroAnimation({ className }: DbHeroAnimationProps) {
   const rootRef = useRef<HTMLDivElement>(null);
+  const playerCleanupRef = useRef<(() => void) | null>(null);
   const playerScriptSrc = `${playerScriptPath}?v=${playerScriptVersion}`;
 
   useEffect(() => {
@@ -572,6 +581,12 @@ export function DbHeroAnimation({ className }: DbHeroAnimationProps) {
 
     if (!root) {
       return undefined;
+    }
+
+    const player = (window as DbHeroPlayerWindow).DatabricksHeroPlayer;
+
+    if (player) {
+      playerCleanupRef.current = player.mount(root);
     }
 
     let frame = 0;
@@ -609,6 +624,8 @@ export function DbHeroAnimation({ className }: DbHeroAnimationProps) {
       observer.disconnect();
       window.removeEventListener("scroll", queueViewportDispatch);
       window.removeEventListener("resize", queueViewportDispatch);
+      playerCleanupRef.current?.();
+      playerCleanupRef.current = null;
     };
   }, []);
 
@@ -619,9 +636,20 @@ export function DbHeroAnimation({ className }: DbHeroAnimationProps) {
         src={playerScriptSrc}
         strategy="afterInteractive"
         onReady={() => {
-          if (rootRef.current) {
-            dispatchViewportState(rootRef.current);
+          const root = rootRef.current;
+
+          if (!root) {
+            return;
           }
+
+          if (!playerCleanupRef.current) {
+            playerCleanupRef.current =
+              (window as DbHeroPlayerWindow).DatabricksHeroPlayer?.mount(
+                root,
+              ) ?? null;
+          }
+
+          dispatchViewportState(root);
         }}
       />
       <div

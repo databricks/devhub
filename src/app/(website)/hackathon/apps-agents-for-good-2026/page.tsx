@@ -4,7 +4,6 @@ import type { Metadata } from "next";
 import { getMetadata } from "@/lib/get-metadata";
 import { appsAgentsForGood2026Event as event } from "@/components/hackathon/apps-agents-for-good-2026-event";
 import {
-  getVisibleHackathonResources,
   HackathonEventFooter,
   HackathonEventSection,
   HackathonEventSidebar,
@@ -25,8 +24,6 @@ export const metadata: Metadata = getMetadata({
 });
 
 export default function AppsAgentsForGood2026Page(): ReactNode {
-  const resources = getVisibleHackathonResources({ event });
-
   return (
     <main className="bg-black text-white">
       <div className="mx-auto grid max-w-304 grid-cols-1 gap-12 px-5 pt-18 md:px-8 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-16 lg:pt-24">
@@ -47,7 +44,7 @@ export default function AppsAgentsForGood2026Page(): ReactNode {
           </HackathonEventSection>
 
           <HackathonEventSection className="mt-10 md:mt-14" title="Resources">
-            <HackathonResources resources={resources} />
+            <HackathonResources resources={event.resources} />
           </HackathonEventSection>
 
           <HackathonEventSection className="mt-10 md:mt-14" title="Timeline">

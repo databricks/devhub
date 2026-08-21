@@ -71,6 +71,8 @@ get_doc_resource(slug: "start-here")
 → full markdown content of the requested page
 ```
 
+Pages that declare a source of truth begin with a short **Source of truth** line naming the agent skill(s) and canonical docs to load for the product's current behavior.
+
 ## Where to next
 
 With the [Databricks CLI](/docs/tools/databricks-cli), [agent skills](/docs/tools/ai-tools/agent-skills), and Docs MCP Server all installed, your coding agent has everything it needs to build and deploy.

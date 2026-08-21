@@ -2,6 +2,12 @@
 title: What is Lakebase Postgres?
 sidebar_label: Overview
 description: Lakebase Postgres is managed Postgres inside Databricks, co-located with your Lakehouse. OLTP storage with instant branching and autoscaling.
+sourceOfTruth:
+  skills:
+    - databricks-lakebase
+  docs:
+    - /docs/appkit/v0/plugins/lakebase
+    - https://docs.databricks.com/aws/en/oltp/
 ---
 
 # What is Lakebase Postgres?
@@ -9,6 +15,8 @@ description: Lakebase Postgres is managed Postgres inside Databricks, co-located
 Lakebase Postgres is managed PostgreSQL that runs inside your Databricks workspace, co-located with your workspace data and services.
 
 Use it for the data your apps actively write and read at low latency: user state, sessions, chat history, and logs stored alongside your analytical data in the Lakehouse.
+
+This page is the AppKit view of Lakebase. For Lakebase Postgres itself (projects, branching, autoscaling, connectivity), see the [Lakebase docs](https://docs.databricks.com/aws/en/oltp/) or the [`databricks-lakebase`](/docs/tools/ai-tools/agent-skills) agent skill.
 
 ## What makes it different from running your own Postgres
 

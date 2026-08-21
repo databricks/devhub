@@ -59,6 +59,15 @@ export function scaffoldApp(options: {
     throw new Error(`Expected ${appDir} to exist after apps init`);
   }
 
+  // Some workspaces require Databricks Apps to be backed by a git repo, so
+  // `apps deploy` fails to create the app otherwise. A local repo with no remote
+  // satisfies the requirement, and `databricks apps init` does not create one.
+  run(
+    "git init -q && git add -A && git -c user.email=devhub-test@example.com " +
+      '-c user.name=devhub-test commit -q -m "scaffold"',
+    { cwd: appDir },
+  );
+
   return appDir;
 }
 

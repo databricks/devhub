@@ -2,11 +2,17 @@
 title: Lakeflow Jobs
 sidebar_label: Lakeflow Jobs
 description: Trigger and monitor Lakeflow Jobs from your AppKit app with the Jobs plugin. Permissions, `runNow` versus `runAndWait`, polling versus webhooks.
+sourceOfTruth:
+  skills:
+    - databricks-jobs
+  docs:
+    - /docs/appkit/v0/plugins/jobs
+    - https://docs.databricks.com/aws/en/jobs/
 ---
 
 # Lakeflow Jobs
 
-To offload work that's too slow or too heavy for a request handler, you need a Lakeflow Job, which is Databricks's managed runner for notebooks, SQL, dbt, and Python wheel tasks. Typical work triggered by a user action: model retraining, multi-task ETL, or a long SQL backfill. The [Jobs plugin](/docs/appkit/v0/plugins/jobs) wires your handler to a job: declare it in `databricks.yml`, then call `AppKit.jobs("etl").runNow(params)` to trigger a run or iterate `runAndWait` for streaming progress.
+To offload work that's too slow or too heavy for a request handler, you need a Lakeflow Job, which is Databricks's managed runner for notebooks, SQL, dbt, and Python wheel tasks. Typical work triggered by a user action: model retraining, multi-task ETL, or a long SQL backfill. The [Jobs plugin](/docs/appkit/v0/plugins/jobs) wires your handler to a job: declare it in `databricks.yml`, then call `AppKit.jobs("default").runNow(params)` to trigger a run or iterate `runAndWait` for streaming progress.
 
 Authoring jobs is a workspace task done in Databricks or with [Declarative Automation Bundles](https://docs.databricks.com/aws/en/dev-tools/bundles/). From an AppKit app, you only trigger them. The plugin handles run polling, SSE (Server-Sent Events) streaming, and parameter validation with Zod.
 
@@ -28,16 +34,7 @@ await createApp({
 });
 ```
 
-With no explicit `jobs` config, the plugin reads `DATABRICKS_JOB_ID` from the environment and registers it under the `default` key. For multiple jobs in one app, pass a `jobs` config to the plugin (as part of `createApp`'s `plugins` array):
-
-```typescript
-jobs({
-  jobs: {
-    etl: { taskType: "notebook" },
-    refresh: { taskType: "sql" },
-  },
-}),
-```
+With no explicit `jobs` config, the plugin reads `DATABRICKS_JOB_ID` from the environment and registers it under the `default` key. Multiple named jobs aren't currently supported at deploy time, so bind a single job to `DATABRICKS_JOB_ID`.
 
 ## Bind the job
 
@@ -54,15 +51,15 @@ resources:
             permission: CAN_MANAGE_RUN
 ```
 
-Inject the job ID into `app.yaml`:
+Inject the job ID into `app.yaml` as `DATABRICKS_JOB_ID`, the env the plugin's default job reads:
 
 ```yaml title="app.yaml"
 env:
-  - name: DATABRICKS_JOB_ETL
+  - name: DATABRICKS_JOB_ID
     valueFrom: etl-job
 ```
 
-Single-job apps can use the default env var name `DATABRICKS_JOB_ID`. The plugin uppercases env var names and lowercases job keys. See [App configuration](/docs/apps/configuration#resources) for the full resource list and the [Jobs plugin reference](/docs/appkit/v0/plugins/jobs) for the multi-job lookup rules.
+See [App configuration](/docs/apps/configuration#resources) for the full resource list and the [Jobs plugin reference](/docs/appkit/v0/plugins/jobs) for the env-var naming rules.
 
 ## Trigger from a route handler
 
@@ -77,7 +74,7 @@ const AppKit = await createApp({
     server(),
     jobs({
       jobs: {
-        etl: {
+        default: {
           taskType: "notebook",
           params: z.object({
             startDate: z.string(),
@@ -91,7 +88,7 @@ const AppKit = await createApp({
 
 AppKit.server.extend((app) => {
   app.post("/api/etl/run", async (req, res) => {
-    const result = await AppKit.jobs("etl").runNow({
+    const result = await AppKit.jobs("default").runNow({
       startDate: req.body.startDate,
       endDate: req.body.endDate,
     });
@@ -103,13 +100,7 @@ AppKit.server.extend((app) => {
 
 All Jobs plugin methods return [`ExecutionResult<T>`](/docs/appkit/v0/api/appkit/TypeAlias.ExecutionResult). Check `result.ok` before reading `result.data`.
 
-For per-user execution, call `.asUser(req)` explicitly. OBO requires the appropriate user API scope in the app's `databricks.yml` (see the [Jobs plugin reference](/docs/appkit/v0/plugins/jobs)) and the user's own `CAN_MANAGE_RUN` grant on the job:
-
-```typescript
-const result = await AppKit.jobs("etl")
-  .asUser(req)
-  .runNow({ startDate, endDate });
-```
+Jobs run as the app's **service principal**. The resource binding grants it `CAN_MANAGE_RUN`, so users trigger runs without individual grants, and the Jobs UI attributes each run to the service principal rather than the human user. AppKit does not run jobs on behalf of the signed-in user, so there is no per-user job execution to configure.
 
 ## Stream live progress
 
@@ -118,7 +109,7 @@ The plugin exposes a built-in SSE endpoint at `POST /api/jobs/:jobKey/run?stream
 For server logic, iterate `runAndWait` directly. It is an async iterator, not a promise:
 
 ```typescript
-for await (const status of AppKit.jobs("etl").runAndWait({
+for await (const status of AppKit.jobs("default").runAndWait({
   startDate,
   endDate,
 })) {

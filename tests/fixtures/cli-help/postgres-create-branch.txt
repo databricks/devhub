@@ -1,0 +1,36 @@
+This command is in Beta and may change without notice.
+
+Create a Branch.
+
+  Creates a new database branch in the project.
+
+  This is a long-running operation. By default, the command waits for the
+  operation to complete. Use --no-wait to return immediately with the raw
+  operation details. The operation's 'name' field can then be used to poll for
+  completion using the get-operation command.
+
+  Arguments:
+    PARENT: The Project where this Branch will be created. Format:
+      projects/{project_id}
+    BRANCH_ID: The ID to use for the Branch. This becomes the final component of the
+      branch's resource name. The ID is required and must be 1-63 characters
+      long, start with a lowercase letter, and contain only lowercase letters,
+      numbers, and hyphens. For example, development becomes
+      projects/my-app/branches/development.
+
+Usage:
+  databricks postgres create-branch PARENT BRANCH_ID [flags]
+
+Flags:
+  -h, --help               help for create-branch
+      --json JSON          either inline JSON string or @path/to/file.json with request body (default JSON (0 bytes))
+      --name string        Output only.
+      --no-wait            do not wait to reach DONE state
+      --replace-existing   If true, update the branch if it already exists instead of returning an error.
+      --timeout duration   maximum amount of time to reach DONE state
+
+Global Flags:
+      --debug            enable debug logging
+  -o, --output type      output type: text or json (default text)
+  -p, --profile string   ~/.databrickscfg profile
+  -t, --target string    bundle target to use (if applicable)

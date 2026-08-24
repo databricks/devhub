@@ -1171,12 +1171,17 @@ test.describe("docs MDX compatibility", () => {
     const article = page.locator("article");
     const details = page.locator("article details").first();
     await expect(article).not.toContainText("<details>");
-    await expect(details.locator("summary")).toContainText("Options");
+    await expect(details.locator("summary")).toContainText("Example output");
 
     await details.locator("summary").click();
     await expect(details).toHaveAttribute("open", "");
-    await expect(details.locator("table")).toBeVisible();
-    await expect(details.locator("table")).toContainText("--template");
+    // The nested fenced code block must be processed as markdown (rendered to a
+    // highlighted code figure), not shown as a raw ```json fence inside the
+    // <details>. This is the "nested markdown content" the test guards.
+    await expect(details.locator("figure.theme-code-block")).toBeVisible();
+    await expect(details.locator("figure.theme-code-block")).toContainText(
+      "compute_size",
+    );
   });
 
   test("keeps nested HTML details content collapsed in Lakebase docs", async ({
@@ -1185,62 +1190,45 @@ test.describe("docs MDX compatibility", () => {
     await page.goto("/docs/lakebase/development");
 
     const article = page.locator("article");
-    const manualSummary = article.locator("details > summary").filter({
-      hasText: "Manual provisioning (without a template)",
+    const exampleSummary = article.locator("details > summary").filter({
+      hasText: "Example databricks.yml",
     });
-    const manualDetails = manualSummary.locator("xpath=..");
+    const exampleDetails = exampleSummary.locator("xpath=..");
 
-    await expect(manualSummary).toContainText(
-      "Manual provisioning (without a template)",
+    await expect(exampleSummary).toContainText(
+      "Example databricks.yml with a project, dev branch, and read-only replica",
     );
-    await expect(manualDetails).not.toHaveAttribute("open", "");
+    // Collapsed by default: no open attribute set on the <details>.
+    await expect(exampleDetails).not.toHaveAttribute("open", "");
 
-    const collapsedLayout = await article.evaluate((element) => {
-      const longRunningHeading = [...element.querySelectorAll("h2")].find(
-        (heading) => heading.textContent?.trim() === "Long-running operations",
-      );
-      const hiddenHeading = [...element.querySelectorAll("h3")].find(
-        (heading) => heading.textContent?.trim() === "Get connection values",
-      );
-      const exampleSummary = [...element.querySelectorAll("details summary")]
-        .map((summary) => summary.textContent?.trim() ?? "")
-        .find((text) => text.includes("databricks.yml"));
-      const articleY = element.getBoundingClientRect().y;
-
+    // Assert the collapsed state directly and independently of the page's total
+    // length: while collapsed the block is just the summary line, and its nested
+    // code block must be hidden. If the <details> had rendered open, its height
+    // would jump by hundreds of px and the code figure would be visible. This is
+    // content-independent, so routine edits to this page don't re-break it.
+    const collapsed = await exampleDetails.evaluate((element) => {
+      const codeFigure = element.querySelector("figure.theme-code-block");
       return {
-        articleHeight: Math.round(element.getBoundingClientRect().height),
-        exampleSummary,
-        hiddenHeadingVisible:
-          hiddenHeading instanceof HTMLElement
-            ? hiddenHeading.checkVisibility()
-            : null,
-        longRunningOffsetFromArticleY:
-          longRunningHeading instanceof HTMLElement
-            ? Math.round(
-                longRunningHeading.getBoundingClientRect().y - articleY,
-              )
+        detailsHeight: Math.round(element.getBoundingClientRect().height),
+        codeVisible:
+          codeFigure instanceof HTMLElement
+            ? codeFigure.checkVisibility()
             : null,
       };
     });
+    expect(collapsed.codeVisible).toBe(false);
+    expect(collapsed.detailsHeight).toBeLessThan(120);
 
-    // The article height and the "Long-running operations" offset are coarse
-    // layout guards: if a nested <details> block expanded, both would jump by
-    // hundreds of px. They are tolerant ranges rather than exact goldens so
-    // routine content edits and minor cross-environment font-rendering
-    // differences don't break the suite; the collapsed state itself is asserted
-    // exactly via hiddenHeadingVisible below.
-    expect(collapsedLayout.articleHeight).toBeGreaterThanOrEqual(6900);
-    expect(collapsedLayout.articleHeight).toBeLessThanOrEqual(7150);
-    expect(collapsedLayout.exampleSummary).toBe(
-      "Example databricks.yml with a project, dev branch, and read-only replica",
-    );
-    expect(collapsedLayout.hiddenHeadingVisible).toBe(false);
-    expect(
-      collapsedLayout.longRunningOffsetFromArticleY,
-    ).toBeGreaterThanOrEqual(4050);
-    expect(collapsedLayout.longRunningOffsetFromArticleY).toBeLessThanOrEqual(
-      4250,
-    );
+    // Expanding reveals the nested markdown, proving the fenced yaml block was
+    // processed (rendered to a code figure) rather than left as a raw fence.
+    await exampleSummary.click();
+    await expect(exampleDetails).toHaveAttribute("open", "");
+    await expect(
+      exampleDetails.locator("figure.theme-code-block"),
+    ).toBeVisible();
+    await expect(
+      exampleDetails.locator("figure.theme-code-block"),
+    ).toContainText("postgres_projects");
   });
 
   test("renders fenced code blocks nested inside ordered lists", async ({

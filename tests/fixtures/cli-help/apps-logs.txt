@@ -1,0 +1,45 @@
+Show Databricks app logs.
+
+When run from a Databricks Apps project directory (containing databricks.yml)
+without a NAME argument, this command automatically detects the app name from
+the project configuration and shows its logs.
+
+When a NAME argument is provided (or when not in a project directory),
+shows logs for the specified app using the API directly.
+
+Arguments:
+  NAME: The name of the app. Required when not in a project directory.
+        When provided in a project directory, uses the specified name instead of auto-detection.
+
+Examples:
+  # Show logs from a project directory (auto-detects app name)
+  databricks apps logs
+
+  # Show logs from a specific target
+  databricks apps logs --target prod
+
+  # Show logs for a specific app using the API (even from a project directory)
+  databricks apps logs my-app
+
+Usage:
+  databricks apps logs [NAME] [flags]
+
+Streaming Flags:
+  -f, --follow             Continue streaming logs until interrupted.
+      --tail-lines int     Number of recent log lines to show before streaming. Set to 0 to show everything. (default 200)
+      --timeout duration   Maximum time to stream when --follow is set. 0 disables the timeout.
+
+Filtering Flags:
+      --search string    Send a search term to the log service before streaming.
+      --source strings   Restrict logs to APP and/or SYSTEM sources.
+
+Flags:
+  -h, --help                 help for logs
+      --output-file string   Optional file path to write logs in addition to stdout.
+
+Global Flags:
+      --debug            enable debug logging
+  -o, --output type      output type: text or json (default text)
+  -p, --profile string   ~/.databrickscfg profile
+  -t, --target string    bundle target to use (if applicable)
+      --var strings      set values for variables defined in bundle config. Example: --var="key=value"

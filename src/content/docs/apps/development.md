@@ -1,11 +1,19 @@
 ---
 title: App development
 sidebar_label: Development
+sourceOfTruth:
+  skills:
+    - databricks-apps
+  docs:
+    - /docs/appkit/v0
+    - https://docs.databricks.com/aws/en/dev-tools/databricks-apps/
 ---
 
 # App development
 
 This page is the CLI and workflow reference for Databricks Apps and AppKit. It covers adding plugins, scaffolding, deploying, managing, and troubleshooting your app.
+
+Each command below shows a common invocation, its full set of flags, and a table describing each. Run `databricks <command> --help` for current flag behavior, since the CLI is the source of truth.
 
 ## Local setup
 
@@ -70,21 +78,20 @@ databricks apps manifest \
   --profile $DATABRICKS_PROFILE
 ```
 
-<details>
-<summary>Options</summary>
+<!-- cli-options:apps manifest -->
 
-| Option       | Required | Description                                                               |
-| ------------ | -------- | ------------------------------------------------------------------------- |
-| `--template` | no       | Template path (local directory or GitHub URL). Default: AppKit template   |
-| `--branch`   | no       | Git branch or tag (mutually exclusive with `--version`)                   |
-| `--version`  | no       | AppKit version for default template (default: main)                       |
-| `--debug`    | no       | Enable debug logging                                                      |
-| `-o json`    | no       | Output as JSON (default: text)                                            |
-| `--target`   | no       | Bundle target to use (if applicable)                                      |
-| `--var`      | no       | Set values for bundle config variables (for example, `--var="key=value"`) |
-| `--profile`  | no       | Databricks CLI profile name                                               |
+| Option            | Description                                                                       |
+| ----------------- | --------------------------------------------------------------------------------- |
+| `--branch`        | Git branch or tag (for GitHub templates, mutually exclusive with --version)       |
+| `--template`      | Template path (local directory or GitHub URL)                                     |
+| `--version`       | AppKit version for default template (default: main, use 'latest' for main branch) |
+| `--debug`         | enable debug logging                                                              |
+| `--output`, `-o`  | output type: text or json (default text)                                          |
+| `--profile`, `-p` | ~/.databrickscfg profile                                                          |
+| `--target`, `-t`  | bundle target to use (if applicable)                                              |
+| `--var`           | set values for variables defined in bundle config. Example: --var="key=value"     |
 
-</details>
+<!-- /cli-options -->
 
 ## Scaffold options
 
@@ -117,29 +124,27 @@ databricks apps init \
   --profile $DATABRICKS_PROFILE
 ```
 
-<details>
-<summary>Options</summary>
+<!-- cli-options:apps init -->
 
-| Option           | Required | Description                                                                                             |
-| ---------------- | -------- | ------------------------------------------------------------------------------------------------------- |
-| `--name`         | no       | App name (lowercase, hyphenated, 26 chars max). Suppresses prompts and applies defaults for other flags |
-| `--features`     | no       | Comma-separated plugins to enable (for example, `lakebase`, `analytics`, `genie`)                       |
-| `--set`          | no       | Resource values: `plugin.resourceKey.field=value`. Multi-field resources require all fields together    |
-| `--description`  | no       | App description                                                                                         |
-| `--output-dir`   | no       | Directory to write the project to                                                                       |
-| `--deploy`       | no       | Deploy the app after creation                                                                           |
-| `--run`          | no       | Run after creation: `none`, `dev`, or `dev-remote`                                                      |
-| `--skip-install` | no       | Skip installing project dependencies (for example, `npm install`). Cannot be combined with `--run`      |
-| `--template`     | no       | Template path (local directory or GitHub URL)                                                           |
-| `--branch`       | no       | Git branch or tag (for GitHub templates, mutually exclusive with `--version`)                           |
-| `--version`      | no       | AppKit version to use (default: latest release, `latest` for main branch)                               |
-| `--debug`        | no       | Enable debug logging                                                                                    |
-| `-o json`        | no       | Output as JSON (default: text)                                                                          |
-| `--target`       | no       | Bundle target to use (if applicable)                                                                    |
-| `--var`          | no       | Set values for bundle config variables (for example, `--var="key=value"`)                               |
-| `--profile`      | no       | Databricks CLI profile name                                                                             |
+| Option            | Description                                                                                       |
+| ----------------- | ------------------------------------------------------------------------------------------------- |
+| `--branch`        | Git branch or tag (for GitHub templates, mutually exclusive with --version)                       |
+| `--deploy`        | Deploy the app after creation                                                                     |
+| `--description`   | App description                                                                                   |
+| `--features`      | Features/plugins to enable (comma-separated, as defined in template manifest)                     |
+| `--output-dir`    | Directory to write the project to                                                                 |
+| `--run`           | Run the app after creation (none, dev, dev-remote)                                                |
+| `--set`           | Set resource values (format: plugin.resourceKey.field=value, can specify multiple)                |
+| `--skip-install`  | Skip installing project dependencies (e.g. npm install / uv sync). Cannot be combined with --run. |
+| `--template`      | Template path (local directory or GitHub URL)                                                     |
+| `--version`       | AppKit version to use (default: auto-detected, use 'latest' for main branch)                      |
+| `--debug`         | enable debug logging                                                                              |
+| `--output`, `-o`  | output type: text or json (default text)                                                          |
+| `--profile`, `-p` | ~/.databrickscfg profile                                                                          |
+| `--target`, `-t`  | bundle target to use (if applicable)                                                              |
+| `--var`           | set values for variables defined in bundle config. Example: --var="key=value"                     |
 
-</details>
+<!-- /cli-options -->
 
 Passing `--name` suppresses prompts and uses defaults for unspecified options. App names must be lowercase, hyphenated, and 26 characters or fewer. Run `databricks apps manifest` to see available plugins and their `--set` keys.
 
@@ -208,29 +213,27 @@ databricks apps deploy $APP_NAME \
   --profile $DATABRICKS_PROFILE
 ```
 
-<details>
-<summary>Options</summary>
+<!-- cli-options:apps deploy -->
 
-| Option               | Required | Description                                                                                |
-| -------------------- | -------- | ------------------------------------------------------------------------------------------ |
-| `APP_NAME`           | no       | App name. Omit when running from a project directory (auto-detected from `databricks.yml`) |
-| `--auto-approve`     | no       | Skip interactive approvals that might be required for deployment                           |
-| `--skip-validation`  | no       | Skip project validation (build, typecheck, lint)                                           |
-| `--skip-tests`       | no       | Skip running tests during validation (default: true)                                       |
-| `--force`            | no       | Force-override Git branch validation                                                       |
-| `--no-wait`          | no       | Return immediately instead of waiting for SUCCEEDED state                                  |
-| `--timeout`          | no       | Max time to wait for completion (default: 20m)                                             |
-| `--mode`             | no       | Source code mode: `AUTO_SYNC` or `SNAPSHOT`                                                |
-| `--deployment-id`    | no       | Unique deployment identifier                                                               |
-| `--source-code-path` | no       | Workspace file system path for source code                                                 |
-| `--json`             | no       | Inline JSON or `@path/to/file.json` with request body                                      |
-| `--debug`            | no       | Enable debug logging                                                                       |
-| `-o json`            | no       | Output as JSON (default: text)                                                             |
-| `--target`           | no       | Bundle target to use (if applicable)                                                       |
-| `--var`              | no       | Set values for bundle config variables (for example, `--var="key=value"`)                  |
-| `--profile`          | no       | Databricks CLI profile name                                                                |
+| Option               | Description                                                                                           |
+| -------------------- | ----------------------------------------------------------------------------------------------------- |
+| `--auto-approve`     | Skip interactive approvals that might be required for deployment.                                     |
+| `--deployment-id`    | The unique id of the deployment.                                                                      |
+| `--force`            | Force-override Git branch validation.                                                                 |
+| `--json`             | either inline JSON string or @path/to/file.json with request body (default JSON (0 bytes))            |
+| `--mode`             | The mode of which the deployment will manage the source code. Supported values: [AUTO_SYNC, SNAPSHOT] |
+| `--no-wait`          | do not wait to reach SUCCEEDED state                                                                  |
+| `--skip-tests`       | Skip running tests during validation (default true)                                                   |
+| `--skip-validation`  | Skip project validation (build, typecheck, lint)                                                      |
+| `--source-code-path` | The workspace file system path of the source code used to create the app deployment.                  |
+| `--timeout`          | maximum amount of time to reach SUCCEEDED state (default 20m0s)                                       |
+| `--debug`            | enable debug logging                                                                                  |
+| `--output`, `-o`     | output type: text or json (default text)                                                              |
+| `--profile`, `-p`    | ~/.databrickscfg profile                                                                              |
+| `--target`, `-t`     | bundle target to use (if applicable)                                                                  |
+| `--var`              | set values for variables defined in bundle config. Example: --var="key=value"                         |
 
-</details>
+<!-- /cli-options -->
 
 The CLI validates configuration, builds the project, uploads it, and starts the app. By default it runs the same project validation as `databricks apps validate` (build, typecheck, lint). Pass `--skip-validation` to skip that step. No `--source-code-path` is needed when deploying from a scaffolded AppKit project.
 
@@ -251,19 +254,17 @@ databricks apps get $APP_NAME \
   --profile $DATABRICKS_PROFILE
 ```
 
-<details>
-<summary>Options</summary>
+<!-- cli-options:apps get -->
 
-| Option      | Required | Description                                                               |
-| ----------- | -------- | ------------------------------------------------------------------------- |
-| `NAME`      | yes      | App name                                                                  |
-| `-o json`   | no       | Output as JSON                                                            |
-| `--debug`   | no       | Enable debug logging                                                      |
-| `--target`  | no       | Bundle target to use (if applicable)                                      |
-| `--var`     | no       | Set values for bundle config variables (for example, `--var="key=value"`) |
-| `--profile` | no       | Databricks CLI profile name                                               |
+| Option            | Description                                                                   |
+| ----------------- | ----------------------------------------------------------------------------- |
+| `--debug`         | enable debug logging                                                          |
+| `--output`, `-o`  | output type: text or json (default text)                                      |
+| `--profile`, `-p` | ~/.databrickscfg profile                                                      |
+| `--target`, `-t`  | bundle target to use (if applicable)                                          |
+| `--var`           | set values for variables defined in bundle config. Example: --var="key=value" |
 
-</details>
+<!-- /cli-options -->
 
 <details>
 <summary>Example output</summary>
@@ -327,25 +328,23 @@ databricks apps logs $APP_NAME \
   --profile $DATABRICKS_PROFILE
 ```
 
-<details>
-<summary>Options</summary>
+<!-- cli-options:apps logs -->
 
-| Option            | Required | Description                                                               |
-| ----------------- | -------- | ------------------------------------------------------------------------- |
-| `NAME`            | no       | App name. Omit from project directory (auto-detected)                     |
-| `-f` / `--follow` | no       | Stream logs until interrupted                                             |
-| `--tail-lines`    | no       | Recent log lines to show before streaming (default: 200, 0 for all)       |
-| `--timeout`       | no       | Max streaming time with `--follow` (0 disables)                           |
-| `--search`        | no       | Search term to filter logs                                                |
-| `--source`        | no       | Filter by source: `APP`, `SYSTEM`, or both                                |
-| `--output-file`   | no       | File path to write logs (in addition to stdout)                           |
-| `--debug`         | no       | Enable debug logging                                                      |
-| `-o json`         | no       | Output as JSON (default: text)                                            |
-| `--target`        | no       | Bundle target to use (if applicable)                                      |
-| `--var`           | no       | Set values for bundle config variables (for example, `--var="key=value"`) |
-| `--profile`       | no       | Databricks CLI profile name                                               |
+| Option            | Description                                                                                     |
+| ----------------- | ----------------------------------------------------------------------------------------------- |
+| `--follow`, `-f`  | Continue streaming logs until interrupted.                                                      |
+| `--tail-lines`    | Number of recent log lines to show before streaming. Set to 0 to show everything. (default 200) |
+| `--timeout`       | Maximum time to stream when --follow is set. 0 disables the timeout.                            |
+| `--search`        | Send a search term to the log service before streaming.                                         |
+| `--source`        | Restrict logs to APP and/or SYSTEM sources.                                                     |
+| `--output-file`   | Optional file path to write logs in addition to stdout.                                         |
+| `--debug`         | enable debug logging                                                                            |
+| `--output`, `-o`  | output type: text or json (default text)                                                        |
+| `--profile`, `-p` | ~/.databrickscfg profile                                                                        |
+| `--target`, `-t`  | bundle target to use (if applicable)                                                            |
+| `--var`           | set values for variables defined in bundle config. Example: --var="key=value"                   |
 
-</details>
+<!-- /cli-options -->
 
 <details>
 <summary>Example log output</summary>
@@ -406,23 +405,53 @@ databricks apps delete $APP_NAME \
   --profile $DATABRICKS_PROFILE
 ```
 
-<details>
-<summary>Options</summary>
+#### `apps stop` options
 
-| Option           | Required | Description                                                               |
-| ---------------- | -------- | ------------------------------------------------------------------------- |
-| `NAME`           | no       | App name. Omit from project directory (auto-detected)                     |
-| `--no-wait`      | no       | Return immediately (stop/start only)                                      |
-| `--timeout`      | no       | Max time to wait for completion (default: 20m, stop/start only)           |
-| `--auto-approve` | no       | Skip confirmation prompts (delete only)                                   |
-| `--force-lock`   | no       | Force acquisition of deployment lock (delete only)                        |
-| `--debug`        | no       | Enable debug logging                                                      |
-| `-o json`        | no       | Output as JSON (default: text)                                            |
-| `--target`       | no       | Bundle target to use (if applicable)                                      |
-| `--var`          | no       | Set values for bundle config variables (for example, `--var="key=value"`) |
-| `--profile`      | no       | Databricks CLI profile name                                               |
+<!-- cli-options:apps stop -->
 
-</details>
+| Option            | Description                                                                   |
+| ----------------- | ----------------------------------------------------------------------------- |
+| `--no-wait`       | do not wait to reach STOPPED state                                            |
+| `--timeout`       | maximum amount of time to reach STOPPED state (default 20m0s)                 |
+| `--debug`         | enable debug logging                                                          |
+| `--output`, `-o`  | output type: text or json (default text)                                      |
+| `--profile`, `-p` | ~/.databrickscfg profile                                                      |
+| `--target`, `-t`  | bundle target to use (if applicable)                                          |
+| `--var`           | set values for variables defined in bundle config. Example: --var="key=value" |
+
+<!-- /cli-options -->
+
+#### `apps start` options
+
+<!-- cli-options:apps start -->
+
+| Option            | Description                                                                   |
+| ----------------- | ----------------------------------------------------------------------------- |
+| `--no-wait`       | do not wait to reach ACTIVE state                                             |
+| `--timeout`       | maximum amount of time to reach ACTIVE state (default 20m0s)                  |
+| `--debug`         | enable debug logging                                                          |
+| `--output`, `-o`  | output type: text or json (default text)                                      |
+| `--profile`, `-p` | ~/.databrickscfg profile                                                      |
+| `--target`, `-t`  | bundle target to use (if applicable)                                          |
+| `--var`           | set values for variables defined in bundle config. Example: --var="key=value" |
+
+<!-- /cli-options -->
+
+#### `apps delete` options
+
+<!-- cli-options:apps delete -->
+
+| Option            | Description                                                                   |
+| ----------------- | ----------------------------------------------------------------------------- |
+| `--auto-approve`  | Skip interactive approvals for deleting resources and files                   |
+| `--force-lock`    | Force acquisition of deployment lock.                                         |
+| `--debug`         | enable debug logging                                                          |
+| `--output`, `-o`  | output type: text or json (default text)                                      |
+| `--profile`, `-p` | ~/.databrickscfg profile                                                      |
+| `--target`, `-t`  | bundle target to use (if applicable)                                          |
+| `--var`           | set values for variables defined in bundle config. Example: --var="key=value" |
+
+<!-- /cli-options -->
 
 `apps delete` prompts for confirmation. Pass `--auto-approve` in CI to skip the prompt.
 

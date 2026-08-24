@@ -2,6 +2,13 @@
 title: What is Databricks Apps?
 sidebar_label: Overview
 description: Databricks Apps hosts web applications inside your workspace with built-in auth, managed compute, and direct access to your data.
+sourceOfTruth:
+  skills:
+    - databricks-apps
+  docs:
+    - /docs/appkit/v0
+    - https://docs.databricks.com/aws/en/dev-tools/databricks-apps/
+  note: "AppKit (the TypeScript SDK) is documented on DevHub and in the databricks-apps skill. docs.databricks.com covers the Apps platform (deploy, auth, runtime), not AppKit."
 ---
 
 # What is Databricks Apps?
@@ -26,6 +33,12 @@ AppKit uses a three-layer architecture with plugins that register capabilities a
 | [**genie**](/docs/appkit/v0/plugins/genie)           | [Genie Agent](/docs/agents/genie) integration for natural-language data queries                                                                                               |
 | [**serving**](/docs/appkit/v0/plugins/model-serving) | Authenticated proxy to [Model Serving](/docs/agents/ai-gateway) endpoints with streaming support                                                                              |
 | [**files**](/docs/appkit/v0/plugins/files)           | File operations against [Unity Catalog Volumes](https://docs.databricks.com/aws/en/files/)                                                                                    |
+| [**agents**](/docs/appkit/v0/plugins/agents)         | AI agents defined in markdown or code, with tool auto-discovery                                                                                                               |
+| [**ai-search**](/docs/appkit/v0/plugins/ai-search)   | Semantic and vector search over your AI Search indexes                                                                                                                        |
+| [**jobs**](/docs/appkit/v0/plugins/jobs)             | Trigger and monitor [Databricks Lakeflow Jobs](/docs/lakehouse/jobs)                                                                                                          |
+| [**caching**](/docs/appkit/v0/plugins/caching)       | Global and plugin-level response caching, backed by [Lakebase Postgres](/docs/lakebase/quickstart) when available                                                             |
+
+For the full, current plugin set, see the [plugin reference](/docs/appkit/v0/plugins).
 
 ## How auth works
 
@@ -35,7 +48,7 @@ By default, all requests run as this service principal and all users share its p
 
 ## When to use it
 
-Apps are about **interactivity**, not only analytics. A dashboard is great for read-only views with pre-canned filters; an app does that plus accepts input, runs logic, and persists results. Build an app when your workflow needs any of those, for example a scenario builder that saves user-created cases, or an internal tool replacing a manual spreadsheet process.
+Apps are about **interactivity**, not only analytics. A dashboard is great for read-only views with pre-canned filters. An app does that plus accepts input, runs logic, and persists results. Build an app when your workflow needs any of those, for example a scenario builder that saves user-created cases, or an internal tool replacing a manual spreadsheet process.
 
 ## When not to use it
 

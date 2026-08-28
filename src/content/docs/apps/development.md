@@ -199,6 +199,10 @@ databricks apps deploy $APP_NAME \
   --deployment-id $DEPLOYMENT_ID \
   --json @$CONFIG_FILE \
   --source-code-path $SOURCE_PATH \
+  --git-branch $GIT_BRANCH \
+  --git-commit $GIT_COMMIT \
+  --git-tag $GIT_TAG \
+  --git-source-code-path $GIT_SOURCE_PATH \
   --mode SNAPSHOT \
   --auto-approve \
   --skip-validation \
@@ -215,23 +219,27 @@ databricks apps deploy $APP_NAME \
 
 <!-- cli-options:apps deploy -->
 
-| Option               | Description                                                                                           |
-| -------------------- | ----------------------------------------------------------------------------------------------------- |
-| `--auto-approve`     | Skip interactive approvals that might be required for deployment.                                     |
-| `--deployment-id`    | The unique id of the deployment.                                                                      |
-| `--force`            | Force-override Git branch validation.                                                                 |
-| `--json`             | either inline JSON string or @path/to/file.json with request body (default JSON (0 bytes))            |
-| `--mode`             | The mode of which the deployment will manage the source code. Supported values: [AUTO_SYNC, SNAPSHOT] |
-| `--no-wait`          | do not wait to reach SUCCEEDED state                                                                  |
-| `--skip-tests`       | Skip running tests during validation (default true)                                                   |
-| `--skip-validation`  | Skip project validation (build, typecheck, lint)                                                      |
-| `--source-code-path` | The workspace file system path of the source code used to create the app deployment.                  |
-| `--timeout`          | maximum amount of time to reach SUCCEEDED state (default 20m0s)                                       |
-| `--debug`            | enable debug logging                                                                                  |
-| `--output`, `-o`     | output type: text or json (default text)                                                              |
-| `--profile`, `-p`    | ~/.databrickscfg profile                                                                              |
-| `--target`, `-t`     | bundle target to use (if applicable)                                                                  |
-| `--var`              | set values for variables defined in bundle config. Example: --var="key=value"                         |
+| Option                   | Description                                                                                           |
+| ------------------------ | ----------------------------------------------------------------------------------------------------- |
+| `--auto-approve`         | Skip interactive approvals that might be required for deployment.                                     |
+| `--deployment-id`        | The unique id of the deployment.                                                                      |
+| `--force`                | Force-override Git branch validation.                                                                 |
+| `--git-branch`           | Git branch to deploy from.                                                                            |
+| `--git-commit`           | Git commit SHA to deploy from.                                                                        |
+| `--git-source-code-path` | Relative path to the app source code within the Git repository. Defaults to the repository root.      |
+| `--git-tag`              | Git tag to deploy from.                                                                               |
+| `--json`                 | either inline JSON string or @path/to/file.json with request body (default JSON (0 bytes))            |
+| `--mode`                 | The mode of which the deployment will manage the source code. Supported values: [AUTO_SYNC, SNAPSHOT] |
+| `--no-wait`              | do not wait to reach SUCCEEDED state                                                                  |
+| `--skip-tests`           | Skip running tests during validation (default true)                                                   |
+| `--skip-validation`      | Skip project validation (build, typecheck, lint)                                                      |
+| `--source-code-path`     | The workspace file system path of the source code used to create the app deployment.                  |
+| `--timeout`              | maximum amount of time to reach SUCCEEDED state (default 20m0s)                                       |
+| `--debug`                | enable debug logging                                                                                  |
+| `--output`, `-o`         | output type: text or json (default text)                                                              |
+| `--profile`, `-p`        | ~/.databrickscfg profile                                                                              |
+| `--target`, `-t`         | bundle target to use (if applicable)                                                                  |
+| `--var`                  | set values for variables defined in bundle config. Example: --var="key=value"                         |
 
 <!-- /cli-options -->
 

@@ -11,6 +11,9 @@
     "src/app/api/bootstrap-prompt/route.ts": {
       "maxDuration": 10
     },
+    "src/app/api/feedback/route.ts": {
+      "maxDuration": 30
+    },
     "src/app/api/llms/route.ts": {
       "maxDuration": 10
     }

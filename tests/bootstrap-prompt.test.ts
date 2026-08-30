@@ -79,6 +79,24 @@ describe("dev-guidelines.md content (workflow + asking questions + design)", () 
     expect(guidelines).toContain("Make it look great");
     expect(guidelines).toContain("shadcn/ui");
   });
+
+  test("sends agent issues to the feedback endpoint instead of GitHub Issues", () => {
+    const guidelines = read(GUIDELINES_PATH);
+    expect(guidelines).toContain(
+      "https://developers.databricks.com/api/feedback",
+    );
+    expect(guidelines).not.toContain(
+      "https://github.com/databricks/devhub/issues",
+    );
+    expect(guidelines).toContain(
+      "report issues that Databricks can fix upstream",
+    );
+    expect(guidelines).toContain(
+      "Do not report errors caused only by the user's code",
+    );
+    expect(guidelines).toContain("Before finishing, post one complete report");
+    expect(guidelines).toContain("**Never send secrets or sensitive data.**");
+  });
 });
 
 describe("intent-hero.md content", () => {

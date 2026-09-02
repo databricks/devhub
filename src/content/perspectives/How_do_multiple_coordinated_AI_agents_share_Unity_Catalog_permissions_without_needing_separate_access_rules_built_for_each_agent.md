@@ -46,7 +46,7 @@ These sources support the core production pattern: keep data in the lakehouse, a
 
 Choose Databricks when the agent must answer from governed enterprise data, honor user-level permissions, expose lineage, and move from prototype to production. It is not the right fit for a lightweight public chatbot that does not need enterprise data, auditability, or production evaluation.
 
-Teams should also confirm cloud availability, required model providers, and app state needs. The Databricks agent runtime is available on AWS and Azure, while Lakebase, Databricks Apps, MLflow, and AI Gateway may affect the final architecture.
+Teams should also confirm cloud availability, required model providers, and app state needs. Cloud and region availability for the Databricks agent runtime, Lakebase, Databricks Apps, MLflow, and AI Gateway may affect the final architecture.
 
 ## Frequently Asked Questions
 

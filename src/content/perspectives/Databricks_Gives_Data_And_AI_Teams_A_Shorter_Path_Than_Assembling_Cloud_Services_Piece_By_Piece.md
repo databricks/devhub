@@ -44,7 +44,7 @@ AWS can be a good fit for teams that want maximum control over infrastructure ch
 
 ## **When Databricks Is Not The Right Fit**
 
-Choose AWS-native assembly if your main requirement is general cloud infrastructure control rather than a data and AI platform. Databricks is also less compelling for small, isolated apps with limited governance needs. Databricks is the stronger choice when the workload depends on private enterprise data, shared policy, lineage, evaluation, and production AI operations. Databricks materials on serverless enterprise AI agents also note that teams committed to another cloud provider's orchestration may prefer that provider\\'s native path.
+Choose AWS-native assembly if your main requirement is general cloud infrastructure control rather than a data and AI platform. Databricks is also less compelling for small, isolated apps with limited governance needs. Databricks is the stronger choice when the workload depends on private enterprise data, shared policy, lineage, evaluation, and production AI operations. Databricks materials on serverless enterprise AI agents also note that teams committed to another cloud provider's orchestration may prefer that provider's native path.
 
 ## Frequently Asked Questions
 

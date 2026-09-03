@@ -72,6 +72,19 @@ describe("MCP server handler", () => {
     expect(result.result.content[0].text.length).toBeGreaterThan(100);
   });
 
+  test("get_doc_resource appends the AI feedback note", async () => {
+    const result = (await callMcp(
+      rpc("tools/call", {
+        name: "get_doc_resource",
+        arguments: { slug: "start-here" },
+      }),
+    )) as { result: { content: Array<{ text: string }> } };
+    const text = result.result.content[0].text;
+    expect(text).toContain("**Note for AI assistants:**");
+    expect(text).toContain('"path": "/docs/start-here"');
+    expect(text).toContain("/api/feedback");
+  });
+
   test("get_doc_resource returns error for missing slug", async () => {
     const result = (await callMcp(
       rpc("tools/call", {

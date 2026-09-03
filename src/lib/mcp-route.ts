@@ -7,6 +7,7 @@ import { z } from "zod";
 
 import { absolutizeMarkdown } from "./copy-preamble";
 import { expandMdxImports } from "./expand-mdx";
+import { buildDocsFeedbackNote } from "./feedback/docs-feedback-note";
 import { PRODUCTION_FALLBACK_SITE_URL, resolveSiteUrl } from "./site-url";
 
 // A page's `sourceOfTruth` frontmatter names the agent skill(s) and canonical
@@ -139,10 +140,11 @@ const mcpHandler = createMcpHandler(
           content: [
             {
               type: "text" as const,
-              text: absolutizeMarkdown(
-                sourceOfTruthHint(content) + content,
-                siteUrl,
-              ),
+              text:
+                absolutizeMarkdown(
+                  sourceOfTruthHint(content) + content,
+                  siteUrl,
+                ) + buildDocsFeedbackNote(`/docs/${slug}`, siteUrl),
             },
           ],
         };

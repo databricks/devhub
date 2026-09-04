@@ -23,4 +23,13 @@ describe("/raw-docs route", () => {
     expect(body).not.toMatch(/^---\n/);
     expect(body).toMatch(/^# Start here/);
   });
+
+  test("appends the AI feedback note with this page's path", async () => {
+    const response = await callRawDocs("start-here.md");
+    const body = await response.text();
+
+    expect(body).toContain("**Note for AI assistants:**");
+    expect(body).toContain('"path": "/docs/start-here"');
+    expect(body).toContain("/api/feedback");
+  });
 });

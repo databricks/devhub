@@ -111,6 +111,8 @@ Serving routes in AppKit run on behalf of the authenticated user by default. If 
 
 For server logic outside the built-in plugin routes (for example, custom Express routes), call `AppKit.serving("assistant").asUser(req).invoke(...)` to keep per-user behavior. For background work without a request (scheduled tasks, workers), omit `asUser` and the call runs as the app's service principal.
 
+To configure how a deployed agent authenticates to other Databricks resources (service principal versus on-behalf-of-user), see [Authentication for agents](https://docs.databricks.com/aws/en/agents/custom-agents/agent-authentication).
+
 ## Where to next
 
 Try the [AI Chat App](/templates/ai-chat-app) for a complete AppKit and agent setup, or browse the [templates catalog](/templates) for more patterns.

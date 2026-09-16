@@ -20,12 +20,20 @@ From your terminal, run the following commands to install or upgrade the CLI:
 <Tabs groupId="os">
 <TabItem value="mac-linux" label="macOS / Linux">
 
+Install:
+
 ```bash
 brew tap databricks/tap
 brew trust databricks/tap
 brew install databricks
+```
 
-brew update && brew upgrade databricks
+Upgrade:
+
+```bash
+brew update
+brew trust databricks/tap
+brew upgrade databricks
 ```
 
 `brew trust databricks/tap` is required as of [Homebrew 6.0.0](https://docs.brew.sh/Tap-Trust) — including for existing users who tapped before upgrading.

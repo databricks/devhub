@@ -5,9 +5,12 @@ description: Embed a chat interface over Unity Catalog tables with the AppKit Ge
 sourceOfTruth:
   skills:
     - databricks-genie-agents
+    - databricks-apps
+    - databricks-app-design
   docs:
     - /docs/appkit/v0/plugins/genie
     - https://docs.databricks.com/aws/en/genie-agents/
+    - https://docs.databricks.com/aws/en/dev-tools/databricks-apps/auth
 ---
 
 # Genie Agents
@@ -145,10 +148,24 @@ Bind each ID to a separate resource in `app.yaml`. See the [Genie Multi-Agent Se
 
 ## Permissions and data access
 
-The `genie` plugin calls the Genie API on behalf of the signed-in user. Both the app's service principal and each end user need access for a request to succeed:
+By default, the `genie` plugin calls the Genie API as the app's **service principal**: every user's questions run under one shared identity, and the service principal's permissions govern what any question can reach. To run each query **on behalf of the signed-in user** (OBO) instead — so results are governed by that user's own Unity Catalog access — declare the scope in `databricks.yml`:
 
-- **App service principal**: `CAN RUN` on the Genie Agent, granted when you attach the agent as an app resource (UI or CLI) with **Can run** selected. Permissions on the underlying data are not auto-provisioned: grant the service principal `USE CATALOG`, `USE SCHEMA`, and `SELECT` on the Unity Catalog tables separately. See [Add a Genie Agent resource to an app](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/genie).
-- **End users**: access to the Genie Agent (shared with them or via a group) and `SELECT` on the same tables. If the user doesn't have access, the call returns a 403. You don't write the permission check.
+```yaml title="databricks.yml"
+resources:
+  apps:
+    app:
+      user_api_scopes:
+        - genie
+```
+
+OBO requires that user authorization is enabled in the workspace. Adding a new resource to the app can silently drop existing `user_api_scopes`, so re-verify the scope after each deployment. See [Authenticate as the app user (OBO)](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/auth#user-authorization).
+
+The permissions each request needs depend on which identity it runs as:
+
+- **App service principal (always)**: `CAN RUN` on the Genie Agent, granted when you attach the agent as an app resource (UI or CLI) with **Can run** selected. Permissions on the underlying data are not auto-provisioned: grant the service principal `USE CATALOG`, `USE SCHEMA`, and `SELECT` on the Unity Catalog tables separately. See [Add a Genie Agent resource to an app](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/genie).
+- **End users (OBO only)**: when `user_api_scopes` is wired, each user also needs access to the Genie Agent (shared with them or via a group) and `SELECT` on the same tables. If the user doesn't have access, the call returns a 403. You don't write the permission check.
+
+Match any in-app disclosure to the real execution identity: only tell users their own permissions govern results when `user_api_scopes: [genie]` is actually wired; otherwise state that queries run as the app's service principal.
 
 ## Where to next
 

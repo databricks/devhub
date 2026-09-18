@@ -133,7 +133,9 @@ Custom variables go in `app.yaml` under `env`. Use `value` for plain text, `valu
 
 Each app gets a dedicated service principal. Databricks injects `DATABRICKS_CLIENT_ID` and `DATABRICKS_CLIENT_SECRET` automatically at runtime and deletes the service principal when the app is deleted.
 
-**User authorization** forwards the signed-in user's token through the `x-forwarded-access-token` HTTP header. Scopes (for example, `sql`, `genie`, `files`) are configured in the workspace UI. AppKit's built-in [Genie](/docs/agents/genie) and [Model Serving](/docs/agents/ai-gateway) plugins use this automatically. See [execution context](/docs/appkit/v0/plugins/execution-context) for the AppKit implementation, or [app authorization](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/auth) for the full platform details.
+**User authorization** forwards the signed-in user's token through the `x-forwarded-access-token` HTTP header, letting calls run on behalf of the user (OBO) rather than the app's service principal. Declare the scopes your app needs in `user_api_scopes` in `databricks.yml` (for example, `sql`, `genie`, `model-serving`, `files`); user authorization must also be enabled for the workspace. AppKit's built-in plugins differ in their default identity: the [Model Serving](/docs/agents/ai-gateway) plugin runs its routes as the signed-in user (OBO) by default, while the [Genie](/docs/agents/genie) plugin runs as the service principal unless you wire `genie`. See [execution context](/docs/appkit/v0/plugins/execution-context) for the AppKit implementation, or [app authorization](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/auth) for the full platform details.
+
+The current scope names are `genie`, `model-serving`, and `files`; the older dotted forms (`dashboards.genie`, `serving.serving-endpoints`, `files.files`) are deprecated aliases you may still see in existing apps or tutorials.
 
 ## Compute
 

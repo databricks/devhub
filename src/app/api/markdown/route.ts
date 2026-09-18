@@ -1,12 +1,9 @@
 import { type NextRequest } from "next/server";
 
 import {
-  composeTemplateAgentPrompt,
-  getDetailMarkdown,
-  resolveTemplateKind,
+  renderDetailMarkdown,
   type MarkdownSection,
 } from "@/lib/agent-content-markdown";
-import { absolutizeMarkdown } from "@/lib/copy-preamble";
 import {
   markdownNotFoundResponse,
   markdownResponse,
@@ -25,16 +22,7 @@ function handleMarkdown(request: NextRequest, includeBody: boolean): Response {
 
   try {
     const parsed: MarkdownSection = parseMarkdownSection(section);
-    const markdown = getDetailMarkdown(parsed, slug, process.cwd(), siteUrl);
-    const kindInfo = resolveTemplateKind(parsed, slug);
-    const body = kindInfo
-      ? composeTemplateAgentPrompt({
-          body: markdown,
-          section: parsed,
-          slug,
-          siteOrigin: siteUrl,
-        })
-      : absolutizeMarkdown(markdown, siteUrl);
+    const body = renderDetailMarkdown(parsed, slug, process.cwd(), siteUrl);
     const filename = slug ? `${slug.replace(/\//g, "-")}.md` : `${parsed}.md`;
 
     return markdownResponse(

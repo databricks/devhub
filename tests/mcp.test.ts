@@ -107,26 +107,50 @@ describe("MCP server handler", () => {
     expect(result.result.content[0].text).toContain("path traversal");
   });
 
-  test("get_doc_resource rejects absolute URLs", async () => {
-    const result = (await callMcp(
-      rpc("tools/call", {
-        name: "get_doc_resource",
-        arguments: { slug: "https://evil.com/hack" },
-      }),
-    )) as { result: { content: Array<{ text: string }>; isError: boolean } };
-    expect(result.result.isError).toBe(true);
-    expect(result.result.content[0].text).toContain("absolute URLs");
+  test("get_doc_resource accepts index-style slugs (docs/ prefix, .md suffix, full URL)", async () => {
+    for (const slug of [
+      "docs/start-here",
+      "docs/start-here.md",
+      "/docs/start-here.md",
+      "http://localhost:4173/docs/start-here.md",
+    ]) {
+      const result = (await callMcp(
+        rpc("tools/call", {
+          name: "get_doc_resource",
+          arguments: { slug },
+        }),
+      )) as { result: { content: Array<{ text: string }>; isError: boolean } };
+      expect(result.result.isError, `slug: ${slug}`).toBeFalsy();
+      expect(result.result.content[0].text).toContain("---");
+    }
   });
 
-  test("get_doc_resource rejects leading slash", async () => {
-    const result = (await callMcp(
-      rpc("tools/call", {
-        name: "get_doc_resource",
-        arguments: { slug: "/etc/passwd" },
-      }),
-    )) as { result: { content: Array<{ text: string }>; isError: boolean } };
-    expect(result.result.isError).toBe(true);
-    expect(result.result.content[0].text).toContain('must not start with "/"');
+  test("get_doc_resource fetches template/recipe pages", async () => {
+    for (const slug of [
+      "templates/genie-conversational-analytics",
+      "resources/genie-conversational-analytics",
+    ]) {
+      const result = (await callMcp(
+        rpc("tools/call", {
+          name: "get_doc_resource",
+          arguments: { slug },
+        }),
+      )) as { result: { content: Array<{ text: string }>; isError: boolean } };
+      expect(result.result.isError, `slug: ${slug}`).toBeFalsy();
+      expect(result.result.content[0].text.length).toBeGreaterThan(100);
+    }
+  });
+
+  test("get_doc_resource still guards path traversal after URL/prefix stripping", async () => {
+    for (const slug of ["/etc/passwd", "https://evil.com/../../etc/passwd"]) {
+      const result = (await callMcp(
+        rpc("tools/call", {
+          name: "get_doc_resource",
+          arguments: { slug },
+        }),
+      )) as { result: { content: Array<{ text: string }>; isError: boolean } };
+      expect(result.result.isError, `slug: ${slug}`).toBe(true);
+    }
   });
 
   test("unknown method returns error", async () => {

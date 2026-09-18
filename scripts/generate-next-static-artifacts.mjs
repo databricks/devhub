@@ -122,17 +122,12 @@ async function loadHelpers() {
     stdin: {
       contents: `
         export {
-          composeTemplateAgentPrompt,
-          getDetailMarkdown,
-          resolveTemplateKind,
+          renderDetailMarkdown,
         } from "./src/lib/agent-content-markdown.ts";
         export {
           getContentSlugs,
           getCookbookSlugs,
         } from "./src/lib/content-markdown.ts";
-        export {
-          absolutizeMarkdown,
-        } from "./src/lib/copy-preamble.ts";
         export {
           copyRawDocs,
           generateLlmsTxt,
@@ -161,18 +156,7 @@ async function loadHelpers() {
 }
 
 function writeMarkdownArtifact({ helpers, section, slug, filePath, siteUrl }) {
-  const markdown = helpers.getDetailMarkdown(section, slug, rootDir, siteUrl);
-  const kindInfo = helpers.resolveTemplateKind(section, slug, rootDir);
-  const body = kindInfo
-    ? helpers.composeTemplateAgentPrompt({
-        body: markdown,
-        section,
-        slug,
-        siteOrigin: siteUrl,
-        rootDir,
-      })
-    : helpers.absolutizeMarkdown(markdown, siteUrl);
-
+  const body = helpers.renderDetailMarkdown(section, slug, rootDir, siteUrl);
   writeTextFile(filePath, body);
 }
 

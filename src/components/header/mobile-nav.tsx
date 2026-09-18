@@ -6,10 +6,8 @@ import { usePathname } from "next/navigation";
 import { ArrowUpRight } from "lucide-react";
 
 import {
-  getActiveProductHref,
   isExternalHref,
   isHeaderNavItemActive,
-  PRODUCT_LINKS,
   type HeaderNavItem,
 } from "@/lib/header-navigation";
 import { cn } from "@/lib/utils";
@@ -85,10 +83,6 @@ function MobileMenuButton({
   );
 }
 
-function MobileTreeLine({ className }: { className: string }) {
-  return <span className={cn("bg-grey-80 absolute", className)} aria-hidden />;
-}
-
 function MobileTreeText({
   active = false,
   activeFill = "content",
@@ -149,10 +143,13 @@ export function MobileNav({
 }: MobileNavProps) {
   const menuId = useId();
   const pathname = usePathname() ?? "/";
-  const activeProductHref = getActiveProductHref(pathname);
   const isHomeActive = pathname === "/";
-  const productItem = items.find(({ label }) => label === "Product");
-  const sectionItems = items.filter(({ label }) => label !== "Product");
+  let nextTop = 46;
+  const positionedItems = items.map((item) => {
+    const top = nextTop;
+    nextTop += item.links ? 32 + item.links.length * 34 : 34;
+    return { item, top };
+  });
 
   useEffect(() => {
     onOpenChange(false);
@@ -246,7 +243,7 @@ export function MobileNav({
     };
   }, [onOpenChange, open]);
 
-  if (!productItem || items.length === 0) {
+  if (items.length === 0) {
     return null;
   }
 
@@ -272,18 +269,13 @@ export function MobileNav({
           <nav
             className="relative flex h-full w-full justify-between font-mono text-xl leading-none font-normal tracking-[-0.025rem]"
             aria-label="Main navigation"
+            style={{ minHeight: nextTop + 80 }}
           >
-            <MobileTreeLine className="top-[38px] left-[23px] h-[260px] w-px" />
-            <MobileTreeLine className="top-[58px] left-6 h-px w-[37px]" />
-            <MobileTreeLine className="top-[90px] left-[63px] h-px w-[37px]" />
-            <MobileTreeLine className="top-[124px] left-[63px] h-px w-[37px]" />
-            <MobileTreeLine className="top-[158px] left-[63px] h-px w-[37px]" />
-            <MobileTreeLine className="top-[192px] left-[63px] h-px w-[37px]" />
-            <MobileTreeLine className="top-[228px] left-6 h-px w-[37px] md:w-[39px]" />
-            <MobileTreeLine className="top-[262px] left-6 h-px w-[37px] md:w-[39px]" />
-            <MobileTreeLine className="top-[298px] left-6 h-px w-[37px] md:w-[39px]" />
-            <MobileTreeLine className="top-[72px] left-[63px] h-[120px] w-px md:top-[73px] md:h-[119px]" />
-
+            <span
+              className="bg-grey-80 absolute top-[38px] left-[23px] w-px"
+              style={{ height: (positionedItems.at(-1)?.top ?? 46) - 24 }}
+              aria-hidden
+            />
             <MobileTreeText
               active={isHomeActive}
               activeFill="full"
@@ -295,59 +287,76 @@ export function MobileNav({
               ~/HOME
             </MobileTreeText>
 
-            <span
-              className="text-grey-80 absolute top-[46px] left-[61px] flex h-6 items-center opacity-60"
-              data-mobile-menu-product-label="true"
-            >
-              {productItem.label.toLowerCase()}
-            </span>
-
-            {PRODUCT_LINKS.map((product, index) => {
-              const isActive = product.href === activeProductHref;
-
-              return (
-                <MobileTreeText
-                  active={isActive}
-                  activeFill="full"
-                  aria-current={isActive ? "page" : undefined}
-                  className={cn(
-                    "right-5 left-[100px]",
-                    index === 0 && "top-[76px]",
-                    index === 1 && "top-[110px]",
-                    index === 2 && "top-36",
-                    index === 3 && "top-[178px]",
-                  )}
-                  data-mobile-menu-product-link="true"
-                  href={product.href}
-                  key={product.href}
-                >
-                  {product.label.toLowerCase()}
-                </MobileTreeText>
-              );
-            })}
-
-            {sectionItems.map((item, index) => {
-              const isActive = isHeaderNavItemActive(item, pathname);
-
-              return (
-                <MobileTreeText
-                  active={isActive}
-                  activeFill="full"
-                  aria-current={isActive ? "page" : undefined}
-                  className={cn(
-                    "right-5 left-[61px] md:right-[22px] md:left-[63px]",
-                    index === 0 && "top-[214px]",
-                    index === 1 && "top-[248px]",
-                    index === 2 && "top-[282px]",
-                  )}
-                  data-mobile-menu-section-link="true"
-                  href={item.href}
-                  key={item.href}
-                >
-                  {item.label.toLowerCase()}
-                </MobileTreeText>
-              );
-            })}
+            {positionedItems.map(({ item, top }) => (
+              <div key={item.label}>
+                <span
+                  className="bg-grey-80 absolute left-6 h-px w-[37px] md:w-[39px]"
+                  style={{ top: top + (item.links ? 12 : 14) }}
+                  aria-hidden
+                />
+                {item.links ? (
+                  <>
+                    <span
+                      className="text-grey-80 absolute left-[61px] flex h-6 items-center opacity-60"
+                      style={{ top }}
+                      data-mobile-menu-product-label={
+                        item.label === "Product" ? "true" : undefined
+                      }
+                    >
+                      {item.label.toLowerCase()}
+                    </span>
+                    <span
+                      className="bg-grey-80 absolute left-[63px] w-px"
+                      style={{
+                        top: top + 26,
+                        height: item.links.length * 34 - 16,
+                      }}
+                      aria-hidden
+                    />
+                    {item.links.map((link, index) => {
+                      const isActive = isHeaderNavItemActive(link, pathname);
+                      const linkTop = top + 30 + index * 34;
+                      return (
+                        <div key={link.href}>
+                          <span
+                            className="bg-grey-80 absolute left-[63px] h-px w-[37px]"
+                            style={{ top: linkTop + 14 }}
+                            aria-hidden
+                          />
+                          <MobileTreeText
+                            active={isActive}
+                            activeFill="full"
+                            aria-current={isActive ? "page" : undefined}
+                            className="right-5 left-[100px]"
+                            style={{ top: linkTop }}
+                            data-mobile-menu-product-link={
+                              item.label === "Product" ? "true" : undefined
+                            }
+                            href={link.href}
+                          >
+                            {link.label.toLowerCase()}
+                          </MobileTreeText>
+                        </div>
+                      );
+                    })}
+                  </>
+                ) : (
+                  <MobileTreeText
+                    active={isHeaderNavItemActive(item, pathname)}
+                    activeFill="full"
+                    aria-current={
+                      isHeaderNavItemActive(item, pathname) ? "page" : undefined
+                    }
+                    className="right-5 left-[61px] md:right-[22px] md:left-[63px]"
+                    style={{ top }}
+                    data-mobile-menu-section-link="true"
+                    href={item.href}
+                  >
+                    {item.label.toLowerCase()}
+                  </MobileTreeText>
+                )}
+              </div>
+            ))}
             <div className="mt-auto w-full px-5 pb-5.5 md:px-6 md:pb-6">
               <SiteSearch
                 iconClassName="size-4.5"

@@ -43,6 +43,13 @@ const FOOTER_SECTIONS: FooterSection[] = [
   {
     title: "COMMUNITY",
     items: [
+      { label: "MVPs", to: "/mvps" },
+      { label: "MVP directory", to: "/mvps/directory" },
+      {
+        label: "Student Fellows",
+        href: "https://databricksstudentfellows.com/",
+        externalArrow: true,
+      },
       {
         label: "Reddit",
         href: "https://www.reddit.com/r/databricks/",
@@ -148,7 +155,7 @@ function LegalLinks({ className }: { className?: string }): ReactNode {
     >
       {LEGAL_LINKS.map((link) => (
         <Link
-          className="text-grey-40 hover:text-grey-70 focus-visible:outline-db-cyan inline-flex w-fit items-center rounded-sm text-[0.8125rem] leading-none tracking-tight no-underline transition-colors hover:no-underline focus-visible:outline-2 focus-visible:outline-offset-4"
+          className="text-grey-60 hover:text-grey-70 focus-visible:outline-db-cyan inline-flex w-fit items-center rounded-sm text-[0.8125rem] leading-none tracking-tight no-underline transition-colors hover:no-underline focus-visible:outline-2 focus-visible:outline-offset-4"
           key={link.label}
           rel="noopener noreferrer"
           target="_blank"
@@ -157,7 +164,7 @@ function LegalLinks({ className }: { className?: string }): ReactNode {
           {link.label}
         </Link>
       ))}
-      <YourPrivacyChoicesLink className="text-grey-40 hover:text-grey-70 focus-visible:outline-db-cyan w-fit rounded-sm text-[0.8125rem] leading-none tracking-tight no-underline transition-colors hover:no-underline focus-visible:outline-2 focus-visible:outline-offset-4" />
+      <YourPrivacyChoicesLink className="text-grey-60 hover:text-grey-70 focus-visible:outline-db-cyan w-fit rounded-sm text-[0.8125rem] leading-none tracking-tight no-underline transition-colors hover:no-underline focus-visible:outline-2 focus-visible:outline-offset-4" />
     </nav>
   );
 }
@@ -173,7 +180,7 @@ function CopyrightAndLegal({
     <div className={className}>
       <p
         className={cn(
-          "text-grey-40 mt-5 max-w-md text-sm leading-normal font-medium tracking-tight",
+          "text-grey-60 mt-5 max-w-md text-sm leading-normal font-medium tracking-tight",
           desktop && "lg:text-[0.8125rem]",
         )}
       >

@@ -5,6 +5,12 @@ import { describe, expect, test } from "vitest";
 
 const NEXT_APP_DIR = resolve(__dirname, "..", ".next", "server", "app");
 const PUBLIC_DIR = resolve(__dirname, "..", "public");
+const APP_PATH_ROUTES_MANIFEST = resolve(
+  __dirname,
+  "..",
+  ".next",
+  "app-path-routes-manifest.json",
+);
 
 // Valid link targets that have no prerendered .html in the build output:
 // route handlers, rewrite sources, and redirect sources from next.config.mjs.
@@ -127,8 +133,17 @@ type Crawl = {
 function crawlBuildOutput(): Crawl {
   const idsByRoute = new Map<string, Set<string>>();
   const links: PageLink[] = [];
-  const pageRoutes = new Set<string>();
-
+  // Server-rendered pages have compiled routes but no prerendered HTML.
+  // Verify their existence against Next's build manifest; browser tests cover
+  // their rendered content and fragments.
+  const appRoutes = JSON.parse(
+    readFileSync(APP_PATH_ROUTES_MANIFEST, "utf-8"),
+  ) as Record<string, string>;
+  const pageRoutes = new Set(
+    Object.entries(appRoutes)
+      .filter(([key, route]) => key.endsWith("/page") && !route.includes("["))
+      .map(([, route]) => route),
+  );
   for (const filePath of listPageHtmlFiles()) {
     const route = htmlFileToRoute(filePath);
     pageRoutes.add(route);

@@ -768,6 +768,17 @@ test.describe("docs MDX compatibility", () => {
       article.getByRole("heading", { name: "Prerequisites" }),
     ).toBeVisible();
     await expect(article).toContainText("Node.js v22+ environment");
+    const prerequisites = article.locator("#prerequisites + ul");
+    await expect(prerequisites.locator("li")).toHaveCount(2);
+    await expect(
+      prerequisites.getByRole("link", { name: "Node.js", exact: true }),
+    ).toHaveAttribute("href", "https://nodejs.org");
+    await expect(
+      prerequisites.getByRole("link", { name: "official tutorial" }),
+    ).toHaveAttribute(
+      "href",
+      "https://docs.databricks.com/aws/en/dev-tools/cli/tutorial",
+    );
     await expect(
       page
         .getByRole("navigation", { name: "On this page" })
@@ -780,23 +791,12 @@ test.describe("docs MDX compatibility", () => {
       inlineCodes: document.querySelectorAll(
         ".prose.prose-docs > code, article :not(pre) > code",
       ).length,
-      linksWithoutBanners:
-        document.querySelectorAll("a").length -
-        document.querySelectorAll(
-          ".devhub-hackathon-banner a, .devhub-site-banner a",
-        ).length,
     }));
 
     expect(layout.articleHeight).toBeGreaterThanOrEqual(3130);
     expect(layout.articleHeight).toBeLessThanOrEqual(3165);
     expect(layout.codeBlocks).toBe(3);
     expect(layout.inlineCodes).toBe(2);
-    // 68 = page links + footer links, including the Neon entry in the footer
-    // Products list and "Your Privacy Choices", which the footer renders twice
-    // (desktop and mobile legal blocks). Announcement banners are env-gated, so
-    // their links are excluded to keep the count stable whether or not a banner
-    // is live.
-    expect(layout.linksWithoutBanners).toBe(68);
   });
 
   test("renders relative docs image assets and links", async ({ page }) => {

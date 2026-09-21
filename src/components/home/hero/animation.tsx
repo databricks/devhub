@@ -26,7 +26,7 @@ type DbHeroPlayerWindow = Window & {
 };
 
 const playerScriptPath = "/js/home-hero-player.js";
-const playerScriptVersion = "20260817-route-return";
+const playerScriptVersion = "20260921-hero-timing-route-return";
 
 function cssVars(vars: CssVariableProperties) {
   return vars;

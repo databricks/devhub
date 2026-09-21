@@ -4,6 +4,8 @@ import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { normalizeSyncedDocLinks } from "./normalize-appkit-doc-links.mjs";
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const repoRoot = path.resolve(__dirname, "..");
@@ -109,6 +111,7 @@ function walkFiles(root) {
 }
 
 function normalizeSyncedDocs(docsRoot) {
+  const appKitErrorSources = new Map();
   const upstreamLlmsLinkHelper =
     /import\s+\w+Context\s+from\s+["'][^"']+["'];\n\nexport function LlmsTxtLink\([\s\S]*?^}\n\n/gm;
   const upstreamSidebarConfigImport =
@@ -150,23 +153,28 @@ type TypedocSidebar = {
       .replace(upstreamLlmsLinkHelper, "")
       .replaceAll("<LlmsTxtLink />", "[`llms.txt`](/llms.txt)");
 
-    // Upstream authors links with Docusaurus/typedoc slug conventions that
-    // differ from DevHub's github-slugger heading ids. Rewrite the known
-    // mismatches so intra-site anchors and the API index resolve:
-    //   - github-slugger drops the leading underscore, so the `_clientMessage?`
-    //     property renders with id `clientmessage`, not `_clientmessage`.
-    //   - a spaced em-dash (`(OBO) — per-user`) collapses to a single hyphen,
-    //     not the double hyphen typedoc/docusaurus emit.
-    //   - upstream API pages live at /docs/api/*; DevHub serves them under the
-    //     versioned AppKit channel (e.g. /docs/appkit/v0/api/*).
-    const channel = path.relative(docsRoot, filePath).split(path.sep)[0];
-    updated = updated
-      .replaceAll("#_clientmessage", "#clientmessage")
-      .replaceAll(
-        "#on-behalf-of-obo--per-user-connections",
-        "#on-behalf-of-obo-per-user-connections",
-      )
-      .replaceAll("](/docs/api/", `](/docs/appkit/${channel}/api/`);
+    if (/\.mdx?$/.test(filePath)) {
+      const [channel] = path.relative(docsRoot, filePath).split(path.sep);
+      if (!appKitErrorSources.has(channel)) {
+        const errorSourcePath = path.join(
+          docsRoot,
+          channel,
+          "api",
+          "appkit",
+          "Class.AppKitError.md",
+        );
+        appKitErrorSources.set(
+          channel,
+          fs.existsSync(errorSourcePath)
+            ? fs.readFileSync(errorSourcePath, "utf-8")
+            : "",
+        );
+      }
+      updated = normalizeSyncedDocLinks(updated, {
+        channel,
+        appKitErrorSource: appKitErrorSources.get(channel),
+      });
+    }
 
     if (upstreamSidebarConfigImport.test(updated)) {
       updated = updated

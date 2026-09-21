@@ -5,6 +5,10 @@ import { resolveSiteUrl } from "@/lib/site-url";
 const DEFAULT_SOCIAL_IMAGE = "/img/databricks-social-card.jpg";
 const SITE_NAME = "Databricks Developer";
 
+export function getPageTitle(title: string): string {
+  return `${title} | ${SITE_NAME}`;
+}
+
 type OpenGraphKind = "article" | "website";
 
 type MetadataOptions = {
@@ -46,8 +50,7 @@ export function getMetadata({
   // Next's title `template` only applies to the document <title>, not to
   // openGraph/twitter titles. Mirror it here so social cards match the page
   // title (e.g. "Start here | Databricks Developer").
-  const socialTitle =
-    titleMode === "absolute" ? title : `${title} | ${SITE_NAME}`;
+  const socialTitle = titleMode === "absolute" ? title : getPageTitle(title);
   const alternateTypes: NonNullable<Metadata["alternates"]>["types"] = {};
 
   if (markdownPath) {

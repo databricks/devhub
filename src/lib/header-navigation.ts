@@ -1,18 +1,36 @@
-export const HEADER_LINKS = [
-  { label: "Product", href: "/product/lakebase" },
-  { label: "Solutions", href: "/solutions" },
+export type HeaderNavItem = {
+  label: string;
+  href: string;
+  activePath?: string;
+  links?: readonly { label: string; href: string }[];
+};
+
+export const HEADER_LINKS: readonly HeaderNavItem[] = [
+  {
+    label: "Product",
+    href: "/product/lakebase",
+    links: [
+      { label: "Lakebase", href: "/product/lakebase" },
+      { label: "Agent Bricks", href: "/product/agent-bricks" },
+      { label: "Databricks Apps", href: "/product/databricks-apps" },
+      { label: "Neon", href: "https://neon.com" },
+    ],
+  },
+  {
+    label: "Resources",
+    href: "/solutions",
+    links: [
+      { label: "Solutions", href: "/solutions" },
+      { label: "MVPs", href: "/mvps" },
+      {
+        label: "Student Fellows",
+        href: "https://databricksstudentfellows.com/",
+      },
+    ],
+  },
   { label: "Templates", href: "/templates" },
   { label: "Docs", href: "/docs/start-here", activePath: "/docs" },
-] as const;
-
-export type HeaderNavItem = (typeof HEADER_LINKS)[number];
-
-export const PRODUCT_LINKS = [
-  { label: "Lakebase", href: "/product/lakebase" },
-  { label: "Agent Bricks", href: "/product/agent-bricks" },
-  { label: "Databricks Apps", href: "/product/databricks-apps" },
-  { label: "Neon", href: "https://neon.com" },
-] as const;
+];
 
 function normalizePath(path: string) {
   if (path === "/") return path;
@@ -36,12 +54,7 @@ function isHrefActive(href: string, pathname: string) {
 }
 
 export function isHeaderNavItemActive(item: HeaderNavItem, pathname: string) {
-  return isHrefActive(
-    "activePath" in item ? item.activePath : item.href,
-    pathname,
-  );
-}
-
-export function getActiveProductHref(pathname: string): string | undefined {
-  return PRODUCT_LINKS.find(({ href }) => isHrefActive(href, pathname))?.href;
+  return item.links
+    ? item.links.some(({ href }) => isHrefActive(href, pathname))
+    : isHrefActive(item.activePath ?? item.href, pathname);
 }

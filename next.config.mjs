@@ -79,6 +79,11 @@ const nextConfig = {
 
     return [
       {
+        source: "/mvps/directory/page/1",
+        destination: "/mvps/directory",
+        permanent: true,
+      },
+      {
         source: "/docs",
         destination: "/docs/start-here",
         permanent: true,
@@ -132,6 +137,13 @@ const nextConfig = {
   },
   async headers() {
     return [
+      ...["/mvps/directory", "/mvps/directory/page/:page"].flatMap((source) =>
+        ["q", "city", "country", "page"].map((key) => ({
+          source,
+          has: [{ type: "query", key }],
+          headers: [{ key: "X-Robots-Tag", value: "noindex, follow" }],
+        })),
+      ),
       {
         source: "/js/home-hero-player.js",
         headers: [

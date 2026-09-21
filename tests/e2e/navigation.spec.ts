@@ -61,102 +61,143 @@ test.describe("navbar navigation", () => {
   for (const { label, expectedPath } of NAVBAR_LINKS) {
     test(`navbar "${label}" navigates to ${expectedPath}`, async ({ page }) => {
       await page.goto("/");
+      if (label === "Solutions") {
+        await page.getByRole("button", { name: "[Resources]" }).hover();
+      }
       await page.locator(`header nav a[href="${expectedPath}"]`).click();
       await page.waitForURL(`**${expectedPath}`);
       expect(new URL(page.url()).pathname).toBe(expectedPath);
     });
   }
 
-  test("product dropdown hover state is visible in production CSS", async ({
+  test("navbar Student Fellows opens the external program site", async ({
     page,
   }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
-    await page.goto("/product/lakebase");
+    await page.goto("/");
+    await page.getByRole("button", { name: "[Resources]" }).hover();
 
-    await page.getByRole("button", { name: "[Product]" }).hover();
-    const productMenu = page.locator('[data-slot="navigation-menu-content"]');
-    await expect(productMenu).toBeVisible();
-
-    const activeLink = productMenu.getByRole("link", {
-      name: "Lakebase",
-      exact: true,
-    });
-    const hoverLink = productMenu.getByRole("link", {
-      name: "Agent Bricks",
-      exact: true,
-    });
-
-    await expect(activeLink).toHaveAttribute("aria-current", "page");
-    await expect(activeLink).toHaveCSS("color", "rgb(28, 29, 34)");
-    await expect(
-      productMenu.locator("[data-product-dropdown-frame]"),
-    ).toHaveAttribute("viewBox", "0 0 178 114");
-
-    const highlight = productMenu.locator("[data-product-dropdown-highlight]");
-    const thumb = productMenu.locator("[data-product-dropdown-thumb]");
-    const dotColumn = productMenu
-      .locator("[data-product-dropdown-dot-column]")
-      .first();
-    const initialHighlightBox = await highlight.boundingBox();
-    const initialThumbBox = await thumb.boundingBox();
-    const dotColumnBox = await dotColumn.boundingBox();
-
-    if (!initialHighlightBox || !initialThumbBox || !dotColumnBox) {
-      throw new Error("Expected product dropdown controls to be measurable");
-    }
-
-    expect(Math.round(dotColumnBox.y - initialThumbBox.y)).toBe(0);
-    expect(Math.round(dotColumnBox.height)).toBeGreaterThan(
-      Math.round(initialThumbBox.height),
+    const link = page.locator(
+      'header nav a[href="https://databricksstudentfellows.com/"]',
     );
-
-    const motionStyles = await productMenu.evaluate((menu) => {
-      const getRequiredElement = (selector: string) => {
-        const element = menu.querySelector(selector);
-
-        if (!element) {
-          throw new Error(`Expected ${selector} to exist`);
-        }
-
-        return getComputedStyle(element);
-      };
-
-      return {
-        contentAnimationName: getComputedStyle(menu).animationName,
-        contentTransitionProperty: getComputedStyle(menu).transitionProperty,
-        highlightTransitionDuration: getRequiredElement(
-          "[data-product-dropdown-highlight]",
-        ).transitionDuration,
-        linkTransitionProperty: getRequiredElement("a").transitionProperty,
-        thumbTransitionDuration: getRequiredElement(
-          "[data-product-dropdown-thumb]",
-        ).transitionDuration,
-      };
-    });
-
-    expect(motionStyles.contentAnimationName).toBe("none");
-    expect(motionStyles.contentTransitionProperty).toBe("none");
-    expect(motionStyles.highlightTransitionDuration).toBe("0s");
-    expect(motionStyles.linkTransitionProperty).toBe("none");
-    expect(motionStyles.thumbTransitionDuration).toBe("0s");
-
-    await hoverLink.hover();
-    await expect(hoverLink).toHaveCSS("color", "rgb(28, 29, 34)");
-    await expect
-      .poll(async () => {
-        const box = await highlight.boundingBox();
-
-        return Math.round((box?.y ?? 0) - initialHighlightBox.y);
-      })
-      .toBe(24);
-    await expect
-      .poll(async () => {
-        const box = await thumb.boundingBox();
-
-        return Math.round((box?.y ?? 0) - initialThumbBox.y);
-      })
-      .toBe(16);
+    await expect(link).toHaveText(/Student Fellows/);
+    await expect(link).toHaveAttribute("target", "_blank");
+    await expect(link).toHaveAttribute("rel", "noopener noreferrer");
   });
+
+  for (const dropdown of [
+    {
+      label: "Product",
+      path: "/product/lakebase",
+      active: "Lakebase",
+      next: "Agent Bricks",
+      nextPath: "/product/agent-bricks",
+      frameHeight: 114,
+      thumbStep: 16,
+    },
+    {
+      label: "Resources",
+      path: "/solutions",
+      active: "Solutions",
+      next: "MVPs",
+      nextPath: "/mvps",
+      frameHeight: 90,
+      thumbStep: 12,
+    },
+  ]) {
+    test(`${dropdown.label} dropdown hover state is visible in production CSS`, async ({
+      page,
+    }) => {
+      await page.setViewportSize({ width: 1440, height: 900 });
+      await page.goto(dropdown.path);
+
+      await page.getByRole("button", { name: `[${dropdown.label}]` }).hover();
+      const productMenu = page.locator('[data-slot="navigation-menu-content"]');
+      await expect(productMenu).toBeVisible();
+
+      const activeLink = productMenu.getByRole("link", {
+        name: dropdown.active,
+        exact: true,
+      });
+      const hoverLink = productMenu.getByRole("link", {
+        name: dropdown.next,
+        exact: true,
+      });
+
+      await expect(activeLink).toHaveAttribute("aria-current", "page");
+      await expect(activeLink).toHaveCSS("color", "rgb(28, 29, 34)");
+      await expect(
+        productMenu.locator("[data-header-dropdown-frame]"),
+      ).toHaveAttribute("viewBox", `0 0 178 ${dropdown.frameHeight}`);
+
+      const highlight = productMenu.locator("[data-header-dropdown-highlight]");
+      const thumb = productMenu.locator("[data-header-dropdown-thumb]");
+      const dotColumn = productMenu
+        .locator("[data-header-dropdown-dot-column]")
+        .first();
+      const initialHighlightBox = await highlight.boundingBox();
+      const initialThumbBox = await thumb.boundingBox();
+      const dotColumnBox = await dotColumn.boundingBox();
+
+      if (!initialHighlightBox || !initialThumbBox || !dotColumnBox) {
+        throw new Error("Expected product dropdown controls to be measurable");
+      }
+
+      expect(Math.round(dotColumnBox.y - initialThumbBox.y)).toBe(0);
+      expect(Math.round(dotColumnBox.height)).toBeGreaterThan(
+        Math.round(initialThumbBox.height),
+      );
+
+      const motionStyles = await productMenu.evaluate((menu) => {
+        const getRequiredElement = (selector: string) => {
+          const element = menu.querySelector(selector);
+
+          if (!element) {
+            throw new Error(`Expected ${selector} to exist`);
+          }
+
+          return getComputedStyle(element);
+        };
+
+        return {
+          contentAnimationName: getComputedStyle(menu).animationName,
+          contentTransitionProperty: getComputedStyle(menu).transitionProperty,
+          highlightTransitionDuration: getRequiredElement(
+            "[data-header-dropdown-highlight]",
+          ).transitionDuration,
+          linkTransitionProperty: getRequiredElement("a").transitionProperty,
+          thumbTransitionDuration: getRequiredElement(
+            "[data-header-dropdown-thumb]",
+          ).transitionDuration,
+        };
+      });
+
+      expect(motionStyles.contentAnimationName).toBe("none");
+      expect(motionStyles.contentTransitionProperty).toBe("none");
+      expect(motionStyles.highlightTransitionDuration).toBe("0s");
+      expect(motionStyles.linkTransitionProperty).toBe("none");
+      expect(motionStyles.thumbTransitionDuration).toBe("0s");
+
+      await hoverLink.hover();
+      await expect(hoverLink).toHaveCSS("color", "rgb(28, 29, 34)");
+      await expect
+        .poll(async () => {
+          const box = await highlight.boundingBox();
+
+          return Math.round((box?.y ?? 0) - initialHighlightBox.y);
+        })
+        .toBe(24);
+      await expect
+        .poll(async () => {
+          const box = await thumb.boundingBox();
+
+          return Math.round((box?.y ?? 0) - initialThumbBox.y);
+        })
+        .toBe(dropdown.thumbStep);
+      await hoverLink.click();
+      await expect(page).toHaveURL(dropdown.nextPath);
+    });
+  }
 });
 
 test.describe("mobile navigation", () => {
@@ -196,6 +237,18 @@ test.describe("mobile navigation", () => {
       const solutions = menu.getByRole("link", { name: "solutions" });
       const templates = menu.getByRole("link", { name: "templates" });
       const docs = menu.getByRole("link", { name: "docs" });
+      await expect(
+        menu.getByRole("link", { name: "mvps", exact: true }),
+      ).toHaveAttribute("href", "/mvps");
+      const studentFellows = menu.locator(
+        'a[href="https://databricksstudentfellows.com/"]',
+      );
+      await expect(studentFellows).toHaveText(/student fellows/);
+      await expect(studentFellows).toHaveAttribute("target", "_blank");
+      await expect(studentFellows).toHaveAttribute(
+        "rel",
+        "noopener noreferrer",
+      );
 
       await expect(
         page.getByRole("button", { name: "Close menu" }),
@@ -246,14 +299,14 @@ test.describe("mobile navigation", () => {
       expect(Math.round(lakebaseBox.x)).toBe(100);
       expect(Math.round(lakebaseBox.y)).toBe(offsetY + 132);
       expect(Math.round(lakebaseBox.width)).toBe(viewport.highlightWidth);
-      expect(Math.round(solutionsBox.x)).toBe(viewport.sectionX);
-      expect(Math.round(solutionsBox.y)).toBe(offsetY + 270);
-      expect(Math.round(solutionsBox.width)).toBe(viewport.sectionClickWidth);
+      expect(Math.round(solutionsBox.x)).toBe(100);
+      expect(Math.round(solutionsBox.y)).toBe(offsetY + 300);
+      expect(Math.round(solutionsBox.width)).toBe(viewport.highlightWidth);
       expect(Math.round(templatesBox.x)).toBe(viewport.sectionX);
-      expect(Math.round(templatesBox.y)).toBe(offsetY + 304);
+      expect(Math.round(templatesBox.y)).toBe(offsetY + 404);
       expect(Math.round(templatesBox.width)).toBe(viewport.sectionClickWidth);
       expect(Math.round(docsBox.x)).toBe(viewport.sectionX);
-      expect(Math.round(docsBox.y)).toBe(offsetY + 338);
+      expect(Math.round(docsBox.y)).toBe(offsetY + 438);
       expect(Math.round(docsBox.width)).toBe(viewport.sectionClickWidth);
     });
   }
@@ -492,12 +545,18 @@ test.describe("footer navigation", () => {
     },
     { href: "/templates", label: "Templates" },
     { href: "/solutions", label: "Solutions" },
+    { href: "/mvps", label: "MVPs" },
+    { href: "/mvps/directory", label: "MVP directory" },
     { href: "/product/databricks-apps", label: "Databricks Apps" },
     { href: "/product/lakebase", label: "Lakebase" },
     { href: "/product/agent-bricks", label: "Agent Bricks" },
   ];
 
   const FOOTER_EXTERNAL_LINKS = [
+    {
+      href: "https://databricksstudentfellows.com/",
+      label: "Student Fellows",
+    },
     { href: "https://www.reddit.com/r/databricks/", label: "Reddit" },
     { href: "https://www.youtube.com/@Databricks", label: "YouTube" },
     { href: "https://github.com/databricks/devhub", label: "GitHub" },
@@ -534,6 +593,9 @@ test.describe("footer navigation", () => {
     "/docs/start-here",
     "/templates",
     "/solutions",
+    "/mvps",
+    "/mvps/directory",
+    "https://databricksstudentfellows.com/",
     "https://www.reddit.com/r/databricks/",
     "https://www.youtube.com/@Databricks",
     "https://github.com/databricks/devhub",

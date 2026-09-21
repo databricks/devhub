@@ -24,14 +24,18 @@ type CTAProps = {
   actions?: ReactNode;
   className?: string;
   theme?: CTATheme;
+  highlightedText?: string;
 };
 
-function titleSegments(title: string): {
+function titleSegments(
+  title: string,
+  highlightedText: string,
+): {
   before: string;
   highlight: string;
   after: string;
 } {
-  const highlightStart = title.indexOf(TITLE_HIGHLIGHT);
+  const highlightStart = title.indexOf(highlightedText);
 
   if (highlightStart === -1) {
     return {
@@ -45,9 +49,9 @@ function titleSegments(title: string): {
     before: title.slice(0, highlightStart),
     highlight: title.slice(
       highlightStart,
-      highlightStart + TITLE_HIGHLIGHT.length,
+      highlightStart + highlightedText.length,
     ),
-    after: title.slice(highlightStart + TITLE_HIGHLIGHT.length),
+    after: title.slice(highlightStart + highlightedText.length),
   };
 }
 
@@ -92,7 +96,7 @@ function Topbar({ theme }: { theme: CTATheme }) {
           />
         ))}
       </div>
-      <p className="truncate font-mono text-sm leading-[1.15] font-normal tracking-[-0.04em] text-white/40 uppercase md:text-lg">
+      <p className="truncate font-mono text-sm leading-[1.15] font-normal tracking-[-0.04em] text-white/60 uppercase md:text-lg">
         Databricks Developer Hub
       </p>
     </header>
@@ -147,10 +151,11 @@ function CTA({
   title = "Ready to ship your next agentic app in minutes?",
   actions,
   theme = "filled",
+  highlightedText = TITLE_HIGHLIGHT,
 }: CTAProps) {
   const bootstrapPromptApiPath = getBootstrapPromptApiPath();
   const [copyState, setCopyState] = useState<CopyState>("idle");
-  const { before, highlight, after } = titleSegments(title);
+  const { before, highlight, after } = titleSegments(title, highlightedText);
 
   const handleCopy = useCallback(async () => {
     if (typeof navigator === "undefined" || !navigator.clipboard?.writeText) {

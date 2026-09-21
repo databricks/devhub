@@ -5,12 +5,21 @@ import { cn } from "@/lib/utils";
 
 function NativeSelect({
   className,
+  wrapperClassName,
+  icon,
   size = "default",
   ...props
-}: Omit<React.ComponentProps<"select">, "size"> & { size?: "sm" | "default" }) {
+}: Omit<React.ComponentProps<"select">, "size"> & {
+  size?: "sm" | "default";
+  wrapperClassName?: string;
+  icon?: React.ReactNode;
+}) {
   return (
     <div
-      className="group/native-select relative w-fit has-[select:disabled]:opacity-50"
+      className={cn(
+        "group/native-select relative w-fit has-[select:disabled]:opacity-50",
+        wrapperClassName,
+      )}
       data-slot="native-select-wrapper"
     >
       <select
@@ -24,11 +33,20 @@ function NativeSelect({
         )}
         {...props}
       />
-      <ChevronDownIcon
-        className="text-muted-foreground pointer-events-none absolute top-1/2 right-3.5 size-4 -translate-y-1/2 opacity-50 select-none"
-        aria-hidden="true"
-        data-slot="native-select-icon"
-      />
+      {icon ? (
+        <span
+          className="pointer-events-none absolute top-1/2 right-3.5 -translate-y-1/2"
+          aria-hidden="true"
+        >
+          {icon}
+        </span>
+      ) : (
+        <ChevronDownIcon
+          className="text-muted-foreground pointer-events-none absolute top-1/2 right-3.5 size-4 -translate-y-1/2 opacity-50 select-none"
+          aria-hidden="true"
+          data-slot="native-select-icon"
+        />
+      )}
     </div>
   );
 }

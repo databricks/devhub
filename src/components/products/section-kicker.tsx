@@ -4,12 +4,14 @@ type SectionKickerProps = {
   children: string;
   className?: string;
   index?: string;
+  font?: "mono" | "sans";
 };
 
 export function SectionKicker({
   children,
   className,
   index,
+  font = "mono",
 }: SectionKickerProps) {
   if (index) {
     return (
@@ -28,7 +30,14 @@ export function SectionKicker({
   return (
     <span className={cn("flex items-center gap-1.5", className)}>
       <span className="bg-orange size-1.5" aria-hidden="true" />
-      <span className="font-mono text-sm/none font-medium tracking-normal uppercase">
+      <span
+        className={cn(
+          "text-sm/none font-medium uppercase",
+          font === "sans"
+            ? "font-sans tracking-tight"
+            : "font-mono tracking-normal",
+        )}
+      >
         [{children}]
       </span>
     </span>

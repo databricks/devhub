@@ -6,10 +6,8 @@ import { usePathname } from "next/navigation";
 import { ArrowUpRight } from "lucide-react";
 
 import {
-  getActiveProductHref,
   isExternalHref,
   isHeaderNavItemActive,
-  PRODUCT_LINKS,
   type HeaderNavItem,
 } from "@/lib/header-navigation";
 import { cn } from "@/lib/utils";
@@ -27,13 +25,7 @@ type HeaderNavProps = {
   items: readonly HeaderNavItem[];
 };
 
-const PRODUCT_DROPDOWN_ROW_STEP = 24;
-const PRODUCT_SCROLLBAR_STEP = 16;
-const PRODUCT_SCROLL_DOT_TRACK_HEIGHT = 66;
-const PRODUCT_SCROLL_DOT_Y_POSITIONS = Array.from(
-  { length: 33 },
-  (_, index) => index * 2 + 1.5,
-);
+const DROPDOWN_ROW_STEP = 24;
 
 function NavItemChrome({
   active,
@@ -54,7 +46,7 @@ function NavItemChrome({
     >
       <span
         className={cn(
-          "bg-grey-12 pointer-events-none absolute inset-0 overflow-hidden opacity-0 group-data-[state=open]/product-trigger:opacity-100",
+          "bg-grey-12 pointer-events-none absolute inset-0 overflow-hidden opacity-0 group-data-[state=open]/dropdown-trigger:opacity-100",
           !active && "group-hover/nav-item:opacity-100",
         )}
         aria-hidden="true"
@@ -70,30 +62,31 @@ function NavItemChrome({
   );
 }
 
-function ProductDropdownFrame() {
+function NavDropdownFrame({ height }: { height: number }) {
   return (
     <svg
-      data-product-dropdown-frame="true"
-      className="pointer-events-none absolute top-2.5 left-1 z-30 h-[114px] w-[178px] overflow-visible text-white"
-      viewBox="0 0 178 114"
+      data-header-dropdown-frame="true"
+      className="pointer-events-none absolute top-2.5 left-1 z-30 w-[178px] overflow-visible text-white"
+      style={{ height }}
+      viewBox={`0 0 178 ${height}`}
       fill="none"
       preserveAspectRatio="none"
       aria-hidden="true"
     >
       <path
-        d="M177.5 104.0319V113.5H0.5V0.5H177.5V1.44681V9.96809"
+        d={`M177.5 ${height - 9.9681}V${height - 0.5}H0.5V0.5H177.5V1.44681V9.96809`}
         stroke="currentColor"
       />
       <path
-        d="M176.5 0.504639V1.45145V9.97272M176.5 113.5046V104.0365"
+        d={`M176.5 0.504639V1.45145V9.97272M176.5 ${height - 0.4954}V${height - 9.9635}`}
         stroke="currentColor"
       />
-      <path d="M1.5 0.5V113.5" stroke="currentColor" />
+      <path d={`M1.5 0.5V${height - 0.5}`} stroke="currentColor" />
     </svg>
   );
 }
 
-function ProductScrollArrow({
+function NavScrollArrow({
   direction,
   top,
 }: {
@@ -131,17 +124,28 @@ function ProductScrollArrow({
   );
 }
 
-function ProductScrollDotColumn({ left, top }: { left: number; top: number }) {
+function NavScrollDotColumn({
+  left,
+  top,
+  height,
+}: {
+  left: number;
+  top: number;
+  height: number;
+}) {
   return (
     <svg
-      data-product-dropdown-dot-column="true"
-      className="absolute z-0 h-[66px] w-[3px] overflow-visible"
-      style={{ left, top }}
-      viewBox={`0 0 3 ${PRODUCT_SCROLL_DOT_TRACK_HEIGHT}`}
+      data-header-dropdown-dot-column="true"
+      className="absolute z-0 w-[3px] overflow-visible"
+      style={{ left, top, height }}
+      viewBox={`0 0 3 ${height}`}
       fill="none"
       preserveAspectRatio="none"
     >
-      {PRODUCT_SCROLL_DOT_Y_POSITIONS.map((dotY) => (
+      {Array.from(
+        { length: Math.floor(height / 2) },
+        (_, index) => index * 2 + 1.5,
+      ).map((dotY) => (
         <circle
           cx="1.5"
           cy={dotY}
@@ -155,54 +159,61 @@ function ProductScrollDotColumn({ left, top }: { left: number; top: number }) {
   );
 }
 
-function ProductScrollbar({
-  highlightedProductIndex,
+function NavScrollbar({
+  highlightedIndex,
+  rowCount,
 }: {
-  highlightedProductIndex: number;
+  highlightedIndex: number;
+  rowCount: number;
 }) {
+  const trackHeight = rowCount * DROPDOWN_ROW_STEP - 30;
+  const thumbHeight = Math.min(18, trackHeight / 2);
+  const step = (trackHeight - thumbHeight) / Math.max(1, rowCount - 1);
   return (
     <span
       className="pointer-events-none absolute inset-0 text-white"
       aria-hidden="true"
     >
-      <ProductScrollDotColumn left={175.7} top={34} />
-      <ProductScrollDotColumn left={177.9} top={35.04} />
-      <ProductScrollDotColumn left={180.1} top={34} />
-      <ProductScrollDotColumn left={182.3} top={35.04} />
-      <ProductScrollArrow direction="up" top={21} />
+      <NavScrollDotColumn left={175.7} top={34} height={trackHeight} />
+      <NavScrollDotColumn left={177.9} top={35.04} height={trackHeight} />
+      <NavScrollDotColumn left={180.1} top={34} height={trackHeight} />
+      <NavScrollDotColumn left={182.3} top={35.04} height={trackHeight} />
+      <NavScrollArrow direction="up" top={21} />
       <span
-        data-product-dropdown-thumb="true"
-        className="absolute top-[34px] left-44 z-20 h-[18px] w-[9px] bg-white"
+        data-header-dropdown-thumb="true"
+        className="absolute top-[34px] left-44 z-20 w-[9px] bg-white"
         style={{
-          transform: `translateY(${
-            highlightedProductIndex * PRODUCT_SCROLLBAR_STEP
-          }px)`,
+          height: thumbHeight,
+          transform: `translateY(${highlightedIndex * step}px)`,
         }}
       />
-      <ProductScrollArrow direction="down" top={100} />
+      <NavScrollArrow direction="down" top={34 + trackHeight} />
     </span>
   );
 }
 
-function ProductDropdown({
-  activeProductHref,
-  highlightedProductHref,
+function NavDropdown({
+  links,
+  activeHref,
+  highlightedHref,
   onHighlightChange,
   onHighlightReset,
 }: {
-  activeProductHref: string | undefined;
-  highlightedProductHref: string | undefined;
+  links: NonNullable<HeaderNavItem["links"]>;
+  activeHref: string | undefined;
+  highlightedHref: string | undefined;
   onHighlightChange: (href: string) => void;
   onHighlightReset: () => void;
 }) {
-  const highlightedProductIndex = Math.max(
+  const highlightedIndex = Math.max(
     0,
-    PRODUCT_LINKS.findIndex(({ href }) => href === highlightedProductHref),
+    links.findIndex(({ href }) => href === highlightedHref),
   );
 
   return (
     <div
-      className="bg-grey-12 relative h-[135px] w-[185px] font-mono text-sm leading-none text-white"
+      className="bg-grey-12 relative w-[185px] font-mono text-sm leading-none text-white"
+      style={{ height: links.length * DROPDOWN_ROW_STEP + 39 }}
       onMouseLeave={onHighlightReset}
       onBlur={(event) => {
         const nextFocusedElement = event.relatedTarget;
@@ -215,50 +226,48 @@ function ProductDropdown({
         }
       }}
     >
-      <ProductDropdownFrame />
+      <NavDropdownFrame height={links.length * DROPDOWN_ROW_STEP + 18} />
       <span
-        data-product-dropdown-highlight="true"
+        data-header-dropdown-highlight="true"
         className="pointer-events-none absolute top-[18px] left-2.5 z-10 h-[22px] w-[166px] bg-white"
         style={{
-          transform: `translateY(${
-            highlightedProductIndex * PRODUCT_DROPDOWN_ROW_STEP
-          }px)`,
+          transform: `translateY(${highlightedIndex * DROPDOWN_ROW_STEP}px)`,
         }}
         aria-hidden="true"
       />
       <div className="absolute top-[18px] left-2.5 z-20 flex w-[166px] flex-col gap-0.5">
-        {PRODUCT_LINKS.map((product) => {
-          const isProductActive = product.href === activeProductHref;
-          const isProductHighlighted = product.href === highlightedProductHref;
-          const isExternal = isExternalHref(product.href);
+        {links.map((link) => {
+          const isLinkActive = link.href === activeHref;
+          const isLinkHighlighted = link.href === highlightedHref;
+          const isExternal = isExternalHref(link.href);
 
           return (
             <NavigationMenuLink
-              active={isProductActive}
+              active={isLinkActive}
               asChild
               className={cn(
                 "focus-visible:outline-db-cyan !flex !h-[22px] !w-full !flex-row !items-center !gap-0 !rounded-none !bg-transparent !px-2 !py-1 font-mono text-sm leading-none tracking-normal no-underline !transition-none outline-none hover:!bg-transparent hover:no-underline focus:!bg-transparent focus-visible:outline-2 focus-visible:outline-offset-2 data-[active=true]:!bg-transparent",
-                isProductHighlighted
+                isLinkHighlighted
                   ? "!text-grey-12 hover:!text-grey-12 focus:!text-grey-12"
                   : "!text-white hover:!text-white focus:!text-white",
               )}
-              key={product.href}
+              key={link.href}
             >
               <Link
-                aria-current={isProductActive ? "page" : undefined}
-                href={product.href}
-                onFocus={() => onHighlightChange(product.href)}
-                onPointerEnter={() => onHighlightChange(product.href)}
+                aria-current={isLinkActive ? "page" : undefined}
+                href={link.href}
+                onFocus={() => onHighlightChange(link.href)}
+                onPointerEnter={() => onHighlightChange(link.href)}
                 {...(isExternal
                   ? { target: "_blank", rel: "noopener noreferrer" }
                   : {})}
               >
-                {product.label}
+                {link.label}
                 {isExternal && (
                   <ArrowUpRight
                     className={cn(
                       "ml-1 size-3.5 shrink-0",
-                      isProductHighlighted ? "text-grey-12" : "text-white",
+                      isLinkHighlighted ? "text-grey-12" : "text-white",
                     )}
                     aria-label="(opens in a new tab)"
                   />
@@ -268,19 +277,17 @@ function ProductDropdown({
           );
         })}
       </div>
-      <ProductScrollbar highlightedProductIndex={highlightedProductIndex} />
+      <NavScrollbar
+        highlightedIndex={highlightedIndex}
+        rowCount={links.length}
+      />
     </div>
   );
 }
 
 export function HeaderNav({ className, items }: HeaderNavProps) {
   const pathname = usePathname() ?? "/";
-  const activeProductHref = getActiveProductHref(pathname);
-  const [highlightedProductHref, setHighlightedProductHref] = useState<
-    string | null
-  >(null);
-  const productHighlightHref =
-    highlightedProductHref ?? activeProductHref ?? PRODUCT_LINKS[0]?.href;
+  const [highlightedHref, setHighlightedHref] = useState<string | null>(null);
 
   return (
     <NavigationMenu
@@ -293,23 +300,29 @@ export function HeaderNav({ className, items }: HeaderNavProps) {
         {items.map((item) => {
           const { href, label } = item;
 
-          if (label === "Product") {
-            const isActive = Boolean(activeProductHref);
+          if (item.links) {
+            const activeHref = item.links.find((link) =>
+              isHeaderNavItemActive(link, pathname),
+            )?.href;
+            const highlightHref =
+              highlightedHref ?? activeHref ?? item.links[0]?.href;
+            const isActive = Boolean(activeHref);
 
             return (
               <NavigationMenuItem
                 key={href}
-                onPointerLeave={() => setHighlightedProductHref(null)}
+                onPointerLeave={() => setHighlightedHref(null)}
               >
-                <NavigationMenuTrigger className="group/product-trigger focus-visible:outline-db-cyan h-auto rounded-none bg-transparent! p-0 font-mono text-white shadow-none !transition-none hover:bg-transparent! hover:text-white! focus:bg-transparent! focus:text-white! focus-visible:outline-offset-2 data-[active=true]:!bg-transparent data-[state=open]:bg-transparent! data-[state=open]:text-white! [&>svg]:hidden">
+                <NavigationMenuTrigger className="group/dropdown-trigger focus-visible:outline-db-cyan h-auto rounded-none bg-transparent! p-0 font-mono text-white shadow-none !transition-none hover:bg-transparent! hover:text-white! focus:bg-transparent! focus:text-white! focus-visible:outline-offset-2 data-[active=true]:!bg-transparent data-[state=open]:bg-transparent! data-[state=open]:text-white! [&>svg]:hidden">
                   <NavItemChrome active={isActive}>{label}</NavItemChrome>
                 </NavigationMenuTrigger>
-                <NavigationMenuContent className="bg-grey-12! z-60 mt-0! h-[135px]! w-[185px]! overflow-visible! rounded-none! border-0! p-0! shadow-none! !transition-none !duration-0 group-data-[viewport=false]/navigation-menu:!duration-0 data-[motion^=from-]:!animate-none data-[motion^=to-]:!animate-none data-[state=closed]:!animate-none group-data-[viewport=false]/navigation-menu:data-[state=closed]:!animate-none data-[state=open]:!animate-none group-data-[viewport=false]/navigation-menu:data-[state=open]:!animate-none">
-                  <ProductDropdown
-                    activeProductHref={activeProductHref}
-                    highlightedProductHref={productHighlightHref}
-                    onHighlightChange={setHighlightedProductHref}
-                    onHighlightReset={() => setHighlightedProductHref(null)}
+                <NavigationMenuContent className="bg-grey-12! z-60 mt-0! w-[185px]! overflow-visible! rounded-none! border-0! p-0! shadow-none! !transition-none !duration-0 group-data-[viewport=false]/navigation-menu:!duration-0 data-[motion^=from-]:!animate-none data-[motion^=to-]:!animate-none data-[state=closed]:!animate-none group-data-[viewport=false]/navigation-menu:data-[state=closed]:!animate-none data-[state=open]:!animate-none group-data-[viewport=false]/navigation-menu:data-[state=open]:!animate-none">
+                  <NavDropdown
+                    links={item.links}
+                    activeHref={activeHref}
+                    highlightedHref={highlightHref}
+                    onHighlightChange={setHighlightedHref}
+                    onHighlightReset={() => setHighlightedHref(null)}
                   />
                 </NavigationMenuContent>
               </NavigationMenuItem>

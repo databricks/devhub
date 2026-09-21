@@ -2,6 +2,15 @@
 title: What is the Data Lakehouse?
 sidebar_label: Overview
 description: The data tier of the Databricks Data Intelligence Platform. Governed analytical tables in Unity Catalog, populated by Lakeflow. Companion docs for AppKit apps.
+sourceOfTruth:
+  skills:
+    - databricks-dbsql
+    - databricks-jobs
+    - databricks-pipelines
+  docs:
+    - /docs/appkit/v0/plugins/analytics
+    - /docs/appkit/v0/plugins/jobs
+    - https://docs.databricks.com/aws/en/lakehouse/
 ---
 
 # What is the Data Lakehouse?

@@ -1,0 +1,66 @@
+Create an app deployment.
+
+When run from a Databricks Apps project directory (containing databricks.yml)
+without an APP_NAME argument, this command runs an enhanced deployment pipeline:
+1. Validates the project (build, typecheck, lint for Node.js projects)
+2. Deploys the project to the workspace
+3. Runs the app
+
+When an APP_NAME argument is provided (or when not in a project directory),
+creates an app deployment using the API directly.
+
+Arguments:
+  APP_NAME: The name of the app. Required when not in a project directory.
+            When provided in a project directory, uses API deploy instead of project deploy.
+
+Examples:
+  # Deploy from a project directory (enhanced flow with validation)
+  databricks apps deploy
+
+  # Deploy from a specific target
+  databricks apps deploy --target prod
+
+  # Deploy a specific app using the API (even from a project directory)
+  databricks apps deploy my-app
+
+  # Deploy from project with validation skip
+  databricks apps deploy --skip-validation
+
+  # Force deploy (override git branch validation)
+  databricks apps deploy --force
+
+  # Skip interactive approval prompts
+  databricks apps deploy --auto-approve
+
+  # Force-acquire the deployment lock if a previous run left it stale
+  databricks apps deploy --force-lock
+
+  # Override the cluster used for job resources in the bundle
+  databricks apps deploy --cluster-id 0123-456789-abcdef01
+
+Usage:
+  databricks apps deploy [APP_NAME] [flags]
+
+Flags:
+      --auto-approve              Skip interactive approvals that might be required for deployment.
+  -c, --cluster-id string         Override cluster in the deployment with the given cluster ID.
+      --deployment-id string      The unique id of the deployment.
+      --fail-on-active-runs       Fail if there are running jobs or pipelines in the deployment.
+      --force                     Force-override Git branch validation.
+      --force-lock                Force acquisition of deployment lock.
+  -h, --help                      help for deploy
+      --json JSON                 either inline JSON string or @path/to/file.json with request body (default JSON (0 bytes))
+      --mode AppDeploymentMode    The mode of which the deployment will manage the source code. Supported values: [AUTO_SYNC, SNAPSHOT]
+      --no-wait                   do not wait to reach SUCCEEDED state
+      --plan string               Path to a JSON plan file to apply instead of planning (direct engine only).
+      --skip-tests                Skip running tests during validation (default true)
+      --skip-validation           Skip project validation (build, typecheck, lint)
+      --source-code-path string   The workspace file system path of the source code used to create the app deployment.
+      --timeout duration          maximum amount of time to reach SUCCEEDED state (default 20m0s)
+
+Global Flags:
+      --debug            enable debug logging
+  -o, --output type      output type: text or json (default text)
+  -p, --profile string   ~/.databrickscfg profile
+  -t, --target string    bundle target to use (if applicable)
+      --var strings      set values for variables defined in bundle config. Example: --var="key=value"

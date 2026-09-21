@@ -22,7 +22,6 @@ export type HackathonResource = {
   external?: boolean;
   links?: HackathonResourceLink[];
   wide?: boolean;
-  showWhenAllResources?: boolean;
 };
 
 type HackathonTimelineItem = {
@@ -431,18 +430,5 @@ export function HackathonEventFooter(): ReactNode {
       />
       <Footer className="border-t border-white/10 bg-black lg:px-8" />
     </div>
-  );
-}
-
-export function getVisibleHackathonResources({
-  event,
-}: {
-  event: HackathonEvent;
-}): HackathonResource[] {
-  // Gated resources stay hidden unless HACKATHON_SHOW_ALL_RESOURCES is
-  // explicitly "true", matching the pre-migration behavior of the env knob.
-  const showAllResources = process.env.HACKATHON_SHOW_ALL_RESOURCES === "true";
-  return event.resources.filter(
-    (resource) => !resource.showWhenAllResources || showAllResources,
   );
 }

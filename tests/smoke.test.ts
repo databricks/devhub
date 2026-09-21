@@ -222,6 +222,8 @@ describe("production build smoke tests", () => {
     expect(paths).toContain("/product/databricks-apps");
     expect(paths).not.toContain("/product/data-lakehouse");
     expect(paths).not.toContain("/product/data-lakehouse/");
+    expect(paths).not.toContain("/appkit");
+    expect(paths).not.toContain("/appkit/");
 
     for (const path of paths) {
       if (path !== "/") {

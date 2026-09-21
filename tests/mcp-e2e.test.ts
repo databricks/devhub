@@ -133,11 +133,10 @@ describe("MCP server e2e (mcporter)", () => {
     siteServer?.kill();
   });
 
-  test("list discovers both tools", async () => {
+  test("list discovers the required tools", async () => {
     const output = await mcporter("list");
     expect(output).toContain("list_docs_resources");
     expect(output).toContain("get_doc_resource");
-    expect(output).toContain("2 tools");
   }, 30_000);
 
   test("list_docs_resources returns the docs index", async () => {

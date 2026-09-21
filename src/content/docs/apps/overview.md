@@ -2,6 +2,13 @@
 title: What is Databricks Apps?
 sidebar_label: Overview
 description: Databricks Apps hosts web applications inside your workspace with built-in auth, managed compute, and direct access to your data.
+sourceOfTruth:
+  skills:
+    - databricks-apps
+  docs:
+    - /docs/appkit/v0
+    - https://docs.databricks.com/aws/en/dev-tools/databricks-apps/
+  note: "AppKit (the TypeScript SDK) is documented on DevHub and in the databricks-apps skill. docs.databricks.com covers the Apps platform (deploy, auth, runtime), not AppKit."
 ---
 
 # What is Databricks Apps?
@@ -22,10 +29,17 @@ AppKit uses a three-layer architecture with plugins that register capabilities a
 | ---------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [**server**](/docs/appkit/v0/plugins/server)         | Express HTTP server, static file serving, Vite dev mode (always included)                                                                                                     |
 | [**lakebase**](/docs/appkit/v0/plugins/lakebase)     | Postgres connection pool for [Lakebase Postgres](/docs/lakebase/quickstart) with automatic OAuth token refresh                                                                |
+| [**database**](/docs/appkit/v0/plugins/database)     | Generated HTTP CRUD and a server-side client from a declared schema over [Lakebase Postgres](/docs/lakebase/quickstart) (Beta)                                                |
 | [**analytics**](/docs/appkit/v0/plugins/analytics)   | SQL query execution against [Databricks SQL Warehouses](https://docs.databricks.com/aws/en/compute/sql-warehouse/). See [Analytical reads](/docs/lakehouse/analytical-reads). |
 | [**genie**](/docs/appkit/v0/plugins/genie)           | [Genie Agent](/docs/agents/genie) integration for natural-language data queries                                                                                               |
 | [**serving**](/docs/appkit/v0/plugins/model-serving) | Authenticated proxy to [Model Serving](/docs/agents/ai-gateway) endpoints with streaming support                                                                              |
-| [**files**](/docs/appkit/v0/plugins/files)           | File operations against [Unity Catalog Volumes](https://docs.databricks.com/aws/en/files/)                                                                                    |
+| [**files**](/docs/appkit/v0/plugins/files)           | File operations against [Unity Catalog Volumes](https://docs.databricks.com/aws/en/volumes/)                                                                                  |
+| [**agents**](/docs/appkit/v0/plugins/agents)         | AI agents defined in markdown or code, with tool auto-discovery                                                                                                               |
+| [**ai-search**](/docs/appkit/v0/plugins/ai-search)   | Semantic and vector search over your AI Search indexes                                                                                                                        |
+| [**jobs**](/docs/appkit/v0/plugins/jobs)             | Trigger and monitor [Databricks Lakeflow Jobs](/docs/lakehouse/jobs)                                                                                                          |
+| [**caching**](/docs/appkit/v0/plugins/caching)       | Global and plugin-level response caching, backed by [Lakebase Postgres](/docs/lakebase/quickstart) when available                                                             |
+
+For the full, current plugin set, see the [plugin reference](/docs/appkit/v0/plugins).
 
 ## How auth works
 
@@ -35,12 +49,12 @@ By default, all requests run as this service principal and all users share its p
 
 ## When to use it
 
-Apps are about **interactivity**, not only analytics. A dashboard is great for read-only views with pre-canned filters; an app does that plus accepts input, runs logic, and persists results. Build an app when your workflow needs any of those, for example a scenario builder that saves user-created cases, or an internal tool replacing a manual spreadsheet process.
+Apps are about **interactivity**, not only analytics. A dashboard is great for read-only views with pre-canned filters. An app does that plus accepts input, runs logic, and persists results. Build an app when your workflow needs any of those, for example a scenario builder that saves user-created cases, or an internal tool replacing a manual spreadsheet process.
 
 ## When not to use it
 
 - **Static sites with no Databricks data access.** Host these anywhere.
-- **Public-facing or customer-facing apps.** By default, users must be authenticated identities in your Databricks account (they don't need to belong to the app's workspace). For external or customer-facing access, see [App Users](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/key-concepts#app-users).
+- **Public-facing or customer-facing apps.** By default, users must be authenticated identities in your Databricks account (they don't need to belong to the app's workspace). For external or customer-facing access, see [App Users](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/key-concepts#app-sharing).
 - **Pure read-only dashboards** that AI/BI [Dashboards](https://docs.databricks.com/aws/en/dashboards/) already cover. Use a dashboard until you need to persist user input or run custom logic on top of it.
 
 ## Where to next

@@ -51,11 +51,10 @@ describe("MCP server handler", () => {
     expect(result.result.serverInfo.name).toBe("devhub-docs");
   });
 
-  test("tools/list returns both tools", async () => {
+  test("tools/list returns the required tools", async () => {
     const result = (await callMcp(rpc("tools/list"))) as {
       result: { tools: Array<{ name: string }> };
     };
-    expect(result.result.tools).toHaveLength(2);
     const names = result.result.tools.map((t) => t.name);
     expect(names).toContain("list_docs_resources");
     expect(names).toContain("get_doc_resource");
@@ -71,6 +70,19 @@ describe("MCP server handler", () => {
     expect(result.result.isError).toBeFalsy();
     expect(result.result.content[0].text).toContain("---");
     expect(result.result.content[0].text.length).toBeGreaterThan(100);
+  });
+
+  test("get_doc_resource appends the AI feedback note", async () => {
+    const result = (await callMcp(
+      rpc("tools/call", {
+        name: "get_doc_resource",
+        arguments: { slug: "start-here" },
+      }),
+    )) as { result: { content: Array<{ text: string }> } };
+    const text = result.result.content[0].text;
+    expect(text).toContain("**Note for AI assistants:**");
+    expect(text).toContain('"path": "/docs/start-here"');
+    expect(text).toContain("/api/feedback");
   });
 
   test("get_doc_resource returns error for missing slug", async () => {

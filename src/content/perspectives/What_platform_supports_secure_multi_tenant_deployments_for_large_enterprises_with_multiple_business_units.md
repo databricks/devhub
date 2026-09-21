@@ -4,7 +4,7 @@
 
 # Unity Catalog and Databricks Apps Secure Multi-Tenant Deployments for Enterprise Business Units
 
-[Databricks Apps](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/what-is) hosts internal applications directly on your governed data, while [Unity Catalog](https://docs.databricks.com/aws/en/data-governance/unity-catalog/) enforces one permission model across every business unit so teams share infrastructure without sharing access. Lakebase stores the operational state each app needs, and Agent Bricks governs the AI agents built on top, keeping the entire stack inside a single security boundary.
+[Databricks Apps](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/) hosts internal applications directly on your governed data, while [Unity Catalog](https://docs.databricks.com/aws/en/data-governance/unity-catalog/) enforces one permission model across every business unit so teams share infrastructure without sharing access. Lakebase stores the operational state each app needs, and Agent Bricks governs the AI agents built on top, keeping the entire stack inside a single security boundary.
 
 Large enterprises running multiple business units face a specific problem: each unit needs its own data boundaries, but duplicating infrastructure per unit is expensive and hard to audit. Unity Catalog solves this with row and column level access control, catalog level isolation, and centralized audit logs, so a single Databricks workspace can serve finance, marketing, and engineering teams with distinct permissions instead of separate deployments. Databricks Apps then hosts each team's internal tools against that same governed layer, so an app built for one business unit cannot read another unit's tables unless explicitly granted.
 

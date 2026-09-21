@@ -3,6 +3,18 @@ import { resolve } from "path";
 
 import { absolutizeMarkdown } from "./copy-preamble";
 import { expandMdxImports } from "./expand-mdx";
+import { buildDocsFeedbackNote } from "./feedback/docs-feedback-note";
+
+/** Maps an on-disk docs source path to its public `/docs/<slug>` URL path. */
+export function docPathFromSourcePath(sourcePath: string): string {
+  const normalized = sourcePath.replace(/\\/g, "/");
+  const marker = "src/content/docs/";
+  const index = normalized.lastIndexOf(marker);
+  const relative =
+    index === -1 ? normalized : normalized.slice(index + marker.length);
+  const slug = relative.replace(/\.(md|mdx)$/, "").replace(/(^|\/)index$/, "");
+  return slug ? `/docs/${slug}` : "/docs";
+}
 
 function normalizeRawDocSlug(rawSlug: string): string {
   const trimmed = rawSlug.trim();
@@ -33,7 +45,12 @@ export function buildRawDocMarkdown(
 ): string {
   const expanded = expandMdxImports(source, sourcePath);
   const withoutFrontmatter = expanded.replace(/^---\n[\s\S]*?\n---\n*/, "");
-  return absolutizeMarkdown(withoutFrontmatter, siteOrigin);
+  // Append the note before absolutizing (same order as getDetailMarkdown) so
+  // both doc-markdown surfaces process it identically.
+  const withNote =
+    withoutFrontmatter +
+    buildDocsFeedbackNote(docPathFromSourcePath(sourcePath), siteOrigin);
+  return absolutizeMarkdown(withNote, siteOrigin);
 }
 
 export function readRawDocMarkdown(

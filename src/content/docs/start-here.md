@@ -1,6 +1,13 @@
 ---
 title: Start here
 description: Build internal apps on the Databricks workspace your company already runs on. DevHub provides templates, the AppKit SDK, and companion docs.
+sourceOfTruth:
+  skills:
+    - databricks-core
+    - databricks-apps
+  docs:
+    - /docs/appkit/v0
+    - https://docs.databricks.com/aws/en/dev-tools/databricks-apps/
 ---
 
 # Start here
@@ -14,7 +21,7 @@ DevHub is the developer resource for building **enterprise apps** with Databrick
 The Databricks platform combines a first-class developer experience with the production readiness and governance that large organizations need:
 
 - **Developer experience**: agent-first tooling lets anyone ship real apps fast, with coding agents doing the heavy lifting.
-- **Production readiness**: stable managed deployments out of the box, plus horizontal scaling (Beta) with zero-downtime rollouts and session affinity.
+- **Production readiness**: stable managed deployments out of the box, plus horizontal scaling with zero-downtime rollouts and session affinity.
 - **Governance & administration**: workspace-level permissions and SSO apply automatically to every app, and per-app compute controls (fixed sizes, stop and start on demand) keep spend under control.
 
 ## Your workspace is the foundation

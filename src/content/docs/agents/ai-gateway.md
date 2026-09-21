@@ -2,17 +2,24 @@
 title: Unity AI Gateway
 sidebar_label: Unity AI Gateway
 description: Call governed LLM endpoints from your AppKit app using the Model Serving plugin. Unity AI Gateway adds rate limits, usage tracking, guardrails, and cost attribution.
+sourceOfTruth:
+  skills:
+    - databricks-model-serving
+  docs:
+    - /docs/appkit/v0/plugins/model-serving
+    - https://docs.databricks.com/aws/en/ai-gateway/ai-governance
+  note: "databricks-model-serving covers the serving-endpoint call path and AI Gateway rate limits. Full AI Gateway governance, model services, and MCP governance are docs-only (no skill yet)."
 ---
 
 # Unity AI Gateway
 
-**Unity AI Gateway** is a Databricks governance layer for LLM endpoints and MCP servers. It tracks usage, enforces rate limits, logs payloads, filters unsafe content and PII, and attributes cost. See the [Unity AI Gateway overview](https://docs.databricks.com/aws/en/ai-gateway/) for a full product introduction. From your AppKit app, you call a governed endpoint with the Model Serving plugin. This page covers the AppKit wiring, the governance features, and the CLI for inspecting and provisioning endpoints.
+**Unity AI Gateway** is a Databricks governance layer for LLM endpoints and MCP servers. It enforces rate limits, applies guardrails, and tracks usage and cost. See the [Unity AI Gateway overview](https://docs.databricks.com/aws/en/ai-gateway/) for a full product introduction. From your AppKit app, you call a governed endpoint with the Model Serving plugin. This page covers the AppKit wiring and the CLI for inspecting and provisioning endpoints.
 
 ## Prerequisites
 
 - Databricks CLI `v1.0.0+` with an [authenticated profile](/docs/tools/databricks-cli#authenticate).
 - A running AppKit app. See [Apps quickstart](/docs/apps/quickstart).
-- A serving endpoint your app can query. Most workspaces come with Databricks-hosted [foundation models](https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/) (prefixed `databricks-`, for example `databricks-claude-sonnet-4-6`) preconfigured with AI Gateway. See [List available endpoints](#list-available-endpoints) to confirm.
+- A serving endpoint your app can query. Most workspaces come with Databricks-hosted foundation models (prefixed `databricks-`, for example `databricks-claude-sonnet-4-6`) preconfigured with AI Gateway. Model IDs change over time, so check the [supported models](https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/supported-models) list for current names, or run [List available endpoints](#list-available-endpoints) to see what your workspace exposes.
 
 ## Call a governed endpoint from AppKit
 
@@ -103,45 +110,22 @@ AppKit.server.extend((app) => {
 
 The examples above use **named mode** with an explicit alias. Omit the config to register a `default` alias backed by `DATABRICKS_SERVING_ENDPOINT_NAME`. Named mode scales to multiple endpoints (chat, classifier, embeddings) in the same app.
 
-## Two AI Gateway surfaces
+## Governance and Unity AI Gateway
 
-:::note[Two surfaces, one plugin]
+Governance is enforced on Databricks, not in AppKit. Your app calls the endpoint and the gateway applies the policy. Unity AI Gateway is the control plane for AI traffic. It routes model and MCP requests and enforces rate limits, cost controls, service policies, and usage tracking. Unity Catalog governs the models, MCP servers, and functions behind it. For the current features and setup, including the beta features you enable from the account console Previews page, see [AI governance with Unity AI Gateway](https://docs.databricks.com/aws/en/ai-gateway/ai-governance).
 
-You might see governance in two places in your workspace:
+For AppKit, the Model Serving plugin calls serving endpoints by name. This includes foundation models (the `databricks-` prefix), Knowledge Assistants, Supervisor Agents, and custom Python agents. The plugin does not call Unity AI Gateway model services, which are Unity Catalog objects you query by fully qualified name through the gateway's OpenAI-compatible API. To use one, see [Query model services](https://docs.databricks.com/aws/en/ai-gateway/query-model-services).
 
-- **Unity AI Gateway** (recommended; Beta): the current standalone product. An account admin must enable it from the account console **Previews** page. Its **model services** are Unity Catalog objects managed under the **AI Gateway** sidebar entry, and you query them by fully qualified name through the Unity AI Gateway APIs (`https://<workspace>/ai-gateway/openai/v1` and the other provider paths), not through the Model Serving plugin. Usage logs to `system.ai_gateway.usage`.
-- **Previous version of AI Gateway**: features toggled on an existing Model Serving endpoint. Usage logs to `system.serving.endpoint_usage`. The Model Serving plugin calls these endpoints directly by name.
+For details on each, see:
 
-The Model Serving plugin in this guide calls serving endpoints by name, including the Databricks-hosted foundation models (`databricks-` prefix). It does not call Unity AI Gateway model services; to use one, query its OpenAI-compatible API. See [Query model services](https://docs.databricks.com/aws/en/ai-gateway/query-model-services).
-
-For more detail, see:
-
-- [Unity AI Gateway](https://docs.databricks.com/aws/en/ai-gateway/)
-- [Previous version: AI Gateway on model serving endpoints](https://docs.databricks.com/aws/en/ai-gateway/overview-serving-endpoints)
-- [Configure AI Gateway on model serving endpoints](https://docs.databricks.com/aws/en/ai-gateway/configure-ai-gateway-endpoints)
-
-:::
-
-## Governance features
-
-AI Gateway features vary by endpoint type. Configure them in the workspace UI or through the REST API (`PUT /api/2.0/serving-endpoints/{name}/ai-gateway`).
-
-| Feature               | What it does                                                         |
-| --------------------- | -------------------------------------------------------------------- |
-| **Usage tracking**    | Records request and token counts to `system.serving.endpoint_usage`  |
-| **Payload logging**   | Logs request and response payloads to Unity Catalog inference tables |
-| **Rate limits**       | QPM and TPM limits per user, group, or service principal             |
-| **AI Guardrails**     | Safety filters (Llama Guard) and PII detection (Presidio)            |
-| **Fallbacks**         | Route to backup endpoints on failure                                 |
-| **Traffic splitting** | Split traffic across multiple served entities                        |
-
-See [Configure AI Gateway on serving endpoints](https://docs.databricks.com/aws/en/ai-gateway/configure-ai-gateway-endpoints) for the full configuration guide, or [Unity AI Gateway](https://docs.databricks.com/aws/en/ai-gateway/) for governing model services.
-
-Unity AI Gateway also governs MCP server access. AppKit apps don't configure this directly. It applies when an agent endpoint you call (for example a Supervisor Agent or a custom Python agent) routes to an MCP server internally. See [custom agent endpoints](/docs/agents/custom-agents).
+- Model services: [overview](https://docs.databricks.com/aws/en/ai-gateway/model-services) and [governance](https://docs.databricks.com/aws/en/ai-gateway/govern-model-services).
+- Model-provider services: [overview](https://docs.databricks.com/aws/en/ai-gateway/model-provider-services) and [governance](https://docs.databricks.com/aws/en/ai-gateway/govern-model-provider-services).
+- MCP server governance: [register an MCP service](https://docs.databricks.com/aws/en/ai-gateway/register-mcp-service) and [govern it](https://docs.databricks.com/aws/en/ai-gateway/govern-mcp-service). This applies when an agent endpoint you call, such as a Supervisor Agent or custom Python agent, routes to an MCP server internally. AppKit apps don't configure it directly.
+- Previous version: [AI Gateway on serving endpoints](https://docs.databricks.com/aws/en/ai-gateway/overview-serving-endpoints), where you toggle features per endpoint and usage logs to `system.serving.endpoint_usage`.
 
 ## List available endpoints
 
-Use the CLI to see which endpoints your workspace exposes and which ones already have AI Gateway features configured.
+Use the CLI to see which endpoints your workspace exposes and which ones already have AI Gateway features configured. Each command below shows a common invocation and its full set of flags. Run `databricks serving-endpoints <command> --help` for current flag behavior, since the CLI is the source of truth.
 
 ```bash title="Common"
 databricks serving-endpoints list -o json
@@ -149,25 +133,12 @@ databricks serving-endpoints list -o json
 
 ```bash title="All Options"
 databricks serving-endpoints list \
-  --limit 100 \
+  --limit $LIMIT \
   --debug \
   -o json \
   --target $TARGET \
   --profile $DATABRICKS_PROFILE
 ```
-
-<details>
-<summary>Options</summary>
-
-| Option      | Required | Description                          |
-| ----------- | -------- | ------------------------------------ |
-| `--limit`   | no       | Maximum number of results to return  |
-| `--debug`   | no       | Enable debug logging                 |
-| `-o json`   | no       | Output as JSON (default: text)       |
-| `--target`  | no       | Bundle target to use (if applicable) |
-| `--profile` | no       | Databricks CLI profile name          |
-
-</details>
 
 Foundation Model API endpoints (prefixed `databricks-`) are available in most workspaces with AI Gateway built in. For example, `databricks-claude-sonnet-4-6`. Availability varies by workspace.
 
@@ -200,34 +171,25 @@ Foundation Model API endpoints (prefixed `databricks-`) are available in most wo
 
 </details>
 
+<!-- cli-options:serving-endpoints list -->
+
+| Option            | Description                              |
+| ----------------- | ---------------------------------------- |
+| `--limit`         | Maximum number of results to return.     |
+| `--debug`         | enable debug logging                     |
+| `--output`, `-o`  | output type: text or json (default text) |
+| `--profile`, `-p` | ~/.databrickscfg profile                 |
+| `--target`, `-t`  | bundle target to use (if applicable)     |
+
+<!-- /cli-options -->
+
 ## Inspect an endpoint
 
-```bash title="Common"
+```bash
 databricks serving-endpoints get databricks-claude-sonnet-4-6 -o json
 ```
 
-```bash title="All Options"
-databricks serving-endpoints get $ENDPOINT_NAME \
-  --debug \
-  -o json \
-  --target $TARGET \
-  --profile $DATABRICKS_PROFILE
-```
-
-<details>
-<summary>Options</summary>
-
-| Option      | Required | Description                          |
-| ----------- | -------- | ------------------------------------ |
-| `NAME`      | yes      | Serving endpoint name                |
-| `--debug`   | no       | Enable debug logging                 |
-| `-o json`   | no       | Output as JSON (default: text)       |
-| `--target`  | no       | Bundle target to use (if applicable) |
-| `--profile` | no       | Databricks CLI profile name          |
-
-</details>
-
-Check for `ai_gateway` in the response to confirm AI Gateway is configured on the endpoint.
+Check for `ai_gateway` in the response to confirm AI Gateway is configured on the endpoint. `get` takes no command-specific flags beyond the global ones, so run `databricks serving-endpoints get --help` if you need them.
 
 ## Query from the terminal
 
@@ -242,8 +204,8 @@ databricks serving-endpoints query databricks-claude-sonnet-4-6 \
 databricks serving-endpoints query $ENDPOINT_NAME \
   --json '{"messages": [{"role": "user", "content": "Hello"}]}' \
   --max-tokens 100 \
-  --temperature 0.7 \
   --n 1 \
+  --temperature 0.7 \
   --stream \
   --client-request-id $REQUEST_ID \
   --debug \
@@ -252,24 +214,22 @@ databricks serving-endpoints query $ENDPOINT_NAME \
   --profile $DATABRICKS_PROFILE
 ```
 
-<details>
-<summary>Options</summary>
+<!-- cli-options:serving-endpoints query -->
 
-| Option                | Required | Description                                           |
-| --------------------- | -------- | ----------------------------------------------------- |
-| `NAME`                | yes      | Serving endpoint name                                 |
-| `--json`              | no       | Inline JSON or `@path/to/file.json` with request body |
-| `--max-tokens`        | no       | Max tokens for completions and chat endpoints         |
-| `--temperature`       | no       | Sampling temperature                                  |
-| `--n`                 | no       | Number of candidates to generate                      |
-| `--stream`            | no       | Enable streaming responses                            |
-| `--client-request-id` | no       | Request identifier for inference and usage tables     |
-| `--debug`             | no       | Enable debug logging                                  |
-| `-o json`             | no       | Output as JSON (default: text)                        |
-| `--target`            | no       | Bundle target to use (if applicable)                  |
-| `--profile`           | no       | Databricks CLI profile name                           |
+| Option                | Description                                                                                                                  |
+| --------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `--client-request-id` | Optional user-provided request identifier that will be recorded in the inference table and the usage tracking table.         |
+| `--json`              | either inline JSON string or @path/to/file.json with request body (default JSON (0 bytes))                                   |
+| `--max-tokens`        | The max tokens field used ONLY for **completions** and **chat external & foundation model** serving endpoints.               |
+| `--n`                 | The n (number of candidates) field used ONLY for **completions** and **chat external & foundation model** serving endpoints. |
+| `--stream`            | The stream field used ONLY for **completions** and **chat external & foundation model** serving endpoints.                   |
+| `--temperature`       | The temperature field used ONLY for **completions** and **chat external & foundation model** serving endpoints.              |
+| `--debug`             | enable debug logging                                                                                                         |
+| `--output`, `-o`      | output type: text or json (default text)                                                                                     |
+| `--profile`, `-p`     | ~/.databrickscfg profile                                                                                                     |
+| `--target`, `-t`      | bundle target to use (if applicable)                                                                                         |
 
-</details>
+<!-- /cli-options -->
 
 ## Provision an endpoint
 
@@ -291,10 +251,10 @@ databricks serving-endpoints create my-model-endpoint \
 
 ```bash title="All Options"
 databricks serving-endpoints create $ENDPOINT_NAME \
-  --json @$CONFIG_FILE \
-  --route-optimized \
+  --json @config.json \
   --budget-policy-id $BUDGET_POLICY_ID \
-  --description "$DESCRIPTION" \
+  --description "My model endpoint" \
+  --route-optimized \
   --no-wait \
   --timeout 20m \
   --debug \
@@ -303,34 +263,28 @@ databricks serving-endpoints create $ENDPOINT_NAME \
   --profile $DATABRICKS_PROFILE
 ```
 
-<details>
-<summary>Options</summary>
-
-| Option               | Required | Description                                                  |
-| -------------------- | -------- | ------------------------------------------------------------ |
-| `NAME`               | yes      | Endpoint name (alphanumeric, dashes, underscores)            |
-| `--json`             | yes      | Inline JSON or `@path/to/file.json` with endpoint config     |
-| `--route-optimized`  | no       | Enable route optimization                                    |
-| `--budget-policy-id` | no       | Budget policy to apply                                       |
-| `--description`      | no       | Endpoint description                                         |
-| `--no-wait`          | no       | Return immediately instead of waiting for NOT_UPDATING state |
-| `--timeout`          | no       | Max time to wait for completion (default: 20m)               |
-| `--debug`            | no       | Enable debug logging                                         |
-| `-o json`            | no       | Output as JSON (default: text)                               |
-| `--target`           | no       | Bundle target to use (if applicable)                         |
-| `--profile`          | no       | Databricks CLI profile name                                  |
-
-</details>
-
 Wait for the endpoint to reach `READY` state before querying it. For a step-by-step walkthrough, see the [Create a Model Serving Endpoint](/templates/model-serving-endpoint-creation) template.
+
+<!-- cli-options:serving-endpoints create -->
+
+| Option               | Description                                                                                |
+| -------------------- | ------------------------------------------------------------------------------------------ |
+| `--budget-policy-id` | The budget policy to be applied to the serving endpoint.                                   |
+| `--description`      |                                                                                            |
+| `--json`             | either inline JSON string or @path/to/file.json with request body (default JSON (0 bytes)) |
+| `--no-wait`          | do not wait to reach NOT_UPDATING state                                                    |
+| `--route-optimized`  | Enable route optimization for the serving endpoint.                                        |
+| `--timeout`          | maximum amount of time to reach NOT_UPDATING state (default 20m0s)                         |
+| `--debug`            | enable debug logging                                                                       |
+| `--output`, `-o`     | output type: text or json (default text)                                                   |
+| `--profile`, `-p`    | ~/.databrickscfg profile                                                                   |
+| `--target`, `-t`     | bundle target to use (if applicable)                                                       |
+
+<!-- /cli-options -->
 
 ## Coding agent integrations
 
-Unity AI Gateway can also govern AI coding tools. Route requests from Cursor, Codex CLI, and Gemini CLI through Unity AI Gateway model services to get one invoice, one usage dashboard, and one place to manage permissions and rate limits across your organization.
-
-Databricks recommends [`ucode`](https://github.com/databricks/ucode), a CLI that installs, authenticates, and configures supported coding agents against Unity AI Gateway in one command. You can also configure an agent by hand with its base URL and a Databricks token.
-
-See [Integrate with coding agents](https://docs.databricks.com/aws/en/ai-gateway/coding-agent-integration-model-services) for the `ucode` setup steps, the manual configuration option, and the current list of supported tools.
+Unity AI Gateway can also govern AI coding tools like Cursor, Codex CLI, and Gemini CLI, so their requests share one invoice, usage dashboard, and set of rate limits. Databricks recommends [`ucode`](https://github.com/databricks/ucode) to set this up. See [Integrate with coding agents](https://docs.databricks.com/aws/en/ai-gateway/coding-agent-integration-model-services) for the setup steps and the current list of supported tools.
 
 ## Where to next
 

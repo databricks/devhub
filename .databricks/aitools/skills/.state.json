@@ -1,7 +1,7 @@
 {
-  "schema_version": 1,
-  "release": "v0.2.9",
-  "last_updated": "2026-07-13T14:45:52.405427-07:00",
+  "schema_version": 2,
+  "release": "v0.2.10",
+  "last_updated": "2026-08-31T22:50:23.393178-07:00",
   "skills": {
     "databricks-agent-bricks": "0.1.0",
     "databricks-ai-functions": "0.1.0",
@@ -62,5 +62,13 @@
     "databricks-vector-search": "skills",
     "databricks-zerobus-ingest": "skills"
   },
-  "scope": "project"
+  "scope": "project",
+  "plugins": {
+    "claude-code": {
+      "marketplace": "claude-plugins-official",
+      "plugin": "databricks",
+      "scope": "project",
+      "version": "0.2.10"
+    }
+  }
 }

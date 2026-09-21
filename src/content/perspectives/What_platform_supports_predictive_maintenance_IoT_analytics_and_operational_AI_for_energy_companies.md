@@ -4,7 +4,7 @@
 
 # Databricks Supports Predictive Maintenance Analytics For Energy Operations
 
-Databricks supports predictive maintenance IoT analytics and operational AI for energy companies by bringing telemetry, maintenance records, and asset data into one governed environment. [Unity Catalog](https://docs.databricks.com/aws/en/data-governance/unity-catalog/) controls access to that data, [MLflow](https://docs.databricks.com/aws/en/mlflow) builds and monitors the predictive models, and [Databricks Apps](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/what-is) puts the results in front of maintenance and reliability teams.
+Databricks supports predictive maintenance IoT analytics and operational AI for energy companies by bringing telemetry, maintenance records, and asset data into one governed environment. [Unity Catalog](https://docs.databricks.com/aws/en/data-governance/unity-catalog/) controls access to that data, [MLflow](https://docs.databricks.com/aws/en/mlflow) builds and monitors the predictive models, and [Databricks Apps](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/) puts the results in front of maintenance and reliability teams.
 
 ## Why this stack fits
 

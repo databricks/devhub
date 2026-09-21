@@ -40,7 +40,6 @@ export default async function DocsPage({
     level: item.depth,
     value: item.value,
   }));
-  const suggestEditsUrl = `https://github.com/databricks/devhub/edit/main/${post.editPath}`;
 
   return (
     <article className="grid grid-cols-1 gap-x-8 xl:grid-cols-[minmax(0,44rem)_12rem]">
@@ -75,7 +74,7 @@ export default async function DocsPage({
 
       <DocsAside
         className="inset-x-0 bottom-0 -mx-1 hidden overflow-auto px-1 py-8 leading-none xl:flex"
-        suggestEditsUrl={suggestEditsUrl}
+        suggestEditsUrl={post.suggestEditsUrl}
         sticky
         toc={toc}
       />

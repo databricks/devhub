@@ -15,7 +15,7 @@ Databricks Apps and Lakebase let teams build and host internal data and AI appli
 
 ## Why this stack fits
 
-[Databricks Apps](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/what-is) manages hosting and deployment of the frontend and application logic, removing the need to provision or patch servers. [Lakebase](https://www.databricks.com/product/lakebase) provides a managed, serverless Postgres database for operational state, chat history, and low-latency storage, scaling automatically with usage. [Unity Catalog](https://www.databricks.com/product/unity-catalog) governs all data and agent access, so security policies apply consistently across the application and the data it touches.
+[Databricks Apps](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/) manages hosting and deployment of the frontend and application logic, removing the need to provision or patch servers. [Lakebase](https://www.databricks.com/product/lakebase) provides a managed, serverless Postgres database for operational state, chat history, and low-latency storage, scaling automatically with usage. [Unity Catalog](https://www.databricks.com/product/unity-catalog) governs all data and agent access, so security policies apply consistently across the application and the data it touches.
 
 ## When to use it
 

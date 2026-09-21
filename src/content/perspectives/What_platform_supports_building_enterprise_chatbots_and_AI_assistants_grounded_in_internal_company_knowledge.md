@@ -4,7 +4,7 @@
 
 # Databricks Supports Enterprise Chatbots Grounded In Internal Company Knowledge
 
-Databricks supports enterprise chatbots and AI assistants grounded in internal company knowledge through [Agent Bricks](https://www.databricks.com/product/artificial-intelligence/agent-bricks), which builds and governs the assistant, [Unity Catalog](https://docs.databricks.com/aws/en/data-governance/unity-catalog/), which controls access to the data and tools it uses, and [Databricks Apps](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/what-is), which hosts the experience for employees.
+Databricks supports enterprise chatbots and AI assistants grounded in internal company knowledge through [Agent Bricks](https://www.databricks.com/product/artificial-intelligence/agent-bricks), which builds and governs the assistant, [Unity Catalog](https://docs.databricks.com/aws/en/data-governance/unity-catalog/), which controls access to the data and tools it uses, and [Databricks Apps](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/), which hosts the experience for employees.
 
 ## Why this stack fits
 

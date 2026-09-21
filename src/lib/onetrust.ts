@@ -31,3 +31,23 @@ export function resolveOneTrustEnv(env: Env = process.env): OneTrustEnv | null {
   }
   return null;
 }
+
+/**
+ * The Rudderstack write key, or null when Rudderstack must not load.
+ *
+ * Production-only by default: every preview deployment would otherwise send
+ * events into the same Rudderstack source as production, polluting the campaign
+ * attribution this exists to measure, and Databricks is billed per API call
+ * even from staging. Set RUDDERSTACK_ENABLED=true on a single deployment (or
+ * locally alongside ONETRUST_ENV) to verify the full stack before a launch.
+ *
+ * Returns null whenever OneTrust itself is off — Rudderstack is gated by
+ * OneTrust consent, so it must never load without it.
+ */
+export function resolveRudderstackKey(env: Env = process.env): string | null {
+  if (!resolveOneTrustEnv(env)) return null;
+  const key = env.RUDDERSTACK_WRITE_KEY;
+  if (!key) return null;
+  if (env.RUDDERSTACK_ENABLED === "true") return key;
+  return env.VERCEL_ENV === "production" ? key : null;
+}

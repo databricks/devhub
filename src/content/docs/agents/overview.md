@@ -2,13 +2,22 @@
 title: What is Agent Bricks?
 sidebar_label: Overview
 description: Agent Bricks is Databricks' enterprise agent platform. It unifies model access, execution, governance, and business context so teams can build, deploy, and govern agents in production.
+sourceOfTruth:
+  skills:
+    - databricks-agent-bricks
+  docs:
+    - /docs/appkit/v0
+    - https://docs.databricks.com/aws/en/agents/agent-bricks/
+  note: "Most of this page is DevHub-owned AppKit framing. The Agent Bricks product is owned by the databricks-agent-bricks skill and canonical docs."
 ---
 
 # What is Agent Bricks?
 
 **Agent Bricks** is Databricks' enterprise agent platform for building, deploying, and governing agents that operate on your business data. It unifies model access, execution, governance, and context across a single system: from the model you call, to the data your agent reads, to the identity it acts under. In your workspace you configure Knowledge Assistants, Supervisor Agents, and custom Python agents. Databricks handles evaluation, tuning, and quality improvement, then hosts each agent at an HTTP endpoint your app can call.
 
-Your AppKit app connects to Agent Bricks capabilities through two plugins: the [Model Serving plugin](/docs/appkit/v0/plugins/model-serving) for agents, foundation models, and governed endpoints, and the [Genie plugin](/docs/appkit/v0/plugins/genie) for natural-language queries over Unity Catalog tables.
+For what Agent Bricks is and how to build with it, see the [Agent Bricks docs](https://docs.databricks.com/aws/en/agents/agent-bricks/) or the [`databricks-agent-bricks`](/docs/tools/ai-tools/agent-skills) agent skill.
+
+Your AppKit app connects to Agent Bricks capabilities through the [Model Serving plugin](/docs/appkit/v0/plugins/model-serving) for agents, foundation models, and governed endpoints, and the [Genie plugin](/docs/appkit/v0/plugins/genie) for natural-language queries over Unity Catalog tables.
 
 ## How it fits together
 
@@ -50,7 +59,7 @@ You could call a serving endpoint directly with `fetch` and a token. The plugin 
 
 :::note[Creating a custom agent]
 
-Creating a custom agent is a Python workflow: the `ResponsesAgent` interface, an agent framework (OpenAI Agents SDK, LangGraph, LlamaIndex), and MLflow for tracing. See [Author an AI agent](https://docs.databricks.com/aws/en/agents/agent-framework/author-agent) on docs.databricks.com for that track.
+Creating a custom agent is a Python workflow: the `ResponsesAgent` interface, an agent framework (OpenAI Agents SDK, LangGraph, LlamaIndex), and MLflow for tracing. See [Author an AI agent](https://docs.databricks.com/aws/en/agents/custom-agents/author-agent).
 
 :::
 

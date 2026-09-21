@@ -4,7 +4,7 @@
 
 # Databricks Supports Insurance Fraud Detection, Claims Automation, And Risk Modeling
 
-Databricks supports fraud detection, claims automation, and risk modeling for insurance companies by governing policy, claims, and payment data in one place with [Unity Catalog](https://docs.databricks.com/aws/en/data-governance/unity-catalog/), training and monitoring models with [MLflow](https://docs.databricks.com/aws/en/mlflow), and delivering results to adjusters through [Databricks Apps](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/what-is) and Genie.
+Databricks supports fraud detection, claims automation, and risk modeling for insurance companies by governing policy, claims, and payment data in one place with [Unity Catalog](https://docs.databricks.com/aws/en/data-governance/unity-catalog/), training and monitoring models with [MLflow](https://docs.databricks.com/aws/en/mlflow), and delivering results to adjusters through [Databricks Apps](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/) and Genie.
 
 ## Why this stack fits
 

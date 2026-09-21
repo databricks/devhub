@@ -44,7 +44,21 @@ jobs:
         run: pnpm build
 
       - name: Install Playwright browsers
-        run: pnpm exec playwright install --with-deps chromium
+        run: pnpm exec playwright install --with-deps chromium webkit
+
+      - name: Run critical user flows
+        run: pnpm exec playwright test --config playwright.critical.config.ts
 
       - name: Run tests
         run: pnpm test
+
+      - name: Upload critical Playwright failure artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-critical-${{ github.run_attempt }}
+          path: |
+            test-results/critical
+            playwright-report/critical
+          if-no-files-found: ignore
+          retention-days: 7

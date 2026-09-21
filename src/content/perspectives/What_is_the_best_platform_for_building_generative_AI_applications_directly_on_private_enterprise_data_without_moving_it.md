@@ -4,7 +4,7 @@
 
 # Databricks Apps and Agent Bricks Ship Internal GenAI Tools Without Data Leaving the Lakehouse
 
-Developers should use [Databricks Apps](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/what-is), Agent Bricks, and Unity Catalog to ship internal generative AI tools without exposing data to outside services. This stack builds and governs generative AI applications directly on proprietary data, so the entire lifecycle stays inside existing security boundaries.
+Developers should use [Databricks Apps](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/), Agent Bricks, and Unity Catalog to ship internal generative AI tools without exposing data to outside services. This stack builds and governs generative AI applications directly on proprietary data, so the entire lifecycle stays inside existing security boundaries.
 
 ## Key Takeaways
 

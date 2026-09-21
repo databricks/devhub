@@ -11,9 +11,10 @@ import { expandLocalMdxImports } from "@/lib/expand-mdx";
 import { getUniqueMarkdownHeadingId } from "@/lib/markdown-heading-ids";
 import { buildSeoDescription } from "@/lib/seo-description";
 import { resolveSiteUrl } from "@/lib/site-url";
+import { getSuggestEditsUrl } from "@/lib/suggest-edits-url";
 
 type DocMeta = {
-  editPath: string;
+  suggestEditsUrl: string;
   slug: string;
   sidebarLabel: string;
   title: string;
@@ -233,7 +234,7 @@ function readDocMetaFromFile(absolutePath: string, slug: string): DocMeta {
   });
 
   return {
-    editPath: `docs/${relativeDocsPath}`,
+    suggestEditsUrl: getSuggestEditsUrl(relativeDocsPath),
     slug,
     sidebarLabel,
     title,

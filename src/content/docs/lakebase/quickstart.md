@@ -1,5 +1,12 @@
 ---
 title: Quickstart
+sourceOfTruth:
+  skills:
+    - databricks-apps
+    - databricks-lakebase
+  docs:
+    - /docs/appkit/v0
+    - https://docs.databricks.com/aws/en/oltp/
 ---
 
 # Quickstart
@@ -32,25 +39,21 @@ After deploying a Lakebase Postgres-backed app, consider the following customiza
 
 ## Manual path
 
-When you scaffold without a template, `databricks apps init` generates a working AppKit project.
+When you scaffold without a template, `databricks apps init` generates a working AppKit project. You need a Lakebase project first. Create one:
 
-**Interactive** (recommended for local development): run without flags and the CLI prompts for project name and feature (plugin) selection:
+```bash
+databricks postgres create-project <project-id>
+```
+
+The ID becomes the project's resource name (`projects/<project-id>`). For a guided setup including branches and connection values, see the [Create a Lakebase Project](/templates/lakebase-create-instance) template or the [`databricks-lakebase`](/docs/tools/ai-tools/agent-skills) agent skill.
+
+**Interactive** (recommended for local development): run without flags.
 
 ```bash
 databricks apps init
 ```
 
-```text
-Project name: my-app
-┃ Select features
-┃   [ ] Analytics Plugin
-┃   [ ] Files Plugin
-┃   [ ] Genie Plugin
-┃   [x] Lakebase
-┃   [ ] Model Serving Plugin
-```
-
-Select **Lakebase** and the CLI walks you through selecting an existing project, branch, and database.
+The CLI prompts for your app name, then lists the available plugins (features). Select **Lakebase**, and it walks you through choosing an existing Lakebase project, branch, and database.
 
 **Non-interactive** (for scripts and CI): pass `--name` and the required `--set` fields for each selected plugin feature. The `database` value must be the full resource path, retrieved via `databricks postgres list-databases projects/<project-id>/branches/<branch-id> -o json` (use the `name` field):
 

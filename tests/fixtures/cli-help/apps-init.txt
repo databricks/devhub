@@ -1,0 +1,77 @@
+Initialize a new AppKit application from a template.
+
+When run without arguments, uses the default AppKit template and an interactive prompt
+guides you through the setup. When run with --name, runs in non-interactive mode
+(all required flags must be provided).
+
+By default, the command uses the latest released version of AppKit. Use --version
+to specify a different version, or --version latest to use the main branch.
+
+Examples:
+  # Interactive mode with default template (recommended)
+  databricks apps init
+
+  # Use a specific AppKit version
+  databricks apps init --version v0.2.0
+
+  # Use the latest development version (main branch)
+  databricks apps init --version latest
+
+  # Non-interactive with flags
+  databricks apps init --name my-app
+
+  # With analytics feature and SQL Warehouse
+  databricks apps init --name my-app --features=analytics \
+    --set analytics.sql-warehouse.id=abc123
+
+  # With database resource (all fields required together)
+  databricks apps init --name my-app --features=analytics \
+    --set analytics.database.instance_name=myinst \
+    --set analytics.database.database_name=mydb
+
+  # Multiple plugins with different warehouses
+  databricks apps init --name my-app --features=analytics,reporting \
+    --set analytics.sql-warehouse.id=wh1 \
+    --set reporting.sql-warehouse.id=wh2
+
+  # Create, deploy, and run with dev-remote
+  databricks apps init --name my-app --deploy --run=dev-remote
+
+  # With a custom template from a local path
+  databricks apps init --template /path/to/template --name my-app
+
+  # With a GitHub URL
+  databricks apps init --template https://github.com/user/repo --name my-app
+
+Resource configuration (--set):
+  Set resource values using --set plugin.resourceKey.field=value
+  Keys are defined in the template's appkit.plugins.json manifest.
+  Multi-field resources (e.g., database, secret) require all fields to be set together.
+
+Environment variables:
+  DATABRICKS_APPKIT_TEMPLATE_PATH  Override the default template source
+
+Usage:
+  databricks apps init [flags]
+
+Flags:
+      --auto-approve         Skip confirmation prompts for optional resources. Optional resources are only configured when their values are provided via --set.
+      --branch string        Git branch or tag (for GitHub templates, mutually exclusive with --version)
+      --deploy               Deploy the app after creation
+      --description string   App description
+      --features strings     Features/plugins to enable (comma-separated, as defined in template manifest)
+  -h, --help                 help for init
+      --name string          Project name (prompts if not provided)
+      --output-dir string    Directory to write the project to
+      --run string           Run the app after creation (none, dev, dev-remote)
+      --set stringArray      Set resource values (format: plugin.resourceKey.field=value, can specify multiple)
+      --skip-install         Skip installing project dependencies (e.g. npm install / uv sync). Cannot be combined with --run.
+      --template string      Template path (local directory or GitHub URL)
+      --version string       AppKit version to use (default: auto-detected, use 'latest' for main branch)
+
+Global Flags:
+      --debug            enable debug logging
+  -o, --output type      output type: text or json (default text)
+  -p, --profile string   ~/.databrickscfg profile
+  -t, --target string    bundle target to use (if applicable)
+      --var strings      set values for variables defined in bundle config. Example: --var="key=value"

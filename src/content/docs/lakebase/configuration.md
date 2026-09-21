@@ -1,11 +1,19 @@
 ---
 title: Lakebase Postgres configuration
 sidebar_label: Configuration
+sourceOfTruth:
+  skills:
+    - databricks-lakebase
+  docs:
+    - /docs/appkit/v0/plugins/lakebase
+    - https://docs.databricks.com/aws/en/oltp/projects/manage-projects
 ---
 
 # Lakebase Postgres configuration
 
 AppKit connects to Lakebase Postgres using a `postgres` resource declared in `databricks.yml` and `LAKEBASE_ENDPOINT` set in `app.yaml`.
+
+This page covers the AppKit wiring. For Lakebase itself (projects, branches, autoscaling, scale to zero), see the [Lakebase docs](https://docs.databricks.com/aws/en/oltp/) or the [`databricks-lakebase`](/docs/tools/ai-tools/agent-skills) agent skill.
 
 ## Connection values
 
@@ -73,18 +81,9 @@ Project, branch, endpoint, and database IDs must be 1-63 characters, start with 
 
 ## Autoscaling
 
-Computes autoscale between a configured min and max compute unit (CU) range. Default settings by branch type when created via API or CLI:
+Computes autoscale between a configured minimum and maximum compute unit (CU). You set the range per project or per endpoint. The default CU values, the maximum compute size, and the min/max constraint are Lakebase settings that change over time, so check [Autoscaling](https://docs.databricks.com/aws/en/oltp/projects/autoscaling) for current values.
 
-- **Production branch**: 1 CU (min and max), scale to zero enabled (24-hour default timeout).
-- **Child branches**: 1 CU (min and max), scale to zero enabled (24-hour default timeout).
-
-The Lakebase Postgres UI sets higher defaults: 8–16 CU for production and 2–4 CU for child branches.
-
-[Autoscaling](https://docs.databricks.com/aws/en/oltp/projects/autoscaling) is available for computes up to 64 CU (128 GB). For workloads requiring more than 64 CU, larger fixed-size computes are available. The difference between max and min cannot exceed 16 CU (`max - min <= 16`).
-
-Compute units (CU) are the capacity measure for Lakebase Postgres. Each CU provides approximately 2 GB of RAM.
-
-Scaling within the configured range happens without connection interruptions. Changing the min/max configuration may cause a brief interruption.
+Scaling within the configured range happens without connection interruptions. Changing the minimum or maximum may cause a brief interruption.
 
 <details>
 <summary>Configure autoscaling</summary>
@@ -112,17 +111,19 @@ databricks postgres update-endpoint \
   --profile $DATABRICKS_PROFILE
 ```
 
-| Option        | Required | Description                                                                                         |
-| ------------- | -------- | --------------------------------------------------------------------------------------------------- |
-| `NAME`        | yes      | Endpoint resource path: `projects/{project_id}/branches/{branch_id}/endpoints/{endpoint_id}`        |
-| `UPDATE_MASK` | yes      | Comma-separated fields (for example, `spec.autoscaling_limit_min_cu,spec.autoscaling_limit_max_cu`) |
-| `--json`      | yes      | JSON with new field values                                                                          |
-| `--no-wait`   | no       | Return immediately with operation details                                                           |
-| `--timeout`   | no       | Max time to wait for completion                                                                     |
-| `--debug`     | no       | Enable debug logging                                                                                |
-| `-o json`     | no       | Output as JSON (default: text)                                                                      |
-| `--target`    | no       | Bundle target to use (if applicable)                                                                |
-| `--profile`   | no       | Databricks CLI profile name                                                                         |
+<!-- cli-options:postgres update-endpoint -->
+
+| Option            | Description                                                                                |
+| ----------------- | ------------------------------------------------------------------------------------------ |
+| `--json`          | either inline JSON string or @path/to/file.json with request body (default JSON (0 bytes)) |
+| `--no-wait`       | do not wait to reach DONE state                                                            |
+| `--timeout`       | maximum amount of time to reach DONE state                                                 |
+| `--debug`         | enable debug logging                                                                       |
+| `--output`, `-o`  | output type: text or json (default text)                                                   |
+| `--profile`, `-p` | ~/.databrickscfg profile                                                                   |
+| `--target`, `-t`  | bundle target to use (if applicable)                                                       |
+
+<!-- /cli-options -->
 
 </details>
 
@@ -130,12 +131,7 @@ databricks postgres update-endpoint \
 
 [Scale to zero](https://docs.databricks.com/aws/en/oltp/projects/scale-to-zero) suspends idle computes to eliminate costs. When a new query arrives, the compute resumes automatically (typically a few hundred milliseconds).
 
-| Setting         | Value                |
-| --------------- | -------------------- |
-| Default timeout | 24 hours             |
-| Timeout range   | 60 seconds to 7 days |
-
-For development branches, shorter timeouts (for example 30 minutes) reduce costs further. Apps connecting to a scaled-down compute will see a brief pause on the first query. Implement connection retry logic in your app.
+The default timeout is 24 hours. Set any value from 60 seconds to 7 days. For development branches, shorter timeouts (for example 30 minutes) reduce costs further. Apps connecting to a scaled-down compute will see a brief pause on the first query. Implement connection retry logic in your app.
 
 When a compute resumes, session context resets (temporary tables, prepared statements, session settings, connection pools).
 
@@ -174,17 +170,19 @@ databricks postgres update-project \
   --profile $DATABRICKS_PROFILE
 ```
 
-| Option        | Required | Description                                                      |
-| ------------- | -------- | ---------------------------------------------------------------- |
-| `NAME`        | yes      | Project resource path: `projects/{project_id}`                   |
-| `UPDATE_MASK` | yes      | Fields to update (for example, `spec.default_endpoint_settings`) |
-| `--json`      | yes      | JSON with new field values                                       |
-| `--no-wait`   | no       | Return immediately with operation details                        |
-| `--timeout`   | no       | Max time to wait for completion                                  |
-| `--debug`     | no       | Enable debug logging                                             |
-| `-o json`     | no       | Output as JSON (default: text)                                   |
-| `--target`    | no       | Bundle target to use (if applicable)                             |
-| `--profile`   | no       | Databricks CLI profile name                                      |
+<!-- cli-options:postgres update-project -->
+
+| Option            | Description                                                                                |
+| ----------------- | ------------------------------------------------------------------------------------------ |
+| `--json`          | either inline JSON string or @path/to/file.json with request body (default JSON (0 bytes)) |
+| `--no-wait`       | do not wait to reach DONE state                                                            |
+| `--timeout`       | maximum amount of time to reach DONE state                                                 |
+| `--debug`         | enable debug logging                                                                       |
+| `--output`, `-o`  | output type: text or json (default text)                                                   |
+| `--profile`, `-p` | ~/.databrickscfg profile                                                                   |
+| `--target`, `-t`  | bundle target to use (if applicable)                                                       |
+
+<!-- /cli-options -->
 
 **Per-endpoint** (change or disable on an existing endpoint):
 

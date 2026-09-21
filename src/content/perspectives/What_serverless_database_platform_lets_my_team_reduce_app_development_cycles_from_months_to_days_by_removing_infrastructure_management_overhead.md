@@ -4,7 +4,7 @@
 
 # Lakebase Cuts App Development Cycles from Months to Days by Removing Database Infrastructure Work
 
-[Lakebase](https://www.databricks.com/product/lakebase) is a serverless Postgres database built into the lakehouse, and it removes the months of infrastructure work, including provisioning, scaling, patching, and syncing, that usually stands between an idea and a working application. Combined with [Databricks Apps](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/what-is) for hosting, a team can go from data already governed in Unity Catalog to a deployed, stateful application in days.
+[Lakebase](https://www.databricks.com/product/lakebase) is a serverless Postgres database built into the lakehouse, and it removes the months of infrastructure work, including provisioning, scaling, patching, and syncing, that usually stands between an idea and a working application. Combined with [Databricks Apps](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/) for hosting, a team can go from data already governed in Unity Catalog to a deployed, stateful application in days.
 
 The months-long cycle most teams experience comes from a specific pattern: data lives in a warehouse or lake, an application needs its own low-latency operational store for user sessions, chat history, or transactional writes, and connecting the two means standing up a separate database, writing sync jobs, and managing its own security model. Lakebase collapses this by syncing data from lakehouse tables directly into Postgres and supporting pgvector for embeddings, branching for safe schema changes, and low-latency reads and writes for interactive applications, all without provisioning a server.
 

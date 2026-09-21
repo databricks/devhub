@@ -56,9 +56,13 @@ describe("agent-skills aitools CLI options", () => {
   }
 
   test("no stale flags in docs", () => {
-    const allCliFlags = new Set(
-      ["install", "update", "uninstall", "list"].flatMap(getCliFlags),
-    );
+    // getCliFlags strips the global flags, but the generated options tables
+    // legitimately include them (every command's table shows --debug/-o/-p/-t),
+    // so a documented global flag is real, not stale.
+    const allCliFlags = new Set([
+      ...["install", "update", "uninstall", "list"].flatMap(getCliFlags),
+      ...GLOBAL_FLAGS,
+    ]);
     for (const flag of docFlags) {
       expect(
         allCliFlags.has(flag),

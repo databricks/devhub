@@ -2,6 +2,14 @@
 title: Read Unity Catalog tables
 sidebar_label: Analytical reads
 description: Read governed Unity Catalog tables from your AppKit app with the Analytics plugin. SQL files, on-behalf-of-user queries, SQL warehouse resource binding.
+sourceOfTruth:
+  skills:
+    - databricks-dbsql
+    - databricks-unity-catalog
+  docs:
+    - /docs/appkit/v0/plugins/analytics
+    - https://docs.databricks.com/aws/en/sql/
+    - https://docs.databricks.com/aws/en/data-governance/unity-catalog/
 ---
 
 # Read Unity Catalog tables
@@ -115,9 +123,9 @@ The identity attached to each query is set by the filename:
 - **Service principal queries** (`*.sql`) use the app's service principal. The SP needs `SELECT` on the underlying tables. Permission errors return `403` from the warehouse.
 - **On-behalf-of-user queries** (`*.obo.sql`) use the signed-in user. UC applies their grants automatically. If the user lacks `SELECT`, or if a row filter or column mask hides the data, the call returns a `403` or fewer rows. You don't write the permission check.
 
-:::note[OBO is in Public Preview]
+:::note[On-behalf-of-user authorization must be enabled]
 
-On-behalf-of-user authorization is in Public Preview. A workspace admin must enable it before scopes can be added to your app. See [App authorization](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/auth) for the platform details.
+A workspace admin must enable on-behalf-of-user authorization before scopes can be added to your app. See [App authorization](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/auth) for the platform details.
 
 :::
 

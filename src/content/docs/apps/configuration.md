@@ -1,6 +1,12 @@
 ---
 title: App configuration
 sidebar_label: Configuration
+sourceOfTruth:
+  skills:
+    - databricks-apps
+  docs:
+    - /docs/appkit/v0/configuration
+    - https://docs.databricks.com/aws/en/dev-tools/databricks-apps/
 ---
 
 # App configuration
@@ -69,7 +75,7 @@ AppKit templates use conventional names for plugin-managed resources:
 | [Model Serving](/docs/agents/ai-gateway)                                      | `serving-endpoint` | AI model inference            |
 | [Genie Agent](/docs/agents/genie)                                             | `genie-space`      | Natural language data queries |
 | [Job](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/resources) | `job`              | Scheduled or triggered job    |
-| [UC Volumes](https://docs.databricks.com/aws/en/files/)                       | `volume`           | File storage                  |
+| [UC Volumes](https://docs.databricks.com/aws/en/volumes/)                     | `volume`           | File storage                  |
 
 Additional resource types (Unity Catalog tables, connections, AI Search indexes (formerly Vector Search), MLflow experiments, and others) are listed in the [official resources documentation](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/resources).
 
@@ -127,16 +133,11 @@ Custom variables go in `app.yaml` under `env`. Use `value` for plain text, `valu
 
 Each app gets a dedicated service principal. Databricks injects `DATABRICKS_CLIENT_ID` and `DATABRICKS_CLIENT_SECRET` automatically at runtime and deletes the service principal when the app is deleted.
 
-**User authorization** (Public Preview) forwards the signed-in user's token through the `x-forwarded-access-token` HTTP header. Scopes (for example, `sql`, `genie`, `files`) are configured in the workspace UI. AppKit's built-in [Genie](/docs/agents/genie) and [Model Serving](/docs/agents/ai-gateway) plugins use this automatically. See [execution context](/docs/appkit/v0/plugins/execution-context) for the AppKit implementation, or [app authorization](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/auth) for the full platform details.
+**User authorization** forwards the signed-in user's token through the `x-forwarded-access-token` HTTP header. Scopes (for example, `sql`, `genie`, `files`) are configured in the workspace UI. AppKit's built-in [Genie](/docs/agents/genie) and [Model Serving](/docs/agents/ai-gateway) plugins use this automatically. See [execution context](/docs/appkit/v0/plugins/execution-context) for the AppKit implementation, or [app authorization](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/auth) for the full platform details.
 
 ## Compute
 
-| Size   | vCPU    | RAM   | DBU |
-| ------ | ------- | ----- | --- |
-| Medium | Up to 2 | 6 GB  | 0.5 |
-| Large  | Up to 4 | 12 GB | 1.0 |
-
-Medium is the default. Configure compute size in the workspace UI or with the `--compute-size` flag (`MEDIUM` or `LARGE`) on `databricks apps create` and `databricks apps update`.
+Compute sizes are `MEDIUM` (the default), `LARGE`, and `XLARGE` (availability varies by workspace). Set the size in the workspace UI or with the `--compute-size` flag on `databricks apps create` and `databricks apps update`. See the [Databricks Apps docs](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/) for the vCPU, RAM, and DBU per size.
 
 ## Constraints
 

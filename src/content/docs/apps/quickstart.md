@@ -1,5 +1,11 @@
 ---
 title: Quickstart
+sourceOfTruth:
+  skills:
+    - databricks-apps
+  docs:
+    - /docs/appkit/v0
+    - https://docs.databricks.com/aws/en/dev-tools/databricks-apps/
 ---
 
 # Quickstart

@@ -1,5 +1,10 @@
 ---
 title: Databricks CLI
+sourceOfTruth:
+  skills:
+    - databricks-core
+  docs:
+    - https://docs.databricks.com/aws/en/dev-tools/cli/
 ---
 
 # Databricks CLI
@@ -15,12 +20,23 @@ From your terminal, run the following commands to install or upgrade the CLI:
 <Tabs groupId="os">
 <TabItem value="mac-linux" label="macOS / Linux">
 
+Install:
+
 ```bash
 brew tap databricks/tap
+brew trust databricks/tap
 brew install databricks
-
-brew update && brew upgrade databricks
 ```
+
+Upgrade:
+
+```bash
+brew update
+brew trust databricks/tap
+brew upgrade databricks
+```
+
+`brew trust databricks/tap` is required as of [Homebrew 6.0.0](https://docs.brew.sh/Tap-Trust) — including for existing users who tapped before upgrading.
 
 </TabItem>
 <TabItem value="windows" label="Windows">
@@ -59,7 +75,7 @@ databricks auth login
 
 This prompts you for a profile name (defaults to `DEFAULT`), then opens a browser where you sign in and pick a workspace.
 
-Once authenticated, credentials are saved to `~/.databrickscfg`.
+Once authenticated, the CLI (v1.0.0+) stores your login token in your operating system's secure storage — Keychain on macOS, Credential Manager on Windows, or the Secret Service on Linux — not in `~/.databrickscfg`. See [Token storage](https://docs.databricks.com/aws/en/dev-tools/cli/authentication#auth-storage) for details and the plaintext fallback.
 
 To authenticate to a specific workspace or to name the profile, use the `--host` and `--profile` flags:
 

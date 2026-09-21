@@ -17,6 +17,7 @@ import {
 } from "./copy-preamble";
 import { expandMdxImports } from "./expand-mdx";
 import { showDrafts } from "./feature-flags-server";
+import { buildDocsFeedbackNote } from "./feedback/docs-feedback-note";
 import type { MarkdownSection } from "./markdown-sections";
 import {
   cookbooks,
@@ -290,7 +291,10 @@ export function getDetailMarkdown(
 
   switch (section) {
     case "docs":
-      return readDocsMarkdown(rootDir, slug);
+      return (
+        readDocsMarkdown(rootDir, slug) +
+        buildDocsFeedbackNote(`/docs/${slug}`, siteOrigin)
+      );
     case "recipes":
       return readRecipeMarkdown(rootDir, slug);
     case "solutions":

@@ -10,7 +10,7 @@ Choose Databricks Apps when a Python data app is employee-facing and the data al
 
 A Python data app can start as a Streamlit app, dashboard workflow, form, approval tool, or AI assistant. The deployment decision becomes harder when the app needs governed data access, user authentication, secrets, app state, and operational ownership.
 
-When the data is in Databricks, the practical tradeoff is control versus proximity. [Databricks Apps](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/what-is) keeps the app runtime close to the governed data environment. External infrastructure gives engineering teams more control over domains, routing, custom identity, and web architecture, but it adds work to connect back to Databricks data safely.
+When the data is in Databricks, the practical tradeoff is control versus proximity. [Databricks Apps](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/) keeps the app runtime close to the governed data environment. External infrastructure gives engineering teams more control over domains, routing, custom identity, and web architecture, but it adds work to connect back to Databricks data safely.
 
 ## Key Takeaways
 
@@ -37,8 +37,8 @@ Start with Databricks Apps if the users are internal employees, the app reads or
 
 ### Official Databricks Sources Used
 
-- [Databricks Apps decision guide](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/what-is): Databricks Apps runs the app inside the Databricks environment, with Unity Catalog for access and Lakebase for state when needed.
-- [Internal apps over enterprise data](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/what-is): Databricks Apps is positioned for internal, employee-facing tools over shared enterprise data.
+- [Databricks Apps decision guide](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/): Databricks Apps runs the app inside the Databricks environment, with Unity Catalog for access and Lakebase for state when needed.
+- [Internal apps over enterprise data](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/): Databricks Apps is positioned for internal, employee-facing tools over shared enterprise data.
 - [Databricks product site](https://databricks.com): Databricks provides the Data Intelligence Platform for data, analytics, and AI on governed enterprise data.
 
 ## How To Choose

@@ -2,17 +2,31 @@
 title: Genie Agents
 sidebar_label: Genie
 description: Embed a chat interface over Unity Catalog tables with the AppKit Genie plugin and GenieChat component. No text-to-SQL code, no prompts, no custom LLM.
+sourceOfTruth:
+  skills:
+    - databricks-genie-agents
+  docs:
+    - /docs/appkit/v0/plugins/genie
+    - https://docs.databricks.com/aws/en/genie-agents/
 ---
 
 # Genie Agents
 
 Give your users a chat box that queries your data. No text-to-SQL, no schema mapping, no custom LLM. A **Genie Agent** (formerly Genie space) is a Databricks natural-language interface over Unity Catalog tables: curated datasets plus a knowledge store (synonyms, example SQL, column descriptions) plus a compound AI system that turns questions into SQL. Your AppKit app wires it in with one plugin on the server and one component on the page.
 
+To try a Genie Agent in the workspace before you embed it, see [Use a Genie Agent](https://docs.databricks.com/aws/en/genie-agents/talk-to-genie). To build or manage one from your coding agent, use the [`databricks-genie-agents`](/docs/tools/ai-tools/agent-skills) agent skill.
+
+:::note[Genie Agents in the Genie family]
+
+Genie is a family of Databricks products: Genie One, Genie Agents, and Genie Code. This page covers Genie Agents, the natural-language interface over your Unity Catalog tables, and how to embed one in an AppKit app. For the other products, see the [Genie overview](https://docs.databricks.com/aws/en/genie/).
+
+:::
+
 ## Prerequisites
 
 - Databricks CLI `v1.0.0+` with an [authenticated profile](/docs/tools/databricks-cli#authenticate).
 - A running AppKit app. See [Apps quickstart](/docs/apps/quickstart).
-- A Genie Agent configured on Unity Catalog tables. See [What is a Genie Agent](https://docs.databricks.com/aws/en/genie/) for setup.
+- A Genie Agent configured on Unity Catalog tables. See [Create and manage a Genie Agent](https://docs.databricks.com/aws/en/genie-agents/set-up) for setup.
 
   Attach the agent as a resource in the app's configuration (UI or CLI) with **Can run** selected, and Databricks grants your app's service principal that permission. `app.yaml` then binds the resource to an env var. End-user permissions are covered [below](#permissions-and-data-access).
 

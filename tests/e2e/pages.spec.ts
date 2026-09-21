@@ -297,6 +297,29 @@ test.describe("product pages", () => {
     await expect(page).toHaveTitle("Lakebase | Databricks Developer");
   });
 
+  test("/appkit redirects to the latest AppKit docs", async ({
+    page,
+    request,
+  }) => {
+    const destinationPath = /^\/docs\/appkit\/v\d+$/;
+    const response = await request.get("/appkit", { maxRedirects: 0 });
+    expect(response.status()).toBe(307);
+    const location = response.headers()["location"];
+    if (!location) {
+      throw new Error("Missing Location header for /appkit");
+    }
+    expect(new URL(location, "http://localhost").pathname).toMatch(
+      destinationPath,
+    );
+
+    await page.goto("/appkit");
+    await expect(page).toHaveURL(/\/docs\/appkit\/v\d+$/);
+    await expect(page).toHaveTitle("Getting started | Databricks Developer");
+
+    await page.goto("/appkit/");
+    await expect(page).toHaveURL(/\/docs\/appkit\/v\d+$/);
+  });
+
   test("uses static testimonial cards on desktop when three testimonials fit", async ({
     page,
   }) => {
@@ -768,11 +791,12 @@ test.describe("docs MDX compatibility", () => {
     expect(layout.articleHeight).toBeLessThanOrEqual(3165);
     expect(layout.codeBlocks).toBe(3);
     expect(layout.inlineCodes).toBe(2);
-    // 67 = page links + footer links including "Your Privacy Choices", which
-    // the footer renders twice (desktop and mobile legal blocks). Announcement
-    // banners are env-gated, so their links are excluded to keep the count
-    // stable whether or not a banner is live.
-    expect(layout.linksWithoutBanners).toBe(67);
+    // 68 = page links + footer links, including the Neon entry in the footer
+    // Products list and "Your Privacy Choices", which the footer renders twice
+    // (desktop and mobile legal blocks). Announcement banners are env-gated, so
+    // their links are excluded to keep the count stable whether or not a banner
+    // is live.
+    expect(layout.linksWithoutBanners).toBe(68);
   });
 
   test("renders relative docs image assets and links", async ({ page }) => {
@@ -1147,12 +1171,17 @@ test.describe("docs MDX compatibility", () => {
     const article = page.locator("article");
     const details = page.locator("article details").first();
     await expect(article).not.toContainText("<details>");
-    await expect(details.locator("summary")).toContainText("Options");
+    await expect(details.locator("summary")).toContainText("Example output");
 
     await details.locator("summary").click();
     await expect(details).toHaveAttribute("open", "");
-    await expect(details.locator("table")).toBeVisible();
-    await expect(details.locator("table")).toContainText("--template");
+    // The nested fenced code block must be processed as markdown (rendered to a
+    // highlighted code figure), not shown as a raw ```json fence inside the
+    // <details>. This is the "nested markdown content" the test guards.
+    await expect(details.locator("figure.theme-code-block")).toBeVisible();
+    await expect(details.locator("figure.theme-code-block")).toContainText(
+      "compute_size",
+    );
   });
 
   test("keeps nested HTML details content collapsed in Lakebase docs", async ({
@@ -1161,51 +1190,45 @@ test.describe("docs MDX compatibility", () => {
     await page.goto("/docs/lakebase/development");
 
     const article = page.locator("article");
-    const manualSummary = article.locator("details > summary").filter({
-      hasText: "Manual provisioning (without a template)",
+    const exampleSummary = article.locator("details > summary").filter({
+      hasText: "Example databricks.yml",
     });
-    const manualDetails = manualSummary.locator("xpath=..");
+    const exampleDetails = exampleSummary.locator("xpath=..");
 
-    await expect(manualSummary).toContainText(
-      "Manual provisioning (without a template)",
+    await expect(exampleSummary).toContainText(
+      "Example databricks.yml with a project, dev branch, and read-only replica",
     );
-    await expect(manualDetails).not.toHaveAttribute("open", "");
+    // Collapsed by default: no open attribute set on the <details>.
+    await expect(exampleDetails).not.toHaveAttribute("open", "");
 
-    const collapsedLayout = await article.evaluate((element) => {
-      const longRunningHeading = [...element.querySelectorAll("h2")].find(
-        (heading) => heading.textContent?.trim() === "Long-running operations",
-      );
-      const hiddenHeading = [...element.querySelectorAll("h3")].find(
-        (heading) => heading.textContent?.trim() === "Get connection values",
-      );
-      const exampleSummary = [...element.querySelectorAll("details summary")]
-        .map((summary) => summary.textContent?.trim() ?? "")
-        .find((text) => text.includes("databricks.yml"));
-      const articleY = element.getBoundingClientRect().y;
-
+    // Assert the collapsed state directly and independently of the page's total
+    // length: while collapsed the block is just the summary line, and its nested
+    // code block must be hidden. If the <details> had rendered open, its height
+    // would jump by hundreds of px and the code figure would be visible. This is
+    // content-independent, so routine edits to this page don't re-break it.
+    const collapsed = await exampleDetails.evaluate((element) => {
+      const codeFigure = element.querySelector("figure.theme-code-block");
       return {
-        articleHeight: Math.round(element.getBoundingClientRect().height),
-        exampleSummary,
-        hiddenHeadingVisible:
-          hiddenHeading instanceof HTMLElement
-            ? hiddenHeading.checkVisibility()
-            : null,
-        longRunningOffsetFromArticleY:
-          longRunningHeading instanceof HTMLElement
-            ? Math.round(
-                longRunningHeading.getBoundingClientRect().y - articleY,
-              )
+        detailsHeight: Math.round(element.getBoundingClientRect().height),
+        codeVisible:
+          codeFigure instanceof HTMLElement
+            ? codeFigure.checkVisibility()
             : null,
       };
     });
+    expect(collapsed.codeVisible).toBe(false);
+    expect(collapsed.detailsHeight).toBeLessThan(120);
 
-    expect(collapsedLayout.articleHeight).toBeGreaterThanOrEqual(6990);
-    expect(collapsedLayout.articleHeight).toBeLessThanOrEqual(7030);
-    expect(collapsedLayout.exampleSummary).toBe(
-      "Example databricks.yml with a project, dev branch, and read-only replica",
-    );
-    expect(collapsedLayout.hiddenHeadingVisible).toBe(false);
-    expect(collapsedLayout.longRunningOffsetFromArticleY).toBe(4119);
+    // Expanding reveals the nested markdown, proving the fenced yaml block was
+    // processed (rendered to a code figure) rather than left as a raw fence.
+    await exampleSummary.click();
+    await expect(exampleDetails).toHaveAttribute("open", "");
+    await expect(
+      exampleDetails.locator("figure.theme-code-block"),
+    ).toBeVisible();
+    await expect(
+      exampleDetails.locator("figure.theme-code-block"),
+    ).toContainText("postgres_projects");
   });
 
   test("renders fenced code blocks nested inside ordered lists", async ({
@@ -1348,7 +1371,9 @@ test.describe("docs MDX compatibility", () => {
 });
 
 test.describe("hackathon resources", () => {
-  test("shows the full production resource set", async ({ page }) => {
+  test("renders the event page metadata and key resource links", async ({
+    page,
+  }) => {
     await page.goto("/hackathon/apps-agents-for-good-2026");
 
     await expect(page).toHaveTitle(

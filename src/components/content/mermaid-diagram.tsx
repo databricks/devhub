@@ -21,6 +21,14 @@ export function MermaidDiagram({ chart }: { chart: string }) {
         mermaid.initialize({
           startOnLoad: false,
           theme: "dark",
+          fontFamily:
+            '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+          // Render labels as native SVG text, not HTML in <foreignObject>.
+          // The site's prose CSS (line-height, paragraph margins, wrapping)
+          // leaks into foreignObject labels and makes them overflow the box
+          // Mermaid sized, so the browser clips the text. SVG text is sized by
+          // its own glyph metrics and can't be clipped this way.
+          flowchart: { htmlLabels: false },
         });
         return mermaid.render(diagramId, chart);
       })

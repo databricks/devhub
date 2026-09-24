@@ -11,9 +11,9 @@ sourceOfTruth:
 
 # Mason CLI
 
-:::note[Private Preview]
+:::note[Experimental]
 
-Mason and the custom agent APIs it uses are experimental and in Private Preview. Commands and behavior can change.
+Mason and the custom agent APIs it uses are experimental. Commands and behavior can change.
 
 :::
 
@@ -32,14 +32,9 @@ Three commands take an agent from a blank directory to production:
 - **`mason deploy`** reads `agent.toml` to provision any declared-but-missing stores, grants the agent's service principal access to them, configures per-project MLflow tracing, and rolls out the deployment. When the deployment finishes, Mason returns the URL of your running agent.
 
 ```mermaid
-flowchart LR
-    Init["mason init<br/>Scaffold from template<br/>Declare stores + tools<br/>Seed .env profile"]
-    Dev["mason dev<br/>Run locally<br/>Validate stores + tools<br/>Connect to model serving"]
-    Deploy["mason deploy<br/>Provision stores<br/>Grant service principal access<br/>Roll out to runtime"]
-    Toml["agent.toml<br/>declarative source of truth"]
-
-    Init --> Dev --> Deploy
-    Init -.->|writes| Toml
+flowchart TB
+    Init["mason init"] --> Dev["mason dev"] --> Deploy["mason deploy"]
+    Init -.->|writes| Toml["agent.toml"]
     Dev -.->|reads| Toml
     Deploy -.->|reads| Toml
 ```

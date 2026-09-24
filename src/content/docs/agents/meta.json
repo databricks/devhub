@@ -1,4 +1,11 @@
 {
   "title": "Agent Bricks",
-  "pages": ["overview", "mason", "ai-gateway", "genie", "custom-agents"]
+  "pages": [
+    "overview",
+    "mason",
+    "deployment",
+    "sandbox",
+    "memory-sessions",
+    "tracing-evals"
+  ]
 }

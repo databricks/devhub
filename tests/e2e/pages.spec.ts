@@ -50,7 +50,7 @@ const PAGES = [
   { path: "/perspectives", title: "Perspectives" },
   { path: "/docs/start-here", title: "Start here" },
   { path: "/docs/agents/overview", title: "What is Agent Bricks?" },
-  { path: "/docs/agents/ai-gateway", title: "Unity AI Gateway" },
+  { path: "/docs/gateway/overview", title: "Unity AI Gateway" },
   { path: "/docs/agents/genie", title: "Genie Agents" },
   { path: "/docs/agents/custom-agents", title: "Custom agent endpoints" },
   { path: "/docs/apps/quickstart", title: "Quickstart" },

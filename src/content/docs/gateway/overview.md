@@ -1,6 +1,6 @@
 ---
 title: Unity AI Gateway
-sidebar_label: Unity AI Gateway
+sidebar_label: Overview
 description: Call governed LLM endpoints from your AppKit app using the Model Serving plugin. Unity AI Gateway adds rate limits, usage tracking, guardrails, and cost attribution.
 sourceOfTruth:
   skills:

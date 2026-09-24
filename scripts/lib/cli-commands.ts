@@ -104,14 +104,14 @@ export const CLI_COMMANDS: CommandSpec[] = [
   // Agents: serving-endpoints commands shown on the ai-gateway page.
   {
     command: "serving-endpoints list",
-    doc: "docs/agents/ai-gateway.md",
+    doc: "docs/gateway/overview.md",
   },
   {
     command: "serving-endpoints query",
-    doc: "docs/agents/ai-gateway.md",
+    doc: "docs/gateway/overview.md",
   },
   {
     command: "serving-endpoints create",
-    doc: "docs/agents/ai-gateway.md",
+    doc: "docs/gateway/overview.md",
   },
 ];

@@ -32,7 +32,7 @@ AppKit uses a three-layer architecture with plugins that register capabilities a
 | [**database**](/docs/appkit/v0/plugins/database)     | Generated HTTP CRUD and a server-side client from a declared schema over [Lakebase Postgres](/docs/lakebase/quickstart) (Beta)                                                |
 | [**analytics**](/docs/appkit/v0/plugins/analytics)   | SQL query execution against [Databricks SQL Warehouses](https://docs.databricks.com/aws/en/compute/sql-warehouse/). See [Analytical reads](/docs/lakehouse/analytical-reads). |
 | [**genie**](/docs/appkit/v0/plugins/genie)           | [Genie Agent](/docs/agents/genie) integration for natural-language data queries                                                                                               |
-| [**serving**](/docs/appkit/v0/plugins/model-serving) | Authenticated proxy to [Model Serving](/docs/agents/ai-gateway) endpoints with streaming support                                                                              |
+| [**serving**](/docs/appkit/v0/plugins/model-serving) | Authenticated proxy to [Model Serving](/docs/gateway/overview) endpoints with streaming support                                                                               |
 | [**files**](/docs/appkit/v0/plugins/files)           | File operations against [Unity Catalog Volumes](https://docs.databricks.com/aws/en/volumes/)                                                                                  |
 | [**agents**](/docs/appkit/v0/plugins/agents)         | AI agents defined in markdown or code, with tool auto-discovery                                                                                                               |
 | [**ai-search**](/docs/appkit/v0/plugins/ai-search)   | Semantic and vector search over your AI Search indexes                                                                                                                        |
@@ -45,7 +45,7 @@ For the full, current plugin set, see the [plugin reference](/docs/appkit/v0/plu
 
 Every app gets a dedicated service principal. Databricks injects its credentials at runtime, so your app can call workspace APIs without managing tokens.
 
-By default, all requests run as this service principal and all users share its permissions. When you need per-user data access, Databricks can forward the signed-in user's token via `x-forwarded-access-token`. AppKit's built-in [Genie](/docs/agents/genie) and [Model Serving](/docs/agents/ai-gateway) plugins handle this automatically.
+By default, all requests run as this service principal and all users share its permissions. When you need per-user data access, Databricks can forward the signed-in user's token via `x-forwarded-access-token`. AppKit's built-in [Genie](/docs/agents/genie) and [Model Serving](/docs/gateway/overview) plugins handle this automatically.
 
 ## When to use it
 

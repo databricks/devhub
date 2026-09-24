@@ -38,12 +38,18 @@ const SIDEBAR_SECTIONS: Array<{
     slugs: ["start-here"],
   },
   {
+    title: "Gateway",
+    description:
+      "Call governed LLM and agent endpoints from your AppKit app through Unity AI Gateway, with rate limits, usage tracking, guardrails, and cost attribution.",
+    slugs: ["gateway/overview"],
+  },
+  {
     title: "Agent Bricks",
     description:
-      "Connect Agent Bricks agents, governed LLM endpoints, and Genie Agents to your AppKit app. Covers Unity AI Gateway, the Model Serving plugin for calling LLM and agent endpoints, and the Genie plugin for natural-language data queries.",
+      "Build and deploy custom agents on Databricks. Covers the Mason CLI, the Genie plugin for natural-language data queries, and custom agent endpoints such as Knowledge Assistants and Supervisor Agents.",
     slugs: [
       "agents/overview",
-      "agents/ai-gateway",
+      "agents/mason",
       "agents/genie",
       "agents/custom-agents",
     ],

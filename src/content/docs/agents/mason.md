@@ -1,6 +1,6 @@
 ---
 title: Mason CLI
-sidebar_label: Mason CLI
+sidebar_label: CLI
 description: Mason (databricks-mason) is an experimental Databricks CLI for building and deploying custom agents. Scaffold, run locally, and deploy an agent with managed memory, sessions, tracing, and tools from one authenticated command.
 sourceOfTruth:
   docs:

@@ -8,7 +8,9 @@
     "templates",
     "apps",
     "lakebase",
+    "gateway",
     "agents",
+    "omnigent",
     "lakehouse"
   ]
 }

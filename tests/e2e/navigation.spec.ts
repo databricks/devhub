@@ -1086,10 +1086,14 @@ test.describe("example detail page", () => {
 test.describe("docs sidebar navigation", () => {
   const SIDEBAR_LINKS = [
     { href: "/docs/start-here" },
+    { href: "/docs/gateway/overview" },
     { href: "/docs/agents/overview" },
-    { href: "/docs/agents/ai-gateway" },
-    { href: "/docs/agents/genie" },
-    { href: "/docs/agents/custom-agents" },
+    { href: "/docs/agents/mason" },
+    { href: "/docs/agents/deployment" },
+    { href: "/docs/agents/sandbox" },
+    { href: "/docs/agents/memory-sessions" },
+    { href: "/docs/agents/tracing-evals" },
+    { href: "/docs/omnigent/overview" },
     { href: "/docs/apps/quickstart" },
     { href: "/docs/apps/configuration" },
     { href: "/docs/apps/development" },

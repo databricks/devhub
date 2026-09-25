@@ -47,14 +47,14 @@ You can add tools and bind memory and session stores at any time, not only at in
 
 ## Capabilities
 
-| Capability           | Description                                                                                                                                                                                                                                                 |
-| -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Model access**     | The CLI provisions model access so your agent can call a Databricks-served model through the AI Gateway without managing credentials or endpoints. See [Foundation Model APIs](https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/). |
-| **Managed memory**   | Durable facts, preferences, and decisions that an agent recalls in later, separate conversations, retrieved by semantic search and partitioned by actor.                                                                                                    |
-| **Managed sessions** | An agent's session state for one interaction, most commonly the conversation transcript, held in managed session stores and partitioned by actor, with support for forking a session into an independent branch.                                            |
-| **Tools**            | Databricks-managed capabilities declared in `agent.toml`: a downscoped Unity Catalog sandbox, a managed MCP service, a Genie Space, or a Unity Catalog function. Write custom Python tools directly in the project code.                                    |
-| **Tracing**          | MLflow tracing that is on by default, routing each run's traces to a per-project MLflow experiment for debugging and monitoring. See [MLflow Tracing](https://docs.databricks.com/aws/en/mlflow3/genai/tracing/).                                           |
-| **Deployment**       | Deploys an agent to the Databricks agent runtime, grants the agent's service principal access to bound stores, and manages the deployment lifecycle.                                                                                                        |
+| Capability           | Description                                                                                                                                                                                                                                                                                                                                |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Model access**     | The CLI provisions model access so your agent can call a Databricks-served model through the AI Gateway without managing credentials or endpoints. See [Foundation Model APIs](https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/).                                                                                |
+| **Managed memory**   | Durable facts, preferences, and decisions that an agent recalls in later, separate conversations, retrieved by semantic search and partitioned by actor. See [Managed agent memory](https://docs.databricks.com/aws/en/agents/agent-memory/managed-memory).                                                                                |
+| **Managed sessions** | An agent's session state for one interaction, most commonly the conversation transcript, held in managed session stores and partitioned by actor, with support for forking a session into an independent branch. See [Managed agent sessions](https://docs.databricks.com/aws/en/agents/agent-memory/managed-sessions).                    |
+| **Tools**            | Databricks-managed capabilities declared in `agent.toml`: a downscoped Unity Catalog sandbox, a managed MCP service, a Genie Space, or a Unity Catalog function. Write custom Python tools directly in the project code. See [Databricks-provided MCP servers](https://docs.databricks.com/aws/en/agents/mcp-tools/built-in-mcp-services). |
+| **Tracing**          | MLflow tracing that is on by default, routing each run's traces to a per-project MLflow experiment for debugging and monitoring. See [MLflow Tracing](https://docs.databricks.com/aws/en/mlflow3/genai/tracing/).                                                                                                                          |
+| **Deployment**       | Deploys an agent to the Databricks agent runtime, grants the agent's service principal access to bound stores, and manages the deployment lifecycle.                                                                                                                                                                                       |
 
 ## Quickstart
 
@@ -109,7 +109,19 @@ ab memory bind my-existing-memory
 
 Binding edits `agent.toml` only; `ab deploy` creates any declared-but-missing store.
 
-### Step 3: View tracing
+### Step 3: Run the agent locally
+
+Run the agent on your machine to test it before you deploy.
+
+```bash
+ab dev
+```
+
+This starts a local server on port 8000, wrapping the Databricks Apps local runtime so local behavior matches a deployment. The CLI connects the agent to the Unity AI Gateway so it can call the model locally. By default, the agent uses the `system.ai.claude-sonnet-4-5` model. To use a different model, edit the `MODEL` value in `agent/agent.py`.
+
+Open the pre-generated chat UI at `http://localhost:8000` to interact with the agent. The UI includes a link to the run's MLflow experiment, where you can view traces.
+
+### Step 4: View tracing
 
 Tracing is on by default. `ab init` binds a default per-project MLflow experiment, so `ab dev` and `ab deploy` send traces automatically with nothing to set up.
 
@@ -121,32 +133,21 @@ ab tracing list
 
 To pin a specific MLflow experiment, run `ab tracing bind --experiment-name <name>` or `ab tracing bind --experiment-id <id>`. To stop tracing, run `ab tracing unbind`.
 
-### Step 4: Run the agent locally
-
-Run the agent on your machine to test it before you deploy.
-
-```bash
-ab dev
-```
-
-This starts a local server on port 8000, wrapping the Databricks Apps local runtime so local behavior matches a deployment. The CLI connects the agent to Databricks model serving so it can call the model locally. By default, the agent uses the `system.ai.claude-sonnet-4-5` model. To use a different model, edit the `MODEL` value in `agent/agent.py`. Use `ab endpoint invoke` to send the agent a request.
-
 ### Step 5: Deploy the agent
 
-Deploy the agent to the Databricks agent runtime. The CLI provisions the bound stores, grants the agent's service principal access to them, and rolls out the deployment. The deployed app is named `agent-bricks-<name>`.
+Deploy the agent to the Databricks agent runtime. The CLI provisions the agent's memory and session stores if they aren't already provisioned, grants the agent's service principal access to them, and rolls out the deployment. The deployed app is named `agent-bricks-<name>`.
 
 ```bash
 ab deploy my-agent
 ```
 
-When the deployment finishes, the CLI returns the deployment's URL. Open that URL to interact with your live agent, which is automatically connected to Databricks model serving. To manage the deployment afterward, use the `ab deployments` commands, such as `ab deployments logs` and `ab deployments stop`.
+When the deployment finishes, the CLI returns the deployment's URL. Open that URL to interact with your live agent, which is automatically connected to the Unity AI Gateway. To manage the deployment afterward, use the `ab deployments` commands, such as `ab deployments logs` and `ab deployments stop`.
 
 ## Command reference
 
-For the full, up-to-date command reference, including every command, argument, and flag, see [`cli.md`](https://github.com/databricks/databricks-ai-bridge/blob/main/integrations/agentbricks/cli.md) in the `databricks-ai-bridge` repo.
+For the full, up-to-date command reference, including every command, argument, and flag, see [`cli.md`](https://github.com/databricks/databricks-ai-bridge/blob/main/integrations/agentbricks/cli.md) in the [`databricks-ai-bridge` repo](https://github.com/databricks/databricks-ai-bridge/tree/main/integrations/agentbricks).
 
 ## Where to next
 
 - [Databricks CLI](/docs/tools/databricks-cli) to install and authenticate the CLI that `ab` builds on.
-- [Custom agent endpoints](/docs/agents/custom-agents) to call a Knowledge Assistant, Supervisor Agent, or custom Python agent from an AppKit app.
 - [Agent Bricks CLI README](https://github.com/databricks/databricks-ai-bridge/blob/main/integrations/agentbricks/README.md) for the AgentKit SDK, the durable runtime, and full command reference.

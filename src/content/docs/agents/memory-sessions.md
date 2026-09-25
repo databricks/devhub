@@ -1,6 +1,6 @@
 ---
 title: Memory and sessions
-sidebar_label: Memory / sessions
+sidebar_label: Memory and sessions
 description: Give custom agents managed long-term memory and durable conversation sessions. This section is under construction; detailed content is coming soon.
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: Tracing and evals
-sidebar_label: Tracing and Evals
+sidebar_label: Tracing and evals
 description: Trace and evaluate custom agents with MLflow on Databricks. This section is under construction; detailed content is coming soon.
 ---
 

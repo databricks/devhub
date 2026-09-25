@@ -17,10 +17,26 @@ export function MermaidDiagram({ chart }: { chart: string }) {
     setFailed(false);
 
     void import("mermaid")
-      .then(({ default: mermaid }) => {
+      .then(async ({ default: mermaid }) => {
+        // Mermaid sizes each label box by measuring the text. If it measures
+        // before the Inter web font has loaded, it uses a narrower fallback
+        // font, sizes the box too small, and the browser clips the last
+        // characters. Waiting for the page fonts guarantees the measuring
+        // font matches the rendered font.
+        if (typeof document !== "undefined" && document.fonts?.ready) {
+          try {
+            await document.fonts.ready;
+          } catch {
+            // Font loading is best-effort; render anyway.
+          }
+        }
         mermaid.initialize({
           startOnLoad: false,
           theme: "dark",
+          fontFamily:
+            '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+          htmlLabels: false,
+          flowchart: { htmlLabels: false },
         });
         return mermaid.render(diagramId, chart);
       })

@@ -38,13 +38,13 @@ const SIDEBAR_SECTIONS: Array<{
     slugs: ["start-here"],
   },
   {
-    title: "Unity Gateway",
+    title: "Gateway",
     description:
       "Call governed LLM and agent endpoints from your AppKit app through Unity AI Gateway, with rate limits, usage tracking, guardrails, and cost attribution.",
     slugs: ["gateway/overview"],
   },
   {
-    title: "Agent Bricks",
+    title: "Agents",
     description:
       "Build and deploy custom agents on Databricks. Covers the Mason CLI, the Genie plugin for natural-language data queries, and custom agent endpoints such as Knowledge Assistants and Supervisor Agents.",
     slugs: [
@@ -66,7 +66,7 @@ const SIDEBAR_SECTIONS: Array<{
     ],
   },
   {
-    title: "Lakebase",
+    title: "Postgres Database",
     description:
       "Managed PostgreSQL for agentic workloads with Databricks-native governance and Delta Lake sync.",
     slugs: [

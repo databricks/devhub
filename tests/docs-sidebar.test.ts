@@ -80,10 +80,10 @@ describe("docs sidebar", () => {
       "Set up your environment",
       "/docs/templates",
       "Apps",
-      "Lakebase Postgres",
-      "Unity Gateway",
-      "Agent Bricks",
-      "Omnigent",
+      "Postgres Database",
+      "Gateway",
+      "Agents",
+      "Meta-Harness",
       "Data Lakehouse",
     ]);
 

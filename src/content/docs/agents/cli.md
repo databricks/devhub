@@ -32,7 +32,7 @@ Three commands take an agent from a blank directory to production:
 - **`ab deploy`** reads `agent.toml` to provision any declared-but-missing stores, grants the agent's service principal access to them, configures tracing, and rolls out the deployment as a Databricks App. When the deployment finishes, the CLI returns the URL of your running agent.
 
 ```mermaid
-flowchart TB
+flowchart LR
     Init["ab init"] --> Dev["ab dev"] --> Deploy["ab deploy"]
     Init -.->|writes| Toml["agent.toml"]
     Dev -.->|reads| Toml

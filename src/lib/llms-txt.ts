@@ -38,7 +38,7 @@ const SIDEBAR_SECTIONS: Array<{
     slugs: ["start-here"],
   },
   {
-    title: "Gateway",
+    title: "Unity Gateway",
     description:
       "Call governed LLM and agent endpoints from your AppKit app through Unity AI Gateway, with rate limits, usage tracking, guardrails, and cost attribution.",
     slugs: ["gateway/overview"],

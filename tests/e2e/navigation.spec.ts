@@ -1135,18 +1135,14 @@ test.describe("docs sidebar navigation", () => {
       sidebar.getByRole("link", { name: "Platform overview" }),
     ).toBeVisible();
     await expect(
-      sidebar.getByRole("button", { name: "Databricks Apps", exact: true }),
+      sidebar.getByRole("button", { name: "Apps", exact: true }),
     ).toBeVisible();
   });
 
-  test("Databricks Apps AppKit link opens latest AppKit docs entry", async ({
-    page,
-  }) => {
+  test("Apps AppKit link opens latest AppKit docs entry", async ({ page }) => {
     await page.goto("/docs/start-here");
     const sidebar = page.getByRole("navigation", { name: "Docs sidebar" });
-    await sidebar
-      .getByRole("button", { name: "Databricks Apps", exact: true })
-      .click();
+    await sidebar.getByRole("button", { name: "Apps", exact: true }).click();
     await sidebar.getByRole("button", { name: "AppKit", exact: true }).click();
     const appKitReferenceLink = page
       .locator('nav[aria-label="Docs sidebar"] a[href*="/docs/appkit/"]')
@@ -1165,7 +1161,7 @@ test.describe("docs sidebar navigation", () => {
       sidebar.getByRole("link", { name: "Start here" }),
     ).toBeVisible();
     await expect(
-      sidebar.getByRole("button", { name: "Databricks Apps", exact: true }),
+      sidebar.getByRole("button", { name: "Apps", exact: true }),
     ).toBeVisible();
     await expect(
       sidebar.getByRole("button", { name: "AppKit", exact: true }),

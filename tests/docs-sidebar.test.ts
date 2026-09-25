@@ -79,9 +79,11 @@ describe("docs sidebar", () => {
       "/docs/platform-overview",
       "Set up your environment",
       "/docs/templates",
-      "Databricks Apps",
-      "Lakebase Postgres",
-      "Agent Bricks",
+      "Apps",
+      "Postgres Database",
+      "Gateway",
+      "Agents",
+      "Meta-Harness",
       "Data Lakehouse",
     ]);
 
@@ -94,8 +96,8 @@ describe("docs sidebar", () => {
     ]);
   });
 
-  test("mounts AppKit under Databricks Apps while keeping AppKit links intact", () => {
-    const apps = findCategory(getDocsSidebarItems(), "Databricks Apps");
+  test("mounts AppKit under Apps while keeping AppKit links intact", () => {
+    const apps = findCategory(getDocsSidebarItems(), "Apps");
     const appKit = findCategory(apps.items, "AppKit");
 
     expect(appKit.href).toBeUndefined();

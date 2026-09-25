@@ -50,7 +50,7 @@ Templates tell you _how_ to build something. The docs explain _what_ the underly
 - **[Platform overview](/docs/platform-overview)** — how Databricks Apps, Lakebase, Agent Bricks, and Unity Catalog fit together for an internal app.
 - **[Databricks Apps](/docs/apps/overview)** — the managed runtime your app deploys to, with workspace SSO, secrets, and the [AppKit](/docs/appkit/v0) TypeScript SDK that wires it all together.
 - **[Lakebase](/docs/lakebase/overview)** — managed Postgres co-located with your workspace data: when to use it, how to provision an instance, and how to connect from on- and off-platform apps.
-- **[Agent Bricks](/docs/agents/overview)** — the agent platform: foundation-model calls through [Unity AI Gateway](/docs/agents/ai-gateway), conversational analytics with [Genie](/docs/agents/genie), and [custom agents](/docs/agents/custom-agents).
+- **[Agent Bricks](/docs/agents/overview)** — the agent platform: foundation-model calls through [Unity AI Gateway](/docs/gateway/overview), conversational analytics with [Genie](/docs/agents/genie), and [custom agents](/docs/agents/custom-agents).
 - **[Tools](/docs/tools/databricks-cli)** — the [Databricks CLI](/docs/tools/databricks-cli), [agent skills](/docs/tools/ai-tools/agent-skills) for your coding agent, and the [Docs MCP server](/docs/tools/ai-tools/docs-mcp-server) that exposes every page on this site to MCP-aware IDEs.
 
 Start at [/docs/start-here](/docs/start-here) if you want the guided tour.

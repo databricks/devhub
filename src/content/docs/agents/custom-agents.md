@@ -93,7 +93,7 @@ env:
 
 When you add the agent endpoint as an app resource (Databricks Apps UI or CLI), Databricks grants your app's service principal `CAN QUERY` on the endpoint.
 
-For the full wiring pattern, including `createApp`, `useServingStream`, and custom route handlers, see [Call a governed endpoint from AppKit](/docs/agents/ai-gateway#call-a-governed-endpoint-from-appkit).
+For the full wiring pattern, including `createApp`, `useServingStream`, and custom route handlers, see [Call a governed endpoint from AppKit](/docs/gateway/overview#call-a-governed-endpoint-from-appkit).
 
 ## What the response looks like
 

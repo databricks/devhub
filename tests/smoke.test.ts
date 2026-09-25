@@ -335,7 +335,7 @@ describe("production build smoke tests", () => {
     const expectedDocPaths = [
       "/docs/start-here.md",
       "/docs/agents/overview.md",
-      "/docs/agents/ai-gateway.md",
+      "/docs/gateway/overview.md",
       "/docs/agents/genie.md",
       "/docs/agents/custom-agents.md",
       "/docs/apps/quickstart.md",

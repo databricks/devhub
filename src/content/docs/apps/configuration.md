@@ -72,7 +72,7 @@ AppKit templates use conventional names for plugin-managed resources:
 | ----------------------------------------------------------------------------- | ------------------ | ----------------------------- |
 | [Lakebase Postgres](/docs/lakebase/quickstart)                                | `postgres`         | PostgreSQL connection         |
 | [SQL Warehouse](https://docs.databricks.com/aws/en/compute/sql-warehouse/)    | `sql-warehouse`    | SQL query execution           |
-| [Model Serving](/docs/agents/ai-gateway)                                      | `serving-endpoint` | AI model inference            |
+| [Model Serving](/docs/gateway/overview)                                       | `serving-endpoint` | AI model inference            |
 | [Genie Agent](/docs/agents/genie)                                             | `genie-space`      | Natural language data queries |
 | [Job](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/resources) | `job`              | Scheduled or triggered job    |
 | [UC Volumes](https://docs.databricks.com/aws/en/volumes/)                     | `volume`           | File storage                  |
@@ -133,7 +133,7 @@ Custom variables go in `app.yaml` under `env`. Use `value` for plain text, `valu
 
 Each app gets a dedicated service principal. Databricks injects `DATABRICKS_CLIENT_ID` and `DATABRICKS_CLIENT_SECRET` automatically at runtime and deletes the service principal when the app is deleted.
 
-**User authorization** forwards the signed-in user's token through the `x-forwarded-access-token` HTTP header. Scopes (for example, `sql`, `genie`, `files`) are configured in the workspace UI. AppKit's built-in [Genie](/docs/agents/genie) and [Model Serving](/docs/agents/ai-gateway) plugins use this automatically. See [execution context](/docs/appkit/v0/plugins/execution-context) for the AppKit implementation, or [app authorization](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/auth) for the full platform details.
+**User authorization** forwards the signed-in user's token through the `x-forwarded-access-token` HTTP header. Scopes (for example, `sql`, `genie`, `files`) are configured in the workspace UI. AppKit's built-in [Genie](/docs/agents/genie) and [Model Serving](/docs/gateway/overview) plugins use this automatically. See [execution context](/docs/appkit/v0/plugins/execution-context) for the AppKit implementation, or [app authorization](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/auth) for the full platform details.
 
 ## Compute
 

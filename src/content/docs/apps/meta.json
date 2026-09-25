@@ -1,4 +1,4 @@
 {
-  "title": "Databricks Apps",
+  "title": "Apps",
   "pages": ["overview", "quickstart", "configuration", "development", "/appkit"]
 }

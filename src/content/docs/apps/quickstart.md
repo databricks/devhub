@@ -30,7 +30,7 @@ Common starting points:
 | [AI Chat App](/templates/ai-chat-app)                                             | Conversational AI, chatbots, assistants                  |
 | [App with Lakebase](/templates/app-with-lakebase)                                 | CRUD apps with persistent storage                        |
 
-The [templates catalog](/templates) has the full list, including [Lakebase Postgres](/docs/lakebase/quickstart), [Genie Agents](/docs/agents/genie), [Unity AI Gateway](/docs/agents/ai-gateway), and [Agent Bricks](/docs/agents/overview).
+The [templates catalog](/templates) has the full list, including [Lakebase Postgres](/docs/lakebase/quickstart), [Genie Agents](/docs/agents/genie), [Unity AI Gateway](/docs/gateway/overview), and [Agent Bricks](/docs/agents/overview).
 
 Give your AI assistant Databricks platform context by installing the [agent skills](/docs/tools/ai-tools/agent-skills) before copying in the template:
 

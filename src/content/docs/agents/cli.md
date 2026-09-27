@@ -147,7 +147,7 @@ When the deployment finishes, the CLI returns the deployment's URL. Open that UR
 
 ## Command reference
 
-For the full, up-to-date command reference, including every command, argument, and flag, see [`cli.md`](https://github.com/databricks/databricks-ai-bridge/blob/main/integrations/agentbricks/cli.md) in the [`databricks-ai-bridge` repo](https://github.com/databricks/databricks-ai-bridge/tree/main/integrations/agentbricks).
+For the full, up-to-date command reference, including every command, argument, and flag, see the [Agent Bricks CLI command reference](https://github.com/databricks/databricks-ai-bridge/blob/main/integrations/agentbricks/cli.md).
 
 ## Where to next
 

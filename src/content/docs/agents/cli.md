@@ -47,6 +47,8 @@ You can add tools and bind memory and session stores at any time, not only at in
 
 ## Capabilities
 
+By default, `agentbricks deploy` automatically enables all of the following capabilities, except tools. Tool bindings are opt-in: add them with `agentbricks tools add`.
+
 | Capability           | Description                                                                                                                                                                                                                                                                                                                                |
 | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | **Model access**     | The CLI provisions model access so your agent can call a Databricks-served model through the AI Gateway without managing credentials or endpoints. See [Foundation Model APIs](https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/).                                                                                |

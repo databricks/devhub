@@ -85,7 +85,7 @@ describe("/api/llms", () => {
         "https://developers.databricks.com/templates/ai-chat-app.md",
       );
       expect(result.body).not.toMatch(
-        /\]\(\/(?:docs|templates|solutions|api|llms\.txt)[^)]+\)/,
+        /\]\(\/(?:docs|templates|api|llms\.txt)[^)]+\)/,
       );
     });
   });

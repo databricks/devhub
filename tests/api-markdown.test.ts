@@ -1,5 +1,4 @@
 import { NextRequest } from "next/server";
-import matter from "gray-matter";
 import { describe, expect, test } from "vitest";
 
 import { GET } from "../src/app/api/markdown/route";
@@ -92,56 +91,6 @@ describe("/api/markdown about-devhub preamble policy", () => {
     });
   });
 
-  test("solution responses do NOT include the About DevHub preamble", async () => {
-    const result = await call({ section: "solutions", slug: "devhub-launch" });
-    expect(result.statusCode).toBe(200);
-    expect(result.body).not.toContain("# About DevHub");
-    expect(result.body).not.toContain("/llms.txt");
-    expect(result.body).toContain("Introducing DevHub");
-  });
-
-  test("solution frontmatter url is absolute and reflects the request host", async () => {
-    const host = "localhost:3001";
-    const result = await call({
-      section: "solutions",
-      slug: "devhub-launch",
-      host,
-    });
-    expect(result.statusCode).toBe(200);
-    const { data } = matter(result.body);
-    expect(data.url).toBe(
-      `${resolveSiteUrlForRequest(host)}/solutions/devhub-launch`,
-    );
-    expect(result.body).not.toMatch(/^url:\s+\/solutions\//m);
-  });
-
-  test("solution frontmatter is built from solutions.ts, not the .md file", async () => {
-    const result = await call({
-      section: "solutions",
-      slug: "devhub-launch",
-      host: "developers.databricks.com",
-    });
-    const { data } = matter(result.body);
-    expect(data).toMatchObject({
-      title: "Introducing DevHub",
-      publishedAt: "2026-05-04",
-    });
-    expect(data.summary).toEqual(expect.any(String));
-    expect(data.authors).toEqual([
-      {
-        name: "Andre Landgraf",
-        role: "Staff Developer Advocate, Databricks",
-      },
-    ]);
-  });
-
-  test("solutions index does NOT include the preamble", async () => {
-    const result = await call({ section: "solutions", slug: "" });
-    expect(result.statusCode).toBe(200);
-    expect(result.body).not.toContain("# About DevHub");
-    expect(result.body).toContain("# Solutions");
-  });
-
   test("recipe responses DO include the About DevHub preamble", async () => {
     const result = await call({
       section: "recipes",
@@ -200,15 +149,6 @@ describe("/api/markdown about-devhub preamble policy", () => {
   test("request-host URLs use the configured SITE_URL origin", async () => {
     await withSiteUrl("https://developers.databricks.com/docs", async () => {
       const host = "localhost:3001";
-
-      const solution = await call({
-        section: "solutions",
-        slug: "devhub-launch",
-        host,
-      });
-      expect(matter(solution.body).data.url).toBe(
-        "https://developers.databricks.com/solutions/devhub-launch",
-      );
 
       const template = await call({
         section: "templates",

@@ -204,7 +204,6 @@
 }
 
 @media (width < 48rem) {
-  .solution-detail-prose p,
   .recipe-content-card .prose p {
     line-height: 1.5rem;
   }

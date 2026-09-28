@@ -202,7 +202,7 @@ describe("validate-content script", () => {
         "",
         "<https://developers.databricks.com/templates/foo>",
         "",
-        "[ref]: https://developers.databricks.com/solutions/baz",
+        "[ref]: https://developers.databricks.com/docs/baz",
         "",
       ].join("\n"),
     });
@@ -244,76 +244,5 @@ describe("validate-content script", () => {
     const result = runValidator(workDir);
     expect(result.status).toBe(0);
     expect(result.stdout).toContain("validation passed");
-  });
-
-  test("fails when a solution markdown contains a `# ` ATX H1 heading", () => {
-    seedFixture(workDir, {
-      "src/content/solutions/bad-launch/goal.md": [
-        "# Should not have an H1",
-        "",
-        "Body paragraph.",
-        "",
-      ].join("\n"),
-    });
-
-    const result = runValidator(workDir);
-    expect(result.status).toBe(1);
-    expect(result.stderr).toContain(
-      "src/content/solutions/bad-launch/goal.md:1: solution markdown must not contain an H1 heading.",
-    );
-  });
-
-  test("fails when a solution markdown uses a setext H1 (`===` underline)", () => {
-    seedFixture(workDir, {
-      "src/content/solutions/setext/goal.md": [
-        "Title that should be in the registry",
-        "===",
-        "",
-        "Body paragraph.",
-        "",
-      ].join("\n"),
-    });
-
-    const result = runValidator(workDir);
-    expect(result.status).toBe(1);
-    expect(result.stderr).toContain(
-      "src/content/solutions/setext/goal.md:2: solution markdown must not contain a setext H1",
-    );
-  });
-
-  test("passes when a solution markdown opens with a body paragraph and uses `## ` for sections", () => {
-    seedFixture(workDir, {
-      "src/content/solutions/launch/goal.md": [
-        "Hello World, developers.databricks.com!",
-        "",
-        "Lede paragraph that does the work an H1 would have done.",
-        "",
-        "## Why we built this",
-        "",
-        "Section body.",
-        "",
-      ].join("\n"),
-    });
-
-    const result = runValidator(workDir);
-    expect(result.status).toBe(0);
-    expect(result.stdout).toContain("solutions H1 audit");
-  });
-
-  test("ignores `# ` heading look-alikes inside fenced code blocks", () => {
-    seedFixture(workDir, {
-      "src/content/solutions/fenced/goal.md": [
-        "Lede paragraph.",
-        "",
-        "```bash",
-        "# Should not be allowed (but is, in code)",
-        "echo hi",
-        "```",
-        "",
-      ].join("\n"),
-    });
-
-    const result = runValidator(workDir);
-    expect(result.status).toBe(0);
   });
 });

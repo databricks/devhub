@@ -29,7 +29,6 @@ export function markdownNotFoundResponse({
     "",
     "- [Site index](/llms.txt): Table of contents for all documentation and templates",
     "- [All templates](/templates.md): Templates for building on Databricks",
-    "- [All solutions](/solutions.md): Use-case solutions",
     "- [Start here](/docs/start-here.md): Site orientation and getting started",
     "",
   ].join("\n");

@@ -35,12 +35,7 @@ describe("vercel rewrites", () => {
       "/templates/(.+)\\.md",
       "/api/markdown?section=templates&slug=$1",
     );
-    expectRewrite(
-      "/solutions/(.+)\\.md",
-      "/api/markdown?section=solutions&slug=$1",
-    );
     expectRewrite("/templates.md", "/api/markdown?section=templates&slug=");
-    expectRewrite("/solutions.md", "/api/markdown?section=solutions&slug=");
     expectRewrite("/raw-docs/(.*)", "/api/markdown?section=docs&slug=$1");
   });
 
@@ -76,23 +71,14 @@ describe("vercel headers", () => {
     });
   });
 
-  test("serves generated agent index and RSS artifacts inline", () => {
+  test("serves the generated agent index inline", () => {
     const llmsHeaders = [
       { key: "Cache-Control", value: "public, max-age=0, s-maxage=600" },
       { key: "Content-Disposition", value: 'inline; filename="llms.txt"' },
     ];
-    const rssHeaders = [
-      { key: "Cache-Control", value: "public, max-age=0, s-maxage=600" },
-      { key: "Content-Disposition", value: 'inline; filename="rss.xml"' },
-    ];
-
     expect(config.headers).toContainEqual({
       source: "/llms.txt",
       headers: llmsHeaders,
-    });
-    expect(config.headers).toContainEqual({
-      source: "/solutions/rss.xml",
-      headers: rssHeaders,
     });
   });
 

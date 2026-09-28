@@ -2,10 +2,9 @@
 
 import { useMemo } from "react";
 import type { SVGProps } from "react";
-import { FileText, Rocket } from "lucide-react";
+import { Rocket } from "lucide-react";
 
 import { cookbooks, examples, recipesInOrder } from "@/lib/recipes/recipes";
-import { buildSolutionItems } from "@/lib/solutions/solutions";
 import { cn } from "@/lib/utils";
 import { Dialog } from "@/components/ui/dialog";
 import {
@@ -17,7 +16,7 @@ import {
 } from "@/components/ui/dialog-search";
 
 export type SiteSearchItem = Omit<SearchDialogItem, "icon"> & {
-  icon: "docs" | "solutions" | "templates";
+  icon: "docs" | "templates";
 };
 
 function SearchDocumentIcon(props: SVGProps<SVGSVGElement>) {
@@ -44,7 +43,6 @@ function SearchDocumentIcon(props: SVGProps<SVGSVGElement>) {
 
 const SEARCH_ICONS: Record<SiteSearchItem["icon"], SearchDialogItem["icon"]> = {
   docs: SearchDocumentIcon,
-  solutions: FileText,
   templates: Rocket,
 };
 
@@ -91,18 +89,7 @@ function buildSearchItems(): SiteSearchItem[] {
     }),
   );
 
-  const solutionItems = buildSolutionItems().map((item) => ({
-    id: `solution-${item.id}`,
-    title: item.title,
-    description: item.description,
-    href: item.type === "linked" ? item.href : `/solutions/${item.id}`,
-    external: item.type === "linked",
-    group: "Solutions",
-    icon: "solutions" as const,
-    keywords: [...item.tags, item.source],
-  }));
-
-  return [...DOC_ITEMS, ...solutionItems, ...templateItems];
+  return [...DOC_ITEMS, ...templateItems];
 }
 
 function toSearchDialogItem(item: SiteSearchItem): SearchDialogItem {

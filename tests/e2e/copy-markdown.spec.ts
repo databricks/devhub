@@ -221,58 +221,6 @@ test.describe("copy markdown exports raw markdown on example pages", () => {
   });
 });
 
-test.describe("copy markdown exports raw markdown on solution pages", () => {
-  test("solution detail page copies actual markdown without the About DevHub preamble", async ({
-    page,
-  }) => {
-    await expectCopyMarkdownWithoutPreamble({
-      page,
-      path: "/solutions/devhub-launch",
-      expectedFragments: [
-        "**developers.databricks.com**",
-        'title: "Introducing DevHub"',
-      ],
-    });
-  });
-
-  test("solution detail page opens the pretty raw markdown URL", async ({
-    page,
-  }) => {
-    await page.goto("/solutions/devhub-launch", {
-      waitUntil: "domcontentloaded",
-    });
-
-    await page.getByRole("button", { name: /copy (as|article)/i }).click();
-    const popupPromise = page.waitForEvent("popup");
-    await page.getByRole("menuitem", { name: "View Raw Markdown" }).click();
-    const popup = await popupPromise;
-
-    await expect
-      .poll(() => popup.url())
-      .toContain("/solutions/devhub-launch.md");
-  });
-
-  test("solution detail page copies the MCP config", async ({ page }) => {
-    await setupClipboardMock(page);
-    await page.goto("/solutions/devhub-launch");
-
-    await page.getByRole("button", { name: /copy (as|article)/i }).click();
-    await page.getByRole("menuitem", { name: "Connect to MCP Server" }).click();
-    await expect(page.getByRole("button", { name: "Copied" })).toBeVisible({
-      timeout: 5000,
-    });
-    await expect(page.getByText("MCP config copied")).toBeHidden();
-
-    const copied = JSON.parse(await getCopiedText(page)) as {
-      mcpServers: Record<string, { url: string }>;
-    };
-    const pageOrigin = new URL(page.url()).origin;
-    const mcpUrl = copied.mcpServers["databricks-devhub"].url;
-    expect(new URL(mcpUrl).origin).toBe(pageOrigin);
-    expect(new URL(mcpUrl).pathname).toBe("/api/mcp");
-  });
-});
-
 test.describe("copy markdown exports raw markdown on docs pages", () => {
   test("docs page copies raw markdown without the About DevHub preamble", async ({
     page,

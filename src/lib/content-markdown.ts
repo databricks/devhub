@@ -6,8 +6,8 @@ import {
   type ContentSections,
 } from "./content-sections";
 
-type ContentMarkdownSection = "recipes" | "solutions" | "examples";
-type FolderContentSection = "recipes" | "solutions" | "examples";
+type ContentMarkdownSection = "recipes" | "examples";
+type FolderContentSection = "recipes" | "examples";
 type TemplateContentSection = "recipes" | "cookbooks" | "examples";
 
 function markdownDirectory(
@@ -30,17 +30,8 @@ function getChildDirectorySlugsWithFile(
     .sort();
 }
 
-function getSolutionSlugs(rootDir: string): string[] {
-  return getContentSlugs(rootDir, "solutions");
-}
-
-export function hasSolutionSlug(rootDir: string, slug: string): boolean {
-  return getSolutionSlugs(rootDir).includes(slug);
-}
-
 /**
- * Recipes, examples, and solutions live in `src/content/<section>/<slug>/`
- * folders.
+ * Recipes and examples live in `src/content/<section>/<slug>/` folders.
  * A folder is published if it has goal.md.
  */
 export function getContentSlugs(

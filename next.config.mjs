@@ -118,20 +118,12 @@ const nextConfig = {
         destination: "/api/markdown?section=templates&slug=",
       },
       {
-        source: "/solutions.md",
-        destination: "/api/markdown?section=solutions&slug=",
-      },
-      {
         source: "/docs/:slug*.md",
         destination: "/api/markdown?section=docs&slug=:slug*",
       },
       {
         source: "/templates/:slug*.md",
         destination: "/api/markdown?section=templates&slug=:slug*",
-      },
-      {
-        source: "/solutions/:slug*.md",
-        destination: "/api/markdown?section=solutions&slug=:slug*",
       },
     ];
   },

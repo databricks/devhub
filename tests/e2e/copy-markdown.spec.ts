@@ -232,6 +232,37 @@ test.describe("copy markdown exports raw markdown on docs pages", () => {
     });
   });
 
+  test("docs page opens the pretty raw markdown URL", async ({ page }) => {
+    await page.goto("/docs/start-here", { waitUntil: "domcontentloaded" });
+
+    await page.getByRole("button", { name: /copy (as|article)/i }).click();
+    const popupPromise = page.waitForEvent("popup");
+    await page.getByRole("menuitem", { name: "View Raw Markdown" }).click();
+    const popup = await popupPromise;
+
+    await expect.poll(() => popup.url()).toContain("/docs/start-here.md");
+  });
+
+  test("docs page copies the MCP config", async ({ page }) => {
+    await setupClipboardMock(page);
+    await page.goto("/docs/start-here");
+
+    await page.getByRole("button", { name: /copy (as|article)/i }).click();
+    await page.getByRole("menuitem", { name: "Connect to MCP Server" }).click();
+    await expect(page.getByRole("button", { name: "Copied" })).toBeVisible({
+      timeout: 5000,
+    });
+    await expect(page.getByText("MCP config copied")).toBeHidden();
+
+    const copied = JSON.parse(await getCopiedText(page)) as {
+      mcpServers: Record<string, { url: string }>;
+    };
+    const pageOrigin = new URL(page.url()).origin;
+    const mcpUrl = copied.mcpServers["databricks-devhub"].url;
+    expect(new URL(mcpUrl).origin).toBe(pageOrigin);
+    expect(new URL(mcpUrl).pathname).toBe("/api/mcp");
+  });
+
   test("raw-docs files are served for static and generated docs", async ({
     request,
   }) => {

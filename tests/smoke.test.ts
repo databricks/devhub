@@ -151,22 +151,16 @@ describe("production build smoke tests", () => {
     expect(text).toContain("> Documentation, templates, and examples");
   });
 
-  test("solutions RSS feed route is included in the build output", () => {
-    expect(
-      existsSync(resolve(NEXT_APP_DIR, "(website)", "solutions", "rss.xml")),
-    ).toBe(true);
-  });
-
   test("llms.txt internal links use the resolved site URL", () => {
     const text = readLlmsTxt();
     const expectedSiteUrl = resolveExpectedSiteUrl();
     const expectedSiteUrlPattern = escapeRegex(expectedSiteUrl);
     // Internal links in llms.txt are absolute URLs whose path starts with
-    // /docs, /templates, /solutions, or ends in .md.
+    // /docs or /templates.
     const internalLinks = Array.from(
       text.matchAll(
         new RegExp(
-          `\\((${expectedSiteUrlPattern}/(?:docs|templates|solutions)[^)\\s]*)\\)`,
+          `\\((${expectedSiteUrlPattern}/(?:docs|templates)[^)\\s]*)\\)`,
           "g",
         ),
       ),
@@ -176,9 +170,7 @@ describe("production build smoke tests", () => {
     for (const link of internalLinks) {
       expect(link.startsWith(`${expectedSiteUrl}/`)).toBe(true);
     }
-    expect(text).not.toMatch(
-      /\]\(\/(?:docs|templates|solutions|api|llms\.txt)[^)]+\)/,
-    );
+    expect(text).not.toMatch(/\]\(\/(?:docs|templates|api|llms\.txt)[^)]+\)/);
   });
 
   test("sitemap.xml uses the resolved site URL for <loc> entries", () => {
@@ -194,7 +186,6 @@ describe("production build smoke tests", () => {
     const expectedSiteUrl = resolveExpectedSiteUrl();
     const locs = readSitemapLocs();
 
-    expect(locs).toContain(`${expectedSiteUrl}/solutions/devhub-launch`);
     expect(locs).toContain(
       `${expectedSiteUrl}/templates/agentic-support-console`,
     );
@@ -206,7 +197,7 @@ describe("production build smoke tests", () => {
   test("sitemap.xml preserves the production URL visibility contract", () => {
     const paths = readSitemapLocs().map((loc) => new URL(loc).pathname);
 
-    expect(paths).toContain("/solutions");
+    expect(paths).not.toContain("/solutions");
     expect(paths).toContain("/templates");
     expect(paths).toContain("/docs/appkit/v0");
     expect(paths).toContain("/docs/appkit/v0/api");
@@ -215,7 +206,6 @@ describe("production build smoke tests", () => {
     expect(paths).toContain("/docs/appkit/v0/development");
     expect(paths).toContain("/docs/appkit/v0/plugins");
 
-    expect(paths).not.toContain("/solutions/page/:page");
     expect(paths).not.toContain("/product");
     expect(paths).toContain("/product/agent-bricks");
     expect(paths).toContain("/product/lakebase");
@@ -255,30 +245,16 @@ describe("production build smoke tests", () => {
     const text = readLlmsTxt();
     expect(text).toContain("/docs/start-here.md");
     expect(text).toContain("/templates/ai-chat-app.md");
-    expect(text).toContain("/solutions.md");
-    expect(text).toContain("/solutions/devhub-launch.md");
+    expect(text).not.toContain("/solutions");
   });
 
-  test("llms.txt links to native solutions internally and to linked solutions externally", () => {
-    const text = readLlmsTxt();
-    expect(text).toContain("/solutions/devhub-launch.md");
-    expect(text).toContain(
-      "https://www.databricks.com/blog/how-build-production-ready-data-and-ai-apps-databricks-apps-and-lakebase",
-    );
-    expect(text).toContain(
-      "https://www.databricks.com/blog/database-branching-postgres-git-style-workflows-databricks-lakebase",
-    );
-    expect(text).toContain("(Databricks Blog)");
-  });
-
-  test("llms.txt section order: Start Here before Templates before Solutions", () => {
+  test("llms.txt section order puts Start Here before Templates", () => {
     const text = readLlmsTxt();
     const startHereIdx = text.indexOf("## Start Here");
     const templatesIdx = text.indexOf("## Templates");
-    const solutionsIdx = text.indexOf("## Solutions");
     expect(startHereIdx).toBeGreaterThan(-1);
     expect(templatesIdx).toBeGreaterThan(startHereIdx);
-    expect(solutionsIdx).toBeGreaterThan(templatesIdx);
+    expect(text).not.toContain("## Solutions");
   });
 
   test("llms.txt Templates section is flat (no Cookbooks/Recipes/Examples subheadings)", () => {
@@ -292,10 +268,8 @@ describe("production build smoke tests", () => {
     const text = readLlmsTxt();
 
     const templatesIdx = text.indexOf("## Templates");
-    const solutionsIdx = text.indexOf("## Solutions");
     expect(templatesIdx).toBeGreaterThan(-1);
-    expect(solutionsIdx).toBeGreaterThan(templatesIdx);
-    const templatesBlock = text.slice(templatesIdx, solutionsIdx);
+    const templatesBlock = text.slice(templatesIdx);
 
     expect(templatesBlock).not.toContain("/templates/hello-world-app.md");
     expect(templatesBlock).toContain("/templates/ai-chat-app.md");
@@ -312,7 +286,6 @@ describe("production build smoke tests", () => {
     const text = readLlmsTxt();
 
     const expectedTemplates = [
-      "/solutions.md",
       "/templates.md",
       "/templates/set-up-your-local-dev-environment.md",
       "/templates/spin-up-databricks-app.md",
@@ -395,14 +368,11 @@ describe("production build smoke tests", () => {
 
   test("pretty markdown routes are emitted as static files for local serving", () => {
     expect(readPublicFile("docs/start-here.md")).toContain("# Start here");
-    expect(readPublicFile("solutions/devhub-launch.md")).toContain(
-      "title: Introducing DevHub",
-    );
     expect(readPublicFile("templates/ai-chat-app.md")).toContain(
       "# About DevHub",
     );
     expect(readPublicFile("templates.md")).toContain("# Templates");
-    expect(readPublicFile("solutions.md")).toContain("# Solutions");
+    expect(existsSync(resolve(PUBLIC_DIR, "solutions.md"))).toBe(false);
   });
 
   test("raw-docs preserve closing HTML tags inside code examples", () => {

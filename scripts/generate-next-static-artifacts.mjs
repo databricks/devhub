@@ -138,10 +138,6 @@ async function loadHelpers() {
           generateLlmsTxt,
         } from "./src/lib/llms-txt.ts";
         export {
-          buildSolutionItems,
-          nativeSolutionItems,
-        } from "./src/lib/solutions/solutions.ts";
-        export {
           resolveSiteUrl,
         } from "./src/lib/site-url.ts";
       `,
@@ -184,9 +180,11 @@ mkdirSync(publicDir, { recursive: true });
 // /docs/llms.txt via /api/llms). Writing a static public/llms.txt here would
 // collide with that route ("conflicting public file and page" — breaks dev).
 
-for (const directory of ["docs", "raw-docs", "templates", "solutions"]) {
+for (const directory of ["docs", "raw-docs", "templates"]) {
   resetGeneratedPath(join(publicDir, directory));
 }
+rmSync(join(publicDir, "solutions"), { recursive: true, force: true });
+rmSync(join(publicDir, "solutions.md"), { force: true });
 
 for (const slug of collectDocsSlugs(docsContentDir)) {
   writeMarkdownArtifact({
@@ -209,14 +207,6 @@ writeMarkdownArtifact({
   siteUrl,
 });
 
-writeMarkdownArtifact({
-  helpers,
-  section: "solutions",
-  slug: "",
-  filePath: join(publicDir, "solutions.md"),
-  siteUrl,
-});
-
 for (const slug of [
   ...helpers.getCookbookSlugs(rootDir),
   ...helpers.getContentSlugs(rootDir, "recipes"),
@@ -231,22 +221,11 @@ for (const slug of [
   });
 }
 
-for (const item of helpers.nativeSolutionItems) {
-  writeMarkdownArtifact({
-    helpers,
-    section: "solutions",
-    slug: item.id,
-    filePath: join(publicDir, "solutions", `${item.id}.md`),
-    siteUrl,
-  });
-}
-
 const generatedSummary = [
   `${collectDocsSlugs(docsContentDir).length} docs markdown files`,
   `${helpers.getCookbookSlugs(rootDir).length} cookbook markdown files`,
   `${helpers.getContentSlugs(rootDir, "recipes").length} recipe markdown files`,
   `${helpers.getContentSlugs(rootDir, "examples").length} example markdown files`,
-  `${helpers.nativeSolutionItems.length} native solution markdown files`,
 ];
 
 console.log(`Generated Next static artifacts: ${generatedSummary.join(", ")}.`);

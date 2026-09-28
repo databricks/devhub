@@ -1,21 +1,14 @@
 #!/usr/bin/env node
-// Verifies raster images under public/img/{guides,examples,solutions}/ meet
-// the DevHub image-format contracts so cards + detail pages render
+// Verifies raster images under public/img/{guides,examples}/ meet
+// the DevHub image-format contract so cards + detail pages render
 // consistently.
-//
-// Two contracts:
 //
 //   guides/, examples/  (recipes, cookbooks, examples — DevHub-authored)
 //     - Aspect ratio: 16:9 (1.778:1, tolerance ±2%)
 //     - Minimum:      1600x900 px
 //     - Fix:          re-export screenshots at 1600x900 (or any exact 16:9).
 //
-//   solutions/          (linked-article previews — Open Graph images)
-//     - Aspect ratio: 1.91:1 (Open Graph standard, tolerance ±2%)
-//     - Minimum:      1200x628 px
-//     - Fix:          re-export at 1200x628 or higher (keep 1.91:1).
-//
-// Both contracts skip .svg files (vector exempt).
+// .svg files are skipped (vector exempt).
 //
 // Run locally:      pnpm verify:images
 // Runs on:          pre-commit
@@ -44,17 +37,6 @@ const FORMATS = [
     minHeight: 900,
     ratioLabel: "16:9 (1.778:1)",
     fixHint: "re-export this screenshot at 1600x900 (or any exact 16:9 size).",
-  },
-  {
-    name: "1.91:1 (linked solutions / Open Graph)",
-    roots: [join(REPO_ROOT, "public/img/solutions")],
-    targetRatio: 1200 / 628,
-    minWidth: 1200,
-    minHeight: 628,
-    ratioLabel: "1.91:1 (Open Graph)",
-    fixHint:
-      "use the source article's Open Graph image (1.91:1, ≥1200x628). " +
-      "Crop with sips if needed: sips --cropToHeightWidth <h> <w> <file>.",
   },
 ];
 
@@ -142,20 +124,19 @@ for (const format of FORMATS) {
 
 if (totalFiles === 0) {
   console.log(
-    `verify:images — no files under public/img/{guides,examples,solutions}/, skipping.`,
+    `verify:images — no files under public/img/{guides,examples}/, skipping.`,
   );
   process.exit(0);
 }
 
 if (errors.length > 0) {
   console.error(
-    `\nverify:images — ${errors.length} issue(s) in public/img/{guides,examples,solutions}/:\n`,
+    `\nverify:images — ${errors.length} issue(s) in public/img/{guides,examples}/:\n`,
   );
   for (const e of errors) console.error(`  ✗ ${e}\n`);
   console.error(
     `Requirements:\n` +
       `  - guides/, examples/   16:9 (±2%), ≥1600x900\n` +
-      `  - solutions/           1.91:1 (±2%), ≥1200x628 (Open Graph)\n` +
       `See CONTRIBUTING.md (Image Requirements) for details.\n`,
   );
   process.exit(1);

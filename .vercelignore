@@ -24,9 +24,7 @@ public/sitemap*.xml
 public/raw-docs
 public/docs
 public/templates
-public/solutions
 public/templates.md
-public/solutions.md
 src/content/docs/appkit/
 src/components/doc-examples/
 public/appkit-preview/

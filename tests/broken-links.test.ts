@@ -20,9 +20,7 @@ const NON_PAGE_ROUTES = new Set([
   "/docs",
   "/product/data-lakehouse",
   "/appkit",
-  "/solutions/rss.xml",
   "/templates.md",
-  "/solutions.md",
 ]);
 const NON_PAGE_ROUTE_PREFIXES = ["/api/", "/raw-docs/", "/_next/"];
 

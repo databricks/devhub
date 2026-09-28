@@ -37,7 +37,6 @@ const FOOTER_SECTIONS: FooterSection[] = [
     items: [
       { label: "Docs", to: "/docs/start-here" },
       { label: "Templates", to: "/templates" },
-      { label: "Solutions", to: "/solutions" },
     ],
   },
   {

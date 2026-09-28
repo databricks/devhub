@@ -32,14 +32,6 @@
       "destination": "/api/markdown?section=templates&slug="
     },
     {
-      "source": "/solutions.md",
-      "destination": "/api/markdown?section=solutions&slug="
-    },
-    {
-      "source": "/solutions/(.+)\\.md",
-      "destination": "/api/markdown?section=solutions&slug=$1"
-    },
-    {
       "source": "/templates/(.+)\\.md",
       "destination": "/api/markdown?section=templates&slug=$1"
     },
@@ -72,19 +64,6 @@
         {
           "key": "Content-Disposition",
           "value": "inline; filename=\"llms.txt\""
-        }
-      ]
-    },
-    {
-      "source": "/solutions/rss.xml",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=0, s-maxage=600"
-        },
-        {
-          "key": "Content-Disposition",
-          "value": "inline; filename=\"rss.xml\""
         }
       ]
     },

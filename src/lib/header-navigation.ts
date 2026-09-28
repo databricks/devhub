@@ -18,9 +18,8 @@ export const HEADER_LINKS: readonly HeaderNavItem[] = [
   },
   {
     label: "Resources",
-    href: "/solutions",
+    href: "/mvps",
     links: [
-      { label: "Solutions", href: "/solutions" },
       { label: "MVPs", href: "/mvps" },
       {
         label: "Student Fellows",

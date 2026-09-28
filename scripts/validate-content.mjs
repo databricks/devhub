@@ -110,42 +110,6 @@ for (const section of RESOURCE_SECTIONS) {
   });
 }
 
-/**
- * Solutions are folders at src/content/solutions/<slug>/goal.md. Their H1
- * (title) is injected by the SolutionDetail component from the registry, so
- * the markdown body must NOT start with — or contain — a `# ` ATX heading.
- * Section headings start at `##` (and may go deeper). Setext-style underlines
- * (`====` / `----`) are also rejected to keep the rule mechanical.
- */
-const solutionsDir = resolve(CONTENT_ROOT, "solutions");
-if (existsSync(solutionsDir)) {
-  for (const entry of readdirSync(solutionsDir)) {
-    const goalPath = resolve(solutionsDir, entry, "goal.md");
-    if (!existsSync(goalPath)) continue;
-    const filePath = goalPath;
-    const fileLabel = `${CONTENT_LABEL}/solutions/${entry}/goal.md`;
-    const source = readFileSync(filePath, "utf-8");
-    const body = stripFencedCodeBlocks(stripFrontmatter(source));
-    const lines = body.split("\n");
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i];
-      if (/^# (?!#)/.test(line)) {
-        errors.push(
-          `${fileLabel}:${i + 1}: solution markdown must not contain an H1 heading. ` +
-            `The page title is rendered from the registry; start sections at "## ".`,
-        );
-      }
-      const next = lines[i + 1];
-      if (line.trim() && next && /^=+\s*$/.test(next)) {
-        errors.push(
-          `${fileLabel}:${i + 2}: solution markdown must not contain a setext H1 (\`===\` underline). ` +
-            `The page title is rendered from the registry; start sections at "## ".`,
-        );
-      }
-    }
-  }
-}
-
 const cookbooksDir = resolve(CONTENT_ROOT, "cookbooks");
 if (existsSync(cookbooksDir)) {
   validateContentFolder({
@@ -162,7 +126,7 @@ if (existsSync(cookbooksDir)) {
 /**
  * Walks every markdown / MDX file under one of the content roots and
  * accumulates absolute-DevHub-link offenders. Authors must use root-relative
- * paths (`/templates/...`, `/docs/...`, `/solutions/...`) inside markdown
+ * paths (`/templates/...`, `/docs/...`) inside markdown
  * link, autolink, and reference-definition syntax. The runtime helper
  * `absolutizeMarkdown` (src/lib/copy-preamble.ts) rewrites them to the
  * caller's origin when a page is served, so the same file works in
@@ -177,7 +141,7 @@ if (existsSync(cookbooksDir)) {
  *   - Code-block URLs (e.g. `npx add-mcp https://developers.databricks.com/api/mcp`)
  *     are install commands and must remain canonical.
  */
-const FORBIDDEN_LINK_PATH = /(templates|docs|solutions)/;
+const FORBIDDEN_LINK_PATH = /(templates|docs)/;
 
 function stripFencedCodeBlocks(markdown) {
   return markdown.replace(/```[\s\S]*?```/g, "");
@@ -276,6 +240,5 @@ if (errors.length > 0) {
 
 console.log(
   `Content validation passed (folder layout: ${[...RESOURCE_SECTIONS.map((s) => `${CONTENT_LABEL}/${s}/`), `${CONTENT_LABEL}/cookbooks/`].join(", ")}; ` +
-    `solutions H1 audit: ${CONTENT_LABEL}/solutions/; ` +
     `absolute-DevHub link audit: ${LINK_VALIDATION_ROOTS.map((d) => `${d}/`).join(", ")}).`,
 );

@@ -255,33 +255,6 @@ databricks apps get <app-name> --profile <PROFILE>
 
 After verifying the deployed app works, delete `../../demos/<slug>/`. Optionally tear down test resources if they were created just for testing.
 
-## Author A `solution`
-
-Solutions live at `developers.databricks.com/solutions/<slug>` and are launch posts, deep-dive write-ups, or curated perspectives on the Databricks developer stack. They sit alongside the linked Databricks Blog posts that the registry hand-picks.
-
-A native (DevHub-authored) solution has two pieces:
-
-- **A registry entry in `src/lib/solutions/solutions.ts`** with `id`, `title`, `description`, `tags`, `authors`, and `publishedAt`. This is the **single source of truth** for the page title, summary, byline, and date — every render path (detail page, served `.md`, frontmatter for MCP consumers) reads from here.
-- **A flat markdown file at `content/solutions/<slug>.md`** that contains only the article body.
-
-### Solution Markdown Body Rules
-
-The detail page (`src/components/solutions/solution-detail.tsx`) renders `solution.title` as the page H1 and the description below it from the registry, then renders the markdown body underneath. To keep the rendered page from showing two stacked titles and to keep the registry as the single source of truth:
-
-- **Do not start `content/solutions/<slug>.md` with a `# ` H1 heading.** The first line of the file must be the opening paragraph (lede).
-- **Do not use a setext H1 (`===` underline).** Same reason.
-- **Section headings start at `## `** and may go deeper (`###`, `####`).
-- **Do not include frontmatter.** `prependSolutionFrontmatter` (in `api/content-markdown.ts`) builds the served frontmatter entirely from the registry whenever the markdown is fetched as `.md` or via the docs MCP server. Any frontmatter in the source file is stripped before serving, so embedding it just creates drift.
-
-These rules are enforced mechanically by `scripts/validate-content.mjs`, which fails the pre-commit hook if any solution markdown contains a `# ` ATX heading or a setext H1 underline.
-
-### Authoring Steps
-
-1. Add the registry entry in `src/lib/solutions/solutions.ts` with `type: "native"`, the canonical `title` / `description`, `tags`, `authors` (IDs from `src/lib/solutions/authors.ts`), and an ISO `publishedAt` (`YYYY-MM-DD`).
-2. Author `content/solutions/<slug>.md`. Open with the lede paragraph (no heading), then organize the rest with `## ` and deeper headings.
-3. Use root-relative DevHub links (see [Link Style](#link-style-use-relative-urls-for-devhub-pages)) — the same rule that applies to recipes and docs.
-4. Run `pnpm validate:content && pnpm typecheck && pnpm build` to confirm the registry, slug, and H1 rule all pass before committing.
-
 ## URL Structure
 
 All templates share a flat URL hierarchy:
@@ -307,7 +280,7 @@ Slugs must be globally unique. The plugin throws at build time if any collision 
 
 ### Link Style: Use Relative URLs For DevHub Pages
 
-When linking to another DevHub page (`/templates/...`, `/docs/...`, `/solutions/...`) from any markdown content (`content/**/*.md`, `docs/**/*.md`, intent files, dev-guidelines, about), use a **root-relative** path. Never hardcode `https://developers.databricks.com/<path>` inside markdown link or autolink syntax.
+When linking to another DevHub page (`/templates/...`, `/docs/...`) from any markdown content (`content/**/*.md`, `docs/**/*.md`, intent files, dev-guidelines, about), use a **root-relative** path. Never hardcode `https://developers.databricks.com/<path>` inside markdown link or autolink syntax.
 
 - Good: `[Spin Up a Databricks App](/templates/spin-up-databricks-app)`
 - Bad: `[Spin Up a Databricks App](https://developers.databricks.com/templates/spin-up-databricks-app)`
@@ -316,7 +289,7 @@ When linking to another DevHub page (`/templates/...`, `/docs/...`, `/solutions/
 
 `absolutizeMarkdown` in `src/lib/copy-preamble.ts` rewrites every root-relative link to the caller's origin when a page or markdown payload is served (Vercel functions, MCP server, in-browser "Copy as Markdown"), so relative links work transparently in `localhost:3001`, preview deployments, and production. Hardcoding the canonical origin makes in-site navigation a full reload and sends local-dev visitors to prod.
 
-`scripts/validate-content.mjs` enforces this rule and fails the build on `https://developers.databricks.com/(templates|docs|solutions)/...` references inside markdown link, autolink, or reference-definition syntax.
+`scripts/validate-content.mjs` enforces this rule and fails the build on `https://developers.databricks.com/(templates|docs)/...` references inside markdown link, autolink, or reference-definition syntax.
 
 Allowed exceptions (the validator skips these):
 

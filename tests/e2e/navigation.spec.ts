@@ -53,7 +53,7 @@ function expectTemplateCardDescriptionToFit(
 
 test.describe("navbar navigation", () => {
   const NAVBAR_LINKS = [
-    { label: "Solutions", expectedPath: "/solutions" },
+    { label: "MVPs", expectedPath: "/mvps" },
     { label: "Templates", expectedPath: "/templates" },
     { label: "Docs", expectedPath: "/docs/start-here" },
   ];
@@ -61,7 +61,7 @@ test.describe("navbar navigation", () => {
   for (const { label, expectedPath } of NAVBAR_LINKS) {
     test(`navbar "${label}" navigates to ${expectedPath}`, async ({ page }) => {
       await page.goto("/");
-      if (label === "Solutions") {
+      if (label === "MVPs") {
         await page.getByRole("button", { name: "[Resources]" }).hover();
       }
       await page.locator(`header nav a[href="${expectedPath}"]`).click();
@@ -94,15 +94,6 @@ test.describe("navbar navigation", () => {
       nextPath: "/product/agent-bricks",
       frameHeight: 114,
       thumbStep: 16,
-    },
-    {
-      label: "Resources",
-      path: "/solutions",
-      active: "Solutions",
-      next: "MVPs",
-      nextPath: "/mvps",
-      frameHeight: 90,
-      thumbStep: 12,
     },
   ]) {
     test(`${dropdown.label} dropdown hover state is visible in production CSS`, async ({
@@ -234,12 +225,10 @@ test.describe("mobile navigation", () => {
       const productLabel = menu.locator("[data-mobile-menu-product-label]");
       const lakebase = menu.getByRole("link", { name: "lakebase" });
       const lakebaseLabel = lakebase.locator("[data-mobile-menu-item-label]");
-      const solutions = menu.getByRole("link", { name: "solutions" });
+      const mvps = menu.getByRole("link", { name: "mvps", exact: true });
       const templates = menu.getByRole("link", { name: "templates" });
       const docs = menu.getByRole("link", { name: "docs" });
-      await expect(
-        menu.getByRole("link", { name: "mvps", exact: true }),
-      ).toHaveAttribute("href", "/mvps");
+      await expect(mvps).toHaveAttribute("href", "/mvps");
       const studentFellows = menu.locator(
         'a[href="https://databricksstudentfellows.com/"]',
       );
@@ -268,7 +257,7 @@ test.describe("mobile navigation", () => {
       const homeBox = await home.boundingBox();
       const productLabelBox = await productLabel.boundingBox();
       const lakebaseBox = await lakebase.boundingBox();
-      const solutionsBox = await solutions.boundingBox();
+      const mvpsBox = await mvps.boundingBox();
       const templatesBox = await templates.boundingBox();
       const docsBox = await docs.boundingBox();
 
@@ -278,7 +267,7 @@ test.describe("mobile navigation", () => {
         !homeBox ||
         !productLabelBox ||
         !lakebaseBox ||
-        !solutionsBox ||
+        !mvpsBox ||
         !templatesBox ||
         !docsBox
       ) {
@@ -299,14 +288,14 @@ test.describe("mobile navigation", () => {
       expect(Math.round(lakebaseBox.x)).toBe(100);
       expect(Math.round(lakebaseBox.y)).toBe(offsetY + 132);
       expect(Math.round(lakebaseBox.width)).toBe(viewport.highlightWidth);
-      expect(Math.round(solutionsBox.x)).toBe(100);
-      expect(Math.round(solutionsBox.y)).toBe(offsetY + 300);
-      expect(Math.round(solutionsBox.width)).toBe(viewport.highlightWidth);
+      expect(Math.round(mvpsBox.x)).toBe(100);
+      expect(Math.round(mvpsBox.y)).toBe(offsetY + 300);
+      expect(Math.round(mvpsBox.width)).toBe(viewport.highlightWidth);
       expect(Math.round(templatesBox.x)).toBe(viewport.sectionX);
-      expect(Math.round(templatesBox.y)).toBe(offsetY + 404);
+      expect(Math.round(templatesBox.y)).toBe(offsetY + 370);
       expect(Math.round(templatesBox.width)).toBe(viewport.sectionClickWidth);
       expect(Math.round(docsBox.x)).toBe(viewport.sectionX);
-      expect(Math.round(docsBox.y)).toBe(offsetY + 438);
+      expect(Math.round(docsBox.y)).toBe(offsetY + 404);
       expect(Math.round(docsBox.width)).toBe(viewport.sectionClickWidth);
     });
   }
@@ -353,7 +342,6 @@ test.describe("mobile navigation", () => {
   });
 
   for (const section of [
-    { href: "/solutions", label: "solutions" },
     { href: "/templates", label: "templates" },
     { href: "/docs/start-here", label: "docs" },
   ]) {
@@ -440,10 +428,9 @@ test.describe("current mobile navigation", () => {
     await expect(
       menu.getByRole("link", { name: "databricks apps" }),
     ).toHaveAttribute("href", "/product/databricks-apps");
-    await expect(menu.getByRole("link", { name: "solutions" })).toHaveAttribute(
-      "href",
-      "/solutions",
-    );
+    await expect(
+      menu.getByRole("link", { name: "mvps", exact: true }),
+    ).toHaveAttribute("href", "/mvps");
     await expect(menu.getByRole("link", { name: "templates" })).toHaveAttribute(
       "href",
       "/templates",
@@ -544,7 +531,6 @@ test.describe("footer navigation", () => {
       label: "Docs",
     },
     { href: "/templates", label: "Templates" },
-    { href: "/solutions", label: "Solutions" },
     { href: "/mvps", label: "MVPs" },
     { href: "/mvps/directory", label: "MVP directory" },
     { href: "/product/databricks-apps", label: "Databricks Apps" },
@@ -592,7 +578,6 @@ test.describe("footer navigation", () => {
     "https://neon.com",
     "/docs/start-here",
     "/templates",
-    "/solutions",
     "/mvps",
     "/mvps/directory",
     "https://databricksstudentfellows.com/",
@@ -892,30 +877,6 @@ test.describe("home page link navigation", () => {
   });
 });
 
-test.describe("solutions page navigation", () => {
-  const SOLUTIONS = [
-    {
-      id: "devhub-launch",
-      path: "/solutions/devhub-launch",
-    },
-  ];
-
-  for (const { path } of SOLUTIONS) {
-    test(`solution card navigates to ${path}`, async ({ page }) => {
-      await page.goto("/solutions", { waitUntil: "domcontentloaded" });
-      const link = page.locator(`a[href="${path}"]`).first();
-      await link.waitFor({ state: "visible" });
-      await expectDevHubImageToUseNextOptimizer(
-        page.locator(`a[href="${path}"] img`).first(),
-        "/img/solutions/devhub-launch.jpg",
-      );
-      await link.click();
-      await page.waitForURL(`**${path}`);
-      expect(new URL(page.url()).pathname).toBe(path);
-    });
-  }
-});
-
 test.describe("templates page navigation", () => {
   const TEMPLATES = [
     { path: "/templates/ai-chat-app", kind: "cookbook" },
@@ -950,47 +911,6 @@ test.describe("templates page navigation", () => {
       expect(new URL(page.url()).pathname).toBe(path);
     });
   }
-});
-
-test.describe("solution detail page navigation", () => {
-  test('"All solutions" back link navigates to /solutions', async ({
-    page,
-  }) => {
-    await page.goto("/solutions/devhub-launch");
-    await page.getByRole("link", { name: /All solutions/ }).click();
-    await page.waitForURL("**/solutions");
-    expect(new URL(page.url()).pathname).toBe("/solutions");
-  });
-
-  test("solution content includes expected internal links", async ({
-    page,
-  }) => {
-    await page.goto("/solutions/devhub-launch");
-    const internalLinks = page.locator('article a[href^="/"]');
-    const count = await internalLinks.count();
-    expect(count).toBeGreaterThan(0);
-
-    const hrefs = await internalLinks.evaluateAll((elements) =>
-      elements
-        .map((element) => element.getAttribute("href"))
-        .filter((href): href is string => Boolean(href)),
-    );
-    expect(hrefs).toContain("/docs/start-here");
-    expect(hrefs).toContain("/templates");
-  });
-
-  test("solution detail hero image uses the Next image optimizer", async ({
-    page,
-  }) => {
-    await page.goto("/solutions/devhub-launch");
-
-    await expectDevHubImageToUseNextOptimizer(
-      page.getByRole("img", {
-        name: "Cover graphic for Introducing DevHub with a grid, launch tags, and developer hub label",
-      }),
-      "/img/solutions/devhub-launch.jpg",
-    );
-  });
 });
 
 test.describe("template detail page navigation", () => {

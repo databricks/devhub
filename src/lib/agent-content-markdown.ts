@@ -4,7 +4,6 @@ import { resolve } from "path";
 import { ABOUT_DEVHUB_SLUG } from "./bootstrap-prompt";
 import {
   hasContentSlug,
-  hasSolutionSlug,
   readContentSections,
   readCookbookGoal,
 } from "./content-markdown";
@@ -27,14 +26,6 @@ import {
   recipesInOrder,
 } from "./recipes/recipes";
 import { resolveSiteUrl } from "./site-url";
-import { buildNativeSolutionMarkdown } from "./solutions/solution-markdown";
-import {
-  buildSolutionItems,
-  isLinkedSolutionItem,
-  isNativeSolutionItem,
-  solutionItems,
-  type NativeSolutionItem,
-} from "./solutions/solutions";
 
 export type { MarkdownSection } from "./markdown-sections";
 
@@ -98,27 +89,6 @@ function readDocsMarkdown(rootDir: string, slug: string): string {
   }
 
   throw new Error(`Doc page not found: "${slug}"`);
-}
-
-function readSolutionMarkdown(
-  rootDir: string,
-  slug: string,
-  siteOrigin: string,
-): string {
-  if (!hasSolutionSlug(rootDir, slug)) {
-    throw new Error(`Solution page not found: "${slug}"`);
-  }
-
-  const native = solutionItems.find(
-    (entry): entry is NativeSolutionItem =>
-      entry.id === slug && isNativeSolutionItem(entry),
-  );
-  if (!native) {
-    throw new Error(`Solution page not found: "${slug}"`);
-  }
-
-  const content = goalOnly(readContentSections(rootDir, "solutions", slug));
-  return buildNativeSolutionMarkdown(content, native, siteOrigin);
 }
 
 function readRecipeMarkdown(rootDir: string, slug: string): string {
@@ -253,25 +223,6 @@ function readTemplatesIndex(): string {
   return lines.join("\n");
 }
 
-/** Markdown index served at /solutions.md — lists all solutions. */
-function readSolutionsIndex(): string {
-  const lines: string[] = [
-    "# Solutions",
-    "",
-    "Databricks use-case solutions built on Lakebase, Agent Bricks, and Databricks Apps.",
-    "",
-  ];
-
-  for (const s of buildSolutionItems(showDrafts())) {
-    const target = isLinkedSolutionItem(s) ? s.href : `/solutions/${s.id}.md`;
-    const suffix = isLinkedSolutionItem(s) ? ` (${s.source})` : "";
-    lines.push(`- [${s.title}](${target}): ${s.description}${suffix}`);
-  }
-  lines.push("");
-
-  return lines.join("\n");
-}
-
 export function getDetailMarkdown(
   section: MarkdownSection,
   rawSlug: string,
@@ -280,10 +231,9 @@ export function getDetailMarkdown(
 ): string {
   const slug = normalizeSlug(rawSlug);
 
-  // Empty slug → serve the section index page (e.g., /templates.md, /solutions.md)
+  // Empty slug serves the templates section index page.
   if (!slug || slug.trim() === "") {
     if (section === "templates") return readTemplatesIndex();
-    if (section === "solutions") return readSolutionsIndex();
     throw new Error("Missing slug");
   }
 
@@ -297,8 +247,6 @@ export function getDetailMarkdown(
       );
     case "recipes":
       return readRecipeMarkdown(rootDir, slug);
-    case "solutions":
-      return readSolutionMarkdown(rootDir, slug, siteOrigin);
     case "examples":
       return readExampleMarkdown(rootDir, slug);
     case "templates":
@@ -330,8 +278,8 @@ export function loadAgentPromptParts(
 
 /**
  * Resolves the agent-prompt kind for a section + slug combination. Returns
- * undefined for sections/slugs that should _not_ be wrapped (docs,
- * solutions, empty-slug index pages).
+ * undefined for sections/slugs that should _not_ be wrapped (docs and
+ * empty-slug index pages).
  */
 export function resolveTemplateKind(
   section: MarkdownSection,

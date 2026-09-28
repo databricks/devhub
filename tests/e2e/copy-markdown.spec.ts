@@ -221,40 +221,31 @@ test.describe("copy markdown exports raw markdown on example pages", () => {
   });
 });
 
-test.describe("copy markdown exports raw markdown on solution pages", () => {
-  test("solution detail page copies actual markdown without the About DevHub preamble", async ({
+test.describe("copy markdown exports raw markdown on docs pages", () => {
+  test("docs page copies raw markdown without the About DevHub preamble", async ({
     page,
   }) => {
     await expectCopyMarkdownWithoutPreamble({
       page,
-      path: "/solutions/devhub-launch",
-      expectedFragments: [
-        "**developers.databricks.com**",
-        'title: "Introducing DevHub"',
-      ],
+      path: "/docs/start-here",
+      expectedFragments: ["# Start here", "## Where to go next"],
     });
   });
 
-  test("solution detail page opens the pretty raw markdown URL", async ({
-    page,
-  }) => {
-    await page.goto("/solutions/devhub-launch", {
-      waitUntil: "domcontentloaded",
-    });
+  test("docs page opens the pretty raw markdown URL", async ({ page }) => {
+    await page.goto("/docs/start-here", { waitUntil: "domcontentloaded" });
 
     await page.getByRole("button", { name: /copy (as|article)/i }).click();
     const popupPromise = page.waitForEvent("popup");
     await page.getByRole("menuitem", { name: "View Raw Markdown" }).click();
     const popup = await popupPromise;
 
-    await expect
-      .poll(() => popup.url())
-      .toContain("/solutions/devhub-launch.md");
+    await expect.poll(() => popup.url()).toContain("/docs/start-here.md");
   });
 
-  test("solution detail page copies the MCP config", async ({ page }) => {
+  test("docs page copies the MCP config", async ({ page }) => {
     await setupClipboardMock(page);
-    await page.goto("/solutions/devhub-launch");
+    await page.goto("/docs/start-here");
 
     await page.getByRole("button", { name: /copy (as|article)/i }).click();
     await page.getByRole("menuitem", { name: "Connect to MCP Server" }).click();
@@ -270,18 +261,6 @@ test.describe("copy markdown exports raw markdown on solution pages", () => {
     const mcpUrl = copied.mcpServers["databricks-devhub"].url;
     expect(new URL(mcpUrl).origin).toBe(pageOrigin);
     expect(new URL(mcpUrl).pathname).toBe("/api/mcp");
-  });
-});
-
-test.describe("copy markdown exports raw markdown on docs pages", () => {
-  test("docs page copies raw markdown without the About DevHub preamble", async ({
-    page,
-  }) => {
-    await expectCopyMarkdownWithoutPreamble({
-      page,
-      path: "/docs/start-here",
-      expectedFragments: ["# Start here", "## Where to go next"],
-    });
   });
 
   test("raw-docs files are served for static and generated docs", async ({

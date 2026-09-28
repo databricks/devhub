@@ -22,17 +22,12 @@ describe("header navigation active state", () => {
     expect(isHeaderNavItemActive(docsItem!, "/templates")).toBe(false);
   });
 
-  test("marks Resources active on solutions and MVP routes", () => {
+  test("marks Resources active on MVP routes", () => {
     const resourcesItem = HEADER_LINKS.find(
       ({ label }) => label === "Resources",
     );
     expect(resourcesItem).toBeDefined();
-    for (const path of [
-      "/solutions",
-      "/solutions/devhub-launch",
-      "/mvps",
-      "/mvps/directory/page/2",
-    ]) {
+    for (const path of ["/mvps", "/mvps/directory/page/2"]) {
       expect(isHeaderNavItemActive(resourcesItem!, path)).toBe(true);
     }
     for (const path of [

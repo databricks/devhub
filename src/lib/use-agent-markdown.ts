@@ -6,11 +6,11 @@ import { useSiteContext } from "@/lib/site-context";
 /**
  * Discriminator for the "Copy as Markdown" / "Copy prompt" flows. Every
  * template-style copy (recipe, cookbook, example) wraps the body in the
- * shared composer; reference pages (docs, solutions) skip the preamble and
+ * shared composer; reference pages (docs) skip the preamble and
  * emit the raw content with frontmatter so they can be ingested as
  * follow-up references.
  */
-type AgentMarkdownKind = "recipe" | "cookbook" | "example" | "doc" | "solution";
+type AgentMarkdownKind = "recipe" | "cookbook" | "example" | "doc";
 
 export type AgentMarkdownInput = {
   /** What the user is copying. Determines whether the preamble is included. */
@@ -96,7 +96,7 @@ export function useAgentMarkdown(
       rawContent,
     });
 
-    if (kind === "doc" || kind === "solution") {
+    if (kind === "doc") {
       return absolutizeMarkdown(frontmatterBody, siteOrigin);
     }
 

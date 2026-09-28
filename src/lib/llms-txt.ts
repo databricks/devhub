@@ -10,11 +10,6 @@ import {
   filterPublished,
   recipesInOrder,
 } from "./recipes/recipes";
-import {
-  buildSolutionItems,
-  getSolutionItemHref,
-  isLinkedSolutionItem,
-} from "./solutions/solutions";
 
 type Section = {
   title: string;
@@ -228,21 +223,6 @@ export function generateLlmsTxt(baseUrl: string, docsDir: string): string {
       (template) =>
         `- [${template.name}](${baseUrl}/templates/${template.id}.md): ${template.description}`,
     ),
-    "",
-  );
-
-  lines.push(
-    "## Solutions",
-    "",
-    "Databricks use-case solutions built on Lakebase, Agent Bricks, and Databricks Apps.",
-    "",
-    `- [All Solutions](${baseUrl}/solutions.md): Overview of Databricks developer solutions`,
-    ...buildSolutionItems(showDrafts()).map((solution) => {
-      if (isLinkedSolutionItem(solution)) {
-        return `- [${solution.title}](${getSolutionItemHref(solution)}): ${solution.description} (${solution.source})`;
-      }
-      return `- [${solution.title}](${baseUrl}/solutions/${solution.id}.md): ${solution.description}`;
-    }),
     "",
   );
 

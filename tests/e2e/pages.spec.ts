@@ -10,11 +10,6 @@ const PRODUCT_PAGES = [
 
 const PAGES = [
   { path: "/", title: "Databricks Developer" },
-  { path: "/solutions", title: "Solutions" },
-  {
-    path: "/solutions/devhub-launch",
-    title: "Introducing DevHub",
-  },
   { path: "/templates", title: "Templates" },
   { path: "/templates/ai-chat-app", title: "AI Chat App" },
   { path: "/templates/app-with-lakebase", title: "App with Lakebase" },
@@ -130,9 +125,7 @@ async function expectMarketing404Footer(page: Page) {
 }
 
 async function gotoPage(page: Page, path: string) {
-  return page.goto(path, {
-    waitUntil: path === "/solutions" ? "domcontentloaded" : "load",
-  });
+  return page.goto(path, { waitUntil: "load" });
 }
 
 test.describe("all pages load without errors", () => {
@@ -165,7 +158,7 @@ test.describe("all pages load without errors", () => {
 
 test.describe("global visual parity", () => {
   test("uses production font rendering defaults", async ({ page }) => {
-    await page.goto("/solutions/devhub-launch");
+    await page.goto("/templates/ai-chat-app");
 
     const rendering = await page.evaluate(() => {
       const body = getComputedStyle(document.body);
@@ -203,11 +196,7 @@ test.describe("global visual parity", () => {
     ).toHaveCount(0);
   });
 
-  for (const path of [
-    "/docs/apps/development",
-    "/solutions",
-    "/hackathon/challenge",
-  ]) {
+  for (const path of ["/docs/apps/development", "/hackathon/challenge"]) {
     test(`${path} applies the single dark theme class to the root`, async ({
       page,
     }) => {
@@ -234,12 +223,21 @@ test.describe("static assets load correctly", () => {
     const response = await request.get("/llms.txt");
     expect(response.status()).toBe(200);
   });
+});
 
-  test("solutions RSS feed returns RSS XML", async ({ request }) => {
-    const response = await request.get("/solutions/rss.xml");
-    expect(response.status()).toBe(200);
-    expect(await response.text()).toContain("<rss");
-  });
+test.describe("removed solutions routes", () => {
+  for (const path of [
+    "/solutions",
+    "/solutions/devhub-launch",
+    "/solutions/rss.xml",
+    "/solutions.md",
+    "/solutions/devhub-launch.md",
+  ]) {
+    test(`${path} returns not found`, async ({ request }) => {
+      const response = await request.get(path);
+      expect(response.status()).toBe(404);
+    });
+  }
 });
 
 test.describe("product pages", () => {
@@ -458,56 +456,6 @@ test.describe("product pages", () => {
   });
 });
 
-test.describe("solutions RSS", () => {
-  test("RSS action links to the generated feed", async ({ page }) => {
-    await gotoPage(page, "/solutions");
-
-    const rssLink = page.getByRole("link", {
-      name: "Subscribe to the Databricks Developer Solutions RSS feed",
-    });
-
-    await expect(rssLink).toHaveAttribute("href", /\/solutions\/rss\.xml$/);
-  });
-
-  test("literal paginated placeholder route returns not found", async ({
-    request,
-  }) => {
-    const response = await request.get("/solutions/page/:page");
-
-    expect(response.status()).toBe(404);
-  });
-
-  test("out-of-range paginated routes return not found", async ({
-    request,
-  }) => {
-    const response = await request.get("/solutions/page/2");
-
-    expect(response.status()).toBe(404);
-  });
-});
-
-test.describe("solutions search", () => {
-  test("opens and filters without runtime errors", async ({ page }) => {
-    const pageErrors: string[] = [];
-    page.on("pageerror", (error) => pageErrors.push(error.message));
-
-    await gotoPage(page, "/solutions");
-    await page.getByRole("button", { name: "Search solutions" }).click();
-
-    const search = page.getByRole("combobox");
-    await expect(search).toBeVisible();
-    await expect(
-      page.getByRole("option", { name: /Introducing DevHub/ }),
-    ).toBeVisible();
-
-    await search.fill("lakebase");
-    await expect(
-      page.getByRole("option", { name: /How to use Lakebase/ }),
-    ).toBeVisible();
-    expect(pageErrors).toEqual([]);
-  });
-});
-
 test.describe("perspectives index", () => {
   test("keeps production metadata and generated-index copy", async ({
     page,
@@ -550,12 +498,11 @@ test.describe("detail prose visual parity", () => {
     });
 
     await page.setViewportSize({ width: 1440, height: 1000 });
-    await page.goto("/solutions/devhub-launch");
 
-    const solutionParagraph = page
+    const desktopTemplateParagraph = page
       .locator(".recipe-content-card .prose p")
       .first();
-    await expect(solutionParagraph).toHaveCSS("line-height", "27px");
+    await expect(desktopTemplateParagraph).toHaveCSS("line-height", "27px");
   });
 });
 

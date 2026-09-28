@@ -113,6 +113,13 @@ function parseDocRequest(raw: string): {
     if (path.startsWith(prefix)) {
       return { section, slug: path.slice(prefix.length) };
     }
+    // A bare section path (e.g. `templates`, `solutions`, or the `recipes`/
+    // `resources`/`examples` aliases) after stripping `.md` is the section
+    // overview URL from `list_docs_resources`; route it to the index (empty
+    // slug). `docs` has no index page, so it stays a normal docs lookup.
+    if (section !== "docs" && path === prefix.slice(0, -1)) {
+      return { section, slug: "" };
+    }
   }
   return { section: "docs", slug: path };
 }
@@ -172,11 +179,16 @@ const mcpHandler = createMcpHandler(
         const siteUrl = resolveSiteUrl();
         const { section, slug: pageSlug } = parseDocRequest(slug);
 
+        // Validate up front for every section so an invalid slug (path
+        // traversal, absolute URL) surfaces its specific reason rather than
+        // being masked as "not found" by the render fallback below. An empty
+        // slug (a section overview URL) passes and renders the section index.
+        validateDocSlug(pageSlug);
+
         // Docs stay on the bespoke path so the page keeps its "Source of truth"
         // hint (skills to load); other sections render through the shared
         // template/recipe composer.
         if (section === "docs") {
-          validateDocSlug(pageSlug);
           const content = readDocFile(pageSlug);
           if (!content) {
             throw new Error(`Doc page not found: "${slug}"`);

@@ -62,8 +62,7 @@ function validateSlug(slug: string): void {
 }
 
 function normalizeSlug(rawSlug: string): string {
-  const trimmed = rawSlug.trim();
-  return trimmed.endsWith(".md") ? trimmed.slice(0, -3) : trimmed;
+  return rawSlug.trim().replace(/\.(md|mdx)$/i, "");
 }
 
 function readIfExists(filePath: string): string | undefined {

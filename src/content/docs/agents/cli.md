@@ -28,7 +28,7 @@ The `agentbricks` CLI scaffolds a local directory of deployable agent code from 
 Three commands take an agent from a blank directory to production:
 
 - **`agentbricks init`** scaffolds the project from a framework template, declares default memory and session stores in `agent.toml`, and optionally seeds a `.env` file with a Databricks profile so the project runs immediately with `agentbricks dev`.
-- **`agentbricks dev`** runs the agent locally using the same manifest and environment that the deployment uses, so local behavior matches what ships. It connects the agent to Databricks model serving and traces to a local MLflow server.
+- **`agentbricks dev`** runs the agent locally using the same manifest and environment that the deployment uses, so the app runs the way it does when deployed. It connects the agent to Databricks model serving and traces to a local MLflow server. Long-term memory is off and session history is kept in-process; bound memory and session stores apply only after you deploy.
 - **`agentbricks deploy`** reads `agent.toml` to provision any declared-but-missing stores, grants the agent's service principal access to them, configures tracing, and rolls out the deployment as a Databricks App. When the deployment finishes, the CLI returns the URL of your running agent.
 
 ```mermaid
@@ -55,7 +55,7 @@ By default, `agentbricks deploy` automatically enables all of the following capa
 | **Managed memory**   | Durable facts, preferences, and decisions that an agent recalls in later, separate conversations, retrieved by semantic search and partitioned by actor. See [Managed agent memory](https://docs.databricks.com/aws/en/agents/agent-memory/managed-memory).                                                                                |
 | **Managed sessions** | An agent's session state for one interaction, most commonly the conversation transcript, held in managed session stores and partitioned by actor, with support for forking a session into an independent branch. See [Managed agent sessions](https://docs.databricks.com/aws/en/agents/agent-memory/managed-sessions).                    |
 | **Tools**            | Databricks-managed capabilities declared in `agent.toml`: a downscoped Unity Catalog sandbox, a managed MCP service, a Genie Space, or a Unity Catalog function. Write custom Python tools directly in the project code. See [Databricks-provided MCP servers](https://docs.databricks.com/aws/en/agents/mcp-tools/built-in-mcp-services). |
-| **Tracing**          | MLflow tracing that is on by default, routing each run's traces to a per-project MLflow experiment for debugging and monitoring. See [MLflow Tracing](https://docs.databricks.com/aws/en/mlflow3/genai/tracing/).                                                                                                                          |
+| **Tracing**          | MLflow tracing that is on by default, routing the deployed agent's traces to a per-project MLflow experiment for debugging and monitoring. See [MLflow Tracing](https://docs.databricks.com/aws/en/mlflow3/genai/tracing/).                                                                                                                |
 | **Deployment**       | Deploys an agent to the Databricks agent runtime, grants the agent's service principal access to bound stores, and manages the deployment lifecycle.                                                                                                                                                                                       |
 
 ## Quickstart
@@ -119,21 +119,24 @@ Run the agent on your machine to test it before you deploy.
 agentbricks dev
 ```
 
-This starts a local server on port 8000, wrapping the Databricks Apps local runtime so local behavior matches a deployment. The CLI connects the agent to the Unity AI Gateway so it can call the model locally. By default, the agent uses the `system.ai.claude-sonnet-4-5` model. To use a different model, edit the `MODEL` value in `agent/agent.py`.
+This starts a local server on port 8000, wrapping the Databricks Apps local runtime so the app runs the way it does when deployed. Long-term memory is off and conversation history is kept in-process, so it doesn't persist across restarts; the bound memory and session stores are created and used only when you deploy. The CLI connects the agent to the Unity AI Gateway so it can call the model locally. By default, the agent uses the `system.ai.claude-sonnet-4-5` model. To use a different model, edit the `MODEL` value in `agent/agent.py`.
 
-Open the pre-generated chat UI at `http://localhost:8000` to interact with the agent. The UI includes a link to the run's MLflow experiment, where you can view traces.
+Open the pre-generated chat UI at `http://localhost:8000` to interact with the agent. The UI includes a link to the local MLflow server, where you can view traces.
 
 ### Step 4: View tracing
 
-Tracing is on by default. `agentbricks init` binds a default per-project MLflow experiment, so `agentbricks dev` and `agentbricks deploy` send traces automatically with nothing to set up.
+Tracing is on by default, with nothing to set up:
 
-To list traces after your agent has produced some, run the following:
+- **Local:** `agentbricks dev` records traces to a local MLflow server in the project's `.agentbricks/` directory. Open the Traces URL that `agentbricks dev` prints, or the link in the chat UI, to view them.
+- **Deployed:** `agentbricks init` binds a per-project workspace experiment (`/Shared/agentbricks_traces/<project>`) in `agent.toml`. `agentbricks deploy` creates it if needed and sends the deployed agent's traces there.
+
+To list traces after your agent has produced some, run the following. It reads the workspace experiment once the agent is deployed, and the local `agentbricks dev` traces before that.
 
 ```bash
 agentbricks tracing list
 ```
 
-To pin a specific MLflow experiment, run `agentbricks tracing bind --experiment-name <name>` or `agentbricks tracing bind --experiment-id <id>`. To stop tracing, run `agentbricks tracing unbind`.
+To pin a specific MLflow experiment, run `agentbricks tracing bind --experiment-name <name>` or `agentbricks tracing bind --experiment-id <id>`. To turn off tracing for the deployed agent, run `agentbricks tracing unbind` and redeploy. `agentbricks dev` keeps tracing locally.
 
 ### Step 5: Deploy the agent
 
@@ -143,7 +146,12 @@ Deploy the agent to the Databricks agent runtime. The CLI provisions the agent's
 agentbricks deploy my-agent
 ```
 
-When the deployment finishes, the CLI returns the deployment's URL. Open that URL to interact with your live agent, which is automatically connected to the Unity AI Gateway. To manage the deployment afterward, use the `agentbricks deployments` commands, such as `agentbricks deployments logs` and `agentbricks deployments stop`.
+When the deployment finishes, the CLI returns the deployment's URL. Open that URL to interact with your live agent, which is automatically connected to the Unity AI Gateway. To manage the deployment afterward, use the `agentbricks deployments` commands with the full app name. For example, to stream logs or stop the deployment:
+
+```bash
+agentbricks deployments logs agent-bricks-my-agent
+agentbricks deployments stop agent-bricks-my-agent
+```
 
 ## Command reference
 

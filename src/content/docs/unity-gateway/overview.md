@@ -96,7 +96,7 @@ export function ChatPanel() {
 
 ### Call it from a route handler
 
-For backend orchestration, pre/post-processing, or logging, invoke the agent server-side with `runAgent`, importing the agent definition from its folder. Built-in agent routes run on behalf of the signed-in user (OBO) by default; see the [`agents` plugin reference](/docs/appkit/v0/plugins/agents) for the `runAgent` signature and per-request identity.
+For backend orchestration, pre/post-processing, or logging, invoke the agent server-side with `runAgent`, importing the agent definition from its folder. `runAgent` runs standalone with no HTTP request, so its model call and tools run as the app service principal (no OBO). Through the built-in agent routes, the model call also runs as the service principal, while the plugin tools an agent calls run on behalf of the signed-in user. See the [`agents` plugin reference](/docs/appkit/v0/plugins/agents) for the `runAgent` signature.
 
 ### One agent or many
 

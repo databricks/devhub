@@ -57,7 +57,7 @@ You could call a serving endpoint directly with `fetch` and a token. The plugin 
 - OBO where it applies: Genie routes and the plugin tools an agent calls run as the authenticated user, so **per-user permissions** apply automatically. Users only see data they're already allowed to see, with no OAuth code on your side. See [Execution context](/docs/appkit/v0/plugins/execution-context) for the details.
 - All **streaming** is handled for you. SSE parsing, abort on unmount, token accumulation, and error handling. `useAgentChat` and `useGenieChat` do this.
 - No **secrets** in the frontend. The plugin proxies through your server and tokens stay on the backend. No PAT in the React bundle.
-- When your serving endpoint publishes an OpenAPI schema, AppKit generates **typed endpoint aliases** with TypeScript types for request and response per alias. Autocomplete for chunk shapes, not `unknown`.
+- The `useAgentChat` hook exposes the stream as OpenAI Responses-shaped events, accumulating the assistant's text for you so you render `content` instead of parsing raw SSE chunks.
 
 :::note[Creating a custom agent]
 

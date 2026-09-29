@@ -28,7 +28,7 @@ flowchart LR
     React["React<br/>(@databricks/appkit-ui/react)"] -->|"useServingStream /<br/>useGenieChat"| Node["AppKit server<br/>(@databricks/appkit)"]
     Node -->|"Model Serving plugin"| Endpoint["Model Serving endpoint<br/>(LLM, Knowledge Assistant,<br/>Supervisor Agent,<br/>custom Python)"]
     Node -->|"Genie plugin"| Space["Genie Agent"]
-    Endpoint --> Gateway["Unity AI Gateway<br/>(governance, rate limits,<br/>system tables)"]
+    Endpoint --> Gateway["Unity Gateway<br/>(governance, rate limits,<br/>system tables)"]
     Space --> UC["Unity Catalog<br/>tables"]
 ```
 
@@ -75,6 +75,6 @@ Start from a template that matches your use case. Each one includes the Model Se
 
 ## Where to next
 
-- [Unity AI Gateway](/docs/agents/ai-gateway) for governed access to models, agent endpoints, and external tools.
+- [Unity Gateway](/docs/unity-gateway/overview) for governed access to models, agent endpoints, and external tools.
 - [Genie Agents](/docs/agents/genie) for chat-with-your-data over Unity Catalog tables.
 - [Custom agent endpoints](/docs/agents/custom-agents) for wiring Knowledge Assistant, Supervisor Agent, or your own Python agent.

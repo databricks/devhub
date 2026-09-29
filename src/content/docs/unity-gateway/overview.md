@@ -1,27 +1,27 @@
 ---
-title: Unity AI Gateway
-sidebar_label: Unity AI Gateway
-description: Call governed LLM endpoints from your AppKit app using the Model Serving plugin. Unity AI Gateway adds rate limits, usage tracking, guardrails, and cost attribution.
+title: Unity Gateway
+sidebar_label: Overview
+description: Call governed LLM endpoints from your AppKit app using the Model Serving plugin. Unity Gateway adds rate limits, usage tracking, guardrails, and cost attribution.
 sourceOfTruth:
   skills:
     - databricks-model-serving
   docs:
     - /docs/appkit/v0/plugins/model-serving
     - https://docs.databricks.com/aws/en/ai-gateway/ai-governance
-  note: "databricks-model-serving covers the serving-endpoint call path and AI Gateway rate limits. Full AI Gateway governance, model services, and MCP governance are docs-only (no skill yet)."
+  note: "databricks-model-serving covers the serving-endpoint call path and Unity Gateway rate limits. Full Unity Gateway governance, model services, and MCP governance are docs-only (no skill yet)."
 ---
 
-# Unity AI Gateway
+# Unity Gateway
 
-Adding an LLM feature to your app (chat, summarization, an agent) normally means signing up with a model provider, putting an API key in your app, and building your own rate limiting and cost tracking. **Unity AI Gateway** removes that: your app calls a governed model endpoint by name, and Databricks applies rate limits, guardrails, usage tracking, and cost controls centrally. You build the feature; the platform governs the traffic.
+Adding an LLM feature to your app (chat, summarization, an agent) normally means signing up with a model provider, putting an API key in your app, and building your own rate limiting and cost tracking. **Unity Gateway** (formerly Unity AI Gateway) removes that: your app calls a governed model endpoint by name, and Databricks applies rate limits, guardrails, usage tracking, and cost controls centrally. You build the feature; the platform governs the traffic.
 
-From your AppKit app, you call a governed endpoint with the Model Serving plugin. This page covers the AppKit wiring and the CLI for inspecting and provisioning endpoints. For a full product introduction, see the [Unity AI Gateway overview](https://docs.databricks.com/aws/en/ai-gateway/).
+From your AppKit app, you call a governed endpoint with the Model Serving plugin. This page covers the AppKit wiring and the CLI for inspecting and provisioning endpoints. For a full product introduction, see the [Unity Gateway overview](https://docs.databricks.com/aws/en/ai-gateway/).
 
 ## Prerequisites
 
 - Databricks CLI `v1.0.0+` with an [authenticated profile](/docs/tools/databricks-cli#authenticate).
 - A running AppKit app. See [Apps quickstart](/docs/apps/quickstart).
-- A serving endpoint your app can query. Most workspaces come with Databricks-hosted foundation models (prefixed `databricks-`, for example `databricks-claude-sonnet-4-6`) preconfigured with AI Gateway. Model IDs change over time, so check the [supported models](https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/supported-models) list for current names, or run [List available endpoints](#list-available-endpoints) to see what your workspace exposes.
+- A serving endpoint your app can query. Most workspaces come with Databricks-hosted foundation models (prefixed `databricks-`, for example `databricks-claude-sonnet-4-6`) preconfigured with Unity Gateway. Model IDs change over time, so check the [supported models](https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/supported-models) list for current names, or run [List available endpoints](#list-available-endpoints) to see what your workspace exposes.
 
 ## Call a governed endpoint from AppKit
 
@@ -204,13 +204,13 @@ AppKit.server.extend((app) => {
 
 - **Scope:** this needs the `ai-gateway` scope in `user_api_scopes` (separate from `model-serving`); without it the gateway returns a 403. See [App configuration](/docs/apps/configuration#auth-model).
 - **Rate limits:** the OpenAI SDK retries a 429 for you; the raw path has to run that retry loop itself, as shown above.
-- **Availability:** `system.ai.*` models aren't in every workspace (region, Unity Catalog, and entitlement all apply), so a name in `system.ai` isn't a guarantee. The **AI Gateway UI** shows which ones you can actually query; `system.ai` and Catalog Explorer list them globally. See [model services](https://docs.databricks.com/aws/en/ai-gateway/model-services) and [Query model services](https://docs.databricks.com/aws/en/ai-gateway/query-model-services).
+- **Availability:** `system.ai.*` models aren't in every workspace (region, Unity Catalog, and entitlement all apply), so a name in `system.ai` isn't a guarantee. The **Unity Gateway UI** shows which ones you can actually query; `system.ai` and Catalog Explorer list them globally. See [model services](https://docs.databricks.com/aws/en/ai-gateway/model-services) and [Query model services](https://docs.databricks.com/aws/en/ai-gateway/query-model-services).
 
-## Governance and Unity AI Gateway
+## Governance and Unity Gateway
 
-Governance is enforced on Databricks, not in AppKit. Your app calls the endpoint and the gateway applies the policy. Unity AI Gateway is the control plane for AI traffic. It routes model and MCP requests and enforces rate limits, cost controls, service policies, and usage tracking. Unity Catalog governs the models, MCP servers, and functions behind it. For the current features and setup, including the beta features you enable from the account console Previews page, see [AI governance with Unity AI Gateway](https://docs.databricks.com/aws/en/ai-gateway/ai-governance).
+Governance is enforced on Databricks, not in AppKit. Your app calls the endpoint and the gateway applies the policy. Unity Gateway is the control plane for AI traffic. It routes model and MCP requests and enforces rate limits, cost controls, service policies, and usage tracking. Unity Catalog governs the models, MCP servers, and functions behind it. For the current features and setup, including the beta features you enable from the account console Previews page, see [AI governance with Unity Gateway](https://docs.databricks.com/aws/en/ai-gateway/ai-governance).
 
-For AppKit, the Model Serving plugin calls serving endpoints by name. This includes foundation models (the `databricks-` prefix), Knowledge Assistants, Supervisor Agents, and custom Python agents. The plugin does not call Unity AI Gateway model services; to call one from your app, see [Query a model service](#query-a-model-service).
+For AppKit, the Model Serving plugin calls serving endpoints by name. This includes foundation models (the `databricks-` prefix), Knowledge Assistants, Supervisor Agents, and custom Python agents. The plugin does not call Unity Gateway model services; to call one from your app, see [Query a model service](#query-a-model-service).
 
 These controls are configured on Databricks by platform or admin teams, not in your app, but requests through a governed endpoint are subject to whatever applies:
 
@@ -223,11 +223,11 @@ These controls are configured on Databricks by platform or admin teams, not in y
 | **Budgets**                 | Spend thresholds, shared or per user, that send an alert or block requests; backs `--budget-policy-id` | [Budgets](https://docs.databricks.com/aws/en/ai-gateway/budgets)                                                                                                                                                                                                                                                    |
 | **MCP server governance**   | Applies when an agent endpoint you call routes to an MCP server internally                             | [Register](https://docs.databricks.com/aws/en/ai-gateway/register-mcp-service), [govern](https://docs.databricks.com/aws/en/ai-gateway/govern-mcp-service)                                                                                                                                                          |
 
-For the earlier per-endpoint approach, see [AI Gateway on serving endpoints](https://docs.databricks.com/aws/en/ai-gateway/overview-serving-endpoints), where you toggle features per endpoint and usage logs to `system.serving.endpoint_usage`.
+For the earlier per-endpoint approach, see [Governance for model serving endpoints (legacy)](https://docs.databricks.com/aws/en/ai-gateway/overview-serving-endpoints), where you toggle features per endpoint and usage logs to `system.serving.endpoint_usage`.
 
 ## List available endpoints
 
-Use the CLI to see which endpoints your workspace exposes and which ones already have AI Gateway features configured. Each command below shows a common invocation and its full set of flags. Run `databricks serving-endpoints <command> --help` for current flag behavior, since the CLI is the source of truth.
+Use the CLI to see which endpoints your workspace exposes and which ones already have Unity Gateway features configured. Each command below shows a common invocation and its full set of flags. Run `databricks serving-endpoints <command> --help` for current flag behavior, since the CLI is the source of truth.
 
 ```bash title="Common"
 databricks serving-endpoints list -o json
@@ -242,7 +242,7 @@ databricks serving-endpoints list \
   --profile $DATABRICKS_PROFILE
 ```
 
-Foundation Model API endpoints (prefixed `databricks-`) are available in most workspaces with AI Gateway built in. For example, `databricks-claude-sonnet-4-6`. Availability varies by workspace.
+Foundation Model API endpoints (prefixed `databricks-`) are available in most workspaces with Unity Gateway built in. For example, `databricks-claude-sonnet-4-6`. Availability varies by workspace.
 
 <details>
 <summary>Example output (truncated)</summary>
@@ -291,7 +291,7 @@ Foundation Model API endpoints (prefixed `databricks-`) are available in most wo
 databricks serving-endpoints get databricks-claude-sonnet-4-6 -o json
 ```
 
-Check for `ai_gateway` in the response to confirm AI Gateway is configured on the endpoint. `get` takes no command-specific flags beyond the global ones, so run `databricks serving-endpoints get --help` if you need them.
+Check for `ai_gateway` in the response to confirm Unity Gateway is configured on the endpoint. `get` takes no command-specific flags beyond the global ones, so run `databricks serving-endpoints get --help` if you need them.
 
 ## Query from the terminal
 
@@ -386,8 +386,8 @@ Wait for the endpoint to reach `READY` state before querying it. For a step-by-s
 
 ## Coding agent integrations
 
-Unity AI Gateway can also govern AI coding tools like Claude Code, Codex, Cursor, and Gemini CLI, so their requests share one invoice, usage dashboard, and set of rate limits. Databricks recommends the [Unity Gateway CLI (`ug`)](https://github.com/databricks/unity-gateway), which installs, authenticates, and configures a supported agent with the gateway in one command (`uv tool install git+https://github.com/databricks/unity-gateway`, then `ug claude`, `ug codex`, and so on). The older `ucode` command still works, but `ug` is now the primary command. See [Integrate with coding agents](https://docs.databricks.com/aws/en/ai-gateway/coding-agent-integration-model-services) for the setup steps and the current list of supported tools.
+Unity Gateway can also govern AI coding tools like Claude Code, Codex, Cursor, and Gemini CLI, so their requests share one invoice, usage dashboard, and set of rate limits. Databricks recommends the [Unity Gateway CLI (`ug`)](https://github.com/databricks/unity-gateway), which installs, authenticates, and configures a supported agent with the gateway in one command (`uv tool install git+https://github.com/databricks/unity-gateway`, then `ug claude`, `ug codex`, and so on). The older `ucode` command still works, but `ug` is now the primary command. See [Integrate with coding agents](https://docs.databricks.com/aws/en/ai-gateway/coding-agent-integration-model-services) for the setup steps and the current list of supported tools.
 
 ## Where to next
 
-Try the [AI Chat App](/templates/ai-chat-app) to wire a governed endpoint into your app, or explore the other agent capabilities: [Genie Agents](/docs/agents/genie) or [Custom agent endpoints](/docs/agents/custom-agents).
+Try the [AI Chat App](/templates/ai-chat-app) to wire a governed endpoint into your app, or see how agents use the gateway in [Agent Bricks](/docs/agents/overview): [Genie Agents](/docs/agents/genie) and [Custom agent endpoints](/docs/agents/custom-agents).

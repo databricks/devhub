@@ -101,17 +101,17 @@ export const CLI_COMMANDS: CommandSpec[] = [
     command: "aitools install",
     doc: "docs/tools/ai-tools/agent-skills.md",
   },
-  // Agents: serving-endpoints commands shown on the ai-gateway page.
+  // Unity Gateway: serving-endpoints commands shown on its overview page.
   {
     command: "serving-endpoints list",
-    doc: "docs/agents/ai-gateway.md",
+    doc: "docs/unity-gateway/overview.md",
   },
   {
     command: "serving-endpoints query",
-    doc: "docs/agents/ai-gateway.md",
+    doc: "docs/unity-gateway/overview.md",
   },
   {
     command: "serving-endpoints create",
-    doc: "docs/agents/ai-gateway.md",
+    doc: "docs/unity-gateway/overview.md",
   },
 ];

@@ -153,7 +153,7 @@ test.describe("templates page service filter", () => {
       .toBeGreaterThan(listTop + 200);
 
     await page
-      .getByRole("checkbox", { name: "Unity AI Gateway", exact: true })
+      .getByRole("checkbox", { name: "Unity Gateway", exact: true })
       .check();
 
     await expect

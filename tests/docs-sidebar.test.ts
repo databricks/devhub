@@ -81,6 +81,7 @@ describe("docs sidebar", () => {
       "/docs/templates",
       "Databricks Apps",
       "Lakebase Postgres",
+      "Unity Gateway",
       "Agent Bricks",
       "Data Lakehouse",
     ]);

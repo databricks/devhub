@@ -33,15 +33,16 @@ const SIDEBAR_SECTIONS: Array<{
     slugs: ["start-here"],
   },
   {
+    title: "Unity Gateway",
+    description:
+      "Call governed LLM endpoints and model services from your AppKit app. Unity Gateway applies rate limits, usage tracking, guardrails, and cost controls to model and MCP traffic.",
+    slugs: ["unity-gateway/overview"],
+  },
+  {
     title: "Agent Bricks",
     description:
-      "Connect Agent Bricks agents, governed LLM endpoints, and Genie Agents to your AppKit app. Covers Unity AI Gateway, the Model Serving plugin for calling LLM and agent endpoints, and the Genie plugin for natural-language data queries.",
-    slugs: [
-      "agents/overview",
-      "agents/ai-gateway",
-      "agents/genie",
-      "agents/custom-agents",
-    ],
+      "Connect Agent Bricks agents and Genie Agents to your AppKit app. Covers the Model Serving plugin for calling LLM and agent endpoints, and the Genie plugin for natural-language data queries.",
+    slugs: ["agents/overview", "agents/genie", "agents/custom-agents"],
   },
   {
     title: "Apps",

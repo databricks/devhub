@@ -48,6 +48,7 @@ const PAGES = [
   { path: "/docs/unity-gateway/overview", title: "Unity Gateway" },
   { path: "/docs/agents/genie", title: "Genie Agents" },
   { path: "/docs/agents/custom-agents", title: "Custom agent endpoints" },
+  { path: "/docs/agents/memory", title: "Agent memory and sessions" },
   { path: "/docs/apps/quickstart", title: "Quickstart" },
   { path: "/docs/apps/configuration", title: "App configuration" },
   { path: "/docs/apps/development", title: "App development" },

@@ -41,8 +41,14 @@ const SIDEBAR_SECTIONS: Array<{
   {
     title: "Agent Bricks",
     description:
-      "Connect Agent Bricks agents and Genie Agents to your AppKit app. Covers the Model Serving plugin for calling LLM and agent endpoints, and the Genie plugin for natural-language data queries.",
-    slugs: ["agents/overview", "agents/genie", "agents/custom-agents"],
+      "Connect Agent Bricks agents and Genie Agents to your AppKit app, and build custom agents with the Agent Bricks CLI. Covers the Model Serving plugin for calling LLM and agent endpoints, the Genie plugin for natural-language data queries, and managed agent memory and sessions.",
+    slugs: [
+      "agents/overview",
+      "agents/cli",
+      "agents/memory",
+      "agents/genie",
+      "agents/custom-agents",
+    ],
   },
   {
     title: "Apps",

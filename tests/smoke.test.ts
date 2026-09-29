@@ -311,6 +311,7 @@ describe("production build smoke tests", () => {
       "/docs/unity-gateway/overview.md",
       "/docs/agents/genie.md",
       "/docs/agents/custom-agents.md",
+      "/docs/agents/memory.md",
       "/docs/apps/quickstart.md",
       "/docs/apps/configuration.md",
       "/docs/apps/development.md",

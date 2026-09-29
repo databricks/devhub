@@ -1,11 +1,12 @@
 ---
 title: Unity Gateway
 sidebar_label: Overview
-description: Call governed LLM endpoints from your AppKit app using the Model Serving plugin. Unity Gateway adds rate limits, usage tracking, guardrails, and cost attribution.
+description: Call governed LLM endpoints from your AppKit app with the agents plugin. Unity Gateway adds rate limits, usage tracking, guardrails, and cost attribution.
 sourceOfTruth:
   skills:
     - databricks-model-serving
   docs:
+    - /docs/appkit/v0/plugins/agents
     - /docs/appkit/v0/plugins/model-serving
     - https://docs.databricks.com/aws/en/ai-gateway/ai-governance
   note: "databricks-model-serving covers the serving-endpoint call path and Unity Gateway rate limits. Full Unity Gateway governance, model services, and MCP governance are docs-only (no skill yet)."
@@ -15,7 +16,7 @@ sourceOfTruth:
 
 Adding an LLM feature to your app (chat, summarization, an agent) normally means signing up with a model provider, putting an API key in your app, and building your own rate limiting and cost tracking. **Unity Gateway** (formerly Unity AI Gateway) removes that: your app calls a governed model endpoint by name, and Databricks applies rate limits, guardrails, usage tracking, and cost controls centrally. You build the feature; the platform governs the traffic.
 
-From your AppKit app, you call a governed endpoint with the Model Serving plugin. This page covers the AppKit wiring and the CLI for inspecting and provisioning endpoints. For a full product introduction, see the [Unity Gateway overview](https://docs.databricks.com/aws/en/ai-gateway/).
+From your AppKit app, you host an agent backed by a governed endpoint with the agents plugin. This page covers the AppKit wiring and the CLI for inspecting and provisioning endpoints. For a full product introduction, see the [Unity Gateway overview](https://docs.databricks.com/aws/en/ai-gateway/).
 
 ## Prerequisites
 
@@ -25,26 +26,36 @@ From your AppKit app, you call a governed endpoint with the Model Serving plugin
 
 ## Call a governed endpoint from AppKit
 
-The [Model Serving plugin](/docs/appkit/v0/plugins/model-serving) handles the HTTP plumbing, auth, and streaming. Endpoint names come from environment variables at runtime, so the same code runs locally and in production.
+Host an agent in your app with the [`agents` plugin](/docs/appkit/v0/plugins/agents) and back it with the governed endpoint through a model adapter. The endpoint's AI Gateway policy (rate limits, usage tracking, guardrails) applies however you call it.
 
-### Register the plugin
+> AppKit deprecated the Model Serving plugin (`serving()` + `useServingStream`) in 0.77.0 in favor of the `agents` plugin. If you have older code that calls a serving endpoint through it, back an agent with `DatabricksAdapter.fromModelServing` instead. Note the identity change: the `serving()` routes ran on behalf of the signed-in user (OBO), whereas an agent's model call runs as the app service principal.
 
-```typescript title="server/server.ts"
-import { createApp, server, serving } from "@databricks/appkit";
+### Define the agent
 
-const AppKit = await createApp({
-  plugins: [
-    server(),
-    serving({
-      endpoints: {
-        chat: { env: "DATABRICKS_SERVING_ENDPOINT_NAME" },
-      },
-    }),
-  ],
+Each agent is a folder under `server/agents/<id>/`; the folder name is the agent id, and `agent.ts` default-exports a created agent. Back it with `fromModelServing` for a serving endpoint (a Databricks-hosted foundation model, prefixed `databricks-`), or `fromAiGateway` for a model service queried by name. Called with no argument, `fromModelServing()` reads the endpoint name from `DATABRICKS_SERVING_ENDPOINT_NAME`, so the same code runs locally and in production.
+
+```typescript title="server/agents/chat/agent.ts"
+import { createAgent, DatabricksAdapter } from "@databricks/appkit/beta";
+
+// Reads DATABRICKS_SERVING_ENDPOINT_NAME.
+const model = await DatabricksAdapter.fromModelServing();
+
+export default createAgent({
+  instructions: "You are a helpful assistant.",
+  model,
 });
 ```
 
-`chat` is an alias you pick. The plugin resolves it at request time by reading `DATABRICKS_SERVING_ENDPOINT_NAME`. Bind the env var in `app.yaml`:
+Register the plugin with no map; it discovers `server/agents/*/agent.ts` at startup:
+
+```typescript title="server/server.ts"
+import { createApp, server } from "@databricks/appkit";
+import { agents } from "@databricks/appkit/beta";
+
+await createApp({ plugins: [server(), agents()] });
+```
+
+Bind the endpoint name in `app.yaml`. For a production build, also list `server/agents/*/agent.ts` as build entries (for example in `tsdown`) so the compiled `dist/agents/<id>/agent.js` is emitted for discovery; otherwise the agent is missing from the deployed bundle.
 
 ```yaml title="app.yaml"
 env:
@@ -52,69 +63,48 @@ env:
     valueFrom: serving-endpoint
 ```
 
-When you deploy, Databricks Apps injects the endpoint name into the container. For local dev, set the env var in `.env`.
-
 ### Stream from a React component
 
 ```tsx title="client/src/ChatPanel.tsx"
 import { useState } from "react";
-import { useServingStream } from "@databricks/appkit-ui/react";
+import { useAgentChat } from "@databricks/appkit-ui/react";
 
 export function ChatPanel() {
   const [prompt, setPrompt] = useState("");
-  const { stream, chunks, streaming, error, reset } = useServingStream(
-    { messages: [{ role: "user", content: prompt }], max_tokens: 500 },
-    { alias: "chat" },
-  );
+  const { content, isStreaming, error, send, reset } = useAgentChat({
+    agent: "chat",
+  });
 
   return (
     <>
       <input value={prompt} onChange={(e) => setPrompt(e.target.value)} />
-      <button onClick={() => stream()} disabled={streaming || !prompt}>
+      <button
+        onClick={() => void send(prompt)}
+        disabled={isStreaming || !prompt}
+      >
         Send
       </button>
       <button onClick={reset}>Clear</button>
-      {chunks.map((chunk, i) => (
-        <pre key={i}>{JSON.stringify(chunk)}</pre>
-      ))}
+      <p>{content}</p>
       {error && <p>{error}</p>}
     </>
   );
 }
 ```
 
-The first argument is the request body. The second holds options, including the alias. The hook manages the SSE connection, aborts on unmount, and accumulates parsed chunks into state. For a non-streaming call, use `useServingInvoke` with the same shape.
-
-For chat models, extract text from each chunk (typically `chunk.choices?.[0]?.delta?.content`) and concatenate for display. During development, rendering raw chunks as JSON confirms the shape before you build your display logic.
+`useAgentChat` opens the SSE stream, accumulates the assistant's text in `content`, and aborts on unmount. The stream yields OpenAI Responses-API events, so read text from `content` and use the hook's `onEvent` for tool calls, rather than Chat Completions `choices`.
 
 ### Call it from a route handler
 
-For agent orchestration, pre/post-processing, or logging on the backend, call the plugin directly. The plugin's built-in HTTP routes run as the authenticated user by default. In a custom route handler like this one, call `.asUser(req)` explicitly to get the same per-user behavior.
+For backend orchestration, pre/post-processing, or logging, invoke the agent server-side with `runAgent`, importing the agent definition from its folder. `runAgent` runs standalone with no HTTP request, so its model call and tools run as the app service principal (no OBO). Through the built-in agent routes, the model call also runs as the service principal, while the plugin tools an agent calls run on behalf of the signed-in user. See the [`agents` plugin reference](/docs/appkit/v0/plugins/agents) for the `runAgent` signature.
 
-```typescript title="server/server.ts"
-AppKit.server.extend((app) => {
-  app.post("/api/summarize", async (req, res) => {
-    const { text } = req.body;
-    const result = await AppKit.serving("chat")
-      .asUser(req)
-      .invoke({
-        messages: [
-          { role: "system", content: "Summarize the text in two sentences." },
-          { role: "user", content: text },
-        ],
-      });
-    res.json(result);
-  });
-});
-```
+### One agent or many
 
-### Named versus default mode
-
-The examples above use **named mode** with an explicit alias. Omit the config to register a `default` alias backed by `DATABRICKS_SERVING_ENDPOINT_NAME`. Named mode scales to multiple endpoints (chat, classifier, embeddings) in the same app.
+Each folder under `server/agents/` is a separate agent, addressed by id (`useAgentChat({ agent: "chat" })`). Add folders for more agents (chat, classifier, summarizer); mark one `createAgent({ default: true })` for callers that don't name an agent.
 
 ### Query a model service
 
-A **model service** is a Unity Catalog model API, such as `system.ai.claude-sonnet-4-5`, queried by fully qualified name. The Model Serving plugin can't call one, so point the OpenAI SDK at the gateway's OpenAI-compatible endpoint, or send a raw request, forwarding the signed-in user's token. Both transports hit the same endpoint:
+A **model service** is a Unity Catalog model API, such as `system.ai.claude-sonnet-4-5`, queried by fully qualified name rather than as a serving endpoint. Point the OpenAI SDK at the gateway's OpenAI-compatible endpoint, or send a raw request, forwarding the signed-in user's token. Both transports hit the same endpoint:
 
 ```typescript title="server/server.ts" tab="OpenAI SDK"
 import OpenAI from "openai";
@@ -210,7 +200,7 @@ AppKit.server.extend((app) => {
 
 Governance is enforced on Databricks, not in AppKit. Your app calls the endpoint and the gateway applies the policy. Unity Gateway is the control plane for AI traffic. It routes model and MCP requests and enforces rate limits, cost controls, service policies, and usage tracking. Unity Catalog governs the models, MCP servers, and functions behind it. For the current features and setup, including the beta features you enable from the account console Previews page, see [AI governance with Unity Gateway](https://docs.databricks.com/aws/en/ai-gateway/ai-governance).
 
-For AppKit, the Model Serving plugin calls serving endpoints by name. This includes foundation models (the `databricks-` prefix), Knowledge Assistants, Supervisor Agents, and custom Python agents. The plugin does not call Unity Gateway model services; to call one from your app, see [Query a model service](#query-a-model-service).
+For AppKit, an agent reaches these serving endpoints by name through a model adapter (`fromModelServing`). This includes foundation models (the `databricks-` prefix), Knowledge Assistants, Supervisor Agents, and custom Python agents. To call a Unity Gateway model service instead, see [Query a model service](#query-a-model-service).
 
 These controls are configured on Databricks by platform or admin teams, not in your app, but requests through a governed endpoint are subject to whatever applies:
 
@@ -386,7 +376,7 @@ Wait for the endpoint to reach `READY` state before querying it. For a step-by-s
 
 ## Coding agent integrations
 
-Unity Gateway can also govern AI coding tools like Claude Code, Codex, Cursor, and Gemini CLI, so their requests share one invoice, usage dashboard, and set of rate limits. Databricks recommends the [Unity Gateway CLI (`ug`)](https://github.com/databricks/unity-gateway), which installs, authenticates, and configures a supported agent with the gateway in one command (`uv tool install git+https://github.com/databricks/unity-gateway`, then `ug claude`, `ug codex`, and so on). The older `ucode` command still works, but `ug` is now the primary command. See [Integrate with coding agents](https://docs.databricks.com/aws/en/ai-gateway/coding-agent-integration-model-services) for the setup steps and the current list of supported tools.
+Unity Gateway can also govern AI coding tools like Claude Code, Codex, Cursor, and Gemini CLI, so their requests share one invoice, usage dashboard, and set of rate limits. Databricks recommends the [Unity Gateway CLI (`ug`)](https://github.com/databricks/unity-gateway), which installs, authenticates, and configures a supported agent with the gateway in one command (`uv tool install git+https://github.com/databricks/unity-gateway`, then `ug claude`, `ug codex`, and so on). The older `ucode` command still works, but `ug` is now the primary command. See [Integrate with coding agents](https://docs.databricks.com/aws/en/ai-gateway/coding-agent-quickstart) for the setup steps and the current list of supported tools.
 
 ## Where to next
 

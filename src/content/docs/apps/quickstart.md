@@ -13,7 +13,7 @@ sourceOfTruth:
 ## Prerequisites
 
 - Databricks CLI `v1.0.0+` with an [authenticated profile](/docs/tools/databricks-cli#authenticate)
-- Node.js 22+ (AppKit apps are Node/TypeScript)
+- Node.js 22.16+ (AppKit apps are Node/TypeScript)
 - Databricks workspace with Apps enabled
 
 ## Template path

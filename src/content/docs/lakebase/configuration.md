@@ -129,7 +129,7 @@ databricks postgres update-endpoint \
 
 ## Scale to zero
 
-[Scale to zero](https://docs.databricks.com/aws/en/oltp/projects/scale-to-zero) suspends idle computes to eliminate costs. When a new query arrives, the compute resumes automatically (typically a few hundred milliseconds).
+[Scale to zero](https://docs.databricks.com/aws/en/oltp/projects/scale-to-zero) suspends idle computes to eliminate costs. When a new query arrives, the compute resumes automatically (typically a few hundred milliseconds). Scale to zero is available only for computes of 32 CU or smaller; for autoscaling computes, the maximum size must be 32 CU or smaller.
 
 The default timeout is 24 hours. Set any value from 60 seconds to 7 days. For development branches, shorter timeouts (for example 30 minutes) reduce costs further. Apps connecting to a scaled-down compute will see a brief pause on the first query. Implement connection retry logic in your app.
 

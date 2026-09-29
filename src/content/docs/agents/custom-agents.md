@@ -1,117 +1,111 @@
 ---
 title: Custom agent endpoints
 sidebar_label: Custom agents
-description: Call a Knowledge Assistant, Supervisor Agent, or custom Python agent from your AppKit app. Wire any of them into the Model Serving plugin.
+description: Host a custom agent in your AppKit app with the agents plugin, backed by a Model Serving endpoint or the AI Gateway. Stream it with useAgentChat.
 sourceOfTruth:
   skills:
     - databricks-agent-bricks
   docs:
-    - /docs/appkit/v0/plugins/model-serving
-    - https://docs.databricks.com/aws/en/agents/agent-bricks/
+    - /docs/appkit/v0/plugins/agents
+    - /docs/appkit/v0/plugins/execution-context
+    - https://docs.databricks.com/aws/en/agents/
     - https://docs.databricks.com/aws/en/agents/custom-agents/author-agent
-  note: "databricks-agent-bricks covers the Knowledge Assistant and Supervisor builders. Custom Python agent authoring is docs-only (no skill yet)."
+  note: "databricks-agent-bricks covers the Knowledge Assistant and Supervisor builders. Custom Python agent authoring is docs-only (no skill yet). AppKit plugin behavior (agents, adapters) is verified against the installed @databricks/appkit and the reference app, not the TypeDoc plugin pages."
 ---
 
 # Custom agent endpoints
 
-When your AppKit app needs more than a foundation model response or a Genie-style data query, you use a **custom agent**: an LLM shaped by instructions, tools, document grounding, or multi-agent orchestration. You can run one from AppKit in the following ways:
+When your AppKit app needs more than a foundation model response or a Genie-style data query, you use a **custom agent**: an LLM shaped by instructions, tools, document grounding, or multi-agent orchestration. You run one from AppKit with the [`agents` plugin](/docs/appkit/v0/plugins/agents), which hosts the agent in your App and serves it at built-in routes, with no separate endpoint to provision.
 
-- **Run it inside your App** with the [`agents` plugin](/docs/appkit/v0/plugins/agents). You define the agent in code or markdown, or run a managed Supervisor through the Supervisor API adapter, with no separate endpoint to deploy. Start here for a new agent you build yourself.
-- **Call an agent that is already a serving endpoint** with the [Model Serving plugin](/docs/appkit/v0/plugins/model-serving). Use this for a Knowledge Assistant, or any agent already deployed as a shared endpoint.
+The agent's model comes from a **model adapter**: `DatabricksAdapter.fromModelServing` for a Model Serving endpoint (a foundation model, or an agent already deployed as an endpoint such as a Knowledge Assistant), or `DatabricksAdapter.fromAiGateway` for a model service through the gateway.
 
 ## Prerequisites
 
 - Databricks CLI `v1.0.0+` with an [authenticated profile](/docs/tools/databricks-cli#authenticate).
 - A running AppKit app. See [Apps quickstart](/docs/apps/quickstart).
-- For the endpoint path below, an agent already deployed as a serving endpoint.
 
-## Run an agent inside your App
+## Define the agent
 
-The [`agents` plugin](/docs/appkit/v0/plugins/agents) hosts the agent in your App. You define it in markdown or code, wire in tools, and it serves at built-in routes, with no endpoint to provision. For a new custom or supervisor agent, start here.
+Each agent is a folder under `server/agents/<id>/`, where the folder name is the agent id. Its `agent.ts` default-exports a created agent; the plugin discovers them at startup, so there is no map to maintain.
 
-For a Supervisor that coordinates Genie spaces, Unity Catalog functions, or other agents, the Supervisor API adapter runs the agent as a managed service on Databricks:
+```typescript title="server/agents/assistant/agent.ts"
+import { createAgent, DatabricksAdapter } from "@databricks/appkit/beta";
 
-```typescript title="server/server.ts"
-import { createApp } from "@databricks/appkit";
-import {
-  agents,
-  createAgent,
-  DatabricksAdapter,
-} from "@databricks/appkit/beta";
+// The model adapter is async, so resolve it before the export.
+const model = await DatabricksAdapter.fromModelServing(
+  "databricks-claude-sonnet-4-6",
+);
 
-await createApp({
-  plugins: [
-    agents({
-      agents: {
-        assistant: createAgent({
-          instructions: "You are a helpful assistant.",
-          model: DatabricksAdapter.fromSupervisorApi({
-            model: "databricks-claude-sonnet-4-6",
-          }),
-        }),
-      },
-    }),
-  ],
+export default createAgent({
+  instructions: "You are a helpful assistant.",
+  model,
 });
 ```
 
-See the [`agents` plugin reference](/docs/appkit/v0/plugins/agents) for markdown agents, tool scoping, sub-agents, and hosted Supervisor tools.
-
-## Call an existing agent endpoint
-
-Some agents are reached as a Model Serving endpoint instead of running in-app. A Knowledge Assistant always is, and a Supervisor Agent or custom Python agent can be. The Model Serving plugin calls any of them by name, like a foundation model. These are the builders that produce such an endpoint:
-
-| Builder             | Use when                                                                       | Set up                                                                                                                                                                                                                                |
-| ------------------- | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Knowledge Assistant | Q&A over your documents, with citations                                        | [Knowledge Assistant](https://docs.databricks.com/aws/en/agents/agent-bricks/knowledge-assistant) (workspace UI)                                                                                                                      |
-| Supervisor Agent    | Coordinate Genie Agents, other agents, Unity Catalog functions, or MCP servers | [Supervisor Agent](https://docs.databricks.com/aws/en/agents/agent-bricks/multi-agent-supervisor) (workspace UI), or the [Supervisor API](https://docs.databricks.com/aws/en/agents/agent-bricks/supervisor-api) to build one in code |
-| Custom Python agent | Nothing else fits: your own orchestration, tools, or framework                 | [Author an agent](https://docs.databricks.com/aws/en/agents/custom-agents/author-agent) in Python                                                                                                                                     |
-
-The Knowledge Assistant and Supervisor Agent builders are click-through in the workspace. You can also create them from your coding agent with the [`databricks-agent-bricks`](/docs/tools/ai-tools/agent-skills) agent skill. The [Supervisor API](https://docs.databricks.com/aws/en/agents/agent-bricks/supervisor-api) defines a Supervisor Agent in Python, for teams that prefer code over the workspace UI.
-
-Deploying a custom agent to its own Model Serving endpoint with `agents.deploy()` is a legacy path. Prefer running it in-app (above), or see [Author an agent](https://docs.databricks.com/aws/en/agents/custom-agents/author-agent) and [Migrate to Databricks Apps](https://docs.databricks.com/aws/en/agents/custom-agents/migrate-agent-to-apps).
-
-## Wire it up
-
-The Model Serving plugin calls agent endpoints the same way it calls foundation model endpoints. Point the plugin at your agent's env var:
+Register the plugin with no arguments; it discovers `server/agents/*/agent.ts`:
 
 ```typescript title="server/server.ts"
-serving({
-  endpoints: {
-    assistant: { env: "DATABRICKS_AGENT_ENDPOINT" },
-  },
-}),
+import { createApp } from "@databricks/appkit";
+import { agents } from "@databricks/appkit/beta";
+
+await createApp({ plugins: [agents()] });
 ```
 
-Bind the env var to a `serving-endpoint` resource in `app.yaml`:
+For a production build, list `server/agents/*/agent.ts` as build entries (for example in `tsdown`) so the compiled `dist/agents/<id>/agent.js` is emitted for discovery. Without it, the agent is absent from the deployed bundle and the plugin finds nothing.
 
-```yaml title="app.yaml"
-env:
-  - name: DATABRICKS_AGENT_ENDPOINT
-    valueFrom: serving-endpoint
+> Earlier AppKit versions took an inline map, `agents({ agents: { assistant: createAgent(...) } })`. That form is deprecated as of AppKit 0.64.0 in favor of the file-based discovery above.
+
+## Stream it from React
+
+The `useAgentChat` hook streams a turn from the agent's built-in chat route:
+
+```tsx title="client/src/Chat.tsx"
+import { useState } from "react";
+import { useAgentChat } from "@databricks/appkit-ui/react";
+
+export function Chat() {
+  const [prompt, setPrompt] = useState("");
+  const { content, isStreaming, send, reset } = useAgentChat({
+    agent: "assistant",
+  });
+
+  return (
+    <>
+      <input value={prompt} onChange={(e) => setPrompt(e.target.value)} />
+      <button
+        onClick={() => void send(prompt)}
+        disabled={isStreaming || !prompt}
+      >
+        Send
+      </button>
+      <button onClick={reset}>Clear</button>
+      <p>{content}</p>
+    </>
+  );
+}
 ```
 
-When you add the agent endpoint as an app resource (Databricks Apps UI or CLI), Databricks grants your app's service principal `CAN QUERY` on the endpoint.
+`content` accumulates the assistant's text as it streams. The agent stream yields OpenAI Responses-API-shaped events, so read text from `content` (and use the hook's `onEvent` for tool calls) rather than Chat Completions `choices`.
 
-For the full wiring pattern, including `createApp`, `useServingStream`, and custom route handlers, see [Call a governed endpoint from AppKit](/docs/unity-gateway/overview#call-a-governed-endpoint-from-appkit).
+> This replaces the Model Serving plugin (`serving()` + `useServingStream` / `useServingInvoke`), deprecated as of AppKit 0.77.0 in favor of the `agents` plugin. To call a foundation model or a deployed endpoint, point an agent's model adapter at it (`fromModelServing`) rather than registering the `serving` plugin. The identity model differs: the `serving()` routes ran on behalf of the signed-in user (OBO), while an agent's model call runs as the app service principal.
 
-## What the response looks like
+See the [`agents` plugin reference](/docs/appkit/v0/plugins/agents) for markdown agents, tool scoping, sub-agents, and server-side invocation (`runAgent`) from a custom route.
 
-Streaming responses arrive as `useServingStream` chunks. Non-streaming calls return the complete object from `useServingInvoke`. The request shape is usually OpenAI Chat Completions-compatible (`messages`, `max_tokens`, optional `stream`). Endpoints built on `ResponsesAgent` use the OpenAI Responses API instead (`input` in place of `messages`).
+## Call an agent someone else built
 
-The response shape depends on the builder, so look it up rather than guess:
+A **Knowledge Assistant**, **Supervisor Agent**, or **custom Python agent** is created outside your app and deployed as a Model Serving endpoint. To call one, back an agent's model adapter with that endpoint name (`fromModelServing("<endpoint>")`), exactly as above. These are the builders that produce such an endpoint:
 
-1. Open your agent endpoint in the workspace and click **Open in Playground**.
-2. Click **Get code** and pick **Curl API** or **Python API**.
-3. Run the example and inspect the response to see the exact fields.
+| Builder             | Use when                                                                       | Set up                                                                                                                                                                                                                                                                         |
+| ------------------- | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Knowledge Assistant | Q&A over your documents, with citations                                        | [Knowledge Assistant](https://docs.databricks.com/aws/en/agents/agent-bricks/knowledge-assistant) (workspace UI)                                                                                                                                                               |
+| Supervisor Agent    | Coordinate Genie Agents, other agents, Unity Catalog functions, or MCP servers | [Supervisor Agent](https://docs.databricks.com/aws/en/agents/agent-bricks/multi-agent-supervisor) (workspace UI), or the [Supervisor API](https://docs.databricks.com/aws/en/agents/agent-bricks/supervisor-api) (deprecated, retires September 30, 2026) to build one in code |
+| Custom Python agent | Nothing else fits: your own orchestration, tools, or framework                 | [Author an agent](https://docs.databricks.com/aws/en/agents/custom-agents/author-agent) in Python                                                                                                                                                                              |
+
+The Knowledge Assistant and Supervisor Agent builders are click-through in the workspace. You can also create them from your coding agent with the [`databricks-agent-bricks`](/docs/tools/ai-tools/agent-skills) agent skill. When you add the endpoint as an app resource (Databricks Apps UI or CLI), Databricks grants your app's service principal `CAN QUERY` on it.
 
 ## Per-user permissions
 
-Serving routes in AppKit run on behalf of the authenticated user by default. If the agent hits user-scoped data (for example a Supervisor Agent that routes to a Genie Agent the user can query), the user only sees the data they're allowed to see. No extra auth code.
-
-For server logic outside the built-in plugin routes (for example, custom Express routes), call `AppKit.serving("assistant").asUser(req).invoke(...)` to keep per-user behavior. For background work without a request (scheduled tasks, workers), omit `asUser` and the call runs as the app's service principal.
-
-To configure how a deployed agent authenticates to other Databricks resources (service principal versus on-behalf-of-user), see [Authentication for agents](https://docs.databricks.com/aws/en/agents/custom-agents/agent-authentication).
+The agent plugin's `/chat` route runs the model call as the app **service principal** by default (OBO for the model call is not yet wired). The **plugin tools an agent calls** (declared as `plugin:<name>`) do run on behalf of the signed-in user, so when an agent reaches user-scoped data through a plugin tool (for example an analytics or Genie tool), the user sees only what they're allowed to, with no extra auth code. See [execution context](/docs/appkit/v0/plugins/execution-context) for how AppKit resolves the identity, and [Authentication for agents](https://docs.databricks.com/aws/en/agents/custom-agents/agent-authentication) for how a deployed agent authenticates to other resources.
 
 ## Where to next
 

@@ -97,7 +97,6 @@ const SECTION_PREFIXES: ReadonlyArray<[string, MarkdownSection]> = [
   ["recipes/", "templates"],
   ["resources/", "templates"],
   ["examples/", "templates"],
-  ["solutions/", "solutions"],
 ];
 
 function parseDocRequest(raw: string): {
@@ -113,8 +112,8 @@ function parseDocRequest(raw: string): {
     if (path.startsWith(prefix)) {
       return { section, slug: path.slice(prefix.length) };
     }
-    // A bare section path (e.g. `templates`, `solutions`, or the `recipes`/
-    // `resources`/`examples` aliases) after stripping `.md` is the section
+    // A bare section path (e.g. `templates` or the `recipes`/`resources`/
+    // `examples` aliases) after stripping `.md` is the section
     // overview URL from `list_docs_resources`; route it to the index (empty
     // slug). `docs` has no index page, so it stays a normal docs lookup.
     if (section !== "docs" && path === prefix.slice(0, -1)) {

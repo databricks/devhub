@@ -13,7 +13,9 @@ sourceOfTruth:
 
 # Unity AI Gateway
 
-**Unity AI Gateway** is a Databricks governance layer for LLM endpoints and MCP servers. It enforces rate limits, applies guardrails, and tracks usage and cost. See the [Unity AI Gateway overview](https://docs.databricks.com/aws/en/ai-gateway/) for a full product introduction. From your AppKit app, you call a governed endpoint with the Model Serving plugin. This page covers the AppKit wiring and the CLI for inspecting and provisioning endpoints.
+Adding an LLM feature to your app (chat, summarization, an agent) normally means signing up with a model provider, putting an API key in your app, and building your own rate limiting and cost tracking. **Unity AI Gateway** removes that: your app calls a governed model endpoint by name, and Databricks applies rate limits, guardrails, usage tracking, and cost controls centrally. You build the feature; the platform governs the traffic.
+
+From your AppKit app, you call a governed endpoint with the Model Serving plugin. This page covers the AppKit wiring and the CLI for inspecting and provisioning endpoints. For a full product introduction, see the [Unity AI Gateway overview](https://docs.databricks.com/aws/en/ai-gateway/).
 
 ## Prerequisites
 
@@ -110,18 +112,118 @@ AppKit.server.extend((app) => {
 
 The examples above use **named mode** with an explicit alias. Omit the config to register a `default` alias backed by `DATABRICKS_SERVING_ENDPOINT_NAME`. Named mode scales to multiple endpoints (chat, classifier, embeddings) in the same app.
 
+### Query a model service
+
+A **model service** is a Unity Catalog model API, such as `system.ai.claude-sonnet-4-5`, queried by fully qualified name. The Model Serving plugin can't call one, so point the OpenAI SDK at the gateway's OpenAI-compatible endpoint, or send a raw request, forwarding the signed-in user's token. Both transports hit the same endpoint:
+
+```typescript title="server/server.ts" tab="OpenAI SDK"
+import OpenAI from "openai";
+
+AppKit.server.extend((app) => {
+  app.post("/api/ask", async (req, res) => {
+    const rawToken = req.headers["x-forwarded-access-token"];
+    const userToken = Array.isArray(rawToken) ? rawToken[0] : rawToken;
+    if (!userToken) {
+      res
+        .status(401)
+        .json({ error: "User authorization (OBO) is not enabled" });
+      return;
+    }
+    // Normalize DATABRICKS_HOST to an absolute URL (prepend a scheme if missing).
+    const host = process.env.DATABRICKS_HOST ?? "";
+    const baseUrl = host.startsWith("http") ? host : `https://${host}`;
+    const client = new OpenAI({
+      baseURL: `${baseUrl}/ai-gateway/mlflow/v1`,
+      apiKey: userToken,
+    });
+    try {
+      // The SDK retries a rate-limited request (HTTP 429) automatically.
+      const completion = await client.chat.completions.create({
+        model: "system.ai.claude-sonnet-4-5", // fully qualified UC name
+        messages: [{ role: "user", content: req.body.prompt }],
+        max_tokens: 256,
+      });
+      res.json(completion);
+    } catch (err) {
+      // The SDK throws on a non-2xx response (a missing ai-gateway scope is a 403).
+      const status = (err as { status?: number }).status ?? 500;
+      res
+        .status(status)
+        .json({ error: err instanceof Error ? err.message : String(err) });
+    }
+  });
+});
+```
+
+```typescript title="server/server.ts" tab="Raw fetch"
+AppKit.server.extend((app) => {
+  app.post("/api/ask", async (req, res) => {
+    const rawToken = req.headers["x-forwarded-access-token"];
+    const userToken = Array.isArray(rawToken) ? rawToken[0] : rawToken;
+    if (!userToken) {
+      res
+        .status(401)
+        .json({ error: "User authorization (OBO) is not enabled" });
+      return;
+    }
+    // Normalize DATABRICKS_HOST to an absolute URL (prepend a scheme if missing);
+    // production code should fail fast if it is unset.
+    const host = process.env.DATABRICKS_HOST ?? "";
+    const baseUrl = host.startsWith("http") ? host : `https://${host}`;
+    const url = `${baseUrl}/ai-gateway/mlflow/v1/chat/completions`;
+    // Minimal example: production code should validate req.body.prompt first.
+    const init = {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${userToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "system.ai.claude-sonnet-4-5", // fully qualified UC name
+        messages: [{ role: "user", content: req.body.prompt }],
+        max_tokens: 256,
+      }),
+    };
+    // No SDK, so retry HTTP 429 yourself, honoring Retry-After. Production code
+    // should also pass an AbortSignal to fetch to bound the request.
+    let resp = await fetch(url, init);
+    for (let attempt = 0; resp.status === 429 && attempt < 2; attempt++) {
+      const retryAfter = Number(resp.headers.get("retry-after"));
+      const delay = Math.min(retryAfter > 0 ? retryAfter : 2 ** attempt, 5);
+      await new Promise((r) => setTimeout(r, delay * 1000));
+      resp = await fetch(url, init);
+    }
+    // Forward the upstream content type: gateway errors are often HTML or text.
+    res
+      .status(resp.status)
+      .type(resp.headers.get("content-type") ?? "application/json")
+      .send(await resp.text());
+  });
+});
+```
+
+- **Scope:** this needs the `ai-gateway` scope in `user_api_scopes` (separate from `model-serving`); without it the gateway returns a 403. See [App configuration](/docs/apps/configuration#auth-model).
+- **Rate limits:** the OpenAI SDK retries a 429 for you; the raw path has to run that retry loop itself, as shown above.
+- **Availability:** `system.ai.*` models aren't in every workspace (region, Unity Catalog, and entitlement all apply), so a name in `system.ai` isn't a guarantee. The **AI Gateway UI** shows which ones you can actually query; `system.ai` and Catalog Explorer list them globally. See [model services](https://docs.databricks.com/aws/en/ai-gateway/model-services) and [Query model services](https://docs.databricks.com/aws/en/ai-gateway/query-model-services).
+
 ## Governance and Unity AI Gateway
 
 Governance is enforced on Databricks, not in AppKit. Your app calls the endpoint and the gateway applies the policy. Unity AI Gateway is the control plane for AI traffic. It routes model and MCP requests and enforces rate limits, cost controls, service policies, and usage tracking. Unity Catalog governs the models, MCP servers, and functions behind it. For the current features and setup, including the beta features you enable from the account console Previews page, see [AI governance with Unity AI Gateway](https://docs.databricks.com/aws/en/ai-gateway/ai-governance).
 
-For AppKit, the Model Serving plugin calls serving endpoints by name. This includes foundation models (the `databricks-` prefix), Knowledge Assistants, Supervisor Agents, and custom Python agents. The plugin does not call Unity AI Gateway model services, which are Unity Catalog objects you query by fully qualified name through the gateway's OpenAI-compatible API. To use one, see [Query model services](https://docs.databricks.com/aws/en/ai-gateway/query-model-services).
+For AppKit, the Model Serving plugin calls serving endpoints by name. This includes foundation models (the `databricks-` prefix), Knowledge Assistants, Supervisor Agents, and custom Python agents. The plugin does not call Unity AI Gateway model services; to call one from your app, see [Query a model service](#query-a-model-service).
 
-For details on each, see:
+These controls are configured on Databricks by platform or admin teams, not in your app, but requests through a governed endpoint are subject to whatever applies:
 
-- Model services: [overview](https://docs.databricks.com/aws/en/ai-gateway/model-services) and [governance](https://docs.databricks.com/aws/en/ai-gateway/govern-model-services).
-- Model-provider services: [overview](https://docs.databricks.com/aws/en/ai-gateway/model-provider-services) and [governance](https://docs.databricks.com/aws/en/ai-gateway/govern-model-provider-services).
-- MCP server governance: [register an MCP service](https://docs.databricks.com/aws/en/ai-gateway/register-mcp-service) and [govern it](https://docs.databricks.com/aws/en/ai-gateway/govern-mcp-service). This applies when an agent endpoint you call, such as a Supervisor Agent or custom Python agent, routes to an MCP server internally. AppKit apps don't configure it directly.
-- Previous version: [AI Gateway on serving endpoints](https://docs.databricks.com/aws/en/ai-gateway/overview-serving-endpoints), where you toggle features per endpoint and usage logs to `system.serving.endpoint_usage`.
+| Capability                  | What it governs                                                                                        | Learn more                                                                                                                                                                                                                                                                                                          |
+| --------------------------- | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Model services**          | Governed LLM endpoints as Unity Catalog objects, over a Databricks or external model                   | [Overview](https://docs.databricks.com/aws/en/ai-gateway/model-services), [create](https://docs.databricks.com/aws/en/ai-gateway/create-model-services), [govern](https://docs.databricks.com/aws/en/ai-gateway/govern-model-services), [query](https://docs.databricks.com/aws/en/ai-gateway/query-model-services) |
+| **Model-provider services** | External model providers registered for governed, discoverable access                                  | [Overview](https://docs.databricks.com/aws/en/ai-gateway/model-provider-services), [govern](https://docs.databricks.com/aws/en/ai-gateway/govern-model-provider-services)                                                                                                                                           |
+| **Rate limits**             | Per-service and per-user request and token quotas on model and MCP services (HTTP 429 over limit)      | [Rate limits](https://docs.databricks.com/aws/en/ai-gateway/rate-limits)                                                                                                                                                                                                                                            |
+| **Usage tracking**          | Per-request logging to the `system.ai_gateway.usage` system table, for dashboards and cost analysis    | [Usage tracking](https://docs.databricks.com/aws/en/ai-gateway/usage-tracking)                                                                                                                                                                                                                                      |
+| **Budgets**                 | Spend thresholds, shared or per user, that send an alert or block requests; backs `--budget-policy-id` | [Budgets](https://docs.databricks.com/aws/en/ai-gateway/budgets)                                                                                                                                                                                                                                                    |
+| **MCP server governance**   | Applies when an agent endpoint you call routes to an MCP server internally                             | [Register](https://docs.databricks.com/aws/en/ai-gateway/register-mcp-service), [govern](https://docs.databricks.com/aws/en/ai-gateway/govern-mcp-service)                                                                                                                                                          |
+
+For the earlier per-endpoint approach, see [AI Gateway on serving endpoints](https://docs.databricks.com/aws/en/ai-gateway/overview-serving-endpoints), where you toggle features per endpoint and usage logs to `system.serving.endpoint_usage`.
 
 ## List available endpoints
 
@@ -284,7 +386,7 @@ Wait for the endpoint to reach `READY` state before querying it. For a step-by-s
 
 ## Coding agent integrations
 
-Unity AI Gateway can also govern AI coding tools like Cursor, Codex CLI, and Gemini CLI, so their requests share one invoice, usage dashboard, and set of rate limits. Databricks recommends [`ucode`](https://github.com/databricks/ucode) to set this up. See [Integrate with coding agents](https://docs.databricks.com/aws/en/ai-gateway/coding-agent-integration-model-services) for the setup steps and the current list of supported tools.
+Unity AI Gateway can also govern AI coding tools like Claude Code, Codex, Cursor, and Gemini CLI, so their requests share one invoice, usage dashboard, and set of rate limits. Databricks recommends the [Unity Gateway CLI (`ug`)](https://github.com/databricks/unity-gateway), which installs, authenticates, and configures a supported agent with the gateway in one command (`uv tool install git+https://github.com/databricks/unity-gateway`, then `ug claude`, `ug codex`, and so on). The older `ucode` command still works, but `ug` is now the primary command. See [Integrate with coding agents](https://docs.databricks.com/aws/en/ai-gateway/coding-agent-integration-model-services) for the setup steps and the current list of supported tools.
 
 ## Where to next
 

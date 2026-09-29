@@ -51,7 +51,7 @@ By default, `agentbricks deploy` automatically enables all of the following capa
 
 | Capability           | Description                                                                                                                                                                                                                                                                                                                                |
 | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Model access**     | The CLI provisions model access so your agent can call a Databricks-served model through the AI Gateway without managing credentials or endpoints. See [Foundation Model APIs](https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/).                                                                                |
+| **Model access**     | The CLI provisions model access so your agent can call a Databricks-served model through Unity Gateway without managing credentials or endpoints. See [Foundation Model APIs](https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/).                                                                                 |
 | **Managed memory**   | Durable facts, preferences, and decisions that an agent recalls in later, separate conversations, retrieved by semantic search and partitioned by actor. See [Managed agent memory](https://docs.databricks.com/aws/en/agents/agent-memory/managed-memory).                                                                                |
 | **Managed sessions** | An agent's session state for one interaction, most commonly the conversation transcript, held in managed session stores and partitioned by actor, with support for forking a session into an independent branch. See [Managed agent sessions](https://docs.databricks.com/aws/en/agents/agent-memory/managed-sessions).                    |
 | **Tools**            | Databricks-managed capabilities declared in `agent.toml`: a downscoped Unity Catalog sandbox, a managed MCP service, a Genie Space, or a Unity Catalog function. Write custom Python tools directly in the project code. See [Databricks-provided MCP servers](https://docs.databricks.com/aws/en/agents/mcp-tools/built-in-mcp-services). |
@@ -119,7 +119,7 @@ Run the agent on your machine to test it before you deploy.
 agentbricks dev
 ```
 
-This starts a local server on port 8000, wrapping the Databricks Apps local runtime so the app runs the way it does when deployed. Long-term memory is off and conversation history is kept in-process, so it doesn't persist across restarts; the bound memory and session stores are created and used only when you deploy. The CLI connects the agent to the Unity AI Gateway so it can call the model locally. By default, the agent uses the `system.ai.claude-sonnet-4-5` model. To use a different model, edit the `MODEL` value in `agent/agent.py`.
+This starts a local server on port 8000, wrapping the Databricks Apps local runtime so the app runs the way it does when deployed. Long-term memory is off and conversation history is kept in-process, so it doesn't persist across restarts; the bound memory and session stores are created and used only when you deploy. The CLI connects the agent to Unity Gateway so it can call the model locally. By default, the agent uses the `system.ai.claude-sonnet-4-5` model. To use a different model, edit the `MODEL` value in `agent/agent.py`.
 
 Open the pre-generated chat UI at `http://localhost:8000` to interact with the agent. The UI includes a link to the local MLflow server, where you can view traces.
 
@@ -146,7 +146,7 @@ Deploy the agent to the Databricks agent runtime. The CLI provisions the agent's
 agentbricks deploy my-agent
 ```
 
-When the deployment finishes, the CLI returns the deployment's URL. Open that URL to interact with your live agent, which is automatically connected to the Unity AI Gateway. To manage the deployment afterward, use the `agentbricks deployments` commands with the full app name. For example, to stream logs or stop the deployment:
+When the deployment finishes, the CLI returns the deployment's URL. Open that URL to interact with your live agent, which is automatically connected to Unity Gateway. To manage the deployment afterward, use the `agentbricks deployments` commands with the full app name. For example, to stream logs or stop the deployment:
 
 ```bash
 agentbricks deployments logs agent-bricks-my-agent

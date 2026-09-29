@@ -94,6 +94,16 @@ const nextConfig = {
         permanent: true,
       },
       {
+        source: "/docs/agents/ai-gateway",
+        destination: "/docs/unity-gateway/overview",
+        permanent: true,
+      },
+      {
+        source: "/docs/agents/ai-gateway.md",
+        destination: "/docs/unity-gateway/overview.md",
+        permanent: true,
+      },
+      {
         source: "/product/data-lakehouse",
         destination: "/product/lakebase",
         permanent: true,

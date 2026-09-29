@@ -8,6 +8,7 @@
     "templates",
     "apps",
     "lakebase",
+    "unity-gateway",
     "agents",
     "lakehouse"
   ]

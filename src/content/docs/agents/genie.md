@@ -9,6 +9,7 @@ sourceOfTruth:
     - databricks-app-design
   docs:
     - /docs/appkit/v0/plugins/genie
+    - /docs/appkit/v0/plugins/execution-context
     - https://docs.databricks.com/aws/en/genie-agents/
     - https://docs.databricks.com/aws/en/dev-tools/databricks-apps/auth
 ---
@@ -148,7 +149,7 @@ Bind each ID to a separate resource in `app.yaml`. See the [Genie Multi-Agent Se
 
 ## Permissions and data access
 
-By default, the `genie` plugin calls the Genie API as the app's **service principal**: every user's questions run under one shared identity, and the service principal's permissions govern what any question can reach. To run each query **on behalf of the signed-in user** (OBO) instead — so results are governed by that user's own Unity Catalog access — declare the scope in `databricks.yml`:
+The `genie` plugin's built-in routes call the Genie API **on behalf of the signed-in user** (OBO), so every query runs as that user and is governed by their own Unity Catalog access. See [AppKit execution context](/docs/appkit/v0/plugins/execution-context) for how AppKit resolves the request identity. Declare the `genie` scope in `databricks.yml` so the forwarded user token is allowed to call Genie:
 
 ```yaml title="databricks.yml"
 resources:
@@ -158,14 +159,14 @@ resources:
         - genie
 ```
 
-OBO requires that user authorization is enabled in the workspace. Adding a new resource to the app can silently drop existing `user_api_scopes`, so re-verify the scope after each deployment. See [Authenticate as the app user (OBO)](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/auth#user-authorization).
+Without the scope the request fails and does not fall back to the service principal (AppKit falls back to the service principal only in local development). OBO also requires that user authorization is enabled in the workspace. Adding a new resource to the app can silently drop existing `user_api_scopes`, so re-verify the scope after each deployment. See [Authenticate as the app user (OBO)](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/auth#user-authorization).
 
-The permissions each request needs depend on which identity it runs as:
+Because each request runs as the signed-in user, that user's permissions govern the result:
 
-- **App service principal (always)**: `CAN RUN` on the Genie Agent, granted when you attach the agent as an app resource (UI or CLI) with **Can run** selected. Permissions on the underlying data are not auto-provisioned: grant the service principal `USE CATALOG`, `USE SCHEMA`, and `SELECT` on the Unity Catalog tables separately. See [Add a Genie Agent resource to an app](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/genie).
-- **End users (OBO only)**: when `user_api_scopes` is wired, each user also needs access to the Genie Agent (shared with them or via a group) and `SELECT` on the same tables. If the user doesn't have access, the call returns a 403. You don't write the permission check.
+- **Signed-in user**: access to the Genie Agent (shared directly or via a group) and `USE CATALOG`, `USE SCHEMA`, and `SELECT` on the underlying tables. If the user lacks access, the call returns a 403. You don't write the permission check.
+- **App service principal**: `CAN RUN` on the Genie Agent, granted when you attach the agent as an app resource (UI or CLI) with **Can run** selected. See [Add a Genie Agent resource to an app](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/genie).
 
-Match any in-app disclosure to the real execution identity: only tell users their own permissions govern results when `user_api_scopes: [genie]` is actually wired; otherwise state that queries run as the app's service principal.
+The built-in routes are always OBO. To run Genie as the app's service principal instead, call the plugin without `asUser` from a custom route; the service principal then also needs the `USE CATALOG`, `USE SCHEMA`, and `SELECT` data grants listed above for the user. Match any in-app disclosure to the identity in use: with the built-in routes, results are governed by the signed-in user's own permissions.
 
 ## Where to next
 

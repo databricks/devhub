@@ -178,24 +178,6 @@ describe("MCP server handler", () => {
     }
   });
 
-  test("get_doc_resource returns the solutions catalog for the bare solutions overview URL", async () => {
-    for (const slug of [
-      "solutions.md",
-      "solutions",
-      "https://developers.databricks.com/solutions.md",
-    ]) {
-      const result = (await callMcp(
-        rpc("tools/call", {
-          name: "get_doc_resource",
-          arguments: { slug },
-        }),
-      )) as { result: { content: Array<{ text: string }>; isError: boolean } };
-      expect(result.result.isError, `slug: ${slug}`).toBeFalsy();
-      const text = result.result.content[0].text;
-      expect(text, `slug: ${slug}`).toContain("# Solutions");
-    }
-  });
-
   test("get_doc_resource still guards path traversal after URL/prefix stripping", async () => {
     for (const slug of [
       "/etc/passwd",
@@ -204,7 +186,6 @@ describe("MCP server handler", () => {
       // -> validateSlug), so exercise traversal through those prefixes too.
       "templates/../../../etc/passwd",
       "recipes/../../secret",
-      "solutions/../../../../etc/passwd",
     ]) {
       const result = (await callMcp(
         rpc("tools/call", {

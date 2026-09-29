@@ -107,26 +107,119 @@ describe("MCP server handler", () => {
     expect(result.result.content[0].text).toContain("path traversal");
   });
 
-  test("get_doc_resource rejects absolute URLs", async () => {
-    const result = (await callMcp(
-      rpc("tools/call", {
-        name: "get_doc_resource",
-        arguments: { slug: "https://evil.com/hack" },
-      }),
-    )) as { result: { content: Array<{ text: string }>; isError: boolean } };
-    expect(result.result.isError).toBe(true);
-    expect(result.result.content[0].text).toContain("absolute URLs");
+  test("get_doc_resource accepts index-style slugs (docs/ prefix, .md suffix, full URL)", async () => {
+    for (const slug of [
+      "docs/start-here",
+      "docs/start-here.md",
+      "/docs/start-here.md",
+      "http://localhost:4173/docs/start-here.md",
+    ]) {
+      const result = (await callMcp(
+        rpc("tools/call", {
+          name: "get_doc_resource",
+          arguments: { slug },
+        }),
+      )) as { result: { content: Array<{ text: string }>; isError: boolean } };
+      expect(result.result.isError, `slug: ${slug}`).toBeFalsy();
+      expect(result.result.content[0].text).toContain("---");
+    }
   });
 
-  test("get_doc_resource rejects leading slash", async () => {
-    const result = (await callMcp(
-      rpc("tools/call", {
-        name: "get_doc_resource",
-        arguments: { slug: "/etc/passwd" },
-      }),
-    )) as { result: { content: Array<{ text: string }>; isError: boolean } };
-    expect(result.result.isError).toBe(true);
-    expect(result.result.content[0].text).toContain('must not start with "/"');
+  test("get_doc_resource fetches template/recipe pages", async () => {
+    for (const slug of [
+      "templates/genie-conversational-analytics",
+      "resources/genie-conversational-analytics",
+    ]) {
+      const result = (await callMcp(
+        rpc("tools/call", {
+          name: "get_doc_resource",
+          arguments: { slug },
+        }),
+      )) as { result: { content: Array<{ text: string }>; isError: boolean } };
+      expect(result.result.isError, `slug: ${slug}`).toBeFalsy();
+      expect(result.result.content[0].text.length).toBeGreaterThan(100);
+    }
+  });
+
+  test("get_doc_resource returns the template catalog for the bare templates overview URL", async () => {
+    for (const slug of [
+      "templates.md",
+      "/templates.md",
+      "templates",
+      "https://developers.databricks.com/templates.md",
+    ]) {
+      const result = (await callMcp(
+        rpc("tools/call", {
+          name: "get_doc_resource",
+          arguments: { slug },
+        }),
+      )) as { result: { content: Array<{ text: string }>; isError: boolean } };
+      expect(result.result.isError, `slug: ${slug}`).toBeFalsy();
+      const text = result.result.content[0].text;
+      expect(text, `slug: ${slug}`).toContain("# Templates");
+      // Must be the catalog, not the "What are templates?" docs article that
+      // lives at the colliding docs slug `templates`.
+      expect(text, `slug: ${slug}`).not.toContain("What are templates?");
+    }
+  });
+
+  test("get_doc_resource still serves the 'What are templates?' docs article at its docs/ URL", async () => {
+    for (const slug of ["docs/templates", "docs/templates.md"]) {
+      const result = (await callMcp(
+        rpc("tools/call", {
+          name: "get_doc_resource",
+          arguments: { slug },
+        }),
+      )) as { result: { content: Array<{ text: string }>; isError: boolean } };
+      expect(result.result.isError, `slug: ${slug}`).toBeFalsy();
+      expect(result.result.content[0].text, `slug: ${slug}`).toContain(
+        "What are templates?",
+      );
+    }
+  });
+
+  test("get_doc_resource returns the solutions catalog for the bare solutions overview URL", async () => {
+    for (const slug of [
+      "solutions.md",
+      "solutions",
+      "https://developers.databricks.com/solutions.md",
+    ]) {
+      const result = (await callMcp(
+        rpc("tools/call", {
+          name: "get_doc_resource",
+          arguments: { slug },
+        }),
+      )) as { result: { content: Array<{ text: string }>; isError: boolean } };
+      expect(result.result.isError, `slug: ${slug}`).toBeFalsy();
+      const text = result.result.content[0].text;
+      expect(text, `slug: ${slug}`).toContain("# Solutions");
+    }
+  });
+
+  test("get_doc_resource still guards path traversal after URL/prefix stripping", async () => {
+    for (const slug of [
+      "/etc/passwd",
+      "https://evil.com/../../etc/passwd",
+      // Non-docs sections validate on a different code path (renderDetailMarkdown
+      // -> validateSlug), so exercise traversal through those prefixes too.
+      "templates/../../../etc/passwd",
+      "recipes/../../secret",
+      "solutions/../../../../etc/passwd",
+    ]) {
+      const result = (await callMcp(
+        rpc("tools/call", {
+          name: "get_doc_resource",
+          arguments: { slug },
+        }),
+      )) as { result: { content: Array<{ text: string }>; isError: boolean } };
+      expect(result.result.isError, `slug: ${slug}`).toBe(true);
+      // Traversal is reported by its reason, not masked as a generic "not found".
+      if (slug.includes("..")) {
+        expect(result.result.content[0].text, `slug: ${slug}`).toContain(
+          "path traversal",
+        );
+      }
+    }
   });
 
   test("unknown method returns error", async () => {

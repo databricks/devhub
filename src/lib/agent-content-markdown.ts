@@ -10,6 +10,7 @@ import {
 import { goalOnly } from "./content-sections";
 import { buildCookbookMarkdownDocument } from "./cookbook-composition";
 import {
+  absolutizeMarkdown,
   composeAgentPrompt,
   type AgentPromptKind,
   type AgentPromptParts,
@@ -52,8 +53,7 @@ function validateSlug(slug: string): void {
 }
 
 function normalizeSlug(rawSlug: string): string {
-  const trimmed = rawSlug.trim();
-  return trimmed.endsWith(".md") ? trimmed.slice(0, -3) : trimmed;
+  return rawSlug.trim().replace(/\.(md|mdx)$/i, "");
 }
 
 function readIfExists(filePath: string): string | undefined {
@@ -256,6 +256,26 @@ export function getDetailMarkdown(
   }
 }
 
+/**
+ * Renders a section + slug to final agent-facing markdown: the section body
+ * wrapped in the template agent prompt when the slug names a
+ * template/recipe/example, or absolutized otherwise. Shared by the `.md` HTTP
+ * route and the docs MCP server so both resolve slugs identically.
+ */
+export function renderDetailMarkdown(
+  section: MarkdownSection,
+  rawSlug: string,
+  rootDir: string = process.cwd(),
+  siteOrigin: string = resolveSiteUrl(),
+): string {
+  const body = getDetailMarkdown(section, rawSlug, rootDir, siteOrigin);
+  const slug = normalizeSlug(rawSlug);
+  const kindInfo = resolveTemplateKind(section, slug, rootDir);
+  return kindInfo
+    ? composeTemplateAgentPrompt({ body, section, slug, siteOrigin, rootDir })
+    : absolutizeMarkdown(body, siteOrigin);
+}
+
 /** Reads all preamble blocks from disk for the server-side composer. */
 export function loadAgentPromptParts(
   rootDir: string = process.cwd(),
@@ -281,7 +301,7 @@ export function loadAgentPromptParts(
  * undefined for sections/slugs that should _not_ be wrapped (docs and
  * empty-slug index pages).
  */
-export function resolveTemplateKind(
+function resolveTemplateKind(
   section: MarkdownSection,
   slug: string,
   rootDir: string = process.cwd(),

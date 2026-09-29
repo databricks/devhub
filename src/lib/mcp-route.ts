@@ -5,6 +5,10 @@ import matter from "gray-matter";
 import { createMcpHandler } from "mcp-handler";
 import { z } from "zod";
 
+import {
+  renderDetailMarkdown,
+  type MarkdownSection,
+} from "./agent-content-markdown";
 import { absolutizeMarkdown } from "./copy-preamble";
 import { expandMdxImports } from "./expand-mdx";
 import { buildDocsFeedbackNote } from "./feedback/docs-feedback-note";
@@ -78,6 +82,48 @@ function validateDocSlug(slug: string): void {
   }
 }
 
+// `list_docs_resources` presents pages as absolute URLs
+// (`…/docs/agents/genie.md`, `/templates/foo.md`) and agents routinely paste
+// those straight back into `get_doc_resource`. Accept them: strip the origin,
+// the file extension, and a leading section segment, then route to the matching
+// content section. A bare slug (`agents/genie`) stays a docs lookup, preserving
+// the documented form. `recipes/`, `resources/`, and `examples/` all resolve
+// through the `templates` section, which serves the whole template catalog
+// (recipes, examples, cookbooks); `resources/` is the legacy prefix the deployed
+// index still uses for templates.
+const SECTION_PREFIXES: ReadonlyArray<[string, MarkdownSection]> = [
+  ["docs/", "docs"],
+  ["templates/", "templates"],
+  ["recipes/", "templates"],
+  ["resources/", "templates"],
+  ["examples/", "templates"],
+  ["solutions/", "solutions"],
+];
+
+function parseDocRequest(raw: string): {
+  section: MarkdownSection;
+  slug: string;
+} {
+  const path = raw
+    .trim()
+    .replace(/^https?:\/\/[^/]+/i, "")
+    .replace(/\.(md|mdx)$/i, "")
+    .replace(/^\/+/, "");
+  for (const [prefix, section] of SECTION_PREFIXES) {
+    if (path.startsWith(prefix)) {
+      return { section, slug: path.slice(prefix.length) };
+    }
+    // A bare section path (e.g. `templates`, `solutions`, or the `recipes`/
+    // `resources`/`examples` aliases) after stripping `.md` is the section
+    // overview URL from `list_docs_resources`; route it to the index (empty
+    // slug). `docs` has no index page, so it stays a normal docs lookup.
+    if (section !== "docs" && path === prefix.slice(0, -1)) {
+      return { section, slug: "" };
+    }
+  }
+  return { section: "docs", slug: path };
+}
+
 function readDocFile(slug: string): string | undefined {
   for (const ext of [".md", ".mdx"]) {
     const filePath = resolve(docsDirectory(), slug + ext);
@@ -120,34 +166,64 @@ const mcpHandler = createMcpHandler(
       "get_doc_resource",
       {
         description:
-          "Fetches a single Databricks developer documentation page as markdown. Use list_docs_resources first to discover available slugs. DevHub pages document the AppKit wiring; a page may begin with a compact 'Source of truth' line naming the agent skill(s) to install (`databricks aitools install`) for the current behavior of the product it wires. Load those skills rather than relying on training data.",
+          "Fetches a single Databricks developer documentation or template page as markdown. Use list_docs_resources first to discover available slugs. DevHub doc pages document the AppKit wiring; a page may begin with a compact 'Source of truth' line naming the agent skill(s) to install (`databricks aitools install`) for the current behavior of the product it wires. Load those skills rather than relying on training data.",
         inputSchema: {
           slug: z
             .string()
             .describe(
-              "The docs page slug (path) to fetch, e.g. 'start-here'. Use list_docs_resources first to discover available slugs.",
+              "The page slug to fetch, e.g. 'agents/genie' or 'templates/genie-conversational-analytics'. Slugs from list_docs_resources are accepted verbatim, including full URLs and a trailing '.md'. Use list_docs_resources first to discover available slugs.",
             ),
         },
       },
       async ({ slug }) => {
-        validateDocSlug(slug);
-        const content = readDocFile(slug);
-        if (!content) {
+        const siteUrl = resolveSiteUrl();
+        const { section, slug: pageSlug } = parseDocRequest(slug);
+
+        // Validate up front for every section so an invalid slug (path
+        // traversal, absolute URL) surfaces its specific reason rather than
+        // being masked as "not found" by the render fallback below. An empty
+        // slug (a section overview URL) passes and renders the section index.
+        validateDocSlug(pageSlug);
+
+        // Docs stay on the bespoke path so the page keeps its "Source of truth"
+        // hint (skills to load); other sections render through the shared
+        // template/recipe composer.
+        if (section === "docs") {
+          const content = readDocFile(pageSlug);
+          if (!content) {
+            throw new Error(`Doc page not found: "${slug}"`);
+          }
+          return {
+            content: [
+              {
+                type: "text" as const,
+                text:
+                  absolutizeMarkdown(
+                    sourceOfTruthHint(content) + content,
+                    siteUrl,
+                  ) + buildDocsFeedbackNote(`/docs/${pageSlug}`, siteUrl),
+              },
+            ],
+          };
+        }
+
+        try {
+          return {
+            content: [
+              {
+                type: "text" as const,
+                text: renderDetailMarkdown(
+                  section,
+                  pageSlug,
+                  process.cwd(),
+                  siteUrl,
+                ),
+              },
+            ],
+          };
+        } catch {
           throw new Error(`Doc page not found: "${slug}"`);
         }
-        const siteUrl = resolveSiteUrl();
-        return {
-          content: [
-            {
-              type: "text" as const,
-              text:
-                absolutizeMarkdown(
-                  sourceOfTruthHint(content) + content,
-                  siteUrl,
-                ) + buildDocsFeedbackNote(`/docs/${slug}`, siteUrl),
-            },
-          ],
-        };
       },
     );
   },

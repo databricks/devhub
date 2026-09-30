@@ -99,6 +99,7 @@ describe("docs sidebar", () => {
     expect(collectHrefs(omnigent.items)).toEqual([
       "/docs/omnigent/overview",
       "/docs/omnigent/quickstart",
+      "/docs/omnigent/programmatic",
     ]);
   });
 

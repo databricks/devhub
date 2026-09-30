@@ -52,8 +52,12 @@ const SIDEBAR_SECTIONS: Array<{
   {
     title: "Omnigent",
     description:
-      "Work with multiple coding agents in one interface, collaborate on sessions, and continue from mobile. Start on Databricks Sandbox or connect your own machine with workspace sign-in and model access.",
-    slugs: ["omnigent/overview", "omnigent/quickstart"],
+      "Work with multiple coding agents in one interface, collaborate on sessions, and continue from mobile. Start on Databricks Sandbox or connect your own machine, then automate sessions with workspace authentication.",
+    slugs: [
+      "omnigent/overview",
+      "omnigent/quickstart",
+      "omnigent/programmatic",
+    ],
   },
   {
     title: "Apps",

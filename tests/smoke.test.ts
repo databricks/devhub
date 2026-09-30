@@ -310,6 +310,7 @@ describe("production build smoke tests", () => {
       "/docs/agents/overview.md",
       "/docs/omnigent/overview.md",
       "/docs/omnigent/quickstart.md",
+      "/docs/omnigent/programmatic.md",
       "/docs/unity-gateway/overview.md",
       "/docs/lakehouse/genie.md",
       "/docs/agents/custom-agents.md",

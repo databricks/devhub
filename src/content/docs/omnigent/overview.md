@@ -57,6 +57,7 @@ After checking the prerequisites in the [quickstart](/docs/omnigent/quickstart):
 
 ## Where to next
 
+- [Programmatic usage](/docs/omnigent/programmatic) explains how to run tasks from scripts with Databricks authentication.
 - [Identity and access](https://docs.databricks.com/aws/en/omnigent/identity-access) explains sign-in, session visibility, and sharing permissions.
 - [Supported harnesses](https://omnigent.ai/docs/build/harnesses/supported) lists the open-source project's agent runtimes and their capabilities.
 - [Custom agents](https://omnigent.ai/docs/use/custom-agents) explains how to define an agent's instructions, tools, harness, and policies.

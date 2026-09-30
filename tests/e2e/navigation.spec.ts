@@ -1009,6 +1009,7 @@ test.describe("docs sidebar navigation", () => {
     { href: "/docs/agents/overview" },
     { href: "/docs/omnigent/overview" },
     { href: "/docs/omnigent/quickstart" },
+    { href: "/docs/omnigent/programmatic" },
     { href: "/docs/unity-gateway/overview" },
     { href: "/docs/lakehouse/genie" },
     { href: "/docs/agents/custom-agents" },

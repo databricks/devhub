@@ -11,6 +11,12 @@ sourceOfTruth:
 
 # Agent memory and sessions
 
+:::note[Beta]
+
+Managed agent memory and sessions are in [Beta](https://docs.databricks.com/aws/en/release-notes/release-types). APIs and behavior can change.
+
+:::
+
 Databricks gives agents two managed stores, both backed by [Lakebase](/docs/lakebase/overview) and usable from any framework:
 
 - **Sessions** hold one conversation: the ordered messages, tool calls, and results the agent replays to continue it.

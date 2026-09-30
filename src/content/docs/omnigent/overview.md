@@ -1,7 +1,7 @@
 ---
 title: What is Omnigent?
 sidebar_label: Overview
-description: Use Claude Code, Codex, and Pi in one interface. Work beyond the terminal, collaborate with teammates, and continue coding sessions from your phone with Omnigent.
+description: Use Codex, Claude Code, Cursor, and Pi in one interface. Work beyond the terminal, collaborate with teammates, and continue coding sessions from your phone with Omnigent.
 sourceOfTruth:
   docs:
     - https://docs.databricks.com/aws/en/omnigent/
@@ -12,7 +12,7 @@ sourceOfTruth:
 
 # What is Omnigent?
 
-Omnigent lets you work with Claude Code, Codex, Pi, and other coding agents in one interface. Take your sessions beyond the terminal: use a browser or desktop app, collaborate with teammates in a live session, and pick up the same work on your phone.
+Omnigent lets you work with Codex, Claude Code, Cursor, Pi, and other coding agents in one interface. Take your sessions beyond the terminal: use a browser or desktop app, collaborate with teammates in a live session, and pick up the same work on your phone.
 
 Omnigent on Databricks connects this experience to your workspace identity and model access through Foundation Model APIs and [Unity Gateway](/docs/unity-gateway/overview).
 
@@ -25,7 +25,7 @@ Omnigent on Databricks is in [Beta](https://docs.databricks.com/aws/en/release-n
 ## When to use it
 
 - **Work beyond the terminal.** Read conversations, inspect code changes, and steer agents from a browser or desktop app.
-- **Use multiple coding agents in one place.** Work with Claude Code, Codex, Pi, and 10+ other harnesses through the same interface. Give agents different roles, such as implementing a feature and reviewing the changes.
+- **Use multiple coding agents in one place.** Work with Codex, Claude Code, Cursor, Pi, and 10+ other harnesses through the same interface. Give agents different roles, such as implementing a feature and reviewing the changes.
 - **Collaborate on a live session.** Share a session with teammates so they can follow the work or help drive it.
 - **Take your agents anywhere.** Start a session on your laptop, then check progress and send instructions from your phone using the mobile app.
 

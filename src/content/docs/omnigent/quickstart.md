@@ -26,7 +26,7 @@ You need access to a Databricks workspace with the **Omnigent** preview enabled 
 
 Find your **workspace URL**, such as `https://my-workspace.cloud.databricks.com`. Throughout this guide, replace `<workspace-url>` with that full HTTPS URL. Use the workspace URL for CLI and app connections; open `<workspace-url>/omnigent` to use the browser UI.
 
-If a coding agent is helping you set up, give it your workspace URL, preferred host, and the coding agent you want to use, such as Claude Code, Codex, or Pi. For a connected machine, also specify which laptop or VM to register and its operating system. Installation and host commands must run on that machine: running them in a remote development environment registers that environment. Complete browser sign-in and interactive credential choices when prompted.
+If a coding agent is helping you set up, give it your workspace URL, preferred host, and the coding agent you want to use, such as Codex, Claude Code, Cursor, or Pi. For a connected machine, also specify which laptop or VM to register and its operating system. Installation and host commands must run on that machine: running them in a remote development environment registers that environment. Complete browser sign-in and interactive credential choices when prompted.
 
 ## Choose where your agent runs
 
@@ -131,7 +131,7 @@ The wizard detects supported credentials already on your machine. Select the exi
 
 To use your workspace's Foundation Model APIs, choose **Databricks** when adding credentials, enter your workspace URL, and complete the browser sign-in. Model requests for that harness then use Unity Gateway. Confirm that the wizard shows the harness as configured before exiting.
 
-Credentials are scoped per harness. Configure each harness you plan to use; setting up Claude Code does not automatically configure Codex or Pi. For a connected machine, you can also choose an existing subscription, provider API key, or another gateway offered by the wizard. The [models and credentials guide](https://omnigent.ai/docs/build/models) describes those options.
+Credentials are scoped per harness. Configure each harness you plan to use; setting up Codex does not automatically configure Claude Code, Cursor, or Pi. For a connected machine, you can also choose an existing subscription, provider API key, or another gateway offered by the wizard. The [models and credentials guide](https://omnigent.ai/docs/build/models) describes those options.
 
 ### 4. Sign in and register the host
 

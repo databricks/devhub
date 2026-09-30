@@ -83,10 +83,10 @@ function validateDocSlug(slug: string): void {
 }
 
 // `list_docs_resources` presents pages as absolute URLs
-// (`…/docs/agents/genie.md`, `/templates/foo.md`) and agents routinely paste
+// (`…/docs/lakehouse/genie.md`, `/templates/foo.md`) and agents routinely paste
 // those straight back into `get_doc_resource`. Accept them: strip the origin,
 // the file extension, and a leading section segment, then route to the matching
-// content section. A bare slug (`agents/genie`) stays a docs lookup, preserving
+// content section. A bare slug (`lakehouse/genie`) stays a docs lookup, preserving
 // the documented form. `recipes/`, `resources/`, and `examples/` all resolve
 // through the `templates` section, which serves the whole template catalog
 // (recipes, examples, cookbooks); `resources/` is the legacy prefix the deployed
@@ -170,7 +170,7 @@ const mcpHandler = createMcpHandler(
           slug: z
             .string()
             .describe(
-              "The page slug to fetch, e.g. 'agents/genie' or 'templates/genie-conversational-analytics'. Slugs from list_docs_resources are accepted verbatim, including full URLs and a trailing '.md'. Use list_docs_resources first to discover available slugs.",
+              "The page slug to fetch, e.g. 'lakehouse/genie' or 'templates/genie-conversational-analytics'. Slugs from list_docs_resources are accepted verbatim, including full URLs and a trailing '.md'. Use list_docs_resources first to discover available slugs.",
             ),
         },
       },

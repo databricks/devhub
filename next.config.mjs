@@ -104,6 +104,16 @@ const nextConfig = {
         permanent: true,
       },
       {
+        source: "/docs/agents/genie",
+        destination: "/docs/lakehouse/genie",
+        permanent: true,
+      },
+      {
+        source: "/docs/agents/genie.md",
+        destination: "/docs/lakehouse/genie.md",
+        permanent: true,
+      },
+      {
         source: "/product/data-lakehouse",
         destination: "/product/lakebase",
         permanent: true,

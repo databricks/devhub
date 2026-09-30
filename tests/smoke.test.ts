@@ -309,7 +309,7 @@ describe("production build smoke tests", () => {
       "/docs/start-here.md",
       "/docs/agents/overview.md",
       "/docs/unity-gateway/overview.md",
-      "/docs/agents/genie.md",
+      "/docs/lakehouse/genie.md",
       "/docs/agents/custom-agents.md",
       "/docs/agents/memory.md",
       "/docs/apps/quickstart.md",

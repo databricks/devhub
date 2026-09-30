@@ -170,4 +170,4 @@ The built-in routes are always OBO. To run Genie as the app's service principal 
 
 ## Where to next
 
-Try the [Genie Analytics App](/templates/genie-analytics-app) for a complete wired setup, or explore [Custom agent endpoints](/docs/agents/custom-agents) for Knowledge Assistants and Supervisor Agents.
+Try the [Genie Analytics App](/templates/genie-analytics-app) for a complete wired setup, or see [Analytical reads](/docs/lakehouse/analytical-reads) to run your own SQL over the same tables.

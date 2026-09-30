@@ -46,7 +46,7 @@ const PAGES = [
   { path: "/docs/start-here", title: "Start here" },
   { path: "/docs/agents/overview", title: "What is Agent Bricks?" },
   { path: "/docs/unity-gateway/overview", title: "Unity Gateway" },
-  { path: "/docs/agents/genie", title: "Genie Agents" },
+  { path: "/docs/lakehouse/genie", title: "Genie Agents" },
   { path: "/docs/agents/custom-agents", title: "Custom agent endpoints" },
   { path: "/docs/agents/memory", title: "Agent memory and sessions" },
   { path: "/docs/apps/quickstart", title: "Quickstart" },

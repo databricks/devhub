@@ -207,7 +207,6 @@ This stops that host's running sessions and host process. It leaves the managed 
 
 ## Where to next
 
-- [Omnigent overview](/docs/omnigent/overview) for working with multiple coding agents and collaborating with teammates.
 - [Identity and access](https://docs.databricks.com/aws/en/omnigent/identity-access) for sharing a session with Read or Edit permissions.
 - [DevHub templates](/templates) for a concrete application to build with your agent.
 - [Databricks quickstart](https://docs.databricks.com/aws/en/omnigent/quickstart) for the canonical managed setup instructions.

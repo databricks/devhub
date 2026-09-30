@@ -79,6 +79,16 @@ const nextConfig = {
 
     return [
       {
+        source: "/solutions/devhub-launch",
+        destination: "/docs/start-here",
+        permanent: true,
+      },
+      {
+        source: "/solutions/devhub-launch.md",
+        destination: "/docs/start-here.md",
+        permanent: true,
+      },
+      {
         source: "/mvps/directory/page/1",
         destination: "/mvps/directory",
         permanent: true,

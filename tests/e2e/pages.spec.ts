@@ -227,13 +227,26 @@ test.describe("static assets load correctly", () => {
 });
 
 test.describe("removed solutions routes", () => {
-  for (const path of [
-    "/solutions",
-    "/solutions/devhub-launch",
-    "/solutions/rss.xml",
-    "/solutions.md",
-    "/solutions/devhub-launch.md",
+  for (const { path, destination } of [
+    {
+      path: "/solutions/devhub-launch",
+      destination: "/docs/start-here",
+    },
+    {
+      path: "/solutions/devhub-launch.md",
+      destination: "/docs/start-here.md",
+    },
   ]) {
+    test(`${path} redirects permanently to ${destination}`, async ({
+      request,
+    }) => {
+      const response = await request.get(path, { maxRedirects: 0 });
+      expect(response.status()).toBe(308);
+      expect(response.headers()["location"]).toBe(destination);
+    });
+  }
+
+  for (const path of ["/solutions", "/solutions/rss.xml", "/solutions.md"]) {
     test(`${path} returns not found`, async ({ request }) => {
       const response = await request.get(path);
       expect(response.status()).toBe(404);
@@ -514,15 +527,21 @@ test.describe("docs MDX compatibility", () => {
     await page.goto("/docs/agents/overview");
 
     const article = page.locator("article");
+    const docsSidebar = page.getByRole("navigation", {
+      name: "Docs sidebar",
+    });
     await expect(article.getByText("Overview").first()).toBeVisible();
     await expect(
       page.getByRole("heading", { name: "What is Agent Bricks?" }),
     ).toBeVisible();
     await expect(
-      page.getByRole("link", { name: "Overview", exact: true }),
+      docsSidebar.getByRole("link", { name: "Overview", exact: true }),
     ).toBeVisible();
     await expect(
-      page.getByRole("link", { name: "What is Agent Bricks?", exact: true }),
+      docsSidebar.getByRole("link", {
+        name: "What is Agent Bricks?",
+        exact: true,
+      }),
     ).toHaveCount(0);
     await expect(page.locator('a[href="#devhub-main-content"]')).toHaveText(
       "Skip to main content",
@@ -536,11 +555,11 @@ test.describe("docs MDX compatibility", () => {
       .getByRole("button", { name: "Search documentation" })
       .click();
     const suggestions = page.getByRole("listbox", { name: "Suggestions" });
-    const aiGatewaySuggestion = suggestions.getByRole("option", {
-      name: "Ai Gateway",
+    const cliSuggestion = suggestions.getByRole("option", {
+      name: "Cli",
     });
-    await expect(aiGatewaySuggestion).toBeVisible();
-    await expect(aiGatewaySuggestion.locator("svg").first()).toHaveAttribute(
+    await expect(cliSuggestion).toBeVisible();
+    await expect(cliSuggestion.locator("svg").first()).toHaveAttribute(
       "viewBox",
       "0 0 14.14 16.14",
     );
@@ -893,7 +912,7 @@ test.describe("docs MDX compatibility", () => {
     await expect(
       table.getByRole("columnheader", { name: "Use this plugin" }),
     ).toBeVisible();
-    await expect(table).toContainText("useServingStream");
+    await expect(table).toContainText("useAgentChat");
     await expect(page.locator("article")).not.toContainText(
       "| ----------------------------------------------------------------------------- |",
     );

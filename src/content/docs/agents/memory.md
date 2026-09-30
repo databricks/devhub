@@ -16,8 +16,6 @@ Databricks gives agents two managed stores, both backed by [Lakebase](/docs/lake
 - **Sessions** hold one conversation: the ordered messages, tool calls, and results the agent replays to continue it.
 - **Memory** holds durable facts, such as a user's preferences, that the agent recalls in later, separate conversations with a natural-language search.
 
-For the product overview and limits, see [Agent memory and sessions](https://docs.databricks.com/aws/en/agents/custom-agents/stateful-agents).
-
 ## Overview
 
 ```mermaid

@@ -382,6 +382,10 @@
     @apply my-2.5 text-base leading-snug tracking-tight;
   }
 
+  a {
+    @apply text-orange hover:text-db-lava rounded-sm font-normal break-words no-underline transition-colors duration-300;
+  }
+
   ol,
   ul {
     @apply my-2.5 flex flex-col gap-y-2.5 pl-5;

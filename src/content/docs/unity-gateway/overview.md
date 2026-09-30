@@ -376,7 +376,7 @@ Wait for the endpoint to reach `READY` state before querying it. For a step-by-s
 
 ## Coding agent integrations
 
-Unity Gateway can also govern AI coding tools like Claude Code, Codex, Cursor, and Gemini CLI, so their requests share one invoice, usage dashboard, and set of rate limits. Databricks recommends the [Unity Gateway CLI (`ug`)](https://github.com/databricks/unity-gateway), which installs, authenticates, and configures a supported agent with the gateway in one command (`uv tool install git+https://github.com/databricks/unity-gateway`, then `ug claude`, `ug codex`, and so on). The older `ucode` command still works, but `ug` is now the primary command. See [Integrate with coding agents](https://docs.databricks.com/aws/en/ai-gateway/coding-agent-quickstart) for the setup steps and the current list of supported tools.
+Unity Gateway can also govern AI coding tools like Codex, Claude Code, Cursor, and Gemini CLI, so their requests share one invoice, usage dashboard, and set of rate limits. Databricks recommends the [Unity Gateway CLI (`ug`)](https://github.com/databricks/unity-gateway), which installs, authenticates, and configures a supported agent with the gateway in one command (`uv tool install git+https://github.com/databricks/unity-gateway`, then `ug claude`, `ug codex`, and so on). The older `ucode` command still works, but `ug` is now the primary command. See [Integrate with coding agents](https://docs.databricks.com/aws/en/ai-gateway/coding-agent-quickstart) for the setup steps and the current list of supported tools.
 
 ## Where to next
 

@@ -8,7 +8,7 @@ Databricks DevHub offers a dedicated developer surface at developers.databricks.
 
 AI coding agents often generate generic code lacking specific architectural context, leading to tools that do not meet enterprise standards. Databricks DevHub addresses this by providing a developer surface optimized for AI coding assistants, which removes boilerplate configuration and integrates enterprise data with application logic.
 
-- **Databricks DevHub** provides copy-pastable markdown for AI coding agents (e.g., Cursor, Claude Code, Codex), packaging architectural context directly into the chat interface. This ensures generated code operates effectively within the enterprise environment.
+- **Databricks DevHub** provides copy-pastable markdown for AI coding agents (e.g., Codex, Claude Code, Cursor), packaging architectural context directly into the chat interface. This ensures generated code operates effectively within the enterprise environment.
 - **Model Serving and AI Gateway** provide production-ready access to foundation models. Developers can deploy **Agent Bricks** for end-to-end AI agent systems, facilitating the integration of generative AI applications and context-aware natural language search.
 - **Lakebase** provides operational state and low-latency data access, while **Databricks Apps** handles application hosting and deployment.
 - Serverless management and execution mean the underlying infrastructure is automatically managed, delivering AI-optimized query execution and scaling without developer intervention.

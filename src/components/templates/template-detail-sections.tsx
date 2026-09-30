@@ -47,7 +47,7 @@ function TemplateAiBlock({
       <ol className="text-grey-70 marker:text-grey-60 mt-3 flex list-decimal flex-col gap-y-2 pl-4.5 text-sm/snug tracking-tight">
         <li className="pl-1">Copy the prompt below</li>
         <li className="pl-1">
-          Paste into Cursor, Claude Code, Codex, or any coding agent
+          Paste into Codex, Claude Code, Cursor, or any coding agent
         </li>
         <li className="pl-1">
           Your agent builds it — asking questions along the way so the result is
@@ -261,7 +261,7 @@ function HackathonTemplateAgentBlock({
       <ol className="text-grey-90 mt-4 flex list-decimal flex-col gap-y-2.5 pl-4 text-lg/normal tracking-tight">
         <li className="pl-2">Copy the prompt below</li>
         <li className="pl-2">
-          Paste into Cursor, Claude Code, Codex, or any coding agent
+          Paste into Codex, Claude Code, Cursor, or any coding agent
         </li>
         <li className="pl-2">
           Your agent builds it — asking questions along the way so the result is

@@ -38,12 +38,12 @@ const steps: ChecklistStep[] = [
         <p className="m-0">
           We suggest{" "}
           <a
-            href="https://cursor.com"
+            href="https://openai.com/codex/"
             target="_blank"
             rel="noopener noreferrer"
             className={inlineLink}
           >
-            Cursor
+            Codex
           </a>
           ,{" "}
           <a
@@ -56,12 +56,12 @@ const steps: ChecklistStep[] = [
           </a>
           , or{" "}
           <a
-            href="https://openai.com/codex/"
+            href="https://cursor.com"
             target="_blank"
             rel="noopener noreferrer"
             className={inlineLink}
           >
-            Codex
+            Cursor
           </a>
           .
         </p>

@@ -8,7 +8,7 @@ The DevHub Docs MCP Server gives coding agents and IDE assistants read access to
 
 ## Install
 
-Add the server to any supported coding agent (Cursor, Claude Code, VS Code, Codex, and more) with a single command.
+Add the server to any supported coding agent (Codex, Claude Code, Cursor, VS Code, and more) with a single command.
 
 Global install (user-level, available across all projects):
 

@@ -8,7 +8,7 @@ description: Templates are copy-paste agent prompts that drive your coding assis
 
 DevHub includes a collection of [templates](/templates) that can help you quickly scaffold a Databricks app.
 
-A **template** is simply an agent prompt — a block of text you paste into your coding assistant (Cursor, Claude Code, Codex, or any agent that runs in your editor) that tells it exactly how to build something on Databricks.
+A **template** is simply an agent prompt — a block of text you paste into your coding assistant (Codex, Claude Code, Cursor, or any agent that runs in your editor) that tells it exactly how to build something on Databricks.
 
 The assistant will do the actual building. It will ask clarifying questions, run the Databricks CLI, write code, and deploy. You stay in the loop to make high-level decisions, but you do not have to know or remember any specific commands.
 

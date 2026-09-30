@@ -114,7 +114,7 @@ function Hero({ className }: HeroProps) {
               </span>
             </h1>
             <p className="text-grey-80 order-last mt-4 max-w-sm text-base/tight tracking-normal xl:order-0 xl:row-span-2 xl:mt-0">
-              Copy the prompt into Cursor, Claude Code, Codex, or any coding
+              Copy the prompt into Codex, Claude Code, Cursor, or any coding
               agent — it will walk you through building a complete app, step by
               step.
             </p>

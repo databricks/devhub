@@ -10,6 +10,7 @@
     "lakebase",
     "unity-gateway",
     "agents",
+    "omnigent",
     "lakehouse"
   ]
 }

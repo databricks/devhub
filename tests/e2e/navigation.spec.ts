@@ -1007,6 +1007,8 @@ test.describe("docs sidebar navigation", () => {
   const SIDEBAR_LINKS = [
     { href: "/docs/start-here" },
     { href: "/docs/agents/overview" },
+    { href: "/docs/omnigent/overview" },
+    { href: "/docs/omnigent/quickstart" },
     { href: "/docs/unity-gateway/overview" },
     { href: "/docs/lakehouse/genie" },
     { href: "/docs/agents/custom-agents" },

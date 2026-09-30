@@ -83,6 +83,7 @@ describe("docs sidebar", () => {
       "Lakebase Postgres",
       "Unity Gateway",
       "Agent Bricks",
+      "Omnigent",
       "Data Lakehouse",
     ]);
 
@@ -92,6 +93,12 @@ describe("docs sidebar", () => {
       "/docs/tools/databricks-cli",
       "/docs/tools/ai-tools/agent-skills",
       "/docs/tools/ai-tools/docs-mcp-server",
+    ]);
+
+    const omnigent = findCategory(items, "Omnigent");
+    expect(collectHrefs(omnigent.items)).toEqual([
+      "/docs/omnigent/overview",
+      "/docs/omnigent/quickstart",
     ]);
   });
 

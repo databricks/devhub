@@ -1008,7 +1008,7 @@ test.describe("docs sidebar navigation", () => {
     { href: "/docs/start-here" },
     { href: "/docs/agents/overview" },
     { href: "/docs/unity-gateway/overview" },
-    { href: "/docs/agents/genie" },
+    { href: "/docs/lakehouse/genie" },
     { href: "/docs/agents/custom-agents" },
     { href: "/docs/apps/quickstart" },
     { href: "/docs/apps/configuration" },

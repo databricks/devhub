@@ -135,7 +135,7 @@ Lakehouse Federation makes foreign sources (Snowflake, BigQuery, Oracle, Redshif
 
 ## Natural-language queries
 
-For natural-language Q&A over UC tables (curated datasets plus a knowledge store plus a compound AI system that turns questions into SQL), use [Genie](/docs/agents/genie). For a working setup, see the [Genie Conversational Analytics](/templates/genie-conversational-analytics) template. The Genie plugin lives in the Agent Bricks section because it is an agent integration, not a SQL one.
+For natural-language Q&A over UC tables (curated datasets plus a knowledge store plus a compound AI system that turns questions into SQL), use [Genie](/docs/lakehouse/genie). For a working setup, see the [Genie Conversational Analytics](/templates/genie-conversational-analytics) template. The Genie plugin lives in the Agent Bricks section because it is an agent integration, not a SQL one.
 
 ## Where to next
 

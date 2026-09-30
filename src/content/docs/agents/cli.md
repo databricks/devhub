@@ -109,7 +109,7 @@ agentbricks sessions bind my-existing-sessions
 agentbricks memory bind my-existing-memory
 ```
 
-Binding edits `agent.toml` only; `agentbricks deploy` creates any declared-but-missing store.
+Binding edits `agent.toml` only; `agentbricks deploy` creates any declared-but-missing store. For how the agent reads and writes the stores, and how local runs differ from deployed ones, see [Agent memory and sessions](/docs/agents/memory).
 
 ### Step 3: Run the agent locally
 

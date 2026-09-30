@@ -20,7 +20,7 @@ DevHub is the developer resource for building **enterprise apps** with Databrick
 
 The Databricks platform combines a first-class developer experience with the production readiness and governance that large organizations need:
 
-- **Developer experience**: agent-first tooling lets anyone ship real apps fast, with coding agents doing the heavy lifting and the [Genie App Builder](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/genie-app-builder) generating apps from natural language.
+- **Developer experience**: agent-first tooling lets anyone ship real apps fast, with coding agents doing the heavy lifting and the [Genie App Builder](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/genie-app-builder) generating apps from natural language. Use [Omnigent](/docs/omnigent/overview) to work with multiple coding agents, collaborate with teammates, and continue sessions from your phone.
 - **Production readiness**: stable managed deployments out of the box, plus horizontal scaling with zero-downtime rollouts and session affinity.
 - **Governance & administration**: workspace-level permissions and SSO apply automatically to every app, admins can define App Spaces to govern how groups of developers build and what their apps can access, and per-app compute controls (fixed sizes, stop and start on demand) keep spend under control.
 

@@ -45,6 +45,8 @@ const PAGES = [
   { path: "/perspectives", title: "Perspectives" },
   { path: "/docs/start-here", title: "Start here" },
   { path: "/docs/agents/overview", title: "What is Agent Bricks?" },
+  { path: "/docs/omnigent/overview", title: "What is Omnigent?" },
+  { path: "/docs/omnigent/quickstart", title: "Omnigent quickstart" },
   { path: "/docs/unity-gateway/overview", title: "Unity Gateway" },
   { path: "/docs/lakehouse/genie", title: "Genie Agents" },
   { path: "/docs/agents/custom-agents", title: "Custom agent endpoints" },

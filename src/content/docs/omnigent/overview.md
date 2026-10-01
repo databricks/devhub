@@ -12,7 +12,7 @@ sourceOfTruth:
 
 # What is Omnigent?
 
-Omnigent lets you work with Codex, Claude Code, Cursor, Pi, and other coding agents in one interface. Take your sessions beyond the terminal: use a browser or desktop app, collaborate with teammates in a live session, and pick up the same work on your phone.
+Omnigent brings Codex, Claude Code, Cursor, Pi, and other coding agents together in one interface. Run agents on your machine or in the cloud, where they can keep working even when your laptop is off. Collaborate with teammates and follow the work from your browser, desktop app, or phone.
 
 Omnigent on Databricks connects this experience to your workspace identity and model access through Foundation Model APIs and [Unity Gateway](/docs/unity-gateway/overview).
 
@@ -25,7 +25,7 @@ Omnigent on Databricks is in [Beta](https://docs.databricks.com/aws/en/release-n
 ## When to use it
 
 - **Work beyond the terminal.** Read conversations, inspect code changes, and steer agents from a browser or desktop app.
-- **Use multiple coding agents in one place.** Work with Codex, Claude Code, Cursor, Pi, and 10+ other harnesses through the same interface. Give agents different roles, such as implementing a feature and reviewing the changes.
+- **Use multiple coding agents in one place.** Bring Codex, Claude Code, Cursor, Pi, and 10+ other harnesses into a single interface. Choose whichever agent fits each task, switch between agents as you work, and manage all their sessions together.
 - **Collaborate on a live session.** Share a session with teammates so they can follow the work or help drive it.
 - **Take your agents anywhere.** Start a session on your laptop, then check progress and send instructions from your phone using the mobile app.
 

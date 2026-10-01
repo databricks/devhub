@@ -315,6 +315,7 @@ describe("production build smoke tests", () => {
       "/docs/lakehouse/genie.md",
       "/docs/agents/custom-agents.md",
       "/docs/agents/memory.md",
+      "/docs/agents/sandbox.md",
       "/docs/apps/quickstart.md",
       "/docs/apps/configuration.md",
       "/docs/apps/development.md",

@@ -17,7 +17,11 @@ sourceOfTruth:
 
 When your AppKit app needs more than a foundation model response or a Genie-style data query, you add an **agent** to it: an LLM shaped by instructions, tools, document grounding, or multi-agent orchestration. You declare it with the [`agents` plugin](/docs/appkit/v0/plugins/agents), which runs the agent in your app's runtime and serves it at built-in routes, with no separate endpoint to provision. The agent works on the data your app already has access to, and users interact with it through your app's UI.
 
+:::note[Building a standalone agent?]
+
 These agents belong to the app: they deploy, scale, and share permissions with it. To build a standalone agent that runs as its own hosted endpoint, which any app or service can call, use the [Agent Bricks CLI](/docs/agents/cli).
+
+:::
 
 The agent's model comes from a **model adapter**: `DatabricksAdapter.fromModelServing` for a Model Serving endpoint (a foundation model, or an agent already deployed as an endpoint such as a Knowledge Assistant), or `DatabricksAdapter.fromAiGateway` for a model service through the gateway.
 

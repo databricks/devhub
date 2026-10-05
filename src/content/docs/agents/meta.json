@@ -1,4 +1,4 @@
 {
   "title": "Agent Bricks",
-  "pages": ["overview", "cli", "memory", "custom-agents"]
+  "pages": ["overview", "cli", "memory"]
 }

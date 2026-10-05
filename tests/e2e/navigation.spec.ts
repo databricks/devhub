@@ -1012,7 +1012,7 @@ test.describe("docs sidebar navigation", () => {
     { href: "/docs/omnigent/programmatic" },
     { href: "/docs/unity-gateway/overview" },
     { href: "/docs/lakehouse/genie" },
-    { href: "/docs/agents/custom-agents" },
+    { href: "/docs/apps/agentic-features" },
     { href: "/docs/apps/quickstart" },
     { href: "/docs/apps/configuration" },
     { href: "/docs/apps/development" },

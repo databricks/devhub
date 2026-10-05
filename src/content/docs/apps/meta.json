@@ -1,4 +1,11 @@
 {
   "title": "Databricks Apps",
-  "pages": ["overview", "quickstart", "configuration", "development", "/appkit"]
+  "pages": [
+    "overview",
+    "quickstart",
+    "configuration",
+    "development",
+    "agentic-features",
+    "/appkit"
+  ]
 }

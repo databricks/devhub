@@ -380,4 +380,4 @@ Unity Gateway can also govern AI coding tools like Codex, Claude Code, Cursor, a
 
 ## Where to next
 
-Try the [AI Chat App](/templates/ai-chat-app) to wire a governed endpoint into your app, or see how agents use the gateway in [Agent Bricks](/docs/agents/overview) and [Custom agent endpoints](/docs/agents/custom-agents).
+Try the [AI Chat App](/templates/ai-chat-app) to wire a governed endpoint into your app, or see how agents use the gateway in [Agent Bricks](/docs/agents/overview) and [Agentic features](/docs/apps/agentic-features).

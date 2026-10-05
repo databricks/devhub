@@ -124,6 +124,16 @@ const nextConfig = {
         permanent: true,
       },
       {
+        source: "/docs/agents/custom-agents",
+        destination: "/docs/apps/agentic-features",
+        permanent: true,
+      },
+      {
+        source: "/docs/agents/custom-agents.md",
+        destination: "/docs/apps/agentic-features.md",
+        permanent: true,
+      },
+      {
         source: "/product/data-lakehouse",
         destination: "/product/lakebase",
         permanent: true,

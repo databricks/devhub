@@ -1,7 +1,7 @@
 ---
-title: Custom agent endpoints
-sidebar_label: Custom agents
-description: Host a custom agent in your AppKit app with the agents plugin, backed by a Model Serving endpoint or the AI Gateway. Stream it with useAgentChat.
+title: Agentic features
+sidebar_label: Agentic features
+description: Add agentic features to your Databricks App with the AppKit agents plugin. Declare agents in your app's code, back them with a Model Serving endpoint or the AI Gateway, and stream them with useAgentChat.
 sourceOfTruth:
   skills:
     - databricks-agent-bricks
@@ -13,9 +13,11 @@ sourceOfTruth:
   note: "databricks-agent-bricks covers the Knowledge Assistant and Supervisor builders. Custom Python agent authoring is docs-only (no skill yet). AppKit plugin behavior (agents, adapters) is verified against the installed @databricks/appkit and the reference app, not the TypeDoc plugin pages."
 ---
 
-# Custom agent endpoints
+# Agentic features
 
-When your AppKit app needs more than a foundation model response or a Genie-style data query, you use a **custom agent**: an LLM shaped by instructions, tools, document grounding, or multi-agent orchestration. You run one from AppKit with the [`agents` plugin](/docs/appkit/v0/plugins/agents), which hosts the agent in your App and serves it at built-in routes, with no separate endpoint to provision.
+When your AppKit app needs more than a foundation model response or a Genie-style data query, you add an **agent** to it: an LLM shaped by instructions, tools, document grounding, or multi-agent orchestration. You declare it with the [`agents` plugin](/docs/appkit/v0/plugins/agents), which runs the agent in your app's runtime and serves it at built-in routes, with no separate endpoint to provision. The agent works on the data your app already has access to, and users interact with it through your app's UI.
+
+These agents belong to the app: they deploy, scale, and share permissions with it. To build a standalone agent that runs as its own hosted endpoint, which any app or service can call, use the [Agent Bricks CLI](/docs/agents/cli).
 
 The agent's model comes from a **model adapter**: `DatabricksAdapter.fromModelServing` for a Model Serving endpoint (a foundation model, or an agent already deployed as an endpoint such as a Knowledge Assistant), or `DatabricksAdapter.fromAiGateway` for a model service through the gateway.
 

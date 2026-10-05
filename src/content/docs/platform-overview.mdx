@@ -18,8 +18,18 @@ Databricks Apps, Lakebase Postgres, Agent Bricks, and the Data Lakehouse are the
 
 - **[Databricks Apps](/docs/apps/overview)**: managed hosting for apps you build with [AppKit](/docs/appkit/v0), the TypeScript SDK for production-ready Databricks applications.
 - **[Lakebase Postgres](/docs/lakebase/overview)**: managed Postgres database for OLTP storage co-located with your workspace data. Use it for sessions, app state, conversation history, or any data your app reads and writes at low latency.
-- **[Agent Bricks](/docs/agents/overview)**: Databricks' enterprise agent platform, unifying model access, execution, governance, and context. Use it for AI features in your app: chat with your company's docs (Knowledge Assistants), ask-your-data in plain English (Genie), foundation-model calls, or custom Python agents.
+- **[Agent Bricks](/docs/agents/overview)**: Databricks' enterprise agent platform, unifying model access, execution, governance, and context. Use it to build and deploy standalone agents: chat with your company's docs (Knowledge Assistants), coordinate other agents and tools (Supervisor Agents), or your own agent code with the [Agent Bricks CLI](/docs/agents/cli).
 - **[Data Lakehouse](/docs/lakehouse/overview)**: governed analytical data in Unity Catalog. Use it to read company data, trigger Lakeflow Jobs, and display data freshness in your UI.
+
+## Which service to use
+
+Each service works on its own, and they combine:
+
+- **Building an internal app for your teammates?** Use [Databricks Apps](/docs/apps/overview) with AppKit. Users sign in with workspace SSO.
+- **Need low-latency reads and writes?** Use [Lakebase Postgres](/docs/lakebase/overview), as your app's database or as a standalone database for any service.
+- **Want agentic features in your app?** Use [AppKit's agents plugin](/docs/apps/agentic-features). The agent is part of the app: it runs in the same runtime, works on the data your app already has access to, and users talk to it through your app's UI.
+- **Building the agent itself?** Use [Agent Bricks](/docs/agents/overview). The [Agent Bricks CLI](/docs/agents/cli) scaffolds a LangGraph or OpenAI Agents project and deploys it as its own hosted endpoint, which your apps and services call over HTTP.
+- **Need your company's analytical data?** Use the [Data Lakehouse](/docs/lakehouse/overview), from an app or from an agent.
 
 ## How a request flows
 

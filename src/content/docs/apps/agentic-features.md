@@ -19,7 +19,7 @@ When your AppKit app needs more than a foundation model response or a Genie-styl
 
 :::note[Building a standalone agent?]
 
-These agents belong to the app: they deploy, scale, and share permissions with it. To build a standalone agent that runs as its own hosted endpoint, which any app or service can call, use the [Agent Bricks CLI](/docs/agents/cli).
+These agents belong to the app: they deploy, scale, and share permissions with it. To build a standalone agent that deploys on its own, with an HTTP API your other apps and services call, use the [Agent Bricks CLI](/docs/agents/cli).
 
 :::
 

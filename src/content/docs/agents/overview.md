@@ -80,4 +80,4 @@ Start from a template that matches your use case. Each one includes the plugin w
 - [Unity Gateway](/docs/unity-gateway/overview) for governed access to models, agent endpoints, and external tools.
 - [Agent memory and sessions](/docs/agents/memory) to give an agent conversation history and long-term memory.
 - [Genie Agents](/docs/lakehouse/genie) for chat-with-your-data over Unity Catalog tables.
-- [Custom agent endpoints](/docs/agents/custom-agents) for wiring Knowledge Assistant, Supervisor Agent, or your own Python agent.
+- [Agentic features](/docs/apps/agentic-features) for wiring Knowledge Assistant, Supervisor Agent, or your own Python agent into an AppKit app.

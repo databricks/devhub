@@ -53,7 +53,7 @@ const PAGES = [
   },
   { path: "/docs/unity-gateway/overview", title: "Unity Gateway" },
   { path: "/docs/lakehouse/genie", title: "Genie Agents" },
-  { path: "/docs/agents/custom-agents", title: "Custom agent endpoints" },
+  { path: "/docs/apps/agentic-features", title: "Agentic features" },
   { path: "/docs/agents/memory", title: "Agent memory and sessions" },
   { path: "/docs/agents/sandbox", title: "Databricks Sandbox" },
   { path: "/docs/apps/quickstart", title: "Quickstart" },

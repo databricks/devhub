@@ -42,13 +42,7 @@ const SIDEBAR_SECTIONS: Array<{
     title: "Agent Bricks",
     description:
       "Connect Agent Bricks agents to your AppKit app, and build custom agents with the Agent Bricks CLI. Covers the agents plugin for calling LLM and agent endpoints, managed agent memory and sessions, and Databricks Sandbox for running agent code.",
-    slugs: [
-      "agents/overview",
-      "agents/cli",
-      "agents/memory",
-      "agents/sandbox",
-      "agents/custom-agents",
-    ],
+    slugs: ["agents/overview", "agents/cli", "agents/memory", "agents/sandbox"],
   },
   {
     title: "Omnigent",
@@ -63,12 +57,13 @@ const SIDEBAR_SECTIONS: Array<{
   {
     title: "Apps",
     description:
-      "Host and operate web applications as managed Databricks workspace resources.",
+      "Host and operate web applications as managed Databricks workspace resources, and add agentic features with the AppKit agents plugin.",
     slugs: [
       "apps/overview",
       "apps/quickstart",
       "apps/configuration",
       "apps/development",
+      "apps/agentic-features",
     ],
   },
   {

@@ -81,4 +81,4 @@ Start from a template that matches your use case. Each one includes the plugin w
 - [Agent memory and sessions](/docs/agents/memory) to give an agent conversation history and long-term memory.
 - [Databricks Sandbox](/docs/agents/sandbox) to run agents and AI-written code in an isolated, persistent environment.
 - [Genie Agents](/docs/lakehouse/genie) for chat-with-your-data over Unity Catalog tables.
-- [Custom agent endpoints](/docs/agents/custom-agents) for wiring Knowledge Assistant, Supervisor Agent, or your own Python agent.
+- [Agentic features](/docs/apps/agentic-features) for wiring Knowledge Assistant, Supervisor Agent, or your own Python agent into an AppKit app.

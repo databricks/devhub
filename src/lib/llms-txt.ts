@@ -41,13 +41,14 @@ const SIDEBAR_SECTIONS: Array<{
   {
     title: "Agent Bricks",
     description:
-      "Connect Agent Bricks agents to your AppKit app, and build custom agents with the Agent Bricks CLI. Covers the agents plugin for calling LLM and agent endpoints, and managed agent memory and sessions.",
+      "Build and deploy custom agents on Databricks with Agent Bricks. Covers the quickstart, the Agent Bricks CLI for new and existing agents, the agent runtime and DurableAgentServer, managed agent memory and sessions, and Databricks Sandbox for running agent code.",
     slugs: [
       "agents/overview",
       "agents/quickstart",
       "agents/cli",
       "agents/runtime",
       "agents/memory",
+      "agents/sandbox",
     ],
   },
   {

@@ -1,4 +1,4 @@
 {
   "title": "Agent Bricks",
-  "pages": ["overview", "quickstart", "cli", "runtime", "memory"]
+  "pages": ["overview", "quickstart", "cli", "runtime", "memory", "sandbox"]
 }

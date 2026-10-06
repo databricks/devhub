@@ -317,6 +317,7 @@ describe("production build smoke tests", () => {
       "/docs/apps/agentic-features.md",
       "/docs/agents/memory.md",
       "/docs/agents/runtime.md",
+      "/docs/agents/sandbox.md",
       "/docs/apps/quickstart.md",
       "/docs/apps/configuration.md",
       "/docs/apps/development.md",

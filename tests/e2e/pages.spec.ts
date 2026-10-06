@@ -57,6 +57,7 @@ const PAGES = [
   { path: "/docs/apps/agentic-features", title: "Agentic features" },
   { path: "/docs/agents/memory", title: "Agent memory and sessions" },
   { path: "/docs/agents/runtime", title: "Deploy agents on the agent runtime" },
+  { path: "/docs/agents/sandbox", title: "Databricks Sandbox" },
   { path: "/docs/apps/quickstart", title: "Quickstart" },
   { path: "/docs/apps/configuration", title: "App configuration" },
   { path: "/docs/apps/development", title: "App development" },

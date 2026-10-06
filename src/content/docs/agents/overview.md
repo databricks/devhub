@@ -1,83 +1,105 @@
 ---
 title: What is Agent Bricks?
 sidebar_label: Overview
-description: Agent Bricks is Databricks' enterprise agent platform. It unifies model access, execution, governance, and business context so teams can build, deploy, and govern agents in production.
+description: Agent Bricks is the Databricks developer platform for custom agents. Build an agent in code with any framework and model, then deploy it, give it memory and tools, and trace and govern it in production.
 sourceOfTruth:
-  skills:
-    - databricks-agent-bricks
   docs:
-    - /docs/appkit/v0
     - https://docs.databricks.com/aws/en/agents/
-  note: "Most of this page is DevHub-owned AppKit framing. The Agent Bricks product is owned by the databricks-agent-bricks skill and canonical docs."
+    - https://github.com/databricks/databricks-ai-bridge/blob/main/integrations/agentbricks/README.md
+    - https://github.com/databricks/databricks-ai-bridge/blob/main/integrations/agentbricks/src/databricks_agentkit/runtime/README.md
+  note: "No agent skill covers the Agent Bricks developer platform. The databricks-agent-bricks skill covers the earlier Knowledge Assistant and Supervisor Agent offerings, not this page. Product behavior is owned by the canonical docs. CLI, DurableAgentServer, and Agent Runtime details follow the databricks-ai-bridge README and runtime guide."
 ---
 
 # What is Agent Bricks?
 
-**Agent Bricks** is Databricks' enterprise agent platform for building, deploying, and governing agents that operate on your business data. It unifies model access, execution, governance, and context across a single system: from the model you call, to the data your agent reads, to the identity it acts under. In your workspace you configure Knowledge Assistants, Supervisor Agents, and custom Python agents. Databricks handles evaluation, tuning, and quality improvement, then hosts each agent at an HTTP endpoint your app can call.
+**Agent Bricks** is the Databricks developer platform for building and deploying custom agents that power your agentic products and workflows. You write the agent in code, with any framework or harness and any model. Agent Bricks provides the managed infrastructure the agent needs in production: hosting, durable execution, memory, tools, model access, tracing, and governance.
 
-For what Agent Bricks is and how to build with it, see the [Databricks agents docs](https://docs.databricks.com/aws/en/agents/) or the [`databricks-agent-bricks`](/docs/tools/ai-tools/agent-skills) agent skill.
+For full product documentation, see the [Databricks agents docs](https://docs.databricks.com/aws/en/agents/).
 
-Your AppKit app connects to Agent Bricks capabilities through the [agents plugin](/docs/appkit/v0/plugins/agents) for agents, foundation models, and governed endpoints, and the [Genie plugin](/docs/appkit/v0/plugins/genie) for natural-language queries over Unity Catalog tables.
+## What the platform gives you
 
-## How it fits together
+Each building block is usable on its own, and the [Agent Bricks CLI](/docs/agents/cli) wires them together for a new project.
 
-Your AppKit app calls Agent Bricks through a **Model Serving endpoint** (a foundation model, Knowledge Assistant, Supervisor Agent, or custom Python agent) or a **Genie Agent** (natural-language queries over Unity Catalog tables). The [agents plugin](/docs/appkit/v0/plugins/agents) (backing an agent with the endpoint) and the [Genie plugin](/docs/appkit/v0/plugins/genie) cover both.
+| You want to                   | Use                                                                                                                                                                                                                            |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Deploy your agent             | **Agent Runtime** hosts any framework or harness, stateful or stateless. **`DurableAgentServer`** serves it with synchronous, streaming, and background runs, and recovers runs that a crash or restart interrupts.            |
+| Give your agent context       | [Managed memory and sessions](/docs/agents/memory) for conversation history and long-term memory, plus Databricks-managed and external [MCP servers](https://docs.databricks.com/aws/en/agents/mcp-tools/) for tools and data. |
+| Run code safely               | [Databricks Sandbox](https://docs.databricks.com/aws/en/compute/serverless/sandbox) gives the agent an isolated environment for the code it writes, with scoped access to governed data.                                       |
+| Connect to models             | [Unity Gateway](/docs/unity-gateway/overview) gives one API for frontier and open models, so you can switch models without changing agent code.                                                                                |
+| Debug and test your agent     | [MLflow Tracing](https://docs.databricks.com/aws/en/mlflow3/genai/tracing/overview) records each step the agent takes, locally and in production.                                                                              |
+| Govern what your agent can do | [Unity Gateway](/docs/unity-gateway/overview) governs access to models, MCP servers, and skills, with guardrails, rate limits, and usage tracking. Unity Catalog governs the data the agent reads.                             |
+
+## The agent compute stack
+
+A deployed agent has three layers. Your **framework or harness** runs the agent loop. An **agent server** wraps that loop in an HTTP server and handles durability. The **agent runtime** runs the agent server on managed compute.
 
 ```mermaid
 flowchart LR
-    React["React<br/>(@databricks/appkit-ui/react)"] -->|"useAgentChat /<br/>useGenieChat"| Node["AppKit server<br/>(@databricks/appkit)"]
-    Node -->|"agents plugin"| Endpoint["Model Serving endpoint<br/>(LLM, Knowledge Assistant,<br/>Supervisor Agent,<br/>custom Python)"]
-    Node -->|"Genie plugin"| Space["Genie Agent"]
-    Endpoint --> Gateway["Unity Gateway<br/>(governance, rate limits,<br/>system tables)"]
-    Space --> UC["Unity Catalog<br/>tables"]
+    Client["Client<br/>(app, user, or agent)"] -->|"invocation API"| Server
+    subgraph Runtime["Agent Runtime (Databricks Apps)"]
+        Server["Agent server<br/>(DurableAgentServer)"] --> Loop["Your agent code<br/>(any framework)"]
+    end
+    Loop --> Gateway["Unity Gateway<br/>(models, MCP, skills)"]
+    Loop --> State["Memory and sessions"]
+    Loop --> Sandbox["Databricks Sandbox"]
 ```
 
-## AppKit plugins for Agent Bricks
+| Layer                | What it does                                                               | On Databricks                                                                                                        |
+| -------------------- | -------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| Framework or harness | Runs the agent loop: calls models and tools and decides what to do next.   | Any framework, such as LangGraph or the OpenAI Agents SDK, or [Omnigent](/docs/omnigent/overview) as a meta-harness. |
+| Agent server         | Serves the invocation API, tracks each run, and recovers interrupted runs. | `DurableAgentServer`, or your own HTTP server.                                                                       |
+| Agent runtime        | Runs the agent server with hosting, identity, and scaling.                 | Agent Runtime, which runs on [Databricks Apps](/docs/apps/overview).                                                 |
 
-| You want to                                                                   | Use this plugin | Frontend helper             |
-| ----------------------------------------------------------------------------- | --------------- | --------------------------- |
-| Call a foundation model (LLM) with chat messages                              | `agents`        | `useAgentChat`              |
-| Call an agent endpoint (Knowledge Assistant, Supervisor Agent, custom Python) | `agents`        | `useAgentChat`              |
-| Give users natural-language queries over Unity Catalog tables                 | `genie`         | `GenieChat`, `useGenieChat` |
+The [runtime guide](https://github.com/databricks/databricks-ai-bridge/blob/main/integrations/agentbricks/src/databricks_agentkit/runtime/README.md) covers `DurableAgentServer` handlers, run state, and recovery in detail.
 
-Pick the plugin that matches the resource. No other primitive is required for the AI surface.
+## Build and deploy your first agent
 
-> The `serving()` Model Serving plugin can also call a serving endpoint, but it's deprecated as of AppKit 0.77.0 in favor of the `agents` plugin, so these docs use `agents`. Back an agent with `DatabricksAdapter.fromModelServing` rather than registering `serving()`.
+:::note[Experimental]
 
-## Auth
-
-Genie routes run on behalf of the authenticated user (OBO) by default, so a user without `CAN RUN` on the Genie Agent gets a 403; you don't write the permission check. The agents plugin's model call runs as the app service principal by default, while the plugin tools an agent calls run on behalf of the signed-in user.
-
-For server logic outside the built-in routes, invoke the agent server-side with `runAgent`. See the [agents plugin reference](/docs/appkit/v0/plugins/agents).
-
-## Why AppKit instead of raw `fetch`
-
-You could call a serving endpoint directly with `fetch` and a token. The plugin isn't doing something you can't do yourself. It's doing these things so you don't have to:
-
-- OBO where it applies: Genie routes and the plugin tools an agent calls run as the authenticated user, so **per-user permissions** apply automatically. Users only see data they're already allowed to see, with no OAuth code on your side. See [Execution context](/docs/appkit/v0/plugins/execution-context) for the details.
-- All **streaming** is handled for you. SSE parsing, abort on unmount, token accumulation, and error handling. `useAgentChat` and `useGenieChat` do this.
-- No **secrets** in the frontend. The plugin proxies through your server and tokens stay on the backend. No PAT in the React bundle.
-- The `useAgentChat` hook exposes the stream as OpenAI Responses-shaped events, accumulating the assistant's text for you so you render `content` instead of parsing raw SSE chunks.
-
-:::note[Creating a custom agent]
-
-Creating a custom agent is a Python workflow: the `ResponsesAgent` interface, an agent framework (OpenAI Agents SDK, LangGraph, LlamaIndex), and MLflow for tracing. See [Author an AI agent](https://docs.databricks.com/aws/en/agents/custom-agents/author-agent).
+The Agent Bricks CLI is experimental. Commands and behavior can change.
 
 :::
 
-## Pick a template to start from
+To scaffold a LangGraph agent, run it locally, and deploy it, run the following:
 
-Start from a template that matches your use case. Each one includes the plugin wiring, an `app.yaml` resource binding, and a working UI you can adapt.
+```bash
+pip install databricks-agentbricks
+agentbricks login --profile <profile>
+agentbricks init --framework langgraph my-agent
+cd my-agent
+agentbricks dev
+agentbricks deploy my-agent
+```
 
-| You want to...                                     | Template                                                   |
-| -------------------------------------------------- | ---------------------------------------------------------- |
-| Add a streaming chatbot to your app                | [AI Chat App](/templates/ai-chat-app)                      |
-| Let users query tables in natural language         | [Genie Analytics App](/templates/genie-analytics-app)      |
-| Add multi-agent Genie switching to an existing app | [Genie Multi-Agent Selector](/templates/genie-multi-space) |
+`agentbricks init` scaffolds the project and writes `agent.toml`, the file that records the managed resources the agent uses: memory and session stores, tools, and tracing. `agentbricks dev` runs the agent locally on the same server it uses when deployed. `agentbricks deploy` creates the declared resources, grants the agent access to them, and deploys it to Agent Runtime as an app named `agent-bricks-my-agent`.
+
+To move an agent you already built with LangGraph or the OpenAI Agents SDK, run `agentbricks init --framework <langgraph|openai> --existing .` in its directory. The CLI prepares migration instructions for a coding agent to follow, and doesn't change your code itself.
+
+For prerequisites, authentication, and each step in detail, see [Agent Bricks CLI](/docs/agents/cli).
+
+## Query a deployed agent
+
+`DurableAgentServer` serves the invocation API at `/api/invocations`. Each request needs a UUID `id`, which also makes retries safe, and a `session_id` that groups requests into one conversation. To send a request to the deployed agent from your terminal, run the following:
+
+```bash
+agentbricks --profile <profile> endpoint invoke agent-bricks-my-agent \
+  --path /api/invocations \
+  --json "{\"id\":\"$(uuidgen)\",\"session_id\":\"$(uuidgen)\",\"input\":[{\"role\":\"user\",\"content\":\"Hello\"}]}"
+```
+
+The command authenticates with your CLI profile and returns the agent's output. To stream the response, add `"stream":true` to the request body and pass `--sse`. To call the agent from your own code, send the same request to `<app-url>/api/invocations` with a Databricks OAuth token. Personal access tokens don't work for Databricks Apps.
+
+## Identity and permissions
+
+A deployed agent runs as the **service principal of its app**.
+
+- `agentbricks deploy` grants the service principal access to the agent's memory, session, and run state stores.
+- Tools that you add with `agentbricks tools add` run **on behalf of the user** who sent the request by default. Pass `--auth app` to run a tool as the service principal instead.
+- Deploy grants the service principal access only to resources that `agent.toml` declares directly. Grant access to anything those resources use, such as the tables behind a tool, yourself.
 
 ## Where to next
 
-- [Unity Gateway](/docs/unity-gateway/overview) for governed access to models, agent endpoints, and external tools.
+- [Agent Bricks CLI](/docs/agents/cli) to scaffold, run, and deploy an agent step by step.
 - [Agent memory and sessions](/docs/agents/memory) to give an agent conversation history and long-term memory.
-- [Genie Agents](/docs/lakehouse/genie) for chat-with-your-data over Unity Catalog tables.
-- [Agentic features](/docs/apps/agentic-features) for wiring Knowledge Assistant, Supervisor Agent, or your own Python agent into an AppKit app.
+- [Unity Gateway](/docs/unity-gateway/overview) for governed access to models, MCP servers, and skills.
+- [Omnigent](/docs/omnigent/overview) to develop agents with coding agents in one interface.

@@ -916,12 +916,10 @@ test.describe("docs MDX compatibility", () => {
     const table = page.locator("article table").first();
     await expect(table).toBeVisible();
     await expect(
-      table.getByRole("columnheader", { name: "Use this plugin" }),
+      table.getByRole("columnheader", { name: "You want to" }),
     ).toBeVisible();
-    await expect(table).toContainText("useAgentChat");
-    await expect(page.locator("article")).not.toContainText(
-      "| ----------------------------------------------------------------------------- |",
-    );
+    await expect(table).toContainText("Agent Runtime");
+    await expect(page.locator("article")).not.toContainText("| ---");
   });
 
   test("matches production inline code alignment in docs prose", async ({

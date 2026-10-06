@@ -1,7 +1,7 @@
 ---
 title: Agent Bricks CLI
 sidebar_label: Agent Bricks CLI
-description: The Agent Bricks CLI (agentbricks, databricks-agentbricks) is an experimental Databricks command-line tool for building and deploying custom agents. Scaffold, run locally, and deploy an agent with managed memory, sessions, tracing, and tools from one authenticated command.
+description: The Agent Bricks CLI (agentbricks, databricks-agentbricks) is an experimental Databricks command-line tool for building and deploying custom agents. Scaffold a new agent or migrate an existing one, run it locally, and deploy it with managed memory, sessions, tracing, and tools.
 sourceOfTruth:
   docs:
     - https://github.com/databricks/databricks-ai-bridge/blob/main/integrations/agentbricks/README.md
@@ -18,6 +18,8 @@ The Agent Bricks CLI and the custom agent APIs it uses are experimental. Command
 :::
 
 The Agent Bricks CLI (`agentbricks`) is a Databricks command-line tool for building and deploying custom agents. The `databricks-agentbricks` package installs the `agentbricks` command and the AgentKit Python SDK, and manages memory, sessions, tracing, tools, and deployments from one authenticated command.
+
+To get an agent running in a few commands, see the [Agent Bricks quickstart](/docs/agents/quickstart). This page covers each step in detail, for a new agent or for one you already built.
 
 ## The agent lifecycle
 
@@ -58,11 +60,7 @@ By default, `agentbricks deploy` automatically enables all of the following capa
 | **Tracing**          | MLflow tracing that is on by default, routing the deployed agent's traces to a per-project MLflow experiment for debugging and monitoring. See [MLflow Tracing](https://docs.databricks.com/aws/en/mlflow3/genai/tracing/).                                                                                                                |
 | **Deployment**       | Deploys an agent to the Databricks agent runtime, grants the agent's service principal access to bound stores, and manages the deployment lifecycle.                                                                                                                                                                                       |
 
-## Quickstart
-
-This quickstart takes you from an empty directory to a deployed custom agent.
-
-### Prerequisites
+## Prerequisites
 
 - The [Databricks CLI](/docs/tools/databricks-cli), installed and [authenticated](/docs/tools/databricks-cli#authenticate) to your workspace (needed for browser-based `agentbricks login`).
 - Python 3.10 or above.
@@ -72,6 +70,10 @@ This quickstart takes you from an empty directory to a deployed custom agent.
   ```bash
   pip install databricks-agentbricks
   ```
+
+## Develop a new agent
+
+Follow these steps to go from an empty directory to a deployed custom agent.
 
 ### Step 1: Authenticate with OAuth and save a profile
 
@@ -153,11 +155,71 @@ agentbricks deployments logs agent-bricks-my-agent
 agentbricks deployments stop agent-bricks-my-agent
 ```
 
+For what deploy grants and which identity the agent runs as, see [Identity and permissions](/docs/agents/runtime#identity-and-permissions).
+
+### Step 6: Query the agent
+
+`DurableAgentServer` serves the invocation API at `/api/invocations`. Each request needs a UUID `id`, which also makes retries safe, and a `session_id` that groups requests into one conversation. To send a request to the deployed agent from your terminal, run the following:
+
+```bash
+SESSION_ID=$(uuidgen)
+agentbricks --profile <profile> endpoint invoke agent-bricks-my-agent \
+  --path /api/invocations \
+  --routing-key "$SESSION_ID" \
+  --json "{\"id\":\"$(uuidgen)\",\"session_id\":\"$SESSION_ID\",\"input\":[{\"role\":\"user\",\"content\":\"Hello\"}]}"
+```
+
+The command authenticates with your CLI profile and returns the agent's output. Reuse the same `SESSION_ID` with a new `id` to continue the conversation. `--routing-key` keeps every request in the session on the same app instance when you deploy with more than one.
+
+- **Stream the response:** add `"stream":true` to the request body and pass `--sse`.
+- **Query the local agent:** while `agentbricks dev` runs, replace the app name with `--url http://localhost:8000`.
+- **Call the agent from your own code:** send the same request to `<app-url>/api/invocations` with a Databricks OAuth token. Personal access tokens don't work for Databricks Apps.
+
+## Bring an existing agent
+
+If you already built an agent with LangGraph or the OpenAI Agents SDK, use the `--existing` flag to move it to the Agent Bricks CLI and [`DurableAgentServer`](/docs/agents/runtime#serve-your-agent-with-durableagentserver). The CLI doesn't rewrite your code. It prepares migration instructions that a coding agent, such as Claude Code or Codex, follows to convert the project.
+
+### Step 1: Prepare the migration
+
+From the agent's project directory, prepare the migration. Pass the framework that the agent uses: `langgraph` for LangGraph or `openai` for the OpenAI Agents SDK.
+
+```bash
+agentbricks init --framework langgraph --existing .
+```
+
+The CLI writes an `agent-bricks-migrate/` directory with the migration instructions, a prompt for your coding agent, and a reference project generated from the CLI's templates. It also adds skills in `.claude/skills/` and `.agent/skills/` that point coding agents to the instructions. The command doesn't change your application code, dependencies, or `.env` file, and doesn't create any resources in your workspace.
+
+### Step 2: Convert the project with your coding agent
+
+Paste the prompt from `agent-bricks-migrate/` into your coding agent. The coding agent converts the project to use `agent.toml` and a `DurableAgentServer` entrypoint, and verifies the conversion.
+
+### Step 3: Check the conversion
+
+To check whether the conversion is complete, run the following in the project directory:
+
+```bash
+agentbricks doctor .
+```
+
+`agentbricks doctor` inspects the project's files without running its code or contacting Databricks. It succeeds when the project has a valid `agent.toml`, starts `DurableAgentServer` with an invoke handler, and calls the adapter for its framework. A failed report means the conversion isn't finished.
+
+### Step 4: Clean up, run, and deploy
+
+Delete `agent-bricks-migrate/` and the two skills that point to it, and keep them out of your commits. Then run the agent with `agentbricks dev`, deploy it with `agentbricks deploy`, and query it as in [Step 6](#step-6-query-the-agent).
+
+### Considerations
+
+- `--existing` supports LangGraph and the OpenAI Agents SDK with `DurableAgentServer`. It doesn't support `--server custom`.
+- Switching the agent to a managed session store doesn't move its existing conversation history. The migration instructions ask you to decide how to handle earlier conversations.
+- The `--disable-chat-app`, `--memory-store`, and `--session-store` options shape the reference project. They don't create resources.
+
 ## Command reference
 
 For the full, up-to-date command reference, including every command, argument, and flag, see the [Agent Bricks CLI command reference](https://github.com/databricks/databricks-ai-bridge/blob/main/integrations/agentbricks/cli.md).
 
 ## Where to next
 
+- [Deploy agents on the agent runtime](/docs/agents/runtime) for `DurableAgentServer` handlers, crash recovery, and the agent's identity and permissions.
+- [Agent memory and sessions](/docs/agents/memory) to give an agent conversation history and long-term memory.
 - [Databricks CLI](/docs/tools/databricks-cli) to install and authenticate the CLI that `agentbricks` builds on.
 - [Agent Bricks CLI README](https://github.com/databricks/databricks-ai-bridge/blob/main/integrations/agentbricks/README.md) for the AgentKit SDK, the durable runtime, and full command reference.

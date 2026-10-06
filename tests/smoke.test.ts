@@ -308,6 +308,7 @@ describe("production build smoke tests", () => {
     const expectedDocPaths = [
       "/docs/start-here.md",
       "/docs/agents/overview.md",
+      "/docs/agents/quickstart.md",
       "/docs/omnigent/overview.md",
       "/docs/omnigent/quickstart.md",
       "/docs/omnigent/programmatic.md",

@@ -79,5 +79,6 @@ Start from a template that matches your use case. Each one includes the plugin w
 
 - [Unity Gateway](/docs/unity-gateway/overview) for governed access to models, agent endpoints, and external tools.
 - [Agent memory and sessions](/docs/agents/memory) to give an agent conversation history and long-term memory.
+- [Databricks Sandbox](/docs/agents/sandbox) to run agents and AI-written code in an isolated, persistent environment.
 - [Genie Agents](/docs/lakehouse/genie) for chat-with-your-data over Unity Catalog tables.
 - [Agentic features](/docs/apps/agentic-features) for wiring Knowledge Assistant, Supervisor Agent, or your own Python agent into an AppKit app.

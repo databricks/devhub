@@ -55,6 +55,7 @@ const PAGES = [
   { path: "/docs/lakehouse/genie", title: "Genie Agents" },
   { path: "/docs/apps/agentic-features", title: "Agentic features" },
   { path: "/docs/agents/memory", title: "Agent memory and sessions" },
+  { path: "/docs/agents/runtime", title: "Deploy agents on Agent Runtime" },
   { path: "/docs/apps/quickstart", title: "Quickstart" },
   { path: "/docs/apps/configuration", title: "App configuration" },
   { path: "/docs/apps/development", title: "App development" },

@@ -20,14 +20,14 @@ For full product documentation, see the [Databricks agents docs](https://docs.da
 
 Each building block is usable on its own, and the [Agent Bricks CLI](/docs/agents/cli) wires them together for a new project.
 
-| You want to                   | Use                                                                                                                                                                                                                            |
-| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Deploy your agent             | **Agent Runtime** hosts any framework or harness, stateful or stateless. **`DurableAgentServer`** serves it with synchronous, streaming, and background runs, and recovers runs that a crash or restart interrupts.            |
-| Give your agent context       | [Managed memory and sessions](/docs/agents/memory) for conversation history and long-term memory, plus Databricks-managed and external [MCP servers](https://docs.databricks.com/aws/en/agents/mcp-tools/) for tools and data. |
-| Run code safely               | [Databricks Sandbox](https://docs.databricks.com/aws/en/compute/serverless/sandbox) gives the agent an isolated environment for the code it writes, with scoped access to governed data.                                       |
-| Connect to models             | [Unity Gateway](/docs/unity-gateway/overview) gives one API for frontier and open models, so you can switch models without changing agent code.                                                                                |
-| Debug and test your agent     | [MLflow Tracing](https://docs.databricks.com/aws/en/mlflow3/genai/tracing/overview) records each step the agent takes, locally and in production.                                                                              |
-| Govern what your agent can do | [Unity Gateway](/docs/unity-gateway/overview) governs access to models, MCP servers, and skills, with guardrails, rate limits, and usage tracking. Unity Catalog governs the data the agent reads.                             |
+| You want to                   | Use                                                                                                                                                                                                                                     |
+| ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Deploy your agent             | [Agent Runtime](/docs/agents/runtime) hosts any framework or harness, stateful or stateless. **`DurableAgentServer`** serves it with synchronous, streaming, and background runs, and recovers runs that a crash or restart interrupts. |
+| Give your agent context       | [Managed memory and sessions](/docs/agents/memory) for conversation history and long-term memory, plus Databricks-managed and external [MCP servers](https://docs.databricks.com/aws/en/agents/mcp-tools/) for tools and data.          |
+| Run code safely               | [Databricks Sandbox](https://docs.databricks.com/aws/en/compute/serverless/sandbox) gives the agent an isolated environment for the code it writes, with scoped access to governed data.                                                |
+| Connect to models             | [Unity Gateway](/docs/unity-gateway/overview) gives one API for frontier and open models, so you can switch models without changing agent code.                                                                                         |
+| Debug and test your agent     | [MLflow Tracing](https://docs.databricks.com/aws/en/mlflow3/genai/tracing/overview) records each step the agent takes, locally and in production.                                                                                       |
+| Govern what your agent can do | [Unity Gateway](/docs/unity-gateway/overview) governs access to models, MCP servers, and skills, with guardrails, rate limits, and usage tracking. Unity Catalog governs the data the agent reads.                                      |
 
 ## The agent compute stack
 
@@ -50,7 +50,7 @@ flowchart LR
 | Agent server         | Serves the invocation API, tracks each run, and recovers interrupted runs. | `DurableAgentServer`, or your own HTTP server.                                                                       |
 | Agent runtime        | Runs the agent server with hosting, identity, and scaling.                 | Agent Runtime, which runs on [Databricks Apps](/docs/apps/overview).                                                 |
 
-The [runtime guide](https://github.com/databricks/databricks-ai-bridge/blob/main/integrations/agentbricks/src/databricks_agentkit/runtime/README.md) covers `DurableAgentServer` handlers, run state, and recovery in detail.
+To serve and deploy an agent on this stack, including `DurableAgentServer` handlers, run state, and crash recovery, see [Deploy agents on Agent Runtime](/docs/agents/runtime).
 
 ## Build and deploy your first agent
 
@@ -100,6 +100,7 @@ A deployed agent runs as the **service principal of its app**.
 ## Where to next
 
 - [Agent Bricks CLI](/docs/agents/cli) to scaffold, run, and deploy an agent step by step.
+- [Deploy agents on Agent Runtime](/docs/agents/runtime) to serve an agent with `DurableAgentServer` and run it in production.
 - [Agent memory and sessions](/docs/agents/memory) to give an agent conversation history and long-term memory.
 - [Unity Gateway](/docs/unity-gateway/overview) for governed access to models, MCP servers, and skills.
 - [Omnigent](/docs/omnigent/overview) to develop agents with coding agents in one interface.

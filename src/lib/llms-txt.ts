@@ -42,7 +42,7 @@ const SIDEBAR_SECTIONS: Array<{
     title: "Agent Bricks",
     description:
       "Connect Agent Bricks agents to your AppKit app, and build custom agents with the Agent Bricks CLI. Covers the agents plugin for calling LLM and agent endpoints, and managed agent memory and sessions.",
-    slugs: ["agents/overview", "agents/cli", "agents/memory"],
+    slugs: ["agents/overview", "agents/cli", "agents/runtime", "agents/memory"],
   },
   {
     title: "Omnigent",

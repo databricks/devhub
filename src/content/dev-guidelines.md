@@ -22,7 +22,7 @@ Follow these rules every time you ask a question:
 2. **Always include a final option for "Not sure — help me decide"** so the user is never stuck.
 3. **Prefer interactive multiple-choice UI when available.** Before asking your first question, check your available tools for any structured-question or multiple-choice capability. If one exists, **always** use it instead of plain text. Known tools by environment:
    - **Cursor**: use the `AskQuestion` tool.
-   - **Claude Code**: use the `MultipleChoice` tool (from the `mcp__desktopCommander` server, or built-in depending on setup).
+   - **Claude Code**: use the built-in `AskUserQuestion` tool.
    - **Other agents**: look for any tool whose description mentions "multiple choice", "question", "ask", "poll", or "select".
 4. **Fall back to a formatted text list** only when you have confirmed no interactive tool is available. Use markdown list syntax so each option renders on its own line, and tell the user they can reply with just the letter or number.
 

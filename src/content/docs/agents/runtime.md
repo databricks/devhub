@@ -41,7 +41,7 @@ flowchart LR
 
 Agents built with the MLflow `AgentServer` or `LongRunningAgentServer`, or deployed to Model Serving, are legacy. Use `DurableAgentServer` and the agent runtime for new agents.
 
-## Serve your agent with `DurableAgentServer`
+## Serve your agent with DurableAgentServer
 
 `DurableAgentServer` is part of the AgentKit library, `databricks_agentkit`, which ships in the `databricks-agentbricks` package (Python 3.10+). `agentbricks init` generates the server entrypoint for you, so you usually edit only the framework code in `agent/`. To bring your own agent loop, create the server and register one async invoke handler:
 

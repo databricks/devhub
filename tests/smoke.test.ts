@@ -308,6 +308,7 @@ describe("production build smoke tests", () => {
     const expectedDocPaths = [
       "/docs/start-here.md",
       "/docs/agents/overview.md",
+      "/docs/agents/quickstart.md",
       "/docs/omnigent/overview.md",
       "/docs/omnigent/quickstart.md",
       "/docs/omnigent/programmatic.md",
@@ -315,6 +316,7 @@ describe("production build smoke tests", () => {
       "/docs/lakehouse/genie.md",
       "/docs/apps/agentic-features.md",
       "/docs/agents/memory.md",
+      "/docs/agents/runtime.md",
       "/docs/agents/sandbox.md",
       "/docs/apps/quickstart.md",
       "/docs/apps/configuration.md",

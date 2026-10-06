@@ -45,6 +45,7 @@ const PAGES = [
   { path: "/perspectives", title: "Perspectives" },
   { path: "/docs/start-here", title: "Start here" },
   { path: "/docs/agents/overview", title: "What is Agent Bricks?" },
+  { path: "/docs/agents/quickstart", title: "Agent Bricks quickstart" },
   { path: "/docs/omnigent/overview", title: "What is Omnigent?" },
   { path: "/docs/omnigent/quickstart", title: "Omnigent quickstart" },
   {
@@ -55,6 +56,7 @@ const PAGES = [
   { path: "/docs/lakehouse/genie", title: "Genie Agents" },
   { path: "/docs/apps/agentic-features", title: "Agentic features" },
   { path: "/docs/agents/memory", title: "Agent memory and sessions" },
+  { path: "/docs/agents/runtime", title: "Deploy agents on the agent runtime" },
   { path: "/docs/agents/sandbox", title: "Databricks Sandbox" },
   { path: "/docs/apps/quickstart", title: "Quickstart" },
   { path: "/docs/apps/configuration", title: "App configuration" },
@@ -917,12 +919,10 @@ test.describe("docs MDX compatibility", () => {
     const table = page.locator("article table").first();
     await expect(table).toBeVisible();
     await expect(
-      table.getByRole("columnheader", { name: "Use this plugin" }),
+      table.getByRole("columnheader", { name: "You want to" }),
     ).toBeVisible();
-    await expect(table).toContainText("useAgentChat");
-    await expect(page.locator("article")).not.toContainText(
-      "| ----------------------------------------------------------------------------- |",
-    );
+    await expect(table).toContainText("agent runtime");
+    await expect(page.locator("article")).not.toContainText("| ---");
   });
 
   test("matches production inline code alignment in docs prose", async ({

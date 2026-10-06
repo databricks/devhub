@@ -62,6 +62,8 @@ Options for `databricks aitools install`:
 
 Note that `--skills-only` and `--path` cannot be combined.
 
+A project-scoped skills install stores the resolved skills under `.databricks/aitools/skills/` and creates relative links from each agent's project directory. Commit both the links and `.databricks/aitools/` so teammates receive working skills. If the repository ignores `.databricks/`, add an exception for `.databricks/aitools/` before committing.
+
 ## Manage
 
 ```bash title="List, update, or remove skills"

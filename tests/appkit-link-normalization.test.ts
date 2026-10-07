@@ -1,7 +1,13 @@
+import { remark } from "remark";
+import remarkMdx from "remark-mdx";
 import { describe, expect, test } from "vitest";
 
 import { normalizeSyncedDocLinks } from "../scripts/normalize-appkit-doc-links.mjs";
-import { getUniqueMarkdownHeadingId } from "../src/lib/markdown-heading-ids";
+import {
+  getUniqueMarkdownHeadingId,
+  parseMarkdownHeading,
+} from "../src/lib/markdown-heading-ids";
+import remarkHeading from "../src/lib/mdx-plugins/remark-heading.mjs";
 
 const appKitErrorSource = [
   "## Properties",
@@ -16,6 +22,40 @@ const inheritedMembers = [
 ].join("\n");
 
 describe("AppKit link normalization", () => {
+  test("converts Docusaurus heading IDs without displaying them", async () => {
+    const headingId = "on-behalf-of-obo--per-user-connections";
+    const source = [
+      `## On-Behalf-Of (OBO) {#${headingId}}`,
+      "",
+      "Text with {#braces} is unchanged.",
+    ].join("\n");
+    const normalized = normalizeSyncedDocLinks(source, { channel: "v0" });
+
+    expect(normalized).toBe(
+      [
+        `## On-Behalf-Of (OBO) \\[#${headingId}]`,
+        "",
+        "Text with {#braces} is unchanged.",
+      ].join("\n"),
+    );
+    expect(
+      parseMarkdownHeading(`On-Behalf-Of (OBO) \\[#${headingId}]`),
+    ).toEqual({ id: headingId, text: "On-Behalf-Of (OBO)" });
+
+    const processor = remark()
+      .use(remarkMdx)
+      .use(remarkHeading, { generateToc: false });
+    const tree = await processor.run(
+      processor.parse(normalized.split("\n")[0]),
+    );
+
+    expect(tree.children[0]).toMatchObject({
+      type: "heading",
+      children: [{ type: "text", value: "On-Behalf-Of (OBO)" }],
+      data: { hProperties: { id: headingId } },
+    });
+  });
+
   test("inherited property and accessor links reach their distinct rendered headings", () => {
     const headingIds = new Map<string, number>();
     const propertyId = getUniqueMarkdownHeadingId(

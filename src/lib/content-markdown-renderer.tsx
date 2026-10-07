@@ -34,7 +34,10 @@ import remarkFrontmatter from "remark-frontmatter";
 import remarkGfm from "remark-gfm";
 import remarkMdx from "remark-mdx";
 
-import { getUniqueMarkdownHeadingId } from "@/lib/markdown-heading-ids";
+import {
+  getUniqueMarkdownHeadingId,
+  parseMarkdownHeading,
+} from "@/lib/markdown-heading-ids";
 import { resolveSiteUrl } from "@/lib/site-url";
 import { Admonition } from "@/components/content/admonition";
 import { Details } from "@/components/content/details";
@@ -711,8 +714,19 @@ async function renderHeading(
     Math.max(node.depth + options.headingDepthOffset, 1),
     6,
   );
-  const text = extractInlineText(node.children);
-  const id = getUniqueMarkdownHeadingId(text, options.headingIds);
+  const parsedHeading = parseMarkdownHeading(extractInlineText(node.children));
+  const id =
+    parsedHeading.id ??
+    getUniqueMarkdownHeadingId(parsedHeading.text, options.headingIds);
+  const headingChildren = [...node.children];
+  const lastChild = headingChildren.at(-1);
+
+  if (parsedHeading.id && lastChild?.type === "text") {
+    headingChildren[headingChildren.length - 1] = {
+      ...lastChild,
+      value: parseMarkdownHeading(lastChild.value).text,
+    };
+  }
 
   return (
     <Heading
@@ -721,7 +735,7 @@ async function renderHeading(
       isProse={variant === "prose"}
       showAnchor={options.showHeadingAnchors}
     >
-      {renderInlineNodes(node.children, variant, options)}
+      {renderInlineNodes(headingChildren, variant, options)}
     </Heading>
   );
 }

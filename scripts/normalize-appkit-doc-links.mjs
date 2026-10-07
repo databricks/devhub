@@ -3,6 +3,7 @@ export function normalizeSyncedDocLinks(
   { channel, appKitErrorSource = "" },
 ) {
   let updated = source
+    .replace(/^(#{1,6}[ \t]+.+?)[ \t]+\{#([^}\r\n]+)\}[ \t]*$/gm, "$1 \\[#$2]")
     .replaceAll("](/docs/api/", `](/docs/appkit/${channel}/api/`)
     .replaceAll(
       "(./lakebase.md#on-behalf-of-obo--per-user-connections)",

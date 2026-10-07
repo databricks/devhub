@@ -1,3 +1,16 @@
+const customHeadingIdPattern = /\s*\\?\[#([^\]]+)]\s*$/;
+
+export function parseMarkdownHeading(text: string): {
+  id?: string;
+  text: string;
+} {
+  const match = customHeadingIdPattern.exec(text);
+
+  return match
+    ? { id: match[1], text: text.slice(0, match.index).trimEnd() }
+    : { text };
+}
+
 function slugifyMarkdownHeading(text: string): string {
   return text
     .replace(/<[^>]+>/g, "")

@@ -8,7 +8,10 @@ import matter from "gray-matter";
 import { renderMarkdownContent } from "@/lib/content-markdown-renderer";
 import { substituteAboutDevhubLlmsUrl } from "@/lib/copy-preamble";
 import { expandLocalMdxImports } from "@/lib/expand-mdx";
-import { getUniqueMarkdownHeadingId } from "@/lib/markdown-heading-ids";
+import {
+  getUniqueMarkdownHeadingId,
+  parseMarkdownHeading,
+} from "@/lib/markdown-heading-ids";
 import { buildSeoDescription } from "@/lib/seo-description";
 import { resolveSiteUrl } from "@/lib/site-url";
 import { getSuggestEditsUrl } from "@/lib/suggest-edits-url";
@@ -793,14 +796,16 @@ function extractTableOfContents(markdown: string): DocPage["tableOfContents"] {
       continue;
     }
 
-    const value = tocHeadingHtml(heading[2]);
-    const id = getUniqueMarkdownHeadingId(value, usedIds);
+    const parsedHeading = parseMarkdownHeading(tocHeadingHtml(heading[2]));
+    const id =
+      parsedHeading.id ??
+      getUniqueMarkdownHeadingId(parsedHeading.text, usedIds);
 
     if (heading[1].length >= 2) {
       items.push({
         depth: heading[1].length,
         id,
-        value,
+        value: parsedHeading.text,
       });
     }
   }

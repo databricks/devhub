@@ -121,6 +121,7 @@ function normalizeSyncedDocs(docsRoot) {
   type: "doc";
   id: string;
   label: string;
+  className?: string;
 };
 
 type SidebarCategoryItem = {

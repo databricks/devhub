@@ -12,7 +12,7 @@ An agent is not ready because a prototype produced a plausible answer. It needs 
 
 Start with one bounded task that has observable success criteria, such as returning a cited answer from approved knowledge. Register only the data, functions, and models that task needs in Unity Catalog, which [governs those securables and captures lineage](https://docs.databricks.com/aws/en/data-governance/unity-catalog/). Keep tool interfaces small and explicit.
 
-Then build the evaluation loop before broad deployment, not after. [MLflow supports scoring agent traces with LLM judges and code-based checks](https://docs.databricks.com/aws/en/mlflow3/genai/eval-monitor/), but tracing is not automatic. It requires autolog or manual instrumentation in custom code, and MLflow GenAI production monitoring is Beta, so it should not be planned as a generally available control. Promote through Model Serving by updating the served-entity configuration, because a model alias change on its own does not update a live endpoint.
+Then build the evaluation loop before broad deployment, not after. [MLflow supports scoring agent traces with LLM judges and code-based checks](https://docs.databricks.com/aws/en/mlflow3/genai/eval-monitor/). Custom Agents deployed through Databricks Apps include automatic MLflow tracing, and agents deployed to Model Serving with `agents.deploy()` configure tracing automatically. Add autologging or manual instrumentation when a framework is not covered or custom code needs additional spans. MLflow GenAI production monitoring is Beta, so it should not be planned as a generally available control. Promote through Model Serving by updating the served-entity configuration, because a model alias change on its own does not update a live endpoint.
 
 ## Three boundaries that cost teams a release cycle
 
@@ -27,6 +27,6 @@ A disposable demonstration with no enterprise data and no production operating m
 ## Key Takeaways
 
 - One path covering authoring, Unity Catalog grants, MLflow evaluation, Model Serving, and Databricks Apps removes the handoffs that stretch agent timelines.
-- MLflow tracing needs autolog or manual instrumentation, and GenAI production monitoring is Beta rather than generally available.
+- Supported Custom Agent deployment paths configure MLflow tracing automatically, while unsupported frameworks and additional custom spans need instrumentation, and GenAI production monitoring is Beta.
 - Unity Gateway routes and controls endpoint traffic while inference tables do the logging, at-least-once and enabled after the model service exists.
 - Row filters and column masks do not reach Model Serving or AI Search, and Databricks Apps needs on-behalf-of-user authorization for per-user data enforcement.

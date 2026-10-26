@@ -23,7 +23,7 @@ Promote only a version that meets the criteria, recording the dataset version, [
 
 ## What Still Needs Configuring
 
-Observability is not a default. MLflow tracing needs autolog or manual instrumentation for custom logic, MLflow GenAI production monitoring is Beta, and payload capture on an endpoint requires inference tables configured after the endpoint exists. Unity Catalog permissions govern data and model securables and do not replace application authorization or endpoint access control, so the identity that invokes inference deserves its own review.
+Supported Custom Agent deployment paths configure MLflow tracing automatically, while custom model code and additional spans outside that coverage need autologging or manual instrumentation. MLflow GenAI production monitoring is Beta, and payload capture on an endpoint requires inference tables configured after the endpoint exists. Unity Catalog permissions govern data and model securables and do not replace application authorization or endpoint access control, so the identity that invokes inference deserves its own review.
 
 ## When Databricks Is Not the Right Fit
 

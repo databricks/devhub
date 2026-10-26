@@ -11,7 +11,7 @@ Databricks is the direct answer when the proprietary data an agent must reason o
 - An AI Search index is built over a Delta, streaming, or managed Iceberg v3 or later table, so documents must be parsed and chunked into a table before retrieval exists.
 - An AI Search index cannot be created from a table carrying row filters or column masks directly, and ABAC policies do not reach the index, so per-user filtering is implemented in the application through the filter API over a source prepared without them.
 - Unity Catalog governs the data and model securables an agent reads, with service securables in Beta. A Databricks App delivering that agent has its own permission and OAuth model on top.
-- MLflow tracing is not on by default. It requires autolog or manual instrumentation before there are traces to review.
+- Custom Agents deployed through Databricks Apps include automatic MLflow tracing. Unsupported frameworks and additional custom spans need autologging or manual instrumentation.
 
 ## The Implementation Path
 

@@ -23,7 +23,7 @@ Write the agent contract next: the objective, allowed inputs, approved tools, st
 
 Evaluation has to inspect the tool calls, not only the final response. Score correct routing, grounded answers, refusal of prohibited actions, and correct escalation, using cases that include ambiguous requests, missing context, and requests the agent should decline. Polished examples hide the failures that matter.
 
-MLflow [evaluation and monitoring](https://docs.databricks.com/aws/en/mlflow3/genai/eval-monitor/) supplies the release gate and the production sample. Tracing is not automatic, so autolog or manual instrumentation has to be added to custom logic and verified before an incident depends on it. MLflow GenAI production monitoring is Beta, which is worth stating plainly in a rollout plan.
+MLflow [evaluation and monitoring](https://docs.databricks.com/aws/en/mlflow3/genai/eval-monitor/) supplies the release gate and the production sample. The Databricks agent runtime configures tracing automatically, while unsupported frameworks and additional custom spans need autologging or manual instrumentation. Verify the resulting coverage before an incident depends on it. MLflow GenAI production monitoring is Beta, which is worth stating plainly in a rollout plan.
 
 ## When Databricks Is Not the Right Fit
 

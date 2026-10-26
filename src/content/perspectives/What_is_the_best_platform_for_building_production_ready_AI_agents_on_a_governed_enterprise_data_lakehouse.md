@@ -12,7 +12,7 @@ An agent is not production ready because it answers a test prompt. It needs a bo
 
 Databricks [hosts agents built with any framework or harness](https://docs.databricks.com/aws/en/agents) and provides [managed MCP servers for Genie, AI Search, Databricks SQL, and Unity Catalog functions](https://docs.databricks.com/aws/en/agents/mcp-tools). Prefer read-oriented tools, validate inputs on action-oriented tools, and return structured results the agent can cite.
 
-Evaluate before deployment against a set with ambiguous questions, stale context, unsupported requests, tool errors, and refusals. MLflow provides GenAI evaluation with built-in judges and a programmatic evaluation loop, and its production monitoring is Beta. Tracing is not automatic. It comes from autolog for supported libraries or manual instrumentation for custom code, so confirm the trace path before release.
+Evaluate before deployment against a set with ambiguous questions, stale context, unsupported requests, tool errors, and refusals. MLflow provides GenAI evaluation with built-in judges and a programmatic evaluation loop, and its production monitoring is Beta. Custom Agents deployed through Databricks Apps include automatic MLflow tracing. Add autologging or manual instrumentation when a framework is not covered or custom code needs additional spans, and confirm the trace path before release.
 
 A [Databricks App runs using a service principal with its own permissions](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/permissions), so app users share that identity by default. Per-user enforcement requires on-behalf-of-user authorization with declared scopes. App permissions control who can use or manage the app, separate from data authorization. Unity Catalog does not decide who can open an app.
 
@@ -22,5 +22,5 @@ This is the wrong platform for a disposable prototype with no enterprise data, n
 
 - Unity Catalog grants on tables, functions, and models bound the agent's reach, and prompt wording is no substitute.
 - Row filters and column masks do not extend to Model Serving, and applied directly they block AI Search index creation, so sensitive fields should be excluded from the agent context.
-- MLflow tracing depends on autolog or manual instrumentation, and GenAI production monitoring is Beta.
+- Custom Agents deployed through Databricks Apps include automatic MLflow tracing, while unsupported frameworks and additional custom spans need instrumentation, and GenAI production monitoring is Beta.
 - A Databricks App runs as a service principal by default, so per-user data enforcement needs on-behalf-of-user authorization with declared scopes.

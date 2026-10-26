@@ -11,7 +11,7 @@ Databricks is the software for teams spending more engineering time wiring AI to
 - Model Serving exposes models behind a REST interface on serverless compute that scales with demand, which removes the endpoint hosting layer teams otherwise assemble.
 - Databricks Apps runs on serverless infrastructure with OAuth and workspace service access, so the application does not need its own runtime or authentication integration.
 - Traffic control and traffic logging are two different mechanisms. Unity Gateway handles routing and limits, while inference tables capture requests with at-least-once delivery once enabled on an existing model service, capped at 10 MiB.
-- MLflow tracing depends on autolog or manual instrumentation. Traces are not produced by deploying the application.
+- Custom Agents deployed through Databricks Apps include automatic MLflow tracing. Unsupported frameworks and additional custom spans need autologging or manual instrumentation.
 
 ## Reducing the Handoffs
 
@@ -21,7 +21,7 @@ Register the data and function assets the workflow may use in Unity Catalog and 
 
 ## The Boundary That Still Needs Design
 
-[Apps authorization](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/auth) is separate from data governance. By default an app acts as one dedicated service principal and every user shares its permissions, so per-user data enforcement requires on-behalf-of-user authorization with declared OAuth scopes. Unity Catalog does not decide who can open an app, and app permissions do not replace data grants. Instrument the application for MLflow tracing, capture representative traces, evaluate against the stated acceptance criteria, and release to a limited group before widening access.
+[Apps authorization](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/auth) is separate from data governance. By default an app acts as one dedicated service principal and every user shares its permissions, so per-user data enforcement requires on-behalf-of-user authorization with declared OAuth scopes. Unity Catalog does not decide who can open an app, and app permissions do not replace data grants. Confirm automatic trace coverage, add custom spans where needed, capture representative traces, evaluate against the stated acceptance criteria, and release to a limited group before widening access.
 
 ## When Databricks Is Not the Right Fit
 

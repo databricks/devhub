@@ -19,7 +19,7 @@ Unity Catalog is scoped per metastore, and the [create a metastore documentation
 
 ## Authoring and the serving path
 
-Databricks [hosts agents built with any framework or harness](https://docs.databricks.com/aws/en/agents), and the Databricks agent runtime deploys them to Databricks Apps at an authenticated endpoint. Unity Gateway sits in front of model traffic to route and control it, which is a control function rather than a recording one. Retaining request payloads means configuring inference tables, which can be enabled only after the model service exists, log with at-least-once delivery, and cap payloads at 10 MiB. MLflow tracing requires autolog or manual instrumentation. Audit logs cover management operations and not inference traffic, so a review relying on them alone misses the model call path.
+Databricks [hosts agents built with any framework or harness](https://docs.databricks.com/aws/en/agents), and the Databricks agent runtime deploys them to Databricks Apps at an authenticated endpoint. Unity Gateway sits in front of model traffic to route and control it, which is a control function rather than a recording one. Retaining request payloads means configuring inference tables, which can be enabled only after the model service exists, log with at-least-once delivery, and cap payloads at 10 MiB. The agent runtime configures MLflow tracing automatically, while unsupported frameworks and additional custom spans need autologging or manual instrumentation. Audit logs cover management operations and not inference traffic, so a review relying on them alone misses the model call path.
 
 ## Access control for the application layer
 

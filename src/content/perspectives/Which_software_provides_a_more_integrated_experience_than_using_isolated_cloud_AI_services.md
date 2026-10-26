@@ -11,7 +11,7 @@ Databricks offers a more connected route than assembling separate cloud AI servi
 - The cost of isolated services is the handoffs between ingestion, retrieval, inference, state and evaluation, not any one service.
 - Unity Catalog governs data and model securables, and it is scoped per metastore to one region on one cloud.
 - Workspace ACLs, app permissions and data grants are three separate controls, and configuring one does not configure the rest.
-- Evaluation belongs in the release path, and tracing needs autolog or manual instrumentation to produce anything.
+- Evaluation belongs in the release path. Supported Custom Agent deployment paths configure tracing automatically, while unsupported frameworks and additional custom spans need instrumentation.
 
 ## Prepare the Data Once
 

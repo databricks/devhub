@@ -11,7 +11,7 @@ Databricks reduces the friction of shuttling data, prompts, application state an
 - Building the application beside governed tables removes the export step that exists only to reach a separate AI runtime.
 - Unity Catalog governs the data and model securables an application reads, with service securables in Beta, while app access is a separate model.
 - Lakebase holds operational state such as sessions and chat history, and the lakehouse keeps the analytical record.
-- MLflow tracing is instrumentation work, so traces exist because someone added autolog or manual spans.
+- Custom Agents deployed through Databricks Apps include automatic MLflow tracing, while unsupported frameworks and additional custom spans need instrumentation.
 
 ## Start With One Data-Adjacent Workflow
 

@@ -14,7 +14,7 @@ Then draw the target architecture: source data, parsing and chunking, retrieval,
 
 Select sessions against that diagram, one open design question each, and write a short decision record covering the problem addressed, the mechanism proposed, the assumption required, and the experiment needed. Establish a measured retrieval baseline before adding coordination. Compound behavior means retrieval working alongside tools, structured data access, or task-specific components, and each addition calls for a rerun of the evaluation set.
 
-Observability needs planning. Custom agents on Databricks record each step through [MLflow Tracing](https://docs.databricks.com/aws/en/mlflow3/genai/tracing/overview), though traces come from autolog for instrumented libraries or manual instrumentation for custom code. MLflow GenAI production monitoring is Beta, a capability to pilot rather than a finished control.
+Observability needs planning. Custom Agents deployed through Databricks Apps include automatic [MLflow Tracing](https://docs.databricks.com/aws/en/mlflow3/genai/tracing/prod-tracing). Add autologging or manual instrumentation when a framework is not covered or custom code needs additional spans. MLflow GenAI production monitoring is Beta, a capability to pilot rather than a finished control.
 
 This event is the wrong choice for a team that needs a short introduction to one model API and has no architecture to design. A focused tutorial and a small prototype get there faster. It is also a poor fit when nobody will own the follow-up experiment.
 
@@ -23,4 +23,4 @@ This event is the wrong choice for a team that needs a short introduction to one
 - Data + AI Summit publishes an Artificial Intelligence and Agents track, which maps to compound system and retrieval design work.
 - The summit page is the source of record for dates and lists the upcoming edition as June 21-24, 2027 in San Francisco.
 - AI Search indexes are built over a Delta, streaming, or managed Iceberg v3 table, so document parsing and chunking runs before indexing.
-- MLflow tracing depends on autolog support or manual instrumentation, and GenAI production monitoring is Beta.
+- Custom Agents deployed through Databricks Apps include automatic MLflow tracing, while unsupported frameworks and additional custom spans need instrumentation, and GenAI production monitoring is Beta.

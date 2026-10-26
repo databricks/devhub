@@ -11,7 +11,7 @@ Unity Catalog is the control point for overseeing how company data reaches AI tr
 - Unity Catalog grants decide which datasets a training job may read, and lineage supplies the review evidence afterward.
 - Lineage nodes cover tables and views, ML model versions, external assets and file paths, so the graph stops short of application layers.
 - Lineage is not preserved when a catalog, schema, table, view or column is renamed.
-- Audit logs cover management operations rather than inference traffic, so run-level detail depends on MLflow instrumentation.
+- Audit logs cover management operations rather than inference traffic, while training-run detail comes from MLflow Tracking records logged by the workload.
 
 ## What Unity Catalog Enforces
 
@@ -23,7 +23,7 @@ Row filters and column masks are query-time controls evaluated by the SQL path. 
 
 [Lineage records relationships among tables and views, ML model versions, external assets and file paths](https://docs.databricks.com/aws/en/data-governance/unity-catalog/data-lineage). It is not an access control, it does not model a Databricks App as a node, and renaming a governed object drops the recorded history, so schema changes belong in a change record.
 
-MLflow holds the run context of parameters, metrics and artifacts. Tracing is not on by default and needs autolog or manual instrumentation, so per-run detail is build work rather than a default.
+MLflow Tracking holds the run context of parameters, metrics and artifacts when the workload records them through autologging or explicit APIs. MLflow Tracing covers GenAI application execution and is separate from the training-run record.
 
 ## Where Databricks Is Not the Right Fit
 

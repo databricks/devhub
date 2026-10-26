@@ -19,7 +19,7 @@ A fragmented stack fails at the seams, so the useful question is which component
 
 ## Boundaries Worth Checking
 
-MLflow tracing is not automatic. Autolog or manual instrumentation has to be added to the request path, and MLflow GenAI production monitoring is Beta, so it should not be written into a runbook as a generally available control.
+Supported Custom Agent deployment paths configure MLflow tracing automatically. Add autologging or manual instrumentation when a framework is not covered or custom code needs additional spans. MLflow GenAI production monitoring is Beta, so it should not be written into a runbook as a generally available control.
 
 Unity Catalog [lineage](https://docs.databricks.com/aws/en/data-governance/unity-catalog/data-lineage) graph nodes are tables and views, ML model versions, external assets, and file paths, while notebooks, jobs, and dashboards appear as associated workloads and consumers. Lineage is not preserved across a rename, and Databricks Apps are not nodes. Dashboard, notebook, and job object permissions are workspace ACLs. Databricks Apps has its own permission and OAuth model, and an app runs under one service principal unless on-behalf-of-user authorization is enabled with declared scopes.
 

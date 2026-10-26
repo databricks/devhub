@@ -1,7 +1,7 @@
 ---
 name: "databricks-core"
-description: "Databricks CLI operations: auth, profiles, data exploration, and bundles. Contains up-to-date guidelines for Databricks-related CLI tasks."
-compatibility: Requires databricks CLI (>= v0.292.0)
+description: "Databricks CLI operations and the parent/entry-point skill for Databricks CLI use: authentication, profile selection, and bundles. Load this first for CLI, auth, profile, and bundle tasks, then load the matching product skill. For finding or exploring data, answering questions about the data, or generating SQL, load the databricks-data-discovery skill (it routes to Genie One). Contains up-to-date guidelines for Databricks-related CLI tasks."
+compatibility: Requires databricks CLI (>= v1.0.0)
 metadata:
   version: "0.1.0"
 ---
@@ -15,15 +15,28 @@ Core skill for Databricks CLI, authentication, and data exploration.
 For specific products, use dedicated skills:
 - **databricks-jobs** - Lakeflow Jobs development and deployment
 - **databricks-pipelines** - Lakeflow Spark Declarative Pipelines (batch and streaming data pipelines)
+- **databricks-serverless** - Compute choice for jobs and pipelines (serverless, performance mode, classic fallback)
 - **databricks-apps** - Full-stack TypeScript app development and deployment
 - **databricks-lakebase** - Lakebase Postgres Autoscaling project management
 - **databricks-model-serving** - Model Serving endpoint management and inference
 
+For **data discovery, exploration, and query generation** — finding tables,
+answering natural-language questions about the data, or generating SQL — use
+**databricks-data-discovery** (it asks Genie One first, then falls back to manual
+exploration). If it isn't installed, use the AI-tool commands below and
+[Manual Data Exploration](manual-data-exploration.md).
+
 ## Prerequisites
 
-1. **CLI installed**: Run `databricks --version` to check.
-   - **If the CLI is missing or outdated (< v0.292.0): STOP. Do not proceed or work around a missing CLI.**
-   - **Read the [CLI Installation](databricks-cli-install.md) reference file and follow the instructions to guide the user through installation.**
+1. **CLI installed and current**: the CLI must be >= v1.0.0. A CLI that is present but
+   too old is not "good enough" — it must be upgraded, not worked around.
+   - **Run the floor check in [CLI Installation](databricks-cli-install.md).** If it reports
+     `UPGRADE` or `INSTALL`: STOP and follow that reference file to upgrade or install — do
+     not proceed or tell the user their CLI is fine.
+   - **If another skill routed you here to upgrade** (it needs a newer CLI than v1.0.0 — e.g.
+     `databricks-setup-local` needs v1.16.0), that skill already detected the gap. A passing
+     v1.0.0 floor check is not enough: follow the Update / repair procedures to install the
+     latest stable, which satisfies any skill's floor.
    - Note: In sandboxed environments (Cursor IDE, containers), install commands write outside the workspace and may be blocked. Present the install command to the user and ask them to run it in their own terminal.
    - **Exception:** If CLI installation is blocked (sandboxed containers, restricted environments), ask the user whether to fall back to direct REST API calls using `DATABRICKS_HOST` and `DATABRICKS_TOKEN` environment variables if present in the shell. See the [Databricks REST API docs](https://docs.databricks.com/api/workspace/introduction).
 
@@ -70,7 +83,16 @@ databricks experimental aitools tools query "SELECT * FROM table LIMIT 10" --pro
 databricks experimental aitools tools get-default-warehouse --profile <PROFILE>
 ```
 
-See [Data Exploration](data-exploration.md) for details.
+**Names are literal.** Use catalog/schema/table names exactly as given — never change a
+hyphen to an underscore or otherwise normalize them. In SQL, backtick-quote any name part
+with special characters (e.g. `` `my-catalog`.schema.table ``); unquoted hyphens cause a
+parse error.
+
+These commands are first-class for running known SQL and profiling — Genie isn't
+required for that. For natural-language data questions, locating data you can't
+pin down, or generating a query from a question, prefer the `databricks-data-discovery`
+skill (above) if it's installed. See [Manual Data Exploration](manual-data-exploration.md) for the
+full command surface, quoting rules, and troubleshooting.
 
 ## Quick Reference
 
@@ -123,6 +145,7 @@ databricks bundle run <RESOURCE> -t <TARGET> --profile <PROFILE>
 | Error | Solution |
 |-------|----------|
 | `cannot configure default credentials` | Use `--profile` flag or authenticate first |
+| `configuration does not support OAuth tokens` | The command requires OAuth (e.g., `databricks apps logs`). Re-authenticate with `databricks auth login --host <URL> --profile <PROFILE>`. See [CLI Authentication](databricks-cli-auth.md). |
 | `PERMISSION_DENIED` | Check workspace/UC permissions |
 | `RESOURCE_DOES_NOT_EXIST` | Verify resource name/id and profile |
 
@@ -132,11 +155,11 @@ databricks bundle run <RESOURCE> -t <TARGET> --profile <PROFILE>
 |------|------------------------|
 | First time setup | [CLI Installation](databricks-cli-install.md) |
 | Auth issues / new workspace | [CLI Authentication](databricks-cli-auth.md) |
-| Exploring tables/schemas | [Data Exploration](data-exploration.md) |
+| Exploring tables/schemas | [Manual Data Exploration](manual-data-exploration.md) (or `databricks-data-discovery` if installed) |
 | Deploying jobs/pipelines | Use `/databricks-dabs` |
 
 ## Reference Guides
 
 - [CLI Installation](databricks-cli-install.md)
 - [CLI Authentication](databricks-cli-auth.md)
-- [Data Exploration](data-exploration.md)
+- [Manual Data Exploration](manual-data-exploration.md)

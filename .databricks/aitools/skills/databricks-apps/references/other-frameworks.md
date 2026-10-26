@@ -89,17 +89,22 @@ env:
 
 ### databricks.yml — Bundle/Deployment Configuration
 - Defines the **app resource** for DABs (Declarative Automation Bundles)
-- `config:` section only takes effect after `bundle run`, NOT just `bundle deploy`
+- Deploy with `databricks apps deploy` — it applies `config:` and starts the app. A bare `bundle deploy` uploads code but leaves the app stopped.
 
 ```yaml
 # databricks.yml
 bundle:
   name: my-app-bundle
 
+variables:
+  app_name:
+    description: 'App name: lowercase letters, digits, and hyphens; maximum 30 characters'
+    default: my-app-${workspace.current_user.domain_friendly_name}
+
 resources:
   apps:
     my-app:
-      name: my-app
+      name: ${var.app_name}
       source_code_path: .
       config:
         command: ['python', 'app.py']
@@ -113,6 +118,12 @@ resources:
 targets:
   dev:
     default: true
+  prod:
+    mode: production
+    workspace:
+      root_path: /Workspace/Shared/.bundle/${bundle.name}/${bundle.target}
+    variables:
+      app_name: my-app
 ```
 
 ### Critical Rules
@@ -120,7 +131,8 @@ targets:
 | Rule | Why |
 |------|-----|
 | Always provide BOTH `app.yaml` AND `databricks.yml` config | UI deployments use app.yaml; DABs uses databricks.yml |
-| Always run `bundle deploy` THEN `bundle run <app-name>` | `deploy` uploads code; `run` applies config and starts the app |
+| Deploy apps with `databricks apps deploy` (one command) | It validates, uploads code, applies config, and **starts** the app. A bare `bundle deploy` leaves it stopped. |
+| Namespace `app_name` in shared development | App names are workspace-global and limited to 30 characters. Default to an app prefix plus `${workspace.current_user.domain_friendly_name}`; persist a local override if the value is too long, invalid, collides, or must distinguish multiple non-production targets in one workspace. |
 | Never use `${var.xxx}` in config env values | Variables are NOT resolved in config — values appear literally |
 
 ## 3. Using OBO in Non-AppKit Apps

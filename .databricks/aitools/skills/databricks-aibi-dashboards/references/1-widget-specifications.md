@@ -28,6 +28,9 @@ Core widget types for AI/BI dashboards. For advanced visualizations (area, scatt
 | scatter | 3 | [2-advanced-widget-specifications.md](2-advanced-widget-specifications.md) |
 | combo | 1 | [2-advanced-widget-specifications.md](2-advanced-widget-specifications.md) |
 | choropleth-map | 1 | [2-advanced-widget-specifications.md](2-advanced-widget-specifications.md) |
+| gantt | 1 | [2-advanced-widget-specifications.md#gantt](2-advanced-widget-specifications.md#gantt) |
+| path-map | 1 | [2-advanced-widget-specifications.md#path-map](2-advanced-widget-specifications.md#path-map) |
+| custom-vega-viz | 1 | [6-custom-visualizations.md](6-custom-visualizations.md) |
 | filter-* | 2 | [3-filters.md](3-filters.md) |
 
 ---
@@ -37,31 +40,16 @@ Core widget types for AI/BI dashboards. For advanced visualizations (area, scatt
 - **CRITICAL: Text widgets do NOT use a spec block** - use `multilineTextboxSpec` directly
 - Supports markdown: `#`, `##`, `###`, `**bold**`, `*italic*`
 - **CRITICAL: Multiple items in the `lines` array are concatenated on a single line, NOT displayed as separate lines!**
-- For title + subtitle, use **separate text widgets** at different y positions
+- **Never put a heading and body in the same string** — `lines[]` is joined verbatim with no separator (like `queryLines`), and a `#` heading runs until a line break, so `["# Title. Body text..."]` renders the whole paragraph as one giant H1. Split them: `["# Title\n", "\n", "subtitle text"]`.
 
 ```json
-// CORRECT: Separate widgets for title and subtitle
+// CORRECT: heading, blank line, body — one widget. Size `height` to the text
+// (title-only ~1, long paragraph 3+) so it isn't clipped or over-padded.
 {
   "widget": {
-    "name": "title",
-    "multilineTextboxSpec": {"lines": ["## Dashboard Title"]}
-  },
-  "position": {"x": 0, "y": 0, "width": 12, "height": 1}
-},
-{
-  "widget": {
-    "name": "subtitle",
-    "multilineTextboxSpec": {"lines": ["Description text here"]}
-  },
-  "position": {"x": 0, "y": 1, "width": 12, "height": 1}
-}
-
-// WRONG: Multiple lines concatenate into one line!
-{
-  "widget": {
-    "name": "title-widget",
+    "name": "header",
     "multilineTextboxSpec": {
-      "lines": ["## Dashboard Title", "Description text here"]  // Becomes "## Dashboard TitleDescription text here"
+      "lines": ["## Dashboard Title\n", "\n", "Description text here"]
     }
   },
   "position": {"x": 0, "y": 0, "width": 12, "height": 2}
@@ -75,6 +63,7 @@ Core widget types for AI/BI dashboards. For advanced visualizations (area, scatt
 - `version`: **2** (NOT 3!)
 - `widgetType`: "counter"
 - Percent values must be 0-1 in the data (not 0-100)
+- **No `color` on the `value` encoding.** A counter takes no per-widget color — `"value": {..., "color": {...}}` (any form: `{"hex": ...}`, `themeColorType`, or a scale) renders the widget as "unsupported widget definition". The counter number's color is set globally by the dashboard theme (`uiSettings.theme.fontColor`); see SKILL.md "Theme & Color".
 
 **Two strongly-recommended defaults:**
 
@@ -187,11 +176,13 @@ Format types: `number`, `number-plain`, `number-currency`, `number-percent`.
 
 | Field type | Format | Why |
 |---|---|---|
-| Money | `number-currency` + `currencyCode: "USD"` (or `EUR` etc.) + `abbreviation: "compact"` | "$1.2M" is readable, "1287394.55" isn't |
+| Money | `number-currency` + `currencyCode: "USD"` (or `EUR` etc.) + `abbreviation: "compact"` + `decimalPlaces` | "$1.2M" is readable, "1287394.55" isn't |
 | Percentage | `number-percent` (data must be 0-1) | Renders "12.5%" from 0.125 |
-| Large count | `number` + `abbreviation: "compact"` | Renders "1.5K" / "2.3M" |
+| Large count | `number` + `abbreviation: "compact"` + `decimalPlaces` | Renders "1.5K" / "2.3M" |
 | Small count (under ~1K) | `number` (no abbreviation) or omit `format` | Raw integer is fine |
 | Value with custom unit (e.g., "8 hrs", "2 weeks") | `number-plain` + `formatTemplate: "{{ @formatted }} hrs"` | Append a unit cleanly without baking it into the dataset |
+
+> **`abbreviation: "compact"` requires a `decimalPlaces` object to round** — without it the value keeps its full digits (renders `$9.756278496M`, not `$9.76M`). Always pair them: `"abbreviation": "compact", "decimalPlaces": {"type": "max", "places": 2}` (use `"places": 0` for counts).
 
 Optional `format.suffix` (e.g., `"suffix": "h"`) appends a short unit directly after the number without a template — simpler than `formatTemplate` when you just need a single-char unit.
 
@@ -232,7 +223,7 @@ Wrap the value with surrounding text. Use `{{@}}` for the raw value and `{{@form
 ```json
 "value": {
   "fieldName": "sum(revenue)",
-  "format": {"type": "number-currency", "currencyCode": "USD", "abbreviation": "compact"},
+  "format": {"type": "number-currency", "currencyCode": "USD", "abbreviation": "compact", "decimalPlaces": {"type": "max", "places": 2}},
   "formatTemplate": "{{@formatted}} (in {{Region}})"
 }
 ```
@@ -402,7 +393,7 @@ Inside `mappings[].color`, use a **bare hex string** (`"#FF0000"`) — that's th
 
 ### Annotations (event markers)
 
-Mark an event on a time-series chart — release, holiday, incident — with a vertical line. Works on `line`, `area`, `bar`, `combo`, and `forecast-line`.
+Use `vertical-line` annotations for events on the x-axis and `horizontal-line` annotations for thresholds on the y-axis. Built-in reference lines do not require a custom Vega-Lite widget. Constant and custom annotations are supported on area, bar, box, combo, heatmap, histogram, line, scatter, and waterfall charts; forecast-line also supports constant event markers.
 
 ```json
 "spec": {
@@ -422,7 +413,49 @@ Mark an event on a time-series chart — release, holiday, incident — with a v
 }
 ```
 
-Multiple annotations are allowed — add more objects to the array. For non-datetime axes, use `"dataType": "STRING"` or `"NUMBER"` and set `dataValue` accordingly.
+For a numeric target, add a horizontal annotation to the same `spec.annotations` array:
+
+```json
+{
+  "type": "horizontal-line",
+  "encodings": {
+    "y": {"dataValue": "100", "dataType": "INTEGER"},
+    "label": {"value": "Target"},
+    "color": {"value": "#2272B4"}
+  }
+}
+```
+
+Multiple annotations are allowed. Constant `dataValue` is serialized as a string; its `dataType` must be `INTEGER`, `DOUBLE`, `DECIMAL`, `DATE`, or `DATETIME`. Categorical `STRING` positions and the type name `NUMBER` are not supported.
+
+The [chart configuration docs](https://docs.databricks.com/aws/en/dashboards/manage/visualizations/#annotations) also describe aggregate reference lines (`avg`, `min`, `max`) and custom field-driven lines. Aggregate lines are supported on area, bar, box, line, and scatter, except with 100% stack layouts. Custom field-driven lines need their own query binding; do not substitute a field name into `dataValue`.
+
+### Faceting and Additional Tooltips
+
+For small multiples, use a standard chart's `spec.facet` alongside `encodings`. Add the facet dimension to `query.fields` so each panel gets its own grouped data:
+
+```json
+{
+  "facet": {
+    "type": "wrap",
+    "fieldName": "region",
+    "scale": {"type": "categorical"},
+    "layout": {"column": {"type": "count", "value": 2}}
+  }
+}
+```
+
+This repeats the chart by region with shared axes. It does not require generating a separate widget per region or switching to Vega-Lite.
+
+On charts that support additional tooltip fields, add them to `spec.encodings.extra` and `query.fields`:
+
+```json
+{
+  "extra": [{"fieldName": "sum(order_count)", "displayName": "Orders"}]
+}
+```
+
+The example requires a matching query field such as ``{"name": "sum(order_count)", "expression": "SUM(`order_count`)"}``. Preserve the chart's aggregation grain when choosing extra fields. See [chart configuration](https://docs.databricks.com/aws/en/dashboards/manage/visualizations/) for per-chart availability.
 
 ---
 
@@ -546,9 +579,19 @@ Use `:param` syntax in SQL for dynamic filtering. Parameters can be bound to fil
 Allowed in `query.fields` (no CAST or complex SQL):
 
 ```json
-{"name": "[sum|avg|count|countdistinct|min|max](col)", "expression": "[SUM|AVG|COUNT|COUNT(DISTINCT)|MIN|MAX](`col`)"}
-{"name": "[daily|weekly|monthly](date)", "expression": "DATE_TRUNC(\"[DAY|WEEK|MONTH]\", `date`)"}
+{"name": "(sum|avg|count|countdistinct|min|max)(col)", "expression": "(SUM|AVG|COUNT|COUNT(DISTINCT)|MIN|MAX)(`col`)"}
+{"name": "(daily|weekly|monthly)(date)", "expression": "DATE_TRUNC(\"(DAY|WEEK|MONTH)\", `date`)"}
 {"name": "field", "expression": "`field`"}
 ```
 
 For conditional logic, compute in dataset SQL instead.
+
+---
+
+## Widget Query Filters
+
+Prefer a `WHERE` in the dataset SQL. To filter a shared dataset per-widget, add `filters` to the `query` — each entry must be `{"expression": "<SQL boolean>"}` (the `{operand, operator, column}` shape fails: `query.filters[0].expression should not be empty`):
+
+```json
+"query": {"datasetName": "ds_fleet", "fields": [...], "filters": [{"expression": "`maintenance_status` = 'pending'"}]}
+```

@@ -39,7 +39,7 @@ Allows the app to act with the identity of the current user. Databricks forwards
 
 **Use for**: user-specific data queries, Unity Catalog row/column filters, audit trails.
 
-**Prerequisite**: workspace admin must enable user authorization (Public Preview). Add scopes when creating/editing the app in the UI.
+**Availability**: User authorization is generally available and on by default — no workspace-admin toggle is required to turn it on. Add scopes when creating/editing the app (in `databricks.yml` or the UI); workspace admins can optionally restrict which scopes apps may request.
 
 ### Retrieving the User Token Per Framework
 
@@ -147,4 +147,3 @@ When adding user authorization, select only the scopes your app needs:
 - Grant service principal minimum required permissions on resources
 - Use `CAN MANAGE` only for trusted developers; `CAN USE` for app users
 - Enforce peer review for app code before production deployment
-- Cookbook auth examples: [Streamlit](https://apps-cookbook.dev/docs/streamlit/authentication/users_get_current) · [Dash](https://apps-cookbook.dev/docs/dash/authentication/users_get_current) · [Reflex](https://apps-cookbook.dev/docs/reflex/authentication/users_get_current)

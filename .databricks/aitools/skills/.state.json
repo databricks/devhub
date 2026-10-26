@@ -1,19 +1,22 @@
 {
   "schema_version": 2,
-  "release": "v0.2.10",
-  "last_updated": "2026-08-31T22:50:23.393178-07:00",
+  "release": "v0.2.30",
+  "last_updated": "2026-10-26T09:05:50.857478-07:00",
   "skills": {
     "databricks-agent-bricks": "0.1.0",
-    "databricks-ai-functions": "0.1.0",
-    "databricks-aibi-dashboards": "0.2.0",
+    "databricks-ai-functions": "0.2.0",
+    "databricks-ai-runtime": "0.2.1",
+    "databricks-aibi-dashboards": "0.2.1",
     "databricks-app-design": "0.1.0",
-    "databricks-apps": "0.1.2",
+    "databricks-apps": "0.1.3",
     "databricks-apps-python": "0.1.0",
     "databricks-core": "0.1.0",
     "databricks-dabs": "0.0.1",
+    "databricks-data-discovery": "0.1.0",
     "databricks-dbsql": "0.1.0",
     "databricks-docs": "0.1.0",
     "databricks-execution-compute": "0.1.0",
+    "databricks-genie-agents": "0.1.0",
     "databricks-iceberg": "0.1.0",
     "databricks-jobs": "0.2.0",
     "databricks-lakebase": "0.1.0",
@@ -24,26 +27,32 @@
     "databricks-model-serving": "0.4.0",
     "databricks-pipelines": "0.3.0",
     "databricks-python-sdk": "0.1.0",
+    "databricks-serverless": "0.3.2",
     "databricks-serverless-migration": "0.1.0",
+    "databricks-setup-local": "0.1.0",
     "databricks-spark-structured-streaming": "0.1.0",
     "databricks-synthetic-data-gen": "0.1.0",
-    "databricks-unity-catalog": "0.1.0",
+    "databricks-unity-catalog": "0.3.0",
+    "databricks-unity-gateway": "0.1.0",
     "databricks-unstructured-pdf-generation": "0.1.0",
     "databricks-vector-search": "0.1.0",
-    "databricks-zerobus-ingest": "0.1.0"
+    "databricks-zerobus-ingest": "0.2.0"
   },
   "repo_dirs": {
     "databricks-agent-bricks": "skills",
     "databricks-ai-functions": "skills",
+    "databricks-ai-runtime": "skills",
     "databricks-aibi-dashboards": "skills",
     "databricks-app-design": "skills",
     "databricks-apps": "skills",
     "databricks-apps-python": "skills",
     "databricks-core": "skills",
     "databricks-dabs": "skills",
+    "databricks-data-discovery": "skills",
     "databricks-dbsql": "skills",
     "databricks-docs": "skills",
     "databricks-execution-compute": "skills",
+    "databricks-genie-agents": "skills",
     "databricks-iceberg": "skills",
     "databricks-jobs": "skills",
     "databricks-lakebase": "skills",
@@ -54,10 +63,13 @@
     "databricks-model-serving": "skills",
     "databricks-pipelines": "skills",
     "databricks-python-sdk": "skills",
+    "databricks-serverless": "skills",
     "databricks-serverless-migration": "skills",
+    "databricks-setup-local": "skills",
     "databricks-spark-structured-streaming": "skills",
     "databricks-synthetic-data-gen": "skills",
     "databricks-unity-catalog": "skills",
+    "databricks-unity-gateway": "skills",
     "databricks-unstructured-pdf-generation": "skills",
     "databricks-vector-search": "skills",
     "databricks-zerobus-ingest": "skills"
@@ -68,7 +80,1425 @@
       "marketplace": "claude-plugins-official",
       "plugin": "databricks",
       "scope": "project",
-      "version": "0.2.10"
+      "version": "0.2.30"
+    }
+  },
+  "files": {
+    "databricks-agent-bricks/SKILL.md": {
+      "sha256": "7081f696e100cd933f40e2aaf248095eaba6e45ae2209166848cce04bca9eee2",
+      "origin": "v0.2.30"
+    },
+    "databricks-agent-bricks/agents/openai.yaml": {
+      "sha256": "22e717a2e3bec3e93bfce8812ef9e07086db74edf57b29972c41524dd590b3b5",
+      "origin": "v0.2.30"
+    },
+    "databricks-agent-bricks/assets/databricks.png": {
+      "sha256": "06873c31ebda49d6ec5a730749c3dd1d0a140495f235cb1c0256cb2a3d1de850",
+      "origin": "v0.2.30"
+    },
+    "databricks-agent-bricks/assets/databricks.svg": {
+      "sha256": "00e528e4d5e665dbb5784e3d028b74ecf74405e5ff5a9c75a4d8661f05bda91c",
+      "origin": "v0.2.30"
+    },
+    "databricks-agent-bricks/references/1-knowledge-assistants.md": {
+      "sha256": "0a8c007386f868d44607e4c1abe3b67965a85099d597717662e24573a4e8a891",
+      "origin": "v0.2.30"
+    },
+    "databricks-agent-bricks/references/2-supervisor-agents.md": {
+      "sha256": "9fc0388a001c0e802fe990f5bb73a320b9a1581e0977474066200fcc20884d8e",
+      "origin": "v0.2.30"
+    },
+    "databricks-ai-functions/SKILL.md": {
+      "sha256": "12cee502f2eb503d70597a5e928d1a1cb89f139ef4bfd74031a50f0ecc73f5be",
+      "origin": "v0.2.30"
+    },
+    "databricks-ai-functions/agents/openai.yaml": {
+      "sha256": "9bad8d3971dec8c4b2471411bfa15696e264e90793dac1d6fbb9efebbedc59fa",
+      "origin": "v0.2.30"
+    },
+    "databricks-ai-functions/assets/databricks.png": {
+      "sha256": "06873c31ebda49d6ec5a730749c3dd1d0a140495f235cb1c0256cb2a3d1de850",
+      "origin": "v0.2.30"
+    },
+    "databricks-ai-functions/assets/databricks.svg": {
+      "sha256": "00e528e4d5e665dbb5784e3d028b74ecf74405e5ff5a9c75a4d8661f05bda91c",
+      "origin": "v0.2.30"
+    },
+    "databricks-ai-functions/references/1-task-functions.md": {
+      "sha256": "a7f373a9189d8978aa08ac5bcdbe862cc1f85eeb28e41b240580cf22f27a7070",
+      "origin": "v0.2.30"
+    },
+    "databricks-ai-functions/references/2-ai-query.md": {
+      "sha256": "6319a3b55781582fa4c4d90fda7e08ba5c803e43ca032c0997c9699b98ad7b8a",
+      "origin": "v0.2.30"
+    },
+    "databricks-ai-functions/references/3-ai-forecast.md": {
+      "sha256": "8b2c8fec783b4ad07a59586e6335f78954a4b726e1086ddffef8369244f8de1f",
+      "origin": "v0.2.30"
+    },
+    "databricks-ai-runtime/SKILL.md": {
+      "sha256": "075f24a3764be610279c5ac92f8ca7107f6a0914f10c422ebb5afcddd543497e",
+      "origin": "v0.2.30"
+    },
+    "databricks-ai-runtime/agents/openai.yaml": {
+      "sha256": "fe23ee4c0d538e525debb72e41471441d02b2e28809e27a82e97c58b6bd894ec",
+      "origin": "v0.2.30"
+    },
+    "databricks-ai-runtime/assets/databricks.png": {
+      "sha256": "06873c31ebda49d6ec5a730749c3dd1d0a140495f235cb1c0256cb2a3d1de850",
+      "origin": "v0.2.30"
+    },
+    "databricks-ai-runtime/assets/databricks.svg": {
+      "sha256": "00e528e4d5e665dbb5784e3d028b74ecf74405e5ff5a9c75a4d8661f05bda91c",
+      "origin": "v0.2.30"
+    },
+    "databricks-ai-runtime/docker-images.md": {
+      "sha256": "d8f6d7154e502cd8d25671a94ece9a11b44eea6a80abfcb791a5cdf55cf32902",
+      "origin": "v0.2.30"
+    },
+    "databricks-aibi-dashboards/SKILL.md": {
+      "sha256": "9a61d9f778394ab6b1f8a75c81b46299b6a2bc8bf113019fcf7c07aa3f492c47",
+      "origin": "v0.2.30"
+    },
+    "databricks-aibi-dashboards/agents/openai.yaml": {
+      "sha256": "4d69741bcf1ca059e1625ed0e99f4380474e416d84f6eb787d4fbe1d7fbdfed6",
+      "origin": "v0.2.30"
+    },
+    "databricks-aibi-dashboards/assets/databricks.png": {
+      "sha256": "06873c31ebda49d6ec5a730749c3dd1d0a140495f235cb1c0256cb2a3d1de850",
+      "origin": "v0.2.30"
+    },
+    "databricks-aibi-dashboards/assets/databricks.svg": {
+      "sha256": "00e528e4d5e665dbb5784e3d028b74ecf74405e5ff5a9c75a4d8661f05bda91c",
+      "origin": "v0.2.30"
+    },
+    "databricks-aibi-dashboards/references/1-widget-specifications.md": {
+      "sha256": "5c5c2586444c13b6bb50a02d411765ba4b40ad94c945d1bb7435c427c2c0e563",
+      "origin": "v0.2.30"
+    },
+    "databricks-aibi-dashboards/references/2-advanced-widget-specifications.md": {
+      "sha256": "78c2e1ef7083085173b849b3bfa96cd5e830de578e43b2aa8daf1e7093915028",
+      "origin": "v0.2.30"
+    },
+    "databricks-aibi-dashboards/references/3-filters.md": {
+      "sha256": "8de055aefd9fb3439677f05840c3cc15b9e366c0ce091f8083dc9bb51211c91f",
+      "origin": "v0.2.30"
+    },
+    "databricks-aibi-dashboards/references/4-examples.md": {
+      "sha256": "f295c661708df007731d47ee712a5f466e8af643c4ce73c32c5a7e8b26d98c0a",
+      "origin": "v0.2.30"
+    },
+    "databricks-aibi-dashboards/references/5-troubleshooting.md": {
+      "sha256": "7125d906838a8cf81812cd2d19480e4e11affc6ca7b5ae86c4018ec1a2877007",
+      "origin": "v0.2.30"
+    },
+    "databricks-aibi-dashboards/references/6-custom-visualizations.md": {
+      "sha256": "d6a05323d1503a2b69938f661cfcf19b8ccc5894a932c4952795d1a2c32d06df",
+      "origin": "v0.2.30"
+    },
+    "databricks-app-design/SKILL.md": {
+      "sha256": "a7caad42f73c3a1584a7ff63dca8573a1e8577a2e1b950d3f5a16613ee6be22e",
+      "origin": "v0.2.30"
+    },
+    "databricks-app-design/agents/openai.yaml": {
+      "sha256": "44bad3bd763070293d471b2329ac3159f42bf26a569274eeebb4fbd9dd187565",
+      "origin": "v0.2.30"
+    },
+    "databricks-app-design/assets/databricks.png": {
+      "sha256": "06873c31ebda49d6ec5a730749c3dd1d0a140495f235cb1c0256cb2a3d1de850",
+      "origin": "v0.2.30"
+    },
+    "databricks-app-design/assets/databricks.svg": {
+      "sha256": "00e528e4d5e665dbb5784e3d028b74ecf74405e5ff5a9c75a4d8661f05bda91c",
+      "origin": "v0.2.30"
+    },
+    "databricks-app-design/references/appkit-cheatsheet.md": {
+      "sha256": "5a3973ea2b10411e35c3f91ddff0d33e9af4d1862721468e9e30a4fa0173f891",
+      "origin": "v0.2.30"
+    },
+    "databricks-app-design/references/dashboard-patterns.md": {
+      "sha256": "5d4966d5da80d122cbd274e167bd4dd67028fcc162eae051734259c6ddd28336",
+      "origin": "v0.2.30"
+    },
+    "databricks-app-design/references/genie-ai-trust.md": {
+      "sha256": "a29438b526b6c04c9dde552af57ef00220c937da6f4aeb1c1ae074befeed7eeb",
+      "origin": "v0.2.30"
+    },
+    "databricks-app-design/references/ibcs-notation.md": {
+      "sha256": "949a2cfb692744f4e4f19195d0c73459c35707ec47a44947a0e2549672b58594",
+      "origin": "v0.2.30"
+    },
+    "databricks-apps-python/SKILL.md": {
+      "sha256": "fbf4752c932283eb17effdd476635ceed575b27e2111a2203168c024a082958e",
+      "origin": "v0.2.30"
+    },
+    "databricks-apps-python/agents/openai.yaml": {
+      "sha256": "39a94b3263d742887070c9eca9d7cabc8d5b25f249f162f75d21e65532cabafa",
+      "origin": "v0.2.30"
+    },
+    "databricks-apps-python/assets/databricks.png": {
+      "sha256": "06873c31ebda49d6ec5a730749c3dd1d0a140495f235cb1c0256cb2a3d1de850",
+      "origin": "v0.2.30"
+    },
+    "databricks-apps-python/assets/databricks.svg": {
+      "sha256": "00e528e4d5e665dbb5784e3d028b74ecf74405e5ff5a9c75a4d8661f05bda91c",
+      "origin": "v0.2.30"
+    },
+    "databricks-apps-python/examples/fm-minimal-chat.py": {
+      "sha256": "e160b274912cc89ba0911eb8ef48eaf4c635115b23fecf273e6711438c971d29",
+      "origin": "v0.2.30"
+    },
+    "databricks-apps-python/examples/fm-parallel-calls.py": {
+      "sha256": "d464612f9499ef0ef1bf272410b0be8e906c66549d3c18486cdd6f4a85018d19",
+      "origin": "v0.2.30"
+    },
+    "databricks-apps-python/examples/fm-structured-outputs.py": {
+      "sha256": "aaeaa39871fa923671ff6663f9749c4cb3c13f062f4c7b8505af219f93cb881d",
+      "origin": "v0.2.30"
+    },
+    "databricks-apps-python/examples/llm_config.py": {
+      "sha256": "0b2061f3e7dd72b14241428cdb4be13dd8dbe2d0845d50db9a358cf1a7aaf29a",
+      "origin": "v0.2.30"
+    },
+    "databricks-apps-python/references/1-authorization.md": {
+      "sha256": "71b8a5a2d63dd7bc72100ce0f98ae3ee13b63456e79845cc2d674474529d19b0",
+      "origin": "v0.2.30"
+    },
+    "databricks-apps-python/references/2-app-resources.md": {
+      "sha256": "b05d88160a2914c6e82ae6e23918c2bd44125b522eab1882104a7633f6d6abca",
+      "origin": "v0.2.30"
+    },
+    "databricks-apps-python/references/3-frameworks.md": {
+      "sha256": "f390ed6ddf07a67e0408f0fa76360e264510ab4f388d5259e691d8b0521f6058",
+      "origin": "v0.2.30"
+    },
+    "databricks-apps-python/references/4-deployment.md": {
+      "sha256": "ffce13da8000144f64b4aceaa6913b5dc684f290d300536875ca949b6ac1e9b1",
+      "origin": "v0.2.30"
+    },
+    "databricks-apps-python/references/5-lakebase.md": {
+      "sha256": "329ed7f13609d407e4125264ffb57604a12d8a58227ced74b263234633eb813f",
+      "origin": "v0.2.30"
+    },
+    "databricks-apps-python/references/6-cli-approach.md": {
+      "sha256": "ac923c7cb66cbfa4244b4e8c83c33926769940ee02e49fa97c068ee85dcf9554",
+      "origin": "v0.2.30"
+    },
+    "databricks-apps/SKILL.md": {
+      "sha256": "34b309783ffae0589ad6564d02146ecd8de08794d284b92fd0adc5d7a7462c79",
+      "origin": "v0.2.30"
+    },
+    "databricks-apps/agents/openai.yaml": {
+      "sha256": "010472ad6bbdadb45e22283d4a0f39048e8d88a2a2011361f2e9ef3da444f278",
+      "origin": "v0.2.30"
+    },
+    "databricks-apps/assets/databricks.png": {
+      "sha256": "06873c31ebda49d6ec5a730749c3dd1d0a140495f235cb1c0256cb2a3d1de850",
+      "origin": "v0.2.30"
+    },
+    "databricks-apps/assets/databricks.svg": {
+      "sha256": "00e528e4d5e665dbb5784e3d028b74ecf74405e5ff5a9c75a4d8661f05bda91c",
+      "origin": "v0.2.30"
+    },
+    "databricks-apps/references/appkit/agents.md": {
+      "sha256": "f5c6e8b0b115add1f9296b09398ade5dcb06b58ea3801fc1504a644b1fbfb2dd",
+      "origin": "v0.2.30"
+    },
+    "databricks-apps/references/appkit/appkit-sdk.md": {
+      "sha256": "0ae4495ce2592f0129a85f188de6a0826dc946596ec4278dd57afce2dc60626a",
+      "origin": "v0.2.30"
+    },
+    "databricks-apps/references/appkit/custom-endpoints.md": {
+      "sha256": "3a6543e55d1032752a41c0c361b2b2d8a5b2460f8906f27dfa8310cdae7c7b61",
+      "origin": "v0.2.30"
+    },
+    "databricks-apps/references/appkit/files.md": {
+      "sha256": "836cba6880455400ebdb53a4d65cb4a6797cd43001eb0487c26c65195ca110c3",
+      "origin": "v0.2.30"
+    },
+    "databricks-apps/references/appkit/frontend.md": {
+      "sha256": "ad3bed478cc719db71f2899607aee8e138e4667a03ab35a9f7c9cd4a0d105c10",
+      "origin": "v0.2.30"
+    },
+    "databricks-apps/references/appkit/genie.md": {
+      "sha256": "e8ebff94a29edd7b5ad60df7c4283640fbc5b2d10674f97a9af2189496828e04",
+      "origin": "v0.2.30"
+    },
+    "databricks-apps/references/appkit/image-generation.md": {
+      "sha256": "b0c94c1adf7010f27d73b7918898940c88b6113913f08d98b542569065fdc65e",
+      "origin": "v0.2.30"
+    },
+    "databricks-apps/references/appkit/jobs.md": {
+      "sha256": "db504cf2ae7504657f80ed9387095ac53b32df7df576dcbabc042511b6fa223c",
+      "origin": "v0.2.30"
+    },
+    "databricks-apps/references/appkit/lakebase.md": {
+      "sha256": "73321f7cfd895cbcf4f778959878584022c0bd0bf15d24e31a91187ca2620bc8",
+      "origin": "v0.2.30"
+    },
+    "databricks-apps/references/appkit/metric-views.md": {
+      "sha256": "f8771a972c2a3b43c70df2d07b066ddaa40438946d545f6a115920e5874c8b7c",
+      "origin": "v0.2.30"
+    },
+    "databricks-apps/references/appkit/model-serving.md": {
+      "sha256": "e23930376c04d828f459bf40a751ebc61c79576ba879080cc0e5890935ef38c7",
+      "origin": "v0.2.30"
+    },
+    "databricks-apps/references/appkit/overview.md": {
+      "sha256": "d0cf423577338e24e2ba3a8b2106d7d41a619298752dcc862570d6e940b5020c",
+      "origin": "v0.2.30"
+    },
+    "databricks-apps/references/appkit/proto-contracts.md": {
+      "sha256": "5a1f296829f4d63c77672932a05a00195f5916e65d7debc37007a1fbbf048e8c",
+      "origin": "v0.2.30"
+    },
+    "databricks-apps/references/appkit/proto-first.md": {
+      "sha256": "29a5c983dff1cdd908d4914c8581cf2e3045557d23cd31d5c68084644f0d5eb7",
+      "origin": "v0.2.30"
+    },
+    "databricks-apps/references/appkit/sql-queries.md": {
+      "sha256": "0bc653e0689acdabfb0f8478ff01316556efad1a117e69af112062aa0cd7723f",
+      "origin": "v0.2.30"
+    },
+    "databricks-apps/references/other-frameworks.md": {
+      "sha256": "bdf4c0782da2df4d3d67744b41715a9627eeea9c5669b803accc9b04f4054da3",
+      "origin": "v0.2.30"
+    },
+    "databricks-apps/references/platform-guide.md": {
+      "sha256": "9f9df3791f9e3c7c052aa146846f3d04a553b9461d4e7709255679ee23b15f8e",
+      "origin": "v0.2.30"
+    },
+    "databricks-apps/references/testing.md": {
+      "sha256": "8027f8a6151fe41cdc33c2cd9f0a1129cbf97f2244bd7d66914f7d6629c1a795",
+      "origin": "v0.2.30"
+    },
+    "databricks-core/SKILL.md": {
+      "sha256": "688ac41f1044c392c1c2de2fe49426cdf8b8e19763c85fe926945c143fea2551",
+      "origin": "v0.2.30"
+    },
+    "databricks-core/agents/openai.yaml": {
+      "sha256": "8c6cc7d4ea613427f5c460357f6dda4c6de340fdf1fa0077ebfefb7afe8b82be",
+      "origin": "v0.2.30"
+    },
+    "databricks-core/assets/databricks.png": {
+      "sha256": "06873c31ebda49d6ec5a730749c3dd1d0a140495f235cb1c0256cb2a3d1de850",
+      "origin": "v0.2.30"
+    },
+    "databricks-core/assets/databricks.svg": {
+      "sha256": "00e528e4d5e665dbb5784e3d028b74ecf74405e5ff5a9c75a4d8661f05bda91c",
+      "origin": "v0.2.30"
+    },
+    "databricks-core/databricks-cli-auth.md": {
+      "sha256": "d30d52889e183b35f957b0ae62e0c2d22b33ad4c2f6dfa87f5aefc66edeacfac",
+      "origin": "v0.2.30"
+    },
+    "databricks-core/databricks-cli-install.md": {
+      "sha256": "e96ba3cdba8c5aa7192cd9fcde4e5a1395d8636f3675c7416e1bc89e82ef85fa",
+      "origin": "v0.2.30"
+    },
+    "databricks-core/manual-data-exploration.md": {
+      "sha256": "511fbd3bd703eef9898835d7136d1bbadf6764ef19b5d430c4261a49adfae57f",
+      "origin": "v0.2.30"
+    },
+    "databricks-dabs/SKILL.md": {
+      "sha256": "1e79d460dd49b7eafcb24a470d37274c79731e83220d76b5272b30d486b1f55c",
+      "origin": "v0.2.30"
+    },
+    "databricks-dabs/agents/openai.yaml": {
+      "sha256": "52f6b4aa18c3b2b0e51ee0f2bc5c5013926d88b72774059969cc4d2db749aef9",
+      "origin": "v0.2.30"
+    },
+    "databricks-dabs/assets/databricks.png": {
+      "sha256": "06873c31ebda49d6ec5a730749c3dd1d0a140495f235cb1c0256cb2a3d1de850",
+      "origin": "v0.2.30"
+    },
+    "databricks-dabs/assets/databricks.svg": {
+      "sha256": "00e528e4d5e665dbb5784e3d028b74ecf74405e5ff5a9c75a4d8661f05bda91c",
+      "origin": "v0.2.30"
+    },
+    "databricks-dabs/references/alerts.md": {
+      "sha256": "3f56a627099be135e15606fe9bb5d84b8fa935195b9a4f99b53dd8a132ab616e",
+      "origin": "v0.2.30"
+    },
+    "databricks-dabs/references/bundle-structure.md": {
+      "sha256": "ab134ed8c627ef304b4ead0d577f60d4d6ce2fda5c2681b8e3c4b4a8cf32ccfd",
+      "origin": "v0.2.30"
+    },
+    "databricks-dabs/references/deploy-and-run.md": {
+      "sha256": "b82229e9ab4eff73ab2c8a8073170aa6305c9ca6d986e4838761e0c66c6bf491",
+      "origin": "v0.2.30"
+    },
+    "databricks-dabs/references/resource-permissions.md": {
+      "sha256": "8bd92af4b51a21822b417782817bd5e196b9916473d1c206c99fa7f18008c601",
+      "origin": "v0.2.30"
+    },
+    "databricks-dabs/references/sdp-pipelines.md": {
+      "sha256": "3f10ba4c10a318f80c2365e0538355e1800e509bc9cecc00eab8073a13f0dfa6",
+      "origin": "v0.2.30"
+    },
+    "databricks-data-discovery/SKILL.md": {
+      "sha256": "786663c9883a6a0ecc6675fe0c2d7dca09a46f7c53110e4b68fe95f9bcb35387",
+      "origin": "v0.2.30"
+    },
+    "databricks-data-discovery/agents/openai.yaml": {
+      "sha256": "683f7c832d0616eae91d6edb90e6c65ae1a10dd089c276905d9d892d3bef7846",
+      "origin": "v0.2.30"
+    },
+    "databricks-data-discovery/assets/databricks.png": {
+      "sha256": "06873c31ebda49d6ec5a730749c3dd1d0a140495f235cb1c0256cb2a3d1de850",
+      "origin": "v0.2.30"
+    },
+    "databricks-data-discovery/assets/databricks.svg": {
+      "sha256": "00e528e4d5e665dbb5784e3d028b74ecf74405e5ff5a9c75a4d8661f05bda91c",
+      "origin": "v0.2.30"
+    },
+    "databricks-dbsql/SKILL.md": {
+      "sha256": "7d58a08aac3ec601478332de9eb2d3146ab64ac0e1007b97cacaf29229ac4c6a",
+      "origin": "v0.2.30"
+    },
+    "databricks-dbsql/agents/openai.yaml": {
+      "sha256": "5a3ea80e8f020d1223ffc3eae2a9d46678650405344ca82e18cd6a708d3a5c37",
+      "origin": "v0.2.30"
+    },
+    "databricks-dbsql/assets/databricks.png": {
+      "sha256": "06873c31ebda49d6ec5a730749c3dd1d0a140495f235cb1c0256cb2a3d1de850",
+      "origin": "v0.2.30"
+    },
+    "databricks-dbsql/assets/databricks.svg": {
+      "sha256": "00e528e4d5e665dbb5784e3d028b74ecf74405e5ff5a9c75a4d8661f05bda91c",
+      "origin": "v0.2.30"
+    },
+    "databricks-dbsql/references/ai-functions.md": {
+      "sha256": "8ddd07806374bbef75dbd941f08ce23385610a950ba135b536679832c58e1469",
+      "origin": "v0.2.30"
+    },
+    "databricks-dbsql/references/best-practices.md": {
+      "sha256": "fabd6fa7457fe06373fd9c26925dcd3f104cf4eead870c80cda50d9f51deebfe",
+      "origin": "v0.2.30"
+    },
+    "databricks-dbsql/references/geospatial-collations.md": {
+      "sha256": "23579de0add0babf26cc98a326a4825e392d1ee9b2785d3b2fcb8d60c8f3453d",
+      "origin": "v0.2.30"
+    },
+    "databricks-dbsql/references/materialized-views-pipes.md": {
+      "sha256": "f25427bd08bbb33432adf74327fb86eeb2762e72cb14c634c98b9a0304fdd39a",
+      "origin": "v0.2.30"
+    },
+    "databricks-dbsql/references/sql-scripting.md": {
+      "sha256": "7275ea7a6cf953fb8ea846240792e5353d4b0128bc789ea984789135d9caf737",
+      "origin": "v0.2.30"
+    },
+    "databricks-docs/SKILL.md": {
+      "sha256": "0040fae239c29888e71cacf6751cee6a8bc834337d24af3814feeca84a0cac08",
+      "origin": "v0.2.30"
+    },
+    "databricks-docs/agents/openai.yaml": {
+      "sha256": "b68655e9829abc722577110fa492f88f5845b8b6cefe03489270e351e1de0623",
+      "origin": "v0.2.30"
+    },
+    "databricks-docs/assets/databricks.png": {
+      "sha256": "06873c31ebda49d6ec5a730749c3dd1d0a140495f235cb1c0256cb2a3d1de850",
+      "origin": "v0.2.30"
+    },
+    "databricks-docs/assets/databricks.svg": {
+      "sha256": "00e528e4d5e665dbb5784e3d028b74ecf74405e5ff5a9c75a4d8661f05bda91c",
+      "origin": "v0.2.30"
+    },
+    "databricks-execution-compute/SKILL.md": {
+      "sha256": "5d9a85713a800798c38ba8f5a4735291a3c6c2eaee09bba15f8ba4b95217be5d",
+      "origin": "v0.2.30"
+    },
+    "databricks-execution-compute/agents/openai.yaml": {
+      "sha256": "e4bd94a6cf4a1a3fd4fe362d199dd27960a96f926a04df77a7deccfdf3f4bf23",
+      "origin": "v0.2.30"
+    },
+    "databricks-execution-compute/assets/databricks.png": {
+      "sha256": "06873c31ebda49d6ec5a730749c3dd1d0a140495f235cb1c0256cb2a3d1de850",
+      "origin": "v0.2.30"
+    },
+    "databricks-execution-compute/assets/databricks.svg": {
+      "sha256": "00e528e4d5e665dbb5784e3d028b74ecf74405e5ff5a9c75a4d8661f05bda91c",
+      "origin": "v0.2.30"
+    },
+    "databricks-execution-compute/references/1-databricks-connect.md": {
+      "sha256": "71ebfb1a4c83068bc2db52e1407149ab1b60a9db215ae47db73a0c363d6a1e9d",
+      "origin": "v0.2.30"
+    },
+    "databricks-execution-compute/references/2-serverless-job.md": {
+      "sha256": "946d680fc83ebeb3be1ca70280a5651e1491fde31a955683824ba4525008de85",
+      "origin": "v0.2.30"
+    },
+    "databricks-execution-compute/references/3-interactive-cluster.md": {
+      "sha256": "0eeb9ef96580c6cae80c5e90abbdcfd17630e96a84cab4f4cd6ec83eccbc1f3f",
+      "origin": "v0.2.30"
+    },
+    "databricks-genie-agents/SKILL.md": {
+      "sha256": "fde9b8e889bc167b6a0a6e0740e5afd2dba214002c602bab0fbdda0cbfc02d33",
+      "origin": "v0.2.30"
+    },
+    "databricks-genie-agents/agents/openai.yaml": {
+      "sha256": "a197f87cca5e008e11ff6aae573c6d19d55a1175d0f255cc38cf646c193dbd10",
+      "origin": "v0.2.30"
+    },
+    "databricks-genie-agents/assets/databricks.png": {
+      "sha256": "06873c31ebda49d6ec5a730749c3dd1d0a140495f235cb1c0256cb2a3d1de850",
+      "origin": "v0.2.30"
+    },
+    "databricks-genie-agents/assets/databricks.svg": {
+      "sha256": "00e528e4d5e665dbb5784e3d028b74ecf74405e5ff5a9c75a4d8661f05bda91c",
+      "origin": "v0.2.30"
+    },
+    "databricks-genie-agents/references/create-genie-agent.md": {
+      "sha256": "b4d91eaaf5b24030cb0e64025522c2dba141d8a6edf458310a792e8bf48e41ec",
+      "origin": "v0.2.30"
+    },
+    "databricks-genie-agents/references/diagnose-genie-agent.md": {
+      "sha256": "d9f8058fd013bdeccbbb5e0adff97ead2f248cd09c6234f995831e32c45952f3",
+      "origin": "v0.2.30"
+    },
+    "databricks-genie-agents/references/genie-agent-cicd.md": {
+      "sha256": "33b356ba416a7a5732605417dc720bd6046416c6dfea57ab1ad927ad4d054da0",
+      "origin": "v0.2.30"
+    },
+    "databricks-genie-agents/references/optimize-genie-agent.md": {
+      "sha256": "934b9b3765d389229689222e8e69b94661102c1802cb71ce1aa096316f62fe09",
+      "origin": "v0.2.30"
+    },
+    "databricks-genie-agents/references/query-genie-agent.md": {
+      "sha256": "370ad2297499c6a6a86230c7da66a48fdc18db47143b29c9d21ff96ece1a55da",
+      "origin": "v0.2.30"
+    },
+    "databricks-genie-agents/references/serialized-space.md": {
+      "sha256": "fb36ac9a59d6dc5d0c0128e9f2b26a2714e99c1baeacac0da4182088dc219a24",
+      "origin": "v0.2.30"
+    },
+    "databricks-genie-agents/references/uc-persistence.md": {
+      "sha256": "8ce0c67f8bddf3df8fad1d489760cd5ae657371b2f213e52cd5b1909364510b5",
+      "origin": "v0.2.30"
+    },
+    "databricks-iceberg/SKILL.md": {
+      "sha256": "1c6e1be3322da4d0ad9839202bf3ec4d0929af8a1b784690f839a84f3c0f276c",
+      "origin": "v0.2.30"
+    },
+    "databricks-iceberg/agents/openai.yaml": {
+      "sha256": "d4c54bda7627231096a3813d35f9b54f7e66055a6e1bcd2fdfc917442aaac97f",
+      "origin": "v0.2.30"
+    },
+    "databricks-iceberg/assets/databricks.png": {
+      "sha256": "06873c31ebda49d6ec5a730749c3dd1d0a140495f235cb1c0256cb2a3d1de850",
+      "origin": "v0.2.30"
+    },
+    "databricks-iceberg/assets/databricks.svg": {
+      "sha256": "00e528e4d5e665dbb5784e3d028b74ecf74405e5ff5a9c75a4d8661f05bda91c",
+      "origin": "v0.2.30"
+    },
+    "databricks-iceberg/references/1-managed-iceberg-tables.md": {
+      "sha256": "b7be96b98948ea25ff1cfe587c8bb81ca97776f15158c8461d94399b4fac81a2",
+      "origin": "v0.2.30"
+    },
+    "databricks-iceberg/references/2-uniform-and-compatibility.md": {
+      "sha256": "1012d5c32647ee292243430a35cd176a6d4056241d3dc2d6850459fab53a5b40",
+      "origin": "v0.2.30"
+    },
+    "databricks-iceberg/references/3-iceberg-rest-catalog.md": {
+      "sha256": "4eccb0643b13dd280e4072fd190b55ac85a9a9eb50520da86eb86fac398a1a0f",
+      "origin": "v0.2.30"
+    },
+    "databricks-iceberg/references/4-snowflake-interop.md": {
+      "sha256": "145d995f2bd8dd2fabad18694b9c6749beb7f2fc0bb8fecb221ce9741a88a429",
+      "origin": "v0.2.30"
+    },
+    "databricks-iceberg/references/5-external-engine-interop.md": {
+      "sha256": "c8e2637aad07bbe579b277f84817889fface29256ba1de672927f29fdcc90b3e",
+      "origin": "v0.2.30"
+    },
+    "databricks-jobs/SKILL.md": {
+      "sha256": "5293473c510665bf7393ea1d0a8d1d9297ed06bf94bb56ce6f4488bfd1e2cd32",
+      "origin": "v0.2.30"
+    },
+    "databricks-jobs/agents/openai.yaml": {
+      "sha256": "61e879cea71a422e32a5a27b06ea43705db0264cb99e92b62bb8db77f0a5d865",
+      "origin": "v0.2.30"
+    },
+    "databricks-jobs/assets/databricks.png": {
+      "sha256": "06873c31ebda49d6ec5a730749c3dd1d0a140495f235cb1c0256cb2a3d1de850",
+      "origin": "v0.2.30"
+    },
+    "databricks-jobs/assets/databricks.svg": {
+      "sha256": "00e528e4d5e665dbb5784e3d028b74ecf74405e5ff5a9c75a4d8661f05bda91c",
+      "origin": "v0.2.30"
+    },
+    "databricks-jobs/references/examples.md": {
+      "sha256": "9312338bc1d2c0c576c7ca95fb4b6b3faf5ff668b48c789d1027846ecf8847a2",
+      "origin": "v0.2.30"
+    },
+    "databricks-jobs/references/notifications-monitoring.md": {
+      "sha256": "742b3be99d863d601e3d4a70ccd94abef7fc3aa0f2a6b6c92940c0d8d563065c",
+      "origin": "v0.2.30"
+    },
+    "databricks-jobs/references/task-types.md": {
+      "sha256": "681f49dc36436d3d3a7e4fa781b393375e1da3c0eaa4013abf906a534d5df9a0",
+      "origin": "v0.2.30"
+    },
+    "databricks-jobs/references/triggers-schedules.md": {
+      "sha256": "95c46b401f9b2bfbb1ab92a129b4250d70fae0568e19d144ce63bb2ed298f7a5",
+      "origin": "v0.2.30"
+    },
+    "databricks-lakebase/SKILL.md": {
+      "sha256": "3fd049a0a4e39c38cb1bbc89ce608e0d45427e7464f6e4178037d822956e31c5",
+      "origin": "v0.2.30"
+    },
+    "databricks-lakebase/agents/openai.yaml": {
+      "sha256": "bbcd829b808e293729ca3e99216f2c8d24ee558b18435359a9cd8fbbfded1084",
+      "origin": "v0.2.30"
+    },
+    "databricks-lakebase/assets/databricks.png": {
+      "sha256": "06873c31ebda49d6ec5a730749c3dd1d0a140495f235cb1c0256cb2a3d1de850",
+      "origin": "v0.2.30"
+    },
+    "databricks-lakebase/assets/databricks.svg": {
+      "sha256": "00e528e4d5e665dbb5784e3d028b74ecf74405e5ff5a9c75a4d8661f05bda91c",
+      "origin": "v0.2.30"
+    },
+    "databricks-lakebase/references/computes-and-scaling.md": {
+      "sha256": "ef5182d900a8cc083a7c88cf556a652c915b9e1954e95d980f1f02e8e4cd36b3",
+      "origin": "v0.2.30"
+    },
+    "databricks-lakebase/references/connectivity.md": {
+      "sha256": "940e943711679a565c9c690f6d1dba6f408e2a41d9cae0c411258e04d715cd35",
+      "origin": "v0.2.30"
+    },
+    "databricks-lakebase/references/lakehouse-sync.md": {
+      "sha256": "308fbba968a0b1b8fc975f0deedfb195d598bbe920ee92055aeae700f98db328",
+      "origin": "v0.2.30"
+    },
+    "databricks-lakebase/references/medallion-from-cdc.md": {
+      "sha256": "935935a746bfe4f82d6deb03ce14259c16d78b8e0716cc84612761e8fd5bbf0b",
+      "origin": "v0.2.30"
+    },
+    "databricks-lakebase/references/off-platform.md": {
+      "sha256": "3834c57dfdc6dc6c378c7d3c6e71ff8b7a9bac530416b4e73f22d491baa75e7a",
+      "origin": "v0.2.30"
+    },
+    "databricks-lakebase/references/pgvector.md": {
+      "sha256": "7f3b597e73e9f93a758b258ee32a64f6e586a795bc1c27aee84a8acdef77169a",
+      "origin": "v0.2.30"
+    },
+    "databricks-lakebase/references/synced-tables.md": {
+      "sha256": "dd3eabad2bdb7d271317672cf6dd6483f2b4eead91c756c660e451ee2ed7677e",
+      "origin": "v0.2.30"
+    },
+    "databricks-lakeflow-connect/SKILL.md": {
+      "sha256": "46cb48ea1a1fb01045d895d3d4863b6a01342c6a4448de660788f4c50ab7568e",
+      "origin": "v0.2.30"
+    },
+    "databricks-lakeflow-connect/agents/openai.yaml": {
+      "sha256": "a75c6eb464a98e087ca930dd8ea79012c438c474b9072a739000916e9fb6599d",
+      "origin": "v0.2.30"
+    },
+    "databricks-lakeflow-connect/assets/databricks.png": {
+      "sha256": "06873c31ebda49d6ec5a730749c3dd1d0a140495f235cb1c0256cb2a3d1de850",
+      "origin": "v0.2.30"
+    },
+    "databricks-lakeflow-connect/assets/databricks.svg": {
+      "sha256": "00e528e4d5e665dbb5784e3d028b74ecf74405e5ff5a9c75a4d8661f05bda91c",
+      "origin": "v0.2.30"
+    },
+    "databricks-lakeflow-connect/references/1-saas-connectors.md": {
+      "sha256": "bbd6716d0d61cbf030f33187cb15765caf23ec7bf8aa12baf4b13cee0c1406ca",
+      "origin": "v0.2.30"
+    },
+    "databricks-lakeflow-connect/references/2-database-connectors.md": {
+      "sha256": "3c4c2df2d882e862ce310c3215bbc66b769e2e73f48dffc84042b7d84f6f20d4",
+      "origin": "v0.2.30"
+    },
+    "databricks-lakeflow-connect/references/4-ingestion-decision-tree.md": {
+      "sha256": "dedd26753d69d80224caf533604b8bdc34ee91ccc2e1e731de4a9592036d0b74",
+      "origin": "v0.2.30"
+    },
+    "databricks-lakeflow-connect/references/5-troubleshooting-and-monitoring.md": {
+      "sha256": "5a3d944985cc9b0aed15d636c1b7676b4bb7028db0fdcee5f6e6d22d5e5eb31f",
+      "origin": "v0.2.30"
+    },
+    "databricks-metric-views/SKILL.md": {
+      "sha256": "07b3fae2bf66cdeb25b961697fb3a6fde83e98f406a30896e0454ac2675cd951",
+      "origin": "v0.2.30"
+    },
+    "databricks-metric-views/agents/openai.yaml": {
+      "sha256": "b762309449b059086498cbbd01102c1ef1c5703181e5c2effc84328692a2018a",
+      "origin": "v0.2.30"
+    },
+    "databricks-metric-views/assets/databricks.png": {
+      "sha256": "06873c31ebda49d6ec5a730749c3dd1d0a140495f235cb1c0256cb2a3d1de850",
+      "origin": "v0.2.30"
+    },
+    "databricks-metric-views/assets/databricks.svg": {
+      "sha256": "00e528e4d5e665dbb5784e3d028b74ecf74405e5ff5a9c75a4d8661f05bda91c",
+      "origin": "v0.2.30"
+    },
+    "databricks-metric-views/references/create-patterns.md": {
+      "sha256": "abef28b6c0845a5e07f3d8ae12514643f36fcee51d17f22852b41d37183e8a77",
+      "origin": "v0.2.30"
+    },
+    "databricks-metric-views/references/metric-view-advisor.md": {
+      "sha256": "b4e12d9db291c804fe6ab3783e0277c8e12a43950887e540bcda2f098c5660da",
+      "origin": "v0.2.30"
+    },
+    "databricks-metric-views/references/query-patterns.md": {
+      "sha256": "e4bcafe98c82c7038c2fec03d20fddee2c800289bbc1cc09f6fb6e371887db93",
+      "origin": "v0.2.30"
+    },
+    "databricks-ml-training/SKILL.md": {
+      "sha256": "74aa25abbce1fdc5b1c6585ceefa6ca5660ff3e269d36737efa8b5a7ee8a9077",
+      "origin": "v0.2.30"
+    },
+    "databricks-ml-training/agents/openai.yaml": {
+      "sha256": "1e6d10f993f9125d20316c5cc22c433322f58f0d72efe8c80dad1fd4116dff63",
+      "origin": "v0.2.30"
+    },
+    "databricks-ml-training/assets/databricks.png": {
+      "sha256": "06873c31ebda49d6ec5a730749c3dd1d0a140495f235cb1c0256cb2a3d1de850",
+      "origin": "v0.2.30"
+    },
+    "databricks-ml-training/assets/databricks.svg": {
+      "sha256": "00e528e4d5e665dbb5784e3d028b74ecf74405e5ff5a9c75a4d8661f05bda91c",
+      "origin": "v0.2.30"
+    },
+    "databricks-ml-training/references/custom-pyfunc.md": {
+      "sha256": "030aa1c7fc32052f3408de94e43f611417cdf0df407ddd5f8eef728ffcb25253",
+      "origin": "v0.2.30"
+    },
+    "databricks-ml-training/references/feature-store.md": {
+      "sha256": "5710aaa581f01aee2b583f522212636c438b5ae303ff150c821b96b44f4a4ce6",
+      "origin": "v0.2.30"
+    },
+    "databricks-ml-training/references/feature-views.md": {
+      "sha256": "ae3f3d37595a32662d198e7a4611dc747637a40efb10bdfb5aa40d36b18f82cf",
+      "origin": "v0.2.30"
+    },
+    "databricks-ml-training/references/genai-agents.md": {
+      "sha256": "1c82dcb2f71b80246c4943456204e3228833e4fa9628b957a0388b2aa2060407",
+      "origin": "v0.2.30"
+    },
+    "databricks-mlflow-evaluation/SKILL.md": {
+      "sha256": "c7ef1bc3b826bd37cc6c72ba76f3c327d78aa95615f7c10945cf1d7574a36375",
+      "origin": "v0.2.30"
+    },
+    "databricks-mlflow-evaluation/agents/openai.yaml": {
+      "sha256": "0661fdd860772285921771d77421e6483808ee49a4ed71c02108bbc899817509",
+      "origin": "v0.2.30"
+    },
+    "databricks-mlflow-evaluation/assets/databricks.png": {
+      "sha256": "06873c31ebda49d6ec5a730749c3dd1d0a140495f235cb1c0256cb2a3d1de850",
+      "origin": "v0.2.30"
+    },
+    "databricks-mlflow-evaluation/assets/databricks.svg": {
+      "sha256": "00e528e4d5e665dbb5784e3d028b74ecf74405e5ff5a9c75a4d8661f05bda91c",
+      "origin": "v0.2.30"
+    },
+    "databricks-mlflow-evaluation/references/CRITICAL-interfaces.md": {
+      "sha256": "b94c59313e6d57d0c20a330a973cd880063d0bfd2985e72123cfac431d7b942e",
+      "origin": "v0.2.30"
+    },
+    "databricks-mlflow-evaluation/references/GOTCHAS.md": {
+      "sha256": "7a6f39735cbf8f11c5b34a206298b566d4640f38fbb11414ab63e288d0d895c3",
+      "origin": "v0.2.30"
+    },
+    "databricks-mlflow-evaluation/references/patterns-context-optimization.md": {
+      "sha256": "0e3e39f76af60ebba3f7749bf7872ab97f51cabe3dfeeaf82b4b57b870b90391",
+      "origin": "v0.2.30"
+    },
+    "databricks-mlflow-evaluation/references/patterns-datasets.md": {
+      "sha256": "b826abdb5679329af0fe5e1feae7ed0e1d2a8a27c2d0139425b7b5401b6f9ec6",
+      "origin": "v0.2.30"
+    },
+    "databricks-mlflow-evaluation/references/patterns-evaluation.md": {
+      "sha256": "3d12ebacdaedca00c88ad67483354d7e098e92e4a80434f3a594f89413b9f1bc",
+      "origin": "v0.2.30"
+    },
+    "databricks-mlflow-evaluation/references/patterns-judge-alignment.md": {
+      "sha256": "5acac05e44235d5a44a174738647b174e404e7bb289d5e571178ee4a4912d6de",
+      "origin": "v0.2.30"
+    },
+    "databricks-mlflow-evaluation/references/patterns-prompt-optimization.md": {
+      "sha256": "53cb491a8684bad1494d9d03eb67781307f7e3ac3c82969a7e88d38accb3ca57",
+      "origin": "v0.2.30"
+    },
+    "databricks-mlflow-evaluation/references/patterns-scorers.md": {
+      "sha256": "1fa6f9edf556c6be6108b01a0576f86ca99c3b3d326c8a27fab940950292bd71",
+      "origin": "v0.2.30"
+    },
+    "databricks-mlflow-evaluation/references/patterns-trace-analysis.md": {
+      "sha256": "5abef7e0be5fdc2c1bac089874a01915935c27442cce62bbcffca7fcc85a08bc",
+      "origin": "v0.2.30"
+    },
+    "databricks-mlflow-evaluation/references/patterns-trace-ingestion.md": {
+      "sha256": "cd92c3de3c12f30e4660aa77eca0a61685beef2fde386379f5d82f5c633e8862",
+      "origin": "v0.2.30"
+    },
+    "databricks-mlflow-evaluation/references/user-journeys.md": {
+      "sha256": "b863fc18f6aeb477a6aab8d56d82a1f4e94a6209a3220f13d0a74e68be1ab750",
+      "origin": "v0.2.30"
+    },
+    "databricks-model-serving/SKILL.md": {
+      "sha256": "215afd379d03db47806068b3dc8f4d1ae58d176841a6e2df4c14c827deb689c5",
+      "origin": "v0.2.30"
+    },
+    "databricks-model-serving/agents/openai.yaml": {
+      "sha256": "92c474e4459ea3f73de028f63597507479f3356953303bf3a3c605d804c0c627",
+      "origin": "v0.2.30"
+    },
+    "databricks-model-serving/assets/databricks.png": {
+      "sha256": "06873c31ebda49d6ec5a730749c3dd1d0a140495f235cb1c0256cb2a3d1de850",
+      "origin": "v0.2.30"
+    },
+    "databricks-model-serving/assets/databricks.svg": {
+      "sha256": "00e528e4d5e665dbb5784e3d028b74ecf74405e5ff5a9c75a4d8661f05bda91c",
+      "origin": "v0.2.30"
+    },
+    "databricks-model-serving/references/off-platform-streaming.md": {
+      "sha256": "c5372679b407a39bb929a88a937f713f9b761b86c755fd55058a8ffcbd49d43d",
+      "origin": "v0.2.30"
+    },
+    "databricks-pipelines/SKILL.md": {
+      "sha256": "bfc8dcff6ba5af2b117fca10b489e176ac3a04abf7dc26e409d5d894ce0a3b52",
+      "origin": "v0.2.30"
+    },
+    "databricks-pipelines/agents/openai.yaml": {
+      "sha256": "92845e3f025be5b77b93904fa2b84e1a47636ab92c07e67c29760088b97cdb2a",
+      "origin": "v0.2.30"
+    },
+    "databricks-pipelines/assets/databricks.png": {
+      "sha256": "06873c31ebda49d6ec5a730749c3dd1d0a140495f235cb1c0256cb2a3d1de850",
+      "origin": "v0.2.30"
+    },
+    "databricks-pipelines/assets/databricks.svg": {
+      "sha256": "00e528e4d5e665dbb5784e3d028b74ecf74405e5ff5a9c75a4d8661f05bda91c",
+      "origin": "v0.2.30"
+    },
+    "databricks-pipelines/references/1-project-initialization-with-dab.md": {
+      "sha256": "d080281f838bfed735cbca3dc65ebdde9aef7deec1b5f078889acc863541201c",
+      "origin": "v0.2.30"
+    },
+    "databricks-pipelines/references/2-rapid-iteration-with-cli.md": {
+      "sha256": "35fb333be5ff59074d06721e715c8f8735c831fa9ceae7261a4ca62f18282eca",
+      "origin": "v0.2.30"
+    },
+    "databricks-pipelines/references/auto-cdc-python.md": {
+      "sha256": "706ea8429907e20c884b3592fc15b6ea292bf3780ebd6fb0f30d4907570181ad",
+      "origin": "v0.2.30"
+    },
+    "databricks-pipelines/references/auto-cdc-sql.md": {
+      "sha256": "92791778c9232a1cbb6bebd6bd2d0d8e1d4ea3cff8388c573a771a6d4e165463",
+      "origin": "v0.2.30"
+    },
+    "databricks-pipelines/references/auto-loader-python.md": {
+      "sha256": "bcbec4e207b1853eb390187e4f1dfb90a4ca7ea2d60ef9e635edf6454dfa47b9",
+      "origin": "v0.2.30"
+    },
+    "databricks-pipelines/references/auto-loader-sql.md": {
+      "sha256": "994d58003a265665188add4482511a74f6c1477e4b537bf7cefbbf2976efc98d",
+      "origin": "v0.2.30"
+    },
+    "databricks-pipelines/references/dlt-migration.md": {
+      "sha256": "d1d391027604a69845369d0249ffd15ea69b49af5626c2b3202a8b782ece0bd2",
+      "origin": "v0.2.30"
+    },
+    "databricks-pipelines/references/expectations-python.md": {
+      "sha256": "e6a08671d4935f294ce1ef37314135b5b582f8d925bedbabf8c130bc3e330775",
+      "origin": "v0.2.30"
+    },
+    "databricks-pipelines/references/expectations-sql.md": {
+      "sha256": "dbb60f0105dc4ee5d1241b20d0a63bc23acc18e400bbc84bf2394a8c5ae485b8",
+      "origin": "v0.2.30"
+    },
+    "databricks-pipelines/references/foreach-batch-sink-python.md": {
+      "sha256": "4d8997147638d4f9d98ffcab541683f01b74fdf5046a32c2165724a30178c9f0",
+      "origin": "v0.2.30"
+    },
+    "databricks-pipelines/references/kafka.md": {
+      "sha256": "8d0ef922204e7696d92a09ffc3e2b7549805804783353ff9bd935cf52dd5dddf",
+      "origin": "v0.2.30"
+    },
+    "databricks-pipelines/references/materialized-view-python.md": {
+      "sha256": "e48950d7ef177a9bd73e42460bcf1b9ac8e9bbac54bd77bb405122e1f2fb7a2f",
+      "origin": "v0.2.30"
+    },
+    "databricks-pipelines/references/materialized-view-sql.md": {
+      "sha256": "7ed43c0ec8b4b3e52f54573cce1b1e41986f5f39ac3f259e1792719b8ea4c9a7",
+      "origin": "v0.2.30"
+    },
+    "databricks-pipelines/references/options-avro.md": {
+      "sha256": "6cf08ede4bf63f3b4ed8c40b78349c50a94555cbcc7c142bc2ab57d79e674af0",
+      "origin": "v0.2.30"
+    },
+    "databricks-pipelines/references/options-csv.md": {
+      "sha256": "a83023ad7a3dcfdf05a834dfd6a5264f2e4f1b1621e14376d51c8c7415173a17",
+      "origin": "v0.2.30"
+    },
+    "databricks-pipelines/references/options-json.md": {
+      "sha256": "5ed3f7f87f2575cc8de545121349359edc805e42d2b6c1adf5f13fb3c96d75b2",
+      "origin": "v0.2.30"
+    },
+    "databricks-pipelines/references/options-orc.md": {
+      "sha256": "24494531ba6bed21ac14e14ec858b416238d9c9dfba7b8f82db6c0683d03c098",
+      "origin": "v0.2.30"
+    },
+    "databricks-pipelines/references/options-parquet.md": {
+      "sha256": "9d99fd3d517e7d1f211711c3655330f9385c0aa722e7cd9580e436d450ec75ea",
+      "origin": "v0.2.30"
+    },
+    "databricks-pipelines/references/options-text.md": {
+      "sha256": "1a2f1a9b501eb18bf5e53d8c38561e0388a9605fce8044fb1e6b496efa288424",
+      "origin": "v0.2.30"
+    },
+    "databricks-pipelines/references/options-xml.md": {
+      "sha256": "dea7b75eb14924f0f9470883a3e1c6afb57364a07662d8721323b0221edd5f71",
+      "origin": "v0.2.30"
+    },
+    "databricks-pipelines/references/performance.md": {
+      "sha256": "f325bb5016cc0ff53022518ac0d4f540e9f368968e7c90506974f6eb9ef9de40",
+      "origin": "v0.2.30"
+    },
+    "databricks-pipelines/references/pipeline-configuration.md": {
+      "sha256": "3935d6ec6c710082a384088d894d85aa3e05e7290c9534fcbda6dfe79eff58c6",
+      "origin": "v0.2.30"
+    },
+    "databricks-pipelines/references/python-basics.md": {
+      "sha256": "b63977d8a211b6a52943f95ba2cb3fa21da4f0f9902443d14d08b5b9df995eef",
+      "origin": "v0.2.30"
+    },
+    "databricks-pipelines/references/real-time-mode.md": {
+      "sha256": "e813eef62df6a96bcde6bd82563e93b28901ff30eed362427f9f0b2da3fcacbf",
+      "origin": "v0.2.30"
+    },
+    "databricks-pipelines/references/scd-2-querying.md": {
+      "sha256": "4b03412d3cd433007888d78be4cea6c6716b373ee850368c0e75fa3237db643a",
+      "origin": "v0.2.30"
+    },
+    "databricks-pipelines/references/sink-python.md": {
+      "sha256": "c9fa865c949a02f5a15eb899420939ba74a9435d01ed3d6e48d430be625b1826",
+      "origin": "v0.2.30"
+    },
+    "databricks-pipelines/references/sql-basics.md": {
+      "sha256": "954962cc88d584bea0b18820bcf0e95e728297b11885329d2bd6d8dbd87cbcf5",
+      "origin": "v0.2.30"
+    },
+    "databricks-pipelines/references/streaming-patterns.md": {
+      "sha256": "e37b637aa120fd06df0b37e0f87d54d68b3734301e174841ff571d81587d01ff",
+      "origin": "v0.2.30"
+    },
+    "databricks-pipelines/references/streaming-table-python.md": {
+      "sha256": "1a4c80e1a30119f4035b229e0855fffcfcfecd4383c6bccec828cbb3be39417a",
+      "origin": "v0.2.30"
+    },
+    "databricks-pipelines/references/streaming-table-sql.md": {
+      "sha256": "3d5f4edb340f555a54fc61cf4deed56b758a1644c067fae53e9fb312f78e9100",
+      "origin": "v0.2.30"
+    },
+    "databricks-pipelines/references/temporary-view-python.md": {
+      "sha256": "ff718fa8c331f488076e3b3becd9d33fec5122e6c750bc610f3d4b2bfc709b4c",
+      "origin": "v0.2.30"
+    },
+    "databricks-pipelines/references/temporary-view-sql.md": {
+      "sha256": "a4f1f32e3af5e50533df47b0d7bb3f1fccc36e4c8fd80fc6f760b23127641762",
+      "origin": "v0.2.30"
+    },
+    "databricks-pipelines/references/view-sql.md": {
+      "sha256": "ee9e52dbc25a8180f34fc60aa959c9a98a38e1a88d6b5f810b6df9af93364fca",
+      "origin": "v0.2.30"
+    },
+    "databricks-python-sdk/SKILL.md": {
+      "sha256": "1cf3702fd174d316e6fc8f836a3dfe2bad74595ce64352b6ae04128694aa240a",
+      "origin": "v0.2.30"
+    },
+    "databricks-python-sdk/agents/openai.yaml": {
+      "sha256": "666ddb456954f7d3fd5ab50b848c75e76604baf1cecc89fa3218d42b71e58e29",
+      "origin": "v0.2.30"
+    },
+    "databricks-python-sdk/assets/databricks.png": {
+      "sha256": "06873c31ebda49d6ec5a730749c3dd1d0a140495f235cb1c0256cb2a3d1de850",
+      "origin": "v0.2.30"
+    },
+    "databricks-python-sdk/assets/databricks.svg": {
+      "sha256": "00e528e4d5e665dbb5784e3d028b74ecf74405e5ff5a9c75a4d8661f05bda91c",
+      "origin": "v0.2.30"
+    },
+    "databricks-python-sdk/examples/1-authentication.py": {
+      "sha256": "ad778285c49886cf505abbf091ee434d18cbbe45632091e401f8b35f14a0f066",
+      "origin": "v0.2.30"
+    },
+    "databricks-python-sdk/examples/2-clusters-and-jobs.py": {
+      "sha256": "931662715e02fdaba72e651893126e98ed6cf87f318c76134aba9a517261fccd",
+      "origin": "v0.2.30"
+    },
+    "databricks-python-sdk/examples/3-sql-and-warehouses.py": {
+      "sha256": "24133cded7984b791332c36f4aaa305c33a599f92ed7b7cc6ddddb28fb043768",
+      "origin": "v0.2.30"
+    },
+    "databricks-python-sdk/examples/4-unity-catalog.py": {
+      "sha256": "1855dffce8f7d4f903a4d645ad061a13cbc40e3c7641aa6f8f96cc887077c851",
+      "origin": "v0.2.30"
+    },
+    "databricks-python-sdk/examples/5-serving-and-vector-search.py": {
+      "sha256": "22c579acb5ddd314068c7f3ba3e4a4f1deeaf260a33bf51acaceea6d99147631",
+      "origin": "v0.2.30"
+    },
+    "databricks-python-sdk/references/doc-index.md": {
+      "sha256": "02d4141e18b407e62b64d254241abb78389221654ab9bd51c43a532da77b290e",
+      "origin": "v0.2.30"
+    },
+    "databricks-serverless-migration/SKILL.md": {
+      "sha256": "9aab226188bfe673b49cbe42b351be8343628fad8018deb804180b55f104de98",
+      "origin": "v0.2.30"
+    },
+    "databricks-serverless-migration/agents/openai.yaml": {
+      "sha256": "593a39dec841d82cf95136c093b7239c53c98e40ec8d4429e79f7b477361cebd",
+      "origin": "v0.2.30"
+    },
+    "databricks-serverless-migration/assets/databricks.png": {
+      "sha256": "06873c31ebda49d6ec5a730749c3dd1d0a140495f235cb1c0256cb2a3d1de850",
+      "origin": "v0.2.30"
+    },
+    "databricks-serverless-migration/assets/databricks.svg": {
+      "sha256": "00e528e4d5e665dbb5784e3d028b74ecf74405e5ff5a9c75a4d8661f05bda91c",
+      "origin": "v0.2.30"
+    },
+    "databricks-serverless-migration/references/code-patterns.md": {
+      "sha256": "0f4e3142093d8bf45f7fd90d346891a651b37d9d45e1407067293e95b9e7a930",
+      "origin": "v0.2.30"
+    },
+    "databricks-serverless-migration/references/compatibility-checks.md": {
+      "sha256": "92b22613d822099e2467669538c022498017c9cc4b7031899cccea7d4edb52d6",
+      "origin": "v0.2.30"
+    },
+    "databricks-serverless-migration/references/configuration-guide.md": {
+      "sha256": "bf02627ad06443279506210e9e3ca3abd4b57ed05064c1d73816a15c00ebc4fa",
+      "origin": "v0.2.30"
+    },
+    "databricks-serverless-migration/references/failure-reporting.md": {
+      "sha256": "05c458b20f3290d99307df8c8524c460b7b0d39af163fa6532028e5efbde0af9",
+      "origin": "v0.2.30"
+    },
+    "databricks-serverless-migration/references/install-in-databricks-genie-code.md": {
+      "sha256": "8ff240962bee8b09ba75626026e4f08fa4beb36304ad243e43761f7032ac43fb",
+      "origin": "v0.2.30"
+    },
+    "databricks-serverless-migration/references/jar-migration.md": {
+      "sha256": "d4d77049afb72d965e976a02a69a6b7a9b110226f6c3f07b666e4ecea82a3345",
+      "origin": "v0.2.30"
+    },
+    "databricks-serverless-migration/references/mlflow-uc-patterns.md": {
+      "sha256": "769c8a8254de9d60b6498cd4437726af39596184644db8f36e00275fc376bae3",
+      "origin": "v0.2.30"
+    },
+    "databricks-serverless-migration/references/multi-source-enumeration.md": {
+      "sha256": "8c584a638adedc0c9e91cf583e06cbcdd6912264c4c5fa6f628dd8af4c3a6728",
+      "origin": "v0.2.30"
+    },
+    "databricks-serverless-migration/references/networking-and-security.md": {
+      "sha256": "79371cf57777dfc789ebeb5418f77f57812e4b3f44e03548224e1f7a5c69c3fb",
+      "origin": "v0.2.30"
+    },
+    "databricks-serverless-migration/references/streaming-migration.md": {
+      "sha256": "b563bfb150d20e5c10edf4b3ec4af283bcccb742bdf6b0a4fd7065902121bda3",
+      "origin": "v0.2.30"
+    },
+    "databricks-serverless/SKILL.md": {
+      "sha256": "b21a23d554f2e5ae5c6d3ccdcc08e92e811f2a1b98082fe092c4f970c5a17ff7",
+      "origin": "v0.2.30"
+    },
+    "databricks-serverless/agents/openai.yaml": {
+      "sha256": "3fe102d273f56f0c04ae09d51a701fee8348690488bec9232b912bdfcdd1002b",
+      "origin": "v0.2.30"
+    },
+    "databricks-serverless/assets/databricks.png": {
+      "sha256": "06873c31ebda49d6ec5a730749c3dd1d0a140495f235cb1c0256cb2a3d1de850",
+      "origin": "v0.2.30"
+    },
+    "databricks-serverless/assets/databricks.svg": {
+      "sha256": "00e528e4d5e665dbb5784e3d028b74ecf74405e5ff5a9c75a4d8661f05bda91c",
+      "origin": "v0.2.30"
+    },
+    "databricks-setup-local/SKILL.md": {
+      "sha256": "dc7e7775677ae4693e9de572fc8ac9c6e17ff30992f5f59a935b12fb8ac04166",
+      "origin": "v0.2.30"
+    },
+    "databricks-setup-local/agents/openai.yaml": {
+      "sha256": "af7dfe6c5183a6ec0e9ca5f35c12dd3f59c1ec65079f92044c05578106a14f8b",
+      "origin": "v0.2.30"
+    },
+    "databricks-setup-local/assets/databricks.png": {
+      "sha256": "06873c31ebda49d6ec5a730749c3dd1d0a140495f235cb1c0256cb2a3d1de850",
+      "origin": "v0.2.30"
+    },
+    "databricks-setup-local/assets/databricks.svg": {
+      "sha256": "00e528e4d5e665dbb5784e3d028b74ecf74405e5ff5a9c75a4d8661f05bda91c",
+      "origin": "v0.2.30"
+    },
+    "databricks-setup-local/references/examples.md": {
+      "sha256": "d570ce17f5130bafc9a00460dc17babb1d937bb109964bb49ae1f8747fb3a407",
+      "origin": "v0.2.30"
+    },
+    "databricks-setup-local/references/json-output.md": {
+      "sha256": "78cb62f0c6ee11fbb8e8524d6171e05ae94b402e425d035cc772740b398738e3",
+      "origin": "v0.2.30"
+    },
+    "databricks-setup-local/references/troubleshooting.md": {
+      "sha256": "0158e3992e52efe83ab35743748c1bda5fb9887a109fc33fb9d1e905c13a5fff",
+      "origin": "v0.2.30"
+    },
+    "databricks-spark-structured-streaming/SKILL.md": {
+      "sha256": "0bef93492116658f96274029020dc199685fe8c9fa62e9d00264b85f09cce0ef",
+      "origin": "v0.2.30"
+    },
+    "databricks-spark-structured-streaming/agents/openai.yaml": {
+      "sha256": "17065383f3c5034ac8c13a8d675b528932580de9ddaeae24ba9edfe5f5ec899e",
+      "origin": "v0.2.30"
+    },
+    "databricks-spark-structured-streaming/assets/databricks.png": {
+      "sha256": "06873c31ebda49d6ec5a730749c3dd1d0a140495f235cb1c0256cb2a3d1de850",
+      "origin": "v0.2.30"
+    },
+    "databricks-spark-structured-streaming/assets/databricks.svg": {
+      "sha256": "00e528e4d5e665dbb5784e3d028b74ecf74405e5ff5a9c75a4d8661f05bda91c",
+      "origin": "v0.2.30"
+    },
+    "databricks-spark-structured-streaming/references/checkpoint-best-practices.md": {
+      "sha256": "8b5df6abe49178503cc2566eb8b264e487972bc19d643cfbd9438f3b91435409",
+      "origin": "v0.2.30"
+    },
+    "databricks-spark-structured-streaming/references/kafka-streaming.md": {
+      "sha256": "2628e1db4d82f8dff3dd92888270b4b47f48226ac8ab458dae0ad34d219c8e47",
+      "origin": "v0.2.30"
+    },
+    "databricks-spark-structured-streaming/references/lakebase-sink-python.md": {
+      "sha256": "de8da28dbb0489b05d92c16c2473ec9eb6a636c923ed56e891ff1334f7003ec7",
+      "origin": "v0.2.30"
+    },
+    "databricks-spark-structured-streaming/references/merge-operations.md": {
+      "sha256": "a76cddcad4b0635fd8109091bcf42986e49b739457285d074491998557a899a0",
+      "origin": "v0.2.30"
+    },
+    "databricks-spark-structured-streaming/references/multi-sink-writes.md": {
+      "sha256": "94f252e6d50a1befcbfd32b46f6b7f501ead02ebaf6e06fd5d42948221607ee3",
+      "origin": "v0.2.30"
+    },
+    "databricks-spark-structured-streaming/references/real-time-mode.md": {
+      "sha256": "2d43eac45e9b4d4ed8874b14b5dc3e2f179f88579386a3830084d5347f37dff6",
+      "origin": "v0.2.30"
+    },
+    "databricks-spark-structured-streaming/references/stateful-operations.md": {
+      "sha256": "4655771e9d9289b0577d51abb8ddbffac9f0224df822ecc28ec2047a6368150c",
+      "origin": "v0.2.30"
+    },
+    "databricks-spark-structured-streaming/references/stream-static-joins.md": {
+      "sha256": "36c52c108221a10b697d9526b5a86751d84aef4bfdbac3065cb166589c1b876d",
+      "origin": "v0.2.30"
+    },
+    "databricks-spark-structured-streaming/references/stream-stream-joins.md": {
+      "sha256": "6bd0bb8a8f3544872002122dd338137af44a0c8870fea6a6f3a38f23d81aaf5a",
+      "origin": "v0.2.30"
+    },
+    "databricks-spark-structured-streaming/references/streaming-best-practices.md": {
+      "sha256": "82b3fc53304bc5dbd03b1103d7e9ec47a19f067d7a31971e48ed48da51ac41c6",
+      "origin": "v0.2.30"
+    },
+    "databricks-spark-structured-streaming/references/trigger-and-cost-optimization.md": {
+      "sha256": "b4915af8ef8092781d47dbbc1af453df2f72842d865d7ec140f146b58ee34e76",
+      "origin": "v0.2.30"
+    },
+    "databricks-synthetic-data-gen/SKILL.md": {
+      "sha256": "d15491624bdc0be2069c31352bcf571d9b9f15355ba3fc4e315cfde2b54abd3e",
+      "origin": "v0.2.30"
+    },
+    "databricks-synthetic-data-gen/agents/openai.yaml": {
+      "sha256": "d3826f2fb3cc6b6bc1cc4a445b1614cce0dfd21343980f4768c1437cad58d53c",
+      "origin": "v0.2.30"
+    },
+    "databricks-synthetic-data-gen/assets/databricks.png": {
+      "sha256": "06873c31ebda49d6ec5a730749c3dd1d0a140495f235cb1c0256cb2a3d1de850",
+      "origin": "v0.2.30"
+    },
+    "databricks-synthetic-data-gen/assets/databricks.svg": {
+      "sha256": "00e528e4d5e665dbb5784e3d028b74ecf74405e5ff5a9c75a4d8661f05bda91c",
+      "origin": "v0.2.30"
+    },
+    "databricks-synthetic-data-gen/references/1-data-patterns.md": {
+      "sha256": "35ee7c4b76a6ec9cc3bf5704b51084b135fbd6c53d9d21f3b5f8bff4e20415b3",
+      "origin": "v0.2.30"
+    },
+    "databricks-synthetic-data-gen/references/2-troubleshooting.md": {
+      "sha256": "a684675504f65722f59c96454a6f4181ed92eb9dacf7c7ba2b26db5352fa318e",
+      "origin": "v0.2.30"
+    },
+    "databricks-synthetic-data-gen/scripts/generate_synthetic_data.py": {
+      "sha256": "ab6a29e050ca626d28f08d4872901031cc0ae0ad2774fe78878c34dc20d9033c",
+      "origin": "v0.2.30"
+    },
+    "databricks-unity-catalog/SKILL.md": {
+      "sha256": "f7c19ee1ed74fcd0ed800b4f5d5dedd39b6c48de67559a38994d77b205f2341b",
+      "origin": "v0.2.30"
+    },
+    "databricks-unity-catalog/agents/openai.yaml": {
+      "sha256": "9a745ac030120b59a47a5092cbdb105b07034396fa47966e7a5b71656aacd873",
+      "origin": "v0.2.30"
+    },
+    "databricks-unity-catalog/assets/databricks.png": {
+      "sha256": "06873c31ebda49d6ec5a730749c3dd1d0a140495f235cb1c0256cb2a3d1de850",
+      "origin": "v0.2.30"
+    },
+    "databricks-unity-catalog/assets/databricks.svg": {
+      "sha256": "00e528e4d5e665dbb5784e3d028b74ecf74405e5ff5a9c75a4d8661f05bda91c",
+      "origin": "v0.2.30"
+    },
+    "databricks-unity-catalog/references/1-access-control.md": {
+      "sha256": "b89b9e97b6c41a7fad10bff16fbdb7f328c9eca22568c2622a3bde276c485516",
+      "origin": "v0.2.30"
+    },
+    "databricks-unity-catalog/references/2-external-locations.md": {
+      "sha256": "dca8f7443d3ef563f495e4ed859e9eed69aac0cc81ea87650dda5ffda6c76cf7",
+      "origin": "v0.2.30"
+    },
+    "databricks-unity-catalog/references/3-securables-ddl.md": {
+      "sha256": "8199b93d15198135b83f43a62d37986a9daa7c791ec854f724b0805b59ae5575",
+      "origin": "v0.2.30"
+    },
+    "databricks-unity-catalog/references/4-fine-grained-access.md": {
+      "sha256": "2cbbf51bbe305ee5bde9fc0a0ffb23fbadd568e0a8989d4adcff925629d8a1c4",
+      "origin": "v0.2.30"
+    },
+    "databricks-unity-catalog/references/5-system-tables.md": {
+      "sha256": "19e652a94a8b3250ff845e324f309975bc6df7b39adf16926322960409e2efab",
+      "origin": "v0.2.30"
+    },
+    "databricks-unity-catalog/references/6-volumes.md": {
+      "sha256": "f2b488f21f7cbe19da494ff14d4a9764732423379cb412c40361a32562b96880",
+      "origin": "v0.2.30"
+    },
+    "databricks-unity-catalog/references/7-data-profiling.md": {
+      "sha256": "35baa78c6caf94342ee5bb4991daba16536d21f3ccc644a0d2fb5095c50603a6",
+      "origin": "v0.2.30"
+    },
+    "databricks-unity-gateway/SKILL.md": {
+      "sha256": "a096761eae68e5f393077ad0a9c4cc99977b021d678b3402ec6ee70efb4e7e94",
+      "origin": "v0.2.30"
+    },
+    "databricks-unity-gateway/agents/openai.yaml": {
+      "sha256": "1742a6b9024ab3274e4fec364b0b51ec35cbb18857c5df2b6b9ab64271e5dc59",
+      "origin": "v0.2.30"
+    },
+    "databricks-unity-gateway/assets/databricks.png": {
+      "sha256": "06873c31ebda49d6ec5a730749c3dd1d0a140495f235cb1c0256cb2a3d1de850",
+      "origin": "v0.2.30"
+    },
+    "databricks-unity-gateway/assets/databricks.svg": {
+      "sha256": "00e528e4d5e665dbb5784e3d028b74ecf74405e5ff5a9c75a4d8661f05bda91c",
+      "origin": "v0.2.30"
+    },
+    "databricks-unity-gateway/references/account-access.md": {
+      "sha256": "6311324e71db1b0eb1352951fe855c556770266199172399d70a8a42d21fe220",
+      "origin": "v0.2.30"
+    },
+    "databricks-unity-gateway/references/budgets.md": {
+      "sha256": "b2b1534ba315b89a1defbd2e34dadf8fd54501dedde164d92fe4128d9aef2c71",
+      "origin": "v0.2.30"
+    },
+    "databricks-unity-gateway/references/mcp-services.md": {
+      "sha256": "a0761826cfe5f61883249ccebcb73f21f08aef4a0f6b7a371187c9c0fbb3ff09",
+      "origin": "v0.2.30"
+    },
+    "databricks-unity-gateway/references/model-provider-services.md": {
+      "sha256": "95512004abeb213f15b5747adedf0af474cdfe2f81bffa890ed42db0ee37381d",
+      "origin": "v0.2.30"
+    },
+    "databricks-unity-gateway/references/model-services.md": {
+      "sha256": "4f964694bd71df110fe973d7c546890c698816d4ba2675151ce9ed71772167dc",
+      "origin": "v0.2.30"
+    },
+    "databricks-unity-gateway/references/model-serving-migration.md": {
+      "sha256": "bd75ff3133ae3430fe52ddb7bd085e04d115c4c323b7a0c859466b676d8d72cf",
+      "origin": "v0.2.30"
+    },
+    "databricks-unity-gateway/references/permissions.md": {
+      "sha256": "87adbe5e4dcf1a28638c01ae778dd3dc9e1521812816f74f31909576aa138216",
+      "origin": "v0.2.30"
+    },
+    "databricks-unity-gateway/references/querying.md": {
+      "sha256": "a1c5d7b9759dcfdedf2c68f56523f5d5ecd50e151a7cc1e03bded55d75e872c1",
+      "origin": "v0.2.30"
+    },
+    "databricks-unstructured-pdf-generation/SKILL.md": {
+      "sha256": "57391a0fa20359b56b7050e9e62a022b671e5fdfc67348d275d30fd9531215ce",
+      "origin": "v0.2.30"
+    },
+    "databricks-unstructured-pdf-generation/agents/openai.yaml": {
+      "sha256": "31ca03fb5d488370d12ee0d240bc6ffa0a7004861d6e44635385d1f9292b902e",
+      "origin": "v0.2.30"
+    },
+    "databricks-unstructured-pdf-generation/assets/databricks.png": {
+      "sha256": "06873c31ebda49d6ec5a730749c3dd1d0a140495f235cb1c0256cb2a3d1de850",
+      "origin": "v0.2.30"
+    },
+    "databricks-unstructured-pdf-generation/assets/databricks.svg": {
+      "sha256": "00e528e4d5e665dbb5784e3d028b74ecf74405e5ff5a9c75a4d8661f05bda91c",
+      "origin": "v0.2.30"
+    },
+    "databricks-unstructured-pdf-generation/scripts/pdf_generator.py": {
+      "sha256": "3c06c6b3cdaca64556f7c47a9ebb79b45fa27938b7263943971e91cb61791c1a",
+      "origin": "v0.2.30"
+    },
+    "databricks-vector-search/SKILL.md": {
+      "sha256": "50b84ee87a43aa000fefeacb29b005d713f395e2726a2c78b7d5ac84354bc4c2",
+      "origin": "v0.2.30"
+    },
+    "databricks-vector-search/agents/openai.yaml": {
+      "sha256": "abaf0640c887fef51627a4a6e7df007f8401196fd12f10c1754a65fb0e5fc6d4",
+      "origin": "v0.2.30"
+    },
+    "databricks-vector-search/assets/databricks.png": {
+      "sha256": "06873c31ebda49d6ec5a730749c3dd1d0a140495f235cb1c0256cb2a3d1de850",
+      "origin": "v0.2.30"
+    },
+    "databricks-vector-search/assets/databricks.svg": {
+      "sha256": "00e528e4d5e665dbb5784e3d028b74ecf74405e5ff5a9c75a4d8661f05bda91c",
+      "origin": "v0.2.30"
+    },
+    "databricks-vector-search/references/end-to-end-rag.md": {
+      "sha256": "d6c5e4b7ba14b8c05192f00ebeae9b1aa52b2a533fb0a62d658889c70d9a348e",
+      "origin": "v0.2.30"
+    },
+    "databricks-vector-search/references/index-types.md": {
+      "sha256": "1ed91a8b37be3b6c39dacd18f4f4c5c34712f4b8f0146a13b1ae50ee40ecc5fc",
+      "origin": "v0.2.30"
+    },
+    "databricks-vector-search/references/search-modes.md": {
+      "sha256": "f6b0c3c981b10cbd2ab450b47117f12b66fb379d4878b4de87cad4f94e3ef237",
+      "origin": "v0.2.30"
+    },
+    "databricks-vector-search/references/troubleshooting-and-operations.md": {
+      "sha256": "80dd3859ce99ae4428fe29a5c01b1dd85436afaeeeef9a340f1ec70ca9dc2117",
+      "origin": "v0.2.30"
+    },
+    "databricks-zerobus-ingest/SKILL.md": {
+      "sha256": "e64bf903cb33dd76ce2ebc3fced2c652342b42208bf7839072ccbda502d84463",
+      "origin": "v0.2.30"
+    },
+    "databricks-zerobus-ingest/agents/openai.yaml": {
+      "sha256": "133f5e2eff82fb8f5ad6de955db7744a352b6bef863bea846c2f199af73e0a47",
+      "origin": "v0.2.30"
+    },
+    "databricks-zerobus-ingest/assets/databricks.png": {
+      "sha256": "06873c31ebda49d6ec5a730749c3dd1d0a140495f235cb1c0256cb2a3d1de850",
+      "origin": "v0.2.30"
+    },
+    "databricks-zerobus-ingest/assets/databricks.svg": {
+      "sha256": "00e528e4d5e665dbb5784e3d028b74ecf74405e5ff5a9c75a4d8661f05bda91c",
+      "origin": "v0.2.30"
+    },
+    "databricks-zerobus-ingest/examples/grpc_client.py": {
+      "sha256": "e166c3bda2affb48bc9e90766423fcfbbed3d8fa6e81f47de1e0f00ba0871a6e",
+      "origin": "v0.2.30"
+    },
+    "databricks-zerobus-ingest/examples/mqtt_producer.py": {
+      "sha256": "f8993d1f3fdbf64d3ea6940d44614856b261d61568b7cb09cf284b46e66caffb",
+      "origin": "v0.2.30"
+    },
+    "databricks-zerobus-ingest/references/arrow-flight.md": {
+      "sha256": "b19360711111392d7a8b23d4bf5f4ef3cde812f6f83e921f376847bdf96fee69",
+      "origin": "v0.2.30"
+    },
+    "databricks-zerobus-ingest/references/authentication.md": {
+      "sha256": "f008e8962a3e1de15c853a9e413ed76dd75eedaf2b6a3e81c1b68cce0fdb3861",
+      "origin": "v0.2.30"
+    },
+    "databricks-zerobus-ingest/references/build-from-source.md": {
+      "sha256": "464a766f91fa95113e7b1f9a1320ceb210cab8a8c00a27adf0d38ff97b797498",
+      "origin": "v0.2.30"
+    },
+    "databricks-zerobus-ingest/references/choose-an-interface.md": {
+      "sha256": "bee51dc75f41a12bdc921ef4d886eb5f09af35826f8b627ebbe389b7a28caf8e",
+      "origin": "v0.2.30"
+    },
+    "databricks-zerobus-ingest/references/databricks-apps.md": {
+      "sha256": "939723116425f2710275dec684ddac7571f2cff5f9399584973d5017ef2d7651",
+      "origin": "v0.2.30"
+    },
+    "databricks-zerobus-ingest/references/go-sdk.md": {
+      "sha256": "0b4738e891573e33435a2b1954548d58249ce7ff397ddc432a5dd72db06772a8",
+      "origin": "v0.2.30"
+    },
+    "databricks-zerobus-ingest/references/grpc-api.md": {
+      "sha256": "75fad457b64901670ab5b1f7825e3cb20d391f1bf6921e0de63e5e32c1cad6d5",
+      "origin": "v0.2.30"
+    },
+    "databricks-zerobus-ingest/references/how-it-works.md": {
+      "sha256": "94c330593cdf0aaa11e8c80b5918a4d24450af490cb076825eadd65ff89e9fba",
+      "origin": "v0.2.30"
+    },
+    "databricks-zerobus-ingest/references/java-sdk.md": {
+      "sha256": "a6e17f67d42afde367ca54adeae63169469002f7b673b0cd2dc8cbe00f768ab9",
+      "origin": "v0.2.30"
+    },
+    "databricks-zerobus-ingest/references/kafka.md": {
+      "sha256": "01275a3b086bcd667655388542038c5e82bb4e5d1c996865f9a25829a2f5f6b1",
+      "origin": "v0.2.30"
+    },
+    "databricks-zerobus-ingest/references/migration-from-kafka-compatible-systems.md": {
+      "sha256": "01263bc9d6ae37c68ab63ce0adb12298fb6d6c7556ffd8c957c76523bb4df167",
+      "origin": "v0.2.30"
+    },
+    "databricks-zerobus-ingest/references/mqtt.md": {
+      "sha256": "43873a64cf6cbb6ee8343c2584db0f184feebd11b2ad249c156918bc707cf53c",
+      "origin": "v0.2.30"
+    },
+    "databricks-zerobus-ingest/references/networking.md": {
+      "sha256": "c0a27a877fe78eb77836701e54f6a6fc218dda85765d56184ae435216353cf03",
+      "origin": "v0.2.30"
+    },
+    "databricks-zerobus-ingest/references/new-to-databricks.md": {
+      "sha256": "e7161825b21535a39edd59eb257f48e0a99eb7ecc8da1948a704566033ab5f49",
+      "origin": "v0.2.30"
+    },
+    "databricks-zerobus-ingest/references/observability.md": {
+      "sha256": "d1086afbc37c76d3b2238b5d877d0548fb6489ea10727b6254d806cf753706dd",
+      "origin": "v0.2.30"
+    },
+    "databricks-zerobus-ingest/references/other-sdks.md": {
+      "sha256": "790a0f52c02ea479e7b2601f8b50e6a811513f2f6d3bf42847a37f68dc03bfb4",
+      "origin": "v0.2.30"
+    },
+    "databricks-zerobus-ingest/references/performance.md": {
+      "sha256": "f236256d386f8787a84e81c6b8df334dfde9473901035e2731e4edba3eeb6f4c",
+      "origin": "v0.2.30"
+    },
+    "databricks-zerobus-ingest/references/protobuf-schema.md": {
+      "sha256": "5826c0119c2fd8fac56553ba7a62941dc8447edb1c101c40aa1c22120c3a21af",
+      "origin": "v0.2.30"
+    },
+    "databricks-zerobus-ingest/references/python-sdk.md": {
+      "sha256": "067b5a4f3ccee997985a30e5c6054f6c2d00ce8164a4c6ee2beb4d1121e20a56",
+      "origin": "v0.2.30"
+    },
+    "databricks-zerobus-ingest/references/recovery.md": {
+      "sha256": "935dfd9e73e0fdabb7a2db698f5d5560ed90e1153c3f1a0b1b60774a931a28ad",
+      "origin": "v0.2.30"
+    },
+    "databricks-zerobus-ingest/references/rest.md": {
+      "sha256": "e0f6845f03305510c4f78e947315dea767f77a7abc3cb6beedfe479609e63b77",
+      "origin": "v0.2.30"
+    },
+    "databricks-zerobus-ingest/references/schema-management.md": {
+      "sha256": "7516544ace51ac7d4e677daaa7237d0b60a213c3848d3f5c68d4cad21f6fb6f8",
+      "origin": "v0.2.30"
+    },
+    "databricks-zerobus-ingest/references/troubleshooting.md": {
+      "sha256": "f9922f0ad8101cc3e2fd27dae777239f9a16ab384359113db512824a1d9f95a4",
+      "origin": "v0.2.30"
+    },
+    "databricks-zerobus-ingest/references/typescript-sdk.md": {
+      "sha256": "bd745db184bac5c7dcf852dcd51aa5131c77b4664483a96858af1c71051ac3ef",
+      "origin": "v0.2.30"
     }
   }
 }

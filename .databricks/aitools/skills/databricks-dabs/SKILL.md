@@ -1,6 +1,6 @@
 ---
 name: databricks-dabs
-description: 'Create, configure, validate, deploy, run, and manage DABs — Declarative Automation Bundles (formerly Databricks Asset Bundles) — for Databricks resources including dashboards, jobs, pipelines, alerts, volumes, and apps'
+description: 'Create, configure, validate, deploy, run, and manage Declarative Automation Bundles (DABs, formerly Databricks Asset Bundles). Use when working with Databricks resources via DABs including dashboards, jobs, pipelines, alerts, volumes, and apps.'
 ---
 
 # Declarative Automation Bundles (DABs)
@@ -37,3 +37,19 @@ Load this skill for any request involving:
 4. **Path resolution is critical** - Paths differ based on file location (see Bundle Structure reference)
 5. **Preserve existing structure** - Keep user comments and structure when editing YAML files
 6. **Use variables** - Parameterize catalog, schema, and warehouse for multi-environment support
+7. **Namespace App names** - App names are workspace-global and limited to 30 characters. With Databricks CLI 0.270.0 or later, shared-development defaults should include the app and `${workspace.current_user.domain_friendly_name}`; override production with a stable name, and persist an explicit local value when the default is invalid, collides, or must distinguish multiple non-production targets in one workspace. On older CLI versions, require an explicit `app_name` value instead
+
+## Required App Completion Contract
+
+Before validating any bundle that creates or changes an App, re-read the final bundle YAML and confirm all of the following structural requirements:
+
+- Each App resource uses a dedicated name variable, such as `name: ${var.app_name}`, while preserving an existing equivalent variable when present.
+- For Databricks CLI 0.270.0 or later, each App name variable defaults to a recognizable App prefix plus `${workspace.current_user.domain_friendly_name}` for development, and the production target overrides it with a stable name. On older CLI versions, App name variables have no default and each developer must provide values.
+- No development App name uses `${workspace.current_user.short_name}`, a bare `${bundle.target}`, or a hardcoded value.
+
+Only after this check, run `databricks bundle validate --strict --target <target> --output json` and inspect each resolved `resources.apps.<key>.name`. Each name must contain only lowercase letters, digits, and hyphens and be at most 30 characters. If a resolved name is invalid, collides after normalization, or multiple non-production targets share a workspace, persist a shorter, distinct value in the uncommitted `.databricks/bundle/<target>/variable-overrides.json` file and validate again. Successful validation alone does not satisfy this contract because validation does not catch every invalid or non-namespaced App name.
+
+## Documentation
+
+- [Declarative Automation Bundles](https://docs.databricks.com/dev-tools/bundles/)
+- [Bundle Examples Repository](https://github.com/databricks/bundle-examples) - official end-to-end example bundles (jobs, pipelines, dashboards, apps, and more); use as working references for patterns not covered by the reference files above

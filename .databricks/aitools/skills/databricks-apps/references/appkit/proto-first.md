@@ -41,7 +41,7 @@ Every Databricks app decomposes into a combination of these plugin modules:
 | **Database** | lakebase | Postgres tables | Structured records, queries, migrations |
 | **Compute** | jobs | Databricks Jobs API | Job runs, task results, cluster configs |
 | **Analytics** | analytics | SQL Warehouse | Read-only queries, dashboards |
-| **Serving** | server | HTTP/tRPC routes | API endpoints, SSE streams |
+| **Serving** | server | HTTP routes | API endpoints, SSE streams |
 
 ### Decomposition Rules
 
@@ -259,8 +259,8 @@ CREATE TABLE IF NOT EXISTS runs (
 ### 3d. Validate
 
 ```bash
-npx tsc --noEmit  # all generated types compile
-buf lint proto/    # proto style checks
+npx tsc --noEmit      # all generated types compile
+buf lint proto/  # proto style checks
 ```
 
 ## Phase 4: Implement Against Contracts

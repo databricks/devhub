@@ -1,5 +1,7 @@
 # Off-Platform Lakebase: Connecting from External Apps
 
+> **Off-platform apps are NOT Databricks Apps.** Do NOT use `databricks apps init`, `databricks apps deploy`, `app.yaml`, or any Databricks Apps platform commands. Off-platform apps run on your own infrastructure (Vercel, AWS, local Node.js, etc.) and use standard Node.js tooling (`npm run dev`, `node server.js`).
+
 Connect to Lakebase from apps deployed outside Databricks App Platform (e.g. Vercel, AWS, Netlify, or any Node.js server).
 
 ## Recommended: `@databricks/lakebase` Package
@@ -39,7 +41,7 @@ const pool = createLakebasePool({
 - OpenTelemetry metrics: `lakebase.token.refresh.duration`, `lakebase.query.duration`, pool connection gauges
 - Logging: `{ debug, info, warn, error }` boolean flags or custom logger instance
 
-> **Lakebase Autoscaling only.** This package is not compatible with Lakebase Provisioned. For the full config reference, see the [`@databricks/lakebase` README](https://github.com/databricks/appkit/tree/main/packages/lakebase).
+> For the full config reference, see the [`@databricks/lakebase` README](https://github.com/databricks/appkit/tree/main/packages/lakebase).
 
 **ORM integration:**
 

@@ -18,6 +18,27 @@ import { MyInterface, MyType } from './types';
 
 For server configuration, see: `npx @databricks/appkit docs ./docs/plugins.md`
 
+## Execution identity: service principal vs user (OBO)
+
+Server-side, AppKit uses the **service principal by default**. Open a caller scope only when an operation must run with the requesting user's Databricks permissions. The app-level `appkit.asUser(req)` API requires **`@databricks/appkit` `>= 0.84.0`** (`databricks apps init --version latest` installs it).
+
+```typescript
+// Block form: everything inside runs as the user; prefer this for handlers doing multiple ops:
+const orders = await appkit.asUser(req).run((kit) => kit.analytics.query("orders"));
+
+// One-call shorthand:
+await appkit.asUser(req).analytics.query("orders");
+
+// No caller scope → runs as the service principal:
+await appkit.analytics.query("metrics");
+```
+
+- The service principal is the default whenever no user scope is open.
+- **Fail-closed:** in production an OBO call with no usable user token rejects. It never silently falls back to the service principal (the only fallback is the documented `NODE_ENV=development` dev mode).
+- `plugin.asUser(req)` (e.g. `appkit.files("uploads").asUser(req)`) is **deprecated** but still works, with a one-time deprecation warning. New code should use `appkit.asUser(req)`.
+- OBO requires the resource's scope in `user_api_scopes`; see [Platform Guide](../platform-guide.md#user_api_scopes-names).
+- SQL query files: a `<key>.obo.sql` file runs as the user (per-user cache); a plain `<key>.sql` runs as the SP. See [SQL Queries](sql-queries.md). Agent execution identity is covered in [Agents](agents.md).
+
 ## useAnalyticsQuery Hook
 
 **ONLY use when displaying data in a custom way that isn't a chart or table.** For charts/tables, pass `queryKey` directly to the component — don't double-fetch. Charts also accept a `format` option (`"json"` | `"arrow"` | `"auto"`, default `"auto"`) to control the data transfer format.
@@ -54,7 +75,7 @@ const { data } = useAnalyticsQuery('query', params, { autoStart: false });
 
 ### Type Inference
 
-When `appKitTypes.d.ts` has been generated (via `npm run typegen`), types are inferred automatically:
+When `appKitTypes.d.ts` has been generated (via `<pm> run typegen`), types are inferred automatically:
 ```typescript
 // ✅ After typegen - types are automatic, no generic needed
 const { data } = useAnalyticsQuery('my_query', params);
@@ -69,7 +90,7 @@ const { data } = useAnalyticsQuery<MyRow[]>('my_query', params);
 interface MyData { id: string; value: number; }
 const { data } = useAnalyticsQuery<MyData[]>('my_query', params);
 
-// ✅ CORRECT - run `npm run typegen` and let it provide types
+// ✅ CORRECT - run `<pm> run typegen` and let it provide types
 const { data } = useAnalyticsQuery('my_query', params);
 ```
 
@@ -104,3 +125,29 @@ function CustomDisplay() {
   );
 }
 ```
+
+## useMetricView Hook
+
+For a **governed UC Metric View** (not a `config/queries/` SQL file), use `useMetricView` —
+a structured `{ measures, dimensions, filter, orderBy, limit }` request instead of SQL text.
+Register the view in `config/metric-views/definitions.json`, run `<pm> run typegen`, then:
+
+```typescript
+import { useMetricView } from '@databricks/appkit-ui/react';
+
+const { data, loading, error } = useMetricView('orders', {
+  measures: ['revenue'],
+  dimensions: ['region'],
+  orderBy: [{ field: 'revenue', direction: 'DESC' }],
+  limit: 10,
+});
+// numeric cells are strings/null → Number(row.revenue) before math
+```
+
+- `measures` is required (≥ 1); `dimensions`, `filter`, `orderBy`, `timeGrain`/`timeDimension`,
+  and `limit` are optional. `autoStart: false` defers the query (no `enabled` option — same as
+  `useAnalyticsQuery`).
+- Do **not** use `useAnalyticsQuery` for a metric view, or `useMetricView` for a plain table.
+
+See [Metric Views](metric-views.md) for registration, executor (service-principal vs OBO),
+the filter predicate tree, and the full request rules.

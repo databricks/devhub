@@ -1,12 +1,16 @@
 # SQL Query Files
 
-**IMPORTANT**: ALWAYS use SQL files in `config/queries/` for data retrieval. NEVER use tRPC for SQL queries.
+**IMPORTANT**: ALWAYS use SQL files in `config/queries/` for data retrieval. NEVER add custom endpoints for warehouse SQL queries.
+
+> For a **governed UC Metric View** (pre-defined semantic measures/dimensions) rather than ad-hoc SQL, use the metric-view path instead — `config/metric-views/definitions.json` + `useMetricView`. See [Metric Views](metric-views.md).
 
 - Store ALL SQL queries in `config/queries/` directory
 - Name files descriptively: `trip_statistics.sql`, `user_metrics.sql`, `sales_by_region.sql`
 - Reference by filename (without extension) in `useAnalyticsQuery` or directly in a visualization component passing it as `queryKey`
 - App Kit automatically executes queries against configured Databricks warehouse
 - Benefits: Built-in caching, proper connection pooling, better performance
+
+**Execution identity by file name:** a plain `<key>.sql` file runs as the **service principal** (shared cache); a `<key>.obo.sql` file runs as the **requesting user** (OBO, per-user cache), so results respect that user's own Databricks permissions. The query key is the **bare name** either way: `spend_summary.obo.sql` is still referenced as `spend_summary`. OBO requires `sql` in `user_api_scopes`.
 
 ## Type Generation
 
@@ -134,7 +138,7 @@ Databricks uses Databricks SQL (based on Spark SQL), NOT PostgreSQL/MySQL. Commo
 
 Always check date ranges before writing date-filtered queries.
 
-## Before Running `npm run typegen`
+## Before Running `<pm> run typegen`
 
 Verify each SQL file before running typegen:
 

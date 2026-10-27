@@ -45,21 +45,21 @@ A session grows within one conversation. When something in it is worth keeping, 
 
 ### How they're saved and retrieved
 
-|          | Save                                                                                                                                              | Retrieve                                                                                                                                                                                                        |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Sessions | Append items as the conversation runs.                                                                                                            | Read the items back in order at the start of each turn to rebuild context.                                                                                                                                      |
-| Memory   | Add an entry when the agent learns something durable, from a model tool or your app code, or let a memory pipeline distill entries from sessions. | **List** an actor's entries, optionally filtered by `path` prefix or `session_id`, or **search** them with a natural-language query. Search ranks entries by full-text relevance (BM25), not vector similarity. |
+|          | Save                                                                                                                                              | Retrieve                                                                                                                                                                                                                                                                                      |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Sessions | Append items as the conversation runs.                                                                                                            | Read the items back in order at the start of each turn to rebuild context.                                                                                                                                                                                                                    |
+| Memory   | Add an entry when the agent learns something durable, from a model tool or your app code, or let a memory pipeline distill entries from sessions. | **List** an actor's entries, optionally filtered by `path` prefix or `session_id`, or **search** them with a natural-language query, ranked by relevance. For how search ranks and limits results, see [Agent memory](https://docs.databricks.com/aws/en/agents/agent-memory/managed-memory). |
 
 ## Creating a new agent with memory and sessions
 
-To create a new agent with memory and sessions, scaffold it with the [Agent Bricks CLI](/docs/agents/cli), which wires in both stores for you. `agentbricks init` declares a `<directory>-memory` and a `<directory>-session` store in `agent.toml`, and `agentbricks deploy` creates them and grants the app's service principal access. To use stores you already have, bind them before you deploy:
+To create a new agent with memory and sessions, scaffold it with the [Agent Bricks CLI](/docs/agents/cli), which wires in both stores for you. `agentbricks init` declares two stores in `agent.toml`: `<project>-<token>-memory` and `<project>-<token>-sessions`. `<token>` is a random suffix that `init` generates so each new project gets its own stores. `agentbricks deploy` creates them and grants the app's service principal access. To use stores you already have, bind them before you deploy:
 
 ```bash
 agentbricks memory bind support-agent-memory
 agentbricks sessions bind support-agent-sessions
 ```
 
-The generated `agent/agent.py` wires them in through the AgentKit adapters. `memory_tools(actor)` gives the model `remember` and `recall` tools with the actor fixed in code, so the model can't reach another actor's memory:
+The generated `agent/agent.py` wires them in through the AgentKit adapters. `memory_tools(actor)` gives the model `remember`, `recall`, `forget`, and `list_memories` tools with the actor fixed in code, so the model can't reach another actor's memory:
 
 ```python title="agent/agent.py" tab="LangGraph"
 from databricks_agentkit.langgraph import checkpointer, memory_tools, thread_config
@@ -78,12 +78,12 @@ result = Runner.run_streamed(agent, agent_input, session=session_store(session_i
 
 Under `agentbricks dev`, sessions stay in the running process and memory is off. The stores are used only once you deploy.
 
-Each request carries the conversation's `session_id` and an `actor` inside its `input` object. `actor` decides whose memory the agent uses; without it, memory is scoped to the one conversation. The scaffolded chat app sets `actor` to the signed-in user. When you call the agent from your own code, set it on your server from the verified user identity:
+Each request carries the conversation's `session_id` at the top level and an `actor` inside its `input` object. `actor` decides whose memory the agent uses; without it, memory is scoped to the one conversation. The scaffolded chat app sets `actor` to the signed-in user. If the agent requires user authorization (tools that run as the user, or `[auth.user]`), the template hashes `actor` with the requesting user's identity, so the agent's memory isn't stored under the plain `actor` value you'd pass to the SDK. When you call the agent from your own code, set `actor` on your server from the verified user identity:
 
 ```bash
 agentbricks --profile <profile> endpoint invoke agent-bricks-my-agent \
   --path /api/invocations \
-  --json '{"id":"'"$(uuidgen)"'","input":{"session_id":"case-456","actor":"user-123","messages":[{"role":"user","content":"I prefer email."}]}}'
+  --json '{"id":"'"$(uuidgen)"'","session_id":"case-456","input":{"actor":"user-123","messages":[{"role":"user","content":"I prefer email."}]}}'
 ```
 
 ## Use the stores from any agent
@@ -104,7 +104,7 @@ history = [item.data for item in session.list_items(order_by="create_time asc")]
 
 # Memory: save a durable fact, then recall it in a later conversation.
 memory_store = agentkit.memory_stores.create("support-agent-memory")
-memory_store.add(
+memory_store.put(
     actor_id="user-123",
     path="/preferences/communication.md",
     content="Prefers email over phone.",
@@ -113,7 +113,7 @@ memory_store.add(
 results = memory_store.search(actor_id="user-123", query="communication preferences")
 ```
 
-`list_items` returns newest first by default, so pass `order_by="create_time asc"` when you rebuild context. To let a model decide when to save and recall, wrap `add` and `search` as tools in your framework, binding `actor_id` in code.
+`list_items` returns newest first by default, so pass `order_by="create_time asc"` when you rebuild context. To let a model decide when to save and recall, wrap `put` and `search` as tools in your framework, binding `actor_id` in code.
 
 Every operation is also a REST call under `/api/2.0/agents/session-stores` and `/api/2.0/agents/memory-stores`. When you create a store over REST, set its ID in the query string (`?session_store_id=<name>` or `?managed_memory_store_id=<name>`) so later paths can use the name. AppKit has no built-in integration, so call the REST API from your server code.
 

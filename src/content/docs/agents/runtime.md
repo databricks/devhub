@@ -70,6 +70,7 @@ The handler receives the request's `input` and an `InvocationContext` (`invocati
 
 - **Idempotency**: Clients send a UUID `id` with every invocation. Resending the same request returns the existing invocation instead of running the agent again. Reusing an ID for a different request returns `409`.
 - **Sessions**: Invocations that share a `session_id` run one at a time, in order. The server passes it to your handler as `context.session_id`.
+- **Browser clients**: CORS is off by default. To let a browser front end call the agent, allow its exact origin with `agentbricks deploy my-agent --allowed-origin <origin>`, which records it in `agent.toml`. Repeat the flag for more than one origin; each deploy that passes it replaces the recorded list. Pass `--clear-allowed-origins` to turn CORS off again. See [External browser clients](https://github.com/databricks/databricks-ai-bridge/blob/main/integrations/agentbricks/src/databricks_agentkit/runtime/README.md#external-browser-clients).
 
 ### Run state
 
@@ -102,9 +103,9 @@ To deploy the agent, run the following from the project directory:
 agentbricks --profile <profile> deploy my-agent
 ```
 
-The command creates the memory and session stores, tools, and MLflow experiment that `agent.toml` declares, grants the app's service principal access to them, provisions the Runtime Store, and deploys the agent as a Databricks app named `agent-bricks-my-agent`. If it can't apply a required grant, it stops before uploading code and leaves the current deployment running.
+The command creates the memory and session stores and MLflow experiment that `agent.toml` declares, grants the app's service principal access to them and to the resources that app-identity tools declare, provisions the Runtime Store, and deploys the agent as a Databricks app named `agent-bricks-my-agent`. Grants for app-identity tools are applied before the new version rolls out, so if one fails, the deploy stops and the current deployment keeps running. Store, tracing, model service, and prompt grants are applied after the rollout; if one fails, the deploy reports it and the new version stays deployed.
 
-To run more than one instance, pass `--instances` (1–5). Then send the session ID in an `X-Routing-Key` header, or with `--routing-key` in `agentbricks endpoint invoke`, so every request in a session reaches the same instance.
+To run more than one instance, pass `--instances` (1–5). Then send the session ID in an `X-Routing-Key` header, or with `--routing-key` in `agentbricks endpoint invoke`, so requests in a session reach the same instance. Routing is best-effort. The header only routes the request, so still send `session_id` in the request body.
 
 ```bash
 agentbricks --profile <profile> deploy my-agent --instances 2
@@ -119,6 +120,7 @@ To send requests to the deployed agent, see [Query the agent](/docs/agents/cli#s
 | List deployed agents                 | `agentbricks deployments list`                         |
 | Get the URL and status               | `agentbricks deployments get agent-bricks-my-agent`    |
 | Stream logs                          | `agentbricks deployments logs agent-bricks-my-agent`   |
+| Wait for a deploy to finish          | `agentbricks deployments wait agent-bricks-my-agent`   |
 | Stop or start the app                | `agentbricks deployments stop` / `start` with the name |
 | Delete the app and its Runtime Store | `agentbricks deployments delete agent-bricks-my-agent` |
 
@@ -130,18 +132,19 @@ A deployed agent runs as the **service principal of its app**. Each tool call ru
 
 ### What deploy grants
 
-`agentbricks deploy` grants the app's service principal access to the agent's memory and session stores and gives it ownership of the Runtime Store. It also grants access to the resources that app-identity tools declare directly in `agent.toml`, such as a Unity Catalog function, a Genie Agent space, or a sandbox's table, volume, and workspace path scopes.
+`agentbricks deploy` grants the app's service principal access to the agent's memory and session stores and gives it ownership of the Runtime Store. It also grants access to the resources that app-identity tools declare directly in `agent.toml`, such as a Unity Catalog function, a Genie Agent space, or a sandbox's table and volume scopes. After the rollout, it grants access to any model services and prompts the agent binds.
 
 - Deploy grants only resources that `agent.toml` declares directly. Grant access to anything those resources use yourself, such as the tables behind a Genie Agent or the objects a Unity Catalog function reads, when the tool runs as the service principal.
 - The user or service principal that runs `agentbricks deploy` needs permission to create or manage the app, the declared stores, and the MLflow experiment, and to grant the resources that app-identity tools declare. If your tools need new Databricks Apps user scopes, pass `--allow-user-scope-update`.
 
 ### Which identity a tool uses
 
-| Tool                                            | Runs as by default                    | To change it                                 |
-| ----------------------------------------------- | ------------------------------------- | -------------------------------------------- |
-| MCP service, sandbox, Genie One, or Genie Agent | The requesting user (`auth = "user"`) | Pass `--auth app` to `agentbricks tools add` |
-| Unity Catalog function                          | The app's service principal           | Can't run as the user                        |
-| Your own code                                   | The app's service principal           | Declare `[auth.user]` (see below)            |
+| Tool                                                                    | Runs as by default                    | To change it                                 |
+| ----------------------------------------------------------------------- | ------------------------------------- | -------------------------------------------- |
+| MCP service, sandbox, Genie One, Genie Agent, or Unity Catalog function | The requesting user (`auth = "user"`) | Pass `--auth app` to `agentbricks tools add` |
+| Your own code                                                           | The app's service principal           | Declare `[auth.user]` (see below)            |
+
+The default comes from `agentbricks tools add`. A tool declared in `agent.toml` without an `auth` value runs as the app's service principal.
 
 Tools that run as the user need no grants for the service principal: each call uses the requesting user's own permissions.
 

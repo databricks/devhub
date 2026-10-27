@@ -83,11 +83,11 @@ To manage sandboxes, use `databricks sandbox list`, `stop`, `start`, and `delete
 ## What a sandbox keeps
 
 - **Home directory:** `/home/sandbox-agent` persists across stops and starts until you delete the sandbox. Keep installed packages, repositories, and configuration here, because the environment outside it resets.
-- **Everything else:** files outside the home directory, including `/tmp`, are deleted when the sandbox stops.
+- **Everything else:** files outside the home directory, including `/tmp`, are deleted when the sandbox stops. To start every sandbox with the same packages, [create it with the SDK from a custom image](https://docs.databricks.com/aws/en/compute/serverless/sandbox-custom-image) stored in Databricks Artifact Registry. You can't connect over SSH to a sandbox created with the SDK.
 - **Network:** outbound access is open and not configurable, and inbound access is closed.
 - **Compute:** each sandbox has 4 vCPUs and 8 GB of RAM. The size isn't configurable.
 
-A stopped sandbox still stores its home directory, so delete sandboxes you no longer need. For storage limits, quotas, and pricing, see [Databricks Sandbox](https://docs.databricks.com/aws/en/compute/serverless/sandbox#limitations).
+A stopped sandbox still stores its home directory, so delete sandboxes you no longer need. See the Databricks docs for sandbox [storage limits](https://docs.databricks.com/aws/en/compute/serverless/sandbox#storage), [quotas](https://docs.databricks.com/aws/en/compute/serverless/sandbox#limitations), and [pricing](https://docs.databricks.com/aws/en/compute/serverless/sandbox#usage-costs).
 
 ## Where to next
 

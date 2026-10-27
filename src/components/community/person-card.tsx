@@ -79,6 +79,66 @@ function PersonLinks({
   );
 }
 
+export function PersonPhotoFilters() {
+  return (
+    <svg
+      aria-hidden="true"
+      focusable="false"
+      className="pointer-events-none absolute size-0"
+    >
+      <defs>
+        <filter
+          id="community-portrait-crt-lines"
+          x="0%"
+          y="0%"
+          width="100%"
+          height="100%"
+          colorInterpolationFilters="sRGB"
+        >
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.025 0.8"
+            numOctaves="2"
+            seed="11"
+            stitchTiles="stitch"
+            result="noise"
+          />
+          <feDisplacementMap
+            in="SourceGraphic"
+            in2="noise"
+            scale="0.65"
+            xChannelSelector="R"
+            yChannelSelector="G"
+          />
+        </filter>
+        <filter
+          id="community-portrait-crt-grain"
+          x="0%"
+          y="0%"
+          width="100%"
+          height="100%"
+          colorInterpolationFilters="sRGB"
+        >
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.9"
+            numOctaves="3"
+            seed="7"
+            stitchTiles="stitch"
+          />
+          <feColorMatrix type="saturate" values="0" />
+          <feComponentTransfer>
+            <feFuncR type="linear" slope="3" intercept="-1" />
+            <feFuncG type="linear" slope="3" intercept="-1" />
+            <feFuncB type="linear" slope="3" intercept="-1" />
+          </feComponentTransfer>
+          <feColorMatrix type="luminanceToAlpha" />
+        </filter>
+      </defs>
+    </svg>
+  );
+}
+
 function PersonPhoto({
   person,
   className,
@@ -91,20 +151,38 @@ function PersonPhoto({
   return (
     <div
       className={cn(
-        "aspect-square w-full overflow-hidden bg-black/5",
+        "relative isolate aspect-square w-full overflow-hidden bg-black/5",
         className,
       )}
     >
       {person.photoUrl ? (
-        <img
-          src={person.photoUrl}
-          alt={person.name}
-          width={352}
-          height={352}
-          loading={eager ? "eager" : "lazy"}
-          decoding="async"
-          className="h-full w-full object-cover object-top grayscale"
-        />
+        <>
+          <img
+            src={person.photoUrl}
+            alt={person.name}
+            width={352}
+            height={352}
+            loading={eager ? "eager" : "lazy"}
+            decoding="async"
+            className="h-full w-full object-cover object-top"
+          />
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 bg-black/5"
+          />
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 bg-[repeating-linear-gradient(0deg,transparent_0_1.4px,var(--grey-8)_1.65px,var(--black)_2.95px,transparent_3.4px)] mask-[radial-gradient(ellipse_80%_75%_at_50%_45%,black_55%,transparent_100%)] opacity-12 mix-blend-darken filter-[url(#community-portrait-crt-lines)] transition-opacity duration-300 group-hover:opacity-16 group-focus-visible:opacity-16"
+          />
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 opacity-9 filter-[url(#community-portrait-crt-grain)]"
+          />
+          <span
+            aria-hidden="true"
+            className="via-db-paper/15 pointer-events-none absolute inset-0 bg-linear-to-b from-transparent to-transparent opacity-0 motion-safe:group-hover:animate-[portrait-crt-sweep_700ms_ease-out_both] motion-safe:group-focus-visible:animate-[portrait-crt-sweep_700ms_ease-out_both]"
+          />
+        </>
       ) : (
         <img
           src="/img/community/default-avatar.svg"

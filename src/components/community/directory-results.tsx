@@ -31,7 +31,10 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { DirectoryFilters } from "@/components/community/directory-filters";
-import { PersonCard } from "@/components/community/person-card";
+import {
+  PersonCard,
+  PersonPhotoFilters,
+} from "@/components/community/person-card";
 
 function subscribe(onChange: () => void) {
   window.addEventListener("popstate", onChange);
@@ -216,6 +219,7 @@ export function DirectoryResults({
       tabIndex={-1}
       className="mx-auto max-w-7xl scroll-mt-16 px-5 pt-16 outline-none md:px-8 lg:pt-22"
     >
+      <PersonPhotoFilters />
       <DirectoryFilters
         kind={kind}
         params={params}

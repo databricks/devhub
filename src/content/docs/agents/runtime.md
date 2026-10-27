@@ -7,7 +7,9 @@ sourceOfTruth:
     - https://docs.databricks.com/aws/en/agents/
     - https://github.com/databricks/databricks-ai-bridge/blob/main/integrations/agentbricks/src/databricks_agentkit/runtime/README.md
     - https://github.com/databricks/databricks-ai-bridge/blob/main/integrations/agentbricks/README.md
-  note: "No agent skill covers the agent runtime or DurableAgentServer. Handler, run state, and recovery behavior follow the databricks_agentkit runtime guide. CLI commands follow the agentbricks README."
+    - https://github.com/databricks/databricks-ai-bridge/blob/main/integrations/agentbricks/cli.md
+    - https://docs.databricks.com/aws/en/agents/custom-agents/agent-authentication
+  note: "No agent skill covers the agent runtime or DurableAgentServer. Handler, run state, and recovery behavior follow the databricks_agentkit runtime guide. CLI commands and flags follow the agentbricks README and cli.md. Tool identity defaults and deploy grant order follow the agentbricks CLI source, which outranks the canonical agent-authentication page when they disagree."
 ---
 
 # Deploy agents on the agent runtime

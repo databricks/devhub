@@ -6,6 +6,8 @@ sourceOfTruth:
   docs:
     - https://github.com/databricks/databricks-ai-bridge/blob/main/integrations/agentbricks/README.md
     - https://github.com/databricks/databricks-ai-bridge/blob/main/integrations/agentbricks/cli.md
+    - https://docs.databricks.com/aws/en/dev-tools/databricks-apps/connect-local
+    - https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/
   note: "The Agent Bricks CLI (agentbricks / databricks-agentbricks) is an experimental CLI in the databricks/databricks-ai-bridge repo (integrations/agentbricks). The README and cli.md there are the canonical, always-current reference; keep this page in sync with them."
 ---
 

@@ -6,8 +6,12 @@ sourceOfTruth:
   docs:
     - https://docs.databricks.com/aws/en/agents/custom-agents/stateful-agents
     - https://docs.databricks.com/aws/en/agents/agent-memory/memory-pipelines
+    - https://docs.databricks.com/aws/en/agents/agent-memory/managed-memory
+    - https://docs.databricks.com/aws/en/agents/agent-memory/managed-sessions
     - https://github.com/databricks/databricks-ai-bridge/blob/main/integrations/agentbricks/README.md#memory-and-sessions
-  note: "No agent skill covers managed memory, sessions, or memory pipelines yet. Product behavior and limits are owned by the canonical docs. CLI, AgentKit SDK, adapter, and REST details are verified against the databricks-agentbricks source and a live workspace. Memory pipeline commands need databricks-agentbricks 0.5.0+."
+    - https://github.com/databricks/databricks-ai-bridge/blob/main/integrations/agentbricks/cli.md
+    - https://github.com/databricks/databricks-ai-bridge/blob/main/integrations/agentbricks/src/databricks_agentbricks/templates/agent-langgraph/AGENTKIT_CONTRACT.md
+  note: "No agent skill covers managed memory, sessions, or memory pipelines yet. Product behavior and limits, including search ranking, are owned by the canonical managed-memory and managed-sessions docs. The invocation request shape (top-level session_id, actor in input) follows AGENTKIT_CONTRACT.md. CLI, AgentKit SDK, adapter, and REST details are verified against the databricks-agentbricks source and a live workspace. Memory pipeline commands need databricks-agentbricks 0.5.0+; the forget and list_memories memory tools need 0.6.0+."
 ---
 
 # Agent memory and sessions

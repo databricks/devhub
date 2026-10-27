@@ -7,7 +7,8 @@ sourceOfTruth:
     - https://docs.databricks.com/aws/en/compute/serverless/sandbox
     - https://docs.databricks.com/aws/en/compute/serverless/sandbox-usage-guide
     - https://docs.databricks.com/aws/en/dev-tools/cli/reference/sandbox-commands
-  note: "No agent skill covers Databricks Sandbox yet. Size, storage, quotas, region support, and pricing are owned by the canonical docs. SDK and CLI behavior was verified against databricks-sdk and Databricks CLI v1.17 in a live workspace."
+    - https://docs.databricks.com/aws/en/compute/serverless/sandbox-custom-image
+  note: "No agent skill covers Databricks Sandbox yet. Size, storage, quotas, region support, pricing, and custom images are owned by the canonical docs. SDK and CLI behavior was verified against databricks-sdk and Databricks CLI v1.17 in a live workspace; CLI commands were rechecked against v1.18 help."
 ---
 
 # Databricks Sandbox

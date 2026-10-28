@@ -8,6 +8,8 @@ sourceOfTruth:
   docs:
     - /docs/appkit/v0/plugins/lakebase
     - https://docs.databricks.com/aws/en/oltp/
+    - https://docs.databricks.com/aws/en/dev-tools/databricks-apps/lakebase
+    - https://docs.databricks.com/aws/en/oltp/projects/ltap-overview
 ---
 
 # What is Lakebase Postgres?
@@ -21,13 +23,14 @@ This page is the AppKit view of Lakebase. For Lakebase Postgres itself (projects
 ## What makes it different from running your own Postgres
 
 - **Runs inside your workspace**, eliminating VPC peering, cross-cloud credential management, and network latency.
-- **Instant branching** via copy-on-write storage creates isolated database copies in seconds, similar to git branches. Branches share unchanged data so they're cheap to create and maintain.
+- **Instant branching** via copy-on-write storage creates isolated database copies in seconds, similar to git branches. Branches share unchanged data, and a branch with an expiration is billed for storage only on what changes.
 - **Autoscales** with your workload, scaling up under load and back down when demand drops, within a configured min/max range. No capacity planning or manual resize.
 - **Scales to zero** when idle and resumes on the next query. No cost for idle compute. The inactivity timeout defaults to 24 hours and can be set anywhere from 60 seconds to 7 days.
+- **Connects to the lakehouse without ETL** through [LTAP](https://docs.databricks.com/aws/en/oltp/projects/ltap-overview): query Lakebase tables from the lakehouse through Unity Catalog, serve lakehouse tables in Lakebase with synced tables, and stream changes to Delta tables. Capabilities vary by cloud.
 
 ## How AppKit wires it up
 
-Add the `lakebase()` plugin to `createApp` and the plugin sets up a `pg.Pool` with automatic OAuth token refresh:
+Add the `lakebase()` plugin to `createApp` and the plugin sets up a `pg.Pool`-compatible pool with automatic OAuth token refresh:
 
 ```typescript
 import { createApp, lakebase, server } from "@databricks/appkit";
@@ -36,10 +39,10 @@ const AppKit = await createApp({
   plugins: [server(), lakebase()],
 });
 
-// Standard pg.Pool query
+// pg.Pool-style query
 const { rows } = await AppKit.lakebase.query("SELECT * FROM app.items");
 
-// ORM-ready config (Drizzle, Prisma, etc.)
+// Connection parameters for ORMs such as TypeORM and Sequelize (for Drizzle, pass AppKit.lakebase.pool)
 const ormConfig = AppKit.lakebase.getOrmConfig();
 ```
 

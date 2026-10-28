@@ -125,8 +125,11 @@ describe("Scaffold base app (no features)", { timeout: 120_000 }, () => {
 
   test("app.yaml has correct command", () => {
     const appYaml = readFileSync(resolve(appDir, "app.yaml"), "utf-8");
-    expect(appYaml).toContain("npm");
-    expect(appYaml).toContain("start");
+    const { packageManager = "npm" } = JSON.parse(
+      readFileSync(resolve(appDir, "package.json"), "utf-8"),
+    ) as { packageManager?: string };
+    const manager = packageManager.split("@")[0];
+    expect(appYaml).toContain(`['${manager}', 'run', 'start']`);
     console.log("[apps] app.yaml:", appYaml.trim());
   });
 
@@ -147,7 +150,7 @@ describe("Scaffold base app (no features)", { timeout: 120_000 }, () => {
     console.log("[apps] server.ts:", serverTs.trim());
   });
 
-  test("npm install and build succeed", () => {
+  test("install and build succeed", () => {
     installAndBuild(appDir);
     expect(existsSync(resolve(appDir, "node_modules"))).toBe(true);
     expect(existsSync(resolve(appDir, "dist"))).toBe(true);
@@ -223,7 +226,7 @@ describe("Scaffold app with Lakebase feature", { timeout: 120_000 }, () => {
     console.log("[apps+lakebase] LakebasePage.tsx exists with API calls");
   });
 
-  test("npm install and build succeed", () => {
+  test("install and build succeed", () => {
     installAndBuild(appDir);
     expect(existsSync(resolve(appDir, "node_modules"))).toBe(true);
     expect(existsSync(resolve(appDir, "dist"))).toBe(true);

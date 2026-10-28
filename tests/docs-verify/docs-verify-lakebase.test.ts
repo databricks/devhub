@@ -449,6 +449,57 @@ describe("Lakebase workflow", { timeout: 600_000 }, () => {
     console.log("[lakebase] deleted branch:", branch.name);
   });
 
+  // Create a branch with `--ttl`, check expire_time lands about `ttlMs` out,
+  // and always delete it, even if an assertion fails.
+  function checkTtlBranch(branchId: string, createArgs: string, ttlMs: number) {
+    const before = Date.now();
+    const branch = cliJson<{ name: string; status: { expire_time?: string } }>(
+      `postgres create-branch projects/${PROJECT_ID} ${branchId} ${createArgs}`,
+      PROFILE,
+      { timeoutMs: 180_000 },
+    );
+    console.log("[lakebase] created --ttl branch:", branch.name);
+
+    try {
+      expect(branch.status.expire_time).toBeTruthy();
+      const expiresInMs = Date.parse(branch.status.expire_time!) - before;
+      const toleranceMs = 60 * 60 * 1000;
+      expect(expiresInMs).toBeGreaterThan(ttlMs - toleranceMs);
+      expect(expiresInMs).toBeLessThan(ttlMs + toleranceMs);
+      console.log("[lakebase] branch expire_time:", branch.status.expire_time);
+    } finally {
+      retry(
+        () =>
+          cli(`postgres delete-branch ${branch.name}`, PROFILE, {
+            timeoutMs: 120_000,
+          }),
+        {
+          attempts: 6,
+          delayMs: 10_000,
+          retryIf: (err) =>
+            err.message.includes("reconciliation") || isTransient(err),
+        },
+      );
+      console.log("[lakebase] deleted branch:", branch.name);
+    }
+  }
+
+  const DAY_MS = 24 * 60 * 60 * 1000;
+
+  test("create branch with --json source_branch and --ttl 1d sets an expiration", () => {
+    checkTtlBranch(
+      `ttl-test-${TEST_RUN_ID}`,
+      `--json '${JSON.stringify({
+        spec: { source_branch: `projects/${PROJECT_ID}/branches/production` },
+      })}' --ttl 1d`,
+      DAY_MS,
+    );
+  });
+
+  test("create branch with --ttl 7d only (docs Common example)", () => {
+    checkTtlBranch(`ttl7-test-${TEST_RUN_ID}`, "--ttl 7d", 7 * DAY_MS);
+  });
+
   test("create read-only endpoint", () => {
     const ep = cliJson<{
       name: string;

@@ -15,17 +15,11 @@ const MANIFEST_URL =
 
 const SKILL_NAME_PATTERN = /`(databricks-[\w-]+)`/g;
 
-// Temporarily excluded from the upstream-sync check because they exist in the repo's main
-// manifest but NOT in the shipped CLI catalog (`databricks aitools list`, bundle v0.2.10 as of
-// CLI 1.16.1) — so they aren't installable, and the auto-generated page (which tracks the CLI
-// catalog) correctly omits them. `databricks-genie` -> `databricks-genie-agents` is a rename;
-// `databricks-setup-local` is a new skill not yet released to the catalog. Remove each entry
+// Skills to exclude from the upstream-sync check while they exist in the repo's main manifest
+// but NOT yet in the shipped CLI catalog (`databricks aitools list`). The auto-generated page
+// tracks the CLI catalog, so it correctly omits them. Empty as of CLI 1.22.1; remove each entry
 // once the CLI catalog ships it.
-const CLI_CATALOG_LAG_SKIP = new Set([
-  "databricks-genie",
-  "databricks-genie-agents",
-  "databricks-setup-local",
-]);
+const CLI_CATALOG_LAG_SKIP = new Set<string>();
 
 describe("agent-skills page stays in sync with upstream", () => {
   let manifest: Record<string, { experimental?: boolean }>;

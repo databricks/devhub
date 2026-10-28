@@ -175,7 +175,7 @@ databricks postgres create-branch \
 
 <!-- /cli-options -->
 
-A `primary` read-write endpoint is created automatically, inheriting the project's `default_endpoint_settings`. Branches require an expiration policy: pass `--ttl` or `--no-expiry`, or set `ttl`, `expire_time`, or `no_expiry` in `--json`. Give feature branches a `--ttl`, because storage billing depends on expiration. A branch with an expiration is billed only for the data that changes on it, while a branch with no expiration is billed for its full data size. [Branch expiration](https://docs.databricks.com/aws/en/oltp/projects/manage-branches#expiration) details the available policies.
+A `primary` read-write endpoint is created automatically, inheriting the project's `default_endpoint_settings`. Branches require an expiration policy: pass `--ttl` or `--no-expiry`, or set `ttl`, `expire_time`, or `no_expiry` in `--json`. The `--ttl` and `--no-expiry` flags need Databricks CLI v1.19.0 or later. Give feature branches a `--ttl`, because storage billing depends on expiration. A branch with an expiration is billed only for the data that changes on it, while a branch with no expiration is billed for its full data size. [Branch expiration](https://docs.databricks.com/aws/en/oltp/projects/manage-branches#expiration) details the available policies.
 
 Delete when done:
 

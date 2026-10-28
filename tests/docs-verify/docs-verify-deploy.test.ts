@@ -72,14 +72,36 @@ describe("Scaffold and build", { timeout: 180_000 }, () => {
 });
 
 describe("Deploy to workspace", { timeout: 1_200_000 }, () => {
-  test("databricks apps deploy succeeds", () => {
-    cli("apps deploy --skip-validation", PROFILE, {
-      cwd: appDir,
-      timeoutMs: 1_200_000,
-    });
+  // A shared workspace can hit its per-workspace app ceiling. That's an
+  // environmental limit, not a docs or CLI regression, so we skip the deploy
+  // verification and its dependent checks rather than failing the suite.
+  let deploySkipped = false;
+
+  test("databricks apps deploy succeeds", (ctx) => {
+    try {
+      cli("apps deploy --skip-validation", PROFILE, {
+        cwd: appDir,
+        timeoutMs: 1_200_000,
+      });
+    } catch (e) {
+      const message = (e as Error).message;
+      if (/maximum limit of \d+ apps/.test(message)) {
+        deploySkipped = true;
+        console.warn(
+          `[deploy] workspace at app capacity, skipping deploy verification:\n${message}`,
+        );
+        ctx.skip();
+        return;
+      }
+      throw e;
+    }
   });
 
-  test("databricks apps get shows app status", () => {
+  test("databricks apps get shows app status", (ctx) => {
+    if (deploySkipped) {
+      ctx.skip();
+      return;
+    }
     const app = cliJson<{
       name: string;
       url: string;
@@ -99,7 +121,11 @@ describe("Deploy to workspace", { timeout: 1_200_000 }, () => {
     expect(app.url).toBeTruthy();
   });
 
-  test("databricks apps logs returns output", () => {
+  test("databricks apps logs returns output", (ctx) => {
+    if (deploySkipped) {
+      ctx.skip();
+      return;
+    }
     const output = cli(`apps logs ${APP_NAME} --tail-lines 20`, PROFILE, {
       timeoutMs: 30_000,
     });

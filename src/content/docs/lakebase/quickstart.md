@@ -53,7 +53,7 @@ The ID becomes the project's resource name (`projects/<project-id>`). For a guid
 databricks apps init
 ```
 
-The CLI prompts for your app name, then lists the available plugins (features). Select **Lakebase**, and it walks you through choosing an existing Lakebase project, branch, and database.
+The CLI prompts for your app name, then lists the available plugins (features). Select **Lakebase**, and it walks you through choosing an existing Lakebase project, branch, and database. If it asks for a default resource auth mode, either choice sets up the Lakebase resource the same way: the deployed app connects to Lakebase Postgres as its service principal. The choice still applies to other plugins you select.
 
 **Non-interactive** (for scripts and CI): pass `--name` and the required `--set` fields for each selected plugin feature. The `database` value must be the full resource path, retrieved via `databricks postgres list-databases projects/<project-id>/branches/<branch-id> -o json` (use the `name` field):
 
@@ -64,7 +64,7 @@ databricks apps init --name my-app --features lakebase \
   --set lakebase.postgres.database=projects/<project-id>/branches/<branch-id>/databases/<database-id>
 ```
 
-Then deploy first to create the schemas, and run locally:
+Then deploy first to create the schema, and run locally:
 
 ```bash
 cd my-app
@@ -75,8 +75,10 @@ databricks apps deploy
 Execute `databricks apps deploy` before `npm run dev`. Deploying sets up a managed identity (the app's service principal) that creates the database schema on first startup. If you start `npm run dev` first instead, the schema gets created under your personal credentials, and when you later deploy the app's managed identity can't access it. [Local setup](/docs/lakebase/development#local-setup) explains this further.
 :::
 
+`databricks apps init` installs the project's dependencies (unless you pass `--skip-install`), so start the local dev server:
+
 ```bash
-npm install && npm run dev
+npm run dev
 ```
 
 ## Where to next

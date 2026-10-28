@@ -7,6 +7,8 @@ sourceOfTruth:
   docs:
     - /docs/appkit/v0/plugins/lakebase
     - https://docs.databricks.com/aws/en/oltp/projects/manage-projects
+    - https://docs.databricks.com/aws/en/oltp/projects/branches
+    - https://docs.databricks.com/aws/en/oltp/projects/manage-branches
 ---
 
 # Lakebase Postgres configuration
@@ -69,11 +71,11 @@ The [`postgres` CLI reference](https://docs.databricks.com/aws/en/oltp/projects/
 
 ## Branching
 
-Branches create isolated database environments. When you branch, Lakebase Postgres copies the source branch's schema and data via copy-on-write. New branches are instant and you only pay for data you change.
+Branches create isolated database environments. When you branch, Lakebase Postgres copies the source branch's schema and data via copy-on-write. New branches are instant. For storage, a branch with an expiration is billed only for the data that changes on it, while a branch with no expiration is billed for its full data size. Compute is billed separately.
 
 Each new branch gets a `primary` read-write endpoint at `projects/{project_id}/branches/{branch_id}/endpoints/primary`, inheriting the project's `default_endpoint_settings`. Use `create-endpoint` to add read replicas (`ENDPOINT_TYPE_READ_ONLY`).
 
-Branches require an expiration policy (`ttl`, `expire_time`, or `no_expiry: true`). [Branch expiration](https://docs.databricks.com/aws/en/oltp/projects/manage-branches#expiration) details all options. For CLI commands, [Feature branches](/docs/lakebase/development#feature-branches) has examples.
+Branches require an expiration policy: pass `--ttl` or `--no-expiry`, or set `ttl`, `expire_time`, or `no_expiry` in `--json`. [Branch expiration](https://docs.databricks.com/aws/en/oltp/projects/manage-branches#expiration) details all options. For CLI commands, [Feature branches](/docs/lakebase/development#feature-branches) has examples.
 
 :::note
 Project, branch, endpoint, and database IDs must be 1-63 characters, start with a lowercase letter, and contain only lowercase letters, numbers, and hyphens.

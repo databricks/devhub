@@ -70,7 +70,6 @@ databricks apps manifest
 databricks apps manifest \
   --template $TEMPLATE_URL \
   --branch $BRANCH \
-  --version $APPKIT_VERSION \
   --debug \
   -o json \
   --target $TARGET \
@@ -105,6 +104,8 @@ databricks apps init --name my-app
 databricks apps init \
   --name $APP_NAME \
   --features lakebase,analytics \
+  --auth-mode sp \
+  --package-manager npm \
   --set lakebase.postgres.project=projects/$PROJECT_ID \
   --set lakebase.postgres.branch=projects/$PROJECT_ID/branches/production \
   --set lakebase.postgres.database=projects/$PROJECT_ID/branches/production/databases/$DB_NAME \
@@ -115,8 +116,6 @@ databricks apps init \
   --branch $BRANCH \
   --deploy \
   --run none \
-  --skip-install \
-  --version $APPKIT_VERSION \
   --debug \
   -o json \
   --target $TARGET \
@@ -126,23 +125,25 @@ databricks apps init \
 
 <!-- cli-options:apps init -->
 
-| Option            | Description                                                                                       |
-| ----------------- | ------------------------------------------------------------------------------------------------- |
-| `--branch`        | Git branch or tag (for GitHub templates, mutually exclusive with --version)                       |
-| `--deploy`        | Deploy the app after creation                                                                     |
-| `--description`   | App description                                                                                   |
-| `--features`      | Features/plugins to enable (comma-separated, as defined in template manifest)                     |
-| `--output-dir`    | Directory to write the project to                                                                 |
-| `--run`           | Run the app after creation (none, dev, dev-remote)                                                |
-| `--set`           | Set resource values (format: plugin.resourceKey.field=value, can specify multiple)                |
-| `--skip-install`  | Skip installing project dependencies (e.g. npm install / uv sync). Cannot be combined with --run. |
-| `--template`      | Template path (local directory or GitHub URL)                                                     |
-| `--version`       | AppKit version to use (default: auto-detected, use 'latest' for main branch)                      |
-| `--debug`         | enable debug logging                                                                              |
-| `--output`, `-o`  | output type: text or json (default text)                                                          |
-| `--profile`, `-p` | ~/.databrickscfg profile                                                                          |
-| `--target`, `-t`  | bundle target to use (if applicable)                                                              |
-| `--var`           | set values for variables defined in bundle config. Example: --var="key=value"                     |
+| Option              | Description                                                                                                                                                                                                             |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--auth-mode`       | Default resource auth mode: obo (on behalf of the user) or sp (service principal). With obo, resources that cannot be accessed on behalf of the user use sp. Prompts if not provided in interactive mode, otherwise sp. |
+| `--branch`          | Git branch or tag (for GitHub templates, mutually exclusive with --version)                                                                                                                                             |
+| `--deploy`          | Deploy the app after creation                                                                                                                                                                                           |
+| `--description`     | App description                                                                                                                                                                                                         |
+| `--features`        | Features/plugins to enable (comma-separated, as defined in template manifest)                                                                                                                                           |
+| `--output-dir`      | Directory to write the project to                                                                                                                                                                                       |
+| `--package-manager` | Node.js package manager (pnpm, npm; default: inferred from template)                                                                                                                                                    |
+| `--run`             | Run the app after creation (none, dev, dev-remote)                                                                                                                                                                      |
+| `--set`             | Set resource values (format: plugin.resourceKey.field=value, can specify multiple)                                                                                                                                      |
+| `--skip-install`    | Skip installing project dependencies (e.g. npm install / uv sync). Cannot be combined with --run.                                                                                                                       |
+| `--template`        | Template path (local directory or GitHub URL)                                                                                                                                                                           |
+| `--version`         | AppKit version to use (default: auto-detected, use 'latest' for main branch)                                                                                                                                            |
+| `--debug`           | enable debug logging                                                                                                                                                                                                    |
+| `--output`, `-o`    | output type: text or json (default text)                                                                                                                                                                                |
+| `--profile`, `-p`   | ~/.databrickscfg profile                                                                                                                                                                                                |
+| `--target`, `-t`    | bundle target to use (if applicable)                                                                                                                                                                                    |
+| `--var`             | set values for variables defined in bundle config. Example: --var="key=value"                                                                                                                                           |
 
 <!-- /cli-options -->
 

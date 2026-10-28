@@ -8,6 +8,10 @@ sourceOfTruth:
   docs:
     - /docs/appkit/v0/plugins/lakebase
     - https://docs.databricks.com/aws/en/oltp/
+    - https://docs.databricks.com/aws/en/oltp/projects/cli
+    - https://docs.databricks.com/aws/en/oltp/projects/branches
+    - https://docs.databricks.com/aws/en/dev-tools/databricks-apps/lakebase
+  note: "AppKit lakebase() behavior (pool identity, getOrmConfig keys) is verified against the published @databricks/appkit (0.89.0, and 0.84.0, which the default template pins) and @databricks/lakebase (0.7.0) package source. CLI commands and flags follow the installed Databricks CLI; the cli-options tables are generated with pnpm docs:cli-sync."
 ---
 
 # Lakebase Postgres development
@@ -16,7 +20,7 @@ This page covers developing against Lakebase Postgres from an AppKit app. For La
 
 ## AppKit plugin API
 
-The `lakebase()` plugin provides a standard `pg.Pool` with automatic OAuth token refresh. Once registered, access it via `AppKit.lakebase`:
+The `lakebase()` plugin provides a `pg.Pool`-compatible pool with automatic OAuth token refresh. Once registered, access it via `AppKit.lakebase`:
 
 ```typescript
 import { createApp, lakebase, server } from "@databricks/appkit";
@@ -31,14 +35,14 @@ const { rows } = await AppKit.lakebase.query<{ id: number; name: string }>(
   [true],
 );
 
-// ORM-ready config (Drizzle, Prisma, TypeORM, etc.)
+// Connection parameters for ORMs such as TypeORM and Sequelize (for Drizzle, pass AppKit.lakebase.pool)
 const ormConfig = AppKit.lakebase.getOrmConfig();
-// Returns: { host, port, database, ssl, user, ... }
+// Returns: { host, port, database, ssl, username, password, ... }
 
 // pg-compatible config
 const pgConfig = AppKit.lakebase.getPgConfig();
 
-// Raw pg.Pool for advanced usage
+// pg.Pool-compatible pool for advanced usage
 const pool = AppKit.lakebase.pool;
 ```
 
@@ -56,7 +60,7 @@ lakebase({
 });
 ```
 
-The `max: 10` default applies to the shared service-principal pool. Per-user on-behalf-of pools (created by `asUser(req)`) default to `max: 3`.
+When deployed, Lakebase calls run as the app's service principal by default. Lakebase Postgres is an app-only resource in AppKit, so Lakebase calls inside an `appkit.asUser(req)` or `runInCallerContext` scope are rejected, including Lakebase agent tools that run in one. The deprecated plugin-level `asUser(req)` and `runInUserContext` still use per-user connections. See [On-Behalf-Of (OBO)](/docs/appkit/v0/plugins/lakebase#on-behalf-of-obo--per-user-connections).
 
 ### Caching integration
 
@@ -136,14 +140,15 @@ Use Lakebase Postgres branches to isolate schema changes and test migrations wit
 
 ```bash title="Common"
 databricks postgres create-branch projects/my-project feature-xyz \
-  --json '{"spec": {"no_expiry": true}}'
+  --ttl 7d
 ```
 
 ```bash title="All Options"
 databricks postgres create-branch \
   projects/$PROJECT_ID \
   $BRANCH_ID \
-  --json '{"spec": {"source_branch": "projects/$PROJECT_ID/branches/$SOURCE_BRANCH_ID", "no_expiry": true}}' \
+  --json "{\"spec\": {\"source_branch\": \"projects/$PROJECT_ID/branches/$SOURCE_BRANCH_ID\"}}" \
+  --ttl 7d \
   --replace-existing \
   --debug \
   -o json \
@@ -155,20 +160,22 @@ databricks postgres create-branch \
 
 <!-- cli-options:postgres create-branch -->
 
-| Option               | Description                                                                                |
-| -------------------- | ------------------------------------------------------------------------------------------ |
-| `--json`             | either inline JSON string or @path/to/file.json with request body (default JSON (0 bytes)) |
-| `--no-wait`          | do not wait to reach DONE state                                                            |
-| `--replace-existing` | If true, update the branch if it already exists instead of returning an error.             |
-| `--timeout`          | maximum amount of time to reach DONE state                                                 |
-| `--debug`            | enable debug logging                                                                       |
-| `--output`, `-o`     | output type: text or json (default text)                                                   |
-| `--profile`, `-p`    | ~/.databrickscfg profile                                                                   |
-| `--target`, `-t`     | bundle target to use (if applicable)                                                       |
+| Option               | Description                                                                                                       |
+| -------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `--json`             | either inline JSON string or @path/to/file.json with request body (default JSON (0 bytes))                        |
+| `--no-expiry`        | Create the branch with no expiration. Required unless --ttl.                                                      |
+| `--no-wait`          | do not wait to reach DONE state                                                                                   |
+| `--replace-existing` | If true, update the branch if it already exists instead of returning an error.                                    |
+| `--timeout`          | maximum amount of time to reach DONE state                                                                        |
+| `--ttl`              | Relative time-to-live before the branch expires, e.g. 604800s, 168h, or 7d (7 days). Required unless --no-expiry. |
+| `--debug`            | enable debug logging                                                                                              |
+| `--output`, `-o`     | output type: text or json (default text)                                                                          |
+| `--profile`, `-p`    | ~/.databrickscfg profile                                                                                          |
+| `--target`, `-t`     | bundle target to use (if applicable)                                                                              |
 
 <!-- /cli-options -->
 
-A `primary` read-write endpoint is created automatically, inheriting the project's `default_endpoint_settings`. Branches require an expiration policy (`ttl`, `expire_time`, or `no_expiry: true`). [Branch expiration](https://docs.databricks.com/aws/en/oltp/projects/manage-branches#expiration) details the available policies.
+A `primary` read-write endpoint is created automatically, inheriting the project's `default_endpoint_settings`. Branches require an expiration policy: pass `--ttl` or `--no-expiry`, or set `ttl`, `expire_time`, or `no_expiry` in `--json`. Give feature branches a `--ttl`, because storage billing depends on expiration. A branch with an expiration is billed only for the data that changes on it, while a branch with no expiration is billed for its full data size. [Branch expiration](https://docs.databricks.com/aws/en/oltp/projects/manage-branches#expiration) details the available policies.
 
 Delete when done:
 
@@ -309,7 +316,7 @@ For Databricks Apps configuration issues (resources in `databricks.yml` and `app
 
 - **`permission denied for schema app` (deployed app)**: `npm run dev` ran before `databricks apps deploy`, so the schema is owned by your personal credentials and the app's service principal can't access it. _(PostgreSQL schema ownership is tied to the role that created it and cannot be reassigned by regular users.)_ If you have data to preserve, export it first (`pg_dump` or copy tables to a temporary schema) before dropping. Then drop the schema and redeploy so the SP recreates it on startup: `databricks psql --project <project-id> -- -c "DROP SCHEMA IF EXISTS app CASCADE;"` then `databricks apps deploy`.
 - **`permission denied for schema app` (local dev, collaborator)**: Only the Lakebase project creator gets `databricks_superuser` access automatically. To grant a teammate local access, the creator adds a role for their identity on the branch (**Roles & Databases** in the Lakebase UI), or sets up Postgres password auth. See [About authentication](https://docs.databricks.com/aws/en/oltp/projects/authentication) for the steps.
-- **`Unknown field path in update_mask: 'spec.suspend_timeout_duration'`**: Use `spec.suspension` as the update mask for all endpoint-level suspension changes with `update-endpoint`. To disable scale to zero, pass `{"spec": {"no_suspension": true}}`. To change the timeout, pass `{"spec": {"suspend_timeout_duration": "300s"}}`. Setting `no_suspension: false` is not supported.
+- **Suspension changes with `update-endpoint`**: Use `spec.suspension`, the documented update mask for endpoint-level suspension. If you get `Unknown field path in update_mask: 'spec.suspend_timeout_duration'`, switch to that mask. To disable scale to zero, pass `{"spec": {"no_suspension": true}}`. To change the timeout, pass `{"spec": {"suspend_timeout_duration": "300s"}}`. Setting `no_suspension: false` is not supported.
 - **Connection refused after period of inactivity**: Lakebase Autoscaling scales to zero when idle. The first connection after inactivity triggers a wake-up and may be briefly delayed. If your connection library doesn't retry automatically, add a short retry loop.
 
 ## AppKit docs

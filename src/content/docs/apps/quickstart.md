@@ -57,12 +57,16 @@ AppKit.server.extend((app) => {
 });
 ```
 
-Scaffold, run locally, and deploy:
+Scaffold, deploy, and run locally. Deploy before you run locally so the app's service principal creates and owns the database schema; [Local setup](/docs/lakebase/development#local-setup) explains why.
 
 ```bash
-databricks apps init --name my-app --features lakebase   # generates the project above
-cd my-app && npm install && npm run dev                  # runs locally
-databricks apps deploy                                   # deploys to your workspace
+# Generate the project and install dependencies
+databricks apps init --name my-app --features lakebase \
+  --set lakebase.postgres.project=projects/<project-id> \
+  --set lakebase.postgres.branch=projects/<project-id>/branches/<branch-id> \
+  --set lakebase.postgres.database=projects/<project-id>/branches/<branch-id>/databases/<database-id>
+cd my-app && databricks apps deploy   # deploy to your workspace
+npm run dev                           # run locally
 ```
 
 After deploy, the CLI prints your app's workspace URL.

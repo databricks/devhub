@@ -16,6 +16,7 @@ sourceOfTruth:
 - Databricks CLI `v1.0.0+` with an [authenticated profile](/docs/tools/databricks-cli#authenticate)
 - `psql` (PostgreSQL client) if using `databricks psql`. Alternatively, use [`generate-database-credential`](/docs/lakebase/development#local-database-access) with any PostgreSQL client.
 - Workspace with Lakebase Postgres access enabled
+- [pnpm](https://pnpm.io/installation), which the default AppKit template uses to install dependencies and run scripts
 
 ## Template path
 
@@ -72,13 +73,13 @@ databricks apps deploy
 ```
 
 :::tip
-Execute `databricks apps deploy` before `npm run dev`. Deploying sets up a managed identity (the app's service principal) that creates the database schema on first startup. If you start `npm run dev` first instead, the schema gets created under your personal credentials, and when you later deploy the app's managed identity can't access it. [Local setup](/docs/lakebase/development#local-setup) explains this further.
+Execute `databricks apps deploy` before `pnpm run dev`. Deploying sets up a managed identity (the app's service principal) that creates the database schema on first startup. If you start `pnpm run dev` first instead, the schema gets created under your personal credentials, and when you later deploy the app's managed identity can't access it. [Local setup](/docs/lakebase/development#local-setup) explains this further.
 :::
 
 `databricks apps init` installs the project's dependencies (unless you pass `--skip-install`), so start the local dev server:
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 ## Where to next

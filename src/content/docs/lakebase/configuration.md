@@ -45,7 +45,7 @@ When you register the `lakebase()` plugin in `createApp`, AppKit generates `appk
 npx @databricks/appkit plugin sync --write
 ```
 
-This runs automatically during `npm run dev` and `npm run build`. Commit it alongside your code.
+This runs automatically during `pnpm run dev` and `pnpm run build`. Commit it alongside your code.
 
 The [AppKit configuration](/docs/appkit/v0/configuration) reference covers `app.yaml` plugin resource bindings in detail.
 

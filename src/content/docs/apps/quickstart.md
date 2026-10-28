@@ -66,7 +66,7 @@ databricks apps init --name my-app --features lakebase \
   --set lakebase.postgres.branch=projects/<project-id>/branches/<branch-id> \
   --set lakebase.postgres.database=projects/<project-id>/branches/<branch-id>/databases/<database-id>
 cd my-app && databricks apps deploy   # deploy to your workspace
-npm run dev                           # run locally
+pnpm run dev                          # run locally
 ```
 
 After deploy, the CLI prints your app's workspace URL.

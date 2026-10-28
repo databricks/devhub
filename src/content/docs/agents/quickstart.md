@@ -6,7 +6,7 @@ sourceOfTruth:
   docs:
     - /docs/agents/cli
     - https://github.com/databricks/databricks-ai-bridge/blob/main/integrations/agentbricks/README.md
-  note: "No agent skill covers the Agent Bricks CLI. This page is a trimmed version of the Develop a new agent steps in /docs/agents/cli; keep the two in sync. Commands follow the databricks-ai-bridge agentbricks README."
+  note: "The installable agent skill catalog has no Agent Bricks CLI skill; agentbricks init adds a project-local agent-bricks-workflow skill to new projects. This page is a trimmed version of the Develop a new agent steps in /docs/agents/cli; keep the two in sync. Commands follow the databricks-ai-bridge agentbricks README."
 ---
 
 # Agent Bricks quickstart

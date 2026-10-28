@@ -6,6 +6,8 @@ sourceOfTruth:
   docs:
     - https://github.com/databricks/databricks-ai-bridge/blob/main/integrations/agentbricks/README.md
     - https://github.com/databricks/databricks-ai-bridge/blob/main/integrations/agentbricks/cli.md
+    - https://docs.databricks.com/aws/en/dev-tools/databricks-apps/connect-local
+    - https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/
   note: "The Agent Bricks CLI (agentbricks / databricks-agentbricks) is an experimental CLI in the databricks/databricks-ai-bridge repo (integrations/agentbricks). The README and cli.md there are the canonical, always-current reference; keep this page in sync with them."
 ---
 
@@ -54,7 +56,7 @@ By default, `agentbricks deploy` automatically enables all of the following capa
 | Capability           | Description                                                                                                                                                                                                                                                                                                                                |
 | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | **Model access**     | The CLI provisions model access so your agent can call a Databricks-served model through Unity Gateway without managing credentials or endpoints. See [Foundation Model APIs](https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/).                                                                                 |
-| **Managed memory**   | Durable facts, preferences, and decisions that an agent recalls in later, separate conversations, retrieved by semantic search and partitioned by actor. See [Managed agent memory](https://docs.databricks.com/aws/en/agents/agent-memory/managed-memory).                                                                                |
+| **Managed memory**   | Durable facts, preferences, and decisions that an agent recalls in later, separate conversations, retrieved by natural-language search and partitioned by actor. See [Managed agent memory](https://docs.databricks.com/aws/en/agents/agent-memory/managed-memory).                                                                        |
 | **Managed sessions** | An agent's session state for one interaction, most commonly the conversation transcript, held in managed session stores and partitioned by actor, with support for forking a session into an independent branch. See [Managed agent sessions](https://docs.databricks.com/aws/en/agents/agent-memory/managed-sessions).                    |
 | **Tools**            | Databricks-managed capabilities declared in `agent.toml`: a downscoped Unity Catalog sandbox, a managed MCP service, a Genie Space, or a Unity Catalog function. Write custom Python tools directly in the project code. See [Databricks-provided MCP servers](https://docs.databricks.com/aws/en/agents/mcp-tools/built-in-mcp-services). |
 | **Tracing**          | MLflow tracing that is on by default, routing the deployed agent's traces to a per-project MLflow experiment for debugging and monitoring. See [MLflow Tracing](https://docs.databricks.com/aws/en/mlflow3/genai/tracing/).                                                                                                                |
@@ -91,7 +93,7 @@ To set that profile as the CLI's default so later commands can omit `--profile`,
 agentbricks login --profile <profile>
 ```
 
-`agentbricks login` validates the profile's credentials. If they are missing or rejected, it reruns `databricks auth login` and retries.
+`agentbricks login` validates the profile's credentials. If they are missing or rejected in an interactive terminal, it reruns `databricks auth login` and retries. In a non-interactive shell, such as a coding agent's, it fails instead; run `databricks auth login --profile <profile>` first.
 
 ### Step 2: Scaffold the agent project
 
@@ -102,7 +104,7 @@ agentbricks init --framework langgraph my-agent
 cd my-agent
 ```
 
-`agentbricks init` writes the project's managed resources and tool bindings to `agent.toml`, and declares a default memory store and session store named from the project, so the deployed agent has long-term memory and durable conversation history. Pass `--framework openai` instead to scaffold an OpenAI Agents project. To scaffold the API-only backend without the chat app, add `--disable-chat-app`.
+`agentbricks init` writes the project's managed resources and tool bindings to `agent.toml`, and, with the default `--server agentbricks`, declares a memory store and session store named `<project>-<token>-memory` and `<project>-<token>-sessions`, so the deployed agent has long-term memory and durable conversation history. Pass `--framework openai` instead to scaffold an OpenAI Agents project. To scaffold the API-only backend without the chat app, add `--disable-chat-app`.
 
 To point the agent at stores you already have instead of the defaults, bind them explicitly:
 
@@ -130,7 +132,7 @@ Open the pre-generated chat UI at `http://localhost:8000` to interact with the a
 Tracing is on by default, with nothing to set up:
 
 - **Local:** `agentbricks dev` records traces to a local MLflow server in the project's `.agentbricks/` directory. Open the Traces URL that `agentbricks dev` prints, or the link in the chat UI, to view them.
-- **Deployed:** `agentbricks init` binds a per-project workspace experiment (`/Shared/agentbricks_traces/<project>`) in `agent.toml`. `agentbricks deploy` creates it if needed and sends the deployed agent's traces there.
+- **Deployed:** `agentbricks init` binds a per-project workspace experiment (`/Shared/agentbricks_traces/<project>-<token>`) in `agent.toml`, where `<token>` is a random suffix that `init` generates and shares with the project's default stores. `agentbricks deploy` creates it if needed and sends the deployed agent's traces there.
 
 To list traces after your agent has produced some, run the following. It reads the workspace experiment once the agent is deployed, and the local `agentbricks dev` traces before that.
 
@@ -142,11 +144,13 @@ To pin a specific MLflow experiment, run `agentbricks tracing bind --experiment-
 
 ### Step 5: Deploy the agent
 
-Deploy the agent to the Databricks agent runtime. The CLI provisions the agent's memory and session stores if they aren't already provisioned, grants the agent's service principal access to them, and rolls out the deployment. The deployed app is named `agent-bricks-<name>`.
+Deploy the agent to the Databricks agent runtime. The CLI provisions the agent's memory and session stores if they aren't already provisioned, grants the agent's service principal access to them, and rolls out the deployment. The deployed app is named `agent-bricks-<name>`. Because Databricks Apps names are limited to 30 characters, `<name>` can be at most 17. `agentbricks init` records a name that fits, shortening a long directory name.
 
 ```bash
 agentbricks deploy my-agent
 ```
+
+A first deploy takes a few minutes, mostly to start the app's compute. From a coding agent or script with a short command timeout, run `agentbricks deploy my-agent --no-wait` to finish the deploy in the background, then `agentbricks deployments wait agent-bricks-my-agent`. If `wait` exits with status 75, the deploy is still running; run the same command again.
 
 When the deployment finishes, the CLI returns the deployment's URL. Open that URL to interact with your live agent, which is automatically connected to Unity Gateway. To manage the deployment afterward, use the `agentbricks deployments` commands with the full app name. For example, to stream logs or stop the deployment:
 
@@ -169,11 +173,11 @@ agentbricks --profile <profile> endpoint invoke agent-bricks-my-agent \
   --json "{\"id\":\"$(uuidgen)\",\"session_id\":\"$SESSION_ID\",\"input\":[{\"role\":\"user\",\"content\":\"Hello\"}]}"
 ```
 
-The command authenticates with your CLI profile and returns the agent's output. Reuse the same `SESSION_ID` with a new `id` to continue the conversation. `--routing-key` keeps every request in the session on the same app instance when you deploy with more than one.
+The command authenticates with your CLI profile and returns the agent's output. Reuse the same `SESSION_ID` with a new `id` to continue the conversation. When you deploy with more than one instance, `--routing-key` sends a sticky-routing hint so requests in the session reach the same instance on a best-effort basis. The session ID still goes in the request body.
 
 - **Stream the response:** add `"stream":true` to the request body and pass `--sse`.
 - **Query the local agent:** while `agentbricks dev` runs, replace the app name with `--url http://localhost:8000`.
-- **Call the agent from your own code:** send the same request to `<app-url>/api/invocations` with a Databricks OAuth token. Personal access tokens don't work for Databricks Apps.
+- **Call the agent from your own code:** send the same request to `<app-url>/api/invocations` with a Databricks OAuth token. Personal access tokens don't work for Databricks Apps. To call it from a browser front end, allow the front end's origin with `agentbricks deploy my-agent --allowed-origin <origin>`. Repeat the flag for more than one origin; each deploy that passes it replaces the recorded list.
 
 ## Bring an existing agent
 
@@ -187,7 +191,7 @@ From the agent's project directory, prepare the migration. Pass the framework th
 agentbricks init --framework langgraph --existing .
 ```
 
-The CLI writes an `agent-bricks-migrate/` directory with the migration instructions, a prompt for your coding agent, and a reference project generated from the CLI's templates. It also adds skills in `.claude/skills/` and `.agent/skills/` that point coding agents to the instructions. The command doesn't change your application code, dependencies, or `.env` file, and doesn't create any resources in your workspace.
+The CLI writes an `agent-bricks-migrate/` directory with the migration instructions, a prompt for your coding agent, and a reference project generated from the CLI's templates. It also adds skills in `.agents/skills/`, `.claude/skills/`, and `.agent/skills/` that point coding agents to the instructions. The command doesn't change your application code, dependencies, or `.env` file, and doesn't create any resources in your workspace.
 
 ### Step 2: Convert the project with your coding agent
 
@@ -205,7 +209,7 @@ agentbricks doctor .
 
 ### Step 4: Clean up, run, and deploy
 
-Delete `agent-bricks-migrate/` and the two skills that point to it, and keep them out of your commits. Then run the agent with `agentbricks dev`, deploy it with `agentbricks deploy`, and query it as in [Step 6](#step-6-query-the-agent).
+Delete `agent-bricks-migrate/` and the three skills that point to it, and keep them out of your commits. Then run the agent with `agentbricks dev`, deploy it with `agentbricks deploy`, and query it as in [Step 6](#step-6-query-the-agent).
 
 ### Considerations
 

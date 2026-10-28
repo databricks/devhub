@@ -52,7 +52,7 @@ Building a production agent is iterative. Start with the simplest agent that wor
 3. **Give the agent context.** Add [memory and sessions](/docs/agents/memory) for conversation history and long-term memory, and add tools such as MCP servers, Genie Agents, and Unity Catalog functions with `agentbricks tools add`.
 4. **Run and debug locally.** Run the agent with `agentbricks dev`, send it real requests, and read its [traces](https://docs.databricks.com/aws/en/mlflow3/genai/tracing/overview) to see each model and tool call.
 5. **Evaluate.** Collect example requests and expected answers, then [evaluate the agent](https://docs.databricks.com/aws/en/mlflow3/genai/eval-monitor/) with MLflow to measure the effect of each change to prompts, tools, or models.
-6. **Deploy.** Deploy the agent to the [agent runtime](/docs/agents/runtime) with `agentbricks deploy`, which creates the stores and tools the agent declares and grants the agent access to them.
+6. **Deploy.** Deploy the agent to the [agent runtime](/docs/agents/runtime) with `agentbricks deploy`, which creates the stores the agent declares and grants the agent access to them.
 7. **Monitor and improve.** Review production traces, [monitor quality](https://docs.databricks.com/aws/en/mlflow3/genai/eval-monitor/production-monitoring) with scorers, and add what you learn to your evaluation data. Then repeat from step 2 and redeploy.
 
 ## Agent Bricks, AppKit agents, and Omnigent

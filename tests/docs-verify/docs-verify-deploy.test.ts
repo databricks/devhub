@@ -58,7 +58,7 @@ afterAll(() => {
   }
 }, 600_000);
 
-describe("Scaffold and build", { timeout: 180_000 }, () => {
+describe("Scaffold and build", { timeout: 300_000 }, () => {
   test("scaffold, install, and build", () => {
     scaffoldApp({
       name: APP_NAME,

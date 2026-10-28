@@ -84,14 +84,17 @@ describe("CLI options completeness", () => {
 
         const docFlags = extractFlagsForCommand(block!, spec.command);
         const subcommand = spec.command.split(" ").pop()!;
-        const exclusiveGroup = MUTUALLY_EXCLUSIVE[subcommand] ?? [];
+        const exclusiveGroups = MUTUALLY_EXCLUSIVE[subcommand] ?? [];
         const skipFlags = SKIP_FLAGS[spec.command] ?? [];
 
         for (const flag of cliFlags) {
           if (skipFlags.includes(flag)) continue;
           if (
-            exclusiveGroup.includes(flag) &&
-            exclusiveGroup.some((f) => flagInSet(f, docFlags))
+            exclusiveGroups.some(
+              (group) =>
+                group.includes(flag) &&
+                group.some((f) => flagInSet(f, docFlags)),
+            )
           ) {
             continue;
           }

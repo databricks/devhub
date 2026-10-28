@@ -9,10 +9,14 @@ export type CommandSpec = {
   doc: string;
 };
 
-export const MUTUALLY_EXCLUSIVE: Record<string, string[]> = {
-  psql: ["--provisioned", "--autoscaling"],
-  manifest: ["--branch", "--version"],
-  init: ["--branch", "--version"],
+export const MUTUALLY_EXCLUSIVE: Record<string, string[][]> = {
+  psql: [["--provisioned", "--autoscaling"]],
+  manifest: [["--branch", "--version"]],
+  init: [
+    ["--branch", "--version"],
+    ["--skip-install", "--run"],
+  ],
+  "create-branch": [["--ttl", "--no-expiry"]],
 };
 
 export const SKIP_FLAGS: Record<string, string[]> = {

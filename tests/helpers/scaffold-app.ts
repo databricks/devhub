@@ -53,7 +53,8 @@ export function scaffoldApp(options: {
     args.push(`--set ${flag}`);
   }
 
-  run(args.join(" "), { timeoutMs: 60_000 });
+  // apps init also installs dependencies, so allow more than the default.
+  run(args.join(" "), { timeoutMs: 120_000 });
 
   if (!existsSync(appDir)) {
     throw new Error(`Expected ${appDir} to exist after apps init`);
@@ -71,7 +72,13 @@ export function scaffoldApp(options: {
   return appDir;
 }
 
+// `databricks apps init` installs dependencies with the template's package
+// manager (pnpm for the default AppKit template), and the docs go straight to
+// `npm run`. Running `npm install` over a pnpm-installed node_modules crashes
+// npm, so only install when the scaffold skipped it.
 export function installAndBuild(appDir: string): void {
-  run("npm install", { cwd: appDir, timeoutMs: 120_000 });
+  if (!existsSync(resolve(appDir, "node_modules"))) {
+    run("npm install", { cwd: appDir, timeoutMs: 120_000 });
+  }
   run("npm run build", { cwd: appDir, timeoutMs: 120_000 });
 }

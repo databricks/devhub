@@ -17,9 +17,18 @@ const SKILL_NAME_PATTERN = /`(databricks-[\w-]+)`/g;
 
 // Skills to exclude from the upstream-sync check while they exist in the repo's main manifest
 // but NOT yet in the shipped CLI catalog (`databricks aitools list`). The auto-generated page
-// tracks the CLI catalog, so it correctly omits them. Empty as of CLI 1.22.1; remove each entry
-// once the CLI catalog ships it.
-const CLI_CATALOG_LAG_SKIP = new Set<string>();
+// tracks the CLI catalog, so it correctly omits them. Remove each entry once the CLI catalog
+// ships it.
+const CLI_CATALOG_LAG_SKIP = new Set<string>([
+  "databricks-mlflow-tracing",
+  "databricks-sandbox",
+]);
+
+// The reverse lag: skills removed from the main manifest that the shipped CLI catalog still
+// installs, so the generated page still lists them. Remove each entry once the CLI drops it.
+const CLI_CATALOG_REMOVAL_LAG_SKIP = new Set<string>([
+  "databricks-agent-bricks",
+]);
 
 describe("agent-skills page stays in sync with upstream", () => {
   let manifest: Record<string, { experimental?: boolean }>;
@@ -50,6 +59,12 @@ describe("agent-skills page stays in sync with upstream", () => {
       expect(page).toContain(name);
       console.log(`[agent-skills] found in page: ${name}`);
     }
+    for (const name of CLI_CATALOG_LAG_SKIP) {
+      expect(
+        page,
+        `${name} is now on the page; remove it from CLI_CATALOG_LAG_SKIP`,
+      ).not.toContain(name);
+    }
   });
 
   test("page does not list skills removed from the manifest", () => {
@@ -67,8 +82,15 @@ describe("agent-skills page stays in sync with upstream", () => {
 
     for (const name of skillsInPage) {
       if (CLI_CATALOG_LAG_SKIP.has(name)) continue;
+      if (CLI_CATALOG_REMOVAL_LAG_SKIP.has(name)) continue;
       expect(manifestSkills).toContain(name);
       console.log(`[agent-skills] still in manifest: ${name}`);
+    }
+    for (const name of CLI_CATALOG_REMOVAL_LAG_SKIP) {
+      expect(
+        skillsInPage,
+        `${name} is no longer on the page; remove it from CLI_CATALOG_REMOVAL_LAG_SKIP`,
+      ).toContain(name);
     }
   });
 

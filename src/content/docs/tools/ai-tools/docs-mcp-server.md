@@ -1,10 +1,14 @@
 ---
 title: Docs MCP Server
+sourceOfTruth:
+  docs:
+    - /docs/tools/ai-tools/agent-skills
+  note: "DevHub owns this server; its tools and slug handling follow src/lib/mcp-route.ts."
 ---
 
 # Docs MCP Server
 
-The DevHub Docs MCP Server gives coding agents and IDE assistants read access to all documentation pages on DevHub. Agents can discover available pages and fetch individual docs as markdown without leaving the editor.
+The DevHub Docs MCP Server gives coding agents and IDE assistants read access to the documentation and template pages on DevHub. Agents can discover available pages and fetch individual pages as markdown without leaving the editor.
 
 ## Install
 
@@ -49,29 +53,29 @@ The server exposes two read-only tools.
 
 ### `list_docs_resources`
 
-Lists all available Databricks developer documentation pages. Returns the documentation index as markdown with page URLs and titles.
+Lists the Databricks developer documentation and template pages. Returns the site index (`llms.txt`) as markdown, with each page's URL, title, and description, grouped by section.
 
 No parameters.
 
 ```
 list_docs_resources()
-→ markdown index of all doc pages with slugs and titles
+→ markdown index of pages with URLs, titles, and descriptions
 ```
 
 ### `get_doc_resource`
 
-Fetches a single Databricks developer documentation page as markdown. Use `list_docs_resources` first to discover available slugs.
+Fetches a single Databricks developer documentation or template page as markdown. Use `list_docs_resources` first to discover available pages.
 
-| Parameter | Type   | Required | Description                                                                                    |
-| --------- | ------ | -------- | ---------------------------------------------------------------------------------------------- |
-| `slug`    | string | yes      | The docs page slug (path), for example, `start-here`. Use `list_docs_resources` to find slugs. |
+| Parameter | Type   | Required | Description                                                                                                                                                                                     |
+| --------- | ------ | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `slug`    | string | yes      | The page path, for example `start-here`, `lakehouse/genie`, or `templates/genie-conversational-analytics`. A full URL from `list_docs_resources`, with or without a trailing `.md`, also works. |
 
 ```
 get_doc_resource(slug: "start-here")
 → full markdown content of the requested page
 ```
 
-Pages that declare a source of truth begin with a short **Source of truth** line naming the agent skill(s) and canonical docs to load for the product's current behavior.
+Docs pages that declare a source of truth begin with a short **Source of truth** line. It names the agent skills (install them with `databricks aitools install`), related DevHub pages, and the canonical Databricks docs to load for the product's current behavior.
 
 ## Where to next
 

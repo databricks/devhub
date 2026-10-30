@@ -9,6 +9,7 @@ sourceOfTruth:
     - /docs/appkit/v0/plugins/agents
     - /docs/appkit/v0/plugins/model-serving
     - https://docs.databricks.com/aws/en/ai-gateway/ai-governance
+    - https://docs.databricks.com/aws/en/agents/legacy/
   note: "databricks-model-serving covers the serving-endpoint call path and Unity Gateway rate limits. Full Unity Gateway governance, model services, and MCP governance are docs-only (no skill yet)."
 ---
 
@@ -22,23 +23,25 @@ From your AppKit app, you host an agent backed by a governed endpoint with the a
 
 - Databricks CLI `v1.0.0+` with an [authenticated profile](/docs/tools/databricks-cli#authenticate).
 - A running AppKit app. See [Apps quickstart](/docs/apps/quickstart).
-- A serving endpoint your app can query. Most workspaces come with Databricks-hosted foundation models (prefixed `databricks-`, for example `databricks-claude-sonnet-4-6`) preconfigured with Unity Gateway. Model IDs change over time, so check the [supported models](https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/supported-models) list for current names, or run [List available endpoints](#list-available-endpoints) to see what your workspace exposes.
+- A model service your app can query, for example the pay-per-token foundation model `system.ai.claude-sonnet-4-6`. Model names change over time, so check the [supported models](https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/supported-models) list for current names. The `databricks-` foundation model serving endpoints are marked Legacy in the [app resource picker](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/model-serving); use them only if you already depend on one.
 
 ## Call a governed endpoint from AppKit
 
 Host an agent in your app with the [`agents` plugin](/docs/appkit/v0/plugins/agents) and back it with the governed endpoint through a model adapter. The endpoint's AI Gateway policy (rate limits, usage tracking, guardrails) applies however you call it.
 
-> AppKit deprecated the Model Serving plugin (`serving()` + `useServingStream`) in 0.77.0 in favor of the `agents` plugin. If you have older code that calls a serving endpoint through it, back an agent with `DatabricksAdapter.fromModelServing` instead. Note the identity change: the `serving()` routes ran on behalf of the signed-in user (OBO), whereas an agent's model call runs as the app service principal.
+> AppKit deprecated the Model Serving plugin (`serving()` + `useServingStream`) in 0.77.0 in favor of the `agents` plugin. If you have older code that calls a serving endpoint through it, back an agent with `DatabricksAdapter.fromModelServing` instead. Note the identity change: the `serving()` routes ran on behalf of the signed-in user (OBO), whereas an agent's model call runs as the app service principal by default (see [Per-user permissions](/docs/apps/agentic-features#per-user-permissions)).
 
 ### Define the agent
 
-Each agent is a folder under `server/agents/<id>/`; the folder name is the agent id, and `agent.ts` default-exports a created agent. Back it with `fromModelServing` for a serving endpoint (a Databricks-hosted foundation model, prefixed `databricks-`), or `fromAiGateway` for a model service queried by name. Called with no argument, `fromModelServing()` reads the endpoint name from `DATABRICKS_SERVING_ENDPOINT_NAME`, so the same code runs locally and in production.
+Each agent is a folder under `server/agents/<id>/`; the folder name is the agent id, and `agent.ts` default-exports a created agent. Back it with `fromAiGateway` for a model service, named by its full Unity Catalog name. For a Model Serving endpoint you already have (a custom model, or an existing `databricks-` endpoint), use `fromModelServing` instead.
 
 ```typescript title="server/agents/chat/agent.ts"
 import { createAgent, DatabricksAdapter } from "@databricks/appkit/beta";
 
-// Reads DATABRICKS_SERVING_ENDPOINT_NAME.
-const model = await DatabricksAdapter.fromModelServing();
+// DATABRICKS_MODEL_SERVICE is bound in app.yaml; the fallback is for local dev.
+const model = await DatabricksAdapter.fromAiGateway({
+  model: process.env.DATABRICKS_MODEL_SERVICE ?? "system.ai.claude-sonnet-4-6",
+});
 
 export default createAgent({
   instructions: "You are a helpful assistant.",
@@ -55,12 +58,24 @@ import { agents } from "@databricks/appkit/beta";
 await createApp({ plugins: [server(), agents()] });
 ```
 
-Bind the endpoint name in `app.yaml`. For a production build, also list `server/agents/*/agent.ts` as build entries (for example in `tsdown`) so the compiled `dist/agents/<id>/agent.js` is emitted for discovery; otherwise the agent is missing from the deployed bundle.
+Add the model service as an app resource, which grants the app's service principal `EXECUTE` on it, and bind its name in `app.yaml`. The production build must emit `dist/agents/<id>/agent.js` for discovery: the `appkitServerConfig()` tsdown preset in current `apps init` templates includes `server/agents/` automatically, and a custom tsdown config must list `server/agents/*/agent.ts` as build entries.
+
+```yaml title="databricks.yml"
+resources:
+  apps:
+    my-app:
+      resources:
+        - name: model
+          uc_securable:
+            securable_full_name: system.ai.claude-sonnet-4-6
+            securable_type: MODEL_SERVICE
+            permission: EXECUTE
+```
 
 ```yaml title="app.yaml"
 env:
-  - name: DATABRICKS_SERVING_ENDPOINT_NAME
-    valueFrom: serving-endpoint
+  - name: DATABRICKS_MODEL_SERVICE
+    valueFrom: model
 ```
 
 ### Stream from a React component
@@ -96,7 +111,7 @@ export function ChatPanel() {
 
 ### Call it from a route handler
 
-For backend orchestration, pre/post-processing, or logging, invoke the agent server-side with `runAgent`, importing the agent definition from its folder. `runAgent` runs standalone with no HTTP request, so its model call and tools run as the app service principal (no OBO). Through the built-in agent routes, the model call also runs as the service principal, while the plugin tools an agent calls run on behalf of the signed-in user. See the [`agents` plugin reference](/docs/appkit/v0/plugins/agents) for the `runAgent` signature.
+For backend orchestration, pre/post-processing, or logging, invoke the agent server-side with `runAgent`, importing the agent definition from its folder. `runAgent` runs standalone with no HTTP request, so its model call and tools run as the app service principal (no OBO). Through the built-in agent routes, the model call also runs as the service principal by default, while the plugin tools an agent calls run on behalf of the signed-in user. See the [`agents` plugin reference](/docs/appkit/v0/plugins/agents) for the `runAgent` signature.
 
 ### One agent or many
 
@@ -200,7 +215,7 @@ AppKit.server.extend((app) => {
 
 Governance is enforced on Databricks, not in AppKit. Your app calls the endpoint and the gateway applies the policy. Unity Gateway is the control plane for AI traffic. It routes model and MCP requests and enforces rate limits, cost controls, service policies, and usage tracking. Unity Catalog governs the models, MCP servers, and functions behind it. For the current features and setup, including the beta features you enable from the account console Previews page, see [AI governance with Unity Gateway](https://docs.databricks.com/aws/en/ai-gateway/ai-governance).
 
-For AppKit, an agent reaches these serving endpoints by name through a model adapter (`fromModelServing`). This includes foundation models (the `databricks-` prefix), Knowledge Assistants, Supervisor Agents, and custom Python agents. To call a Unity Gateway model service instead, see [Query a model service](#query-a-model-service).
+For AppKit, an agent reaches these serving endpoints by name through a model adapter (`fromModelServing`). This includes the `databricks-` foundation model endpoints, which are marked legacy (for a foundation model, use a model service with `fromAiGateway`), and existing agent endpoints, such as a Knowledge Assistant or Supervisor Agent (both [legacy offerings](https://docs.databricks.com/aws/en/agents/legacy/)). An agent built with the [Agent Bricks CLI](/docs/agents/cli) deploys as its own app with an HTTP API instead. To call a Unity Gateway model service instead, see [Query a model service](#query-a-model-service).
 
 These controls are configured on Databricks by platform or admin teams, not in your app, but requests through a governed endpoint are subject to whatever applies:
 
@@ -232,7 +247,7 @@ databricks serving-endpoints list \
   --profile $DATABRICKS_PROFILE
 ```
 
-Foundation Model API endpoints (prefixed `databricks-`) are available in most workspaces with Unity Gateway built in. For example, `databricks-claude-sonnet-4-6`. Availability varies by workspace.
+Foundation Model API endpoints (prefixed `databricks-`, for example `databricks-claude-sonnet-4-6`) are available in most workspaces with Unity Gateway built in, but they're marked legacy: for new work, call the matching model service (`system.ai.claude-sonnet-4-6`) instead. The examples below use one to show the endpoint commands. Availability varies by workspace.
 
 <details>
 <summary>Example output (truncated)</summary>

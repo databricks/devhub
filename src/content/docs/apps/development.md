@@ -7,6 +7,8 @@ sourceOfTruth:
   docs:
     - /docs/appkit/v0
     - https://docs.databricks.com/aws/en/dev-tools/databricks-apps/
+    - /docs/lakebase/development
+  note: "CLI flags and examples follow the installed Databricks CLI (cli-options tables come from pnpm docs:cli-sync). Scaffold behavior (.env, pnpm, required --set values) is verified by running databricks apps init. Lakebase local access follows /docs/lakebase/development."
 ---
 
 # App development
@@ -17,22 +19,22 @@ Each command below shows a common invocation, its full set of flags, and a table
 
 ## Local setup
 
-Copy `.env.example` to `.env` and fill in your workspace URL and resource IDs before running `npm run dev`. AppKit reads these for local connections to Databricks resources.
+`databricks apps init` writes a `.env` file in the project root with your CLI profile and the connection values for the resources you chose. AppKit reads it for local connections to Databricks resources. `.env.example` lists the connection keys with placeholder values (with `DATABRICKS_HOST` in place of the profile); copy it to `.env` and fill it in only when you start from a project that has no `.env`, such as a fresh clone.
 
-Example `.env` for an app with [Lakebase Postgres](/docs/lakebase/quickstart):
+Example `.env` (abbreviated) for an app with [Lakebase Postgres](/docs/lakebase/quickstart):
 
 ```text
-DATABRICKS_HOST=https://<workspace>.cloud.databricks.com
+DATABRICKS_CONFIG_PROFILE=<profile>
+PGHOST=<endpoint-host>
+PGDATABASE=<database-name>
 LAKEBASE_ENDPOINT=projects/<project>/branches/production/endpoints/primary
+PGPORT=5432
+PGSSLMODE=require
 ```
 
-If your app uses Lakebase, also grant your local user the `databricks_superuser` role before running locally. The app's service principal creates schemas and tables on first deploy and owns them. Without this grant, your local identity cannot access those objects:
+The default AppKit template uses pnpm: `apps init` installs dependencies with pnpm, and the project scripts call it, so run the app with `pnpm run dev`. To scaffold an npm project instead, pass `--package-manager npm` to `apps init` and use `npm run dev`.
 
-```sql
-GRANT databricks_superuser TO "<your-email>";
-```
-
-See [Lakebase Development](/docs/lakebase/development#local-database-access) for the full local access workflow.
+If your app uses Lakebase, run `databricks apps deploy` once before `pnpm run dev`, so the app's service principal creates and owns the schema. If you created the Lakebase project, your identity already has the access it needs locally. Teammates need a Postgres role on the branch, which the project creator can add. See [Lakebase Development](/docs/lakebase/development#local-setup) for the full local access workflow.
 
 For testing against production data without redeploying, see the [remote bridge](/docs/appkit/v0/development/remote-bridge).
 
@@ -48,13 +50,13 @@ const AppKit = await createApp({
 });
 ```
 
-Then regenerate `appkit.plugins.json` with the updated resource requirements:
+Then regenerate `appkit.plugins.json` with the updated resource requirements (the template's `sync` script runs `appkit plugin sync --write`):
 
 ```bash
-npx @databricks/appkit plugin sync --write
+pnpm run sync
 ```
 
-This runs automatically during `npm run dev` and `npm run build`. Commit the updated `appkit.plugins.json` alongside your code. It tells the deployment pipeline which resources to provision.
+This runs automatically before the template's `dev` and `build` scripts. Commit the updated `appkit.plugins.json` alongside your code. `databricks apps validate` reads it; the resources themselves are declared in `databricks.yml` (see [App configuration](/docs/apps/configuration#plugin-manifest)).
 
 See the [AppKit plugins reference](/docs/appkit/v0/plugins) for configuration options for each plugin, or [Creating custom plugins](/docs/appkit/v0/plugins/custom-plugins) to add your own.
 
@@ -105,7 +107,7 @@ databricks apps init \
   --name $APP_NAME \
   --features lakebase,analytics \
   --auth-mode sp \
-  --package-manager npm \
+  --package-manager pnpm \
   --set lakebase.postgres.project=projects/$PROJECT_ID \
   --set lakebase.postgres.branch=projects/$PROJECT_ID/branches/production \
   --set lakebase.postgres.database=projects/$PROJECT_ID/branches/production/databases/$DB_NAME \
@@ -147,11 +149,13 @@ databricks apps init \
 
 <!-- /cli-options -->
 
-Passing `--name` suppresses prompts and uses defaults for unspecified options. App names must be lowercase, hyphenated, and 26 characters or fewer. Run `databricks apps manifest` to see available plugins and their `--set` keys.
+Passing `--name` makes `apps init` non-interactive, so every required resource field must be set with `--set`. Run `databricks apps manifest` to see available plugins and their `--set` keys. App names must be lowercase, hyphenated, and 26 characters or fewer.
+
+`--auth-mode` sets how the app accesses its resources by default: `obo` (on behalf of the signed-in user, falling back to the service principal for resources that can't be accessed that way) or `sp` (the app's service principal, the non-interactive default). Override it for one resource with `--set <plugin>.<resource-key>.authMode=obo|sp|both`. `--auth-mode` and `--package-manager` need Databricks CLI v1.20.0 or later.
 
 ## Environment configuration
 
-**Local** (`npm run dev`): variables from `.env` in the project root.
+**Local** (`pnpm run dev`): variables from `.env` in the project root.
 
 **Deployed**: variables from `app.yaml` `env` entries. Use `value` for plain strings and `valueFrom` for resource bindings:
 
@@ -159,13 +163,13 @@ Passing `--name` suppresses prompts and uses defaults for unspecified options. A
 env:
   - name: LAKEBASE_ENDPOINT
     valueFrom: postgres
-  - name: WAREHOUSE_ID
+  - name: DATABRICKS_WAREHOUSE_ID
     valueFrom: sql-warehouse
   - name: APP_LOG_LEVEL
     value: info
 ```
 
-Resources referenced by `valueFrom` must be declared in `databricks.yml`. See [App configuration](/docs/apps/configuration#resources) for the full resource list.
+Resources referenced by `valueFrom` must be declared as app resources: in `databricks.yml` for bundle deploys, or in the app's configuration in the workspace UI. See [App configuration](/docs/apps/configuration#resources) for the full resource list.
 
 ## Pre-deploy checklist
 
@@ -175,9 +179,9 @@ Before deploying to production:
 - `app.yaml` command uses array syntax (no shell strings)
 - No files larger than 10 MB in the project
 - Secrets use `valueFrom` (never `value`)
-- `databricks.yml` declares all required resources
+- All required resources are declared (in `databricks.yml` or the app's workspace configuration), including `SELECT` on tables your analytics queries read: the build's type generation runs as the app's service principal
 - `databricks apps validate` succeeds (`--skip-tests` skips tests for a faster run)
-- `npm run build` succeeds locally
+- `pnpm run build` succeeds locally
 
 ## Validate
 
@@ -199,10 +203,7 @@ databricks apps deploy
 databricks apps deploy $APP_NAME \
   --deployment-id $DEPLOYMENT_ID \
   --json @$CONFIG_FILE \
-  --source-code-path $SOURCE_PATH \
   --git-branch $GIT_BRANCH \
-  --git-commit $GIT_COMMIT \
-  --git-tag $GIT_TAG \
   --git-source-code-path $GIT_SOURCE_PATH \
   --mode SNAPSHOT \
   --auto-approve \
@@ -244,7 +245,9 @@ databricks apps deploy $APP_NAME \
 
 <!-- /cli-options -->
 
-The CLI validates configuration, builds the project, uploads it, and starts the app. By default it runs the same project validation as `databricks apps validate` (build, typecheck, lint). Pass `--skip-validation` to skip that step. No `--source-code-path` is needed when deploying from a scaffolded AppKit project.
+In your project directory, without an app name, the CLI runs the same validation as `databricks apps validate` (build, typecheck, lint), uploads the project, and starts the app. Pass `--skip-validation` to skip validation. No `--source-code-path` is needed when deploying from a scaffolded AppKit project. With an app name, the CLI uses API deploy instead of the project deploy flow, and deploys the source you name.
+
+When you pass an app name, pick one source: a workspace folder with `--source-code-path`, or a Git source with exactly one of `--git-branch`, `--git-tag`, or `--git-commit` (plus `--git-source-code-path` for a subfolder). The CLI rejects `--source-code-path` combined with a `--git-*` flag, and more than one Git ref.
 
 ### Verify the deployment
 
@@ -360,22 +363,27 @@ databricks apps logs $APP_NAME \
 
 ```text
 [SYSTEM] [INFO] Starting Databricks Apps runtime...
-[SYSTEM] [INFO] Starting deployment a1b2c3d4e5f6...
-[SYSTEM] [INFO] Downloading source code from /Workspace/Users/.../src/a1b2c3d4e5f6
-[SYSTEM] [INFO] Installing dependencies...
-[BUILD] added 899 packages, and audited 900 packages in 21s
-[SYSTEM] [INFO] Dependencies installed successfully.
-[SYSTEM] [INFO] Running build script npm run build:server && npm run build:client
-[BUILD] ✔ Build complete in 30ms
-[BUILD] ✓ built in 2.80s
-[SYSTEM] [INFO] Build completed successfully.
-[SYSTEM] [INFO] Starting app with command: [npm run start]
-[APP] [appkit:lakebase] Lakebase pool initialized
+[BUILD] [INFO] Starting deployment a1b2c3d4e5f6...
+[BUILD] [INFO] Downloading source code from /Workspace/Users/.../src/a1b2c3d4e5f6
+[BUILD] [INFO] Installing dependencies...
+[BUILD] Packages: +766
+[BUILD] Done in 19s using pnpm v11.0.8
+[BUILD] [INFO] Dependencies installed successfully.
+[BUILD] [INFO] Running build script pnpm run build:server && pnpm run build:client
+[BUILD] ✔ Build complete in 90ms
+[BUILD] ✓ built in 1.60s
+[BUILD] [INFO] Build completed successfully.
+[BUILD] [INFO] Starting app with command: [pnpm run start]
+[BUILD] [INFO] Deployment successful
 [APP] [appkit:server] Server running on http://0.0.0.0:8000
 [APP] [appkit:server] Mode: production (static)
 ```
 
 </details>
+
+### Roll back
+
+Apps has no single rollback action. To roll back, redeploy an earlier version: for a Git-backed app, deploy the earlier tag or commit (for example `databricks apps deploy my-app --git-commit <commit-sha>`, or `--git-tag` for a release tag); for a workspace-source app, restore the earlier source to the folder and redeploy it. `databricks apps list-deployments my-app` lists past deployments. See [Roll back to a previous version](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/deploy#rollback).
 
 ## Managing apps
 
@@ -480,26 +488,28 @@ Or use a pre-configured profile:
 databricks apps deploy --profile ci-profile
 ```
 
-See the [Databricks CLI authentication docs](/docs/tools/databricks-cli#authenticate) for all auth methods.
+See the [Databricks CLI authentication docs](/docs/tools/databricks-cli#authenticate) for all auth methods. For GitHub Actions, [CI/CD with GitHub Actions](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/cicd-github-actions) uses workload identity federation, so the workflow stores no secret.
 
 ## Troubleshooting
 
 For additional troubleshooting, see [Deploy apps](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/deploy#troubleshoot) and the [AppKit remote bridge](/docs/appkit/v0/development/remote-bridge) for local connection issues.
 
 - **App fails to deploy**: Check logs for error messages, validate `app.yaml` syntax, and verify that secrets and environment variables in the `env` section resolve properly. Confirm all dependencies are included or installed.
-- **401 errors (authentication)**: Verify your token is valid (`databricks auth token --profile <PROFILE>`), hasn't expired, and includes the required OAuth scopes. Your token's scopes must be a superset of the scopes configured for the app's [user authorization](/docs/appkit/v0/plugins/execution-context).
+- **401 errors (authentication)**: Verify your token is valid, hasn't expired, and includes the required OAuth scopes. For a user (U2M) profile, run `databricks auth token --profile <PROFILE>` to check it. Your token's scopes must be a superset of the scopes configured for the app's [user authorization](/docs/appkit/v0/plugins/execution-context).
 - **403 errors (permission denied)**: Verify you have `CAN USE` permission on the app. Insufficient OAuth scopes can also cause 403s even with valid permissions.
+- **Build fails in type generation**: On deploy, the build runs AppKit's type generation as the app's service principal, which describes each analytics query. If it can't read a table, the deploy fails with `Error building app`, and AppKit may report the failed queries as SQL errors. Add the table as an app resource with `SELECT` (a `uc_securable` with `securable_type: TABLE`).
+- **Deploy or start fails on OAuth scopes**: Workspace admins can restrict which user authorization scopes apps may request. Remove scopes that aren't allowed from `user_api_scopes`. See [Restrict user authorization scopes](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/auth#restrict-scopes).
 - **404 errors (app not found)**: Verify the app name and workspace URL are correct, the app is deployed and running, and the endpoint path exists.
 - **Git deployment fails**: For private repositories, verify the app's service principal has a Git credential configured. If deploying through CLI/API/DABs, create the app first, then add the Git credential.
 
 ## AppKit docs
 
-Access the AppKit API reference, component docs, and plugin docs from the terminal:
+Access the AppKit API reference, component docs, and plugin docs from your project directory. `pnpm exec` runs the AppKit version your project installed:
 
 ```bash
-npx @databricks/appkit docs                        # browse the documentation index
-npx @databricks/appkit docs --full                 # full index with all API entries
-npx @databricks/appkit docs "<query-or-doc-path>"  # view a specific section or file
+pnpm exec appkit docs                        # browse the documentation index
+pnpm exec appkit docs --full                 # full index with all API entries
+pnpm exec appkit docs "<section-or-./docs/path.md>"  # view a section or doc file
 ```
 
 Run without arguments to browse the index. Useful when building with an AI coding assistant. Point it here instead of guessing API shapes, or view the [AppKit reference](/docs/appkit/v0) on this site.

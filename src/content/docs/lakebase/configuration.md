@@ -39,13 +39,13 @@ For local development, these values come from your `.env` file. [Local setup](/d
 
 ## Plugin manifest
 
-When you register the `lakebase()` plugin in `createApp`, AppKit generates `appkit.plugins.json` declaring the plugin's resource requirements. Run `npx @databricks/appkit plugin sync --write` to regenerate it after adding or changing plugins:
+When you register the `lakebase()` plugin in `createApp`, AppKit generates `appkit.plugins.json` declaring the plugin's resource requirements. Run the template's `sync` script (`appkit plugin sync --write`) to regenerate it after adding or changing plugins:
 
 ```bash
-npx @databricks/appkit plugin sync --write
+pnpm run sync
 ```
 
-This runs automatically during `pnpm run dev` and `pnpm run build`. Commit it alongside your code.
+This runs automatically before the template's `dev` and `build` scripts. Commit it alongside your code.
 
 The [AppKit configuration](/docs/appkit/v0/configuration) reference covers `app.yaml` plugin resource bindings in detail.
 

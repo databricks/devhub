@@ -17,6 +17,8 @@ export const MUTUALLY_EXCLUSIVE: Record<string, string[][]> = {
     ["--skip-install", "--run"],
   ],
   "create-branch": [["--ttl", "--no-expiry"]],
+  // --path writes raw files to a directory, so it replaces --skills-only
+  install: [["--skills-only", "--path"]],
 };
 
 export const SKIP_FLAGS: Record<string, string[]> = {

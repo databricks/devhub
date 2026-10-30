@@ -8,7 +8,7 @@ sourceOfTruth:
   docs:
     - /docs/appkit/v0
     - https://docs.databricks.com/aws/en/dev-tools/databricks-apps/
-  note: "AppKit (the TypeScript SDK) is documented on DevHub and in the databricks-apps skill. docs.databricks.com covers the Apps platform (deploy, auth, runtime), not AppKit."
+  note: "AppKit (the TypeScript SDK) is documented on DevHub and in the databricks-apps skill. docs.databricks.com covers the Apps platform (deploy, auth, runtime), not AppKit. Plugin status (deprecated plugins, caching as a createApp option) and plugin identity are verified against the published @databricks/appkit package and databricks apps manifest."
 ---
 
 # What is Databricks Apps?
@@ -29,23 +29,22 @@ AppKit uses a three-layer architecture with plugins that register capabilities a
 | ---------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [**server**](/docs/appkit/v0/plugins/server)         | Express HTTP server, static file serving, Vite dev mode (always included)                                                                                                     |
 | [**lakebase**](/docs/appkit/v0/plugins/lakebase)     | Postgres connection pool for [Lakebase Postgres](/docs/lakebase/quickstart) with automatic OAuth token refresh                                                                |
-| [**database**](/docs/appkit/v0/plugins/database)     | Generated HTTP CRUD and a server-side client from a declared schema over [Lakebase Postgres](/docs/lakebase/quickstart) (Beta)                                                |
+| [**database**](/docs/appkit/v0/plugins/database)     | Generated HTTP CRUD and a server-side client from a declared schema over [Lakebase Postgres](/docs/lakebase/quickstart)                                                       |
 | [**analytics**](/docs/appkit/v0/plugins/analytics)   | SQL query execution against [Databricks SQL Warehouses](https://docs.databricks.com/aws/en/compute/sql-warehouse/). See [Analytical reads](/docs/lakehouse/analytical-reads). |
 | [**genie**](/docs/appkit/v0/plugins/genie)           | [Genie Agent](/docs/lakehouse/genie) integration for natural-language data queries                                                                                            |
-| [**serving**](/docs/appkit/v0/plugins/model-serving) | Authenticated proxy to [Model Serving](/docs/unity-gateway/overview) endpoints with streaming support                                                                         |
+| [**serving**](/docs/appkit/v0/plugins/model-serving) | Deprecated in favor of **agents**. Authenticated proxy to Model Serving endpoints with streaming support                                                                      |
 | [**files**](/docs/appkit/v0/plugins/files)           | File operations against [Unity Catalog Volumes](https://docs.databricks.com/aws/en/volumes/)                                                                                  |
 | [**agents**](/docs/appkit/v0/plugins/agents)         | AI agents defined in markdown or code, with tool auto-discovery                                                                                                               |
 | [**ai-search**](/docs/appkit/v0/plugins/ai-search)   | Semantic and vector search over your AI Search indexes                                                                                                                        |
 | [**jobs**](/docs/appkit/v0/plugins/jobs)             | Trigger and monitor [Databricks Lakeflow Jobs](/docs/lakehouse/jobs)                                                                                                          |
-| [**caching**](/docs/appkit/v0/plugins/caching)       | Global and plugin-level response caching, backed by [Lakebase Postgres](/docs/lakebase/quickstart) when available                                                             |
 
-For the full, current plugin set, see the [plugin reference](/docs/appkit/v0/plugins).
+Response [caching](/docs/appkit/v0/plugins/caching) is not a plugin. It is on by default, and you configure it with the `cache` option of `createApp`. It uses Lakebase Postgres when available and falls back to memory. For the full, current plugin set, see the [plugin reference](/docs/appkit/v0/plugins).
 
 ## How auth works
 
 Every app gets a dedicated service principal. Databricks injects its credentials at runtime, so your app can call workspace APIs without managing tokens.
 
-By default, all requests run as this service principal and all users share its permissions. When you need per-user data access, Databricks can forward the signed-in user's token via `x-forwarded-access-token`. AppKit's built-in [Genie](/docs/lakehouse/genie) and [Model Serving](/docs/unity-gateway/overview) plugins handle this automatically.
+By default, all requests run as this service principal and all users share its permissions. When you need per-user data access, Databricks can forward the signed-in user's token via `x-forwarded-access-token`, when user authorization is enabled and the app declares the matching scopes. AppKit's [Genie](/docs/lakehouse/genie) plugin uses it automatically, and the agents plugin runs its plugin tools as the signed-in user. [App configuration](/docs/apps/configuration#auth-model) explains how to set it up.
 
 ## When to use it
 
@@ -60,3 +59,5 @@ Apps are about **interactivity**, not only analytics. A dashboard is great for r
 ## Where to next
 
 [Templates](/templates) are agent-ready prompts organized by use case. Find one that fits, or see the [Apps Quickstart](/docs/apps/quickstart) for a step-by-step walkthrough.
+
+To describe an app in natural language and have the workspace generate it with AppKit (if your admin has enabled it), see [Genie App Builder](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/genie-app-builder).

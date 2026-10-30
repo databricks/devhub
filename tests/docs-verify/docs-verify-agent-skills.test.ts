@@ -21,6 +21,12 @@ const SKILL_NAME_PATTERN = /`(databricks-[\w-]+)`/g;
 // once the CLI catalog ships it.
 const CLI_CATALOG_LAG_SKIP = new Set<string>();
 
+// The reverse lag: skills removed from the main manifest that the shipped CLI catalog still
+// installs, so the generated page still lists them. Remove each entry once the CLI drops it.
+const CLI_CATALOG_REMOVAL_LAG_SKIP = new Set<string>([
+  "databricks-agent-bricks",
+]);
+
 describe("agent-skills page stays in sync with upstream", () => {
   let manifest: Record<string, { experimental?: boolean }>;
   let manifestSkills: string[];
@@ -67,8 +73,15 @@ describe("agent-skills page stays in sync with upstream", () => {
 
     for (const name of skillsInPage) {
       if (CLI_CATALOG_LAG_SKIP.has(name)) continue;
+      if (CLI_CATALOG_REMOVAL_LAG_SKIP.has(name)) continue;
       expect(manifestSkills).toContain(name);
       console.log(`[agent-skills] still in manifest: ${name}`);
+    }
+    for (const name of CLI_CATALOG_REMOVAL_LAG_SKIP) {
+      expect(
+        skillsInPage,
+        `${name} is no longer on the page; remove it from CLI_CATALOG_REMOVAL_LAG_SKIP`,
+      ).toContain(name);
     }
   });
 

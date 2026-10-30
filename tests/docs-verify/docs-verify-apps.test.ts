@@ -5,7 +5,13 @@ import { resolve } from "node:path";
 
 import { afterAll, describe, expect, test } from "vitest";
 
-import { cli, installAndBuild, scaffoldApp } from "../helpers/scaffold-app";
+import {
+  cli,
+  installAndBuild,
+  packageManagerOf,
+  run,
+  scaffoldApp,
+} from "../helpers/scaffold-app";
 
 const PROFILE = process.env.DATABRICKS_PROFILE;
 if (!PROFILE) {
@@ -17,6 +23,7 @@ const TEST_RUN_ID = Date.now().toString(36);
 const TEST_DIR = mkdtempSync(resolve(tmpdir(), "devhub-test-apps-"));
 const BASE_APP_NAME = `devhub-test-base-${TEST_RUN_ID}`;
 const LAKEBASE_APP_NAME = `devhub-test-lkb-${TEST_RUN_ID}`;
+const NPM_APP_NAME = `devhub-test-npm-${TEST_RUN_ID}`;
 
 const SKIP_CLEANUP = Boolean(process.env.SKIP_CLEANUP);
 console.log(`[setup] temp dir: ${TEST_DIR}`);
@@ -42,6 +49,10 @@ describe("CLI prerequisites", { timeout: 30_000 }, () => {
     const minor = Number(match![2]);
     // Minimum: v1.0.0, or the pre-1.0 floor of v0.295.0
     expect(major >= 1 || minor >= 295).toBe(true);
+  });
+
+  test("pnpm is on PATH (the default AppKit template uses it)", () => {
+    expect(run("pnpm --version")).toMatch(/^\d+\.\d+\.\d+/);
   });
 
   test("profile is authenticated and valid", () => {
@@ -74,6 +85,8 @@ describe("Apps CLI reference", { timeout: 60_000 }, () => {
     expect(output).toContain("--run");
     expect(output).toContain("--output-dir");
     expect(output).toContain("--template");
+    expect(output).toContain("--auth-mode");
+    expect(output).toContain("--package-manager");
   });
 
   test("apps manifest shows available plugins", () => {
@@ -91,7 +104,7 @@ describe("Apps CLI reference", { timeout: 60_000 }, () => {
   });
 });
 
-describe("Scaffold base app (no features)", { timeout: 120_000 }, () => {
+describe("Scaffold base app (no features)", { timeout: 300_000 }, () => {
   let appDir: string;
 
   test("databricks apps init creates a project", () => {
@@ -125,10 +138,7 @@ describe("Scaffold base app (no features)", { timeout: 120_000 }, () => {
 
   test("app.yaml has correct command", () => {
     const appYaml = readFileSync(resolve(appDir, "app.yaml"), "utf-8");
-    const { packageManager = "npm" } = JSON.parse(
-      readFileSync(resolve(appDir, "package.json"), "utf-8"),
-    ) as { packageManager?: string };
-    const manager = packageManager.split("@")[0];
+    const manager = packageManagerOf(appDir);
     expect(appYaml).toContain(`['${manager}', 'run', 'start']`);
     console.log("[apps] app.yaml:", appYaml.trim());
   });
@@ -156,9 +166,39 @@ describe("Scaffold base app (no features)", { timeout: 120_000 }, () => {
     expect(existsSync(resolve(appDir, "dist"))).toBe(true);
     expect(existsSync(resolve(appDir, "client/dist"))).toBe(true);
   });
+
+  test("default scaffold uses pnpm", () => {
+    expect(packageManagerOf(appDir)).toBe("pnpm");
+  });
+
+  test("pnpm run sync writes appkit.plugins.json", () => {
+    const manifestPath = resolve(appDir, "appkit.plugins.json");
+    rmSync(manifestPath, { force: true });
+    run("pnpm run sync", { cwd: appDir, timeoutMs: 60_000 });
+    const manifest = JSON.parse(readFileSync(manifestPath, "utf-8")) as {
+      plugins: Record<string, unknown>;
+    };
+    expect(Object.keys(manifest.plugins)).toContain("server");
+  });
+
+  test("pnpm exec appkit docs prints the docs index", () => {
+    const output = run("pnpm exec appkit docs", {
+      cwd: appDir,
+      timeoutMs: 60_000,
+    });
+    expect(output).toContain("./docs/plugins/lakebase.md");
+  });
+
+  test("pnpm exec appkit docs opens a doc by path", () => {
+    const output = run("pnpm exec appkit docs ./docs/plugins/lakebase.md", {
+      cwd: appDir,
+      timeoutMs: 60_000,
+    });
+    expect(output).toContain("Lakebase plugin");
+  });
 });
 
-describe("Scaffold app with Lakebase feature", { timeout: 120_000 }, () => {
+describe("Scaffold app with Lakebase feature", { timeout: 300_000 }, () => {
   let appDir: string;
 
   test("databricks apps init --features=lakebase creates a project", () => {
@@ -233,3 +273,32 @@ describe("Scaffold app with Lakebase feature", { timeout: 120_000 }, () => {
     expect(existsSync(resolve(appDir, "client/dist"))).toBe(true);
   });
 });
+
+describe(
+  "Scaffold app with --package-manager npm",
+  { timeout: 120_000 },
+  () => {
+    let appDir: string;
+
+    test("databricks apps init --package-manager npm creates an npm project", () => {
+      appDir = scaffoldApp({
+        name: NPM_APP_NAME,
+        outputDir: TEST_DIR,
+        profile: PROFILE,
+        packageManager: "npm",
+        skipInstall: true,
+      });
+      expect(existsSync(resolve(appDir, "package-lock.json"))).toBe(true);
+      expect(existsSync(resolve(appDir, "pnpm-lock.yaml"))).toBe(false);
+    });
+
+    test("scripts and app.yaml use npm", () => {
+      const { scripts } = JSON.parse(
+        readFileSync(resolve(appDir, "package.json"), "utf-8"),
+      ) as { scripts: Record<string, string> };
+      expect(Object.values(scripts).join("\n")).not.toContain("pnpm");
+      const appYaml = readFileSync(resolve(appDir, "app.yaml"), "utf-8");
+      expect(appYaml).toContain("['npm', 'run', 'start']");
+    });
+  },
+);

@@ -53,8 +53,9 @@ export function DocsAside({
   return (
     <aside
       className={cn(
-        "aside -my-8 flex flex-col py-8 leading-none",
-        sticky && "sticky top-16 h-fit max-h-[calc(100svh-4rem)]",
+        "aside flex flex-col py-8 leading-none",
+        sticky &&
+          "sticky top-(--sticky-header-height) h-fit max-h-[calc(100svh-var(--sticky-header-height))]",
         className,
       )}
       data-sticky={sticky ? "true" : undefined}

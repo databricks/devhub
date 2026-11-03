@@ -1,4 +1,4 @@
-import { SERVICES, type Service } from "@/lib/recipes/recipes";
+import type { Service } from "@/lib/recipes/recipes";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -48,6 +48,7 @@ function TemplateFiltersTitle({
 }
 
 export function TemplateFilters({
+  availableServices,
   selectedServices,
   onToggleService,
   replitOnly,
@@ -56,6 +57,7 @@ export function TemplateFilters({
   onClearFilters,
   hideFilterMeta = false,
 }: {
+  availableServices: readonly Service[];
   selectedServices: Set<Service>;
   onToggleService: (service: Service) => void;
   replitOnly: boolean;
@@ -106,7 +108,7 @@ export function TemplateFilters({
         </div>
       ) : null}
       <TemplateFiltersTitle title="Services" />
-      {SERVICES.map((service) => (
+      {availableServices.map((service) => (
         <label
           className="mb-1 flex min-h-9 cursor-pointer items-center gap-2.5 text-base/snug text-black transition-colors hover:text-black"
           key={service}

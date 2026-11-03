@@ -7,10 +7,13 @@ import {
   getDocPagination,
   getDocPostBySlug,
   getDocPostMetaBySlug,
+  getDocsSidebarItems,
 } from "@/lib/docs-content";
+import { getDocsBreadcrumbs } from "@/lib/docs/breadcrumbs";
 import { getMetadata } from "@/lib/get-metadata";
 import { AIExportMenu } from "@/components/ai-export-menu";
 import { DocsAside } from "@/components/docs/docs-aside";
+import { DocsBreadcrumbs } from "@/components/docs/docs-breadcrumbs";
 import { DocsFooter } from "@/components/docs/docs-footer";
 
 type DocsPageParams = Promise<{ slug?: string[] }>;
@@ -34,6 +37,11 @@ export default async function DocsPage({
   }
 
   const currentPath = `/docs/${post.slug}`;
+  const breadcrumbs = getDocsBreadcrumbs(
+    getDocsSidebarItems(),
+    currentPath,
+    post.sidebarLabel,
+  );
   const pagination = getDocPagination(post.slug);
   const toc = post.tableOfContents.map((item) => ({
     id: item.id,
@@ -44,11 +52,8 @@ export default async function DocsPage({
   return (
     <article className="grid grid-cols-1 gap-x-8 xl:grid-cols-[minmax(0,44rem)_12rem]">
       <div className="min-w-0 pt-8 md:pt-9">
-        <p className="m-0 flex min-w-0 items-center truncate font-mono text-xs leading-none text-white uppercase">
-          {post.sidebarLabel}
-        </p>
-
-        <div className="prose prose-docs relative mt-14 max-w-none">
+        <DocsBreadcrumbs items={breadcrumbs} />
+        <div className="prose prose-docs relative max-w-none">
           <div className="not-prose relative mb-5 md:absolute md:top-2 md:right-0 md:z-10">
             <AIExportMenu
               appearance="article"
@@ -73,7 +78,7 @@ export default async function DocsPage({
       </div>
 
       <DocsAside
-        className="inset-x-0 bottom-0 -mx-1 hidden overflow-auto px-1 py-8 leading-none xl:flex"
+        className="inset-x-0 bottom-0 -mx-1 hidden overflow-auto px-1 leading-none md:pt-9 xl:flex"
         suggestEditsUrl={post.suggestEditsUrl}
         sticky
         toc={toc}

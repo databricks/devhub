@@ -5,7 +5,6 @@ import Footer from "@/components/footer";
 import CTA from "@/components/home/cta";
 import Features from "@/components/home/features";
 import Hero from "@/components/home/hero";
-import LovedByDevelopers from "@/components/home/loved-by-developers";
 import Templates from "@/components/home/templates";
 
 export const metadata = getMetadata({
@@ -60,10 +59,9 @@ export default function HomePage(): ReactNode {
       <Hero />
       <Templates />
       <Features />
-      <div className="bg-linear-to-b from-[#1A2E2F] from-65% to-[#2A4647]">
-        <LovedByDevelopers />
+      <div className="bg-db-paper text-black">
         <CTA
-          className="mx-auto mt-18 max-w-432 pt-1.5 pb-16 md:mt-24 lg:mt-32 lg:pb-22 xl:mt-38"
+          className="mx-auto max-w-432 pb-16 lg:pb-22"
           label="Start building"
           title="Ready to ship your next agentic app in minutes?"
           description="Start from Databricks templates, connect your data, and deploy with the tools your team already uses."

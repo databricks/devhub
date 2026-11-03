@@ -125,7 +125,7 @@ export function Hero({ content }: HeroProps) {
               {content.benefitsIntro.eyebrow}
             </SectionKicker>
             <h2
-              className="font-sans text-[1.75rem]/tight font-normal tracking-normal text-white md:text-[2rem] lg:text-[2.5rem] 2xl:text-[2.75rem]"
+              className="font-sans text-[1.75rem]/tight font-normal tracking-[-0.04em] text-white md:text-[2rem] lg:text-[2.5rem] 2xl:text-[2.75rem]"
               id="product-benefits"
             >
               {content.benefitsIntro.title}{" "}
@@ -146,7 +146,7 @@ export function Hero({ content }: HeroProps) {
                 />
                 <div className="relative">
                   <BenefitIcon icon={icon} />
-                  <h3 className="mt-12 text-lg/tight font-medium tracking-normal text-white md:mt-15 md:text-xl/tight lg:mt-18 lg:text-2xl/tight xl:text-[1.75rem]/tight 2xl:mt-29">
+                  <h3 className="mt-12 text-lg/tight font-medium tracking-tight text-white md:mt-15 md:text-xl/tight lg:mt-18 lg:text-2xl/tight xl:text-[1.75rem]/tight 2xl:mt-29">
                     {title}
                   </h3>
                   <p className="text-grey-70 mt-1.5 max-w-80 text-base tracking-normal text-pretty md:mt-2 md:max-w-100 md:text-lg/normal lg:mt-2.5 xl:mt-3 xl:text-xl/normal">

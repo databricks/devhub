@@ -368,7 +368,7 @@ export function DocsDesktopSidebar({
   return (
     <nav
       aria-label="Docs sidebar"
-      className="thin-scrollbar sticky top-16 max-h-[calc(100svh-4rem)] grow [scrollbar-gutter:stable] overflow-y-auto border-r-0 bg-black px-1 pt-7 pb-10"
+      className="thin-scrollbar sticky top-(--sticky-header-height) max-h-[calc(100svh-var(--sticky-header-height))] grow [scrollbar-gutter:stable] overflow-y-auto border-r-0 bg-black px-1 pt-7 pb-10"
     >
       <div className="flex flex-col gap-y-0 pb-10">
         <DocsSidebar

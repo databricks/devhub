@@ -530,7 +530,7 @@ test.describe("detail prose visual parity", () => {
 });
 
 test.describe("docs MDX compatibility", () => {
-  test("uses sidebar labels in docs navigation and eyebrow", async ({
+  test("renders sidebar-derived breadcrumbs without an article eyebrow", async ({
     page,
   }) => {
     await page.goto("/docs/agents/overview");
@@ -539,7 +539,23 @@ test.describe("docs MDX compatibility", () => {
     const docsSidebar = page.getByRole("navigation", {
       name: "Docs sidebar",
     });
-    await expect(article.getByText("Overview").first()).toBeVisible();
+    await expect(
+      article.locator("p").filter({ hasText: /^Overview$/ }),
+    ).toHaveCount(0);
+    const breadcrumbs = page.getByRole("navigation", { name: "Breadcrumb" });
+    await expect(breadcrumbs).toBeVisible();
+    await expect(
+      breadcrumbs.getByRole("link", { name: "Docs", exact: true }),
+    ).toHaveAttribute("href", "/docs");
+    await expect(
+      breadcrumbs.getByText("Agent Bricks", { exact: true }),
+    ).toBeVisible();
+    await expect(breadcrumbs.locator('[aria-current="page"]')).toHaveText(
+      "Overview",
+    );
+    await expect(
+      breadcrumbs.locator('[aria-current="page"]'),
+    ).not.toHaveAttribute("href");
     await expect(
       page.getByRole("heading", { name: "What is Agent Bricks?" }),
     ).toBeVisible();
@@ -632,7 +648,7 @@ test.describe("docs MDX compatibility", () => {
     ).toBeVisible();
 
     const verifyListLayout = await article
-      .locator("ol")
+      .locator(".prose-docs ol")
       .first()
       .evaluate((list) => ({
         directParagraphs: list.querySelectorAll(":scope > li > p").length,
@@ -769,8 +785,8 @@ test.describe("docs MDX compatibility", () => {
       ).length,
     }));
 
-    expect(layout.articleHeight).toBeGreaterThanOrEqual(3130);
-    expect(layout.articleHeight).toBeLessThanOrEqual(3165);
+    expect(layout.articleHeight).toBeGreaterThanOrEqual(3122);
+    expect(layout.articleHeight).toBeLessThanOrEqual(3157);
     expect(layout.codeBlocks).toBe(3);
     expect(layout.inlineCodes).toBe(2);
   });
@@ -1257,8 +1273,8 @@ test.describe("docs MDX compatibility", () => {
     }));
 
     expect(layout).toEqual({
-      articleHeight: 4312,
-      footerOffsetFromArticleY: 4244,
+      articleHeight: 4304,
+      footerOffsetFromArticleY: 4236,
     });
   });
 

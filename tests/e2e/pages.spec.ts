@@ -742,7 +742,7 @@ test.describe("docs MDX compatibility", () => {
     await expect(diagram).toBeVisible();
     await expect(diagram).toHaveAttribute(
       "src",
-      "/img/docs/platform-overview.svg",
+      "/img/docs/platform-overview.png",
     );
     await expect(article).not.toContainText("<img");
     await expect(article).not.toContainText("useBaseUrl");
@@ -916,7 +916,7 @@ test.describe("docs MDX compatibility", () => {
     expect(layout.imageRight).toBeLessThanOrEqual(layout.viewportWidth);
   });
 
-  test("renders Mermaid diagrams as SVG instead of source code", async ({
+  test("renders the agent diagram as an image instead of source code", async ({
     page,
   }) => {
     await page.goto("/docs/agents/overview");
@@ -924,7 +924,9 @@ test.describe("docs MDX compatibility", () => {
     const article = page.locator("article");
     await expect(article).not.toContainText("```mermaid");
     await expect(page.locator("figure code.language-mermaid")).toHaveCount(0);
-    await expect(page.locator("[data-mermaid-diagram] svg")).toBeVisible();
+    await expect(
+      article.locator('img[src="/img/docs/agent-overview.png"]'),
+    ).toBeVisible();
   });
 
   test("renders GFM tables as semantic tables instead of pipe text", async ({

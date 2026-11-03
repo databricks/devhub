@@ -646,6 +646,7 @@ async function renderImage({
       height={parseNumericImageDimension(height) ?? dimensions?.height ?? 675}
       sizes={getImageSizes(width, maxWidth, dimensions?.width)}
       src={src}
+      unoptimized={src.startsWith("/img/docs/")}
       style={getImageStyle({ height, maxWidth, width })}
       width={parseNumericImageDimension(width) ?? dimensions?.width ?? 1200}
       quality={100}

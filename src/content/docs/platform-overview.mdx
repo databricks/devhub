@@ -12,9 +12,13 @@ sourceOfTruth:
 
 # Platform overview
 
-Databricks Apps, Lakebase Postgres, Agent Bricks, and the Data Lakehouse are the four core workspace services that make up a full-stack Databricks application. Omnigent is where you run the coding agents that build it. The diagram below shows how the services fit together.
+Databricks Apps, Lakebase Postgres, Agent Bricks, and the Data Lakehouse are the four core workspace services that make up a full-stack Databricks application. Omnigent is where you run the coding agents that build it. The first diagram shows how Databricks Apps and AppKit fit inside the workspace.
 
-![Architecture diagram of the Databricks workspace: Databricks Apps contains AppKit, whose Lakebase, Model Serving, and Analytics plugins connect to Lakebase, Agent Bricks, and the Data Lakehouse as sibling services inside the workspace; a fourth column lists additional AppKit plugins (Server, Genie, Files, Jobs, Vector Search, and Custom Plugins)](/img/docs/platform-overview.svg)
+![A developer uses the CLI and a coding agent to build a Databricks App containing AppKit and its plugins inside the Databricks workspace.](/img/docs/platform-overview-appkit.png)
+
+AppKit connects your application to workspace services through plugins. The Lakebase Plugin connects to Lakebase, the Model Serving Plugin calls Agent Bricks, and the Analytics Plugin reads from the Data Lakehouse. Additional plugins support files, jobs, and other integrations.
+
+![AppKit's Lakebase Plugin connects to Lakebase, Model Serving Plugin to Agent Bricks, and Analytics Plugin to the Data Lakehouse. Additional plugins include Server, Genie, Files, Jobs, Vector Search, and custom plugins.](/img/docs/platform-overview-services.png)
 
 - **[Databricks Apps](/docs/apps/overview)**: managed hosting for apps you build with [AppKit](/docs/appkit/v0), the TypeScript SDK for production-ready Databricks applications.
 - **[Lakebase Postgres](/docs/lakebase/overview)**: managed Postgres database for OLTP storage co-located with your workspace data. Use it for sessions, app state, conversation history, or any data your app reads and writes at low latency.

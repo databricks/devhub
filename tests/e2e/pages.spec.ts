@@ -736,13 +736,13 @@ test.describe("docs MDX compatibility", () => {
 
     const article = page.locator("article");
     const diagram = article.getByRole("img", {
-      name: /Architecture diagram of the Databricks workspace/,
+      name: /A developer uses the CLI and a coding agent/,
     });
 
     await expect(diagram).toBeVisible();
     await expect(diagram).toHaveAttribute(
       "src",
-      "/img/docs/platform-overview.png",
+      "/img/docs/platform-overview-appkit.png",
     );
     await expect(article).not.toContainText("<img");
     await expect(article).not.toContainText("useBaseUrl");

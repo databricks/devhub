@@ -20,6 +20,7 @@ const SKILL_NAME_PATTERN = /`(databricks-[\w-]+)`/g;
 // tracks the CLI catalog, so it correctly omits them. Remove each entry once the CLI catalog
 // ships it.
 const CLI_CATALOG_LAG_SKIP = new Set<string>([
+  "databricks-lakeflow-connect-saas",
   "databricks-mlflow-tracing",
   "databricks-sandbox",
 ]);

@@ -143,7 +143,7 @@ const mcpHandler = createMcpHandler(
       "list_docs_resources",
       {
         description:
-          "Lists all available Databricks developer documentation pages. Returns the documentation index as markdown with page URLs and titles. Use get_doc_resource to fetch specific pages.",
+          "Lists the Databricks developer documentation and template pages. Returns the site index (llms.txt) as markdown, with each page's URL, title, and description, grouped by section. Use get_doc_resource to fetch specific pages.",
       },
       async () => {
         const response = await fetch(`${resolveSiteUrl()}/llms.txt`);

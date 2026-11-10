@@ -58,7 +58,10 @@ describe("CLI prerequisites", { timeout: 30_000 }, () => {
 
 describe("Apps CLI reference", { timeout: 60_000 }, () => {
   test("apps list is accessible", () => {
-    const output = cli("apps list", PROFILE, { timeoutMs: 30_000 });
+    // Bound the result set: this only verifies the command is reachable, and a
+    // shared workspace can hold thousands of apps, which makes an unbounded
+    // `apps list` slow enough to blow the timeout.
+    const output = cli("apps list --limit 5", PROFILE, { timeoutMs: 30_000 });
     expect(output).toBeTruthy();
   });
 

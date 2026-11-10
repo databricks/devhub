@@ -7,7 +7,7 @@ sourceOfTruth:
     - https://docs.databricks.com/aws/en/agents/
     - https://github.com/databricks/databricks-ai-bridge/blob/main/integrations/agentbricks/README.md
     - https://github.com/databricks/databricks-ai-bridge/blob/main/integrations/agentbricks/src/databricks_agentkit/runtime/README.md
-  note: "No agent skill covers the Agent Bricks developer platform. The databricks-agent-bricks skill covers the earlier Knowledge Assistant and Supervisor Agent offerings, not this page. Product behavior is owned by the canonical docs. CLI, DurableAgentServer, and agent runtime details follow the databricks-ai-bridge README and runtime guide."
+  note: "No agent skill covers the Agent Bricks developer platform. The legacy Knowledge Assistant and Supervisor Agent offerings (and the databricks-agent-bricks skill, removed upstream in v0.2.37) are not this page's subject; Genie Agents replace them for low-code agents. Product behavior is owned by the canonical docs. CLI, DurableAgentServer, and agent runtime details follow the databricks-ai-bridge README and runtime guide."
 ---
 
 # What is Agent Bricks?

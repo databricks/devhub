@@ -19,6 +19,8 @@ export const MUTUALLY_EXCLUSIVE: Record<string, string[][]> = {
   "create-branch": [["--ttl", "--no-expiry"]],
   // --path writes raw files to a directory, so it replaces --skills-only
   install: [["--skills-only", "--path"]],
+  // One deploy source: a workspace path or a single Git ref
+  deploy: [["--source-code-path", "--git-branch", "--git-commit", "--git-tag"]],
 };
 
 export const SKIP_FLAGS: Record<string, string[]> = {

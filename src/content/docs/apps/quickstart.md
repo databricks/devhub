@@ -14,7 +14,9 @@ sourceOfTruth:
 
 - Databricks CLI `v1.0.0+` with an [authenticated profile](/docs/tools/databricks-cli#authenticate)
 - Node.js 22.16+ (AppKit apps are Node/TypeScript)
+- [pnpm](https://pnpm.io/installation), which the default AppKit template uses to install dependencies and run scripts
 - Databricks workspace with Apps enabled
+- For the manual path, a [Lakebase Postgres project](/docs/lakebase/quickstart) you have `CAN MANAGE` on, with its branch and database
 
 ## Template path
 
@@ -40,21 +42,38 @@ databricks aitools install
 
 ## Manual path
 
-Without a template, `databricks apps init` generates a working AppKit project. Here is what `--features lakebase` produces (you don't write this yourself):
+Without a template, `databricks apps init` generates a working AppKit project. With `--features lakebase`, it generates a sample to-do app on an `app.todos` table. Here is a shortened version of the server code it produces (you don't write this yourself):
 
-```typescript
+```typescript title="server/server.ts"
 import { createApp, lakebase, server } from "@databricks/appkit";
 
-const AppKit = await createApp({
-  plugins: [server(), lakebase()],
-});
+import { setupSampleLakebaseRoutes } from "./routes/lakebase/todo-routes";
 
-AppKit.server.extend((app) => {
-  app.get("/api/items", async (_req, res) => {
-    const { rows } = await AppKit.lakebase.query("SELECT * FROM items");
-    res.json(rows);
+createApp({
+  plugins: [lakebase(), server()],
+  async onPluginsReady(appkit) {
+    await setupSampleLakebaseRoutes(appkit);
+  },
+}).catch(console.error);
+```
+
+```typescript title="server/routes/lakebase/todo-routes.ts"
+export async function setupSampleLakebaseRoutes(appkit) {
+  // On first start, creates the app schema and the app.todos table
+  await appkit.lakebase.query("CREATE SCHEMA IF NOT EXISTS app");
+  await appkit.lakebase.query(
+    "CREATE TABLE IF NOT EXISTS app.todos (id SERIAL PRIMARY KEY, title TEXT NOT NULL, ...)",
+  );
+
+  appkit.server.extend((app) => {
+    app.get("/api/lakebase/todos", async (_req, res) => {
+      const { rows } = await appkit.lakebase.query(
+        "SELECT id, title, completed, created_at FROM app.todos ORDER BY created_at DESC",
+      );
+      res.json(rows);
+    });
   });
-});
+}
 ```
 
 Scaffold, deploy, and run locally. Deploy before you run locally so the app's service principal creates and owns the database schema; [Local setup](/docs/lakebase/development#local-setup) explains why.

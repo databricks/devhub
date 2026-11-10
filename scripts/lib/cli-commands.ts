@@ -17,6 +17,8 @@ export const MUTUALLY_EXCLUSIVE: Record<string, string[][]> = {
     ["--skip-install", "--run"],
   ],
   "create-branch": [["--ttl", "--no-expiry"]],
+  // One deploy source: a workspace path or a single Git ref
+  deploy: [["--source-code-path", "--git-branch", "--git-commit", "--git-tag"]],
 };
 
 export const SKIP_FLAGS: Record<string, string[]> = {

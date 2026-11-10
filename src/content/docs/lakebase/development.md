@@ -321,11 +321,11 @@ For Databricks Apps configuration issues (resources in `databricks.yml` and `app
 
 ## AppKit docs
 
-Access the AppKit API reference, component docs, and plugin docs from the terminal:
+Access the AppKit API reference, component docs, and plugin docs from your project directory. `pnpm exec` runs the AppKit version your project installed:
 
 ```bash
-npx @databricks/appkit docs                    # browse the documentation index
-npx @databricks/appkit docs "lakebase"         # view Lakebase Postgres plugin docs
+pnpm exec appkit docs                               # browse the documentation index
+pnpm exec appkit docs ./docs/plugins/lakebase.md   # view Lakebase Postgres plugin docs
 ```
 
 Or view the [AppKit Lakebase Postgres plugin reference](/docs/appkit/v0/plugins/lakebase) on this site.

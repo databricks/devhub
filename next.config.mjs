@@ -138,6 +138,12 @@ const nextConfig = {
         destination: "/product/lakebase",
         permanent: true,
       },
+      {
+        source:
+          "/ai-index/share/open-source-:chart(token-share|wallet-share)/:path*",
+        destination: "/ai-index/share/open-weight-:chart/:path*",
+        permanent: true,
+      },
       // /appkit is a moving alias for the current major. A 308 would pin
       // crawlers to whatever destination this build happened to emit.
       {

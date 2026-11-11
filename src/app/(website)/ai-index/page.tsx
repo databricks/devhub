@@ -128,8 +128,8 @@ export default function AiTrendsPage(): ReactNode {
               token={charts.open_source_token_share}
               wallet={charts.open_source_wallet_share}
               slugs={{
-                token: "open-source-token-share",
-                wallet: "open-source-wallet-share",
+                token: "open-weight-token-share",
+                wallet: "open-weight-wallet-share",
               }}
               canvasIds={{
                 token: "ossTokenShareChart",

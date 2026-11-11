@@ -62,9 +62,9 @@ function renderChart(slug: string, logos: Record<string, string>): ReactNode {
       return renderStackedShare("proprietary", "token");
     case "wallet-share":
       return renderStackedShare("proprietary", "wallet");
-    case "open-source-token-share":
+    case "open-weight-token-share":
       return renderStackedShare("open_source", "token");
-    case "open-source-wallet-share":
+    case "open-weight-wallet-share":
       return renderStackedShare("open_source", "wallet");
     case "spend": {
       const { spend } = industryData;

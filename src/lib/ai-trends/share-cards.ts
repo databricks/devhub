@@ -5,8 +5,8 @@ export type ShareSlug =
   | "scatter"
   | "token-share"
   | "wallet-share"
-  | "open-source-token-share"
-  | "open-source-wallet-share"
+  | "open-weight-token-share"
+  | "open-weight-wallet-share"
   | "spend";
 
 export type ShareCard = {
@@ -42,13 +42,13 @@ const CARDS: ShareCard[] = [
     placeholder: walletPlaceholder,
   },
   {
-    slug: "open-source-token-share",
+    slug: "open-weight-token-share",
     title: `Open-weight ${charts.open_source_token_share.title.toLowerCase()}`,
     description: charts.open_source_token_share.description,
     updated: shareUpdated,
   },
   {
-    slug: "open-source-wallet-share",
+    slug: "open-weight-wallet-share",
     title: `Open-weight ${charts.open_source_wallet_share.title.toLowerCase()}`,
     description: charts.open_source_wallet_share.description,
     updated: shareUpdated,

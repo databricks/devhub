@@ -15,6 +15,7 @@ export function ShareSection({
   token,
   wallet,
   slugs,
+  legacyIds,
   canvasIds,
   showHalfLine,
   walletPlaceholder,
@@ -25,6 +26,7 @@ export function ShareSection({
   token: ChartCopy;
   wallet: ChartCopy;
   slugs: { token: string; wallet: string };
+  legacyIds?: { token: string; wallet: string };
   canvasIds: { token: string; wallet: string };
   showHalfLine: boolean;
   walletPlaceholder: boolean;
@@ -48,6 +50,11 @@ export function ShareSection({
           shareChartIds={[canvasIds[metric]]}
           shareSlug={slugs[metric]}
         >
+          {legacyIds ? (
+            // Former card id, so old /ai-index#<id> links still land here; the
+            // larger scroll margin clears the card header above this point.
+            <span id={legacyIds[metric]} className="block scroll-mt-40" />
+          ) : null}
           <StackedShareChart
             weeks={weeks}
             layers={layers}

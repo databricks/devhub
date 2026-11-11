@@ -131,6 +131,10 @@ export default function AiTrendsPage(): ReactNode {
                 token: "open-weight-token-share",
                 wallet: "open-weight-wallet-share",
               }}
+              legacyIds={{
+                token: "open-source-token-share",
+                wallet: "open-source-wallet-share",
+              }}
               canvasIds={{
                 token: "ossTokenShareChart",
                 wallet: "ossWalletShareChart",

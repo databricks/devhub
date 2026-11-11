@@ -10,10 +10,12 @@ import { resolveSiteUrl } from "../src/lib/site-url";
 // Social platforms build the share preview by fetching /ai-index/share/<chart>
 // and reading its Open Graph / Twitter tags, so these tests check the built
 // output a crawler would see. `pnpm test` runs `pnpm build` first.
-const NEXT_APP_DIR = resolve(__dirname, "..", ".next", "server", "app");
+const NEXT_DIR = resolve(__dirname, "..", ".next");
+const NEXT_APP_DIR = resolve(NEXT_DIR, "server", "app");
 const SHARE_DIR = resolve(NEXT_APP_DIR, "ai-index", "share");
 const OG_WIDTH = 1200;
 const OG_HEIGHT = 630;
+const LEGACY_SLUGS = ["open-source-token-share", "open-source-wallet-share"];
 
 function readMeta(html: string, key: string): string | undefined {
   const tag = html.match(
@@ -65,6 +67,35 @@ describe("AI Index share previews", () => {
       // A blank or failed render is a few KB; real charts are far larger.
       expect(image.byteLength).toBeGreaterThan(20_000);
     }
+  });
+
+  test.each(LEGACY_SLUGS)("%s: old anchor still lands on its card", (slug) => {
+    expect(pageHtml).toContain(`id="${slug}"`);
+  });
+
+  test("old share URLs and their images redirect permanently", () => {
+    const manifest = JSON.parse(
+      readFileSync(resolve(NEXT_DIR, "routes-manifest.json"), "utf-8"),
+    ) as {
+      redirects: { regex: string; destination: string; statusCode: number }[];
+    };
+    const legacy = manifest.redirects.filter(({ regex }) =>
+      new RegExp(regex).test("/ai-index/share/open-source-token-share"),
+    );
+    expect(legacy).toEqual([
+      expect.objectContaining({
+        destination: "/ai-index/share/open-weight-:chart/:path*",
+        statusCode: 308,
+      }),
+    ]);
+    const matches = new RegExp(legacy[0].regex);
+    for (const slug of LEGACY_SLUGS) {
+      expect(matches.test(`/ai-index/share/${slug}`)).toBe(true);
+      expect(matches.test(`/ai-index/share/${slug}/opengraph-image-x`)).toBe(
+        true,
+      );
+    }
+    expect(matches.test("/ai-index/share/open-source-scatter")).toBe(false);
   });
 
   test.each(getShareSlugs())(

@@ -44,6 +44,10 @@
       "destination": "/api/markdown?section=mvps&slug="
     },
     {
+      "source": "/ai-index.md",
+      "destination": "/api/markdown?section=ai-index&slug="
+    },
+    {
       "source": "/raw-docs/(.*)",
       "destination": "/api/markdown?section=docs&slug=$1"
     },

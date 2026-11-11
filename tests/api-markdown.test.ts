@@ -212,6 +212,15 @@ describe("/api/markdown product and resources pages", () => {
     );
   });
 
+  test("/ai-index renders from the AI Index data", async () => {
+    const result = await call({ section: "ai-index", slug: "" });
+    expect(result.statusCode).toBe(200);
+    expect(result.body).toMatch(/^# Databricks AI Index\n/);
+    expect(result.body).toContain(
+      "](https://developers.databricks.com/ai-index/share/scatter)",
+    );
+  });
+
   test("an unknown product returns a markdown 404 for its own path", async () => {
     const result = await call({ section: "product", slug: "does-not-exist" });
     expect(result.statusCode).toBe(404);

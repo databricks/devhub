@@ -226,12 +226,21 @@ writeMarkdownArtifact({
   siteUrl,
 });
 
+writeMarkdownArtifact({
+  helpers,
+  section: "ai-index",
+  slug: "",
+  filePath: join(publicDir, "ai-index.md"),
+  siteUrl,
+});
+
 const generatedSummary = [
   `${collectDocsSlugs(docsContentDir).length} docs markdown files`,
   `${helpers.getCookbookSlugs(rootDir).length} cookbook markdown files`,
   `${helpers.getContentSlugs(rootDir, "recipes").length} recipe markdown files`,
   `${helpers.getContentSlugs(rootDir, "examples").length} example markdown files`,
   `${helpers.getProductRouteSlugs().length + 1} product and resources markdown files`,
+  "1 AI Index markdown file",
 ];
 
 console.log(`Generated Next static artifacts: ${generatedSummary.join(", ")}.`);

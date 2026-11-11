@@ -3,6 +3,26 @@ const INK = "#0b2026";
 const MUTED = "#5b6a70";
 const SITE_LABEL = "developers.databricks.com/ai-index";
 
+function wrapLines(
+  ctx: CanvasRenderingContext2D,
+  text: string,
+  maxWidth: number,
+): string[] {
+  const lines: string[] = [];
+  let line = "";
+  for (const word of text.split(" ")) {
+    const candidate = line ? `${line} ${word}` : word;
+    if (line && ctx.measureText(candidate).width > maxWidth) {
+      lines.push(line);
+      line = word;
+    } else {
+      line = candidate;
+    }
+  }
+  if (line) lines.push(line);
+  return lines;
+}
+
 /**
  * PNG of a live chart canvas under a title, for views the server-rendered
  * share cards can't show (a filtered scatter). Chart.js sizes the canvas
@@ -16,26 +36,35 @@ export function renderCanvasImage(
   const scale = canvas.width / canvas.getBoundingClientRect().width;
   const pad = 24 * scale;
   const titleSize = 20 * scale;
+  const titleLineHeight = 26 * scale;
   const metaSize = 13 * scale;
-  const chartTop = pad + titleSize + metaSize + 24 * scale;
   const footerHeight = 40 * scale;
-  const font = getComputedStyle(document.body).fontFamily;
+  const titleFont = `600 ${titleSize}px ${getComputedStyle(document.body).fontFamily}`;
+  const metaFont = `${metaSize}px ${getComputedStyle(document.body).fontFamily}`;
 
   const out = document.createElement("canvas");
-  out.width = canvas.width + pad * 2;
-  out.height = chartTop + canvas.height + pad + footerHeight;
   const ctx = out.getContext("2d");
   if (!ctx) return Promise.reject(new Error("No 2D canvas context"));
+  ctx.font = titleFont;
+  const titleLines = wrapLines(ctx, title, canvas.width);
+  const metaTop = pad + titleLines.length * titleLineHeight + 4 * scale;
+  const chartTop = metaTop + metaSize + 20 * scale;
+
+  // Resizing a canvas resets its context state, so fonts are set after this.
+  out.width = canvas.width + pad * 2;
+  out.height = chartTop + canvas.height + pad + footerHeight;
 
   ctx.fillStyle = PAPER;
   ctx.fillRect(0, 0, out.width, out.height);
   ctx.textBaseline = "top";
   ctx.fillStyle = INK;
-  ctx.font = `600 ${titleSize}px ${font}`;
-  ctx.fillText(title, pad, pad);
+  ctx.font = titleFont;
+  titleLines.forEach((line, i) => {
+    ctx.fillText(line, pad, pad + i * titleLineHeight);
+  });
   ctx.fillStyle = MUTED;
-  ctx.font = `${metaSize}px ${font}`;
-  ctx.fillText("Databricks AI Index", pad, pad + titleSize + 8 * scale);
+  ctx.font = metaFont;
+  ctx.fillText("Databricks AI Index", pad, metaTop);
 
   // The chart draws white discs behind its logos, so it sits on white as on the page.
   ctx.fillStyle = "#ffffff";

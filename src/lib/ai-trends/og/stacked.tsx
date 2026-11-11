@@ -6,7 +6,6 @@ import { CHART_HEIGHT, CHART_WIDTH, GRID, INK, OgLabel, PAPER } from "./frame";
 import { linear } from "./scale";
 
 const PLOT = { left: 48, right: 250, top: 8, bottom: 30 };
-const BARE_PLOT = { left: 0, right: 0, top: 0, bottom: 0 };
 const BAR_FILL = 0.78;
 const LEGEND_ROW = 20;
 
@@ -16,30 +15,22 @@ export function OgStackedBars({
   legend,
   metric,
   showHalfLine,
-  width = CHART_WIDTH,
-  height = CHART_HEIGHT,
-  bare = false,
 }: {
   weeks: string[];
   layers: StackLayer[];
   legend: LegendGroup[];
   metric: "token" | "wallet";
   showHalfLine: boolean;
-  width?: number;
-  height?: number;
-  /** Bars only: no axis labels, gridlines, or legend. */
-  bare?: boolean;
 }): ReactNode {
-  const plot = bare ? BARE_PLOT : PLOT;
-  const plotRight = width - plot.right;
-  const bottom = height - plot.bottom;
-  const y = linear(0, 100, bottom, plot.top);
-  const slot = (plotRight - plot.left) / weeks.length;
+  const plotRight = CHART_WIDTH - PLOT.right;
+  const bottom = CHART_HEIGHT - PLOT.bottom;
+  const y = linear(0, 100, bottom, PLOT.top);
+  const slot = (plotRight - PLOT.left) / weeks.length;
   const barWidth = slot * BAR_FILL;
   const ticks = [0, 25, 50, 75, 100];
   const xEvery = Math.ceil(weeks.length / 8);
   const legendRows = legend.reduce((n, g) => n + g.items.length + 1, 0);
-  const rowHeight = Math.min(LEGEND_ROW, height / legendRows);
+  const rowHeight = Math.min(LEGEND_ROW, CHART_HEIGHT / legendRows);
 
   const bars = weeks.map((_, week) => {
     let base = 0;
@@ -47,7 +38,7 @@ export function OgStackedBars({
       const value = layer[metric][week] ?? 0;
       const rect = {
         key: `${week}-${layer.label}`,
-        x: plot.left + slot * week + (slot - barWidth) / 2,
+        x: PLOT.left + slot * week + (slot - barWidth) / 2,
         y: y(base + value),
         height: y(base) - y(base + value),
         color: layer.color,
@@ -77,43 +68,24 @@ export function OgStackedBars({
     return rows;
   });
 
-  const barRects = bars
-    .flat()
-    .map(({ key, ...rect }) => (
-      <rect
-        key={key}
-        x={rect.x}
-        y={rect.y}
-        width={barWidth}
-        height={rect.height}
-        fill={rect.color}
-        stroke={PAPER}
-        strokeWidth={0.75}
-      />
-    ));
-
-  if (bare) {
-    return (
-      <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`}>
-        {barRects}
-      </svg>
-    );
-  }
-
   return (
     <div
       style={{
         display: "flex",
         position: "relative",
-        width,
-        height,
+        width: CHART_WIDTH,
+        height: CHART_HEIGHT,
       }}
     >
-      <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`}>
+      <svg
+        width={CHART_WIDTH}
+        height={CHART_HEIGHT}
+        viewBox={`0 0 ${CHART_WIDTH} ${CHART_HEIGHT}`}
+      >
         {ticks.map((v) => (
           <line
             key={v}
-            x1={plot.left}
+            x1={PLOT.left}
             x2={plotRight}
             y1={y(v)}
             y2={y(v)}
@@ -121,10 +93,21 @@ export function OgStackedBars({
             strokeWidth={1}
           />
         ))}
-        {barRects}
+        {bars.flat().map(({ key, ...rect }) => (
+          <rect
+            key={key}
+            x={rect.x}
+            y={rect.y}
+            width={barWidth}
+            height={rect.height}
+            fill={rect.color}
+            stroke={PAPER}
+            strokeWidth={0.75}
+          />
+        ))}
         {showHalfLine ? (
           <line
-            x1={plot.left}
+            x1={PLOT.left}
             x2={plotRight}
             y1={y(50)}
             y2={y(50)}
@@ -137,7 +120,7 @@ export function OgStackedBars({
       {ticks.map((v) => (
         <OgLabel
           key={v}
-          x={plot.left - 8}
+          x={PLOT.left - 8}
           y={y(v)}
           align="right"
           width={44}
@@ -150,7 +133,7 @@ export function OgStackedBars({
         i % xEvery === 0 ? (
           <OgLabel
             key={w}
-            x={plot.left + slot * i + slot / 2}
+            x={PLOT.left + slot * i + slot / 2}
             y={bottom + 16}
             align="center"
             width={70}

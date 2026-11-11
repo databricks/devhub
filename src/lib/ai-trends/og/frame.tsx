@@ -1,21 +1,16 @@
 import type { CSSProperties, ReactNode } from "react";
 
 export const OG_SIZE = { width: 1200, height: 630 };
-const PADDING_TOP = 40;
-const FOOTER_HEIGHT = 44;
-/** Height between the top padding and the footer. */
-export const OG_BODY_HEIGHT = OG_SIZE.height - PADDING_TOP - FOOTER_HEIGHT;
 export const CHART_WIDTH = 1104;
 export const CHART_HEIGHT = 384;
 
 // Mirrors the page palette in src/css/custom.css (--db-navy, --db-paper,
-// --db-lava, --db-card); image rendering can't read Tailwind tokens.
+// --db-lava); image rendering can't read Tailwind tokens.
 export const INK = "#0b2026";
 export const MUTED = "#5b6a70";
 export const GRID = "#e4e2dd";
 export const PAPER = "#f9f7f4";
 export const LAVA = "#ff3621";
-export const CARD = "#ffffff";
 
 const SITE_LABEL = "developers.databricks.com/ai-index";
 
@@ -84,7 +79,7 @@ export function OgPage({ children }: { children: ReactNode }): ReactNode {
         flexDirection: "column",
         background: PAPER,
         color: INK,
-        padding: `${PADDING_TOP}px 48px 0`,
+        padding: "40px 48px 0",
         position: "relative",
       }}
     >
@@ -95,7 +90,7 @@ export function OgPage({ children }: { children: ReactNode }): ReactNode {
           left: 48,
           right: 48,
           bottom: 0,
-          height: FOOTER_HEIGHT,
+          height: 44,
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",

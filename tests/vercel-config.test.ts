@@ -37,6 +37,20 @@ describe("vercel rewrites", () => {
     );
     expectRewrite("/templates.md", "/api/markdown?section=templates&slug=");
     expectRewrite("/raw-docs/(.*)", "/api/markdown?section=docs&slug=$1");
+    expectRewrite(
+      "/product/(.+)\\.md",
+      "/api/markdown?section=product&slug=$1",
+    );
+    expectRewrite("/mvps.md", "/api/markdown?section=mvps&slug=");
+  });
+
+  test("routes page markdown before the docs catch-all", () => {
+    const sources = config.rewrites.map((rewrite) => rewrite.source);
+    const catchAll = sources.indexOf("/(.+)\\.md");
+    expect(catchAll).toBeGreaterThan(-1);
+    for (const source of ["/product/(.+)\\.md", "/mvps.md"]) {
+      expect(sources.indexOf(source)).toBeLessThan(catchAll);
+    }
   });
 
   test("does not keep legacy base-path rewrites", () => {

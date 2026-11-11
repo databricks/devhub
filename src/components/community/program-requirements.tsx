@@ -1,64 +1,26 @@
+import { mvpProgram } from "@/lib/community/mvp-program";
+import { InlineLinks } from "@/components/community/inline-links";
 import { SectionKicker } from "@/components/products/section-kicker";
 
-const membership = [
-  {
-    label: "Share knowledge",
-    title: "Create and share technical content.",
-    items: [
-      "Write thought-leadership blogs and technical guides",
-      "Publish video demonstrations and tutorials",
-      "Post product breakdowns and tips on social media",
-    ],
-  },
-  {
-    label: "Build community",
-    title: "Help create an active, welcoming, and connected community.",
-    items: [
-      "Speak at industry conferences and data meetups",
-      "Answer questions and share experiences on Reddit",
-      "Engage actively in the official Databricks Community forum",
-    ],
-  },
-  {
-    label: "Grow the ecosystem",
-    title: "Help grow the Databricks developer community.",
-    items: [
-      "Organize local or virtual Databricks meetups",
-      "Develop courses and webinars to educate users",
-      "Expand the global developer footprint",
-    ],
-  },
-  {
-    label: "Shape the future",
-    title: "Support and help shape the Databricks and the MVP program.",
-    items: [
-      "Champion new products and feature releases",
-      "Provide candid feedback on what is and isn't working",
-      "Collaborate with fellow MVPs to refine and publish content",
-    ],
-  },
-];
-
 export function MVPRequirements() {
+  const { requirementsIntro, requirements } = mvpProgram;
   return (
     <section
       aria-labelledby="membership-requirements"
       className="mx-auto max-w-7xl px-5 pt-24 md:px-8 md:pt-32 xl:pt-40"
     >
       <SectionKicker className="text-grey-40">
-        Membership Requirements
+        {requirementsIntro.kicker}
       </SectionKicker>
       <h2
         id="membership-requirements"
         className="mt-6 max-w-3xl text-3xl/tight font-normal tracking-[-0.04em] text-pretty md:text-4xl/tight xl:text-[2.75rem]/[1.25]"
       >
-        How Databricks MVPs contribute to the community.{" "}
-        <span className="text-grey-40">
-          MVPs share knowledge and grow the ecosystem.
-        </span>
+        {requirementsIntro.title}{" "}
+        <span className="text-grey-40">{requirementsIntro.description}</span>
       </h2>
       <div className="mt-14 flex flex-col gap-14 lg:mt-20 lg:gap-16">
-        {membership.map(({ label, title, items }, index) => (
+        {requirements.map(({ label, title, items }, index) => (
           <article
             key={label}
             className="grid gap-6 lg:grid-cols-[256px_1fr] lg:gap-16"
@@ -86,20 +48,7 @@ export function MVPRequirements() {
                       aria-hidden="true"
                     />
                     <span className="text-pretty">
-                      {item ===
-                      "Engage actively in the official Databricks Community forum" ? (
-                        <>
-                          Engage actively in the official{" "}
-                          <a
-                            href="https://community.databricks.com/"
-                            className="text-orange underline-offset-4 hover:underline"
-                          >
-                            Databricks Community forum
-                          </a>
-                        </>
-                      ) : (
-                        item
-                      )}
+                      <InlineLinks text={item} />
                     </span>
                   </li>
                 ))}

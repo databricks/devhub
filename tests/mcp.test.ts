@@ -141,6 +141,25 @@ describe("MCP server handler", () => {
     }
   });
 
+  test("get_doc_resource fetches the product and MVP pages listed in llms.txt", async () => {
+    for (const [slug, heading] of [
+      ["https://developers.databricks.com/product/lakebase.md", "# Lakebase. "],
+      ["https://developers.databricks.com/mvps.md", "# Databricks MVPs. "],
+    ]) {
+      const result = (await callMcp(
+        rpc("tools/call", {
+          name: "get_doc_resource",
+          arguments: { slug },
+        }),
+      )) as { result: { content: Array<{ text: string }>; isError: boolean } };
+      expect(result.result.isError, `slug: ${slug}`).toBeFalsy();
+      expect(
+        result.result.content[0].text.startsWith(heading),
+        `slug: ${slug}`,
+      ).toBe(true);
+    }
+  });
+
   test("get_doc_resource returns the template catalog for the bare templates overview URL", async () => {
     for (const slug of [
       "templates.md",

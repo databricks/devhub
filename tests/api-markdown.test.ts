@@ -190,3 +190,32 @@ describe("/api/markdown about-devhub preamble policy", () => {
     expect([400, 404, 500]).toContain(result.statusCode);
   });
 });
+
+describe("/api/markdown product and resources pages", () => {
+  test("product pages render from the product page data", async () => {
+    const result = await call({ section: "product", slug: "lakebase" });
+    expect(result.statusCode).toBe(200);
+    expect(result.headers["content-type"]).toContain("text/markdown");
+    expect(result.body).toMatch(/^# Lakebase\. /);
+    expect(result.body).not.toContain("# About DevHub");
+    expect(result.body).toContain(
+      "](https://developers.databricks.com/docs/lakebase/overview)",
+    );
+  });
+
+  test("/mvps renders from the MVP program data", async () => {
+    const result = await call({ section: "mvps", slug: "" });
+    expect(result.statusCode).toBe(200);
+    expect(result.body).toMatch(/^# Databricks MVPs\. /);
+    expect(result.body).toContain(
+      "[Databricks Community forum](https://community.databricks.com/)",
+    );
+  });
+
+  test("an unknown product returns a markdown 404 for its own path", async () => {
+    const result = await call({ section: "product", slug: "does-not-exist" });
+    expect(result.statusCode).toBe(404);
+    expect(result.headers["content-type"]).toContain("text/markdown");
+    expect(result.body).toContain("`/product/does-not-exist.md`");
+  });
+});

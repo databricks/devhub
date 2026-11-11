@@ -86,6 +86,7 @@ export async function generateMetadata({
     title: product.title,
     description: product.description,
     imagePath: product.hero.image.src,
+    markdownPath: `${product.canonicalPath}.md`,
     pathname: product.canonicalPath,
   });
 }

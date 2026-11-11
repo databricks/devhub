@@ -1,10 +1,9 @@
 import Link from "next/link";
 
+import { MVP_NOMINATION_URL } from "@/lib/community/mvp-program";
 import { Button } from "@/components/ui/button";
 import CTA from "@/components/home/cta";
 
-export const MVP_NOMINATION_URL =
-  "https://surveys.training.databricks.com/jfe/form/SV_6Ed034QOD4pcQFU";
 export const STUDENT_APPLICATION_URL =
   "https://airtable.com/appasC90KmqZ5x1t5/pag6tvR9VUG4Kf1iM/form";
 

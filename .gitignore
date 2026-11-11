@@ -11,6 +11,8 @@ public/raw-docs
 public/docs
 public/templates
 public/templates.md
+public/product
+public/mvps.md
 src/content/docs/appkit/
 src/components/doc-examples/
 public/appkit-preview/

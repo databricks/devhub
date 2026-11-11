@@ -2,6 +2,7 @@ import { existsSync, readFileSync } from "fs";
 import { resolve } from "path";
 
 import { ABOUT_DEVHUB_SLUG } from "./bootstrap-prompt";
+import { renderMvpProgramMarkdown } from "./community/mvp-program";
 import {
   hasContentSlug,
   readContentSections,
@@ -19,6 +20,8 @@ import { expandMdxImports } from "./expand-mdx";
 import { showDrafts } from "./feature-flags-server";
 import { buildDocsFeedbackNote } from "./feedback/docs-feedback-note";
 import type { MarkdownSection } from "./markdown-sections";
+import { renderProductMarkdown } from "./products/product-markdown";
+import { getProductPageByRouteSlug } from "./products/product-pages";
 import {
   cookbooks,
   examples,
@@ -231,9 +234,10 @@ export function getDetailMarkdown(
 ): string {
   const slug = normalizeSlug(rawSlug);
 
-  // Empty slug serves the templates section index page.
+  // Empty slug serves the section index page.
   if (!slug || slug.trim() === "") {
     if (section === "templates") return readTemplatesIndex();
+    if (section === "mvps") return renderMvpProgramMarkdown();
     throw new Error("Missing slug");
   }
 
@@ -251,6 +255,11 @@ export function getDetailMarkdown(
       return readExampleMarkdown(rootDir, slug);
     case "templates":
       return readTemplateMarkdown(rootDir, slug, siteOrigin);
+    case "product": {
+      const product = getProductPageByRouteSlug(slug);
+      if (!product) throw new Error(`Product page not found: "${slug}"`);
+      return renderProductMarkdown(product);
+    }
     default:
       throw new Error(`Unsupported section: "${section}"`);
   }

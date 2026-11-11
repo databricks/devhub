@@ -1,4 +1,11 @@
-const MARKDOWN_SECTIONS = ["docs", "recipes", "examples", "templates"] as const;
+const MARKDOWN_SECTIONS = [
+  "docs",
+  "recipes",
+  "examples",
+  "templates",
+  "product",
+  "mvps",
+] as const;
 
 export type MarkdownSection = (typeof MARKDOWN_SECTIONS)[number];
 
@@ -10,10 +17,12 @@ const MARKDOWN_HTML_PREFIXES: ReadonlyArray<{
 }> = [
   { prefix: "/docs/", section: "docs" },
   { prefix: "/templates/", section: "templates" },
+  { prefix: "/product/", section: "product" },
 ];
 
 const MARKDOWN_INDEX_PATHS: Readonly<Record<string, MarkdownSection>> = {
   "/templates": "templates",
+  "/mvps": "mvps",
 };
 
 function isMarkdownSection(value: string | null): value is MarkdownSection {

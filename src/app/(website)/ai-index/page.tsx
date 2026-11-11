@@ -33,6 +33,7 @@ const TOP_MODEL_COUNT = 10;
 export const metadata = getMetadata({
   title: contentData.seo.title,
   description: contentData.seo.description,
+  markdownPath: `${PAGE_PATH}.md`,
   pathname: PAGE_PATH,
   noIndex: true,
 });

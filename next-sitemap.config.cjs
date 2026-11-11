@@ -8,7 +8,7 @@ module.exports = {
   siteUrl,
   generateRobotsTxt: true,
   trailingSlash: false,
-  exclude: ["/hackathon", "/hackathon/*"],
+  exclude: ["/hackathon", "/hackathon/*", "/ai-index", "/ai-index/*"],
   transform: async (config, path) => ({
     loc: path,
     changefreq: config.changefreq,

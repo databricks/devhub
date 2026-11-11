@@ -1,0 +1,227 @@
+{
+  "source": "Aggregated, anonymized Unity Gateway traffic from external enterprise customers, refreshed 2026-11-10. Embedding models, Databricks-internal usage, and reseller traffic are excluded. Wallet share and spend per user are priced at published provider list price, which is not what Databricks bills.",
+  "share": {
+    "as_of": "2026-11-02",
+    "weeks": [
+      "Sep 21",
+      "Sep 28",
+      "Oct 5",
+      "Oct 12",
+      "Oct 19",
+      "Oct 26",
+      "Nov 2"
+    ],
+    "groups": {
+      "proprietary": {
+        "providers": [
+          {
+            "name": "Anthropic",
+            "color": "#d97757"
+          },
+          {
+            "name": "OpenAI",
+            "color": "#10a37f"
+          },
+          {
+            "name": "Other proprietary",
+            "color": "#6366f1"
+          }
+        ],
+        "series": [
+          {
+            "label": "Older Anthropic Models",
+            "provider": "Anthropic",
+            "older": true,
+            "token": [10.3, 8.5, 8.7, 7.1, 6.3, 6.9, 9.3],
+            "wallet": [19.7, 15.4, 17.0, 15.3, 13.0, 14.5, 25.8]
+          },
+          {
+            "label": "Sonnet 5",
+            "provider": "Anthropic",
+            "older": false,
+            "token": [22.6, 19.0, 12.4, 9.0, 6.5, 6.3, 5.4],
+            "wallet": [14.4, 11.5, 9.2, 6.9, 5.5, 5.3, 4.8]
+          },
+          {
+            "label": "Opus 5",
+            "provider": "Anthropic",
+            "older": false,
+            "token": [12.0, 8.1, 5.1, 3.7, 3.1, 2.3, 2.0],
+            "wallet": [19.5, 12.2, 9.5, 7.4, 6.6, 6.1, 5.2]
+          },
+          {
+            "label": "Sonnet 5.5",
+            "provider": "Anthropic",
+            "older": false,
+            "token": [0.0, 2.0, 9.7, 10.2, 11.5, 14.3, 11.1],
+            "wallet": [0.0, 0.8, 4.8, 6.3, 6.3, 8.0, 6.6]
+          },
+          {
+            "label": "Opus 5.5",
+            "provider": "Anthropic",
+            "older": false,
+            "token": [7.2, 19.4, 28.1, 34.4, 37.3, 37.9, 34.5],
+            "wallet": [6.1, 17.5, 24.4, 28.9, 33.1, 34.8, 30.1]
+          },
+          {
+            "label": "Fable 5.1",
+            "provider": "Anthropic",
+            "older": false,
+            "token": [5.5, 6.2, 2.5, 1.6, 1.2, 1.1, 0.6],
+            "wallet": [11.1, 13.3, 5.2, 2.9, 2.6, 2.9, 1.4]
+          },
+          {
+            "label": "Older OpenAI Models",
+            "provider": "OpenAI",
+            "older": true,
+            "token": [30.6, 19.1, 13.6, 11.4, 11.4, 10.7, 14.6],
+            "wallet": [12.6, 10.6, 9.4, 7.5, 7.8, 7.3, 7.0]
+          },
+          {
+            "label": "GPT 6 Luna",
+            "provider": "OpenAI",
+            "older": false,
+            "token": [0.6, 1.9, 2.7, 3.8, 3.7, 3.9, 4.7],
+            "wallet": [0.0, 0.1, 0.2, 0.2, 0.4, 0.4, 0.5]
+          },
+          {
+            "label": "GPT 6 Sol",
+            "provider": "OpenAI",
+            "older": false,
+            "token": [2.1, 5.5, 4.1, 2.1, 1.3, 1.1, 0.8],
+            "wallet": [1.0, 3.7, 2.2, 1.5, 1.0, 0.9, 0.6]
+          },
+          {
+            "label": "GPT 6 Astra",
+            "provider": "OpenAI",
+            "older": false,
+            "token": [4.8, 4.6, 2.6, 2.2, 1.6, 2.5, 1.8],
+            "wallet": [12.8, 11.7, 8.1, 6.9, 4.7, 10.5, 7.4]
+          },
+          {
+            "label": "GPT 6.1 Sol",
+            "provider": "OpenAI",
+            "older": false,
+            "token": [0.0, 1.9, 7.5, 11.5, 13.9, 11.2, 13.9],
+            "wallet": [0.0, 0.6, 7.6, 12.5, 16.3, 6.5, 8.2]
+          },
+          {
+            "label": "Gemini, Grok",
+            "provider": "Other proprietary",
+            "older": false,
+            "token": [4.4, 3.8, 3.1, 3.1, 2.2, 2.0, 1.4],
+            "wallet": [2.7, 2.6, 2.6, 3.6, 2.7, 3.0, 2.3]
+          }
+        ]
+      },
+      "open_source": {
+        "providers": [
+          {
+            "name": "Zhipu",
+            "color": "#e87ba4"
+          },
+          {
+            "name": "Moonshot",
+            "color": "#1c1c1c"
+          },
+          {
+            "name": "DeepSeek",
+            "color": "#6e56f7"
+          },
+          {
+            "name": "Other open-weight",
+            "color": "#f59e0b"
+          }
+        ],
+        "series": [
+          {
+            "label": "Older Zhipu Models",
+            "provider": "Zhipu",
+            "older": true,
+            "token": [11.1, 8.8, 7.5, 6.8, 9.0, 5.3, 5.4],
+            "wallet": [19.0, 16.8, 16.1, 15.2, 17.2, 10.9, 11.6]
+          },
+          {
+            "label": "GLM 5.3",
+            "provider": "Zhipu",
+            "older": false,
+            "token": [12.9, 12.3, 10.1, 12.0, 22.9, 21.9, 21.6],
+            "wallet": [23.4, 22.9, 20.2, 28.2, 39.6, 44.1, 45.0]
+          },
+          {
+            "label": "GLM 5.3 Flash",
+            "provider": "Zhipu",
+            "older": false,
+            "token": [35.9, 42.7, 42.0, 48.3, 33.4, 33.3, 33.3],
+            "wallet": [6.6, 8.8, 9.1, 11.6, 7.0, 7.4, 8.4]
+          },
+          {
+            "label": "Older Moonshot Models",
+            "provider": "Moonshot",
+            "older": true,
+            "token": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.9],
+            "wallet": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+          },
+          {
+            "label": "Kimi K2.7 Code",
+            "provider": "Moonshot",
+            "older": false,
+            "token": [0.0, 0.1, 0.0, 0.0, 0.0, 0.0, 0.0],
+            "wallet": [0.1, 0.2, 0.1, 0.0, 0.0, 0.0, 0.0]
+          },
+          {
+            "label": "Kimi K3",
+            "provider": "Moonshot",
+            "older": false,
+            "token": [17.4, 16.4, 16.4, 10.8, 10.2, 9.6, 7.9],
+            "wallet": [42.3, 42.2, 45.2, 35.0, 27.4, 26.5, 22.0]
+          },
+          {
+            "label": "Older DeepSeek Models",
+            "provider": "DeepSeek",
+            "older": true,
+            "token": [6.1, 5.6, 3.5, 3.1, 1.0, 0.7, 0.2],
+            "wallet": [1.1, 1.2, 0.7, 0.5, 0.2, 0.2, 0.0]
+          },
+          {
+            "label": "DS V4 Pro",
+            "provider": "DeepSeek",
+            "older": false,
+            "token": [0.9, 0.3, 0.2, 0.1, 0.1, 0.2, 0.0],
+            "wallet": [0.2, 0.1, 0.1, 0.1, 0.0, 0.0, 0.0]
+          },
+          {
+            "label": "DS V4.1 Flash",
+            "provider": "DeepSeek",
+            "older": false,
+            "token": [13.4, 11.7, 18.5, 17.4, 21.1, 26.4, 28.0],
+            "wallet": [3.6, 4.2, 5.9, 7.1, 5.7, 7.6, 9.4]
+          },
+          {
+            "label": "Other",
+            "provider": "Other open-weight",
+            "older": false,
+            "token": [2.3, 2.0, 1.7, 1.4, 2.3, 2.6, 2.6],
+            "wallet": [3.8, 3.6, 2.8, 2.3, 2.7, 3.4, 3.5]
+          }
+        ]
+      }
+    }
+  },
+  "spend": {
+    "as_of": "2026-11-02",
+    "unit": "usd",
+    "weeks": [
+      "Sep 21",
+      "Sep 28",
+      "Oct 5",
+      "Oct 12",
+      "Oct 19",
+      "Oct 26",
+      "Nov 2"
+    ],
+    "p50": [1.1, 1.3, 1.48, 1.92, 2.03, 2.11, 2.48],
+    "p90": [95.41, 91.26, 90.27, 81.92, 87.03, 88.95, 95.96],
+    "p99": [781.48, 738.26, 654.18, 730.05, 713.79, 748.69, 698.82]
+  }
+}

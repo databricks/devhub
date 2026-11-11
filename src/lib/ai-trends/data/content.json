@@ -1,0 +1,159 @@
+{
+  "seo": {
+    "title": "Databricks AI Index",
+    "description": "The Databricks AI Index tracks enterprise AI from anonymized Unity Gateway traffic: which models companies use, where spend goes, how coding agents compare."
+  },
+  "header": {
+    "title_lead": "Databricks",
+    "title_accent": "AI Index",
+    "intro": "**Explore the tokenomics of enterprise AI:** which models companies use, where spending goes, and which coding agents deliver the best quality for the cost. Based on aggregated, anonymized data from thousands of enterprises using [Unity Gateway](https://www.databricks.com/product/artificial-intelligence/unity-gateway)."
+  },
+  "sections": {
+    "proprietary": {
+      "eyebrow": "Usage",
+      "title": "Token and wallet share by **proprietary** provider",
+      "intro": ""
+    },
+    "open_source": {
+      "eyebrow": "Usage",
+      "title": "Token and wallet share by **open-weight** provider",
+      "intro": ""
+    },
+    "spend": {
+      "eyebrow": "Spend",
+      "title": "What a user spends in a week",
+      "intro": ""
+    },
+    "frontier": {
+      "eyebrow": "Coding Frontier",
+      "title": "Cost/Quality Frontier for Coding",
+      "intro": "Measured on an internal benchmark built from Unity Gateway traces of real enterprise coding tasks from the Databricks engineering organization."
+    },
+    "changelog": {
+      "eyebrow": "Further reading",
+      "title": "Publications",
+      "intro": ""
+    }
+  },
+  "charts": {
+    "scatter": {
+      "title": "Cost per task vs quality",
+      "description": "Pass rate against average cost per task on Databricks' internal coding benchmark, one point per model. Hover over a point for exact values.",
+      "note": "Built from internal benchmarks on the Databricks codebase. Anthropic models are shown in Claude Code, all other models in Codex."
+    },
+    "top_models": {
+      "panels": {
+        "quality": {
+          "title": "Highest quality",
+          "caption": "Top 10 models, ranked by highest pass rate on the coding benchmark.",
+          "axis": "Pass rate (%)"
+        },
+        "time": {
+          "title": "Shortest time per task",
+          "caption": "Top 10 models, ranked by shortest average time to finish a task (minutes).",
+          "axis": "Average time per task (minutes)"
+        },
+        "cost": {
+          "title": "Lowest cost per task",
+          "caption": "Top 10 models, ranked by lowest average cost per task (USD).",
+          "axis": "Average cost per task (USD)"
+        }
+      }
+    },
+    "token_share": {
+      "title": "Token share by model",
+      "description": "Weekly share of Unity Gateway tokens across proprietary models.",
+      "note": "Input plus output tokens routed through Unity Gateway, including traffic routed to external model providers."
+    },
+    "wallet_share": {
+      "title": "Share of wallet by model",
+      "description": "Weekly share of list-price spend across proprietary models on Unity Gateway.",
+      "note": "Tokens priced at each provider's published list price, with cache reads at the cache-read rate. Includes traffic routed to external model providers; not what Databricks bills."
+    },
+    "spend": {
+      "title": "Weekly spend per active user",
+      "description": "Weekly spend at list price for the median Unity Gateway user and the users at the 90th and 99th percentiles.",
+      "note": "Each user's input, cached and output tokens priced at each provider's published list price; human users only.",
+      "panel_labels": {
+        "p50": "Median",
+        "p90": "P90",
+        "p99": "P99"
+      }
+    },
+    "open_source_token_share": {
+      "title": "Token share by model",
+      "description": "Weekly share of Unity Gateway tokens across open-weight models.",
+      "note": "Input plus output tokens routed through Unity Gateway, including traffic routed to external model providers."
+    },
+    "open_source_wallet_share": {
+      "title": "Share of wallet by model",
+      "description": "Weekly share of list-price spend across open-weight models on Unity Gateway.",
+      "note": "Tokens priced at each provider's published list price, with cache reads at the cache-read rate. Includes traffic routed to external model providers; not what Databricks bills."
+    }
+  },
+  "changelog": [
+    {
+      "date": "2026-11-04",
+      "category": "Publication",
+      "title": "The Enterprise Case for Open-Weight Models on Databricks",
+      "url": "https://www.databricks.com/blog/enterprise-case-open-weight-models-databricks",
+      "description": "Why enterprises run a mix of open-weight and frontier models, weighing cost, data control and governance."
+    },
+    {
+      "date": "2026-11-01",
+      "category": "Publication",
+      "title": "The new economics of AI cost management",
+      "url": "https://www.databricks.com/blog/ai-cost-management",
+      "description": "An interview on measuring AI by the value it returns per dollar, moving from tokenmaxxing to valuemaxxing."
+    },
+    {
+      "date": "2026-10-22",
+      "category": "Publication",
+      "title": "The AI Bill is coming",
+      "url": "https://www.databricks.com/blog/ai-bill-coming",
+      "description": "Why AI coding costs rise with usage, and how engineering leaders control them with gateways, routing and visibility."
+    },
+    {
+      "date": "2026-09-30",
+      "category": "Publication",
+      "title": "How to scale agentic applications without creating AI sprawl",
+      "url": "https://www.databricks.com/blog/how-scale-agentic-applications-without-creating-ai-sprawl",
+      "description": "Shared infrastructure for model choice, context and control, so each new agent does not rebuild governance and cost controls."
+    },
+    {
+      "date": "2026-09-28",
+      "category": "Publication",
+      "title": "How Databricks rolls out frontier models to 12,000 employees on Day 1",
+      "url": "https://www.databricks.com/blog/how-databricks-rolls-out-frontier-models-12000-employees-day-1",
+      "description": "Databricks' internal process for releasing new frontier models company-wide, covering experimental access, per-user budgets, and evaluation."
+    },
+    {
+      "date": "2026-09-01",
+      "category": "Publication",
+      "title": "How we eliminated $1 million a year of wasted AI agent spend in one hour",
+      "url": "https://www.databricks.com/blog/how-we-eliminated-1-million-year-wasted-ai-agent-spend-one-hour",
+      "description": "Using Unity Gateway tracing and Genie One to find and fix bugs in MCP tool servers that caused wasted agent token spend."
+    },
+    {
+      "date": "2026-08-13",
+      "category": "Publication",
+      "title": "Smart Routing in Unity Gateway",
+      "url": "https://www.databricks.com/blog/smart-routing-unity-ai-gateway-match-frontier-quality-30-lower-cost-task",
+      "description": "Introduces Smart Routing, a Unity Gateway feature that selects a model for each coding task."
+    },
+    {
+      "date": "2026-08-07",
+      "category": "Publication",
+      "title": "Managing AI Coding Costs at Scale",
+      "url": "https://www.databricks.com/blog/managing-ai-coding-costs-scale",
+      "description": "Approaches to controlling AI coding tool spend while keeping broad developer access."
+    },
+    {
+      "date": "2026-07-08",
+      "category": "Publication",
+      "title": "Benchmarking Coding Agents on Databricks' Multi-Million Line Codebase",
+      "url": "https://www.databricks.com/blog/benchmarking-coding-agents-databricks-multi-million-line-codebase",
+      "description": "The internal benchmark, built from merged pull requests, behind the cost and quality frontier on this page."
+    }
+  ]
+}

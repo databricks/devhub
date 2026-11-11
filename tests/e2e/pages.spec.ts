@@ -11,6 +11,7 @@ const PRODUCT_PAGES = [
 const PAGES = [
   { path: "/", title: "Databricks Developer" },
   { path: "/templates", title: "Templates" },
+  { path: "/ai-index", title: "Databricks AI Index" },
   { path: "/templates/ai-chat-app", title: "AI Chat App" },
   { path: "/templates/app-with-lakebase", title: "App with Lakebase" },
   {

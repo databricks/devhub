@@ -5,6 +5,7 @@ const MARKDOWN_SECTIONS = [
   "templates",
   "product",
   "mvps",
+  "ai-index",
 ] as const;
 
 export type MarkdownSection = (typeof MARKDOWN_SECTIONS)[number];
@@ -23,6 +24,7 @@ const MARKDOWN_HTML_PREFIXES: ReadonlyArray<{
 const MARKDOWN_INDEX_PATHS: Readonly<Record<string, MarkdownSection>> = {
   "/templates": "templates",
   "/mvps": "mvps",
+  "/ai-index": "ai-index",
 };
 
 function isMarkdownSection(value: string | null): value is MarkdownSection {

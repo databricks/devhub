@@ -198,26 +198,28 @@ export function ShareControl({
 
   return (
     <div className="relative flex items-center">
-      <button
-        type="button"
-        onClick={shareOnX}
-        aria-label="Share on X"
-        className="flex items-center gap-1.5 rounded-l-full border border-black/10 bg-white px-2.5 py-1 text-xs text-black/60 transition-colors hover:border-black/20 hover:text-black"
-      >
-        <XIcon />
-        <span>Share</span>
-      </button>
-      <button
-        ref={toggleRef}
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        aria-haspopup="menu"
-        aria-expanded={open}
-        aria-label="More share options"
-        className="flex items-center rounded-r-full border border-l-0 border-black/10 bg-white px-2 py-1.5 text-black/50 transition-colors hover:border-black/20 hover:text-black"
-      >
-        <ChevronIcon />
-      </button>
+      <div className="flex items-stretch overflow-hidden rounded-full border border-black/10 bg-white transition-colors hover:border-black/20">
+        <button
+          type="button"
+          onClick={shareOnX}
+          aria-label="Share on X"
+          className="flex items-center gap-1.5 px-2.5 py-1 text-xs text-black/60 transition-colors hover:bg-black/5 hover:text-black"
+        >
+          <XIcon />
+          <span>Share</span>
+        </button>
+        <button
+          ref={toggleRef}
+          type="button"
+          onClick={() => setOpen((v) => !v)}
+          aria-haspopup="menu"
+          aria-expanded={open}
+          aria-label="More share options"
+          className="flex items-center border-l border-black/10 px-2 text-black/50 transition-colors hover:bg-black/5 hover:text-black"
+        >
+          <ChevronIcon />
+        </button>
+      </div>
       {feedback ? (
         <span
           role="status"

@@ -20,15 +20,7 @@ To run an agent in production, deploy its code to managed compute that serves re
 
 A deployed agent has three layers, and each layer wraps the one above it:
 
-```mermaid
-flowchart LR
-    Client["Client"] -->|"1. POST /api/invocations"| Server
-    subgraph Runtime["Agent runtime (Databricks Apps)"]
-        Server["Agent server<br/>(DurableAgentServer)"] -->|"2. calls your invoke handler"| Loop["Framework or harness<br/>(your agent loop)"]
-        Server -->|"3. saves status, events, and result"| Store["Runtime Store<br/>(run state)"]
-    end
-    Server -.->|"4. returns or streams the result"| Client
-```
+![Agent invocation: client, DurableAgentServer, agent loop, Runtime Store, and returned or streamed results](/img/docs/agent-runtime.png)
 
 1. A client sends a request to the agent server's invocation API.
 2. The agent server calls your invoke handler, which runs the agent loop in your framework.

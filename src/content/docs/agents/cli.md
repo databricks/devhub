@@ -35,13 +35,7 @@ Three commands take an agent from a blank directory to production:
 - **`agentbricks dev`** runs the agent locally using the same manifest and environment that the deployment uses, so the app runs the way it does when deployed. It connects the agent to Databricks model serving and traces to a local MLflow server. Long-term memory is off and session history is kept in-process; bound memory and session stores apply only after you deploy.
 - **`agentbricks deploy`** reads `agent.toml` to provision any declared-but-missing stores, grants the agent's service principal access to them, configures tracing, and rolls out the deployment as a Databricks App. When the deployment finishes, the CLI returns the URL of your running agent.
 
-```mermaid
-flowchart LR
-    Init["agentbricks init"] --> Dev["agentbricks dev"] --> Deploy["agentbricks deploy"]
-    Init -.->|writes| Toml["agent.toml"]
-    Dev -.->|reads| Toml
-    Deploy -.->|reads| Toml
-```
+![Agent Bricks lifecycle: init, dev, and deploy share agent.toml](/img/docs/agent-cli.png)
 
 :::note
 

@@ -20,19 +20,7 @@ To build and deploy your first agent, see the [Agent Bricks quickstart](/docs/ag
 
 Each building block is usable on its own, and the [Agent Bricks CLI](/docs/agents/cli) wires them together for a new project. The following diagram shows how a deployed agent uses them:
 
-```mermaid
-flowchart LR
-    Client["Client<br/>(app, user, or agent)"] -->|"sends a request"| Agent
-    subgraph Runtime["Agent runtime (Databricks Apps)"]
-        Agent["Your agent code<br/>(any framework),<br/>served by DurableAgentServer"]
-    end
-    Agent -->|"calls models,<br/>MCP servers, and skills"| Gateway["Unity Gateway"]
-    Agent -->|"reads and writes<br/>history and memory"| State["Memory and sessions"]
-    Agent -->|"runs the code it writes"| Sandbox["Databricks Sandbox"]
-    Agent -->|"records each step"| Tracing["MLflow Tracing"]
-    Tracing -->|"traces feed"| Eval["MLflow evaluation<br/>and monitoring"]
-    Eval -.->|"informs the next version"| Agent
-```
+![Agent architecture: client requests, runtime, Unity Gateway, memory, Sandbox, tracing, and evaluation feedback](/img/docs/agent-overview.png)
 
 | You want to                             | Use                                                                                                                                                                                                                                                                                                                             |
 | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

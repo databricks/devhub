@@ -111,6 +111,14 @@ function walkFiles(root) {
 }
 
 function normalizeSyncedDocs(docsRoot) {
+  const diagramImages = {
+    "v0/architecture.md":
+      "![AppKit client, server, plugins, and Databricks services](/img/docs/appkit-architecture.png)",
+    "v0/development/remote-bridge.mdx":
+      "![Browser, deployed backend, WebSocket bridge, and local Vite server connections](/img/docs/remote-bridge.png)",
+    "v0/plugins/files.md":
+      "![Files permissions: Unity Catalog grants, execution identity, and file policies](/img/docs/files-permissions.png)",
+  };
   const appKitErrorSources = new Map();
   const upstreamLlmsLinkHelper =
     /import\s+\w+Context\s+from\s+["'][^"']+["'];\n\nexport function LlmsTxtLink\([\s\S]*?^}\n\n/gm;
@@ -175,6 +183,16 @@ type TypedocSidebar = {
         channel,
         appKitErrorSource: appKitErrorSources.get(channel),
       });
+      const diagramImage =
+        diagramImages[
+          path.relative(docsRoot, filePath).split(path.sep).join("/")
+        ];
+      if (diagramImage) {
+        updated = updated.replace(
+          /^```(?:mermaid[\t ]*\r?\n|[\t ]*\r?\n(?=┌))[\s\S]*?^```[\t ]*$/m,
+          diagramImage,
+        );
+      }
     }
 
     if (upstreamSidebarConfigImport.test(updated)) {

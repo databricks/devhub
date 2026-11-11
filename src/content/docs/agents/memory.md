@@ -29,13 +29,7 @@ Databricks gives agents two managed stores, both backed by [Lakebase](/docs/lake
 
 ## Overview
 
-```mermaid
-flowchart LR
-    Sessions["Session store<br/>(one conversation's transcript)"] <-->|"read and append<br/>each turn"| Agent["Agent"]
-    Agent <-->|"recall and save<br/>durable facts"| Memory["Memory store<br/>(facts across conversations)"]
-    Sessions -.->|"read by"| Pipeline["Memory pipeline"]
-    Pipeline -.->|"distills into"| Memory
-```
+![Agent sessions and memory: bidirectional store access and a pipeline that distills sessions into durable facts](/img/docs/agent-memory.png)
 
 A session grows within one conversation. When something in it is worth keeping, the agent or your app saves that fact to memory, which outlives the conversation. A [memory pipeline](#distill-memories-with-a-memory-pipeline) can also do this for you in the background, across all of a session store's conversations. The stores are independent, so deleting a session never deletes memory.
 

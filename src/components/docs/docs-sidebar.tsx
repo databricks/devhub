@@ -88,6 +88,96 @@ function hasHrefDescendant(item: DocsSidebarItem, href: string): boolean {
   return item.items.some((child) => hasHrefDescendant(child, href));
 }
 
+function useCenteredActiveItem(pathname: string, enabled = true) {
+  const [viewport, setViewport] = useState<HTMLElement | null>(null);
+
+  useEffect(() => {
+    if (!viewport || !enabled) {
+      return;
+    }
+
+    const scrollViewport = viewport;
+    let frame = 0;
+    let centered = false;
+
+    function scheduleCenter() {
+      if (centered) {
+        return;
+      }
+
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        const active = scrollViewport.querySelector<HTMLElement>(
+          'a[aria-current="page"]',
+        );
+        if (!active || scrollViewport.clientHeight === 0) {
+          return;
+        }
+
+        const activeRect = active.getBoundingClientRect();
+        if (activeRect.height === 0) {
+          return;
+        }
+
+        const viewportRect = scrollViewport.getBoundingClientRect();
+        scrollViewport.scrollTop +=
+          activeRect.top -
+          viewportRect.top -
+          scrollViewport.clientTop +
+          activeRect.height / 2 -
+          scrollViewport.clientHeight / 2;
+        centered = true;
+        mutations.disconnect();
+        resize.disconnect();
+      });
+    }
+
+    const mutations = new MutationObserver(scheduleCenter);
+    const resize = new ResizeObserver(scheduleCenter);
+    mutations.observe(viewport, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ["aria-current", "data-state", "hidden", "style"],
+    });
+    resize.observe(viewport);
+    if (viewport.firstElementChild) {
+      resize.observe(viewport.firstElementChild);
+    }
+    scheduleCenter();
+
+    return () => {
+      cancelAnimationFrame(frame);
+      mutations.disconnect();
+      resize.disconnect();
+    };
+  }, [enabled, pathname, viewport]);
+
+  return setViewport;
+}
+
+function SidebarActiveIndicator({
+  className,
+  depth,
+}: {
+  className: string;
+  depth: number;
+}): ReactNode {
+  return (
+    <span
+      aria-hidden="true"
+      className={cn(
+        "bg-orange absolute w-(--docs-sidebar-rail-width)",
+        className,
+      )}
+      data-slot="docs-sidebar-active-indicator"
+      style={{
+        left: `calc(-${depth} * var(--docs-sidebar-indent) - var(--docs-sidebar-rail-width))`,
+      }}
+    />
+  );
+}
+
 function SidebarItemLabel({
   label,
   mode,
@@ -223,12 +313,9 @@ function RecursiveSidebarItem({
             )}
           >
             {depth >= 1 && exactActive ? (
-              <span
-                aria-hidden="true"
-                className="bg-orange absolute top-1.5 bottom-1.5 w-px -translate-x-px"
-                style={{
-                  left: `calc(-${depth} * 0.0625rem - ${depth} * 0.6875rem)`,
-                }}
+              <SidebarActiveIndicator
+                className="top-1.5 bottom-1.5"
+                depth={depth}
               />
             ) : null}
             {href ? (
@@ -283,7 +370,11 @@ function RecursiveSidebarItem({
           <CollapsibleContent className="py-0.5" id={collapsibleContentId}>
             <DocsSidebar
               activePath={activePath}
-              className={cn("pl-3", depth < 1 && "border-grey-12 border-l")}
+              className={cn(
+                "pl-(--docs-sidebar-indent)",
+                depth < 1 &&
+                  "border-grey-12 [border-left-width:var(--docs-sidebar-rail-width)]",
+              )}
               depth={depth + 1}
               fallbackActiveHref={fallbackActiveHref}
               items={item.items}
@@ -311,13 +402,7 @@ function RecursiveSidebarItem({
         onClick={onItemClick}
       >
         {depth >= 1 && exactActive ? (
-          <span
-            aria-hidden="true"
-            className="bg-orange absolute top-0 h-full w-px -translate-x-px"
-            style={{
-              left: `calc(-0.0625rem - ${depth} * 0.6875rem)`,
-            }}
-          />
+          <SidebarActiveIndicator className="top-0 h-full" depth={depth} />
         ) : null}
         <SidebarItemLabel label={item.label} mode={mode} />
       </DocsSidebarLink>
@@ -340,7 +425,12 @@ function DocsSidebar({
   fallbackActiveHref?: string;
 }): ReactNode {
   return (
-    <ul className={cn("m-0 flex list-none flex-col gap-y-0 p-0", className)}>
+    <ul
+      className={cn(
+        "m-0 flex list-none flex-col gap-y-0 p-0 [--docs-sidebar-indent:0.75rem] [--docs-sidebar-rail-width:1px]",
+        className,
+      )}
+    >
       {items.map((item, index) => (
         <RecursiveSidebarItem
           activePath={activePath}
@@ -362,13 +452,15 @@ export function DocsDesktopSidebar({
   items: readonly DocsSidebarItem[];
 }): ReactNode {
   const pathname = usePathname();
+  const viewportRef = useCenteredActiveItem(pathname);
   const anyActive = items.some((item) => hasActiveDescendant(item, pathname));
   const fallbackActiveHref = anyActive ? undefined : findFirstHref(items);
 
   return (
     <nav
       aria-label="Docs sidebar"
-      className="thin-scrollbar sticky top-16 max-h-[calc(100svh-4rem)] grow [scrollbar-gutter:stable] overflow-y-auto border-r-0 bg-black px-1 pt-7 pb-10"
+      className="thin-scrollbar sticky top-(--sticky-header-height) max-h-[calc(100svh-var(--sticky-header-height))] grow [scrollbar-gutter:stable] overflow-y-auto border-r-0 bg-black px-1 pt-7 pb-10"
+      ref={viewportRef}
     >
       <div className="flex flex-col gap-y-0 pb-10">
         <DocsSidebar
@@ -390,6 +482,7 @@ export function DocsMobileSidebar({
 }): ReactNode {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const viewportRef = useCenteredActiveItem(pathname, open);
 
   useEffect(() => {
     setOpen(false);
@@ -426,7 +519,11 @@ export function DocsMobileSidebar({
 
       <DrawerContent className="border-prose-border flex h-[75dvh] flex-col rounded-t-xl bg-black p-0 text-white lg:hidden">
         <DrawerTitle className="sr-only">Documentation menu</DrawerTitle>
-        <div className="flex-1 overflow-y-auto px-5 pt-6 pb-12">
+        <div
+          className="flex-1 overflow-y-auto px-5 pt-6 pb-12"
+          data-slot="docs-sidebar-viewport"
+          ref={viewportRef}
+        >
           <DocsSidebar
             activePath={pathname}
             fallbackActiveHref={fallbackActiveHref}

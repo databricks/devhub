@@ -144,7 +144,7 @@ export function TestimonialsSlider({ content }: TestimonialsSliderProps) {
         <SectionKicker className="text-grey-70">
           {content.testimonialsIntro.eyebrow}
         </SectionKicker>
-        <h2 className="mt-6 max-w-304 font-sans text-4xl leading-tight font-normal tracking-normal text-balance md:text-[2.5rem] lg:text-[2.75rem]">
+        <h2 className="mt-6 max-w-304 font-sans text-4xl leading-tight font-normal tracking-[-0.04em] text-balance md:text-[2.5rem] lg:text-[2.75rem]">
           {content.testimonialsIntro.titleLead}{" "}
           <span className="text-white/60">
             {content.testimonialsIntro.titleMuted}

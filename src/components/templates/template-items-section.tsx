@@ -9,7 +9,11 @@ import {
   type ReactNode,
 } from "react";
 
-import { matchesTemplateFilter, type Service } from "@/lib/recipes/recipes";
+import {
+  matchesTemplateFilter,
+  SERVICES,
+  type Service,
+} from "@/lib/recipes/recipes";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
@@ -33,6 +37,14 @@ export function TemplateItemsSection({
   );
   const [replitOnly, setReplitOnly] = useState(false);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+
+  const availableServices = useMemo(
+    () =>
+      SERVICES.filter((service) =>
+        items.some((item) => item.data.services.includes(service)),
+      ),
+    [items],
+  );
 
   const replitTemplateIdSet = useMemo(
     () => new Set(replitTemplateIds),
@@ -152,6 +164,7 @@ export function TemplateItemsSection({
                 onChange={handleSearchChange}
               />
               <TemplateFilters
+                availableServices={availableServices}
                 selectedServices={selectedServices}
                 onToggleService={handleToggleService}
                 replitOnly={replitOnly}
@@ -389,6 +402,7 @@ export function TemplateItemsSection({
 
           <div className="flex-1 overflow-y-auto px-6 pb-6">
             <TemplateFilters
+              availableServices={availableServices}
               selectedServices={selectedServices}
               onToggleService={handleToggleService}
               replitOnly={replitOnly}

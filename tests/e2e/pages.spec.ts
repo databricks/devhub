@@ -531,7 +531,7 @@ test.describe("detail prose visual parity", () => {
 });
 
 test.describe("docs MDX compatibility", () => {
-  test("uses sidebar labels in docs navigation and eyebrow", async ({
+  test("renders sidebar-derived breadcrumbs without an article eyebrow", async ({
     page,
   }) => {
     await page.goto("/docs/agents/overview");
@@ -540,7 +540,23 @@ test.describe("docs MDX compatibility", () => {
     const docsSidebar = page.getByRole("navigation", {
       name: "Docs sidebar",
     });
-    await expect(article.getByText("Overview").first()).toBeVisible();
+    await expect(
+      article.locator("p").filter({ hasText: /^Overview$/ }),
+    ).toHaveCount(0);
+    const breadcrumbs = page.getByRole("navigation", { name: "Breadcrumb" });
+    await expect(breadcrumbs).toBeVisible();
+    await expect(
+      breadcrumbs.getByRole("link", { name: "Docs", exact: true }),
+    ).toHaveAttribute("href", "/docs");
+    await expect(
+      breadcrumbs.getByText("Agent Bricks", { exact: true }),
+    ).toBeVisible();
+    await expect(breadcrumbs.locator('[aria-current="page"]')).toHaveText(
+      "Overview",
+    );
+    await expect(
+      breadcrumbs.locator('[aria-current="page"]'),
+    ).not.toHaveAttribute("href");
     await expect(
       page.getByRole("heading", { name: "What is Agent Bricks?" }),
     ).toBeVisible();
@@ -633,7 +649,7 @@ test.describe("docs MDX compatibility", () => {
     ).toBeVisible();
 
     const verifyListLayout = await article
-      .locator("ol")
+      .locator(".prose-docs ol")
       .first()
       .evaluate((list) => ({
         directParagraphs: list.querySelectorAll(":scope > li > p").length,
@@ -721,13 +737,13 @@ test.describe("docs MDX compatibility", () => {
 
     const article = page.locator("article");
     const diagram = article.getByRole("img", {
-      name: /Architecture diagram of the Databricks workspace/,
+      name: /A developer uses the CLI and a coding agent/,
     });
 
     await expect(diagram).toBeVisible();
     await expect(diagram).toHaveAttribute(
       "src",
-      "/img/docs/platform-overview.svg",
+      "/img/docs/platform-overview-appkit.png",
     );
     await expect(article).not.toContainText("<img");
     await expect(article).not.toContainText("useBaseUrl");
@@ -770,8 +786,8 @@ test.describe("docs MDX compatibility", () => {
       ).length,
     }));
 
-    expect(layout.articleHeight).toBeGreaterThanOrEqual(3130);
-    expect(layout.articleHeight).toBeLessThanOrEqual(3165);
+    expect(layout.articleHeight).toBeGreaterThanOrEqual(3122);
+    expect(layout.articleHeight).toBeLessThanOrEqual(3157);
     expect(layout.codeBlocks).toBe(3);
     expect(layout.inlineCodes).toBe(2);
   });
@@ -901,7 +917,7 @@ test.describe("docs MDX compatibility", () => {
     expect(layout.imageRight).toBeLessThanOrEqual(layout.viewportWidth);
   });
 
-  test("renders Mermaid diagrams as SVG instead of source code", async ({
+  test("renders the agent diagram as an image instead of source code", async ({
     page,
   }) => {
     await page.goto("/docs/agents/overview");
@@ -909,7 +925,9 @@ test.describe("docs MDX compatibility", () => {
     const article = page.locator("article");
     await expect(article).not.toContainText("```mermaid");
     await expect(page.locator("figure code.language-mermaid")).toHaveCount(0);
-    await expect(page.locator("[data-mermaid-diagram] svg")).toBeVisible();
+    await expect(
+      article.locator('img[src="/img/docs/agent-overview.png"]'),
+    ).toBeVisible();
   });
 
   test("renders GFM tables as semantic tables instead of pipe text", async ({
@@ -1014,8 +1032,8 @@ test.describe("docs MDX compatibility", () => {
     expect(layout.headingButtons).toBe(23);
     expect(layout.httpTableHeight).toBeGreaterThanOrEqual(660);
     expect(layout.httpTableHeight).toBeLessThanOrEqual(690);
-    expect(layout.articleHeight).toBeGreaterThanOrEqual(21750);
-    expect(layout.articleHeight).toBeLessThanOrEqual(21850);
+    expect(layout.articleHeight).toBeGreaterThanOrEqual(22400);
+    expect(layout.articleHeight).toBeLessThanOrEqual(22500);
 
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto("/docs/appkit/v0/plugins/files");
@@ -1066,8 +1084,8 @@ test.describe("docs MDX compatibility", () => {
     expect(mobileLayout.firstTableScrollWidth).toBeGreaterThan(
       mobileLayout.firstTableVisibleWidth,
     );
-    expect(mobileLayout.articleHeight).toBeGreaterThanOrEqual(24730);
-    expect(mobileLayout.articleHeight).toBeLessThanOrEqual(24775);
+    expect(mobileLayout.articleHeight).toBeGreaterThanOrEqual(25055);
+    expect(mobileLayout.articleHeight).toBeLessThanOrEqual(25100);
   });
 
   test("renders DocExample embeds with preview and code tabs", async ({
@@ -1258,8 +1276,8 @@ test.describe("docs MDX compatibility", () => {
     }));
 
     expect(layout).toEqual({
-      articleHeight: 4312,
-      footerOffsetFromArticleY: 4244,
+      articleHeight: 4304,
+      footerOffsetFromArticleY: 4236,
     });
   });
 

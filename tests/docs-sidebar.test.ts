@@ -4,6 +4,7 @@ import {
   getDocsSidebarItems,
   type DocsSidebarItem,
 } from "../src/lib/docs-content";
+import { getDocsBreadcrumbs } from "../src/lib/docs/breadcrumbs";
 
 type SidebarCategory = Extract<DocsSidebarItem, { type: "category" }>;
 
@@ -130,5 +131,61 @@ describe("docs sidebar", () => {
     expect(findByHref(items, "/docs/appkit/v0/api/appkit")).toMatchObject({
       type: "category",
     });
+  });
+});
+
+describe("docs breadcrumbs", () => {
+  test("follows AppKit's mounted sidebar hierarchy rather than its URL segments", () => {
+    expect(
+      getDocsBreadcrumbs(
+        getDocsSidebarItems(),
+        "/docs/appkit/v0/plugins/server",
+        "Server plugin",
+      ),
+    ).toEqual([
+      { label: "Docs", href: "/docs" },
+      { label: "Databricks Apps", href: undefined },
+      { label: "AppKit", href: undefined },
+      { label: "Getting started", href: "/docs/appkit/v0" },
+      { label: "Plugins", href: "/docs/appkit/v0/plugins" },
+      { label: "Server plugin" },
+    ]);
+  });
+
+  test("does not repeat a category index also listed as a child page", () => {
+    const items: DocsSidebarItem[] = [
+      {
+        type: "category",
+        label: "AppKit",
+        href: "/docs/appkit/v0",
+        items: [
+          {
+            type: "link",
+            label: "Overview",
+            href: "/docs/appkit/v0",
+          },
+        ],
+      },
+    ];
+
+    expect(
+      getDocsBreadcrumbs(items, "/docs/appkit/v0/", "Getting started"),
+    ).toEqual([{ label: "Docs", href: "/docs" }, { label: "AppKit" }]);
+  });
+
+  test("keeps the docs root for top-level pages", () => {
+    expect(
+      getDocsBreadcrumbs(
+        getDocsSidebarItems(),
+        "/docs/start-here",
+        "Start here",
+      ),
+    ).toEqual([{ label: "Docs", href: "/docs" }, { label: "Start here" }]);
+  });
+
+  test("uses the supplied page label when a page is absent from the sidebar", () => {
+    expect(
+      getDocsBreadcrumbs([], "/docs/unlisted-page", "Unlisted page"),
+    ).toEqual([{ label: "Docs", href: "/docs" }, { label: "Unlisted page" }]);
   });
 });

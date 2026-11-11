@@ -9,7 +9,7 @@ export function ProgramBackLink({ kind }: { kind: PersonKind }) {
     <Button
       asChild
       variant="orange"
-      className="h-12 w-full gap-5 rounded-none font-mono text-lg font-medium tracking-tight text-white uppercase no-underline shadow-none hover:text-white hover:no-underline focus-visible:ring-white focus-visible:ring-offset-0 focus-visible:ring-inset md:h-14 md:gap-8 md:text-2xl xl:text-[2rem]"
+      className="h-12 w-full gap-3.5 rounded-none font-mono text-lg/none font-medium tracking-[-0.02em] text-white uppercase no-underline shadow-none hover:text-white hover:no-underline focus-visible:ring-white focus-visible:ring-offset-0 focus-visible:ring-inset md:h-13.75 md:text-2xl/none"
     >
       <Link href={kind === "mvp" ? "/mvps" : "/student-fellows"}>
         <Image
@@ -17,7 +17,7 @@ export function ProgramBackLink({ kind }: { kind: PersonKind }) {
           alt=""
           width={32}
           height={32}
-          className="size-5 shrink-0 md:size-6 xl:size-8"
+          className="size-5 shrink-0 md:size-6"
           aria-hidden="true"
           data-icon="inline-start"
         />
@@ -27,7 +27,7 @@ export function ProgramBackLink({ kind }: { kind: PersonKind }) {
           alt=""
           width={32}
           height={32}
-          className="size-5 shrink-0 rotate-180 md:size-6 xl:size-8"
+          className="size-5 shrink-0 rotate-180 md:size-6"
           aria-hidden="true"
           data-icon="inline-end"
         />

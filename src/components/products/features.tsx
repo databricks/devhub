@@ -28,7 +28,7 @@ function FeatureRow({ feature }: { feature: ProductFeature }) {
       <div className="flex h-full flex-col">
         <SectionKicker index={feature.index}>{feature.eyebrow}</SectionKicker>
         <div className="mt-5 flex flex-1 flex-col justify-between gap-6 md:mt-6 md:gap-8 lg:mt-7 lg:gap-12 lg:pl-8">
-          <h3 className="3xl:text-[2.5rem] max-w-152 text-[1.75rem] leading-tight font-normal tracking-normal text-balance text-black md:max-w-none md:text-[2rem] lg:max-w-152 lg:text-4xl">
+          <h3 className="3xl:text-[2.5rem] max-w-152 text-[1.75rem] leading-tight font-normal tracking-[-0.04em] text-balance text-black md:max-w-none md:text-[2rem] lg:max-w-152 lg:text-4xl">
             {feature.title}{" "}
             <span className="text-black/35">[{feature.description}]</span>
           </h3>
@@ -76,10 +76,10 @@ export function Features({ content }: ProductFeaturesProps) {
         <SectionKicker className="text-grey-40">
           {content.featuresIntro.eyebrow}
         </SectionKicker>
-        <h2 className="3xl:text-8xl 3xl:leading-[1.125] mt-4 font-sans text-[2rem]/tight tracking-normal text-balance whitespace-pre-line md:mt-4.5 md:text-[2.5rem] lg:mt-5 lg:max-w-4xl lg:text-[3.25rem] xl:text-[4rem]/[1.125] 2xl:max-w-full 2xl:text-7xl/[1.125]">
+        <h2 className="mt-4 font-sans text-[2rem]/tight tracking-[-0.04em] text-balance whitespace-pre-line md:mt-4.5 md:text-[2.5rem] lg:mt-5 lg:max-w-4xl lg:text-[3.75rem] 2xl:max-w-full">
           {content.featuresIntro.title}
         </h2>
-        <div className="3xl:mt-50 mt-16 grid grid-cols-1 gap-16 md:mt-24 md:gap-28 lg:mt-30 lg:gap-50 2xl:mt-40">
+        <div className="mt-16 grid grid-cols-1 gap-16 md:mt-24 md:gap-28 lg:mt-32 lg:gap-50">
           {content.features.map((feature) => (
             <FeatureRow feature={feature} key={feature.index} />
           ))}

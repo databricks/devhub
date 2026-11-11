@@ -45,7 +45,6 @@ export function ShareSection({
           updated={updated}
           placeholder={metric === "wallet" && walletPlaceholder}
           note={copy.note}
-          shareChartIds={[canvasIds[metric]]}
           shareSlug={slugs[metric]}
         >
           <StackedShareChart

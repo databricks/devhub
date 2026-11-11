@@ -1,6 +1,7 @@
 import type { ReactElement, ReactNode } from "react";
 
 import {
+  getAtLeastLayers,
   getBestPerModel,
   getFamilies,
   getLegendGroups,
@@ -19,13 +20,14 @@ import type { ShareCard } from "@/lib/ai-trends/share-cards";
 import {
   CHART_HEIGHT,
   CHART_WIDTH,
+  INK,
   LAVA,
   MUTED,
   OgAccent,
   OgFrame,
   OgPage,
 } from "./frame";
-import { LINE_BLUE, OgLines, OgSpendPanels } from "./lines";
+import { OgLines, OgSpendPanels } from "./lines";
 import { OgScatter } from "./scatter";
 import { OgStackedBars } from "./stacked";
 
@@ -53,35 +55,69 @@ function renderStackedShare(
   );
 }
 
-const OPEN_WEIGHT_TICKS = 4;
+const OG_LEGEND_HEIGHT = 34;
 
 function renderOpenWeightShare(): ReactNode {
-  const { weeks, open_weight_share: values } = industryData.long_term;
-  const max = getNiceMax(values);
+  const layers = getSeriesLayers(
+    industryData.long_term.open_weight_share,
+    contentData.charts.open_weight_share.legend,
+  );
   return (
-    <OgLines
-      weeks={weeks}
-      series={[{ label: "Open-weight", color: LINE_BLUE, values }]}
-      yMax={max}
-      yStep={max / OPEN_WEIGHT_TICKS}
-      formatY={(v) => `${v}%`}
+    <OgStackedBars
+      weeks={industryData.long_term.weeks}
+      layers={layers}
+      legend={getLegendGroups(layers)}
+      showHalfLine
     />
   );
 }
 
+/** Nested areas, largest drawn first, with a one-row legend above. */
 function renderProvidersUsed(): ReactNode {
-  const { long_term: longTerm } = industryData;
-  const layers = getSeriesLayers(
-    longTerm.providers_used,
+  const { weeks, providers_used: buckets } = industryData.long_term;
+  const layers = getAtLeastLayers(
+    buckets,
     contentData.charts.providers_used.legend,
-  );
+  ).reverse();
   return (
-    <OgStackedBars
-      weeks={longTerm.weeks}
-      layers={layers}
-      legend={getLegendGroups(layers)}
-      showHalfLine={false}
-    />
+    <div style={{ display: "flex", flexDirection: "column" }}>
+      <div
+        style={{
+          display: "flex",
+          height: OG_LEGEND_HEIGHT,
+          alignItems: "center",
+          fontSize: 15,
+          color: INK,
+        }}
+      >
+        {layers.map(({ label, color }) => (
+          <div
+            key={label}
+            style={{ display: "flex", alignItems: "center", marginRight: 24 }}
+          >
+            <div
+              style={{
+                display: "flex",
+                width: 12,
+                height: 12,
+                marginRight: 8,
+                background: color,
+              }}
+            />
+            {label}
+          </div>
+        ))}
+      </div>
+      <OgLines
+        weeks={weeks}
+        series={layers}
+        yMax={100}
+        yStep={25}
+        formatY={(v) => `${v}%`}
+        height={CHART_HEIGHT - OG_LEGEND_HEIGHT}
+        fill
+      />
+    </div>
   );
 }
 

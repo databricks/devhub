@@ -89,13 +89,12 @@ describe("/ai-index.md", () => {
     expect(markdown).toContain(`Updated ${formatDate(spend.as_of)}.`);
     const { long_term: longTerm } = industryData;
     expect(markdown).toContain(`## ${contentData.sections.long_term.title}`);
-    for (const series of longTerm.providers_used)
+    for (const series of longTerm.open_weight_share)
       expect(markdown).toContain(
         `${series.label} ${lastValue(series.values).toFixed(1)}%`,
       );
-    expect(markdown).toContain(
-      `open-weight models had ${lastValue(longTerm.open_weight_share).toFixed(1)}% of tokens`,
-    );
+    const single = lastValue(longTerm.providers_used.at(-1)!.values);
+    expect(markdown).toContain(`2+ providers ${(100 - single).toFixed(1)}%`);
     expect(markdown).toContain(
       `Updated ${formatDate(benchmarkData.run_date)}.`,
     );

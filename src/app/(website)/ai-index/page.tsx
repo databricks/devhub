@@ -160,8 +160,7 @@ export default function AiTrendsPage(): ReactNode {
             }}
             openWeight={{
               copy: charts.open_weight_share,
-              values: longTerm.open_weight_share,
-              yMax: getNiceMax(longTerm.open_weight_share),
+              series: longTerm.open_weight_share,
             }}
           />
         </section>

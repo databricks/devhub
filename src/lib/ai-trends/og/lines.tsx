@@ -7,7 +7,7 @@ type OgSeries = { label: string; color: string; values: number[] };
 
 const PLOT = { left: 56, right: 14, top: 10, bottom: 32 };
 // Same series color as the page line charts (CHART_BLUE in chart-setup.ts).
-export const LINE_BLUE = "#2a78d6";
+const LINE_BLUE = "#2a78d6";
 
 function niceCeil(value: number, step: number): number {
   return Math.max(step, Math.ceil(value / step) * step);
@@ -22,6 +22,7 @@ export function OgLines({
   width = CHART_WIDTH,
   height = CHART_HEIGHT,
   compact = false,
+  fill = false,
 }: {
   weeks: string[];
   series: OgSeries[];
@@ -31,6 +32,8 @@ export function OgLines({
   width?: number;
   height?: number;
   compact?: boolean;
+  /** Fill each series down to zero; series draw in order, so list the largest first. */
+  fill?: boolean;
 }): ReactNode {
   const plotLeft = compact ? 44 : PLOT.left;
   const plotRight = width - PLOT.right;
@@ -66,6 +69,16 @@ export function OgLines({
         ))}
         {series.map((s) => (
           <g key={s.label}>
+            {fill ? (
+              <polygon
+                points={[
+                  `${x(0)},${bottom}`,
+                  ...s.values.map((v, i) => `${x(i)},${y(v)}`),
+                  `${x(s.values.length - 1)},${bottom}`,
+                ].join(" ")}
+                fill={s.color}
+              />
+            ) : null}
             <polyline
               points={s.values.map((v, i) => `${x(i)},${y(v)}`).join(" ")}
               fill="none"
@@ -74,7 +87,7 @@ export function OgLines({
               strokeLinejoin="round"
               strokeLinecap="round"
             />
-            {compact && !single
+            {(compact && !single) || fill
               ? null
               : s.values.map((v, i) => (
                   <circle key={i} cx={x(i)} cy={y(v)} r={4.5} fill={s.color} />

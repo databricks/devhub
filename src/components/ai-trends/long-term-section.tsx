@@ -1,13 +1,17 @@
 import type { ReactNode } from "react";
 
-import { getLegendGroups, getSeriesLayers } from "@/lib/ai-trends/compute";
+import {
+  getAtLeastLayers,
+  getLegendGroups,
+  getSeriesLayers,
+} from "@/lib/ai-trends/compute";
 import type { StackSeries } from "@/lib/ai-trends/schema";
 
 import { ChartCard } from "./chart-card";
-import { ShareLineChart } from "./share-line-chart";
+import { ShareAreaChart } from "./share-area-chart";
 import { StackedShareChart } from "./stacked-share-chart";
 
-type ChartCopy = { title: string; note?: string };
+type ChartCopy = { title: string; note?: string; legend: string };
 
 export function LongTermSection({
   weeks,
@@ -17,12 +21,16 @@ export function LongTermSection({
 }: {
   weeks: string[];
   updated: string;
-  providers: { copy: ChartCopy & { legend: string }; series: StackSeries[] };
-  openWeight: { copy: ChartCopy; values: number[]; yMax: number };
+  providers: { copy: ChartCopy; series: StackSeries[] };
+  openWeight: { copy: ChartCopy; series: StackSeries[] };
 }): ReactNode {
-  const providerLayers = getSeriesLayers(
+  const providerLayers = getAtLeastLayers(
     providers.series,
     providers.copy.legend,
+  );
+  const openWeightLayers = getSeriesLayers(
+    openWeight.series,
+    openWeight.copy.legend,
   );
   return (
     <div className="grid min-w-0 grid-cols-1 items-stretch gap-6 lg:grid-cols-2">
@@ -33,7 +41,7 @@ export function LongTermSection({
         note={providers.copy.note}
         shareSlug="providers-used"
       >
-        <StackedShareChart
+        <ShareAreaChart
           weeks={weeks}
           layers={providerLayers}
           legend={getLegendGroups(providerLayers)}
@@ -48,13 +56,13 @@ export function LongTermSection({
         note={openWeight.copy.note}
         shareSlug="open-weight-share"
       >
-        <ShareLineChart
+        <StackedShareChart
           weeks={weeks}
-          values={openWeight.values}
-          yMax={openWeight.yMax}
-          label="Open-weight"
+          layers={openWeightLayers}
+          legend={getLegendGroups(openWeightLayers)}
           canvasId="openWeightShareChart"
           yAxisTitle="% of token volume"
+          showHalfLine
         />
       </ChartCard>
     </div>

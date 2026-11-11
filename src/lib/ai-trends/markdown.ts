@@ -1,4 +1,5 @@
 import {
+  getAtLeastLayers,
   getBestPerModel,
   getParetoNames,
   getShownRuns,
@@ -7,7 +8,7 @@ import {
 } from "./compute";
 import { benchmarkData, contentData, industryData } from "./data";
 import { formatDate } from "./format";
-import type { ShareGroup, StackSeries } from "./schema";
+import type { ShareGroup } from "./schema";
 import { getShareCard, getSharePath, type ShareSlug } from "./share-cards";
 
 const TOP_COUNT = 3;
@@ -153,7 +154,7 @@ function shareGroupSections(
 
 /** Each layer's share in the latest and first week, top of the stack first. */
 function describeStack(
-  series: StackSeries[],
+  series: { label: string; values: number[] }[],
   weeks: readonly string[],
 ): string {
   const shares = [...series]
@@ -270,13 +271,16 @@ export function renderAiIndexMarkdown(): string {
     ...shareChartSection(
       charts.providers_used,
       "providers-used",
-      describeStack(longTerm.providers_used, longTerm.weeks),
+      describeStack(
+        getAtLeastLayers(longTerm.providers_used, ""),
+        longTerm.weeks,
+      ),
       longTerm.as_of,
     ),
     ...shareChartSection(
       charts.open_weight_share,
       "open-weight-share",
-      `In the week of ${last(longTerm.weeks)}, open-weight models had ${percent(last(longTerm.open_weight_share))} of tokens, up from ${percent(longTerm.open_weight_share[0])} in the week of ${longTerm.weeks[0]}.`,
+      describeStack(longTerm.open_weight_share, longTerm.weeks),
       longTerm.as_of,
     ),
     ...sectionHeading(sections.spend),

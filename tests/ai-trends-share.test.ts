@@ -67,6 +67,16 @@ describe("AI Index share previews", () => {
     }
   });
 
+  test.each(getShareSlugs())("%s: Copy image is a 1200x630 PNG", (slug) => {
+    const image = readFileSync(resolve(SHARE_DIR, slug, "image.png.body"));
+    expect(imageSize(image)).toMatchObject({
+      type: "png",
+      width: OG_WIDTH,
+      height: OG_HEIGHT,
+    });
+    expect(image.byteLength).toBeGreaterThan(20_000);
+  });
+
   test.each(getShareSlugs())(
     "%s: share page redirects to a chart on the page",
     (slug) => {

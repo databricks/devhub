@@ -3,8 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import type { KeyboardEvent as ReactKeyboardEvent, ReactNode } from "react";
 
-import { copyChartImage } from "@/lib/ai-trends/share-image";
-
 function XIcon(): ReactNode {
   return (
     <svg
@@ -70,14 +68,24 @@ function CopyIcon(): ReactNode {
   );
 }
 
+function fetchShareCard(shareSlug: string): Promise<Blob> {
+  return fetch(`/ai-index/share/${shareSlug}/image.png`).then((response) => {
+    if (!response.ok) {
+      throw new Error(`Share image request failed: ${response.status}`);
+    }
+    return response.blob();
+  });
+}
+
 export function ShareControl({
-  chartIds,
   shareSlug,
   title,
+  getImage,
 }: {
-  chartIds: string[];
   shareSlug: string;
   title: string;
+  /** Replaces the server-rendered share card, for views it can't show. */
+  getImage?: () => Promise<Blob>;
 }): ReactNode {
   const [open, setOpen] = useState(false);
   const [feedback, setFeedback] = useState<string | null>(null);
@@ -164,9 +172,19 @@ export function ShareControl({
 
   function handleCopyImage() {
     setOpen(false);
-    copyChartImage(chartIds, title).then(
+    if (typeof ClipboardItem === "undefined" || !navigator.clipboard?.write) {
+      showFeedback("Copy not supported");
+      return;
+    }
+    // Safari drops the user gesture across an await, so the clipboard write
+    // starts now and receives the image as a pending promise.
+    const image = getImage ? getImage() : fetchShareCard(shareSlug);
+    navigator.clipboard.write([new ClipboardItem({ "image/png": image })]).then(
       () => showFeedback("Copied!"),
-      () => showFeedback("Copy not supported"),
+      (error: unknown) => {
+        console.error(error);
+        showFeedback("Copy failed");
+      },
     );
   }
 

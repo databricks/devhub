@@ -16,7 +16,7 @@ import { absoluteSiteUrl, getMetadata } from "@/lib/get-metadata";
 import { Changelog } from "@/components/ai-trends/changelog";
 import { ChartCard } from "@/components/ai-trends/chart-card";
 import { TrendsHeader } from "@/components/ai-trends/page-header";
-import { ScatterChart } from "@/components/ai-trends/scatter-chart";
+import { ScatterCard } from "@/components/ai-trends/scatter-card";
 import {
   SectionHeading,
   SubsectionTitle,
@@ -155,7 +155,6 @@ export default function AiTrendsPage(): ReactNode {
             title={charts.spend.title}
             updated={formatDate(spend.as_of)}
             note={charts.spend.note}
-            shareChartIds={["spendP50", "spendP90", "spendP99"]}
             shareSlug="spend"
           >
             <SpendCharts
@@ -181,23 +180,18 @@ export default function AiTrendsPage(): ReactNode {
             title={sections.frontier.title}
             intro={sections.frontier.intro}
           />
-          <ChartCard
+          <ScatterCard
             title={charts.scatter.title}
             updated={formatDate(runDate)}
             note={charts.scatter.note}
-            shareChartIds={["scatterChart"]}
-            shareSlug="scatter"
-          >
-            <ScatterChart
-              models={pricedModels}
-              paretoNames={getParetoNames(pricedModels)}
-              axis={getQualityAxis(
-                pricedModels.map(({ quality }) => quality),
-                QUALITY_AXIS_STEP,
-              )}
-              families={getFamilies(pricedModels)}
-            />
-          </ChartCard>
+            models={pricedModels}
+            paretoNames={getParetoNames(pricedModels)}
+            axis={getQualityAxis(
+              pricedModels.map(({ quality }) => quality),
+              QUALITY_AXIS_STEP,
+            )}
+            families={getFamilies(pricedModels)}
+          />
           <ChartCard>
             <TopModelBars panels={getTopModelBarPanels()} />
           </ChartCard>

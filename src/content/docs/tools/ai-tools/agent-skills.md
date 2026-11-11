@@ -5,6 +5,8 @@ sourceOfTruth:
     - databricks-core
   docs:
     - https://github.com/databricks/databricks-agent-skills
+    - https://docs.databricks.com/aws/en/dev-tools/cli/reference/aitools-commands
+  note: "Install, update, and uninstall flags, supported agents, and the skills tables follow the installed Databricks CLI (`databricks aitools <cmd> --help` and `databricks aitools list`, the shipped catalog), which can lag the skills repo's main branch. The tables are generated with pnpm docs:skills-sync and the options table with pnpm docs:cli-sync."
 ---
 
 # Agent skills
@@ -27,7 +29,6 @@ databricks aitools install \
   --agents $AGENTS \
   --skills $SKILLS \
   --skills-only \
-  --path $OUTPUT_DIR \
   --experimental \
   --debug \
   -o json \
@@ -39,7 +40,7 @@ databricks aitools install \
 This requires the Databricks CLI to be installed. See [Databricks CLI](/docs/tools/databricks-cli) for installation instructions.
 :::
 
-The CLI detects which coding agents you have installed. For agents with plugin support (Claude Code, Codex CLI, GitHub Copilot), it installs the `databricks` plugin through the agent's own CLI. Agents without a headless plugin install (Cursor, OpenCode, Antigravity) get raw skill files linked from a shared location (`~/.databricks/aitools/skills/`).
+The CLI detects which coding agents you have installed. For agents with plugin support (Claude Code, Codex CLI, GitHub Copilot), it installs the `databricks` plugin through the agent's own CLI. Agents without a headless plugin install (Cursor, OpenCode, Antigravity, Pi, Gemini CLI, Goose, Kiro) get raw skill files linked from a shared location (`~/.databricks/aitools/skills/`). Run `databricks aitools install --help` for the current list of supported agents.
 
 Options for `databricks aitools install`:
 
@@ -60,7 +61,7 @@ Options for `databricks aitools install`:
 
 <!-- /cli-options -->
 
-Note that `--skills-only` and `--path` cannot be combined.
+To write the skill files to a directory without installing them for any agent, pass `--path <dir>` instead of `--skills-only`. The two can't be combined, and `--path` doesn't support `-o json`. To choose specific skills, use `--skills` with `--skills-only` or `--path`.
 
 ## Manage
 

@@ -5,13 +5,12 @@ import type { ChartConfiguration } from "chart.js";
 
 import {
   axisTitle,
+  CHART_BLUE,
   CHART_GRID,
   CHART_MUTED,
   ChartDataLabels,
 } from "@/lib/ai-trends/chart-setup";
 import { useChart } from "@/lib/ai-trends/use-chart";
-
-const SPEND_COLOR = "#2a78d6";
 
 function fmtP50(v: number): string {
   return v === 0 ? "$0" : "$" + v.toFixed(2);
@@ -51,12 +50,12 @@ function SpendPanel({
         datasets: [
           {
             data,
-            borderColor: SPEND_COLOR,
-            backgroundColor: SPEND_COLOR + "33",
+            borderColor: CHART_BLUE,
+            backgroundColor: CHART_BLUE + "33",
             fill: true,
             borderWidth: 2,
             pointRadius: single ? 5 : 0,
-            pointBackgroundColor: SPEND_COLOR,
+            pointBackgroundColor: CHART_BLUE,
             tension: 0.35,
           },
         ],
@@ -103,11 +102,12 @@ function SpendPanel({
               color: CHART_MUTED,
               maxTicksLimit: 7,
               maxRotation: 0,
+              autoSkipPadding: 12,
             },
           },
           y: {
             min: 0,
-            max: yMax,
+            suggestedMax: yMax,
             grid: { color: CHART_GRID },
             title: axisTitle("Spend per user (USD)"),
             ticks: {

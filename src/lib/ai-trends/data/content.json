@@ -19,6 +19,11 @@
       "title": "Token and wallet share by **open-weight** provider",
       "intro": ""
     },
+    "long_term": {
+      "eyebrow": "Multi-AI",
+      "title": "How enterprises **mix models** over time",
+      "intro": "These charts cover a longer period but only include traffic to models hosted by Databricks, so they draw on fewer customers. Because the method differs, these numbers don't match the other charts on this page."
+    },
     "spend": {
       "eyebrow": "Spend",
       "title": "What a user spends in a week",
@@ -89,6 +94,17 @@
       "title": "Share of wallet by model",
       "description": "Weekly share of list-price spend across open-weight models on Unity Gateway.",
       "note": "Tokens priced at each provider's published list price, with cache reads at the cache-read rate. Includes traffic routed to external model providers; not what Databricks bills."
+    },
+    "open_weight_share": {
+      "title": "Open-weight share of tokens",
+      "description": "Weekly share of tokens on Databricks-hosted models that go to open-weight models.",
+      "note": "Input plus output tokens to Databricks-hosted models on Unity Gateway. Open-weight: GLM, Kimi, DeepSeek, Qwen, Llama, GPT-OSS and Gemma; the rest is proprietary (Claude, GPT, Gemini and Grok). Traffic without a model name is excluded."
+    },
+    "providers_used": {
+      "title": "Companies using multiple model providers",
+      "description": "Weekly share of active companies by how many model providers they have used on Databricks-hosted models.",
+      "note": "Among companies active each week, counts every provider a company has used since July 20, 2026, so early weeks reflect less history. Gemini and Gemma count as one provider, as do GPT and GPT-OSS.",
+      "legend": "Providers used"
     }
   },
   "changelog": [

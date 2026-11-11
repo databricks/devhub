@@ -7,7 +7,7 @@ import {
 } from "./compute";
 import { benchmarkData, contentData, industryData } from "./data";
 import { formatDate } from "./format";
-import type { ShareGroup } from "./schema";
+import type { ShareGroup, StackSeries } from "./schema";
 import { getShareCard, getSharePath, type ShareSlug } from "./share-cards";
 
 const TOP_COUNT = 3;
@@ -113,11 +113,12 @@ function shareChartSection(
   copy: { title: string; description: string; note?: string },
   slug: ShareSlug,
   description: string,
+  asOf = industryData.share.as_of,
 ): string[] {
   return [
     `### ${copy.title}`,
     "",
-    `${copy.description} Updated ${formatDate(industryData.share.as_of)}.`,
+    `${copy.description} Updated ${formatDate(asOf)}.`,
     "",
     description,
     "",
@@ -148,6 +149,20 @@ function shareGroupSections(
         : describeShare(group, "wallet", weeks),
     ),
   ];
+}
+
+/** Each layer's share in the latest and first week, top of the stack first. */
+function describeStack(
+  series: StackSeries[],
+  weeks: readonly string[],
+): string {
+  const shares = [...series]
+    .reverse()
+    .map(
+      ({ label, values }) =>
+        `${label} ${percent(last(values))} (${percent(values[0])} in the week of ${weeks[0]})`,
+    );
+  return `In the week of ${last(weeks)}: ${list.format(shares)}.`;
 }
 
 type SpendKey = "p50" | "p90" | "p99";
@@ -225,6 +240,7 @@ function sectionHeading(section: { title: string; intro: string }): string[] {
 export function renderAiIndexMarkdown(): string {
   const { header, sections, charts, changelog } = contentData;
   const { proprietary, open_source: openSource } = industryData.share.groups;
+  const { long_term: longTerm } = industryData;
   const top = getTopModelPanels(getShownRuns(benchmarkData.models), TOP_COUNT);
   const panels = charts.top_models.panels;
 
@@ -249,6 +265,19 @@ export function renderAiIndexMarkdown(): string {
       charts.open_source_token_share,
       charts.open_source_wallet_share,
       { token: "open-source-token-share", wallet: "open-source-wallet-share" },
+    ),
+    ...sectionHeading(sections.long_term),
+    ...shareChartSection(
+      charts.providers_used,
+      "providers-used",
+      describeStack(longTerm.providers_used, longTerm.weeks),
+      longTerm.as_of,
+    ),
+    ...shareChartSection(
+      charts.open_weight_share,
+      "open-weight-share",
+      `In the week of ${last(longTerm.weeks)}, open-weight models had ${percent(last(longTerm.open_weight_share))} of tokens, up from ${percent(longTerm.open_weight_share[0])} in the week of ${longTerm.weeks[0]}.`,
+      longTerm.as_of,
     ),
     ...sectionHeading(sections.spend),
     `### ${charts.spend.title}`,

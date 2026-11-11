@@ -8,7 +8,10 @@ import {
   ChartDataLabels,
 } from "@/lib/ai-trends/chart-setup";
 import type { FamilyOption, QualityAxis } from "@/lib/ai-trends/compute";
-import { placeLabels } from "@/lib/ai-trends/label-placement";
+import {
+  placeLabels,
+  type LabelPlacement,
+} from "@/lib/ai-trends/label-placement";
 import type { BenchmarkModel } from "@/lib/ai-trends/schema";
 import { useChart } from "@/lib/ai-trends/use-chart";
 import { useIsNarrow } from "@/lib/ai-trends/use-narrow";
@@ -31,6 +34,7 @@ const LABEL_OFFSET = 10;
 const LABEL_PADDING = 2;
 // Extra room around each label so near-touching labels aren't hidden as overlaps.
 const LABEL_GAP = 6;
+const LEADER_COLOR = "rgba(68,68,68,0.45)";
 
 type ScatterPoint = {
   x: number;
@@ -38,7 +42,7 @@ type ScatterPoint = {
   label: string;
   frontier: boolean;
   harness: string;
-  al: string;
+  place?: LabelPlacement;
 };
 
 type HoveredModel = {
@@ -103,7 +107,6 @@ export function ScatterChart({
         label: m.name,
         frontier: paretoSet.has(m.name),
         harness: m.harness,
-        al: "top",
       });
     });
 
@@ -135,17 +138,19 @@ export function ScatterChart({
         data: pts,
         datalabels: {
           display: (ctx: DatalabelsCtx) => {
-            if (narrow) return false;
-            return (ctx.dataset.data[ctx.dataIndex] as ScatterPoint).frontier
-              ? true
-              : "auto";
+            const pt = ctx.dataset.data[ctx.dataIndex] as ScatterPoint;
+            if (narrow || pt.place?.hidden) return false;
+            return pt.frontier ? true : "auto";
           },
           color: "#444",
           font: { size: LABEL_FONT_SIZE, weight: "500" },
           formatter: (v: unknown) => (v as ScatterPoint).label,
           align: (ctx: DatalabelsCtx) =>
-            (ctx.dataset.data[ctx.dataIndex] as ScatterPoint).al ?? "top",
-          offset: LABEL_OFFSET,
+            (ctx.dataset.data[ctx.dataIndex] as ScatterPoint).place?.angle ??
+            -90,
+          offset: (ctx: DatalabelsCtx) =>
+            (ctx.dataset.data[ctx.dataIndex] as ScatterPoint).place?.offset ??
+            LABEL_OFFSET,
           clamp: true,
           padding: LABEL_PADDING,
           backgroundColor: "rgba(255,255,255,0.88)",
@@ -190,7 +195,7 @@ export function ScatterChart({
             ? []
             : (ds.data as ScatterPoint[]),
         );
-        const sides = placeLabels(
+        const placements = placeLabels(
           points.map((pt) => ({
             x: scales.x.getPixelForValue(pt.x),
             y: scales.y.getPixelForValue(pt.y),
@@ -199,13 +204,14 @@ export function ScatterChart({
             height: LABEL_FONT_SIZE * 1.2 + LABEL_PADDING * 2 + LABEL_GAP,
             marker: logoSize,
             priority: (pt.frontier ? 1000 : 0) + pt.y,
+            required: pt.frontier,
           })),
           chartArea,
           LABEL_OFFSET,
         );
         ctx.restore();
         points.forEach((pt, i) => {
-          pt.al = sides[i];
+          pt.place = placements[i];
         });
       },
     };
@@ -217,6 +223,25 @@ export function ScatterChart({
           return;
         const { ctx } = chart;
         ctx.save();
+        // Leader lines run from a pushed-out label to its logo, under the logos.
+        ctx.strokeStyle = LEADER_COLOR;
+        ctx.lineWidth = 1;
+        chart.data.datasets.forEach((ds, di) => {
+          if (ds.label === "Pareto frontier" || !chart.isDatasetVisible(di))
+            return;
+          chart.getDatasetMeta(di).data.forEach((el, pi) => {
+            const { place } = ds.data[pi] as ScatterPoint;
+            if (narrow || !place?.leader || place.hidden || !place.box) return;
+            const { left, right, top, bottom } = place.box;
+            ctx.beginPath();
+            ctx.moveTo(el.x, el.y);
+            ctx.lineTo(
+              Math.min(Math.max(el.x, left), right),
+              Math.min(Math.max(el.y, top), bottom),
+            );
+            ctx.stroke();
+          });
+        });
         ctx.fillStyle = "#ffffff";
         chart.data.datasets.forEach((ds, di) => {
           if (ds.label === "Pareto frontier" || !chart.isDatasetVisible(di))

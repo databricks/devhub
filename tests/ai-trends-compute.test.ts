@@ -4,12 +4,14 @@ import {
   getBestPerModel,
   getFamilies,
   getLegendGroups,
+  getMetricLayers,
   getModelShades,
   getNiceMax,
   getParetoNames,
   getPricedModels,
   getProviderOrder,
   getQualityAxis,
+  getSeriesLayers,
   getShownRuns,
   getStackLayers,
   getTopModelPanels,
@@ -251,7 +253,9 @@ describe("share stacking", () => {
   });
 
   test("legend lists providers top to bottom with newest models first", () => {
-    const legend = getLegendGroups(getStackLayers(group));
+    const legend = getLegendGroups(
+      getMetricLayers(getStackLayers(group), "token"),
+    );
     expect(legend.map((g) => g.provider)).toEqual(["A", "B"]);
     expect(legend[0].items.map((i) => i.label)).toEqual(["A1", "Older A"]);
   });
@@ -267,6 +271,30 @@ describe("share stacking", () => {
       });
     }
   }
+});
+
+describe("long-term stacks", () => {
+  test("providers_used sums to ~100 each week", () => {
+    const { weeks, providers_used: series } = industryData.long_term;
+    weeks.forEach((_, i) => {
+      const total = series.reduce((sum, s) => sum + s.values[i], 0);
+      expect(total).toBeCloseTo(100, 0);
+    });
+  });
+
+  test("legend lists the top of the stack first under one heading", () => {
+    const legend = getLegendGroups(
+      getSeriesLayers(industryData.long_term.providers_used, "Providers used"),
+    );
+    expect(legend).toHaveLength(1);
+    expect(legend[0].provider).toBe("Providers used");
+    expect(legend[0].items.map((i) => i.label)).toEqual([
+      "1 provider",
+      "2 providers",
+      "3 providers",
+      "4+ providers",
+    ]);
+  });
 });
 
 describe("industry data", () => {
@@ -406,6 +434,19 @@ describe("industry data", () => {
     }
   });
 
+  test("long-term stack neighbours stay distinct, including for colorblind readers", () => {
+    for (const series of [industryData.long_term.providers_used])
+      for (let i = 0; i + 1 < series.length; i++) {
+        const [a, b] = [series[i].color, series[i + 1].color];
+        const pair = `${series[i].label} vs ${series[i + 1].label}`;
+        expect(deltaE(a, b), pair).toBeGreaterThanOrEqual(8);
+        expect(
+          Math.min(deltaE(a, b, "protan"), deltaE(a, b, "deutan")),
+          `${pair} (colorblind)`,
+        ).toBeGreaterThanOrEqual(8);
+      }
+  });
+
   test("palest shade of every provider still reads against a white card", () => {
     const luminance = (hex: string) => {
       const [r, g, b] = toLinear(hex);
@@ -514,39 +555,84 @@ describe("getShownRuns", () => {
 
 describe("placeLabels", () => {
   const area = { left: 0, top: 0, right: 400, bottom: 300 };
-  const item = (x: number, y: number, priority: number) => ({
+  const item = (x: number, y: number, priority: number, required = false) => ({
     x,
     y,
     width: 100,
     height: 14,
     marker: 24,
     priority,
+    required,
   });
+  const angles = (placements: ReturnType<typeof placeLabels>) =>
+    placements.map((p) => (p.hidden ? "hidden" : p.angle));
+  const markerBox = ({ x, y, marker }: ReturnType<typeof item>) => ({
+    left: x - marker / 2,
+    top: y - marker / 2,
+    right: x + marker / 2,
+    bottom: y + marker / 2,
+  });
+  const overlaps = (
+    a: { left: number; top: number; right: number; bottom: number },
+    b: { left: number; top: number; right: number; bottom: number },
+  ) =>
+    a.left < b.right &&
+    b.left < a.right &&
+    a.top < b.bottom &&
+    b.top < a.bottom;
 
   test("puts labels on top when there is room", () => {
     expect(
-      placeLabels([item(100, 100, 1), item(300, 200, 0)], area, 10),
-    ).toEqual(["top", "top"]);
+      angles(placeLabels([item(100, 100, 1), item(300, 200, 0)], area, 10)),
+    ).toEqual([-90, -90]);
   });
 
   test("moves a lower-priority label off a spot another label took", () => {
     expect(
-      placeLabels([item(100, 100, 1), item(150, 105, 0)], area, 10),
-    ).toEqual(["top", "right"]);
-  });
-
-  test("with no free side, covers the least marker area instead of hiding", () => {
-    // Markers just right and just left of the label's side spots; top is taken.
-    const crowded = [
-      item(100, 100, 2),
-      item(150, 104, 1),
-      item(275, 104, 0),
-      item(30, 112, 0),
-    ];
-    expect(placeLabels(crowded, area, 10)[1]).not.toBe("top");
+      angles(placeLabels([item(100, 100, 1), item(150, 105, 0)], area, 10)),
+    ).toEqual([-90, 0]);
   });
 
   test("keeps labels inside the chart area", () => {
-    expect(placeLabels([item(100, 10, 0)], area, 10)).toEqual(["right"]);
+    expect(angles(placeLabels([item(100, 10, 0)], area, 10))).toEqual([0]);
+  });
+
+  test("never covers another logo; a crowded label moves out with a leader", () => {
+    const crowded = [
+      item(100, 100, 3),
+      item(150, 104, 2),
+      item(100, 130, 1),
+      item(40, 112, 0),
+      item(160, 140, 0),
+    ];
+    const placements = placeLabels(crowded, area, 10);
+    placements.forEach((p, i) => {
+      if (p.hidden || !p.box) return;
+      crowded.forEach((other, j) => {
+        if (j !== i)
+          expect(overlaps(p.box!, markerBox(other)), `${i} covers ${j}`).toBe(
+            false,
+          );
+      });
+    });
+    expect(placements.some((p) => p.leader && !p.hidden)).toBe(true);
+  });
+
+  test("hides an optional label with no clear spot but keeps a required one", () => {
+    const boxedIn = (required: boolean) =>
+      placeLabels(
+        [
+          item(200, 150, 0, required),
+          ...[-60, -30, 0, 30, 60].flatMap((dx) =>
+            [-60, -30, 0, 30, 60]
+              .filter((dy) => dx !== 0 || dy !== 0)
+              .map((dy) => ({ ...item(200 + dx * 3, 150 + dy, 0), width: 1 })),
+          ),
+        ],
+        area,
+        10,
+      )[0];
+    expect(boxedIn(false).hidden).toBe(true);
+    expect(boxedIn(true).hidden).toBe(false);
   });
 });

@@ -1,5 +1,5 @@
 {
-  "source": "Aggregated, anonymized Unity Gateway traffic from external enterprise customers, refreshed 2026-11-10. Embedding models, Databricks-internal usage, and reseller traffic are excluded. Wallet share and spend per user are priced at published provider list price, which is not what Databricks bills.",
+  "source": "Aggregated, anonymized Unity Gateway traffic from external enterprise customers, refreshed 2026-11-11. Embedding models, Databricks-internal usage, and reseller traffic are excluded. Wallet share and spend per user are priced at published provider list price, which is not what Databricks bills.",
   "share": {
     "as_of": "2026-11-02",
     "weeks": [
@@ -47,7 +47,7 @@
             "provider": "Anthropic",
             "older": false,
             "token": [12.0, 8.1, 5.1, 3.7, 3.1, 2.3, 2.0],
-            "wallet": [19.5, 12.2, 9.5, 7.4, 6.6, 6.1, 5.2]
+            "wallet": [19.5, 12.2, 9.4, 7.4, 6.6, 6.1, 5.2]
           },
           {
             "label": "Sonnet 5.5",
@@ -89,7 +89,7 @@
             "provider": "OpenAI",
             "older": false,
             "token": [2.1, 5.5, 4.1, 2.1, 1.3, 1.1, 0.8],
-            "wallet": [1.0, 3.7, 2.2, 1.5, 1.0, 0.9, 0.6]
+            "wallet": [0.9, 3.7, 2.2, 1.5, 1.0, 0.9, 0.6]
           },
           {
             "label": "GPT 6 Astra",
@@ -110,7 +110,7 @@
             "provider": "Other proprietary",
             "older": false,
             "token": [4.4, 3.8, 3.1, 3.1, 2.2, 2.0, 1.4],
-            "wallet": [2.7, 2.6, 2.6, 3.6, 2.7, 3.0, 2.3]
+            "wallet": [2.7, 2.6, 2.6, 3.6, 2.7, 3.0, 2.4]
           }
         ]
       },
@@ -139,70 +139,56 @@
             "provider": "Zhipu",
             "older": true,
             "token": [11.1, 8.8, 7.5, 6.8, 9.0, 5.3, 5.4],
-            "wallet": [19.0, 16.8, 16.1, 15.2, 17.2, 10.9, 11.6]
+            "wallet": [18.7, 16.6, 15.9, 14.9, 16.7, 10.6, 11.0]
           },
           {
             "label": "GLM 5.3",
             "provider": "Zhipu",
             "older": false,
             "token": [12.9, 12.3, 10.1, 12.0, 22.9, 21.9, 21.6],
-            "wallet": [23.4, 22.9, 20.2, 28.2, 39.6, 44.1, 45.0]
+            "wallet": [24.1, 23.5, 20.7, 28.7, 40.0, 44.4, 44.3]
           },
           {
             "label": "GLM 5.3 Flash",
             "provider": "Zhipu",
             "older": false,
             "token": [35.9, 42.7, 42.0, 48.3, 33.4, 33.3, 33.3],
-            "wallet": [6.6, 8.8, 9.1, 11.6, 7.0, 7.4, 8.4]
+            "wallet": [6.5, 8.7, 9.0, 11.3, 6.9, 7.2, 8.0]
           },
           {
             "label": "Older Moonshot Models",
             "provider": "Moonshot",
             "older": true,
-            "token": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.9],
-            "wallet": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-          },
-          {
-            "label": "Kimi K2.7 Code",
-            "provider": "Moonshot",
-            "older": false,
-            "token": [0.0, 0.1, 0.0, 0.0, 0.0, 0.0, 0.0],
-            "wallet": [0.1, 0.2, 0.1, 0.0, 0.0, 0.0, 0.0]
+            "token": [0.0, 0.1, 0.0, 0.0, 0.0, 0.0, 0.9],
+            "wallet": [0.1, 0.2, 0.1, 0.0, 0.0, 0.0, 2.8]
           },
           {
             "label": "Kimi K3",
             "provider": "Moonshot",
             "older": false,
             "token": [17.4, 16.4, 16.4, 10.8, 10.2, 9.6, 7.9],
-            "wallet": [42.3, 42.2, 45.2, 35.0, 27.4, 26.5, 22.0]
+            "wallet": [41.7, 41.6, 44.6, 34.2, 26.7, 25.7, 20.8]
           },
           {
             "label": "Older DeepSeek Models",
             "provider": "DeepSeek",
             "older": true,
-            "token": [6.1, 5.6, 3.5, 3.1, 1.0, 0.7, 0.2],
-            "wallet": [1.1, 1.2, 0.7, 0.5, 0.2, 0.2, 0.0]
-          },
-          {
-            "label": "DS V4 Pro",
-            "provider": "DeepSeek",
-            "older": false,
-            "token": [0.9, 0.3, 0.2, 0.1, 0.1, 0.2, 0.0],
-            "wallet": [0.2, 0.1, 0.1, 0.1, 0.0, 0.0, 0.0]
+            "token": [7.0, 5.9, 3.7, 3.2, 1.1, 0.9, 0.2],
+            "wallet": [1.2, 1.3, 0.8, 0.6, 0.2, 0.2, 0.0]
           },
           {
             "label": "DS V4.1 Flash",
             "provider": "DeepSeek",
             "older": false,
             "token": [13.4, 11.7, 18.5, 17.4, 21.1, 26.4, 28.0],
-            "wallet": [3.6, 4.2, 5.9, 7.1, 5.7, 7.6, 9.4]
+            "wallet": [3.8, 4.4, 6.2, 7.4, 6.0, 7.8, 9.2]
           },
           {
             "label": "Other",
             "provider": "Other open-weight",
             "older": false,
             "token": [2.3, 2.0, 1.7, 1.4, 2.3, 2.6, 2.6],
-            "wallet": [3.8, 3.6, 2.8, 2.3, 2.7, 3.4, 3.5]
+            "wallet": [3.9, 3.6, 2.9, 2.8, 3.5, 4.2, 3.9]
           }
         ]
       }
@@ -220,8 +206,67 @@
       "Oct 26",
       "Nov 2"
     ],
-    "p50": [1.1, 1.3, 1.48, 1.92, 2.03, 2.11, 2.48],
-    "p90": [95.41, 91.26, 90.27, 81.92, 87.03, 88.95, 95.96],
-    "p99": [781.48, 738.26, 654.18, 730.05, 713.79, 748.69, 698.82]
+    "p50": [1.1, 1.3, 1.49, 1.92, 2.03, 2.12, 2.5],
+    "p90": [95.66, 91.66, 90.39, 82.29, 87.03, 88.95, 95.96],
+    "p99": [781.48, 738.26, 654.18, 730.05, 715.29, 748.69, 700.0]
+  },
+  "long_term": {
+    "as_of": "2026-11-02",
+    "weeks": [
+      "Jul 20",
+      "Jul 27",
+      "Aug 3",
+      "Aug 10",
+      "Aug 17",
+      "Aug 24",
+      "Aug 31",
+      "Sep 7",
+      "Sep 14",
+      "Sep 21",
+      "Sep 28",
+      "Oct 5",
+      "Oct 12",
+      "Oct 19",
+      "Oct 26",
+      "Nov 2"
+    ],
+    "open_weight_share": [
+      7.3, 8.3, 11.8, 15.5, 17.7, 21.4, 23.7, 27.2, 33.2, 30.6, 29.0, 31.2,
+      32.6, 30.3, 32.1, 30.9
+    ],
+    "providers_used": [
+      {
+        "label": "4+ providers",
+        "color": "#173f73",
+        "values": [
+          4.4, 6.6, 6.9, 10.0, 12.7, 16.4, 18.1, 20.4, 22.9, 24.3, 27.6, 28.0,
+          28.4, 30.0, 30.8, 31.4
+        ]
+      },
+      {
+        "label": "3 providers",
+        "color": "#2a78d6",
+        "values": [
+          8.0, 12.4, 12.3, 14.1, 15.5, 14.5, 15.4, 16.0, 15.5, 16.4, 15.9, 17.0,
+          16.7, 16.2, 17.3, 16.5
+        ]
+      },
+      {
+        "label": "2 providers",
+        "color": "#79abe8",
+        "values": [
+          23.7, 25.4, 23.5, 25.7, 26.0, 27.3, 26.6, 25.6, 25.8, 25.1, 24.1,
+          24.4, 23.4, 23.1, 22.9, 23.1
+        ]
+      },
+      {
+        "label": "1 provider",
+        "color": "#b4d0f2",
+        "values": [
+          64.0, 55.5, 57.3, 50.2, 45.8, 41.8, 39.9, 38.0, 35.8, 34.2, 32.4,
+          30.6, 31.5, 30.7, 29.1, 28.9
+        ]
+      }
+    ]
   }
 }

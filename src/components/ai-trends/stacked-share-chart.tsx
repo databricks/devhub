@@ -8,7 +8,7 @@ import {
   CHART_GRID,
   CHART_MUTED,
 } from "@/lib/ai-trends/chart-setup";
-import type { LegendGroup, StackLayer } from "@/lib/ai-trends/compute";
+import type { ChartLayer, LegendGroup } from "@/lib/ai-trends/compute";
 import { useChart } from "@/lib/ai-trends/use-chart";
 
 import { ShareLegend } from "./share-legend";
@@ -37,15 +37,13 @@ export function StackedShareChart({
   weeks,
   layers,
   legend,
-  metric,
   canvasId,
   yAxisTitle,
   showHalfLine = false,
 }: {
   weeks: string[];
-  layers: StackLayer[];
+  layers: ChartLayer[];
   legend: LegendGroup[];
-  metric: "token" | "wallet";
   canvasId: string;
   yAxisTitle: string;
   showHalfLine?: boolean;
@@ -57,8 +55,8 @@ export function StackedShareChart({
       data: {
         labels: weeks,
         datasets: layers.map((layer) => ({
-          label: layer.label,
-          data: layer[metric],
+          label: layer.tooltip,
+          data: layer.values,
           backgroundColor: layer.color,
           borderColor: "#ffffff",
           borderWidth: 1,
@@ -76,7 +74,7 @@ export function StackedShareChart({
           tooltip: {
             callbacks: {
               label: (item) =>
-                `${item.dataset.label} · ${layers[item.datasetIndex].provider}: ${item.parsed.y.toFixed(1)}%`,
+                `${item.dataset.label}: ${item.parsed.y.toFixed(1)}%`,
             },
           },
           datalabels: { display: false },
@@ -103,7 +101,7 @@ export function StackedShareChart({
         },
       },
     }),
-    [weeks, layers, metric, showHalfLine],
+    [weeks, layers, showHalfLine],
   );
 
   return (

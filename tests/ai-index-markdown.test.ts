@@ -87,6 +87,15 @@ describe("/ai-index.md", () => {
     const { share, spend } = industryData;
     expect(markdown).toContain(`Updated ${formatDate(share.as_of)}.`);
     expect(markdown).toContain(`Updated ${formatDate(spend.as_of)}.`);
+    const { long_term: longTerm } = industryData;
+    expect(markdown).toContain(`## ${contentData.sections.long_term.title}`);
+    for (const series of longTerm.providers_used)
+      expect(markdown).toContain(
+        `${series.label} ${lastValue(series.values).toFixed(1)}%`,
+      );
+    expect(markdown).toContain(
+      `open-weight models had ${lastValue(longTerm.open_weight_share).toFixed(1)}% of tokens`,
+    );
     expect(markdown).toContain(
       `Updated ${formatDate(benchmarkData.run_date)}.`,
     );

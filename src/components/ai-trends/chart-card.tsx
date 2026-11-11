@@ -12,8 +12,8 @@ export function ChartCard({
   placeholder = false,
   description,
   note,
-  shareChartIds,
   shareSlug,
+  getShareImage,
   children,
   className,
 }: {
@@ -23,8 +23,8 @@ export function ChartCard({
   placeholder?: boolean;
   description?: ReactNode;
   note?: ReactNode;
-  shareChartIds?: string[];
   shareSlug?: string;
+  getShareImage?: () => Promise<Blob>;
   children?: ReactNode;
   className?: string;
 }): ReactNode {
@@ -51,11 +51,11 @@ export function ChartCard({
               Updated {updated}
             </span>
           ) : null}
-          {shareChartIds && shareChartIds.length > 0 && shareSlug ? (
+          {shareSlug ? (
             <ShareControl
-              chartIds={shareChartIds}
               shareSlug={shareSlug}
               title={title}
+              getImage={getShareImage}
             />
           ) : null}
         </div>

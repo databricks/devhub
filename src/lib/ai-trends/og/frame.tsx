@@ -10,7 +10,7 @@ export const INK = "#0b2026";
 export const MUTED = "#5b6a70";
 export const GRID = "#e4e2dd";
 export const PAPER = "#f9f7f4";
-const LAVA = "#ff3621";
+export const LAVA = "#ff3621";
 
 const SITE_LABEL = "developers.databricks.com/ai-index";
 
@@ -62,17 +62,14 @@ export function OgLabel({
   );
 }
 
-export function OgFrame({
-  title,
-  updated,
-  placeholder = false,
-  children,
-}: {
-  title: string;
-  updated: string;
-  placeholder?: boolean;
-  children: ReactNode;
-}): ReactNode {
+export function OgAccent(): ReactNode {
+  return (
+    <div style={{ display: "flex", width: 72, height: 6, background: LAVA }} />
+  );
+}
+
+/** Paper background and the Databricks footer shared by every card. */
+export function OgPage({ children }: { children: ReactNode }): ReactNode {
   return (
     <div
       style={{
@@ -86,9 +83,45 @@ export function OgFrame({
         position: "relative",
       }}
     >
+      {children}
       <div
-        style={{ display: "flex", width: 72, height: 6, background: LAVA }}
-      />
+        style={{
+          position: "absolute",
+          left: 48,
+          right: 48,
+          bottom: 0,
+          height: 44,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          borderTop: `1px solid ${GRID}`,
+          fontSize: 18,
+          color: MUTED,
+        }}
+      >
+        <div style={{ display: "flex", color: LAVA, fontWeight: 700 }}>
+          Databricks
+        </div>
+        <div style={{ display: "flex" }}>{SITE_LABEL}</div>
+      </div>
+    </div>
+  );
+}
+
+export function OgFrame({
+  title,
+  updated,
+  placeholder = false,
+  children,
+}: {
+  title: string;
+  updated: string;
+  placeholder?: boolean;
+  children: ReactNode;
+}): ReactNode {
+  return (
+    <OgPage>
+      <OgAccent />
       <div
         style={{
           display: "flex",
@@ -117,26 +150,6 @@ export function OgFrame({
       >
         {children}
       </div>
-      <div
-        style={{
-          position: "absolute",
-          left: 48,
-          right: 48,
-          bottom: 0,
-          height: 44,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          borderTop: `1px solid ${GRID}`,
-          fontSize: 18,
-          color: MUTED,
-        }}
-      >
-        <div style={{ display: "flex", color: LAVA, fontWeight: 700 }}>
-          Databricks
-        </div>
-        <div style={{ display: "flex" }}>{SITE_LABEL}</div>
-      </div>
-    </div>
+    </OgPage>
   );
 }

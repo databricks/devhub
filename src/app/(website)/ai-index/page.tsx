@@ -35,6 +35,7 @@ export const metadata = getMetadata({
   description: contentData.seo.description,
   markdownPath: `${PAGE_PATH}.md`,
   pathname: PAGE_PATH,
+  imagePath: null,
   noIndex: true,
 });
 

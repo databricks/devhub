@@ -42,13 +42,14 @@ describe("vercel rewrites", () => {
       "/api/markdown?section=product&slug=$1",
     );
     expectRewrite("/mvps.md", "/api/markdown?section=mvps&slug=");
+    expectRewrite("/ai-index.md", "/api/markdown?section=ai-index&slug=");
   });
 
   test("routes page markdown before the docs catch-all", () => {
     const sources = config.rewrites.map((rewrite) => rewrite.source);
     const catchAll = sources.indexOf("/(.+)\\.md");
     expect(catchAll).toBeGreaterThan(-1);
-    for (const source of ["/product/(.+)\\.md", "/mvps.md"]) {
+    for (const source of ["/product/(.+)\\.md", "/mvps.md", "/ai-index.md"]) {
       expect(sources.indexOf(source)).toBeLessThan(catchAll);
     }
   });

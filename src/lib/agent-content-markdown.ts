@@ -1,6 +1,7 @@
 import { existsSync, readFileSync } from "fs";
 import { resolve } from "path";
 
+import { renderAiIndexMarkdown } from "./ai-trends/markdown";
 import { ABOUT_DEVHUB_SLUG } from "./bootstrap-prompt";
 import { renderMvpProgramMarkdown } from "./community/mvp-program";
 import {
@@ -238,6 +239,7 @@ export function getDetailMarkdown(
   if (!slug || slug.trim() === "") {
     if (section === "templates") return readTemplatesIndex();
     if (section === "mvps") return renderMvpProgramMarkdown();
+    if (section === "ai-index") return renderAiIndexMarkdown();
     throw new Error("Missing slug");
   }
 

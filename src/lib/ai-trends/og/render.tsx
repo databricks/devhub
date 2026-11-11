@@ -11,9 +11,18 @@ import {
   getStackLayers,
 } from "@/lib/ai-trends/compute";
 import { benchmarkData, contentData, industryData } from "@/lib/ai-trends/data";
+import { formatDate } from "@/lib/ai-trends/format";
 import type { ShareCard } from "@/lib/ai-trends/share-cards";
 
-import { OgFrame } from "./frame";
+import {
+  CHART_HEIGHT,
+  CHART_WIDTH,
+  LAVA,
+  MUTED,
+  OgAccent,
+  OgFrame,
+  OgPage,
+} from "./frame";
 import { OgSpendPanels } from "./lines";
 import { OgScatter } from "./scatter";
 import { OgStackedBars } from "./stacked";
@@ -105,5 +114,61 @@ export function renderShareCard(
     >
       {renderChart(card.slug, logos)}
     </OgFrame>
+  );
+}
+
+/** The bold lead of the page intro, e.g. "Explore the tokenomics of enterprise AI". */
+function getIntroLead(): string {
+  const lead = contentData.header.intro.match(/^\*\*(.+?):?\*\*/)?.[1];
+  if (!lead) throw new Error("content.json header.intro has no bold lead");
+  return lead;
+}
+
+/**
+ * The /ai-index page card: the index title and intro lead over the
+ * proprietary token share chart, which illustrates the page as a whole.
+ */
+export function renderIndexCard(): ReactElement {
+  const { header } = contentData;
+  const updated = [
+    industryData.share.as_of,
+    industryData.spend.as_of,
+    benchmarkData.run_date,
+  ].sort()[2];
+  return (
+    <OgPage>
+      <OgAccent />
+      <div
+        style={{
+          display: "flex",
+          marginTop: 18,
+          fontSize: 56,
+          fontWeight: 600,
+          lineHeight: 1.1,
+          letterSpacing: -1.6,
+        }}
+      >
+        <span>{header.title_lead}</span>
+        <span style={{ color: LAVA, marginLeft: 14 }}>
+          {header.title_accent}
+        </span>
+      </div>
+      <div
+        style={{ display: "flex", marginTop: 8, fontSize: 22, color: MUTED }}
+      >
+        {`${getIntroLead()} · Updated ${formatDate(updated)}`}
+      </div>
+      <div
+        style={{
+          display: "flex",
+          position: "relative",
+          width: CHART_WIDTH,
+          height: CHART_HEIGHT,
+          marginTop: 26,
+        }}
+      >
+        {renderStackedShare("proprietary", "token")}
+      </div>
+    </OgPage>
   );
 }

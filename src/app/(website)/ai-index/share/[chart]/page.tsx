@@ -25,16 +25,13 @@ export async function generateMetadata({
   const { chart } = await params;
   const card = getShareCard(chart);
   if (!card) notFound();
-  const metadata = getMetadata({
+  return getMetadata({
     title: card.title,
     description: card.description,
     pathname: getSharePath(card.slug),
+    imagePath: null,
     noIndex: true,
   });
-  // Drop the default social image so the file-based opengraph/twitter images apply.
-  const { images: _ogImages, ...openGraph } = metadata.openGraph ?? {};
-  const { images: _twitterImages, ...twitter } = metadata.twitter ?? {};
-  return { ...metadata, openGraph, twitter };
 }
 
 export default async function ShareChartPage({

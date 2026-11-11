@@ -13,7 +13,8 @@ type OpenGraphKind = "article" | "website";
 
 type MetadataOptions = {
   description: string;
-  imagePath?: string;
+  /** `null` leaves images to the route's opengraph-image / twitter-image files, which config images would override. */
+  imagePath?: string | null;
   markdownPath?: string;
   noIndex?: boolean;
   pathname: string;
@@ -45,7 +46,8 @@ export function getMetadata({
   type = "website",
 }: MetadataOptions): Metadata {
   const canonicalUrl = absoluteSiteUrl(pathname);
-  const imageUrl = absoluteSiteUrl(imagePath);
+  const socialImages =
+    imagePath === null ? {} : { images: [absoluteSiteUrl(imagePath)] };
 
   // Next's title `template` only applies to the document <title>, not to
   // openGraph/twitter titles. Mirror it here so social cards match the page
@@ -68,7 +70,7 @@ export function getMetadata({
           siteName: SITE_NAME,
           type: "article" as const,
           url: canonicalUrl,
-          images: [imageUrl],
+          ...socialImages,
         }
       : {
           title: socialTitle,
@@ -76,7 +78,7 @@ export function getMetadata({
           siteName: SITE_NAME,
           type: "website" as const,
           url: canonicalUrl,
-          images: [imageUrl],
+          ...socialImages,
         };
 
   return {
@@ -92,7 +94,7 @@ export function getMetadata({
       card: "summary_large_image",
       title: socialTitle,
       description,
-      images: [imageUrl],
+      ...socialImages,
     },
     robots: noIndex
       ? {

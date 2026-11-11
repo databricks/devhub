@@ -63,16 +63,13 @@ export function ScatterChart({
   paretoNames,
   axis,
   families,
-  selectedFamilies,
-  onSelectedFamiliesChange,
 }: {
   models: BenchmarkModel[];
   paretoNames: string[];
   axis: QualityAxis;
   families: FamilyOption[];
-  selectedFamilies: string[];
-  onSelectedFamiliesChange: (selected: string[]) => void;
 }) {
+  const [selectedFamilies, setSelectedFamilies] = useState<string[]>([]);
   const [hovered, setHovered] = useState<HoveredModel | null>(null);
   const narrow = useIsNarrow();
   const logoSize = narrow ? NARROW_LOGO_SIZE : LOGO_SIZE;
@@ -381,7 +378,7 @@ export function ScatterChart({
       <FamilyFilter
         families={families}
         selected={selectedFamilies}
-        onChange={onSelectedFamiliesChange}
+        onChange={setSelectedFamilies}
         label="Model family"
       />
       <div

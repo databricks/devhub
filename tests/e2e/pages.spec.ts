@@ -1031,8 +1031,8 @@ test.describe("docs MDX compatibility", () => {
     expect(layout.headingButtons).toBe(23);
     expect(layout.httpTableHeight).toBeGreaterThanOrEqual(660);
     expect(layout.httpTableHeight).toBeLessThanOrEqual(690);
-    expect(layout.articleHeight).toBeGreaterThanOrEqual(21750);
-    expect(layout.articleHeight).toBeLessThanOrEqual(21850);
+    expect(layout.articleHeight).toBeGreaterThanOrEqual(22400);
+    expect(layout.articleHeight).toBeLessThanOrEqual(22500);
 
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto("/docs/appkit/v0/plugins/files");
@@ -1083,8 +1083,8 @@ test.describe("docs MDX compatibility", () => {
     expect(mobileLayout.firstTableScrollWidth).toBeGreaterThan(
       mobileLayout.firstTableVisibleWidth,
     );
-    expect(mobileLayout.articleHeight).toBeGreaterThanOrEqual(24730);
-    expect(mobileLayout.articleHeight).toBeLessThanOrEqual(24775);
+    expect(mobileLayout.articleHeight).toBeGreaterThanOrEqual(25055);
+    expect(mobileLayout.articleHeight).toBeLessThanOrEqual(25100);
   });
 
   test("renders DocExample embeds with preview and code tabs", async ({

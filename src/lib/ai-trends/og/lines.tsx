@@ -22,6 +22,7 @@ function OgLines({
   width = CHART_WIDTH,
   height = CHART_HEIGHT,
   compact = false,
+  bare = false,
 }: {
   weeks: string[];
   series: OgSeries[];
@@ -31,11 +32,13 @@ function OgLines({
   width?: number;
   height?: number;
   compact?: boolean;
+  bare?: boolean;
 }): ReactNode {
-  const plotLeft = compact ? 44 : PLOT.left;
-  const plotRight = width - PLOT.right;
-  const top = compact ? 10 : PLOT.top;
-  const bottom = height - (compact ? 28 : PLOT.bottom);
+  const stroke = compact ? 3 : 4;
+  const plotLeft = bare ? stroke : compact ? 44 : PLOT.left;
+  const plotRight = width - (bare ? stroke : PLOT.right);
+  const top = bare ? stroke : compact ? 10 : PLOT.top;
+  const bottom = height - (bare ? stroke : compact ? 28 : PLOT.bottom);
   const max =
     yMax ?? niceCeil(Math.max(...series.flatMap((s) => s.values)), yStep);
   const single = weeks.length === 1;
@@ -53,7 +56,7 @@ function OgLines({
   return (
     <div style={{ display: "flex", position: "relative", width, height }}>
       <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`}>
-        {ticks.map((v) => (
+        {(bare ? [0] : ticks).map((v) => (
           <line
             key={v}
             x1={plotLeft}
@@ -70,7 +73,7 @@ function OgLines({
               points={s.values.map((v, i) => `${x(i)},${y(v)}`).join(" ")}
               fill="none"
               stroke={s.color}
-              strokeWidth={compact ? 3 : 4}
+              strokeWidth={stroke}
               strokeLinejoin="round"
               strokeLinecap="round"
             />
@@ -82,7 +85,7 @@ function OgLines({
           </g>
         ))}
       </svg>
-      {ticks.map((v) => (
+      {(bare ? [] : ticks).map((v) => (
         <OgLabel
           key={v}
           x={plotLeft - 8}
@@ -95,7 +98,7 @@ function OgLines({
         </OgLabel>
       ))}
       {weeks.map((w, i) =>
-        i % xEvery === 0 ? (
+        !bare && i % xEvery === 0 ? (
           <OgLabel
             key={w}
             x={x(i)}
@@ -115,14 +118,21 @@ function OgLines({
 export function OgSpendPanels({
   weeks,
   panels,
+  width = CHART_WIDTH,
+  height = CHART_HEIGHT,
+  bare = false,
 }: {
   weeks: string[];
   panels: { label: string; values: number[]; max: number; step: number }[];
+  width?: number;
+  height?: number;
+  /** One line per panel: no panel titles, latest values, or axis labels. */
+  bare?: boolean;
 }): ReactNode {
-  const gap = 20;
-  const panelWidth = (CHART_WIDTH - gap * (panels.length - 1)) / panels.length;
+  const gap = bare ? 24 : 20;
+  const panelWidth = (width - gap * (panels.length - 1)) / panels.length;
   return (
-    <div style={{ display: "flex", width: CHART_WIDTH, height: CHART_HEIGHT }}>
+    <div style={{ display: "flex", width, height }}>
       {panels.map((p, i) => (
         <div
           key={p.label}
@@ -133,29 +143,33 @@ export function OgSpendPanels({
             marginRight: i < panels.length - 1 ? gap : 0,
           }}
         >
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              fontSize: 20,
-              fontWeight: 600,
-              color: INK,
-              marginBottom: 6,
-            }}
-          >
-            {p.label}
-          </div>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              fontSize: 15,
-              color: MUTED,
-              marginBottom: 4,
-            }}
-          >
-            {`Latest ${formatSpend(p.values[p.values.length - 1])}`}
-          </div>
+          {bare ? null : (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                fontSize: 20,
+                fontWeight: 600,
+                color: INK,
+                marginBottom: 6,
+              }}
+            >
+              {p.label}
+            </div>
+          )}
+          {bare ? null : (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                fontSize: 15,
+                color: MUTED,
+                marginBottom: 4,
+              }}
+            >
+              {`Latest ${formatSpend(p.values[p.values.length - 1])}`}
+            </div>
+          )}
           <OgLines
             weeks={weeks}
             series={[
@@ -169,8 +183,9 @@ export function OgSpendPanels({
             yStep={p.step}
             formatY={formatSpend}
             width={panelWidth}
-            height={CHART_HEIGHT - 60}
+            height={bare ? height : height - 60}
             compact
+            bare={bare}
           />
         </div>
       ))}

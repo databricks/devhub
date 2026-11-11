@@ -1,16 +1,21 @@
 import type { CSSProperties, ReactNode } from "react";
 
 export const OG_SIZE = { width: 1200, height: 630 };
+const PADDING_TOP = 40;
+const FOOTER_HEIGHT = 44;
+/** Height between the top padding and the footer. */
+export const OG_BODY_HEIGHT = OG_SIZE.height - PADDING_TOP - FOOTER_HEIGHT;
 export const CHART_WIDTH = 1104;
 export const CHART_HEIGHT = 384;
 
 // Mirrors the page palette in src/css/custom.css (--db-navy, --db-paper,
-// --db-lava); image rendering can't read Tailwind tokens.
+// --db-lava, --db-card); image rendering can't read Tailwind tokens.
 export const INK = "#0b2026";
 export const MUTED = "#5b6a70";
 export const GRID = "#e4e2dd";
 export const PAPER = "#f9f7f4";
-const LAVA = "#ff3621";
+export const LAVA = "#ff3621";
+export const CARD = "#ffffff";
 
 const SITE_LABEL = "developers.databricks.com/ai-index";
 
@@ -62,6 +67,52 @@ export function OgLabel({
   );
 }
 
+export function OgAccent(): ReactNode {
+  return (
+    <div style={{ display: "flex", width: 72, height: 6, background: LAVA }} />
+  );
+}
+
+/** Paper background and the Databricks footer shared by every card. */
+export function OgPage({ children }: { children: ReactNode }): ReactNode {
+  return (
+    <div
+      style={{
+        width: OG_SIZE.width,
+        height: OG_SIZE.height,
+        display: "flex",
+        flexDirection: "column",
+        background: PAPER,
+        color: INK,
+        padding: `${PADDING_TOP}px 48px 0`,
+        position: "relative",
+      }}
+    >
+      {children}
+      <div
+        style={{
+          position: "absolute",
+          left: 48,
+          right: 48,
+          bottom: 0,
+          height: FOOTER_HEIGHT,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          borderTop: `1px solid ${GRID}`,
+          fontSize: 18,
+          color: MUTED,
+        }}
+      >
+        <div style={{ display: "flex", color: LAVA, fontWeight: 700 }}>
+          Databricks
+        </div>
+        <div style={{ display: "flex" }}>{SITE_LABEL}</div>
+      </div>
+    </div>
+  );
+}
+
 export function OgFrame({
   title,
   updated,
@@ -74,21 +125,8 @@ export function OgFrame({
   children: ReactNode;
 }): ReactNode {
   return (
-    <div
-      style={{
-        width: OG_SIZE.width,
-        height: OG_SIZE.height,
-        display: "flex",
-        flexDirection: "column",
-        background: PAPER,
-        color: INK,
-        padding: "40px 48px 0",
-        position: "relative",
-      }}
-    >
-      <div
-        style={{ display: "flex", width: 72, height: 6, background: LAVA }}
-      />
+    <OgPage>
+      <OgAccent />
       <div
         style={{
           display: "flex",
@@ -117,26 +155,6 @@ export function OgFrame({
       >
         {children}
       </div>
-      <div
-        style={{
-          position: "absolute",
-          left: 48,
-          right: 48,
-          bottom: 0,
-          height: 44,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          borderTop: `1px solid ${GRID}`,
-          fontSize: 18,
-          color: MUTED,
-        }}
-      >
-        <div style={{ display: "flex", color: LAVA, fontWeight: 700 }}>
-          Databricks
-        </div>
-        <div style={{ display: "flex" }}>{SITE_LABEL}</div>
-      </div>
-    </div>
+    </OgPage>
   );
 }

@@ -67,6 +67,46 @@ describe("AI Index share previews", () => {
     }
   });
 
+  test("page has its own preview tags", () => {
+    expect(readMeta(pageHtml, "og:url")).toBe(`${siteUrl}/ai-index`);
+    expect(readMeta(pageHtml, "twitter:card")).toBe("summary_large_image");
+    expect(readMeta(pageHtml, "og:image:width")).toBe(String(OG_WIDTH));
+    expect(readMeta(pageHtml, "og:image:height")).toBe(String(OG_HEIGHT));
+    expect(readMeta(pageHtml, "og:image:alt")).toBeTruthy();
+    expect(readMeta(pageHtml, "twitter:image:alt")).toBeTruthy();
+    expect(
+      readMeta(pageHtml, "og:image")?.startsWith(
+        `${siteUrl}/ai-index/opengraph-image`,
+      ),
+    ).toBe(true);
+    expect(
+      readMeta(pageHtml, "twitter:image")?.startsWith(
+        `${siteUrl}/ai-index/twitter-image`,
+      ),
+    ).toBe(true);
+  });
+
+  test("page preview images are 1200x630 PNGs", () => {
+    for (const key of ["og:image", "twitter:image"]) {
+      const image = readImageFor(readMeta(pageHtml, key) ?? "");
+      expect(imageSize(image)).toMatchObject({
+        type: "png",
+        width: OG_WIDTH,
+        height: OG_HEIGHT,
+      });
+      expect(image.byteLength).toBeGreaterThan(20_000);
+    }
+  });
+
+  test("other pages keep the site-wide card", () => {
+    const homeHtml = readFileSync(resolve(NEXT_APP_DIR, "index.html"), "utf-8");
+    for (const key of ["og:image", "twitter:image"]) {
+      expect(readMeta(homeHtml, key)).toBe(
+        `${siteUrl}/img/databricks-social-card.jpg`,
+      );
+    }
+  });
+
   test.each(getShareSlugs())(
     "%s: share page redirects to a chart on the page",
     (slug) => {

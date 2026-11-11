@@ -18,26 +18,41 @@ const PLOT = { left: 56, right: 12, top: 8, bottom: 30 };
 const Y_STEP = 5;
 const LOGO_SIZE = 26;
 const FRONTIER_LOGO_SIZE = 32;
+const BARE_LOGO_SIZE = 18;
+const BARE_FRONTIER_LOGO_SIZE = 22;
 
 export function OgScatter({
   models,
   axis,
   paretoNames,
   logos,
+  width = CHART_WIDTH,
+  height = CHART_HEIGHT,
+  bare = false,
 }: {
   models: BenchmarkModel[];
   axis: QualityAxis;
   paretoNames: string[];
   /** Vendor name to logo image source; vendors without one get a dot. */
   logos: Record<string, string>;
+  width?: number;
+  height?: number;
+  /** Markers and frontier only: no axis labels, gridlines, or model names. */
+  bare?: boolean;
 }): ReactNode {
+  const logoSize = bare ? BARE_LOGO_SIZE : LOGO_SIZE;
+  const frontierLogoSize = bare ? BARE_FRONTIER_LOGO_SIZE : FRONTIER_LOGO_SIZE;
+  const inset = frontierLogoSize / 2;
+  const plot = bare
+    ? { left: inset, right: inset, top: inset, bottom: inset }
+    : PLOT;
   const costs = models.map((m) => m.cost);
-  const xMin = Math.min(...costs) * 0.55;
-  const xMax = Math.max(...costs) * 1.25;
-  const left = PLOT.left;
-  const right = CHART_WIDTH - PLOT.right;
-  const top = PLOT.top;
-  const bottom = CHART_HEIGHT - PLOT.bottom;
+  const xMin = Math.min(...costs) * (bare ? 1 : 0.55);
+  const xMax = Math.max(...costs) * (bare ? 1 : 1.25);
+  const left = plot.left;
+  const right = width - plot.right;
+  const top = plot.top;
+  const bottom = height - plot.bottom;
   const x = logScale(xMin, xMax, left, right);
   const y = linear(axis.min, axis.max, bottom, top);
   const paretoSet = new Set(paretoNames);
@@ -48,23 +63,19 @@ export function OgScatter({
   for (let v = axis.min; v <= axis.max; v += Y_STEP) yTicks.push(v);
   const xTicks = logTicks(xMin, xMax);
   const markerSize = (m: BenchmarkModel) =>
-    paretoSet.has(m.name) ? FRONTIER_LOGO_SIZE : LOGO_SIZE;
+    paretoSet.has(m.name) ? frontierLogoSize : logoSize;
 
   return (
     <div
       style={{
         display: "flex",
         position: "relative",
-        width: CHART_WIDTH,
-        height: CHART_HEIGHT,
+        width,
+        height,
       }}
     >
-      <svg
-        width={CHART_WIDTH}
-        height={CHART_HEIGHT}
-        viewBox={`0 0 ${CHART_WIDTH} ${CHART_HEIGHT}`}
-      >
-        {yTicks.map((v) => (
+      <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`}>
+        {(bare ? [] : yTicks).map((v) => (
           <line
             key={v}
             x1={left}
@@ -75,7 +86,7 @@ export function OgScatter({
             strokeWidth={1}
           />
         ))}
-        {xTicks.map((v) => (
+        {(bare ? [] : xTicks).map((v) => (
           <line
             key={v}
             x1={x(v)}
@@ -135,7 +146,7 @@ export function OgScatter({
           />
         );
       })}
-      {yTicks.map((v) => (
+      {(bare ? [] : yTicks).map((v) => (
         <OgLabel
           key={v}
           x={left - 10}
@@ -147,7 +158,7 @@ export function OgScatter({
           {v}
         </OgLabel>
       ))}
-      {xTicks.map((v) => (
+      {(bare ? [] : xTicks).map((v) => (
         <OgLabel
           key={v}
           x={x(v)}
@@ -159,7 +170,7 @@ export function OgScatter({
           {formatUsd(v)}
         </OgLabel>
       ))}
-      {pareto.map((m) => {
+      {(bare ? [] : pareto).map((m) => {
         const flip = x(m.cost) > (left + right) / 2;
         const below = !flip;
         return (
@@ -176,19 +187,23 @@ export function OgScatter({
           </OgLabel>
         );
       })}
-      <OgLabel
-        x={right}
-        y={bottom - 10}
-        align="right"
-        width={300}
-        size={13}
-        color={MUTED}
-      >
-        Cost per task (log scale) →
-      </OgLabel>
-      <OgLabel x={left + 8} y={top + 10} width={300} size={13} color={MUTED}>
-        ↑ Quality (pass rate %)
-      </OgLabel>
+      {bare ? null : (
+        <OgLabel
+          x={right}
+          y={bottom - 10}
+          align="right"
+          width={300}
+          size={13}
+          color={MUTED}
+        >
+          Cost per task (log scale) →
+        </OgLabel>
+      )}
+      {bare ? null : (
+        <OgLabel x={left + 8} y={top + 10} width={300} size={13} color={MUTED}>
+          ↑ Quality (pass rate %)
+        </OgLabel>
+      )}
     </div>
   );
 }

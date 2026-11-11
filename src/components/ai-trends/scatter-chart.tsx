@@ -370,23 +370,16 @@ export function ScatterChart({
   useEffect(() => {
     const chart = chartRef.current;
     if (!chart) return;
-    const isShown = (family: string) =>
-      selectedFamilies.length === 0 || selectedFamilies.includes(family);
-    // The frontier is computed over every model, so the line only holds while
-    // all of its points are on screen.
-    const frontierShown = models
-      .filter((m) => paretoNames.includes(m.name))
-      .every((m) => isShown(m.vendor));
     chart.data.datasets.forEach((ds, i) => {
+      if (ds.label === "Pareto frontier") return;
       chart.setDatasetVisibility(
         i,
-        ds.label === "Pareto frontier"
-          ? frontierShown
-          : isShown(String(ds.label)),
+        selectedFamilies.length === 0 ||
+          selectedFamilies.includes(String(ds.label)),
       );
     });
     chart.update();
-  }, [selectedFamilies, chartRef, narrow, models, paretoNames]);
+  }, [selectedFamilies, chartRef, narrow]);
 
   let tooltipLeft = 0;
   let tooltipTop = 0;

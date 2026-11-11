@@ -8,7 +8,7 @@ import {
   ChartDataLabels,
 } from "@/lib/ai-trends/chart-setup";
 import type { FamilyOption, QualityAxis } from "@/lib/ai-trends/compute";
-import { placeLabels } from "@/lib/ai-trends/label-placement";
+import { placeLabels, type LabelSide } from "@/lib/ai-trends/label-placement";
 import type { BenchmarkModel } from "@/lib/ai-trends/schema";
 import { useChart } from "@/lib/ai-trends/use-chart";
 import { useIsNarrow } from "@/lib/ai-trends/use-narrow";
@@ -27,10 +27,24 @@ import {
 const LOGO_SIZE = 24;
 const NARROW_LOGO_SIZE = 18;
 const LABEL_FONT_SIZE = 9.5;
-const LABEL_OFFSET = 10;
+// Clearance between a logo's edge and its label, so the label's white box
+// doesn't clip the logo.
+const LABEL_CLEARANCE = 3;
 const LABEL_PADDING = 2;
 // Extra room around each label so near-touching labels aren't hidden as overlaps.
 const LABEL_GAP = 6;
+
+/** Diagonals are clockwise angles in degrees, with 0 pointing right. */
+const DATALABELS_ALIGN: Record<LabelSide, string | number> = {
+  top: "top",
+  right: "right",
+  bottom: "bottom",
+  left: "left",
+  "top-right": -45,
+  "bottom-right": 45,
+  "bottom-left": 135,
+  "top-left": -135,
+};
 
 type ScatterPoint = {
   x: number;
@@ -38,7 +52,7 @@ type ScatterPoint = {
   label: string;
   frontier: boolean;
   harness: string;
-  al: string;
+  al: LabelSide;
 };
 
 type HoveredModel = {
@@ -73,6 +87,7 @@ export function ScatterChart({
   const [hovered, setHovered] = useState<HoveredModel | null>(null);
   const narrow = useIsNarrow();
   const logoSize = narrow ? NARROW_LOGO_SIZE : LOGO_SIZE;
+  const labelOffset = logoSize / 2 + LABEL_CLEARANCE;
 
   const wrapperRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
@@ -141,8 +156,10 @@ export function ScatterChart({
           font: { size: LABEL_FONT_SIZE, weight: "500" },
           formatter: (v: unknown) => (v as ScatterPoint).label,
           align: (ctx: DatalabelsCtx) =>
-            (ctx.dataset.data[ctx.dataIndex] as ScatterPoint).al ?? "top",
-          offset: LABEL_OFFSET,
+            DATALABELS_ALIGN[
+              (ctx.dataset.data[ctx.dataIndex] as ScatterPoint).al
+            ],
+          offset: labelOffset,
           clamp: true,
           padding: LABEL_PADDING,
           backgroundColor: "rgba(255,255,255,0.88)",
@@ -198,7 +215,7 @@ export function ScatterChart({
             priority: (pt.frontier ? 1000 : 0) + pt.y,
           })),
           chartArea,
-          LABEL_OFFSET,
+          labelOffset,
         );
         ctx.restore();
         points.forEach((pt, i) => {
@@ -350,16 +367,23 @@ export function ScatterChart({
   useEffect(() => {
     const chart = chartRef.current;
     if (!chart) return;
+    const isShown = (family: string) =>
+      selectedFamilies.length === 0 || selectedFamilies.includes(family);
+    // The frontier is computed over every model, so the line only holds while
+    // all of its points are on screen.
+    const frontierShown = models
+      .filter((m) => paretoNames.includes(m.name))
+      .every((m) => isShown(m.vendor));
     chart.data.datasets.forEach((ds, i) => {
-      if (ds.label === "Pareto frontier") return;
       chart.setDatasetVisibility(
         i,
-        selectedFamilies.length === 0 ||
-          selectedFamilies.includes(String(ds.label)),
+        ds.label === "Pareto frontier"
+          ? frontierShown
+          : isShown(String(ds.label)),
       );
     });
     chart.update();
-  }, [selectedFamilies, chartRef, narrow]);
+  }, [selectedFamilies, chartRef, narrow, models, paretoNames]);
 
   let tooltipLeft = 0;
   let tooltipTop = 0;

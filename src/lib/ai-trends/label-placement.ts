@@ -1,4 +1,12 @@
-export type LabelSide = "top" | "right" | "bottom" | "left";
+export type LabelSide =
+  | "top"
+  | "right"
+  | "bottom"
+  | "left"
+  | "top-right"
+  | "bottom-right"
+  | "bottom-left"
+  | "top-left";
 
 export type LabelItem = {
   /** Marker center, in canvas pixels. */
@@ -15,18 +23,38 @@ export type LabelItem = {
 
 type Box = { left: number; top: number; right: number; bottom: number };
 
-const SIDES: LabelSide[] = ["top", "right", "bottom", "left"];
+const SIDES: LabelSide[] = [
+  "top",
+  "right",
+  "bottom",
+  "left",
+  "top-right",
+  "bottom-right",
+  "bottom-left",
+  "top-left",
+];
 
+/** Unit direction from the marker to the label for each side. */
+const DIRECTIONS: Record<LabelSide, [number, number]> = {
+  top: [0, -1],
+  right: [1, 0],
+  bottom: [0, 1],
+  left: [-1, 0],
+  "top-right": [Math.SQRT1_2, -Math.SQRT1_2],
+  "bottom-right": [Math.SQRT1_2, Math.SQRT1_2],
+  "bottom-left": [-Math.SQRT1_2, Math.SQRT1_2],
+  "top-left": [-Math.SQRT1_2, -Math.SQRT1_2],
+};
+
+/**
+ * Mirrors chartjs-plugin-datalabels: the box edge (or corner, on a diagonal)
+ * nearest the marker sits `offset` pixels from it along the side's direction.
+ */
 function labelBox(item: LabelItem, side: LabelSide, offset: number): Box {
   const { x, y, width: w, height: h } = item;
-  const [cx, cy] =
-    side === "top"
-      ? [x, y - offset - h / 2]
-      : side === "bottom"
-        ? [x, y + offset + h / 2]
-        : side === "right"
-          ? [x + offset + w / 2, y]
-          : [x - offset - w / 2, y];
+  const [vx, vy] = DIRECTIONS[side];
+  const cx = x + Math.sign(vx) * (w / 2) + vx * offset;
+  const cy = y + Math.sign(vy) * (h / 2) + vy * offset;
   return {
     left: cx - w / 2,
     top: cy - h / 2,
@@ -90,8 +118,8 @@ function placeInOrder(
 }
 
 /**
- * Picks a side for each label: the first of top, right, bottom, left that
- * stays inside `area` and covers no placed label and no other marker. If no
+ * Picks a side for each label: the first of top, right, bottom, left and the
+ * four diagonals that stays inside `area` and covers no placed label and no other marker. If no
  * side is free, it takes the side that covers no placed label and the least
  * marker area. Labels are placed in priority order; when one is left without
  * a spot, it moves to the front of the order and placement reruns; the

@@ -8,6 +8,9 @@ import { StackedShareChart } from "./stacked-share-chart";
 
 type ChartCopy = { title: string; description: string; note?: string };
 
+/** Layers below this share (%) in every week are under 2px tall, so the legend skips them. */
+const MIN_LEGEND_SHARE = 0.5;
+
 export function ShareSection({
   weeks,
   layers,
@@ -29,7 +32,6 @@ export function ShareSection({
   showHalfLine: boolean;
   walletPlaceholder: boolean;
 }): ReactNode {
-  const legend = getLegendGroups(layers);
   const cards = [
     { metric: "token", copy: token, yAxisTitle: "% of token volume" },
     { metric: "wallet", copy: wallet, yAxisTitle: "% of spend" },
@@ -51,7 +53,11 @@ export function ShareSection({
           <StackedShareChart
             weeks={weeks}
             layers={layers}
-            legend={legend}
+            legend={getLegendGroups(
+              layers.filter((layer) =>
+                layer[metric].some((share) => share >= MIN_LEGEND_SHARE),
+              ),
+            )}
             metric={metric}
             canvasId={canvasIds[metric]}
             yAxisTitle={yAxisTitle}

@@ -103,11 +103,14 @@ function SpendPanel({
               color: CHART_MUTED,
               maxTicksLimit: 7,
               maxRotation: 0,
+              autoSkipPadding: 12,
             },
           },
           y: {
             min: 0,
-            max: yMax,
+            // A hard max that isn't a multiple of the tick step adds an
+            // uneven last step ($800 to $900); Chart.js rounds this one up.
+            suggestedMax: yMax,
             grid: { color: CHART_GRID },
             title: axisTitle("Spend per user (USD)"),
             ticks: {

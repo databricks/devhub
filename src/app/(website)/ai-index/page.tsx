@@ -217,7 +217,7 @@ export default function AiTrendsPage(): ReactNode {
         </section>
       </div>
 
-      <Footer className="mx-auto max-w-432 border-t border-black/10 lg:px-8" />
+      <Footer className="max-w-none border-t border-black/10 lg:px-8" />
     </main>
   );
 }

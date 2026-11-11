@@ -546,6 +546,18 @@ describe("placeLabels", () => {
     expect(placeLabels(crowded, area, 10)[1]).not.toBe("top");
   });
 
+  test("uses a diagonal when every side would cover another marker", () => {
+    // Markers sit in the top, right, bottom and left spots of the first label.
+    const boxed = [
+      item(200, 150, 1),
+      item(200, 125, 0),
+      item(290, 150, 0),
+      item(200, 175, 0),
+      item(110, 150, 0),
+    ];
+    expect(placeLabels(boxed, area, 14)[0]).toMatch(/^(top|bottom)-/);
+  });
+
   test("keeps labels inside the chart area", () => {
     expect(placeLabels([item(100, 10, 0)], area, 10)).toEqual(["right"]);
   });

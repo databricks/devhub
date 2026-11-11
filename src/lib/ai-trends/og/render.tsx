@@ -4,9 +4,11 @@ import {
   getBestPerModel,
   getFamilies,
   getLegendGroups,
+  getMetricLayers,
   getNiceMax,
   getParetoNames,
   getQualityAxis,
+  getSeriesLayers,
   getShownRuns,
   getStackLayers,
 } from "@/lib/ai-trends/compute";
@@ -23,7 +25,7 @@ import {
   OgFrame,
   OgPage,
 } from "./frame";
-import { OgSpendPanels } from "./lines";
+import { LINE_BLUE, OgLines, OgSpendPanels } from "./lines";
 import { OgScatter } from "./scatter";
 import { OgStackedBars } from "./stacked";
 
@@ -37,14 +39,48 @@ function renderStackedShare(
   const brandColors = Object.fromEntries(
     getFamilies(benchmarkData.models).map(({ label, color }) => [label, color]),
   );
-  const layers = getStackLayers(industryData.share.groups[group], brandColors);
+  const layers = getMetricLayers(
+    getStackLayers(industryData.share.groups[group], brandColors),
+    metric,
+  );
   return (
     <OgStackedBars
       weeks={industryData.share.weeks}
       layers={layers}
       legend={getLegendGroups(layers)}
-      metric={metric}
       showHalfLine={group === "proprietary"}
+    />
+  );
+}
+
+const OPEN_WEIGHT_TICKS = 4;
+
+function renderOpenWeightShare(): ReactNode {
+  const { weeks, open_weight_share: values } = industryData.long_term;
+  const max = getNiceMax(values);
+  return (
+    <OgLines
+      weeks={weeks}
+      series={[{ label: "Open-weight", color: LINE_BLUE, values }]}
+      yMax={max}
+      yStep={max / OPEN_WEIGHT_TICKS}
+      formatY={(v) => `${v}%`}
+    />
+  );
+}
+
+function renderProvidersUsed(): ReactNode {
+  const { long_term: longTerm } = industryData;
+  const layers = getSeriesLayers(
+    longTerm.providers_used,
+    contentData.charts.providers_used.legend,
+  );
+  return (
+    <OgStackedBars
+      weeks={longTerm.weeks}
+      layers={layers}
+      legend={getLegendGroups(layers)}
+      showHalfLine={false}
     />
   );
 }
@@ -75,6 +111,10 @@ function renderChart(slug: string, logos: Record<string, string>): ReactNode {
       return renderStackedShare("open_source", "token");
     case "open-source-wallet-share":
       return renderStackedShare("open_source", "wallet");
+    case "open-weight-share":
+      return renderOpenWeightShare();
+    case "providers-used":
+      return renderProvidersUsed();
     case "spend": {
       const { spend } = industryData;
       const labels = contentData.charts.spend.panel_labels;

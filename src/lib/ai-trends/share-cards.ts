@@ -7,6 +7,8 @@ export type ShareSlug =
   | "wallet-share"
   | "open-source-token-share"
   | "open-source-wallet-share"
+  | "open-weight-share"
+  | "providers-used"
   | "spend";
 
 export type ShareCard = {
@@ -19,6 +21,7 @@ export type ShareCard = {
 
 const { charts } = contentData;
 const shareUpdated = formatDate(industryData.share.as_of);
+const longTermUpdated = formatDate(industryData.long_term.as_of);
 const walletPlaceholder = industryData.share.wallet_placeholder === true;
 
 const CARDS: ShareCard[] = [
@@ -53,6 +56,18 @@ const CARDS: ShareCard[] = [
     description: charts.open_source_wallet_share.description,
     updated: shareUpdated,
     placeholder: walletPlaceholder,
+  },
+  {
+    slug: "providers-used",
+    title: charts.providers_used.title,
+    description: charts.providers_used.description,
+    updated: longTermUpdated,
+  },
+  {
+    slug: "open-weight-share",
+    title: charts.open_weight_share.title,
+    description: charts.open_weight_share.description,
+    updated: longTermUpdated,
   },
   {
     slug: "spend",

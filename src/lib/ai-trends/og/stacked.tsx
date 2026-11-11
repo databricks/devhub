@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-import type { LegendGroup, StackLayer } from "@/lib/ai-trends/compute";
+import type { ChartLayer, LegendGroup } from "@/lib/ai-trends/compute";
 
 import { CHART_HEIGHT, CHART_WIDTH, GRID, INK, OgLabel, PAPER } from "./frame";
 import { linear } from "./scale";
@@ -13,13 +13,11 @@ export function OgStackedBars({
   weeks,
   layers,
   legend,
-  metric,
   showHalfLine,
 }: {
   weeks: string[];
-  layers: StackLayer[];
+  layers: ChartLayer[];
   legend: LegendGroup[];
-  metric: "token" | "wallet";
   showHalfLine: boolean;
 }): ReactNode {
   const plotRight = CHART_WIDTH - PLOT.right;
@@ -35,7 +33,7 @@ export function OgStackedBars({
   const bars = weeks.map((_, week) => {
     let base = 0;
     return layers.map((layer) => {
-      const value = layer[metric][week] ?? 0;
+      const value = layer.values[week] ?? 0;
       const rect = {
         key: `${week}-${layer.label}`,
         x: PLOT.left + slot * week + (slot - barWidth) / 2,

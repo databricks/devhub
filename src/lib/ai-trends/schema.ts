@@ -52,42 +52,65 @@ const shareGroupSchema = z.object({
 
 const SHARE_SUM_TOLERANCE = 0.5;
 
+const stackSeriesSchema = z.object({
+  label: z.string().min(1),
+  color: hexColor,
+  values: weeklySeries,
+});
+
+/** Every series has one value per week, and each week's values sum to 100. */
+function validateStack(
+  name: string,
+  weeks: string[],
+  series: { label: string; values: number[] }[],
+  path: string[],
+  ctx: z.RefinementCtx,
+): void {
+  for (const { label, values } of series)
+    if (values.length !== weeks.length)
+      ctx.addIssue({
+        code: "custom",
+        message: `${name} series "${label}" must have one value per week`,
+        path,
+      });
+  weeks.forEach((week, i) => {
+    const total = series.reduce((sum, { values }) => sum + (values[i] ?? 0), 0);
+    if (Math.abs(total - 100) > SHARE_SUM_TOLERANCE)
+      ctx.addIssue({
+        code: "custom",
+        message: `${name} for ${week} sums to ${total.toFixed(2)}, expected 100`,
+        path,
+      });
+  });
+}
+
 function validateShareGroup(
   name: string,
   weeks: string[],
   group: z.infer<typeof shareGroupSchema>,
   ctx: z.RefinementCtx,
 ): void {
+  const path = ["share", "groups", name, "series"];
   const providerNames = new Set(group.providers.map(({ name }) => name));
   for (const series of group.series) {
     if (!providerNames.has(series.provider))
       ctx.addIssue({
         code: "custom",
         message: `${name} series "${series.label}" references unknown provider "${series.provider}"`,
-        path: ["share", "groups", name, "series"],
+        path,
       });
   }
-  for (const metric of ["token", "wallet"] as const) {
-    for (const series of group.series)
-      if (series[metric].length !== weeks.length)
-        ctx.addIssue({
-          code: "custom",
-          message: `${name} series "${series.label}" ${metric} must have one value per week`,
-          path: ["share", "groups", name, "series"],
-        });
-    weeks.forEach((week, i) => {
-      const total = group.series.reduce(
-        (sum, series) => sum + (series[metric][i] ?? 0),
-        0,
-      );
-      if (Math.abs(total - 100) > SHARE_SUM_TOLERANCE)
-        ctx.addIssue({
-          code: "custom",
-          message: `${name} ${metric} for ${week} sums to ${total.toFixed(2)}, expected 100`,
-          path: ["share", "groups", name, "series"],
-        });
-    });
-  }
+  for (const metric of ["token", "wallet"] as const)
+    validateStack(
+      `${name} ${metric}`,
+      weeks,
+      group.series.map(({ label, ...series }) => ({
+        label,
+        values: series[metric],
+      })),
+      path,
+      ctx,
+    );
 }
 
 export const industryDataSchema = z
@@ -110,8 +133,14 @@ export const industryDataSchema = z
       p90: weeklySeries,
       p99: weeklySeries,
     }),
+    long_term: z.object({
+      as_of: isoDate,
+      weeks: z.array(z.string()).min(1),
+      open_weight_share: z.array(z.number().min(0).max(100)).min(1),
+      providers_used: z.array(stackSeriesSchema).min(1),
+    }),
   })
-  .superRefine(({ share, spend }, ctx) => {
+  .superRefine(({ share, spend, long_term: longTerm }, ctx) => {
     for (const [name, group] of Object.entries(share.groups))
       validateShareGroup(name, share.weeks, group, ctx);
     for (const key of ["p50", "p90", "p99"] as const)
@@ -121,6 +150,19 @@ export const industryDataSchema = z
           message: `spend.${key} must have one value per week`,
           path: ["spend", key],
         });
+    if (longTerm.open_weight_share.length !== longTerm.weeks.length)
+      ctx.addIssue({
+        code: "custom",
+        message: "long_term.open_weight_share must have one value per week",
+        path: ["long_term", "open_weight_share"],
+      });
+    validateStack(
+      "long_term.providers_used",
+      longTerm.weeks,
+      longTerm.providers_used,
+      ["long_term", "providers_used"],
+      ctx,
+    );
   });
 
 const panelCopy = z.object({
@@ -154,6 +196,7 @@ export const contentDataSchema = z.object({
   sections: z.object({
     proprietary: sectionCopy,
     open_source: sectionCopy,
+    long_term: sectionCopy,
     spend: sectionCopy,
     frontier: sectionCopy,
     changelog: sectionCopy,
@@ -171,6 +214,8 @@ export const contentDataSchema = z.object({
     wallet_share: chartCopy,
     open_source_token_share: chartCopy,
     open_source_wallet_share: chartCopy,
+    open_weight_share: chartCopy,
+    providers_used: chartCopy.extend({ legend: z.string().min(1) }),
     spend: chartCopy.extend({
       panel_labels: z.object({
         p50: z.string().min(1),
@@ -192,4 +237,5 @@ export const contentDataSchema = z.object({
 
 export type BenchmarkModel = z.infer<typeof benchmarkModelSchema>;
 export type ShareGroup = z.infer<typeof shareGroupSchema>;
+export type StackSeries = z.infer<typeof stackSeriesSchema>;
 export type ContentData = z.infer<typeof contentDataSchema>;

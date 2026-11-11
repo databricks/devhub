@@ -1,4 +1,4 @@
-import type { BenchmarkModel, ShareGroup } from "./schema";
+import type { BenchmarkModel, ShareGroup, StackSeries } from "./schema";
 
 export type QualityAxis = { min: number; max: number };
 
@@ -8,6 +8,15 @@ export type StackLayer = {
   color: string;
   token: number[];
   wallet: number[];
+};
+
+/** One stacked series as a chart draws it: a value per week. */
+export type ChartLayer = {
+  label: string;
+  group: string;
+  tooltip: string;
+  color: string;
+  values: number[];
 };
 
 export type LegendGroup = {
@@ -341,13 +350,40 @@ export function getStackLayers(
 }
 
 /** Legend entries top to bottom, matching the visual stacking order. */
-export function getLegendGroups(layers: StackLayer[]): LegendGroup[] {
+export function getMetricLayers(
+  layers: StackLayer[],
+  metric: "token" | "wallet",
+): ChartLayer[] {
+  return layers.map(({ label, provider, color, ...values }) => ({
+    label,
+    group: provider,
+    tooltip: `${label} · ${provider}`,
+    color,
+    values: values[metric],
+  }));
+}
+
+/** Layers for a stack with no provider grouping; `group` titles the legend. */
+export function getSeriesLayers(
+  series: StackSeries[],
+  group: string,
+): ChartLayer[] {
+  return series.map(({ label, color, values }) => ({
+    label,
+    group,
+    tooltip: label,
+    color,
+    values,
+  }));
+}
+
+export function getLegendGroups(layers: ChartLayer[]): LegendGroup[] {
   const groups: LegendGroup[] = [];
   for (const layer of [...layers].reverse()) {
     const item = { label: layer.label, color: layer.color };
     const last = groups[groups.length - 1];
-    if (last?.provider === layer.provider) last.items.push(item);
-    else groups.push({ provider: layer.provider, items: [item] });
+    if (last?.provider === layer.group) last.items.push(item);
+    else groups.push({ provider: layer.group, items: [item] });
   }
   return groups;
 }

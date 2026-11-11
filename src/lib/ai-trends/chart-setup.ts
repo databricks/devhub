@@ -39,6 +39,8 @@ export { default as ChartDataLabels } from "chartjs-plugin-datalabels";
 
 export const CHART_GRID = "#EBEBEB";
 export const CHART_MUTED = "#6B6B6B";
+/** Series color for single-series line charts (spend, open-weight share). */
+export const CHART_BLUE = "#2a78d6";
 
 /** Axis title in the shared muted style; every chart axis on the page has one. */
 export function axisTitle(text: string) {

@@ -1,5 +1,3 @@
-export type LabelSide = "top" | "right" | "bottom" | "left";
-
 export type LabelItem = {
   /** Marker center, in canvas pixels. */
   x: number;
@@ -7,31 +5,52 @@ export type LabelItem = {
   /** Label box size, in canvas pixels. */
   width: number;
   height: number;
-  /** Marker box size; other labels may not cover it. */
+  /** Marker box size; no label may cover it. */
   marker: number;
   /** Higher-priority labels claim a spot first. */
   priority: number;
+  /** Must stay visible even when no spot is free. */
+  required: boolean;
+};
+
+/**
+ * Where a label sits: `angle` is the direction from the marker in degrees,
+ * clockwise from the right (-90 is above), and `offset` the gap between the
+ * marker and the label's nearest edge or corner. Both are what
+ * chartjs-plugin-datalabels takes as `align` and `offset`. `leader` asks for a
+ * line back to the marker; `hidden` means no spot was free.
+ */
+export type LabelPlacement = {
+  angle: number;
+  offset: number;
+  leader: boolean;
+  hidden: boolean;
+  /** The space the label claims, for drawing its leader line. */
+  box?: Box;
 };
 
 type Box = { left: number; top: number; right: number; bottom: number };
 
-const SIDES: LabelSide[] = ["top", "right", "bottom", "left"];
+/** Sides first, then corners, so labels stay level with their marker when they can. */
+const ANGLES = [-90, 0, 90, 180, -45, 45, 135, -135];
+/** Labels pushed out this many offsets get a leader line. */
+const FAR_RING = 2.6;
+/** Clear space kept around every marker. */
+const MARKER_MARGIN = 2;
 
-function labelBox(item: LabelItem, side: LabelSide, offset: number): Box {
-  const { x, y, width: w, height: h } = item;
-  const [cx, cy] =
-    side === "top"
-      ? [x, y - offset - h / 2]
-      : side === "bottom"
-        ? [x, y + offset + h / 2]
-        : side === "right"
-          ? [x + offset + w / 2, y]
-          : [x - offset - w / 2, y];
+/** Mirrors chartjs-plugin-datalabels: the label's edge (or corner) sits `offset` from the marker. */
+function labelBox(item: LabelItem, angle: number, offset: number): Box {
+  const rad = (angle * Math.PI) / 180;
+  const vx = Math.cos(rad);
+  const vy = Math.sin(rad);
+  const scale = 1 / Math.max(Math.abs(vx), Math.abs(vy));
+  const cx = item.x + (item.width / 2) * vx * scale + offset * vx;
+  const cy = item.y + (item.height / 2) * vy * scale + offset * vy;
   return {
-    left: cx - w / 2,
-    top: cy - h / 2,
-    right: cx + w / 2,
-    bottom: cy + h / 2,
+    left: cx - item.width / 2,
+    top: cy - item.height / 2,
+    right: cx + item.width / 2,
+    bottom: cy + item.height / 2,
   };
 }
 
@@ -48,61 +67,92 @@ const inside = (a: Box, area: Box) =>
   a.top >= area.top &&
   a.bottom <= area.bottom;
 
-type Placement = { sides: LabelSide[]; unplaced: number[] };
+const HIDDEN: LabelPlacement = {
+  angle: -90,
+  offset: 0,
+  leader: false,
+  hidden: true,
+};
 
 function placeInOrder(
   items: LabelItem[],
   order: number[],
   area: Box,
   offset: number,
-): Placement {
-  const markers = items.map(({ x, y, marker }) => ({
-    left: x - marker / 2,
-    top: y - marker / 2,
-    right: x + marker / 2,
-    bottom: y + marker / 2,
-  }));
+): { placements: LabelPlacement[]; unplaced: number[] } {
+  const markers = items.map(({ x, y, marker }) => {
+    const r = marker / 2 + MARKER_MARGIN;
+    return { left: x - r, top: y - r, right: x + r, bottom: y + r };
+  });
+  const candidates = [offset, offset * FAR_RING].flatMap((ring) =>
+    ANGLES.map((angle) => ({ angle, offset: ring })),
+  );
   const placed: Box[] = [];
-  const sides: LabelSide[] = items.map(() => "top");
+  const placements = items.map(() => HIDDEN);
   const unplaced: number[] = [];
   for (const i of order) {
-    const candidates = SIDES.map((side) => {
-      const box = labelBox(items[i], side, offset);
-      const markerCover = markers.reduce(
-        (sum, m, j) => (j === i ? sum : sum + overlapArea(box, m)),
-        0,
-      );
-      const fits = inside(box, area) && !placed.some((p) => overlaps(box, p));
-      return { side, fits, markerCover };
-    }).filter((c) => c.fits);
-    const side = (
-      candidates.find((c) => c.markerCover === 0) ??
-      [...candidates].sort((a, b) => a.markerCover - b.markerCover)[0]
-    )?.side;
-    if (side) {
-      sides[i] = side;
-      placed.push(labelBox(items[i], side, offset));
-    } else {
-      unplaced.push(i);
+    const fits = (box: Box) =>
+      inside(box, area) && !placed.some((p) => overlaps(box, p));
+    const coversMarker = (box: Box) =>
+      markers.some((m, j) => j !== i && overlaps(box, m));
+    const spot = candidates.find(({ angle, offset: o }) => {
+      const box = labelBox(items[i], angle, o);
+      return fits(box) && !coversMarker(box);
+    });
+    if (spot) {
+      const box = labelBox(items[i], spot.angle, spot.offset);
+      placements[i] = {
+        ...spot,
+        leader: spot.offset > offset,
+        hidden: false,
+        box,
+      };
+      placed.push(box);
+      continue;
+    }
+    unplaced.push(i);
+    if (!items[i].required) continue;
+    // A required label with no clear spot covers as little marker area as it can.
+    const fallback = candidates
+      .map(({ angle, offset: o }) => {
+        const box = labelBox(items[i], angle, o);
+        const cover = markers.reduce(
+          (sum, m, j) => (j === i ? sum : sum + overlapArea(box, m)),
+          0,
+        );
+        return { angle, offset: o, box, cover, fits: fits(box) };
+      })
+      .filter((c) => c.fits)
+      .sort((a, b) => a.cover - b.cover)[0];
+    if (fallback) {
+      placements[i] = {
+        angle: fallback.angle,
+        offset: fallback.offset,
+        leader: fallback.offset > offset,
+        hidden: false,
+        box: fallback.box,
+      };
+      placed.push(fallback.box);
     }
   }
-  return { sides, unplaced };
+  return { placements, unplaced };
 }
 
 /**
- * Picks a side for each label: the first of top, right, bottom, left that
- * stays inside `area` and covers no placed label and no other marker. If no
- * side is free, it takes the side that covers no placed label and the least
- * marker area. Labels are placed in priority order; when one is left without
- * a spot, it moves to the front of the order and placement reruns; the
- * arrangement that leaves the fewest labels without a spot wins. Those stay on top, where the chart's
- * own overlap hiding applies.
+ * Gives each label a spot that stays inside `area` and covers no other label
+ * and no marker: the four sides first, then the four corners, then the same
+ * eight a ring further out with a leader line. Labels are placed in priority
+ * order; when one is left without a spot, it moves to the front of the order
+ * and placement reruns, and the arrangement that leaves the fewest labels
+ * without a spot wins. Optional labels with no spot are hidden (the tooltip
+ * still names the point); required ones take the spot covering the least
+ * marker area.
  */
 export function placeLabels(
   items: LabelItem[],
   area: Box,
   offset: number,
-): LabelSide[] {
+): LabelPlacement[] {
   let order = items
     .map((_, i) => i)
     .sort((a, b) => items[b].priority - items[a].priority);
@@ -118,5 +168,5 @@ export function placeLabels(
     current = placeInOrder(items, order, area, offset);
     if (current.unplaced.length < best.unplaced.length) best = current;
   }
-  return best.sides;
+  return best.placements;
 }

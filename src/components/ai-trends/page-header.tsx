@@ -26,9 +26,10 @@ export function TrendsHeader({
       >
         {[
           ["01", "Usage", "usage"],
-          ["02", "Spend", "spend-trends"],
-          ["03", "Coding Frontier", "benchmark"],
-          ["04", "Publications", "publications"],
+          ["02", "Multi-AI", "multi-ai"],
+          ["03", "Spend", "spend-trends"],
+          ["04", "Coding Frontier", "benchmark"],
+          ["05", "Publications", "publications"],
         ].map(([number, label, id]) => (
           <a
             key={id}

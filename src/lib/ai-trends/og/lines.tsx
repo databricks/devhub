@@ -6,14 +6,14 @@ import { linear } from "./scale";
 type OgSeries = { label: string; color: string; values: number[] };
 
 const PLOT = { left: 56, right: 14, top: 10, bottom: 32 };
-// Same series color as the page spend charts (spend-charts.tsx).
-const SPEND_COLOR = "#2a78d6";
+// Same series color as the page line charts (CHART_BLUE in chart-setup.ts).
+export const LINE_BLUE = "#2a78d6";
 
 function niceCeil(value: number, step: number): number {
   return Math.max(step, Math.ceil(value / step) * step);
 }
 
-function OgLines({
+export function OgLines({
   weeks,
   series,
   yMax,
@@ -161,7 +161,7 @@ export function OgSpendPanels({
             series={[
               {
                 label: p.label,
-                color: SPEND_COLOR,
+                color: LINE_BLUE,
                 values: p.values,
               },
             ]}

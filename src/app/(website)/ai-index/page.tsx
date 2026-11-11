@@ -15,6 +15,7 @@ import { formatDate } from "@/lib/ai-trends/format";
 import { absoluteSiteUrl, getMetadata } from "@/lib/get-metadata";
 import { Changelog } from "@/components/ai-trends/changelog";
 import { ChartCard } from "@/components/ai-trends/chart-card";
+import { LongTermSection } from "@/components/ai-trends/long-term-section";
 import { TrendsHeader } from "@/components/ai-trends/page-header";
 import { ScatterCard } from "@/components/ai-trends/scatter-card";
 import {
@@ -74,7 +75,7 @@ export default function AiTrendsPage(): ReactNode {
   const { models, run_date: runDate } = benchmarkData;
   const { charts, sections } = contentData;
   const pricedModels = getBestPerModel(getShownRuns(models));
-  const { share, spend } = industryData;
+  const { share, spend, long_term: longTerm } = industryData;
   const brandColors = Object.fromEntries(
     getFamilies(models).map(({ label, color }) => [label, color]),
   );
@@ -143,12 +144,34 @@ export default function AiTrendsPage(): ReactNode {
           </div>
         </section>
 
+        <section id="multi-ai" className="flex scroll-mt-24 flex-col gap-5">
+          <SectionHeading
+            index={2}
+            eyebrow={sections.long_term.eyebrow}
+            title={sections.long_term.title}
+            intro={sections.long_term.intro}
+          />
+          <LongTermSection
+            weeks={longTerm.weeks}
+            updated={formatDate(longTerm.as_of)}
+            providers={{
+              copy: charts.providers_used,
+              series: longTerm.providers_used,
+            }}
+            openWeight={{
+              copy: charts.open_weight_share,
+              values: longTerm.open_weight_share,
+              yMax: getNiceMax(longTerm.open_weight_share),
+            }}
+          />
+        </section>
+
         <section
           id="spend-trends"
           className="flex scroll-mt-24 flex-col gap-6 md:gap-8"
         >
           <SectionHeading
-            index={2}
+            index={3}
             eyebrow={sections.spend.eyebrow}
             title={sections.spend.title}
             intro={sections.spend.intro}
@@ -177,7 +200,7 @@ export default function AiTrendsPage(): ReactNode {
           className="flex scroll-mt-24 flex-col gap-6 md:gap-8"
         >
           <SectionHeading
-            index={3}
+            index={4}
             eyebrow={sections.frontier.eyebrow}
             title={sections.frontier.title}
             intro={sections.frontier.intro}
@@ -204,7 +227,7 @@ export default function AiTrendsPage(): ReactNode {
           className="flex scroll-mt-24 flex-col gap-6 md:gap-8"
         >
           <SectionHeading
-            index={4}
+            index={5}
             eyebrow={sections.changelog.eyebrow}
             title={sections.changelog.title}
             intro={sections.changelog.intro}
@@ -213,7 +236,7 @@ export default function AiTrendsPage(): ReactNode {
         </section>
       </div>
 
-      <Footer className="mx-auto max-w-432 border-t border-black/10 lg:px-8" />
+      <Footer className="max-w-none border-t border-black/10 lg:px-8" />
     </main>
   );
 }

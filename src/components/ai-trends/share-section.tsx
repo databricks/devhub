@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 
 import type { StackLayer } from "@/lib/ai-trends/compute";
-import { getLegendGroups } from "@/lib/ai-trends/compute";
+import { getLegendGroups, getMetricLayers } from "@/lib/ai-trends/compute";
 
 import { ChartCard } from "./chart-card";
 import { StackedShareChart } from "./stacked-share-chart";
@@ -29,7 +29,7 @@ export function ShareSection({
   showHalfLine: boolean;
   walletPlaceholder: boolean;
 }): ReactNode {
-  const legend = getLegendGroups(layers);
+  const legend = getLegendGroups(getMetricLayers(layers, "token"));
   const cards = [
     { metric: "token", copy: token, yAxisTitle: "% of token volume" },
     { metric: "wallet", copy: wallet, yAxisTitle: "% of spend" },
@@ -49,9 +49,8 @@ export function ShareSection({
         >
           <StackedShareChart
             weeks={weeks}
-            layers={layers}
+            layers={getMetricLayers(layers, metric)}
             legend={legend}
-            metric={metric}
             canvasId={canvasIds[metric]}
             yAxisTitle={yAxisTitle}
             showHalfLine={showHalfLine}

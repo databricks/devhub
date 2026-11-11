@@ -16,6 +16,10 @@ export function getProductRouteSlugs(): string[] {
   return productPages.map((entry) => entry.routeSlug);
 }
 
+export function getProductPages(): ProductPageContent[] {
+  return productPages.map((entry) => entry.product);
+}
+
 export function getProductPageByRouteSlug(
   slug: string,
 ): ProductPageContent | undefined {

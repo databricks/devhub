@@ -1,16 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { mvpProgram } from "@/lib/community/mvp-program";
 import type { PersonKind } from "@/lib/community/schema";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import {
-  MVP_NOMINATION_URL,
-  STUDENT_APPLICATION_URL,
-} from "@/components/community/community-cta";
+import { STUDENT_APPLICATION_URL } from "@/components/community/community-cta";
 
 export function ProgramHero({ kind }: { kind: PersonKind }) {
   const mvp = kind === "mvp";
+  const { hero } = mvpProgram;
   return (
     <section
       className={cn(
@@ -19,12 +18,8 @@ export function ProgramHero({ kind }: { kind: PersonKind }) {
       )}
     >
       <Image
-        src={
-          mvp
-            ? "/img/community/mvp-badge.svg"
-            : "/img/community/student-badge.svg"
-        }
-        alt={mvp ? "Databricks MVP" : "Databricks Student Fellows"}
+        src={mvp ? hero.badge.src : "/img/community/student-badge.svg"}
+        alt={mvp ? hero.badge.alt : "Databricks Student Fellows"}
         width={116}
         height={mvp ? 135 : 138}
         priority
@@ -33,11 +28,9 @@ export function ProgramHero({ kind }: { kind: PersonKind }) {
       />
       <h1 className="font-heading max-w-3xl text-4xl/none font-normal tracking-normal text-pretty md:text-5xl/none xl:max-w-241.5 xl:text-[3.5rem]/none">
         <span className="text-db-lava">
-          {mvp ? "Databricks MVPs." : "Student fellows."}
+          {mvp ? hero.highlightedTitle : "Student fellows."}
         </span>{" "}
-        {mvp
-          ? "How Databricks recognizes and supports experts in the Data + AI community."
-          : "Turn your data expertise into a career in AI."}
+        {mvp ? hero.title : "Turn your data expertise into a career in AI."}
       </h1>
       <div
         className={cn(
@@ -66,9 +59,11 @@ export function ProgramHero({ kind }: { kind: PersonKind }) {
               )}
             >
               <Link
-                href={mvp ? MVP_NOMINATION_URL : "/student-fellows/fellows"}
+                href={
+                  mvp ? hero.primaryAction.href : "/student-fellows/fellows"
+                }
               >
-                {mvp ? "Nominate a Peer" : "Browse fellow profiles"}
+                {mvp ? hero.primaryAction.label : "Browse fellow profiles"}
               </Link>
             </Button>
             {mvp ? (
@@ -77,7 +72,9 @@ export function ProgramHero({ kind }: { kind: PersonKind }) {
                 size="xl"
                 className="bg-grey-20 hover:bg-grey-30 font-mono text-sm font-medium tracking-tight text-white uppercase md:text-base"
               >
-                <Link href="/mvps/directory">Browse MVP profiles</Link>
+                <Link href={hero.secondaryAction.href}>
+                  {hero.secondaryAction.label}
+                </Link>
               </Button>
             ) : (
               <Button
@@ -117,7 +114,7 @@ export function ProgramHero({ kind }: { kind: PersonKind }) {
           )}
         >
           {mvp
-            ? "Recognizing those who share knowledge and grow the community."
+            ? hero.tagline
             : "Learn from Databricks experts and build real-world data and AI skills."}
         </p>
       </div>

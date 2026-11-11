@@ -1,8 +1,10 @@
 import fs from "fs";
 import path from "path";
 
+import { mvpProgram } from "./community/mvp-program";
 import { absolutizeMarkdown } from "./copy-preamble";
 import { showDrafts } from "./feature-flags-server";
+import { getProductPages } from "./products/product-pages";
 import { buildRawDocMarkdown } from "./raw-docs";
 import {
   cookbooks,
@@ -254,6 +256,24 @@ export function generateLlmsTxt(baseUrl: string, docsDir: string): string {
       (template) =>
         `- [${template.name}](${baseUrl}/templates/${template.id}.md): ${template.description}`,
     ),
+    "",
+  );
+
+  lines.push(
+    "## Product",
+    "",
+    "Product overviews: benefits, features, use cases, and customer stories.",
+    "",
+    ...getProductPages().map(
+      (product) =>
+        `- [${product.title}](${baseUrl}${product.canonicalPath}.md): ${product.description}`,
+    ),
+    "",
+    "## Resources",
+    "",
+    "Community programs for Databricks developers.",
+    "",
+    `- [${mvpProgram.title}](${baseUrl}/mvps.md): ${mvpProgram.description}`,
     "",
   );
 

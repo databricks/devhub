@@ -36,6 +36,14 @@
       "destination": "/api/markdown?section=templates&slug=$1"
     },
     {
+      "source": "/product/(.+)\\.md",
+      "destination": "/api/markdown?section=product&slug=$1"
+    },
+    {
+      "source": "/mvps.md",
+      "destination": "/api/markdown?section=mvps&slug="
+    },
+    {
       "source": "/raw-docs/(.*)",
       "destination": "/api/markdown?section=docs&slug=$1"
     },

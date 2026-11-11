@@ -1,3 +1,4 @@
+import { mvpProgram } from "@/lib/community/mvp-program";
 import { getMetadata } from "@/lib/get-metadata";
 import { BrandStrip } from "@/components/ui/brand-strip";
 import { CommunityCTA } from "@/components/community/community-cta";
@@ -7,10 +8,10 @@ import { MVPRequirements } from "@/components/community/program-requirements";
 import Footer from "@/components/footer";
 
 export const metadata = getMetadata({
-  title: "Databricks MVPs",
-  description:
-    "How Databricks recognizes and supports experts in the Data + AI community. Explore program benefits, meet the MVPs, and nominate a peer.",
+  title: mvpProgram.title,
+  description: mvpProgram.description,
   imagePath: "/img/community/mvp-og-image.jpg",
+  markdownPath: "/mvps.md",
   pathname: "/mvps",
 });
 

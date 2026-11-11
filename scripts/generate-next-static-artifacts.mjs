@@ -133,6 +133,9 @@ async function loadHelpers() {
           generateLlmsTxt,
         } from "./src/lib/llms-txt.ts";
         export {
+          getProductRouteSlugs,
+        } from "./src/lib/products/product-pages.ts";
+        export {
           resolveSiteUrl,
         } from "./src/lib/site-url.ts";
       `,
@@ -164,7 +167,7 @@ mkdirSync(publicDir, { recursive: true });
 // /docs/llms.txt via /api/llms). Writing a static public/llms.txt here would
 // collide with that route ("conflicting public file and page" — breaks dev).
 
-for (const directory of ["docs", "raw-docs", "templates"]) {
+for (const directory of ["docs", "raw-docs", "templates", "product"]) {
   resetGeneratedPath(join(publicDir, directory));
 }
 rmSync(join(publicDir, "solutions"), { recursive: true, force: true });
@@ -205,11 +208,30 @@ for (const slug of [
   });
 }
 
+for (const slug of helpers.getProductRouteSlugs()) {
+  writeMarkdownArtifact({
+    helpers,
+    section: "product",
+    slug,
+    filePath: join(publicDir, "product", `${slug}.md`),
+    siteUrl,
+  });
+}
+
+writeMarkdownArtifact({
+  helpers,
+  section: "mvps",
+  slug: "",
+  filePath: join(publicDir, "mvps.md"),
+  siteUrl,
+});
+
 const generatedSummary = [
   `${collectDocsSlugs(docsContentDir).length} docs markdown files`,
   `${helpers.getCookbookSlugs(rootDir).length} cookbook markdown files`,
   `${helpers.getContentSlugs(rootDir, "recipes").length} recipe markdown files`,
   `${helpers.getContentSlugs(rootDir, "examples").length} example markdown files`,
+  `${helpers.getProductRouteSlugs().length + 1} product and resources markdown files`,
 ];
 
 console.log(`Generated Next static artifacts: ${generatedSummary.join(", ")}.`);

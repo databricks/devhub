@@ -97,6 +97,8 @@ const SECTION_PREFIXES: ReadonlyArray<[string, MarkdownSection]> = [
   ["recipes/", "templates"],
   ["resources/", "templates"],
   ["examples/", "templates"],
+  ["product/", "product"],
+  ["mvps/", "mvps"],
 ];
 
 function parseDocRequest(raw: string): {

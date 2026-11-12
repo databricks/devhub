@@ -110,7 +110,7 @@ export default function AiTrendsPage(): ReactNode {
             intro={sections.proprietary.intro}
           />
           <ShareSection
-            weeks={share.weeks}
+            weeks={share.groups.proprietary.weeks}
             layers={getStackLayers(share.groups.proprietary, brandColors)}
             updated={shareUpdated}
             token={charts.token_share}
@@ -126,7 +126,7 @@ export default function AiTrendsPage(): ReactNode {
           >
             <SubsectionTitle title={sections.open_source.title} />
             <ShareSection
-              weeks={share.weeks}
+              weeks={share.groups.open_source.weeks}
               layers={getStackLayers(share.groups.open_source, brandColors)}
               updated={shareUpdated}
               token={charts.open_source_token_share}

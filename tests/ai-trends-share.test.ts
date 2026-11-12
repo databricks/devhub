@@ -4,6 +4,7 @@ import { resolve } from "path";
 import { imageSize } from "image-size";
 import { describe, expect, test } from "vitest";
 
+import { contentData } from "../src/lib/ai-trends/data";
 import { getShareCard, getShareSlugs } from "../src/lib/ai-trends/share-cards";
 import { resolveSiteUrl } from "../src/lib/site-url";
 
@@ -105,6 +106,20 @@ describe("AI Index share previews", () => {
         `${siteUrl}/img/databricks-social-card.jpg`,
       );
     }
+  });
+
+  test.each([
+    ["token-share", contentData.charts.token_share.title],
+    ["wallet-share", contentData.charts.wallet_share.title],
+  ])("%s: card title keeps the chart title's casing", (slug, chartTitle) => {
+    expect(getShareCard(slug)?.title.endsWith(chartTitle.slice(1))).toBe(true);
+  });
+
+  test.each([
+    ["token-share", contentData.charts.token_share.title],
+    ["wallet-share", contentData.charts.wallet_share.title],
+  ])("%s: card title keeps the chart title's casing", (slug, chartTitle) => {
+    expect(getShareCard(slug)?.title).toContain(chartTitle.slice(1));
   });
 
   test.each(getShareSlugs())("%s: Copy image is a 1200x630 PNG", (slug) => {

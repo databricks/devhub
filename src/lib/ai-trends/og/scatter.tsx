@@ -4,13 +4,13 @@ import type { QualityAxis } from "@/lib/ai-trends/compute";
 import type { BenchmarkModel } from "@/lib/ai-trends/schema";
 
 import {
-  BACKGROUND,
   CHART_HEIGHT,
   CHART_WIDTH,
   GRID,
   INK,
   MUTED,
   OgLabel,
+  PAPER,
 } from "./frame";
 import { formatUsd, linear, logScale, logTicks, shortName } from "./scale";
 
@@ -95,13 +95,13 @@ export function OgScatter({
         />
         {models.map((m) =>
           logos[m.vendor] ? (
-            // Background disc so the frontier line passes beneath the logo.
+            // Paper disc so the frontier line passes beneath the logo.
             <circle
               key={m.name}
               cx={x(m.cost)}
               cy={y(m.quality)}
               r={markerSize(m) / 2 + 1}
-              fill={BACKGROUND}
+              fill={PAPER}
             />
           ) : (
             <circle
@@ -110,7 +110,7 @@ export function OgScatter({
               cy={y(m.quality)}
               r={paretoSet.has(m.name) ? 9 : 7}
               fill={m.color}
-              stroke={BACKGROUND}
+              stroke={PAPER}
               strokeWidth={1.5}
             />
           ),

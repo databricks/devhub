@@ -2,14 +2,7 @@ import type { ReactNode } from "react";
 
 import type { ChartLayer, LegendGroup } from "@/lib/ai-trends/compute";
 
-import {
-  BACKGROUND,
-  CHART_HEIGHT,
-  CHART_WIDTH,
-  GRID,
-  INK,
-  OgLabel,
-} from "./frame";
+import { CHART_HEIGHT, CHART_WIDTH, GRID, INK, OgLabel, PAPER } from "./frame";
 import { linear } from "./scale";
 
 const PLOT = { left: 48, right: 250, top: 8, bottom: 30 };
@@ -106,7 +99,7 @@ export function OgStackedBars({
             width={barWidth}
             height={rect.height}
             fill={rect.color}
-            stroke={BACKGROUND}
+            stroke={PAPER}
             strokeWidth={0.75}
           />
         ))}

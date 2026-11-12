@@ -13,20 +13,6 @@ import { getShareCard, getSharePath, type ShareSlug } from "./share-cards";
 
 const TOP_COUNT = 3;
 
-/**
- * Next.js serves file-based metadata images under a route group at
- * `opengraph-image-<suffix>`, where the suffix is a djb2 hash of the parent app
- * path (`getMetadataRouteSuffix` in next/dist/lib/metadata, not exported).
- */
-function openGraphImagePath(appDir: string, urlPath: string): string {
-  let hash = 5381;
-  for (const char of appDir) {
-    hash = ((hash << 5) + hash + char.charCodeAt(0)) & 0xffffffff;
-  }
-  const suffix = (hash >>> 0).toString(36).slice(0, 6);
-  return `${urlPath}/opengraph-image-${suffix}`;
-}
-
 const list = new Intl.ListFormat("en-US", {
   style: "long",
   type: "conjunction",
@@ -55,7 +41,7 @@ function shareImageLinks(slug: ShareSlug): string[] {
   if (!card) throw new Error(`Missing AI Index share card "${slug}"`);
   const path = getSharePath(slug);
   return [
-    `![${card.title}](${openGraphImagePath("/(website)/ai-index/share/[chart]", path)})`,
+    `![${card.title}](${path}/image.png)`,
     "",
     `[Share page for this chart](${path})`,
   ];

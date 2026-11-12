@@ -12,7 +12,7 @@ import {
 } from "@/lib/ai-trends/compute";
 import { benchmarkData, contentData, industryData } from "@/lib/ai-trends/data";
 import { formatDate } from "@/lib/ai-trends/format";
-import { getShareTitle } from "@/lib/ai-trends/share-cards";
+import { getShareTitle, getShareVersion } from "@/lib/ai-trends/share-cards";
 import { absoluteSiteUrl, getMetadata } from "@/lib/get-metadata";
 import { Changelog } from "@/components/ai-trends/changelog";
 import { ChartCard } from "@/components/ai-trends/chart-card";
@@ -181,6 +181,7 @@ export default function AiTrendsPage(): ReactNode {
             updated={formatDate(spend.as_of)}
             note={charts.spend.note}
             shareSlug="spend"
+            shareVersion={getShareVersion("spend")}
             shareTitle={getShareTitle("spend")}
           >
             <SpendCharts
@@ -210,6 +211,7 @@ export default function AiTrendsPage(): ReactNode {
             title={charts.scatter.title}
             updated={formatDate(runDate)}
             note={charts.scatter.note}
+            shareVersion={getShareVersion("scatter")}
             models={pricedModels}
             paretoNames={getParetoNames(pricedModels)}
             axis={getQualityAxis(

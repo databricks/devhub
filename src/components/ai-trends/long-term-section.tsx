@@ -6,7 +6,7 @@ import {
   getSeriesLayers,
 } from "@/lib/ai-trends/compute";
 import type { StackSeries } from "@/lib/ai-trends/schema";
-import { getShareTitle } from "@/lib/ai-trends/share-cards";
+import { getShareTitle, getShareVersion } from "@/lib/ai-trends/share-cards";
 
 import { ChartCard } from "./chart-card";
 import { ShareAreaChart } from "./share-area-chart";
@@ -41,6 +41,7 @@ export function LongTermSection({
         updated={updated}
         note={providers.copy.note}
         shareSlug="providers-used"
+        shareVersion={getShareVersion("providers-used")}
         shareTitle={getShareTitle("providers-used")}
       >
         <ShareAreaChart
@@ -57,6 +58,7 @@ export function LongTermSection({
         updated={updated}
         note={openWeight.copy.note}
         shareSlug="open-weight-share"
+        shareVersion={getShareVersion("open-weight-share")}
         shareTitle={getShareTitle("open-weight-share")}
       >
         <StackedShareChart

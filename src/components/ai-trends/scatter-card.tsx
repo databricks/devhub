@@ -13,7 +13,7 @@ const CANVAS_ID = "scatterChart";
 type ScatterCardProps = Omit<
   ComponentProps<typeof ScatterChart>,
   "selectedFamilies" | "onSelectedFamiliesChange"
-> & { title: string; updated: string; note?: string };
+> & { title: string; updated: string; note?: string; shareVersion: string };
 
 /**
  * The scatter card owns the family filter so "Copy image" can copy the
@@ -23,6 +23,7 @@ export function ScatterCard({
   title,
   updated,
   note,
+  shareVersion,
   ...chart
 }: ScatterCardProps): ReactNode {
   const [selectedFamilies, setSelectedFamilies] = useState<string[]>([]);
@@ -44,6 +45,7 @@ export function ScatterCard({
       updated={updated}
       note={note}
       shareSlug="scatter"
+      shareVersion={shareVersion}
       getShareImage={selectedLabels.length > 0 ? getFilteredImage : undefined}
     >
       <ScatterChart

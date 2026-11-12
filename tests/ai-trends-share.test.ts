@@ -115,13 +115,6 @@ describe("AI Index share previews", () => {
     expect(getShareCard(slug)?.title.endsWith(chartTitle.slice(1))).toBe(true);
   });
 
-  test.each([
-    ["token-share", contentData.charts.token_share.title],
-    ["wallet-share", contentData.charts.wallet_share.title],
-  ])("%s: card title keeps the chart title's casing", (slug, chartTitle) => {
-    expect(getShareCard(slug)?.title).toContain(chartTitle.slice(1));
-  });
-
   test.each(getShareSlugs())("%s: Copy image is a 1200x630 PNG", (slug) => {
     const image = readFileSync(resolve(SHARE_DIR, slug, "image.png.body"));
     expect(imageSize(image)).toMatchObject({

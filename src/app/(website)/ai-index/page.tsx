@@ -12,6 +12,7 @@ import {
 } from "@/lib/ai-trends/compute";
 import { benchmarkData, contentData, industryData } from "@/lib/ai-trends/data";
 import { formatDate } from "@/lib/ai-trends/format";
+import { getShareTitle } from "@/lib/ai-trends/share-cards";
 import { absoluteSiteUrl, getMetadata } from "@/lib/get-metadata";
 import { Changelog } from "@/components/ai-trends/changelog";
 import { ChartCard } from "@/components/ai-trends/chart-card";
@@ -180,6 +181,7 @@ export default function AiTrendsPage(): ReactNode {
             updated={formatDate(spend.as_of)}
             note={charts.spend.note}
             shareSlug="spend"
+            shareTitle={getShareTitle("spend")}
           >
             <SpendCharts
               weeks={spend.weeks}

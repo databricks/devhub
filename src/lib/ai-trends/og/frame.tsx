@@ -4,12 +4,12 @@ export const OG_SIZE = { width: 1200, height: 630 };
 export const CHART_WIDTH = 1104;
 export const CHART_HEIGHT = 384;
 
-// Mirrors the page palette in src/css/custom.css (--db-navy, --db-paper,
-// --db-lava); image rendering can't read Tailwind tokens.
+// Mirrors the page palette in src/css/custom.css (--db-navy, --db-lava);
+// image rendering can't read Tailwind tokens.
 export const INK = "#0b2026";
 export const MUTED = "#5b6a70";
 export const GRID = "#e4e2dd";
-export const PAPER = "#f9f7f4";
+export const BACKGROUND = "#ffffff";
 export const LAVA = "#ff3621";
 
 const SITE_LABEL = "developers.databricks.com/ai-index";
@@ -68,7 +68,7 @@ export function OgAccent(): ReactNode {
   );
 }
 
-/** Paper background and the Databricks footer shared by every card. */
+/** White background and the Databricks footer shared by every card. */
 export function OgPage({ children }: { children: ReactNode }): ReactNode {
   return (
     <div
@@ -77,7 +77,7 @@ export function OgPage({ children }: { children: ReactNode }): ReactNode {
         height: OG_SIZE.height,
         display: "flex",
         flexDirection: "column",
-        background: PAPER,
+        background: BACKGROUND,
         color: INK,
         padding: "40px 48px 0",
         position: "relative",
@@ -126,7 +126,7 @@ export function OgFrame({
         style={{
           display: "flex",
           marginTop: 20,
-          fontSize: title.length > 50 ? 32 : 44,
+          fontSize: title.length > 50 ? 38 : 44,
           fontWeight: 600,
           lineHeight: 1.1,
           letterSpacing: -1.2,

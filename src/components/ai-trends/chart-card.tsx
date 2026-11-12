@@ -13,6 +13,7 @@ export function ChartCard({
   description,
   note,
   shareSlug,
+  shareTitle,
   getShareImage,
   children,
   className,
@@ -24,6 +25,8 @@ export function ChartCard({
   description?: ReactNode;
   note?: ReactNode;
   shareSlug?: string;
+  /** The share card title, for the X post text, when it differs from `title`. */
+  shareTitle?: string;
   getShareImage?: () => Promise<Blob>;
   children?: ReactNode;
   className?: string;
@@ -54,7 +57,7 @@ export function ChartCard({
           {shareSlug ? (
             <ShareControl
               shareSlug={shareSlug}
-              title={title}
+              title={shareTitle ?? title}
               getImage={getShareImage}
             />
           ) : null}

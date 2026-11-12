@@ -41,14 +41,13 @@ function renderStackedShare(
   const brandColors = Object.fromEntries(
     getFamilies(benchmarkData.models).map(({ label, color }) => [label, color]),
   );
-  const shareGroup = industryData.share.groups[group];
   const layers = getMetricLayers(
-    getStackLayers(shareGroup, brandColors),
+    getStackLayers(industryData.share.groups[group], brandColors),
     metric,
   );
   return (
     <OgStackedBars
-      weeks={shareGroup.weeks}
+      weeks={industryData.share.weeks}
       layers={layers}
       legend={getLegendGroups(layers)}
       showHalfLine={group === "proprietary"}

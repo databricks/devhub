@@ -264,9 +264,8 @@ describe("share stacking", () => {
   for (const key of ["proprietary", "open_source"] as const) {
     for (const metric of ["token", "wallet"] as const) {
       test(`${key} ${metric} shares sum to ~100 each week`, () => {
-        const group = industryData.share.groups[key];
-        const layers = getStackLayers(group);
-        group.weeks.forEach((_, i) => {
+        const layers = getStackLayers(industryData.share.groups[key]);
+        industryData.share.weeks.forEach((_, i) => {
           const total = layers.reduce((sum, l) => sum + l[metric][i], 0);
           expect(total).toBeCloseTo(100, 0);
         });

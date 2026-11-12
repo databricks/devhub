@@ -111,6 +111,14 @@ describe("AI Index share previews", () => {
   test.each([
     ["token-share", contentData.charts.token_share.title],
     ["wallet-share", contentData.charts.wallet_share.title],
+    [
+      "open-source-token-share",
+      contentData.charts.open_source_token_share.title,
+    ],
+    [
+      "open-source-wallet-share",
+      contentData.charts.open_source_wallet_share.title,
+    ],
   ])("%s: card title keeps the chart title's casing", (slug, chartTitle) => {
     expect(getShareCard(slug)?.title.endsWith(chartTitle.slice(1))).toBe(true);
   });

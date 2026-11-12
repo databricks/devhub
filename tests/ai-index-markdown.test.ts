@@ -87,8 +87,6 @@ describe("/ai-index.md", () => {
     const { share, spend } = industryData;
     expect(markdown).toContain(`Updated ${formatDate(share.as_of)}.`);
     expect(markdown).toContain(`Updated ${formatDate(spend.as_of)}.`);
-    for (const group of Object.values(share.groups))
-      expect(markdown).toContain(`in the week of ${group.weeks[0]})`);
     const { long_term: longTerm } = industryData;
     expect(markdown).toContain(`## ${contentData.sections.long_term.title}`);
     for (const series of longTerm.open_weight_share)
@@ -109,20 +107,6 @@ describe("/ai-index.md", () => {
     }
     for (const entry of contentData.changelog) {
       expect(markdown).toContain(`[${entry.title}](${entry.url})`);
-    }
-  });
-
-  test("describes each share group over its own weeks", () => {
-    const { groups } = industryData.share;
-    const { charts } = contentData;
-    for (const [group, copy] of [
-      [groups.proprietary, charts.token_share],
-      [groups.open_source, charts.open_source_token_share],
-    ] as const) {
-      const section =
-        markdown.split(`### ${copy.title}\n`)[1]?.split("\n### ")[0] ?? "";
-      expect(section).toContain(`in the week of ${group.weeks[0]})`);
-      expect(section).toContain(`In the week of ${lastValue(group.weeks)},`);
     }
   });
 

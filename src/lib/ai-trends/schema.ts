@@ -44,7 +44,6 @@ const shareSeriesSchema = z.object({
 });
 
 const shareGroupSchema = z.object({
-  weeks: z.array(z.string()).min(1),
   providers: z
     .array(z.object({ name: z.string().min(1), color: hexColor }))
     .min(1),
@@ -87,6 +86,7 @@ function validateStack(
 
 function validateShareGroup(
   name: string,
+  weeks: string[],
   group: z.infer<typeof shareGroupSchema>,
   ctx: z.RefinementCtx,
 ): void {
@@ -103,7 +103,7 @@ function validateShareGroup(
   for (const metric of ["token", "wallet"] as const)
     validateStack(
       `${name} ${metric}`,
-      group.weeks,
+      weeks,
       group.series.map(({ label, ...series }) => ({
         label,
         values: series[metric],
@@ -119,6 +119,7 @@ export const industryDataSchema = z
     share: z.object({
       wallet_placeholder: z.boolean().optional(),
       as_of: isoDate,
+      weeks: z.array(z.string()).min(1),
       groups: z.object({
         proprietary: shareGroupSchema,
         open_source: shareGroupSchema,
@@ -141,7 +142,7 @@ export const industryDataSchema = z
   })
   .superRefine(({ share, spend, long_term: longTerm }, ctx) => {
     for (const [name, group] of Object.entries(share.groups))
-      validateShareGroup(name, group, ctx);
+      validateShareGroup(name, share.weeks, group, ctx);
     for (const key of ["p50", "p90", "p99"] as const)
       if (spend[key].length !== spend.weeks.length)
         ctx.addIssue({

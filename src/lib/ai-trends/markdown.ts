@@ -135,19 +135,19 @@ function shareGroupSections(
   wallet: { title: string; description: string; note?: string },
   slugs: { token: ShareSlug; wallet: ShareSlug },
 ): string[] {
-  const walletPlaceholder = industryData.share.wallet_placeholder;
+  const { weeks, wallet_placeholder: walletPlaceholder } = industryData.share;
   return [
     ...shareChartSection(
       token,
       slugs.token,
-      describeShare(group, "token", group.weeks),
+      describeShare(group, "token", weeks),
     ),
     ...shareChartSection(
       wallet,
       slugs.wallet,
       walletPlaceholder
         ? "This chart shows placeholder data."
-        : describeShare(group, "wallet", group.weeks),
+        : describeShare(group, "wallet", weeks),
     ),
   ];
 }

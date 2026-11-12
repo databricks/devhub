@@ -26,18 +26,6 @@ export type LegendGroup = {
 
 export type FamilyOption = { label: string; color: string };
 
-/**
- * Benchmark runs the coding charts show: Claude Code only for Anthropic
- * models, Codex for every model.
- */
-export function getShownRuns(models: BenchmarkModel[]): BenchmarkModel[] {
-  return models.filter(
-    (m) =>
-      m.harness === "Codex" ||
-      (m.harness === "Claude Code" && m.vendor === "Anthropic"),
-  );
-}
-
 export function getPricedModels(models: BenchmarkModel[]): BenchmarkModel[] {
   return models.filter((m) => m.cost > 0);
 }

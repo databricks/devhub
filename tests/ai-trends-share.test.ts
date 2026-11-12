@@ -115,6 +115,7 @@ describe("AI Index share previews", () => {
   });
 
   test.each([
+    ["scatter", contentData.charts.scatter.title],
     ["token-share", contentData.charts.token_share.title],
     ["wallet-share", contentData.charts.wallet_share.title],
     [
@@ -125,8 +126,11 @@ describe("AI Index share previews", () => {
       "open-source-wallet-share",
       contentData.charts.open_source_wallet_share.title,
     ],
-  ])("%s: card title keeps the chart title's casing", (slug, chartTitle) => {
-    expect(getShareCard(slug)?.title.endsWith(chartTitle.slice(1))).toBe(true);
+    ["providers-used", contentData.charts.providers_used.title],
+    ["open-weight-share", contentData.charts.open_weight_share.title],
+    ["spend", contentData.charts.spend.title],
+  ])("%s: card title is the page chart title", (slug, chartTitle) => {
+    expect(getShareCard(slug)?.title).toBe(chartTitle);
   });
 
   test.each(getShareSlugs())("%s: Copy image is a 1200x630 PNG", (slug) => {

@@ -230,6 +230,35 @@ export function getNiceMax(values: number[]): number {
   return Math.ceil(v / magnitude) * magnitude;
 }
 
+/** Chart.js `maxTicksLimit` on the page's spend panels. */
+export const SPEND_MAX_TICKS = 6;
+
+/** Chart.js `niceNum`: rounds a tick spacing up to 1, 2, 5 or 10 times a power of ten. */
+function niceNum(range: number): number {
+  const magnitude = Math.pow(10, Math.floor(Math.log10(range)));
+  const fraction = range / magnitude;
+  const epsilon = 1e-9;
+  const nice =
+    fraction <= 1 + epsilon
+      ? 1
+      : fraction <= 2 + epsilon
+        ? 2
+        : fraction <= 5 + epsilon
+          ? 5
+          : 10;
+  return nice * magnitude;
+}
+
+/**
+ * The y axis Chart.js draws for a page spend panel (min 0, `suggestedMax`
+ * from getNiceMax, SPEND_MAX_TICKS), so the share card's ticks match the page.
+ */
+export function getSpendAxis(values: number[]): { max: number; step: number } {
+  const suggested = getNiceMax(values);
+  const step = niceNum(suggested / (SPEND_MAX_TICKS - 1));
+  return { max: Math.ceil(suggested / step - 1e-9) * step, step };
+}
+
 export function getFamilies(models: BenchmarkModel[]): FamilyOption[] {
   const seen = new Map<string, string>();
   for (const m of models) {

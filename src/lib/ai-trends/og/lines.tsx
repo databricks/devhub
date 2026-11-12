@@ -125,75 +125,205 @@ export function OgLines({
   );
 }
 
-export function OgSpendPanels({
+type SpendPanel = {
+  label: string;
+  values: number[];
+  max: number;
+  step: number;
+  formatY: (value: number) => string;
+};
+
+type Point = { x: number; y: number };
+
+/** Chart.js `tension` spline through the points, so the card curves like the page. */
+function splinePath(
+  points: Point[],
+  tension: number,
+  top: number,
+  bottom: number,
+): string {
+  const clampY = (y: number) => Math.min(bottom, Math.max(top, y));
+  const controls = points.map((cur, i) => {
+    const prev = points[i - 1] ?? cur;
+    const next = points[i + 1] ?? cur;
+    const d01 = Math.hypot(cur.x - prev.x, cur.y - prev.y);
+    const d12 = Math.hypot(next.x - cur.x, next.y - cur.y);
+    const total = d01 + d12 || 1;
+    const fa = (tension * d01) / total;
+    const fb = (tension * d12) / total;
+    return {
+      before: {
+        x: cur.x - fa * (next.x - prev.x),
+        y: clampY(cur.y - fa * (next.y - prev.y)),
+      },
+      after: {
+        x: cur.x + fb * (next.x - prev.x),
+        y: clampY(cur.y + fb * (next.y - prev.y)),
+      },
+    };
+  });
+  return points
+    .map((p, i) =>
+      i === 0
+        ? `M${p.x},${p.y}`
+        : `C${controls[i - 1].after.x},${controls[i - 1].after.y} ${controls[i].before.x},${controls[i].before.y} ${p.x},${p.y}`,
+    )
+    .join(" ");
+}
+
+const SPEND_LABEL_HEIGHT = 40;
+const SPEND_AXIS_TITLE = "Spend per user (USD)";
+
+function OgSpendArea({
   weeks,
-  panels,
+  panel,
+  width,
+  height,
 }: {
   weeks: string[];
-  panels: { label: string; values: number[]; max: number; step: number }[];
+  panel: SpendPanel;
+  width: number;
+  height: number;
 }): ReactNode {
-  const gap = 20;
-  const panelWidth = (CHART_WIDTH - gap * (panels.length - 1)) / panels.length;
+  const size = 15;
+  const plotLeft = 78;
+  const plotRight = width - 24;
+  const top = SPEND_LABEL_HEIGHT + 10;
+  const bottom = height - 30;
+  const last = weeks.length - 1;
+  const x = linear(0, Math.max(1, last), plotLeft, plotRight);
+  const y = linear(0, panel.max, bottom, top);
+  const ticks: number[] = [];
+  for (let v = 0; v <= panel.max + 1e-9; v += panel.step) ticks.push(v);
+  const points = panel.values.map((v, i) => ({ x: x(i), y: y(v) }));
+  const line = splinePath(points, 0.35, top, bottom);
+  const area = `${line} L${points[points.length - 1].x},${bottom} L${points[0].x},${bottom} Z`;
+  const xTicks = [...new Set([0, Math.round(last / 2), last])];
+  const axisTitleLength = bottom - top;
+
   return (
-    <div style={{ display: "flex", width: CHART_WIDTH, height: CHART_HEIGHT }}>
-      {panels.map((p, i) => (
-        <div
-          key={p.label}
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            width: panelWidth,
-            marginRight: i < panels.length - 1 ? gap : 0,
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              fontSize: 20,
-              fontWeight: 600,
-              color: INK,
-              marginBottom: 6,
-            }}
-          >
-            {p.label}
-          </div>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              fontSize: 15,
-              color: MUTED,
-              marginBottom: 4,
-            }}
-          >
-            {`Latest ${formatSpend(p.values[p.values.length - 1])}`}
-          </div>
-          <OgLines
-            weeks={weeks}
-            series={[
-              {
-                label: p.label,
-                color: LINE_BLUE,
-                values: p.values,
-              },
-            ]}
-            yMax={p.max}
-            yStep={p.step}
-            formatY={formatSpend}
-            width={panelWidth}
-            height={CHART_HEIGHT - 60}
-            compact
+    <div style={{ display: "flex", position: "relative", width, height }}>
+      <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`}>
+        {ticks.map((v) => (
+          <line
+            key={v}
+            x1={plotLeft}
+            x2={plotRight}
+            y1={y(v)}
+            y2={y(v)}
+            stroke={GRID}
+            strokeWidth={1}
           />
-        </div>
+        ))}
+        <line
+          x1={plotLeft}
+          x2={plotLeft}
+          y1={top}
+          y2={bottom}
+          stroke={GRID}
+          strokeWidth={1}
+        />
+        <path d={area} fill={LINE_BLUE} fillOpacity={0.2} />
+        <path
+          d={line}
+          fill="none"
+          stroke={LINE_BLUE}
+          strokeWidth={3}
+          strokeLinejoin="round"
+          strokeLinecap="round"
+        />
+      </svg>
+      <OgLabel
+        x={(plotLeft + plotRight) / 2}
+        y={SPEND_LABEL_HEIGHT / 2}
+        align="center"
+        width={plotRight - plotLeft}
+        size={20}
+        weight={600}
+        color={INK}
+      >
+        {panel.label}
+      </OgLabel>
+      <div
+        style={{
+          position: "absolute",
+          left: 12 - axisTitleLength / 2,
+          top: (top + bottom) / 2 - 10,
+          width: axisTitleLength,
+          height: 20,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          fontSize: 14,
+          color: MUTED,
+          whiteSpace: "nowrap",
+          transform: "rotate(-90deg)",
+        }}
+      >
+        {SPEND_AXIS_TITLE}
+      </div>
+      {ticks.map((v) => (
+        <OgLabel
+          key={v}
+          x={plotLeft - 8}
+          y={y(v)}
+          align="right"
+          width={52}
+          size={size}
+        >
+          {panel.formatY(v)}
+        </OgLabel>
+      ))}
+      {xTicks.map((i) => (
+        <OgLabel
+          key={weeks[i]}
+          x={x(i)}
+          y={bottom + 18}
+          align="center"
+          width={70}
+          size={size}
+        >
+          {weeks[i]}
+        </OgLabel>
       ))}
     </div>
   );
 }
 
-function formatSpend(value: number): string {
-  if (value >= 1000)
-    return `$${(value / 1000).toFixed(value >= 10000 ? 0 : 1)}k`;
-  if (value >= 10) return `$${value.toFixed(0)}`;
-  return `$${value.toFixed(value % 1 === 0 ? 0 : 1)}`;
+/** Median, P90 and P99 side by side, each a filled line on its own axis, like the page. */
+export function OgSpendPanels({
+  weeks,
+  panels,
+}: {
+  weeks: string[];
+  panels: SpendPanel[];
+}): ReactNode {
+  const gap = 24;
+  const panelWidth = (CHART_WIDTH - gap * (panels.length - 1)) / panels.length;
+  return (
+    <div style={{ display: "flex", width: CHART_WIDTH, height: CHART_HEIGHT }}>
+      {panels.map((p, i) => (
+        <div key={p.label} style={{ display: "flex" }}>
+          {i > 0 ? (
+            <div
+              style={{
+                display: "flex",
+                width: 1,
+                height: CHART_HEIGHT,
+                marginLeft: (gap - 1) / 2,
+                marginRight: (gap - 1) / 2,
+                background: GRID,
+              }}
+            />
+          ) : null}
+          <OgSpendArea
+            weeks={weeks}
+            panel={p}
+            width={panelWidth}
+            height={CHART_HEIGHT}
+          />
+        </div>
+      ))}
+    </div>
+  );
 }

@@ -25,11 +25,6 @@ const { charts } = contentData;
 const shareUpdated = formatDate(industryData.share.as_of);
 const longTermUpdated = formatDate(industryData.long_term.as_of);
 const walletPlaceholder = industryData.share.wallet_placeholder === true;
-const GATEWAY = "Unity Gateway";
-
-function lowerFirst(text: string): string {
-  return text.charAt(0).toLowerCase() + text.slice(1);
-}
 
 const CARDS: ShareCard[] = [
   {
@@ -40,45 +35,45 @@ const CARDS: ShareCard[] = [
   },
   {
     slug: "token-share",
-    title: `${GATEWAY} proprietary ${lowerFirst(charts.token_share.title)}`,
+    title: charts.token_share.title,
     description: charts.token_share.description,
     updated: shareUpdated,
   },
   {
     slug: "wallet-share",
-    title: `${GATEWAY} proprietary ${lowerFirst(charts.wallet_share.title)}`,
+    title: charts.wallet_share.title,
     description: charts.wallet_share.description,
     updated: shareUpdated,
     placeholder: walletPlaceholder,
   },
   {
     slug: "open-source-token-share",
-    title: `${GATEWAY} open-weight ${lowerFirst(charts.open_source_token_share.title)}`,
+    title: charts.open_source_token_share.title,
     description: charts.open_source_token_share.description,
     updated: shareUpdated,
   },
   {
     slug: "open-source-wallet-share",
-    title: `${GATEWAY} open-weight ${lowerFirst(charts.open_source_wallet_share.title)}`,
+    title: charts.open_source_wallet_share.title,
     description: charts.open_source_wallet_share.description,
     updated: shareUpdated,
     placeholder: walletPlaceholder,
   },
   {
     slug: "providers-used",
-    title: `${charts.providers_used.title} on ${GATEWAY}`,
+    title: charts.providers_used.title,
     description: charts.providers_used.description,
     updated: longTermUpdated,
   },
   {
     slug: "open-weight-share",
-    title: `${GATEWAY} ${charts.open_weight_share.title.toLowerCase()}`,
+    title: charts.open_weight_share.title,
     description: charts.open_weight_share.description,
     updated: longTermUpdated,
   },
   {
     slug: "spend",
-    title: `${GATEWAY} ${charts.spend.title.toLowerCase()}`,
+    title: charts.spend.title,
     description: charts.spend.description,
     updated: formatDate(industryData.spend.as_of),
   },

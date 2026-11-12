@@ -2,12 +2,14 @@ import type { ReactNode } from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
+import { OG_SIZE } from "@/lib/ai-trends/og/frame";
 import {
   getShareCard,
   getSharePath,
   getShareSlugs,
+  getShareVersion,
 } from "@/lib/ai-trends/share-cards";
-import { getMetadata } from "@/lib/get-metadata";
+import { absoluteSiteUrl, getMetadata } from "@/lib/get-metadata";
 
 import { RedirectToChart } from "./redirect-to-chart";
 
@@ -25,13 +27,32 @@ export async function generateMetadata({
   const { chart } = await params;
   const card = getShareCard(chart);
   if (!card) notFound();
-  return getMetadata({
+  const path = getSharePath(card.slug);
+  const version = `?v=${getShareVersion(card.slug)}`;
+  const metadata = getMetadata({
     title: card.title,
     description: card.description,
-    pathname: getSharePath(card.slug),
+    pathname: path,
     imagePath: null,
     noIndex: true,
   });
+  const images = [
+    {
+      url: absoluteSiteUrl(`${path}/image.png${version}`),
+      ...OG_SIZE,
+      type: "image/png",
+      alt: "Databricks AI Index chart",
+    },
+  ];
+  return {
+    ...metadata,
+    openGraph: {
+      ...metadata.openGraph,
+      url: absoluteSiteUrl(path + version),
+      images,
+    },
+    twitter: { ...metadata.twitter, images },
+  };
 }
 
 export default async function ShareChartPage({

@@ -3,6 +3,7 @@ import { expect, test, type Locator, type Page } from "@playwright/test";
 import {
   getShareSlugs,
   getShareTitle,
+  getShareVersion,
 } from "../../src/lib/ai-trends/share-cards";
 
 const SHARE_CARD = { width: 1200, height: 630 };
@@ -41,7 +42,12 @@ test.describe("AI Index Copy image", () => {
     test(`${id}: copies the share card`, async ({ page }) => {
       const card = page.locator(`[id="${id}"]`);
       await card.scrollIntoViewIfNeeded();
+      const imagePath = `/ai-index/share/${id}/image.png?v=${getShareVersion(id)}`;
+      const imageRequest = page.waitForRequest((request) =>
+        request.url().endsWith(imagePath),
+      );
       expect(await copyImage(page, card)).toEqual(SHARE_CARD);
+      await imageRequest;
     });
   }
 
@@ -49,7 +55,10 @@ test.describe("AI Index Copy image", () => {
     test(`${id}: share links and Copy link point at its share page`, async ({
       page,
     }) => {
-      const shareUrl = new URL(`/ai-index/share/${id}`, page.url()).href;
+      const shareUrl = new URL(
+        `/ai-index/share/${id}?v=${getShareVersion(id)}`,
+        page.url(),
+      ).href;
       await page.evaluate(() => {
         const opened: string[] = [];
         Object.assign(window, { __opened: opened });

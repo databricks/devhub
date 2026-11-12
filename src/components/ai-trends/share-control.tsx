@@ -68,8 +68,8 @@ function CopyIcon(): ReactNode {
   );
 }
 
-function fetchShareCard(shareSlug: string): Promise<Blob> {
-  return fetch(`/ai-index/share/${shareSlug}/image.png`).then((response) => {
+function fetchShareCard(imagePath: string): Promise<Blob> {
+  return fetch(imagePath).then((response) => {
     if (!response.ok) {
       throw new Error(`Share image request failed: ${response.status}`);
     }
@@ -79,10 +79,12 @@ function fetchShareCard(shareSlug: string): Promise<Blob> {
 
 export function ShareControl({
   shareSlug,
+  shareVersion,
   title,
   getImage,
 }: {
   shareSlug: string;
+  shareVersion: string;
   title: string;
   /** Replaces the server-rendered share card, for views it can't show. */
   getImage?: () => Promise<Blob>;
@@ -150,8 +152,10 @@ export function ShareControl({
     }
   }
 
+  const imagePath = `/ai-index/share/${shareSlug}/image.png?v=${shareVersion}`;
+
   function getShareUrl(): string {
-    return `${window.location.origin}/ai-index/share/${shareSlug}`;
+    return `${window.location.origin}/ai-index/share/${shareSlug}?v=${shareVersion}`;
   }
 
   function showFeedback(message: string) {
@@ -178,7 +182,7 @@ export function ShareControl({
     }
     // Safari drops the user gesture across an await, so the clipboard write
     // starts now and receives the image as a pending promise.
-    const image = getImage ? getImage() : fetchShareCard(shareSlug);
+    const image = getImage ? getImage() : fetchShareCard(imagePath);
     navigator.clipboard.write([new ClipboardItem({ "image/png": image })]).then(
       () => showFeedback("Copied!"),
       (error: unknown) => {

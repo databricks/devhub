@@ -5,7 +5,11 @@ import { imageSize } from "image-size";
 import { describe, expect, test } from "vitest";
 
 import { contentData } from "../src/lib/ai-trends/data";
-import { getShareCard, getShareSlugs } from "../src/lib/ai-trends/share-cards";
+import {
+  getShareCard,
+  getShareSlugs,
+  getShareVersion,
+} from "../src/lib/ai-trends/share-cards";
 import { resolveSiteUrl } from "../src/lib/site-url";
 
 // Social platforms build the share preview by fetching /ai-index/share/<chart>
@@ -42,14 +46,16 @@ describe("AI Index share previews", () => {
 
     expect(readMeta(html, "og:title")).toContain(card?.title);
     expect(readMeta(html, "og:description")).toBeTruthy();
-    expect(readMeta(html, "og:url")).toBe(`${siteUrl}/ai-index/share/${slug}`);
+    const version = getShareVersion(slug);
+    expect(readMeta(html, "og:url")).toBe(
+      `${siteUrl}/ai-index/share/${slug}?v=${version}`,
+    );
     expect(readMeta(html, "twitter:card")).toBe("summary_large_image");
     expect(readMeta(html, "og:image:width")).toBe(String(OG_WIDTH));
     expect(readMeta(html, "og:image:height")).toBe(String(OG_HEIGHT));
     for (const key of ["og:image", "twitter:image"]) {
-      const imageUrl = readMeta(html, key) ?? "";
-      expect(imageUrl.startsWith(`${siteUrl}/ai-index/share/${slug}/`)).toBe(
-        true,
+      expect(readMeta(html, key)).toBe(
+        `${siteUrl}/ai-index/share/${slug}/image.png?v=${version}`,
       );
     }
   });

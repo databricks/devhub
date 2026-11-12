@@ -79,6 +79,12 @@ const nextConfig = {
 
     return [
       {
+        source:
+          "/ai-index/share/:chart/:kind(opengraph-image|twitter-image)-:suffix",
+        destination: "/ai-index/share/:chart/image.png",
+        permanent: true,
+      },
+      {
         source: "/solutions/devhub-launch",
         destination: "/docs/start-here",
         permanent: true,

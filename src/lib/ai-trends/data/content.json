@@ -66,14 +66,14 @@
       }
     },
     "token_share": {
-      "title": "Token share by model",
+      "title": "Token share by model, since Jul 20",
       "description": "Weekly share of Unity Gateway tokens across proprietary models.",
-      "note": "Input plus output tokens routed through Unity Gateway, including traffic routed to external model providers."
+      "note": "Input plus output tokens. Before Sep 21, externally routed traffic can't be matched to a model, so Jul 20 to Sep 14 cover Databricks-hosted models only (external traffic was 0.5% to 8% of tokens in those weeks); from Sep 21 it is included."
     },
     "wallet_share": {
-      "title": "Share of wallet by model",
+      "title": "Share of wallet by model, since Jul 20",
       "description": "Weekly share of list-price spend across proprietary models on Unity Gateway.",
-      "note": "Tokens priced at each provider's published list price, with cache reads at the cache-read rate. Includes traffic routed to external model providers; not what Databricks bills."
+      "note": "Tokens priced at each provider's published list price; not what Databricks bills. Before Sep 21, externally routed traffic can't be matched to a model, so Jul 20 to Sep 14 cover Databricks-hosted models only (external traffic was 0.5% to 8% of tokens in those weeks); from Sep 21 it is included."
     },
     "spend": {
       "title": "Weekly spend per active user",
@@ -86,14 +86,14 @@
       }
     },
     "open_source_token_share": {
-      "title": "Token share by model",
+      "title": "Token share by model, since Jul 20",
       "description": "Weekly share of Unity Gateway tokens across open-weight models.",
-      "note": "Input plus output tokens routed through Unity Gateway, including traffic routed to external model providers."
+      "note": "Input plus output tokens. Before Sep 21, externally routed traffic can't be matched to a model, so Jul 20 to Sep 14 cover Databricks-hosted models only (external traffic was 0.5% to 8% of tokens in those weeks); from Sep 21 it is included."
     },
     "open_source_wallet_share": {
-      "title": "Share of wallet by model",
+      "title": "Share of wallet by model, since Jul 20",
       "description": "Weekly share of list-price spend across open-weight models on Unity Gateway.",
-      "note": "Tokens priced at each provider's published list price, with cache reads at the cache-read rate. Includes traffic routed to external model providers; not what Databricks bills."
+      "note": "Tokens priced at each provider's published list price; not what Databricks bills. Before Sep 21, externally routed traffic can't be matched to a model, so Jul 20 to Sep 14 cover Databricks-hosted models only (external traffic was 0.5% to 8% of tokens in those weeks); from Sep 21 it is included."
     },
     "open_weight_share": {
       "title": "Token share: proprietary vs open-weight",

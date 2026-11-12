@@ -105,9 +105,15 @@ export function StackedShareChart({
   );
 
   return (
-    <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:gap-5">
-      <div className="relative h-80 min-w-0 lg:flex-1">
-        <canvas id={canvasId} ref={canvasRef} />
+    <div className="flex flex-col gap-4 lg:flex-row lg:gap-5">
+      {/* On wide screens the plot grows to the legend's height. The canvas is
+          absolute so its own size can't hold the row open after a resize. */}
+      <div className="relative h-80 min-w-0 lg:h-auto lg:min-h-80 lg:flex-1">
+        <canvas
+          id={canvasId}
+          ref={canvasRef}
+          className="lg:absolute lg:inset-0"
+        />
       </div>
       <div className="shrink-0 lg:w-44 lg:border-l lg:border-black/10 lg:pl-4">
         <ShareLegend groups={legend} />

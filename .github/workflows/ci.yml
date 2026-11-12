@@ -46,7 +46,7 @@ jobs:
         run: pnpm build
 
       - name: Install Playwright browsers
-        run: pnpm exec playwright install --with-deps chromium webkit
+        run: pnpm exec playwright install --with-deps chromium firefox webkit
 
       - name: Run critical user flows
         run: pnpm exec playwright test --config playwright.critical.config.ts

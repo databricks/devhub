@@ -22,7 +22,7 @@
     "long_term": {
       "eyebrow": "Multi-AI",
       "title": "How enterprises **mix models** over time",
-      "intro": "These charts cover a longer period but only include traffic to models hosted by Databricks, so they draw on fewer customers. Because the method differs, these numbers don't match the other charts on this page."
+      "intro": ""
     },
     "spend": {
       "eyebrow": "Spend",
@@ -98,13 +98,13 @@
     "open_weight_share": {
       "title": "Token share: proprietary vs open-weight",
       "description": "Weekly share of tokens on Databricks-hosted models, split between proprietary and open-weight models.",
-      "note": "Input plus output tokens to Databricks-hosted models on Unity Gateway. Open-weight: GLM, Kimi, DeepSeek, Qwen, Llama, GPT-OSS and Gemma; the rest is proprietary (Claude, GPT, Gemini and Grok). Traffic without a model name is excluded.",
+      "note": "Input plus output tokens to Databricks-hosted models on Unity Gateway. Open-weight: GLM, Kimi, DeepSeek, Qwen, Llama, GPT-OSS and Gemma; the rest is proprietary (Claude, GPT, Gemini and Grok).",
       "legend": "Model type"
     },
     "providers_used": {
       "title": "Companies using multiple model providers",
       "description": "Weekly share of active companies that have used at least two, three or four model providers on Databricks-hosted models.",
-      "note": "Among companies active each week, counts every provider a company has used since July 20, 2026, so early weeks reflect less history. Gemini and Gemma count as one provider, as do GPT and GPT-OSS.",
+      "note": "Among companies active each week, counts every provider a company has used since July 20, 2026. Gemini and Gemma count as one provider, as do GPT and GPT-OSS.",
       "legend": "Companies using"
     }
   },

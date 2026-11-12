@@ -48,27 +48,31 @@ export function ChartCard({
       )}
     >
       {title ? (
-        <div className="mb-4 flex flex-wrap items-center gap-x-3 gap-y-2">
-          <h3 className="text-foreground mr-auto w-full text-base font-semibold sm:w-auto">
+        <div className="mb-4 flex flex-wrap items-start gap-x-3 gap-y-2">
+          <h3 className="text-foreground min-w-0 grow basis-full text-base font-semibold sm:basis-0">
             {title}
           </h3>
-          {placeholder ? (
-            <span className="bg-orange/15 text-orange rounded-full px-2.5 py-0.5 text-xs font-medium">
-              Placeholder data
-            </span>
-          ) : null}
-          {updated ? (
-            <span className="text-foreground/65 text-xs">
-              Updated {updated}
-            </span>
-          ) : null}
-          {shareSlug ? (
-            <ShareControl
-              shareSlug={shareSlug}
-              shareVersion={requireShareVersion(shareSlug, shareVersion)}
-              title={shareTitle ?? title}
-              getImage={getShareImage}
-            />
+          {placeholder || updated || shareSlug ? (
+            <div className="ml-auto flex shrink-0 flex-col items-end gap-1.5">
+              {placeholder ? (
+                <span className="bg-orange/15 text-orange rounded-full px-2.5 py-0.5 text-xs font-medium">
+                  Placeholder data
+                </span>
+              ) : null}
+              {updated ? (
+                <span className="text-foreground/65 text-xs leading-6">
+                  Updated {updated}
+                </span>
+              ) : null}
+              {shareSlug ? (
+                <ShareControl
+                  shareSlug={shareSlug}
+                  shareVersion={requireShareVersion(shareSlug, shareVersion)}
+                  title={shareTitle ?? title}
+                  getImage={getShareImage}
+                />
+              ) : null}
+            </div>
           ) : null}
         </div>
       ) : null}

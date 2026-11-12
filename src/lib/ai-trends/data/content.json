@@ -42,41 +42,41 @@
   },
   "charts": {
     "scatter": {
-      "title": "Cost per task vs quality",
+      "title": "Cost per Task vs Quality",
       "description": "Pass rate against average cost per task on Databricks' internal coding benchmark, one point per model. Hover over a point for exact values.",
       "note": "Built from internal benchmarks on the Databricks codebase. Anthropic models are shown in Claude Code, all other models in Codex."
     },
     "top_models": {
       "panels": {
         "quality": {
-          "title": "Highest quality",
+          "title": "Highest Quality",
           "caption": "Top 10 models, ranked by highest pass rate on the coding benchmark.",
           "axis": "Pass rate (%)"
         },
         "time": {
-          "title": "Shortest time per task",
+          "title": "Shortest Time per Task",
           "caption": "Top 10 models, ranked by shortest average time to finish a task (minutes).",
           "axis": "Average time per task (minutes)"
         },
         "cost": {
-          "title": "Lowest cost per task",
+          "title": "Lowest Cost per Task",
           "caption": "Top 10 models, ranked by lowest average cost per task (USD).",
           "axis": "Average cost per task (USD)"
         }
       }
     },
     "token_share": {
-      "title": "Token share by model",
+      "title": "Unity Gateway Token Share - Proprietary Models",
       "description": "Weekly share of Unity Gateway tokens across proprietary models.",
       "note": "Input plus output tokens routed through Unity Gateway, including traffic routed to external model providers."
     },
     "wallet_share": {
-      "title": "Share of wallet by model",
+      "title": "Unity Gateway Wallet Share - Proprietary Models",
       "description": "Weekly share of list-price spend across proprietary models on Unity Gateway.",
       "note": "Tokens priced at each provider's published list price, with cache reads at the cache-read rate. Includes traffic routed to external model providers; not what Databricks bills."
     },
     "spend": {
-      "title": "Weekly spend per active user",
+      "title": "Unity Gateway User Spend Percentiles (Weekly)",
       "description": "Weekly spend at list price for the median Unity Gateway user and the users at the 90th and 99th percentiles.",
       "note": "Each user's input, cached and output tokens priced at each provider's published list price; human users only.",
       "panel_labels": {
@@ -86,23 +86,23 @@
       }
     },
     "open_source_token_share": {
-      "title": "Token share by model",
+      "title": "Unity Gateway Token Share - Open-Weight Models",
       "description": "Weekly share of Unity Gateway tokens across open-weight models.",
       "note": "Input plus output tokens routed through Unity Gateway, including traffic routed to external model providers."
     },
     "open_source_wallet_share": {
-      "title": "Share of wallet by model",
+      "title": "Unity Gateway Wallet Share - Open-Weight Models",
       "description": "Weekly share of list-price spend across open-weight models on Unity Gateway.",
       "note": "Tokens priced at each provider's published list price, with cache reads at the cache-read rate. Includes traffic routed to external model providers; not what Databricks bills."
     },
     "open_weight_share": {
-      "title": "Token share: proprietary vs open-weight",
+      "title": "Unity Gateway Token Share - Proprietary vs Open-Weight",
       "description": "Weekly share of tokens on Databricks-hosted models, split between proprietary and open-weight models.",
       "note": "Input plus output tokens to Databricks-hosted models on Unity Gateway. Open-weight: GLM, Kimi, DeepSeek, Qwen, Llama, GPT-OSS and Gemma; the rest is proprietary (Claude, GPT, Gemini and Grok).",
       "legend": "Model type"
     },
     "providers_used": {
-      "title": "Companies using multiple model providers",
+      "title": "Companies Using Multiple Model Providers with Unity Gateway",
       "description": "Weekly share of active companies that have used at least two, three or four model providers on Databricks-hosted models.",
       "note": "Among companies active each week, counts every provider a company has used since July 20, 2026. Gemini and Gemma count as one provider, as do GPT and GPT-OSS.",
       "legend": "Companies using"

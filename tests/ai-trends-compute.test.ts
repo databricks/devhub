@@ -14,6 +14,7 @@ import {
   getQualityAxis,
   getSeriesLayers,
   getShownRuns,
+  getSpendAxis,
   getStackLayers,
   getTopModelPanels,
 } from "../src/lib/ai-trends/compute";
@@ -159,6 +160,17 @@ describe("getNiceMax", () => {
 
   test("negative values returns 1", () => {
     expect(getNiceMax([-1, -2])).toBe(1);
+  });
+});
+
+describe("getSpendAxis", () => {
+  // The ticks Chart.js draws on the page's spend panels for these maxima.
+  test.each([
+    [[1.1, 2.49], { max: 3, step: 1 }],
+    [[82.29, 95.96], { max: 200, step: 50 }],
+    [[654.18, 781.48], { max: 1000, step: 200 }],
+  ])("%j -> %j", (values, axis) => {
+    expect(getSpendAxis(values)).toEqual(axis);
   });
 });
 

@@ -4,11 +4,7 @@ import { resolve } from "path";
 import { imageSize } from "image-size";
 import { describe, expect, test } from "vitest";
 
-import {
-  getBestPerModel,
-  getParetoNames,
-  getShownRuns,
-} from "../src/lib/ai-trends/compute";
+import { getBestPerModel, getParetoNames } from "../src/lib/ai-trends/compute";
 import {
   benchmarkData,
   contentData,
@@ -101,7 +97,7 @@ describe("/ai-index.md", () => {
     for (const key of ["p50", "p90", "p99"] as const) {
       expect(markdown).toContain(`$${lastValue(spend[key]).toFixed(2)}`);
     }
-    const plotted = getBestPerModel(getShownRuns(benchmarkData.models));
+    const plotted = getBestPerModel(benchmarkData.models);
     for (const name of getParetoNames(plotted)) {
       expect(markdown).toContain(`\n- ${name}: `);
     }

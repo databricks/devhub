@@ -9,7 +9,6 @@ import {
   getParetoNames,
   getQualityAxis,
   getSeriesLayers,
-  getShownRuns,
   getSpendAxis,
   getStackLayers,
 } from "@/lib/ai-trends/compute";
@@ -129,7 +128,7 @@ function renderChart(slug: string, logos: Record<string, string>): ReactNode {
 
   switch (slug) {
     case "scatter": {
-      const priced = getBestPerModel(getShownRuns(models));
+      const priced = getBestPerModel(models);
       return (
         <OgScatter
           models={priced}

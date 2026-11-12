@@ -44,7 +44,7 @@
     "scatter": {
       "title": "Cost per Task vs Quality",
       "description": "Pass rate against average cost per task on Databricks' internal coding benchmark, one point per model. Hover over a point for exact values.",
-      "note": "Built from internal benchmarks on the Databricks codebase. Anthropic models are shown in Claude Code, all other models in Codex."
+      "note": "Built from internal benchmarks on the Databricks codebase. Each model is shown in the harness, Claude Code or Codex, that sits closest to the frontier."
     },
     "top_models": {
       "panels": {

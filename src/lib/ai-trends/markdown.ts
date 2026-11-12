@@ -8,7 +8,12 @@ import {
 import { benchmarkData, contentData, industryData } from "./data";
 import { formatDate } from "./format";
 import type { ShareGroup } from "./schema";
-import { getShareCard, getSharePath, type ShareSlug } from "./share-cards";
+import {
+  getShareCard,
+  getSharePath,
+  getShareVersion,
+  type ShareSlug,
+} from "./share-cards";
 
 const TOP_COUNT = 3;
 
@@ -39,10 +44,11 @@ function shareImageLinks(slug: ShareSlug): string[] {
   const card = getShareCard(slug);
   if (!card) throw new Error(`Missing AI Index share card "${slug}"`);
   const path = getSharePath(slug);
+  const version = `?v=${getShareVersion(slug)}`;
   return [
-    `![${card.title}](${path}/image.png)`,
+    `![${card.title}](${path}/image.png${version})`,
     "",
-    `[Share page for this chart](${path})`,
+    `[Share page for this chart](${path}${version})`,
   ];
 }
 

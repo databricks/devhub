@@ -9,10 +9,7 @@ const PLOT = { left: 56, right: 14, top: 10, bottom: 32 };
 // Same series color as the page line charts (CHART_BLUE in chart-setup.ts).
 const LINE_BLUE = "#2a78d6";
 
-function niceCeil(value: number, step: number): number {
-  return Math.max(step, Math.ceil(value / step) * step);
-}
-
+/** Filled lines down to zero; series draw in order, so list the largest first. */
 export function OgLines({
   weeks,
   series,
@@ -21,37 +18,28 @@ export function OgLines({
   formatY,
   width = CHART_WIDTH,
   height = CHART_HEIGHT,
-  compact = false,
-  fill = false,
 }: {
   weeks: string[];
   series: OgSeries[];
-  yMax?: number;
+  yMax: number;
   yStep: number;
   formatY: (value: number) => string;
   width?: number;
   height?: number;
-  compact?: boolean;
-  /** Fill each series down to zero; series draw in order, so list the largest first. */
-  fill?: boolean;
 }): ReactNode {
-  const plotLeft = compact ? 44 : PLOT.left;
+  const plotLeft = PLOT.left;
   const plotRight = width - PLOT.right;
-  const top = compact ? 10 : PLOT.top;
-  const bottom = height - (compact ? 28 : PLOT.bottom);
-  const max =
-    yMax ?? niceCeil(Math.max(...series.flatMap((s) => s.values)), yStep);
-  const single = weeks.length === 1;
-  const x = single
-    ? () => (plotLeft + plotRight) / 2
-    : linear(0, weeks.length - 1, plotLeft, plotRight);
-  const y = linear(0, max, bottom, top);
+  const top = PLOT.top;
+  const bottom = height - PLOT.bottom;
+  const x =
+    weeks.length === 1
+      ? () => (plotLeft + plotRight) / 2
+      : linear(0, weeks.length - 1, plotLeft, plotRight);
+  const y = linear(0, yMax, bottom, top);
   const ticks: number[] = [];
-  for (let v = 0; v <= max + 1e-9; v += yStep) ticks.push(v);
-  const size = compact ? 13 : 15;
-  const xEvery = compact
-    ? Math.ceil(weeks.length / 4)
-    : Math.ceil(weeks.length / 8);
+  for (let v = 0; v <= yMax + 1e-9; v += yStep) ticks.push(v);
+  const size = 15;
+  const xEvery = Math.ceil(weeks.length / 8);
 
   return (
     <div style={{ display: "flex", position: "relative", width, height }}>
@@ -69,29 +57,22 @@ export function OgLines({
         ))}
         {series.map((s) => (
           <g key={s.label}>
-            {fill ? (
-              <polygon
-                points={[
-                  `${x(0)},${bottom}`,
-                  ...s.values.map((v, i) => `${x(i)},${y(v)}`),
-                  `${x(s.values.length - 1)},${bottom}`,
-                ].join(" ")}
-                fill={s.color}
-              />
-            ) : null}
+            <polygon
+              points={[
+                `${x(0)},${bottom}`,
+                ...s.values.map((v, i) => `${x(i)},${y(v)}`),
+                `${x(s.values.length - 1)},${bottom}`,
+              ].join(" ")}
+              fill={s.color}
+            />
             <polyline
               points={s.values.map((v, i) => `${x(i)},${y(v)}`).join(" ")}
               fill="none"
               stroke={s.color}
-              strokeWidth={compact ? 3 : 4}
+              strokeWidth={4}
               strokeLinejoin="round"
               strokeLinecap="round"
             />
-            {(compact && !single) || fill
-              ? null
-              : s.values.map((v, i) => (
-                  <circle key={i} cx={x(i)} cy={y(v)} r={4.5} fill={s.color} />
-                ))}
           </g>
         ))}
       </svg>

@@ -1,6 +1,10 @@
 import { defineConfig } from "@playwright/test";
 
 const PORT = 4173;
+const CROSS_BROWSER = {
+  testMatch: "ai-index-copy-image.spec.ts",
+  grep: /@cross-browser/,
+};
 
 export default defineConfig({
   testDir: "tests/e2e",
@@ -16,6 +20,16 @@ export default defineConfig({
     {
       name: "chromium",
       use: { browserName: "chromium" },
+    },
+    {
+      name: "firefox",
+      use: { browserName: "firefox" },
+      ...CROSS_BROWSER,
+    },
+    {
+      name: "webkit",
+      use: { browserName: "webkit" },
+      ...CROSS_BROWSER,
     },
   ],
   webServer: {

@@ -68,6 +68,8 @@ function CopyIcon(): ReactNode {
   );
 }
 
+type ShareImage = { promise: Promise<Blob>; blob?: Blob };
+
 function fetchShareCard(shareSlug: string): Promise<Blob> {
   return fetch(`/ai-index/share/${shareSlug}/image.png`).then((response) => {
     if (!response.ok) {
@@ -75,6 +77,15 @@ function fetchShareCard(shareSlug: string): Promise<Blob> {
     }
     return response.blob();
   });
+}
+
+function downloadImage(blob: Blob, filename: string) {
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  link.click();
+  URL.revokeObjectURL(url);
 }
 
 export function ShareControl({
@@ -91,6 +102,7 @@ export function ShareControl({
   const [feedback, setFeedback] = useState<string | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
+  const shareCard = useRef<ShareImage | null>(null);
 
   useEffect(() => {
     if (!open) return;
@@ -170,22 +182,49 @@ export function ShareControl({
     window.open(url, "_blank", "noopener");
   }
 
-  function handleCopyImage() {
-    setOpen(false);
-    if (typeof ClipboardItem === "undefined" || !navigator.clipboard?.write) {
-      showFeedback("Copy not supported");
-      return;
-    }
-    // Safari drops the user gesture across an await, so the clipboard write
-    // starts now and receives the image as a pending promise.
-    const image = getImage ? getImage() : fetchShareCard(shareSlug);
-    navigator.clipboard.write([new ClipboardItem({ "image/png": image })]).then(
-      () => showFeedback("Copied!"),
+  function loadShareCard(): ShareImage {
+    if (shareCard.current) return shareCard.current;
+    const image: ShareImage = { promise: fetchShareCard(shareSlug) };
+    image.promise.then(
+      (blob) => {
+        image.blob = blob;
+      },
       (error: unknown) => {
-        console.error(error);
-        showFeedback("Copy failed");
+        shareCard.current = null;
+        console.error(`Loading the ${shareSlug} share card failed`, error);
       },
     );
+    shareCard.current = image;
+    return image;
+  }
+
+  async function copyOrDownloadImage(image: ShareImage): Promise<string> {
+    if (typeof ClipboardItem === "undefined" || !navigator.clipboard?.write) {
+      console.warn("No clipboard image support, downloading the image instead");
+    } else {
+      try {
+        // Safari drops the user gesture across an await, so the write starts
+        // before any await. Every ClipboardItem accepts a Blob; a still
+        // pending image goes in as a promise, which Chrome 76-97 rejects.
+        await navigator.clipboard.write([
+          new ClipboardItem({ "image/png": image.blob ?? image.promise }),
+        ]);
+        return "Copied!";
+      } catch (error) {
+        console.error("Copy image failed, downloading it instead", error);
+      }
+    }
+    downloadImage(await image.promise, `databricks-ai-index-${shareSlug}.png`);
+    return "Copy unavailable, image downloaded";
+  }
+
+  function handleCopyImage() {
+    setOpen(false);
+    const image = getImage ? { promise: getImage() } : loadShareCard();
+    copyOrDownloadImage(image).then(showFeedback, (error: unknown) => {
+      console.error("Copy image failed", error);
+      showFeedback("Copy failed");
+    });
   }
 
   function handleCopyLink() {
@@ -211,7 +250,10 @@ export function ShareControl({
         <button
           ref={toggleRef}
           type="button"
-          onClick={() => setOpen((v) => !v)}
+          onClick={() => {
+            if (!open) loadShareCard();
+            setOpen(!open);
+          }}
           aria-haspopup="menu"
           aria-expanded={open}
           aria-label="More share options"

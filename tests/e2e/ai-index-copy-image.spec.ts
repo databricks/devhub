@@ -1,6 +1,9 @@
 import { expect, test, type Locator, type Page } from "@playwright/test";
 
-import { getShareSlugs } from "../../src/lib/ai-trends/share-cards";
+import {
+  getShareSlugs,
+  getShareTitle,
+} from "../../src/lib/ai-trends/share-cards";
 
 const SHARE_CARD = { width: 1200, height: 630 };
 // Every chart with a share card, so a new chart can't skip these checks.
@@ -65,6 +68,9 @@ test.describe("AI Index Copy image", () => {
         () => (window as unknown as { __opened: string[] }).__opened,
       );
       expect(new URL(x).searchParams.get("url")).toBe(shareUrl);
+      expect(new URL(x).searchParams.get("text")).toBe(
+        `${getShareTitle(id)} — Databricks AI Index`,
+      );
       expect(new URL(linkedIn).searchParams.get("url")).toBe(shareUrl);
 
       await card.getByRole("button", { name: "More share options" }).click();

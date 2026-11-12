@@ -126,7 +126,7 @@ export function OgFrame({
         style={{
           display: "flex",
           marginTop: 20,
-          fontSize: title.length > 50 ? 32 : 44,
+          fontSize: title.length > 50 ? 38 : 44,
           fontWeight: 600,
           lineHeight: 1.1,
           letterSpacing: -1.2,

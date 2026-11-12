@@ -1,6 +1,7 @@
 import { describe, expect, test } from "vitest";
 
 import {
+  getAtLeastLayers,
   getBestPerModel,
   getFamilies,
   getLegendGroups,
@@ -274,12 +275,51 @@ describe("share stacking", () => {
 });
 
 describe("long-term stacks", () => {
-  test("providers_used sums to ~100 each week", () => {
-    const { weeks, providers_used: series } = industryData.long_term;
-    weeks.forEach((_, i) => {
-      const total = series.reduce((sum, s) => sum + s.values[i], 0);
-      expect(total).toBeCloseTo(100, 0);
+  for (const key of ["open_weight_share", "providers_used"] as const) {
+    test(`${key} sums to ~100 each week`, () => {
+      const { weeks, [key]: series } = industryData.long_term;
+      weeks.forEach((_, i) => {
+        const total = series.reduce((sum, s) => sum + s.values[i], 0);
+        expect(total).toBeCloseTo(100, 0);
+      });
     });
+  }
+
+  test("at-least layers add up the buckets and leave out single-provider", () => {
+    const series = [
+      { label: "4+ providers", color: "#000001", values: [10, 20] },
+      { label: "3 providers", color: "#000002", values: [15, 15] },
+      { label: "2 providers", color: "#000003", values: [25, 25] },
+      { label: "1 provider", color: "#000004", values: [50, 40] },
+    ];
+    const layers = getAtLeastLayers(series, "Companies using");
+    expect(layers.map((l) => l.label)).toEqual([
+      "4+ providers",
+      "3+ providers",
+      "2+ providers",
+    ]);
+    expect(layers.map((l) => l.values)).toEqual([
+      [10, 20],
+      [25, 35],
+      [50, 60],
+    ]);
+    // The widest layer comes from the single-provider bucket, not the sum.
+    const rounded = getAtLeastLayers(
+      series.map((s, i) =>
+        i < 3 ? { ...s, values: s.values.map((v) => v - 0.04) } : s,
+      ),
+      "x",
+    );
+    expect(rounded.at(-1)!.values).toEqual([50, 60]);
+  });
+
+  test("2+ providers is everyone not on a single provider", () => {
+    const { providers_used: buckets } = industryData.long_term;
+    const twoPlus = getAtLeastLayers(buckets, "x").at(-1)!;
+    const single = buckets.at(-1)!;
+    twoPlus.values.forEach((v, i) =>
+      expect(v + single.values[i]).toBeCloseTo(100, 0),
+    );
   });
 
   test("legend lists the top of the stack first under one heading", () => {
@@ -435,7 +475,10 @@ describe("industry data", () => {
   });
 
   test("long-term stack neighbours stay distinct, including for colorblind readers", () => {
-    for (const series of [industryData.long_term.providers_used])
+    for (const series of [
+      industryData.long_term.open_weight_share,
+      industryData.long_term.providers_used,
+    ])
       for (let i = 0; i + 1 < series.length; i++) {
         const [a, b] = [series[i].color, series[i + 1].color];
         const pair = `${series[i].label} vs ${series[i + 1].label}`;

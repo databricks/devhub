@@ -1,14 +1,10 @@
 import { expect, test, type Locator, type Page } from "@playwright/test";
 
+import { getShareSlugs } from "../../src/lib/ai-trends/share-cards";
+
 const SHARE_CARD = { width: 1200, height: 630 };
-const CARDS = [
-  "token-share",
-  "wallet-share",
-  "open-source-token-share",
-  "open-source-wallet-share",
-  "spend",
-  "scatter",
-];
+// Every chart with a share card, so a new chart can't skip these checks.
+const CARDS = getShareSlugs();
 
 test.use({ permissions: ["clipboard-read", "clipboard-write"] });
 
@@ -43,6 +39,40 @@ test.describe("AI Index Copy image", () => {
       const card = page.locator(`[id="${id}"]`);
       await card.scrollIntoViewIfNeeded();
       expect(await copyImage(page, card)).toEqual(SHARE_CARD);
+    });
+  }
+
+  for (const id of CARDS) {
+    test(`${id}: share links and Copy link point at its share page`, async ({
+      page,
+    }) => {
+      const shareUrl = new URL(`/ai-index/share/${id}`, page.url()).href;
+      await page.evaluate(() => {
+        const opened: string[] = [];
+        Object.assign(window, { __opened: opened });
+        window.open = (url) => {
+          opened.push(String(url));
+          return null;
+        };
+      });
+      const card = page.locator(`[id="${id}"]`);
+      await card.scrollIntoViewIfNeeded();
+
+      await card.getByRole("button", { name: "Share on X" }).click();
+      await card.getByRole("button", { name: "More share options" }).click();
+      await page.getByRole("menuitem", { name: "LinkedIn" }).click();
+      const [x, linkedIn] = await page.evaluate(
+        () => (window as unknown as { __opened: string[] }).__opened,
+      );
+      expect(new URL(x).searchParams.get("url")).toBe(shareUrl);
+      expect(new URL(linkedIn).searchParams.get("url")).toBe(shareUrl);
+
+      await card.getByRole("button", { name: "More share options" }).click();
+      await page.getByRole("menuitem", { name: "Copy link" }).click();
+      await expect(card.getByRole("status")).toHaveText("Copied!");
+      expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(
+        shareUrl,
+      );
     });
   }
 

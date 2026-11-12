@@ -377,6 +377,31 @@ export function getSeriesLayers(
   }));
 }
 
+/**
+ * Turns "exactly N providers" buckets (bottom of the stack first, ending with
+ * the single-provider bucket) into "at least N" layers: 4+, then 3+ (4+ plus
+ * 3), then 2+. Smallest first, which is the order nested areas draw in. The
+ * widest layer is everyone outside the single-provider bucket, so rounding in
+ * the buckets doesn't move the headline number.
+ */
+export function getAtLeastLayers(
+  series: StackSeries[],
+  group: string,
+): ChartLayer[] {
+  const round = (v: number) => Math.round(v * 10) / 10;
+  const single = series.at(-1)?.values ?? [];
+  const kept = series.slice(0, -1);
+  let running = single.map(() => 0);
+  return kept.map(({ label, color, values }, k) => {
+    running =
+      k === kept.length - 1
+        ? single.map((v) => round(100 - v))
+        : running.map((sum, i) => round(sum + values[i]));
+    const atLeast = `${parseInt(label, 10)}+ providers`;
+    return { label: atLeast, group, tooltip: atLeast, color, values: running };
+  });
+}
+
 export function getLegendGroups(layers: ChartLayer[]): LegendGroup[] {
   const groups: LegendGroup[] = [];
   for (const layer of [...layers].reverse()) {

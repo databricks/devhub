@@ -136,7 +136,7 @@ export const industryDataSchema = z
     long_term: z.object({
       as_of: isoDate,
       weeks: z.array(z.string()).min(1),
-      open_weight_share: z.array(z.number().min(0).max(100)).min(1),
+      open_weight_share: z.array(stackSeriesSchema).min(1),
       providers_used: z.array(stackSeriesSchema).min(1),
     }),
   })
@@ -150,19 +150,14 @@ export const industryDataSchema = z
           message: `spend.${key} must have one value per week`,
           path: ["spend", key],
         });
-    if (longTerm.open_weight_share.length !== longTerm.weeks.length)
-      ctx.addIssue({
-        code: "custom",
-        message: "long_term.open_weight_share must have one value per week",
-        path: ["long_term", "open_weight_share"],
-      });
-    validateStack(
-      "long_term.providers_used",
-      longTerm.weeks,
-      longTerm.providers_used,
-      ["long_term", "providers_used"],
-      ctx,
-    );
+    for (const key of ["open_weight_share", "providers_used"] as const)
+      validateStack(
+        `long_term.${key}`,
+        longTerm.weeks,
+        longTerm[key],
+        ["long_term", key],
+        ctx,
+      );
   });
 
 const panelCopy = z.object({
@@ -214,7 +209,7 @@ export const contentDataSchema = z.object({
     wallet_share: chartCopy,
     open_source_token_share: chartCopy,
     open_source_wallet_share: chartCopy,
-    open_weight_share: chartCopy,
+    open_weight_share: chartCopy.extend({ legend: z.string().min(1) }),
     providers_used: chartCopy.extend({ legend: z.string().min(1) }),
     spend: chartCopy.extend({
       panel_labels: z.object({

@@ -6,15 +6,19 @@ import {
   getFamilies,
   getLegendGroups,
   getMetricLayers,
-  getNiceMax,
   getParetoNames,
   getQualityAxis,
   getSeriesLayers,
   getShownRuns,
+  getSpendAxis,
   getStackLayers,
 } from "@/lib/ai-trends/compute";
 import { benchmarkData, contentData, industryData } from "@/lib/ai-trends/data";
-import { formatDate } from "@/lib/ai-trends/format";
+import {
+  formatDate,
+  formatSpendCentsTick,
+  formatSpendTick,
+} from "@/lib/ai-trends/format";
 import type { ShareCard } from "@/lib/ai-trends/share-cards";
 
 import {
@@ -32,7 +36,6 @@ import { OgScatter } from "./scatter";
 import { OgStackedBars } from "./stacked";
 
 const QUALITY_AXIS_STEP = 5;
-const SPEND_TICKS = 2;
 
 function renderStackedShare(
   group: keyof typeof industryData.share.groups,
@@ -154,17 +157,18 @@ function renderChart(slug: string, logos: Record<string, string>): ReactNode {
     case "spend": {
       const { spend } = industryData;
       const labels = contentData.charts.spend.panel_labels;
-      const panel = (label: string, values: number[]) => {
-        const max = getNiceMax(values);
-        return { label, values, max, step: max / SPEND_TICKS };
-      };
+      const panel = (
+        label: string,
+        values: number[],
+        formatY: (value: number) => string,
+      ) => ({ label, values, formatY, ...getSpendAxis(values) });
       return (
         <OgSpendPanels
           weeks={spend.weeks}
           panels={[
-            panel(labels.p50, spend.p50),
-            panel(labels.p90, spend.p90),
-            panel(labels.p99, spend.p99),
+            panel(labels.p50, spend.p50, formatSpendCentsTick),
+            panel(labels.p90, spend.p90, formatSpendTick),
+            panel(labels.p99, spend.p99, formatSpendTick),
           ]}
         />
       );

@@ -10,19 +10,9 @@ import {
   CHART_MUTED,
   ChartDataLabels,
 } from "@/lib/ai-trends/chart-setup";
+import { SPEND_MAX_TICKS } from "@/lib/ai-trends/compute";
+import { formatSpendCentsTick, formatSpendTick } from "@/lib/ai-trends/format";
 import { useChart } from "@/lib/ai-trends/use-chart";
-
-function fmtP50(v: number): string {
-  return v === 0 ? "$0" : "$" + v.toFixed(2);
-}
-
-function fmtKilo(v: number): string {
-  if (v < 1000) return "$" + v;
-  const k = v / 1000;
-  return (
-    "$" + (k < 10 && !Number.isInteger(k) ? k.toFixed(1) : k.toFixed(0)) + "k"
-  );
-}
 
 function SpendPanel({
   canvasId,
@@ -113,7 +103,7 @@ function SpendPanel({
             ticks: {
               font: { size: 11 },
               color: CHART_MUTED,
-              maxTicksLimit: 6,
+              maxTicksLimit: SPEND_MAX_TICKS,
               callback: (v) =>
                 tickFmt(typeof v === "number" ? v : parseFloat(String(v))),
             },
@@ -154,7 +144,7 @@ export function SpendCharts({
         weeks={weeks}
         data={series.p50}
         yMax={maxes.p50}
-        tickFmt={fmtP50}
+        tickFmt={formatSpendCentsTick}
         label={labels.p50}
       />
       <SpendPanel
@@ -162,7 +152,7 @@ export function SpendCharts({
         weeks={weeks}
         data={series.p90}
         yMax={maxes.p90}
-        tickFmt={fmtKilo}
+        tickFmt={formatSpendTick}
         label={labels.p90}
       />
       <SpendPanel
@@ -170,7 +160,7 @@ export function SpendCharts({
         weeks={weeks}
         data={series.p99}
         yMax={maxes.p99}
-        tickFmt={fmtKilo}
+        tickFmt={formatSpendTick}
         label={labels.p99}
       />
     </div>

@@ -2,7 +2,6 @@ import {
   getAtLeastLayers,
   getBestPerModel,
   getParetoNames,
-  getShownRuns,
   getTopModelPanels,
   type MetricBar,
 } from "./compute";
@@ -178,7 +177,7 @@ export function describeSpend(
 }
 
 function describeFrontier(): string[] {
-  const models = getBestPerModel(getShownRuns(benchmarkData.models));
+  const models = getBestPerModel(benchmarkData.models);
   const frontier = new Set(getParetoNames(models));
   const label = benchmarkData.meta.quality_metric_label.toLowerCase();
   return [
@@ -228,7 +227,7 @@ export function renderAiIndexMarkdown(): string {
   const { header, sections, charts, changelog } = contentData;
   const { proprietary, open_source: openSource } = industryData.share.groups;
   const { long_term: longTerm } = industryData;
-  const top = getTopModelPanels(getShownRuns(benchmarkData.models), TOP_COUNT);
+  const top = getTopModelPanels(benchmarkData.models, TOP_COUNT);
   const panels = charts.top_models.panels;
 
   return [

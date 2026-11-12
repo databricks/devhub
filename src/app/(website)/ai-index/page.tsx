@@ -6,7 +6,6 @@ import {
   getNiceMax,
   getParetoNames,
   getQualityAxis,
-  getShownRuns,
   getStackLayers,
   getTopModelPanels,
 } from "@/lib/ai-trends/compute";
@@ -42,10 +41,7 @@ export const metadata = getMetadata({
 });
 
 function getTopModelBarPanels() {
-  const top = getTopModelPanels(
-    getShownRuns(benchmarkData.models),
-    TOP_MODEL_COUNT,
-  );
+  const top = getTopModelPanels(benchmarkData.models, TOP_MODEL_COUNT);
   const copy = contentData.charts.top_models.panels;
   return [
     {
@@ -75,7 +71,7 @@ function getTopModelBarPanels() {
 export default function AiTrendsPage(): ReactNode {
   const { models, run_date: runDate } = benchmarkData;
   const { charts, sections } = contentData;
-  const pricedModels = getBestPerModel(getShownRuns(models));
+  const pricedModels = getBestPerModel(models);
   const { share, spend, long_term: longTerm } = industryData;
   const brandColors = Object.fromEntries(
     getFamilies(models).map(({ label, color }) => [label, color]),

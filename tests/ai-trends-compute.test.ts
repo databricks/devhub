@@ -13,7 +13,6 @@ import {
   getProviderOrder,
   getQualityAxis,
   getSeriesLayers,
-  getShownRuns,
   getSpendAxis,
   getStackLayers,
   getTopModelPanels,
@@ -579,32 +578,6 @@ describe("getTopModelPanels", () => {
     expect(panels.quality[0]).toMatchObject({ harness: "Codex", value: 95 });
     expect(panels.time[1]).toMatchObject({ harness: "Claude Code", value: 4 });
     expect(panels.cost[1]).toMatchObject({ harness: "Claude Code", value: 1 });
-  });
-});
-
-describe("getShownRuns", () => {
-  test("keeps Claude Code runs only for Anthropic models and every Codex run", () => {
-    const pool = [
-      makeModel("Claude A (claude code)", 90, 1, "Claude Code", "Anthropic"),
-      makeModel("Claude A (codex)", 89, 2, "Codex", "Anthropic"),
-      makeModel("GPT B (claude code)", 95, 1, "Claude Code", "OpenAI"),
-      makeModel("GPT B (codex)", 91, 1, "Codex", "OpenAI"),
-    ];
-    expect(getShownRuns(pool).map((m) => m.name)).toEqual([
-      "Claude A (claude code)",
-      "Claude A (codex)",
-      "GPT B (codex)",
-    ]);
-  });
-
-  test("every benchmark model keeps at least one shown run", () => {
-    const name = (n: string) => n.replace(/ \([^)]*\)$/, "");
-    const shown = new Set(getShownRuns(models).map((m) => name(m.name)));
-    expect(
-      [...new Set(models.map((m) => name(m.name)))].filter(
-        (n) => !shown.has(n),
-      ),
-    ).toEqual([]);
   });
 });
 

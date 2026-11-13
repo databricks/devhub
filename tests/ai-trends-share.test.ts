@@ -2,9 +2,9 @@ import { existsSync, readFileSync } from "fs";
 import { resolve } from "path";
 
 import { imageSize } from "image-size";
-import { describe, expect, test } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 
-import { contentData } from "../src/lib/ai-trends/data";
+import { getProviderOrder } from "../src/lib/ai-trends/compute";
 import {
   getShareCard,
   getShareSlugs,
@@ -114,25 +114,6 @@ describe("AI Index share previews", () => {
     }
   });
 
-  test.each([
-    ["scatter", contentData.charts.scatter.title],
-    ["token-share", contentData.charts.token_share.title],
-    ["wallet-share", contentData.charts.wallet_share.title],
-    [
-      "open-source-token-share",
-      contentData.charts.open_source_token_share.title,
-    ],
-    [
-      "open-source-wallet-share",
-      contentData.charts.open_source_wallet_share.title,
-    ],
-    ["providers-used", contentData.charts.providers_used.title],
-    ["open-weight-share", contentData.charts.open_weight_share.title],
-    ["spend", contentData.charts.spend.title],
-  ])("%s: card title is the page chart title", (slug, chartTitle) => {
-    expect(getShareCard(slug)?.title).toBe(chartTitle);
-  });
-
   test.each(getShareSlugs())("%s: Copy image is a 1200x630 PNG", (slug) => {
     const image = readFileSync(resolve(SHARE_DIR, slug, "image.png.body"));
     expect(imageSize(image)).toMatchObject({
@@ -148,6 +129,137 @@ describe("AI Index share previews", () => {
     (slug) => {
       expect(existsSync(resolve(SHARE_DIR, `${slug}.html`))).toBe(true);
       expect(pageHtml).toContain(`id="${slug}"`);
+    },
+  );
+});
+
+type AiTrendsData = typeof import("../src/lib/ai-trends/data");
+
+/** Every card's version after `edit` changes a fresh copy of the data. */
+async function versionsAfter(
+  edit: (data: AiTrendsData) => void,
+): Promise<Record<string, string>> {
+  vi.resetModules();
+  edit(await import("../src/lib/ai-trends/data"));
+  const shareCards = await import("../src/lib/ai-trends/share-cards");
+  return Object.fromEntries(
+    shareCards
+      .getShareSlugs()
+      .map((slug) => [slug, shareCards.getShareVersion(slug)]),
+  );
+}
+
+describe("getShareVersion", () => {
+  test("is distinct per card and safe in a query string", () => {
+    const versions = getShareSlugs().map(getShareVersion);
+    expect(new Set(versions).size).toBe(versions.length);
+    for (const version of versions) expect(version).toMatch(/^[0-9a-z]+$/);
+  });
+
+  test.each<[string, (data: AiTrendsData) => void, string[]]>([
+    [
+      "a chart title",
+      ({ contentData }) => {
+        contentData.charts.spend.title += " (edited)";
+      },
+      ["spend"],
+    ],
+    [
+      "the share date",
+      ({ industryData }) => {
+        industryData.share.as_of = "2099-01-01";
+      },
+      [
+        "token-share",
+        "wallet-share",
+        "open-source-token-share",
+        "open-source-wallet-share",
+      ],
+    ],
+    [
+      "a proprietary token value",
+      ({ industryData }) => {
+        industryData.share.groups.proprietary.series[0].token[0] += 1;
+      },
+      ["token-share"],
+    ],
+    [
+      "a proprietary wallet value",
+      ({ industryData }) => {
+        industryData.share.groups.proprietary.series[0].wallet[0] += 1;
+      },
+      ["wallet-share"],
+    ],
+    [
+      // Providers stack by latest token share, so this reorders the wallet card too.
+      "the latest proprietary token leader",
+      ({ industryData }) => {
+        const group = industryData.share.groups.proprietary;
+        const last = getProviderOrder(group).at(-1);
+        const series = group.series.find(({ provider }) => provider === last);
+        if (!series) throw new Error(`No series for provider "${last}"`);
+        series.token[series.token.length - 1] = 1000;
+      },
+      ["token-share", "wallet-share"],
+    ],
+    [
+      "an open-weight token value",
+      ({ industryData }) => {
+        industryData.share.groups.open_source.series[0].token[0] += 1;
+      },
+      ["open-source-token-share"],
+    ],
+    [
+      "an open-weight wallet value",
+      ({ industryData }) => {
+        industryData.share.groups.open_source.series[0].wallet[0] += 1;
+      },
+      ["open-source-wallet-share"],
+    ],
+    [
+      "a proprietary vs open-weight value",
+      ({ industryData }) => {
+        industryData.long_term.open_weight_share[0].values[0] += 1;
+      },
+      ["open-weight-share"],
+    ],
+    [
+      "a providers used value",
+      ({ industryData }) => {
+        industryData.long_term.providers_used[0].values[0] += 1;
+      },
+      ["providers-used"],
+    ],
+    [
+      "a spend percentile",
+      ({ industryData }) => {
+        industryData.spend.p99[0] += 1;
+      },
+      ["spend"],
+    ],
+    [
+      "a benchmark result",
+      ({ benchmarkData }) => {
+        benchmarkData.models[0].cost += 1;
+      },
+      ["scatter"],
+    ],
+    [
+      "copy no card shows",
+      ({ contentData }) => {
+        contentData.sections.spend.intro += " (edited)";
+        contentData.changelog.pop();
+      },
+      [],
+    ],
+  ])(
+    "changing %s changes only the cards that draw it",
+    async (_, edit, changed) => {
+      const before = await versionsAfter(() => {});
+      const after = await versionsAfter(edit);
+      expect(
+        getShareSlugs().filter((slug) => after[slug] !== before[slug]),
+      ).toEqual(changed);
     },
   );
 });

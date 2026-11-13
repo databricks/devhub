@@ -12,7 +12,10 @@ import {
 } from "../src/lib/ai-trends/data";
 import { formatDate } from "../src/lib/ai-trends/format";
 import { describeSpend } from "../src/lib/ai-trends/markdown";
-import { getShareSlugs } from "../src/lib/ai-trends/share-cards";
+import {
+  getShareSlugs,
+  getShareVersion,
+} from "../src/lib/ai-trends/share-cards";
 import { generateLlmsTxt } from "../src/lib/llms-txt";
 import { resolveSiteUrl } from "../src/lib/site-url";
 
@@ -74,8 +77,10 @@ describe("/ai-index.md", () => {
       );
       const imageUrl = readMeta(html, "og:image");
       readPngFor(imageUrl);
-      expect(markdown).toContain(`](${siteUrl}${new URL(imageUrl).pathname})`);
-      expect(markdown).toContain(`](${siteUrl}/ai-index/share/${slug})`);
+      expect(markdown).toContain(`](${imageUrl})`);
+      expect(markdown).toContain(
+        `](${siteUrl}/ai-index/share/${slug}?v=${getShareVersion(slug)})`,
+      );
     },
   );
 
@@ -105,6 +110,37 @@ describe("/ai-index.md", () => {
       expect(markdown).toContain(`[${entry.title}](${entry.url})`);
     }
   });
+
+  test.each([
+    ["proprietary", "token", contentData.charts.token_share.title],
+    ["proprietary", "wallet", contentData.charts.wallet_share.title],
+    ["open_source", "token", contentData.charts.open_source_token_share.title],
+    [
+      "open_source",
+      "wallet",
+      contentData.charts.open_source_wallet_share.title,
+    ],
+  ] as const)(
+    "describes the %s %s share chart from its own series",
+    (group, metric, title) => {
+      const start = markdown.indexOf(`### ${title}\n`);
+      expect(start).toBeGreaterThanOrEqual(0);
+      const section = markdown.slice(start).split("\n### ")[0];
+      const { weeks, groups, wallet_placeholder } = industryData.share;
+      if (metric === "wallet" && wallet_placeholder) {
+        expect(section).toContain("This chart shows placeholder data.");
+        return;
+      }
+      const leader = [...groups[group].series].sort(
+        (a, b) => lastValue(b[metric]) - lastValue(a[metric]),
+      )[0];
+      expect(section).toContain(`In the week of ${weeks.at(-1)}, the largest`);
+      expect(section).toContain(
+        `${leader.label} (${lastValue(leader[metric]).toFixed(1)}%)`,
+      );
+      expect(section).toContain(`in the week of ${weeks[0]})`);
+    },
+  );
 
   test("stays out of llms.txt and the sitemap until launch", () => {
     const llms = generateLlmsTxt(

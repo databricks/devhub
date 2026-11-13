@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 
 import type { StackLayer } from "@/lib/ai-trends/compute";
 import { getLegendGroups, getMetricLayers } from "@/lib/ai-trends/compute";
-import { getShareTitle, getShareVersion } from "@/lib/ai-trends/share-cards";
+import { getShareVersion } from "@/lib/ai-trends/share-cards";
 
 import { ChartCard } from "./chart-card";
 import { StackedShareChart } from "./stacked-share-chart";
@@ -48,7 +48,6 @@ export function ShareSection({
           note={copy.note}
           shareSlug={slugs[metric]}
           shareVersion={getShareVersion(slugs[metric])}
-          shareTitle={getShareTitle(slugs[metric])}
         >
           <StackedShareChart
             weeks={weeks}

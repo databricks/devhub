@@ -1,8 +1,8 @@
 import { expect, test, type Locator, type Page } from "@playwright/test";
 
 import {
+  getShareCard,
   getShareSlugs,
-  getShareTitle,
   getShareVersion,
 } from "../../src/lib/ai-trends/share-cards";
 
@@ -55,6 +55,8 @@ test.describe("AI Index Copy image", () => {
     test(`${id}: share links and Copy link point at its share page`, async ({
       page,
     }) => {
+      const title = getShareCard(id)?.title;
+      if (!title) throw new Error(`No share card for "${id}"`);
       const shareUrl = new URL(
         `/ai-index/share/${id}?v=${getShareVersion(id)}`,
         page.url(),
@@ -69,6 +71,7 @@ test.describe("AI Index Copy image", () => {
       });
       const card = page.locator(`[id="${id}"]`);
       await card.scrollIntoViewIfNeeded();
+      await expect(card.getByRole("heading", { level: 3 })).toHaveText(title);
 
       await card.getByRole("button", { name: "Share on X" }).click();
       await card.getByRole("button", { name: "More share options" }).click();
@@ -78,7 +81,7 @@ test.describe("AI Index Copy image", () => {
       );
       expect(new URL(x).searchParams.get("url")).toBe(shareUrl);
       expect(new URL(x).searchParams.get("text")).toBe(
-        `${getShareTitle(id)} — Databricks AI Index`,
+        `${title} — Databricks AI Index`,
       );
       expect(new URL(linkedIn).searchParams.get("url")).toBe(shareUrl);
 

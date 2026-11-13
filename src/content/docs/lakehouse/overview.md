@@ -44,6 +44,7 @@ Each one combines the wiring on the pages above into a working pattern.
 
 ## Where to next
 
+- [Zerobus Ingest](/docs/lakehouse/zerobus-ingest) to push records from apps, services, and devices straight into Unity Catalog tables.
 - [Analytical reads](/docs/lakehouse/analytical-reads) with the Analytics plugin, SQL files, and on-behalf-of-user queries.
 - [Genie Agents](/docs/lakehouse/genie) for natural-language Q&A over Unity Catalog tables.
 - [Lakeflow Jobs](/docs/lakehouse/jobs) for the Jobs plugin, `runNow`, and SSE progress.

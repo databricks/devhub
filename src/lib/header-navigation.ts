@@ -28,6 +28,7 @@ export const HEADER_LINKS: readonly HeaderNavItem[] = [
     ],
   },
   { label: "Templates", href: "/templates" },
+  { label: "AI Index", href: "/ai-index" },
   { label: "Docs", href: "/docs/start-here", activePath: "/docs" },
 ];
 

@@ -51,4 +51,15 @@ describe("header navigation active state", () => {
 
     expect(studentFellows?.href).toBe("https://databricksstudentfellows.com/");
   });
+
+  test("marks AI Index active on its page and share routes", () => {
+    const aiIndexItem = HEADER_LINKS.find(({ label }) => label === "AI Index");
+    expect(aiIndexItem?.href).toBe("/ai-index");
+    for (const path of ["/ai-index", "/ai-index/share/example"]) {
+      expect(isHeaderNavItemActive(aiIndexItem!, path)).toBe(true);
+    }
+    for (const path of ["/", "/templates", "/docs/start-here"]) {
+      expect(isHeaderNavItemActive(aiIndexItem!, path)).toBe(false);
+    }
+  });
 });

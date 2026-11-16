@@ -215,10 +215,15 @@ function topModelSection(
   ];
 }
 
-function sectionHeading(section: { title: string; intro: string }): string[] {
+function sectionHeading(section: {
+  title: string;
+  description?: string;
+  intro: string;
+}): string[] {
   return [
     `## ${section.title}`,
     "",
+    ...(section.description ? [section.description, ""] : []),
     ...(section.intro ? [section.intro, ""] : []),
   ];
 }

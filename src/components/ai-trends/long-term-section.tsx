@@ -16,12 +16,10 @@ type ChartCopy = { title: string; note?: string; legend: string };
 
 export function LongTermSection({
   weeks,
-  updated,
   providers,
   openWeight,
 }: {
   weeks: string[];
-  updated: string;
   providers: { copy: ChartCopy; series: StackSeries[] };
   openWeight: { copy: ChartCopy; series: StackSeries[] };
 }): ReactNode {
@@ -34,11 +32,10 @@ export function LongTermSection({
     openWeight.copy.legend,
   );
   return (
-    <div className="grid min-w-0 grid-cols-1 items-stretch gap-6 lg:grid-cols-2">
+    <div className="grid min-w-0 grid-cols-1 items-stretch gap-6 xl:grid-cols-2">
       <ChartCard
         className="h-full"
         title={providers.copy.title}
-        updated={updated}
         note={providers.copy.note}
         shareSlug="providers-used"
         shareVersion={getShareVersion("providers-used")}
@@ -55,7 +52,6 @@ export function LongTermSection({
       <ChartCard
         className="h-full"
         title={openWeight.copy.title}
-        updated={updated}
         note={openWeight.copy.note}
         shareSlug="open-weight-share"
         shareVersion={getShareVersion("open-weight-share")}

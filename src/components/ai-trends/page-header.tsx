@@ -4,43 +4,23 @@ import type { ContentData } from "@/lib/ai-trends/schema";
 
 import { RichText } from "./rich-text";
 
+/** Dark hero in the same layout and type scale as the /templates hero. */
 export function TrendsHeader({
   header,
 }: {
   header: ContentData["header"];
 }): ReactNode {
   return (
-    <header className="mx-auto grid w-full max-w-360 grid-cols-1 gap-y-3 px-5 pt-10 pb-3 md:px-8 lg:grid-cols-[auto_minmax(0,1fr)] lg:gap-x-16 lg:gap-y-2">
-      <h1 className="font-heading text-foreground text-[2.5rem] leading-none font-normal tracking-[-0.035em] md:text-5xl lg:self-end xl:text-[3.5rem]">
-        <span>{header.title_lead}</span>{" "}
-        <span className="text-db-lava">{header.title_accent}</span>
-      </h1>
-      <div className="flex max-w-2xl flex-col gap-2 lg:row-span-2 lg:max-w-xl lg:self-center lg:justify-self-end xl:max-w-2xl">
-        <p className="text-foreground/75 text-sm leading-normal text-pretty">
+    <section className="3xl:pb-29 bg-black py-8 text-white md:py-12 lg:pt-18 lg:pb-16 xl:pt-40">
+      <div className="relative mx-auto flex w-full max-w-400 flex-col gap-6 px-5 md:px-8">
+        <h1 className="max-w-330 font-sans text-3xl/[1.125] font-normal tracking-[-0.04em] text-balance md:text-5xl/[1.125] lg:text-6xl/[1.125] xl:text-[4rem]/[1.125] 2xl:text-7xl/[1.125]">
+          {header.title_lead}{" "}
+          <span className="text-db-lava">{header.title_accent}.</span>
+        </h1>
+        <p className="text-grey-90 max-w-xl text-base leading-normal tracking-tight text-pretty xl:absolute xl:right-8 xl:bottom-0 xl:max-w-md xl:pb-2 xl:text-sm/normal 2xl:text-base/normal [&_strong]:font-medium [&_strong]:text-white">
           <RichText text={header.intro} />
         </p>
       </div>
-      <nav
-        aria-label="On this page"
-        className="grid grid-cols-2 gap-x-6 md:flex md:gap-4"
-      >
-        {[
-          ["01", "Usage", "usage"],
-          ["02", "Multi-AI", "multi-ai"],
-          ["03", "Spend", "spend-trends"],
-          ["04", "Coding Frontier", "benchmark"],
-          ["05", "Publications", "publications"],
-        ].map(([number, label, id]) => (
-          <a
-            key={id}
-            href={`#${id}`}
-            className="hover:text-db-lava focus-visible:outline-db-lava text-foreground/75 inline-flex min-h-11 items-center gap-2.5 text-sm whitespace-nowrap transition-colors md:min-h-9 pointer-coarse:min-h-11"
-          >
-            <span className="text-db-lava font-mono text-xs">{number}</span>
-            {label}
-          </a>
-        ))}
-      </nav>
-    </header>
+    </section>
   );
 }

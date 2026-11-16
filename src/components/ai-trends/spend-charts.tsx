@@ -5,9 +5,10 @@ import type { ChartConfiguration } from "chart.js";
 
 import {
   axisTitle,
-  CHART_BLUE,
+  CHART_AREA_FILL,
   CHART_GRID,
   CHART_MUTED,
+  CHART_SERIES,
   ChartDataLabels,
 } from "@/lib/ai-trends/chart-setup";
 import { SPEND_MAX_TICKS } from "@/lib/ai-trends/compute";
@@ -40,12 +41,12 @@ function SpendPanel({
         datasets: [
           {
             data,
-            borderColor: CHART_BLUE,
-            backgroundColor: CHART_BLUE + "33",
+            borderColor: CHART_SERIES,
+            backgroundColor: CHART_AREA_FILL,
             fill: true,
             borderWidth: 2,
             pointRadius: single ? 5 : 0,
-            pointBackgroundColor: CHART_BLUE,
+            pointBackgroundColor: CHART_SERIES,
             tension: 0.35,
           },
         ],
@@ -115,8 +116,8 @@ function SpendPanel({
   );
 
   return (
-    <div className="flex min-w-0 flex-col gap-2 pt-5 first:pt-0 md:pt-0 md:pr-8 md:last:pr-0">
-      <p className="font-heading text-foreground text-center text-sm font-semibold">
+    <div className="flex min-w-0 flex-col gap-2 pt-6 pb-5 first:pt-0 last:pb-0 md:py-0 md:pr-8 md:last:pr-0">
+      <p className="text-grey-40 font-mono text-sm/none font-medium uppercase">
         {label}
       </p>
       <div className="relative h-[200px]">
@@ -138,7 +139,7 @@ export function SpendCharts({
   labels: { p50: string; p90: string; p99: string };
 }): ReactNode {
   return (
-    <div className="divide-foreground/10 grid grid-cols-1 gap-6 divide-y md:grid-cols-3 md:gap-8 md:divide-x md:divide-y-0">
+    <div className="divide-foreground/10 grid grid-cols-1 divide-y md:grid-cols-3 md:gap-8 md:divide-x md:divide-y-0">
       <SpendPanel
         canvasId="spendP50"
         weeks={weeks}

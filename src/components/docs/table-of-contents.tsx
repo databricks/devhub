@@ -22,6 +22,8 @@ type TableOfContentsProps = {
   className?: string;
   items: readonly DocsTableOfContentsItem[];
   title?: string;
+  /** Link colors for the page background; docs pages are dark. */
+  tone?: "dark" | "light";
 };
 
 function useActiveAnchor(
@@ -107,6 +109,7 @@ export function TableOfContents({
   className,
   items,
   title = "Table of contents",
+  tone = "dark",
 }: TableOfContentsProps): ReactNode {
   const { activeAnchor, hasAnyHeadings, hasResolvedHeadings } =
     useActiveAnchor(items);
@@ -141,7 +144,9 @@ export function TableOfContents({
                 "line-clamp-2 w-full min-w-0 text-sm leading-snug font-normal break-words no-underline",
                 currentAnchor === anchor
                   ? "text-orange"
-                  : "text-grey-70 hover:text-orange",
+                  : tone === "light"
+                    ? "hover:text-orange text-black/60"
+                    : "text-grey-70 hover:text-orange",
               )}
               href={`#${anchor}`}
               aria-current={currentAnchor === anchor ? "location" : undefined}

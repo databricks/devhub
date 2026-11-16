@@ -6,8 +6,8 @@ import { linear } from "./scale";
 type OgSeries = { label: string; color: string; values: number[] };
 
 const PLOT = { left: 56, right: 14, top: 10, bottom: 32 };
-// Same series color as the page line charts (CHART_BLUE in chart-setup.ts).
-const LINE_BLUE = "#2a78d6";
+// Same series color as the page line charts (CHART_SERIES in chart-setup.ts).
+const LINE_SERIES = "#ff5f46";
 
 function niceCeil(value: number, step: number): number {
   return Math.max(step, Math.ceil(value / step) * step);
@@ -223,11 +223,11 @@ function OgSpendArea({
           stroke={GRID}
           strokeWidth={1}
         />
-        <path d={area} fill={LINE_BLUE} fillOpacity={0.2} />
+        <path d={area} fill={LINE_SERIES} fillOpacity={0.2} />
         <path
           d={line}
           fill="none"
-          stroke={LINE_BLUE}
+          stroke={LINE_SERIES}
           strokeWidth={3}
           strokeLinejoin="round"
           strokeLinecap="round"

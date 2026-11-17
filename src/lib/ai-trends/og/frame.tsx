@@ -110,12 +110,12 @@ export function OgPage({ children }: { children: ReactNode }): ReactNode {
 
 export function OgFrame({
   title,
-  updated,
+  dateLabel,
   placeholder = false,
   children,
 }: {
   title: string;
-  updated: string;
+  dateLabel: string;
   placeholder?: boolean;
   children: ReactNode;
 }): ReactNode {
@@ -137,7 +137,7 @@ export function OgFrame({
       <div
         style={{ display: "flex", marginTop: 10, fontSize: 20, color: MUTED }}
       >
-        {`Databricks AI Index · Updated ${updated}${placeholder ? " · Placeholder data" : ""}`}
+        {`Databricks AI Index · ${dateLabel}${placeholder ? " · Placeholder data" : ""}`}
       </div>
       <div
         style={{

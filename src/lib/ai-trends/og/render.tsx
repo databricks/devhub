@@ -14,7 +14,7 @@ import {
 } from "@/lib/ai-trends/compute";
 import { benchmarkData, contentData, industryData } from "@/lib/ai-trends/data";
 import {
-  formatDate,
+  formatDataThrough,
   formatSpendCentsTick,
   formatSpendTick,
 } from "@/lib/ai-trends/format";
@@ -188,7 +188,7 @@ export function renderShareCard(
   return (
     <OgFrame
       title={card.title}
-      updated={card.updated}
+      dateLabel={card.dateLabel}
       placeholder={card.placeholder}
     >
       {renderChart(card.slug, logos)}
@@ -209,11 +209,9 @@ function getIntroLead(): string {
  */
 export function renderIndexCard(): ReactElement {
   const { header } = contentData;
-  const updated = [
-    industryData.share.as_of,
-    industryData.spend.as_of,
-    benchmarkData.run_date,
-  ].sort()[2];
+  const dataThrough = formatDataThrough(
+    [industryData.share.as_of, industryData.spend.as_of].sort()[1],
+  );
   return (
     <OgPage>
       <OgAccent />
@@ -235,7 +233,7 @@ export function renderIndexCard(): ReactElement {
       <div
         style={{ display: "flex", marginTop: 8, fontSize: 22, color: MUTED }}
       >
-        {`${getIntroLead()} · Updated ${formatDate(updated)}`}
+        {`${getIntroLead()} · ${dataThrough}`}
       </div>
       <div
         style={{

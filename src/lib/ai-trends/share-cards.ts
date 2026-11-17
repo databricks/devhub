@@ -1,6 +1,6 @@
 import { getFamilies } from "./compute";
 import { benchmarkData, contentData, industryData } from "./data";
-import { formatDate } from "./format";
+import { formatBenchmarkRun, formatDataThrough } from "./format";
 import { getVendorLogoEntries } from "./vendor-logos";
 
 export type ShareSlug =
@@ -17,13 +17,13 @@ export type ShareCard = {
   slug: ShareSlug;
   title: string;
   description: string;
-  updated: string;
+  dateLabel: string;
   placeholder?: boolean;
 };
 
 const { charts } = contentData;
-const shareUpdated = formatDate(industryData.share.as_of);
-const longTermUpdated = formatDate(industryData.long_term.as_of);
+const shareDateLabel = formatDataThrough(industryData.share.as_of);
+const longTermDateLabel = formatDataThrough(industryData.long_term.as_of);
 const walletPlaceholder = industryData.share.wallet_placeholder === true;
 
 const CARDS: ShareCard[] = [
@@ -31,51 +31,51 @@ const CARDS: ShareCard[] = [
     slug: "scatter",
     title: charts.scatter.title,
     description: charts.scatter.description,
-    updated: formatDate(benchmarkData.run_date),
+    dateLabel: formatBenchmarkRun(benchmarkData.run_date),
   },
   {
     slug: "token-share",
     title: charts.token_share.title,
     description: charts.token_share.description,
-    updated: shareUpdated,
+    dateLabel: shareDateLabel,
   },
   {
     slug: "wallet-share",
     title: charts.wallet_share.title,
     description: charts.wallet_share.description,
-    updated: shareUpdated,
+    dateLabel: shareDateLabel,
     placeholder: walletPlaceholder,
   },
   {
     slug: "open-source-token-share",
     title: charts.open_source_token_share.title,
     description: charts.open_source_token_share.description,
-    updated: shareUpdated,
+    dateLabel: shareDateLabel,
   },
   {
     slug: "open-source-wallet-share",
     title: charts.open_source_wallet_share.title,
     description: charts.open_source_wallet_share.description,
-    updated: shareUpdated,
+    dateLabel: shareDateLabel,
     placeholder: walletPlaceholder,
   },
   {
     slug: "providers-used",
     title: charts.providers_used.title,
     description: charts.providers_used.description,
-    updated: longTermUpdated,
+    dateLabel: longTermDateLabel,
   },
   {
     slug: "open-weight-share",
     title: charts.open_weight_share.title,
     description: charts.open_weight_share.description,
-    updated: longTermUpdated,
+    dateLabel: longTermDateLabel,
   },
   {
     slug: "spend",
     title: charts.spend.title,
     description: charts.spend.description,
-    updated: formatDate(industryData.spend.as_of),
+    dateLabel: formatDataThrough(industryData.spend.as_of),
   },
 ];
 

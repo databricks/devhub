@@ -10,7 +10,11 @@ import {
   contentData,
   industryData,
 } from "../src/lib/ai-trends/data";
-import { formatDate } from "../src/lib/ai-trends/format";
+import {
+  formatBenchmarkRun,
+  formatDataThrough,
+  WEEKS_NOTE,
+} from "../src/lib/ai-trends/format";
 import { describeSpend } from "../src/lib/ai-trends/markdown";
 import { getShareSlugs } from "../src/lib/ai-trends/share-cards";
 import { generateLlmsTxt } from "../src/lib/llms-txt";
@@ -81,8 +85,9 @@ describe("/ai-index.md", () => {
 
   test("describes the charts with values from the current data", () => {
     const { share, spend } = industryData;
-    expect(markdown).toContain(`Updated ${formatDate(share.as_of)}.`);
-    expect(markdown).toContain(`Updated ${formatDate(spend.as_of)}.`);
+    for (const asOf of [share.as_of, spend.as_of])
+      expect(markdown).toContain(`${formatDataThrough(asOf)}. ${WEEKS_NOTE}.`);
+    expect(markdown).not.toContain("Updated ");
     const { long_term: longTerm } = industryData;
     expect(markdown).toContain(`## ${contentData.sections.long_term.title}`);
     for (const series of longTerm.open_weight_share)
@@ -92,7 +97,7 @@ describe("/ai-index.md", () => {
     const single = lastValue(longTerm.providers_used.at(-1)!.values);
     expect(markdown).toContain(`2+ providers ${(100 - single).toFixed(1)}%`);
     expect(markdown).toContain(
-      `Updated ${formatDate(benchmarkData.run_date)}.`,
+      `${formatBenchmarkRun(benchmarkData.run_date)}.`,
     );
     for (const key of ["p50", "p90", "p99"] as const) {
       expect(markdown).toContain(`$${lastValue(spend[key]).toFixed(2)}`);

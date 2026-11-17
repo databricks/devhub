@@ -18,6 +18,11 @@ import {
   getTopModelPanels,
 } from "../src/lib/ai-trends/compute";
 import { benchmarkData, industryData } from "../src/lib/ai-trends/data";
+import {
+  formatBenchmarkRun,
+  formatDataThrough,
+  weekEnd,
+} from "../src/lib/ai-trends/format";
 import { placeLabels } from "../src/lib/ai-trends/label-placement";
 import type { ShareGroup } from "../src/lib/ai-trends/schema";
 
@@ -662,5 +667,17 @@ describe("placeLabels", () => {
       )[0];
     expect(boxedIn(false).hidden).toBe(true);
     expect(boxedIn(true).hidden).toBe(false);
+  });
+});
+
+describe("weekly date labels", () => {
+  test("a Monday week start ends on the Sunday six days later", () => {
+    expect(weekEnd("2026-11-09")).toBe("2026-11-15");
+    expect(weekEnd("2026-12-28")).toBe("2027-01-03");
+    expect(formatDataThrough("2026-11-09")).toBe("Data through Nov 15, 2026");
+  });
+
+  test("benchmark runs keep their own run date", () => {
+    expect(formatBenchmarkRun("2026-11-08")).toBe("Benchmark run Nov 8, 2026");
   });
 });

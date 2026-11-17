@@ -6,7 +6,12 @@ import {
   type MetricBar,
 } from "./compute";
 import { benchmarkData, contentData, industryData } from "./data";
-import { formatDate } from "./format";
+import {
+  formatBenchmarkRun,
+  formatDataThrough,
+  formatDate,
+  WEEKS_NOTE,
+} from "./format";
 import type { ShareGroup } from "./schema";
 import { getShareCard, getSharePath, type ShareSlug } from "./share-cards";
 
@@ -95,6 +100,11 @@ function describeShare(
   return sentences.join(" ");
 }
 
+/** "Data through Nov 15, 2026. Weeks run Monday–Sunday." */
+function weeklyDateSentence(asOf: string): string {
+  return `${formatDataThrough(asOf)}. ${WEEKS_NOTE}.`;
+}
+
 function shareChartSection(
   copy: { title: string; description: string; note?: string },
   slug: ShareSlug,
@@ -104,7 +114,7 @@ function shareChartSection(
   return [
     `### ${copy.title}`,
     "",
-    `${copy.description} Updated ${formatDate(asOf)}.`,
+    `${copy.description} ${weeklyDateSentence(asOf)}`,
     "",
     description,
     "",
@@ -181,7 +191,7 @@ function describeFrontier(): string[] {
   const frontier = new Set(getParetoNames(models));
   const label = benchmarkData.meta.quality_metric_label.toLowerCase();
   return [
-    `The chart plots ${label} against average cost per task for ${models.length} models, one point each. Updated ${formatDate(benchmarkData.run_date)}.`,
+    `The chart plots ${label} against average cost per task for ${models.length} models, one point each. ${formatBenchmarkRun(benchmarkData.run_date)}.`,
     "",
     `A model is on the frontier when no other model matches or beats it on both cost and ${label}. Frontier models from lowest to highest cost:`,
     "",
@@ -271,7 +281,7 @@ export function renderAiIndexMarkdown(): string {
     ...sectionHeading(sections.spend),
     `### ${charts.spend.title}`,
     "",
-    `${charts.spend.description} Updated ${formatDate(industryData.spend.as_of)}.`,
+    `${charts.spend.description} ${weeklyDateSentence(industryData.spend.as_of)}`,
     "",
     describeSpend(industryData.spend, charts.spend.panel_labels),
     "",

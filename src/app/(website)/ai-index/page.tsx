@@ -10,7 +10,11 @@ import {
   getTopModelPanels,
 } from "@/lib/ai-trends/compute";
 import { benchmarkData, contentData, industryData } from "@/lib/ai-trends/data";
-import { formatDate } from "@/lib/ai-trends/format";
+import {
+  formatBenchmarkRun,
+  formatDataThrough,
+  WEEKS_NOTE,
+} from "@/lib/ai-trends/format";
 import { getShareTitle, getShareVersion } from "@/lib/ai-trends/share-cards";
 import { absoluteSiteUrl, getMetadata } from "@/lib/get-metadata";
 import { Changelog } from "@/components/ai-trends/changelog";
@@ -76,7 +80,9 @@ export default function AiTrendsPage(): ReactNode {
   const brandColors = Object.fromEntries(
     getFamilies(models).map(({ label, color }) => [label, color]),
   );
-  const shareUpdated = formatDate(share.as_of);
+  const weeklyLabel = (asOf: string) =>
+    `${formatDataThrough(asOf)} · ${WEEKS_NOTE}`;
+  const shareDateLabel = weeklyLabel(share.as_of);
   const walletPlaceholder = share.wallet_placeholder === true;
 
   return (
@@ -108,7 +114,7 @@ export default function AiTrendsPage(): ReactNode {
           <ShareSection
             weeks={share.weeks}
             layers={getStackLayers(share.groups.proprietary, brandColors)}
-            updated={shareUpdated}
+            dateLabel={shareDateLabel}
             token={charts.token_share}
             wallet={charts.wallet_share}
             slugs={{ token: "token-share", wallet: "wallet-share" }}
@@ -124,7 +130,7 @@ export default function AiTrendsPage(): ReactNode {
             <ShareSection
               weeks={share.weeks}
               layers={getStackLayers(share.groups.open_source, brandColors)}
-              updated={shareUpdated}
+              dateLabel={shareDateLabel}
               token={charts.open_source_token_share}
               wallet={charts.open_source_wallet_share}
               slugs={{
@@ -150,7 +156,7 @@ export default function AiTrendsPage(): ReactNode {
           />
           <LongTermSection
             weeks={longTerm.weeks}
-            updated={formatDate(longTerm.as_of)}
+            dateLabel={weeklyLabel(longTerm.as_of)}
             providers={{
               copy: charts.providers_used,
               series: longTerm.providers_used,
@@ -174,7 +180,7 @@ export default function AiTrendsPage(): ReactNode {
           />
           <ChartCard
             title={charts.spend.title}
-            updated={formatDate(spend.as_of)}
+            dateLabel={weeklyLabel(spend.as_of)}
             note={charts.spend.note}
             shareSlug="spend"
             shareVersion={getShareVersion("spend")}
@@ -205,7 +211,7 @@ export default function AiTrendsPage(): ReactNode {
           />
           <ScatterCard
             title={charts.scatter.title}
-            updated={formatDate(runDate)}
+            dateLabel={formatBenchmarkRun(runDate)}
             note={charts.scatter.note}
             shareVersion={getShareVersion("scatter")}
             models={pricedModels}

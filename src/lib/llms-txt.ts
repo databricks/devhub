@@ -88,9 +88,10 @@ const SIDEBAR_SECTIONS: Array<{
   {
     title: "Data Lakehouse",
     description:
-      "Governed analytical tables in Unity Catalog, populated by Lakeflow. Covers SQL warehouse reads, Lakeflow Jobs and Pipelines, and Genie Agents for natural-language Q&A over tables.",
+      "Governed analytical tables in Unity Catalog, populated by Lakeflow. Covers Zerobus Ingest for pushing records into tables, SQL warehouse reads, Lakeflow Jobs and Pipelines, and Genie Agents for natural-language Q&A over tables.",
     slugs: [
       "lakehouse/overview",
+      "lakehouse/zerobus-ingest",
       "lakehouse/analytical-reads",
       "lakehouse/genie",
       "lakehouse/jobs",

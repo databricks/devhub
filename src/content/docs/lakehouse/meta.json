@@ -1,4 +1,11 @@
 {
   "title": "Data Lakehouse",
-  "pages": ["overview", "analytical-reads", "genie", "jobs", "pipelines"]
+  "pages": [
+    "overview",
+    "zerobus-ingest",
+    "analytical-reads",
+    "genie",
+    "jobs",
+    "pipelines"
+  ]
 }

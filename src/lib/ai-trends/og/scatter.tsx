@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 
 import type { QualityAxis } from "@/lib/ai-trends/compute";
+import { placeLabels } from "@/lib/ai-trends/label-placement";
 import type { BenchmarkModel } from "@/lib/ai-trends/schema";
 
 import {
@@ -18,6 +19,12 @@ const PLOT = { left: 56, right: 12, top: 8, bottom: 30 };
 const Y_STEP = 5;
 const LOGO_SIZE = 26;
 const FRONTIER_LOGO_SIZE = 32;
+const LABEL_SIZE = 14;
+const LABEL_OFFSET = 6;
+/** Satori has no text metrics; this over-estimates Inter at LABEL_SIZE a little. */
+const labelWidth = (text: string) =>
+  Math.ceil(text.length * LABEL_SIZE * 0.56) + 6;
+const LABEL_HEIGHT = Math.ceil(LABEL_SIZE * 1.2) + 4;
 
 export function OgScatter({
   models,
@@ -49,6 +56,30 @@ export function OgScatter({
   const xTicks = logTicks(xMin, xMax);
   const markerSize = (m: BenchmarkModel) =>
     paretoSet.has(m.name) ? FRONTIER_LOGO_SIZE : LOGO_SIZE;
+  // Same collision-aware placement as the page chart: frontier labels avoid
+  // every logo and each other. Other models get no label, only an obstacle.
+  const placements = placeLabels(
+    models.map((m) => {
+      const named = paretoSet.has(m.name);
+      return {
+        x: x(m.cost),
+        y: y(m.quality),
+        width: named ? labelWidth(shortName(m.name)) : 0,
+        height: named ? LABEL_HEIGHT : 0,
+        marker: markerSize(m),
+        priority: named ? 1000 + m.quality : 0,
+        required: named,
+      };
+    }),
+    { left, top, right, bottom },
+    LABEL_OFFSET,
+  );
+  const labelBoxes = models.flatMap((m, i) => {
+    const box = placements[i].box;
+    return paretoSet.has(m.name) && box
+      ? [{ m, box, leader: placements[i].leader }]
+      : [];
+  });
 
   return (
     <div
@@ -93,6 +124,19 @@ export function OgScatter({
           strokeWidth={2}
           strokeDasharray="7 6"
         />
+        {labelBoxes
+          .filter(({ leader }) => leader)
+          .map(({ m, box }) => (
+            <line
+              key={`leader-${m.name}`}
+              x1={x(m.cost)}
+              y1={y(m.quality)}
+              x2={Math.min(Math.max(x(m.cost), box.left), box.right)}
+              y2={Math.min(Math.max(y(m.quality), box.top), box.bottom)}
+              stroke={MUTED}
+              strokeWidth={1}
+            />
+          ))}
         {models.map((m) =>
           logos[m.vendor] ? (
             // Paper disc so the frontier line passes beneath the logo.
@@ -159,23 +203,19 @@ export function OgScatter({
           {formatUsd(v)}
         </OgLabel>
       ))}
-      {pareto.map((m) => {
-        const flip = x(m.cost) > (left + right) / 2;
-        const below = !flip;
-        return (
-          <OgLabel
-            key={m.name}
-            x={x(m.cost) + (flip ? -16 : 16)}
-            y={y(m.quality) + (below ? 24 : -24)}
-            align={flip ? "right" : "left"}
-            width={260}
-            size={14}
-            color={INK}
-          >
-            {shortName(m.name)}
-          </OgLabel>
-        );
-      })}
+      {labelBoxes.map(({ m, box }) => (
+        <OgLabel
+          key={m.name}
+          x={(box.left + box.right) / 2}
+          y={(box.top + box.bottom) / 2}
+          align="center"
+          width={box.right - box.left}
+          size={LABEL_SIZE}
+          color={INK}
+        >
+          {shortName(m.name)}
+        </OgLabel>
+      ))}
       <OgLabel
         x={right}
         y={bottom - 10}

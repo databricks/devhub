@@ -20,13 +20,14 @@ export const SCATTER_POINT_STYLES = {
 export function computeCostRange(models: { cost: number }[]) {
   const allCosts = models.map((m) => m.cost);
   return {
+    // The floor only guards log(0); it must sit below the cheapest real model.
     xMin:
-      allCosts.length > 0 ? Math.max(0.05, Math.min(...allCosts) * 0.55) : 0.05,
+      allCosts.length > 0 ? Math.max(0.01, Math.min(...allCosts) * 0.55) : 0.05,
     xMax: allCosts.length > 0 ? Math.max(...allCosts) * 2.2 : 10,
   };
 }
 
-const NICE_TICKS = [0.1, 0.2, 0.5, 1, 2, 5, 10, 20, 50];
+const NICE_TICKS = [0.01, 0.02, 0.05, 0.1, 0.2, 0.5, 1, 2, 5, 10, 20, 50];
 
 export function costXScale(xMin: number, xMax: number) {
   return {

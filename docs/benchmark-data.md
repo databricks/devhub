@@ -40,7 +40,7 @@ Key sub-objects:
 - **`seo`** — page `title` and `description`.
 - **`header`** — `title_lead`, `title_accent`, and `intro` (inline links use `[label](https://…)`).
 - **`sections`** — display `title` and `intro` copy for each page section: `proprietary`, `open_source`, `long_term`, `spend`, `frontier` (the scatter section), `changelog`.
-- **`charts`** — `title`/`description` (and optional `note`) for each chart: `scatter`, `token_share`, `wallet_share`, `open_source_token_share`, `open_source_wallet_share`, `open_weight_share` and `providers_used` (both also have a `legend` heading), and `spend` (which also has `panel_labels.p50/p90/p99`).
+- **`charts`** — `title`/`description` (and optional `note`) for each chart: `scatter`, `token_share`, `wallet_share`, `open_source_token_share`, `open_source_wallet_share`, `open_weight_share` and `providers_used` (both also have a `legend` heading), and `spend` (which also has `panel_labels.p50/p90/p99`). A chart's `title` is also its share card title, share page `og:title`, and X post text, so write it in Title Case.
 - **`changelog`** — chronological array of `{date, category, title, description}` entries shown in the Changelog section.
 
 Content fields support two inline formats:

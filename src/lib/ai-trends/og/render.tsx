@@ -117,7 +117,6 @@ function renderProvidersUsed(): ReactNode {
         yStep={25}
         formatY={(v) => `${v}%`}
         height={CHART_HEIGHT - OG_LEGEND_HEIGHT}
-        fill
       />
     </div>
   );

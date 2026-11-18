@@ -1,4 +1,4 @@
-import { getFamilies } from "./compute";
+import { getFamilies, getMetricLayers, getStackLayers } from "./compute";
 import { benchmarkData, contentData, industryData } from "./data";
 import { formatDate } from "./format";
 import { getVendorLogoEntries } from "./vendor-logos";
@@ -87,32 +87,24 @@ export function getShareCard(slug: string): ShareCard | undefined {
   return CARDS.find((card) => card.slug === slug);
 }
 
-export function getShareTitle(slug: string): string {
-  const card = getShareCard(slug);
-  if (!card) throw new Error(`No AI Index share card for "${slug}"`);
-  return card.title;
-}
-
 export function getSharePath(slug: string): string {
   return `/ai-index/share/${slug}`;
 }
 
+/** The layers the card draws: providers stack by latest token share, so token data also moves the wallet card. */
 function getShareGroupData(
   group: keyof typeof industryData.share.groups,
   metric: "token" | "wallet",
 ) {
-  const { weeks, groups } = industryData.share;
-  const { providers, series } = groups[group];
   const brandColors = Object.fromEntries(
     getFamilies(benchmarkData.models).map(({ label, color }) => [label, color]),
   );
   return {
-    weeks,
-    providers: providers.map((p) => ({ ...p, brand: brandColors[p.name] })),
-    series: series.map(({ token, wallet, ...rest }) => ({
-      ...rest,
-      values: { token, wallet }[metric],
-    })),
+    weeks: industryData.share.weeks,
+    layers: getMetricLayers(
+      getStackLayers(industryData.share.groups[group], brandColors),
+      metric,
+    ),
   };
 }
 

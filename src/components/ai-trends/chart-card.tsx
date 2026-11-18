@@ -5,11 +5,6 @@ import { Card } from "@/components/ui/card";
 
 import { ShareControl } from "./share-control";
 
-function requireShareVersion(slug: string, version?: string): string {
-  if (!version) throw new Error(`Chart card "${slug}" has no shareVersion`);
-  return version;
-}
-
 export function ChartCard({
   id,
   title,
@@ -19,7 +14,6 @@ export function ChartCard({
   note,
   shareSlug,
   shareVersion,
-  shareTitle,
   getShareImage,
   children,
   className,
@@ -30,15 +24,17 @@ export function ChartCard({
   placeholder?: boolean;
   description?: ReactNode;
   note?: ReactNode;
-  shareSlug?: string;
-  /** `getShareVersion(shareSlug)`, required with `shareSlug`. */
-  shareVersion?: string;
-  /** The share card title, for the X post text, when it differs from `title`. */
-  shareTitle?: string;
   getShareImage?: () => Promise<Blob>;
   children?: ReactNode;
   className?: string;
-}): ReactNode {
+} & (
+  | { shareSlug?: undefined; shareVersion?: undefined }
+  | {
+      shareSlug: string;
+      /** `getShareVersion(shareSlug)` */
+      shareVersion: string;
+    }
+)): ReactNode {
   return (
     <Card
       id={shareSlug ?? id}
@@ -67,8 +63,8 @@ export function ChartCard({
               {shareSlug ? (
                 <ShareControl
                   shareSlug={shareSlug}
-                  shareVersion={requireShareVersion(shareSlug, shareVersion)}
-                  title={shareTitle ?? title}
+                  shareVersion={shareVersion}
+                  title={title}
                   getImage={getShareImage}
                 />
               ) : null}

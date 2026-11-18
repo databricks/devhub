@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { describe, expect, test } from "vitest";
 
 import { GET } from "../src/app/api/markdown/route";
+import { getShareVersion } from "../src/lib/ai-trends/share-cards";
 import { resolveSiteUrlForRequest } from "../src/lib/site-url";
 
 type RawResponse = {
@@ -217,7 +218,7 @@ describe("/api/markdown product and resources pages", () => {
     expect(result.statusCode).toBe(200);
     expect(result.body).toMatch(/^# Databricks AI Index\n/);
     expect(result.body).toContain(
-      "](https://developers.databricks.com/ai-index/share/scatter)",
+      `](https://developers.databricks.com/ai-index/share/scatter?v=${getShareVersion("scatter")})`,
     );
   });
 

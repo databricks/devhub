@@ -122,6 +122,7 @@ async function loadHelpers() {
     stdin: {
       contents: `
         export {
+          isHiddenDraftTemplate,
           renderDetailMarkdown,
         } from "./src/lib/agent-content-markdown.ts";
         export {
@@ -198,7 +199,7 @@ for (const slug of [
   ...helpers.getCookbookSlugs(rootDir),
   ...helpers.getContentSlugs(rootDir, "recipes"),
   ...helpers.getContentSlugs(rootDir, "examples"),
-]) {
+].filter((slug) => !helpers.isHiddenDraftTemplate(slug))) {
   writeMarkdownArtifact({
     helpers,
     section: "templates",

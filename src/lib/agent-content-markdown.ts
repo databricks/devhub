@@ -181,11 +181,25 @@ function readCookbookMarkdown(
   });
 }
 
+/** True when the slug names a draft template and drafts are off. */
+export function isHiddenDraftTemplate(slug: string): boolean {
+  const template = [...recipes, ...examples, ...cookbooks].find(
+    (entry) => entry.id === slug,
+  );
+  return (
+    template !== undefined &&
+    filterPublished([template], showDrafts()).length === 0
+  );
+}
+
 function readTemplateMarkdown(
   rootDir: string,
   slug: string,
   siteOrigin: string,
 ): string {
+  if (isHiddenDraftTemplate(slug)) {
+    throw new Error(`Template not found: "${slug}"`);
+  }
   if (hasContentSlug(rootDir, "recipes", slug)) {
     return readRecipeMarkdown(rootDir, slug);
   }

@@ -135,6 +135,30 @@ describe("templates index in API markdown", () => {
   });
 });
 
+describe("template markdown for draft slugs", () => {
+  afterEach(() => {
+    delete process.env.SHOW_DRAFTS;
+    vi.resetModules();
+  });
+
+  test("does not serve a draft template's markdown when drafts are off", async () => {
+    const { getDetailMarkdown } =
+      await import("../src/lib/agent-content-markdown");
+    expect(() =>
+      getDetailMarkdown("templates", "zerobus-target-table"),
+    ).toThrow('Template not found: "zerobus-target-table"');
+  });
+
+  test("serves a draft template's markdown when drafts are on", async () => {
+    process.env.SHOW_DRAFTS = "true";
+    const { getDetailMarkdown } =
+      await import("../src/lib/agent-content-markdown");
+    expect(getDetailMarkdown("templates", "zerobus-target-table")).toContain(
+      "Zerobus Ingest writes into a table",
+    );
+  });
+});
+
 describe("template static params slugs", () => {
   afterEach(() => {
     delete process.env.SHOW_DRAFTS;

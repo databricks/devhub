@@ -23,7 +23,7 @@ export function ZerobusTemplatesSection({
         </h2>
         <div className="mt-12 grid min-w-0 gap-y-12 md:grid-cols-2 md:gap-x-10 md:gap-y-16 xl:gap-x-16">
           {items.map((item, index) => (
-            <TemplateCard key={item.data.id} item={item} index={index} />
+            <TemplateCard key={item.data.id} item={item} index={index + 1} />
           ))}
         </div>
       </div>

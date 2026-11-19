@@ -267,5 +267,8 @@ describe("filterTemplates against real recipe data", () => {
     for (const item of zerobusItems) {
       expect(item.data.services).toContain("Zerobus Ingest");
     }
+    expect(zerobusItems.map((item) => item.data.id)).toContain(
+      "zerobus-ingest-getting-started",
+    );
   });
 });

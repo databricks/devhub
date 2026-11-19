@@ -1,3 +1,4 @@
+- **Set up your local dev environment.** Complete [Set Up Your Local Dev Environment](/templates/set-up-your-local-dev-environment) first.
 - **Unity Catalog catalog and schema.** You need a catalog and a schema where you can create tables.
 - **A region that supports Zerobus Ingest.** Run `databricks metastores summary` and check that its region appears in the [region list](https://docs.databricks.com/resources/feature-region-support#ingestion).
 - **A sample event.** One example record, in JSON, with the field names and types that your producer will send.

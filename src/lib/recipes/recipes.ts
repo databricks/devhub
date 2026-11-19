@@ -386,7 +386,6 @@ export const recipes: Recipe[] = [
       "Create the Unity Catalog Delta table that a Zerobus Ingest producer writes to, with columns taken from a sample event.",
     tags: ["Zerobus Ingest", "Delta Tables", "Unity Catalog", "Schema"],
     services: ["Unity Catalog", "Data Lakehouse"],
-    isDraft: true,
   },
   {
     id: "zerobus-service-principal-and-grants",
@@ -396,7 +395,6 @@ export const recipes: Recipe[] = [
     tags: ["Zerobus Ingest", "Service Principal", "OAuth", "Grants"],
     services: ["Unity Catalog", "Data Lakehouse"],
     prerequisites: ["zerobus-target-table"],
-    isDraft: true,
   },
   {
     id: "zerobus-first-producer-sdk",
@@ -406,7 +404,6 @@ export const recipes: Recipe[] = [
     tags: ["Zerobus Ingest", "Streaming", "SDK", "Python", "TypeScript"],
     services: ["Data Lakehouse"],
     prerequisites: ["zerobus-service-principal-and-grants"],
-    isDraft: true,
   },
   {
     id: "zerobus-first-producer-rest",
@@ -416,7 +413,14 @@ export const recipes: Recipe[] = [
     tags: ["Zerobus Ingest", "Streaming", "REST", "OAuth"],
     services: ["Data Lakehouse"],
     prerequisites: ["zerobus-service-principal-and-grants"],
-    isDraft: true,
+  },
+  {
+    id: "zerobus-verify-rows",
+    name: "Zerobus Ingest Verify Rows",
+    description:
+      "Check that the rows a Zerobus Ingest producer sent landed in the target table, with a row count and latest timestamp.",
+    tags: ["Zerobus Ingest", "Delta Tables", "Unity Catalog", "Verification"],
+    services: ["Unity Catalog", "Data Lakehouse"],
   },
   {
     id: "zerobus-otel-tables",
@@ -425,7 +429,14 @@ export const recipes: Recipe[] = [
       "Create the three predefined OpenTelemetry tables in Unity Catalog that Zerobus Ingest writes traces, logs, and metrics to.",
     tags: ["Zerobus Ingest", "OpenTelemetry", "Unity Catalog", "Delta"],
     services: ["Unity Catalog", "Data Lakehouse"],
-    isDraft: true,
+  },
+  {
+    id: "zerobus-otel-exporter",
+    name: "Configure the OpenTelemetry Exporter for Zerobus Ingest",
+    description:
+      "Use a native Zerobus Ingest sink, or set up one OpenTelemetry exporter per signal with a table-scoped token that the tool refreshes before it expires.",
+    tags: ["Zerobus Ingest", "OpenTelemetry", "OAuth", "Exporter"],
+    services: ["Data Lakehouse"],
   },
   {
     id: "zerobus-otel-verify",
@@ -434,7 +445,6 @@ export const recipes: Recipe[] = [
       "Check that traces, logs, and metrics from an OpenTelemetry-compatible tool are landing in their Zerobus Ingest tables, one signal at a time.",
     tags: ["Zerobus Ingest", "OpenTelemetry", "Unity Catalog", "Delta"],
     services: ["Unity Catalog", "Data Lakehouse"],
-    isDraft: true,
   },
 ];
 
@@ -469,7 +479,9 @@ export const recipesInOrder: Recipe[] = [
   "zerobus-service-principal-and-grants",
   "zerobus-first-producer-sdk",
   "zerobus-first-producer-rest",
+  "zerobus-verify-rows",
   "zerobus-otel-tables",
+  "zerobus-otel-exporter",
   "zerobus-otel-verify",
 ].map((recipeId) => {
   const recipe = recipeIndex[recipeId];
@@ -595,8 +607,12 @@ export const cookbooks: Cookbook[] = [
       "zerobus-service-principal-and-grants",
       "zerobus-first-producer-sdk",
       "zerobus-first-producer-rest",
+      "zerobus-verify-rows",
     ],
-    isDraft: true,
+    previewImageLightUrl:
+      "/img/guides/zerobus-ingest-getting-started-preview-light.png",
+    previewImageDarkUrl:
+      "/img/guides/zerobus-ingest-getting-started-preview-dark.png",
   }),
   createCookbook({
     id: "zerobus-ingest-otel-collectors",
@@ -606,9 +622,13 @@ export const cookbooks: Cookbook[] = [
     recipeIds: [
       "zerobus-otel-tables",
       "zerobus-service-principal-and-grants",
+      "zerobus-otel-exporter",
       "zerobus-otel-verify",
     ],
-    isDraft: true,
+    previewImageLightUrl:
+      "/img/guides/zerobus-ingest-otel-collectors-preview-light.png",
+    previewImageDarkUrl:
+      "/img/guides/zerobus-ingest-otel-collectors-preview-dark.png",
   }),
 ];
 

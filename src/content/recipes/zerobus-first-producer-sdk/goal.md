@@ -4,9 +4,9 @@ When done, you will have:
 - Acknowledgments that log the offsets Zerobus Ingest stored, and any errors
 - A producer that flushes and closes its stream when it finishes
 
-Start with Python. Use the TypeScript SDK when the user needs Node.js. Rust, Go, Java, C++, and .NET aren't covered by this template yet. For those languages, use the SDK references in the [`databricks-zerobus-ingest` skill](https://github.com/databricks/databricks-agent-skills/tree/main/skills/databricks-zerobus-ingest).
+Use the SDK for a service or app that can load it. Start with Python, and use the TypeScript SDK when the user needs Node.js. Rust, Go, Java, C++, and .NET aren't covered by this template yet. For those languages, use the SDK references in the [`databricks-zerobus-ingest` skill](https://github.com/databricks/databricks-agent-skills/tree/main/skills/databricks-zerobus-ingest).
 
-Read the Python or TypeScript reference in that skill before you write the producer. It covers the install steps, the producer APIs, and the record formats.
+Read the Python or TypeScript reference in that skill before you write the producer. It covers the install steps, the producer APIs, and the record formats. The SDK fetches and refreshes tokens for you.
 
 1. Install the SDK. For Python, run `pip install databricks-zerobus-ingest-sdk`. For TypeScript, run `npm install @databricks/zerobus-ingest-sdk`.
 2. Write the producer. Read the endpoint, workspace URL, table name, client ID, and client secret from the environment variables that the service principal step set. Never hard-code the secret. Send records shaped like the sample event in the [target table step](/templates/zerobus-target-table).
@@ -30,3 +30,5 @@ Read the Python or TypeScript reference in that skill before you write the produ
 4. Handle errors. The SDK retries transient errors and recovers the stream itself. Handle the errors it raises, such as invalid credentials, missing grants, or a missing table. Don't write your own retry loop around the ingest calls.
 
 Zerobus Ingest delivers at least once. A retry can resend records that already landed, so the table can hold duplicate rows. When duplicates matter, deduplicate on a key in the queries that read the table.
+
+For a complete project, see [zerobus-ingest-examples](https://github.com/databricks-solutions/zerobus-ingest-examples).

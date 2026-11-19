@@ -101,6 +101,11 @@ LIMIT 20;
 
 To read them, you need `USE` and `SELECT` on the system schemas, or both metastore admin and workspace admin rights.
 
+## Pick a template to start from
+
+- [Get Started with Zerobus Ingest](/templates/zerobus-ingest-getting-started): create a table and a service principal, run a producer, and check that the rows landed.
+- [Send OpenTelemetry Data to Zerobus Ingest](/templates/zerobus-ingest-otel-collectors): send traces, logs, and metrics from an OpenTelemetry tool to Delta tables.
+
 ## Start building with the agent skill
 
 The [`databricks-zerobus-ingest`](/docs/tools/ai-tools/agent-skills) agent skill teaches your coding agent how to pick an interface, confirm the prerequisites, write a producer, and verify that rows landed. It ships with the Databricks agent skills:

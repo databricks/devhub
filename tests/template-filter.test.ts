@@ -270,5 +270,8 @@ describe("filterTemplates against real recipe data", () => {
     expect(zerobusItems.map((item) => item.data.id)).toContain(
       "zerobus-ingest-getting-started",
     );
+    expect(zerobusItems.map((item) => item.data.id)).toContain(
+      "zerobus-ingest-otel-collectors",
+    );
   });
 });

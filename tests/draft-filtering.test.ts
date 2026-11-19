@@ -149,6 +149,14 @@ describe("template markdown for draft slugs", () => {
     ).toThrow('Template not found: "zerobus-target-table"');
   });
 
+  test("does not serve the OpenTelemetry draft template's markdown when drafts are off", async () => {
+    const { getDetailMarkdown } =
+      await import("../src/lib/agent-content-markdown");
+    expect(() =>
+      getDetailMarkdown("templates", "zerobus-ingest-otel-collectors"),
+    ).toThrow('Template not found: "zerobus-ingest-otel-collectors"');
+  });
+
   test("serves a draft template's markdown when drafts are on", async () => {
     process.env.SHOW_DRAFTS = "true";
     const { getDetailMarkdown } =

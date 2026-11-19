@@ -419,6 +419,24 @@ export const recipes: Recipe[] = [
     prerequisites: ["zerobus-service-principal-and-grants"],
     isDraft: true,
   },
+  {
+    id: "zerobus-otel-tables",
+    name: "Create OpenTelemetry Tables",
+    description:
+      "Create the three predefined OpenTelemetry tables in Unity Catalog that Zerobus Ingest writes traces, logs, and metrics to.",
+    tags: ["Zerobus Ingest", "OpenTelemetry", "Unity Catalog", "Delta"],
+    services: ["Zerobus Ingest", "Unity Catalog", "Data Lakehouse"],
+    isDraft: true,
+  },
+  {
+    id: "zerobus-otel-verify",
+    name: "Verify OpenTelemetry Rows",
+    description:
+      "Check that traces, logs, and metrics from an OpenTelemetry-compatible tool are landing in their Zerobus Ingest tables, one signal at a time.",
+    tags: ["Zerobus Ingest", "OpenTelemetry", "Unity Catalog", "Delta"],
+    services: ["Zerobus Ingest", "Unity Catalog", "Data Lakehouse"],
+    isDraft: true,
+  },
 ];
 
 const recipeIndex: Record<string, Recipe> = Object.fromEntries(
@@ -452,6 +470,8 @@ export const recipesInOrder: Recipe[] = [
   "zerobus-service-principal-and-grants",
   "zerobus-first-producer-sdk",
   "zerobus-first-producer-rest",
+  "zerobus-otel-tables",
+  "zerobus-otel-verify",
 ].map((recipeId) => {
   const recipe = recipeIndex[recipeId];
   if (!recipe) {
@@ -576,6 +596,18 @@ export const cookbooks: Cookbook[] = [
       "zerobus-service-principal-and-grants",
       "zerobus-first-producer-sdk",
       "zerobus-first-producer-rest",
+    ],
+    isDraft: true,
+  }),
+  createCookbook({
+    id: "zerobus-ingest-otel-collectors",
+    name: "Send OpenTelemetry Data to Zerobus Ingest",
+    description:
+      "Send traces, logs, and metrics from the OpenTelemetry-compatible tool you already run to Delta tables with Zerobus Ingest, with no message bus in between.",
+    recipeIds: [
+      "zerobus-otel-tables",
+      "zerobus-service-principal-and-grants",
+      "zerobus-otel-verify",
     ],
     isDraft: true,
   }),

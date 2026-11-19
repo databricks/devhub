@@ -27,11 +27,11 @@ User-facing, all three kinds are presented as one thing: **template**. The site 
 
 The internal kind names (`recipe`, `cookbook`, `example`) **live only in code, file paths, and this skill** — they never appear in shipped UI, markdown content, or generated indexes.
 
-| Internal kind | Source location                                                                        | Route at runtime    | When to use                                                                |
-| ------------- | -------------------------------------------------------------------------------------- | ------------------- | -------------------------------------------------------------------------- |
-| `recipe`      | `content/recipes/<slug>/{goal,prerequisites}.md` + entry in `recipes`                  | `/templates/<slug>` | One atomic outcome, copy-pasteable in a single agent prompt.               |
-| `cookbook`    | Entry in `cookbooks` (composes recipes) + `src/content/cookbooks/<slug>/goal.md`       | `/templates/<slug>` | End-to-end walkthrough composed from multiple recipes.                     |
-| `example`     | `content/examples/<slug>/goal.md` + full app source under `examples/<slug>/template/`  | `/templates/<slug>` | Full deployable codebase that bundles cookbooks/recipes plus runnable app. |
+| Internal kind | Source location                                                                           | Route at runtime    | When to use                                                                |
+| ------------- | ----------------------------------------------------------------------------------------- | ------------------- | -------------------------------------------------------------------------- |
+| `recipe`      | `src/content/recipes/<slug>/{goal,prerequisites}.md` + entry in `recipes`                 | `/templates/<slug>` | One atomic outcome, copy-pasteable in a single agent prompt.               |
+| `cookbook`    | Entry in `cookbooks` (composes recipes) + `src/content/cookbooks/<slug>/goal.md`          | `/templates/<slug>` | End-to-end walkthrough composed from multiple recipes.                     |
+| `example`     | `src/content/examples/<slug>/goal.md` + full app source under `examples/<slug>/template/` | `/templates/<slug>` | Full deployable codebase that bundles cookbooks/recipes plus runnable app. |
 
 All three are registered in `src/lib/recipes/recipes.ts`, share a flat `/templates/<slug>` URL hierarchy, and must have globally unique slugs (the content-entries plugin asserts this at build time). Choose the kind that matches the **shape of the work**, not the customer-facing label.
 
@@ -44,7 +44,7 @@ All three are registered in `src/lib/recipes/recipes.ts`, share a flat `/templat
 
 ## Author A `recipe`
 
-1. Create `content/recipes/<slug>/goal.md`. Optionally add `prerequisites.md`.
+1. Create `src/content/recipes/<slug>/goal.md`. Optionally add `prerequisites.md`.
 2. The slug must equal the folder name and be globally unique across the catalog.
 3. Write `goal.md` as a concise outcome description — what the agent should build, what the user will have when done. Keep it short (5-10 lines). Agent skills handle the implementation details.
 4. Optionally add `prerequisites.md` for workspace-specific requirements the agent should verify before starting (e.g., "Lakebase Postgres available", "Genie enabled", "AWS workspace"). Do NOT include "Databricks CLI authenticated" — the localBootstrap recipe already handles that.
@@ -56,7 +56,7 @@ All three are registered in `src/lib/recipes/recipes.ts`, share a flat `/templat
 
 ### Prerequisites Belong In `prerequisites.md` — Never In `goal.md`
 
-Prerequisites have a single home: `content/<recipes|examples>/<slug>/prerequisites.md`. The route plugin renders that file under a `## Prerequisites` H2 on the detail page.
+Prerequisites have a single home: `src/content/<recipes|examples>/<slug>/prerequisites.md`. The route plugin renders that file under a `## Prerequisites` H2 on the detail page.
 
 Rules:
 
@@ -137,7 +137,7 @@ For examples with no Unity Catalog DDL, still add `template/provisioning/sql/` w
 
 ### 2. Create The Example Markdown
 
-Create `content/examples/<slug>/goal.md`:
+Create `src/content/examples/<slug>/goal.md`:
 
 - Write a concise outcome description (5-10 lines): what the example builds, what you'll have when done.
 - Optionally add `prerequisites.md` for workspace-specific requirements.
@@ -244,7 +244,7 @@ databricks apps get <app-name> --profile <PROFILE>
 #### Fixing issues found during dry run
 
 - **Code bug** (build fails, runtime error, wrong SQL dialect) — fix in `examples/<slug>/` in the repo, then re-copy to `../../demos/<slug>/` and retry.
-- **Instruction gap** (missing step, unclear placeholder) — fix in `content/examples/<slug>/goal.md` or the relevant recipe under `content/recipes/`.
+- **Instruction gap** (missing step, unclear placeholder) — fix in `src/content/examples/<slug>/goal.md` or the relevant recipe under `src/content/recipes/`.
 - **Seed data issue** — fix in `examples/<slug>/template/seed/seed.ts`.
 
 #### Cleanup
@@ -255,11 +255,11 @@ After verifying the deployed app works, delete `../../demos/<slug>/`. Optionally
 
 All templates share a flat URL hierarchy:
 
-| Internal kind | Public URL          | Route source                                                               |
-| ------------- | ------------------- | -------------------------------------------------------------------------- |
-| `recipe`      | `/templates/<slug>` | Generated by content-entries plugin from `content/recipes/<slug>/goal.md`  |
-| `cookbook`    | `/templates/<slug>` | Generic route `src/app/(website)/templates/[slug]/page.tsx`                |
-| `example`     | `/templates/<slug>` | Generated by content-entries plugin from `content/examples/<slug>/goal.md` |
+| Internal kind | Public URL          | Route source                                                                   |
+| ------------- | ------------------- | ------------------------------------------------------------------------------ |
+| `recipe`      | `/templates/<slug>` | Generated by content-entries plugin from `src/content/recipes/<slug>/goal.md`  |
+| `cookbook`    | `/templates/<slug>` | Generic route `src/app/(website)/templates/[slug]/page.tsx`                    |
+| `example`     | `/templates/<slug>` | Generated by content-entries plugin from `src/content/examples/<slug>/goal.md` |
 
 Slugs must be globally unique. The plugin throws at build time if any collision exists.
 
@@ -276,7 +276,7 @@ Slugs must be globally unique. The plugin throws at build time if any collision 
 
 ### Link Style: Use Relative URLs For DevHub Pages
 
-When linking to another DevHub page (`/templates/...`, `/docs/...`) from any markdown content (`content/**/*.md`, `docs/**/*.md`, intent files, dev-guidelines, about), use a **root-relative** path. Never hardcode `https://developers.databricks.com/<path>` inside markdown link or autolink syntax.
+When linking to another DevHub page (`/templates/...`, `/docs/...`) from any markdown content (`src/content/**/*.md`, `docs/**/*.md`, intent files, dev-guidelines, about), use a **root-relative** path. Never hardcode `https://developers.databricks.com/<path>` inside markdown link or autolink syntax.
 
 - Good: `[Spin Up a Databricks App](/templates/spin-up-databricks-app)`
 - Bad: `[Spin Up a Databricks App](https://developers.databricks.com/templates/spin-up-databricks-app)`
@@ -311,10 +311,10 @@ Allowed exceptions (the validator skips these):
 
 ## References
 
-- Read `content/recipes/set-up-your-local-dev-environment/goal.md` for atomic-template goal structure and tone.
-- Read `content/examples/agentic-support-console/goal.md` for example-template goal style.
+- Read `src/content/recipes/set-up-your-local-dev-environment/goal.md` for atomic-template goal structure and tone.
+- Read `src/content/examples/agentic-support-console/goal.md` for example-template goal style.
 - Read `src/lib/recipes/recipes.ts` for all type contracts (`Recipe`, `Cookbook`, `Example`).
-- Read `src/content/cookbooks/app-with-lakebase/goal.md` for the cookbook composition pattern.
+- Read the `app-with-lakebase` entry in `src/lib/recipes/recipes.ts` (`createCookbook()` with its `recipeIds`) for the cookbook composition pattern.
 - Read `src/components/examples/example-detail.tsx` for example detail rendering.
 - Read `examples/agentic-support-console/template/README.md` for a full example runbook (provisioning, SQL, seed, pipelines, deploy).
 - Read `plugins/content-entries.ts` for slug parity and uniqueness validation.

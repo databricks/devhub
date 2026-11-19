@@ -8,7 +8,7 @@ Use REST when the producer can't load an SDK, for example in an edge runtime, or
 
 Read the REST reference in the [`databricks-zerobus-ingest` skill](https://github.com/databricks/databricks-agent-skills/tree/main/skills/databricks-zerobus-ingest) before you write the producer. It has the token request and a sender example.
 
-1. Request a token. Send a `POST` to `<DATABRICKS_WORKSPACE_URL>/oidc/v1/token`, with HTTP Basic authentication that uses the client ID as the user name and the client secret as the password. Send the client credentials grant, `scope=all-apis`, and `resource=api://databricks/workspaces/<workspace-id>/zerobusDirectWriteApi`. Pass `authorization_details` with one `unity_catalog_privileges` entry for each of the catalog, the schema, and the table, as in the following request body:
+1. Request a token. Send a form-encoded (`application/x-www-form-urlencoded`) `POST` to `<DATABRICKS_WORKSPACE_URL>/oidc/v1/token`, with HTTP Basic authentication that uses the client ID as the user name and the client secret as the password. Send the client credentials grant, `scope=all-apis`, and `resource=api://databricks/workspaces/<workspace-id>/zerobusDirectWriteApi`. Pass `authorization_details` with one `unity_catalog_privileges` entry for each of the catalog, the schema, and the table, as in the following request body:
 
    ```json
    [

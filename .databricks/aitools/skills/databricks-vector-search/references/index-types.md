@@ -1,4 +1,4 @@
-# Vector Search Index Types
+# AI Search Index Types
 
 ## Comparison Matrix
 
@@ -8,6 +8,7 @@
 | **Sync** | Auto from Delta | Auto from Delta | Manual CRUD |
 | **Setup** | Easiest | Medium | Most control |
 | **Source** | Delta table + text | Delta table + vectors | API calls |
+| **Endpoints** | Standard, Storage-Optimized | Standard, Storage-Optimized | Standard only |
 | **Best for** | Quick start, RAG | Custom models | Real-time apps |
 
 ## Delta Sync with Managed Embeddings
@@ -19,31 +20,25 @@ Databricks automatically computes embeddings from your text column.
 - Source Delta table with:
   - Primary key column (unique identifier)
   - Text column (content to embed)
+  - Change Data Feed enabled, for Standard endpoints: `ALTER TABLE ... SET TBLPROPERTIES (delta.enableChangeDataFeed = true)`
 - Embedding model endpoint (or use built-in)
 
 ### Create Index
 
 ```python
-from databricks.sdk import WorkspaceClient
+from databricks.ai_search.client import AISearchClient
 
-w = WorkspaceClient()
+client = AISearchClient()
 
-index = w.vector_search_indexes.create_index(
-    name="catalog.schema.docs_index",
+index = client.create_delta_sync_index(
     endpoint_name="my-vs-endpoint",
+    source_table_name="catalog.schema.documents",
+    index_name="catalog.schema.docs_index",
+    pipeline_type="TRIGGERED",  # or "CONTINUOUS" (Standard only)
     primary_key="doc_id",
-    index_type="DELTA_SYNC",
-    delta_sync_index_spec={
-        "source_table": "catalog.schema.documents",
-        "embedding_source_columns": [
-            {
-                "name": "content",
-                "embedding_model_endpoint_name": "databricks-gte-large-en"
-            }
-        ],
-        "pipeline_type": "TRIGGERED",  # or "CONTINUOUS"
-        "columns_to_sync": ["doc_id", "content", "title", "category"]
-    }
+    embedding_source_column="content",
+    embedding_model_endpoint_name="databricks-gte-large-en",
+    columns_to_sync=["doc_id", "content", "title", "category"]  # See the Storage-Optimized note in SKILL.md
 )
 ```
 
@@ -51,8 +46,8 @@ index = w.vector_search_indexes.create_index(
 
 | Type | Behavior | Cost | Use Case |
 |------|----------|------|----------|
-| `TRIGGERED` | Manual sync via API | Lower | Batch updates |
-| `CONTINUOUS` | Auto-sync on changes | Higher | Real-time sync |
+| `TRIGGERED` | Manual sync via `index.sync()` | Lower | Batch updates; the only option on Storage-Optimized |
+| `CONTINUOUS` | Auto-sync on changes | Higher | Real-time sync (Standard only) |
 
 ### Source Table Example
 
@@ -63,7 +58,7 @@ CREATE TABLE catalog.schema.documents (
     content STRING,  -- Text to embed
     category STRING,
     created_at TIMESTAMP
-);
+) TBLPROPERTIES (delta.enableChangeDataFeed = true);
 ```
 
 ## Delta Sync with Self-Managed Embeddings
@@ -75,25 +70,19 @@ You pre-compute embeddings and store them in the source table.
 - Source Delta table with:
   - Primary key column
   - Embedding vector column (array of floats)
+  - Change Data Feed enabled, for Standard endpoints: `ALTER TABLE ... SET TBLPROPERTIES (delta.enableChangeDataFeed = true)`
 
 ### Create Index
 
 ```python
-index = w.vector_search_indexes.create_index(
-    name="catalog.schema.custom_index",
+index = client.create_delta_sync_index(
     endpoint_name="my-vs-endpoint",
-    primary_key="id",
-    index_type="DELTA_SYNC",
-    delta_sync_index_spec={
-        "source_table": "catalog.schema.embedded_docs",
-        "embedding_vector_columns": [
-            {
-                "name": "embedding",
-                "embedding_dimension": 768
-            }
-        ],
-        "pipeline_type": "TRIGGERED"
-    }
+    source_table_name="catalog.schema.embedded_docs",
+    index_name="catalog.schema.custom_index",
+    pipeline_type="TRIGGERED",
+    primary_key="doc_id",
+    embedding_dimension=1024,  # databricks-gte-large-en output size
+    embedding_vector_column="embedding"
 )
 ```
 
@@ -102,11 +91,11 @@ index = w.vector_search_indexes.create_index(
 ```python
 from databricks.sdk import WorkspaceClient
 import pandas as pd
+from pyspark.sql.functions import col
 
 w = WorkspaceClient()
 
 def get_embeddings(texts: list[str]) -> list[list[float]]:
-    """Call embedding endpoint for texts."""
     response = w.serving_endpoints.query(
         name="databricks-gte-large-en",
         input=texts
@@ -117,26 +106,30 @@ def get_embeddings(texts: list[str]) -> list[list[float]]:
 df = spark.table("catalog.schema.documents").toPandas()
 df["embedding"] = get_embeddings(df["content"].tolist())
 
-# Write back to Delta
-spark.createDataFrame(df).write.mode("overwrite").saveAsTable(
-    "catalog.schema.embedded_docs"
-)
+# Write back to Delta; Spark infers Python float lists as array<double>, so cast to match the table's ARRAY<FLOAT>
+spark.createDataFrame(df).withColumn("embedding", col("embedding").cast("array<float>")).write.mode(
+    "overwrite"
+).saveAsTable("catalog.schema.embedded_docs")
+# Standard endpoints need Change Data Feed on the source table
+spark.sql("ALTER TABLE catalog.schema.embedded_docs SET TBLPROPERTIES (delta.enableChangeDataFeed = true)")
 ```
 
 ### Source Table Example
 
 ```sql
 CREATE TABLE catalog.schema.embedded_docs (
-    id STRING,
+    doc_id STRING,
+    title STRING,
     content STRING,
-    embedding ARRAY<FLOAT>,  -- Pre-computed embedding
-    metadata STRING
-);
+    category STRING,
+    created_at TIMESTAMP,
+    embedding ARRAY<FLOAT>  -- Pre-computed embedding
+) TBLPROPERTIES (delta.enableChangeDataFeed = true);
 ```
 
 ## Direct Access Index
 
-Full control over vector data via CRUD API. No Delta table sync.
+Full control over vector data via CRUD API. No Delta table sync. Standard endpoints only; Storage-Optimized rejects `DIRECT_ACCESS`.
 
 ### Requirements
 
@@ -146,24 +139,22 @@ Full control over vector data via CRUD API. No Delta table sync.
 ### Create Index
 
 ```python
-import json
+from databricks.ai_search.client import AISearchClient
 
-index = w.vector_search_indexes.create_index(
-    name="catalog.schema.realtime_index",
+client = AISearchClient()
+
+index = client.create_direct_access_index(
     endpoint_name="my-vs-endpoint",
+    index_name="catalog.schema.realtime_index",
     primary_key="id",
-    index_type="DIRECT_ACCESS",
-    direct_access_index_spec={
-        "embedding_vector_columns": [
-            {"name": "embedding", "embedding_dimension": 768}
-        ],
-        "schema_json": json.dumps({
-            "id": "string",
-            "text": "string",
-            "embedding": "array<float>",
-            "category": "string",
-            "score": "float"
-        })
+    embedding_dimension=768,
+    embedding_vector_column="embedding",
+    schema={
+        "id": "string",
+        "text": "string",
+        "embedding": "array<float>",
+        "category": "string",
+        "score": "float"
     }
 )
 ```
@@ -171,57 +162,44 @@ index = w.vector_search_indexes.create_index(
 ### Upsert Data
 
 ```python
-import json
-
 # Insert or update vectors
-w.vector_search_indexes.upsert_data_vector_index(
-    index_name="catalog.schema.realtime_index",
-    inputs_json=json.dumps([
-        {
-            "id": "doc-001",
-            "text": "Machine learning basics",
-            "embedding": [0.1, 0.2, 0.3, ...],  # 768 floats
-            "category": "ml",
-            "score": 0.95
-        },
-        {
-            "id": "doc-002",
-            "text": "Deep learning overview",
-            "embedding": [0.4, 0.5, 0.6, ...],
-            "category": "dl",
-            "score": 0.88
-        }
-    ])
-)
+index.upsert([
+    {
+        "id": "doc-001",
+        "text": "Machine learning basics",
+        "embedding": [0.1, 0.2, 0.3, ...],  # 768 floats
+        "category": "ml",
+        "score": 0.95
+    },
+    {
+        "id": "doc-002",
+        "text": "Deep learning overview",
+        "embedding": [0.4, 0.5, 0.6, ...],
+        "category": "dl",
+        "score": 0.88
+    }
+])
 ```
 
 ### Delete Data
 
 ```python
-w.vector_search_indexes.delete_data_vector_index(
-    index_name="catalog.schema.realtime_index",
-    primary_keys=["doc-001", "doc-002"]
-)
+index.delete(primary_keys=["doc-001", "doc-002"])
 ```
 
 ### Attach Embedding Model (Optional)
 
-For Direct Access with text queries:
+For Direct Access indexes that need to support `query_text` (rather than `query_vector`), specify an embedding model at creation time:
 
 ```python
-# Create index with embedding model for query-time embedding
-index = w.vector_search_indexes.create_index(
-    name="catalog.schema.hybrid_index",
+index = client.create_direct_access_index(
     endpoint_name="my-vs-endpoint",
+    index_name="catalog.schema.hybrid_index",
     primary_key="id",
-    index_type="DIRECT_ACCESS",
-    direct_access_index_spec={
-        "embedding_vector_columns": [
-            {"name": "embedding", "embedding_dimension": 768}
-        ],
-        "embedding_model_endpoint_name": "databricks-gte-large-en",  # For query_text
-        "schema_json": json.dumps({...})
-    }
+    embedding_dimension=1024,  # must match the attached model's output
+    embedding_vector_column="embedding",
+    embedding_model_endpoint_name="databricks-gte-large-en",  # Enables query_text
+    schema={...}
 )
 ```
 
@@ -233,12 +211,12 @@ Start here:
 ├─ Do you have pre-computed embeddings?
 │   ├─ Yes → Do you want auto-sync from Delta?
 │   │         ├─ Yes → Delta Sync (Self-Managed)
-│   │         └─ No  → Direct Access
+│   │         └─ No  → Direct Access (Standard endpoint)
 │   │
 │   └─ No → Delta Sync (Managed Embeddings)
 │
 └─ Do you need real-time updates (<1 sec)?
-    ├─ Yes → Direct Access
+    ├─ Yes → Direct Access (Standard endpoint)
     └─ No  → Delta Sync (any type)
 ```
 
@@ -248,7 +226,8 @@ After choosing index type, choose endpoint:
 
 | Scenario | Endpoint Type |
 |----------|---------------|
-| Need <100ms latency | Standard |
-| >100M vectors | Storage-Optimized |
+| Need <100ms latency or high QPS | Standard |
+| Direct Access or CONTINUOUS sync | Standard |
+| 10M+ vectors, latency-tolerant | Storage-Optimized |
 | Cost-sensitive | Storage-Optimized |
-| Default choice | Storage-Optimized |
+| Default choice, if none of the Standard-only needs apply | Storage-Optimized |

@@ -6,6 +6,8 @@ Lakebase synced tables sync data from Unity Catalog Delta tables into Lakebase a
 
 **How it works:** Synced tables create a managed copy — a Unity Catalog table (read-only, managed by sync pipeline) and a Postgres table in Lakebase (queryable by apps). Uses managed Lakeflow Spark Declarative Pipelines.
 
+> **PHI:** apply the [HIPAA gate](../SKILL.md#hipaa-gate-phi) before you sync PHI. Unity Catalog row filters and column masks are not copied to Postgres (see [Constraints](#constraints)), so the Postgres copy needs its own grants.
+
 **Performance (per Autoscaling CU):**
 - Continuous/Triggered: ~150 rows/sec per CU
 - Snapshot: ~2,000 rows/sec per CU
@@ -90,7 +92,7 @@ databricks postgres delete-synced-table "synced_tables/<UC_CATALOG>.<SCHEMA>.<TA
 
 Deletes the sync pipeline and the UC table entry. The Postgres table remains and must be dropped manually if no longer needed (`DROP TABLE <schema>.<table>`).
 
-> **DABs:** The bundle schema includes `synced_database_tables`, but it maps to a deprecated Terraform resource (`databricks_database_synced_database_table`) that fails on current Lakebase. **Do not use `synced_database_tables` in DABs.** DAB support via `postgres_synced_tables` is blocked on Terraform provider work and not yet available — use the CLI commands above instead.
+> **DABs:** The bundle schema includes `synced_database_tables`, but it maps to a deprecated Terraform resource (`databricks_database_synced_database_table`) that fails on current Lakebase. **Do not use `synced_database_tables` in DABs.** For DABs, use the `postgres_synced_tables` resource (Beta, CLI v1.0.0 or later; see [bundle resources](https://docs.databricks.com/dev-tools/bundles/resources#postgres_synced_tables)), or use the CLI commands above.
 
 ## Example: Sync NYC Taxi Data to Lakebase
 
@@ -183,6 +185,8 @@ If a Databricks App reads synced tables, the app's Service Principal needs expli
 Reverse direction: continuously streams changes **from** Lakebase Postgres **into** Unity Catalog Delta tables using CDC (SCD Type 2 history). Destination tables are named `lb_<table_name>_history`. Does not require external compute, pipelines, or jobs — it is a native Lakebase feature. Available on AWS, Azure, and GCP.
 
 > **Important:** Tables must reside in the `databricks_postgres` database for Lakehouse Sync to work.
+
+> **PHI:** Lakehouse Sync is Beta. Before it carries PHI, confirm that **Lakebase CDF** is listed for your region in [Regional support for features](https://docs.databricks.com/aws/en/security/privacy/hipaa), and apply the [HIPAA gate](../SKILL.md#hipaa-gate-phi).
 
 **Lakehouse Sync enablement is programmable** (Beta) — `databricks postgres create-cdf-config` / `w.postgres.create_cdf_config`, or the "Lakehouse sync" tab in the branch overview. It operates at the **schema level**: one config syncs a whole Postgres schema, so all current and future tables in it sync to Unity Catalog. See [lakehouse-sync.md](lakehouse-sync.md) for the commands and gotchas.
 

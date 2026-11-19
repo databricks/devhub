@@ -747,15 +747,15 @@ Hive variable substitution (`SET hivevar:name = value` + `${hivevar:name}`) is n
 -- BEFORE (Classic) — uses Hive variable substitution
 SET hivevar:target_date = '2024-01-01';
 SET hivevar:min_amount = 100;
-SELECT * FROM transactions
-WHERE date >= '${hivevar:target_date}'
+SELECT * FROM transactions 
+WHERE date >= '${hivevar:target_date}' 
 AND amount > ${hivevar:min_amount};
 
 -- AFTER (Serverless) — uses SQL session variables (DBR 14.1+)
 DECLARE OR REPLACE VARIABLE target_date STRING = '2024-01-01';
 DECLARE OR REPLACE VARIABLE min_amount INT = 100;
-SELECT * FROM transactions
-WHERE date >= target_date
+SELECT * FROM transactions 
+WHERE date >= target_date 
 AND amount > min_amount;
 ```
 
@@ -776,9 +776,9 @@ result = spark.sql(f"SELECT * FROM transactions WHERE date >= '{target_date}'")
 - Serverless limitations: https://docs.databricks.com/en/compute/serverless/limitations
 - Spark Connect vs classic: https://docs.databricks.com/en/spark/connect-vs-classic
 - UC Volumes: https://docs.databricks.com/en/volumes/volume-files
-- UC external locations: https://docs.databricks.com/en/connect/unity-catalog/external-locations.html
+- UC external locations: https://docs.databricks.com/connect/unity-catalog/cloud-storage
 - UC upgrade guide: https://docs.databricks.com/en/data-governance/unity-catalog/upgrade/
 - Serverless dependencies: https://docs.databricks.com/en/compute/serverless/dependencies
 - Lakehouse Federation: https://docs.databricks.com/en/query-federation/
 - Query Profile: https://docs.databricks.com/en/sql/user/queries/query-profile.html
-- PySpark data sources: https://docs.databricks.com/en/pyspark/datasource.html
+- PySpark data sources: https://docs.databricks.com/pyspark/datasources

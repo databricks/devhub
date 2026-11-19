@@ -17,7 +17,7 @@ Zerobus suits **producer-to-lake pipelines** with one primary consumer. Migratio
 | Pathway | Code change | Throughput | Ordering | Status | Use when |
 |---------|-------------|-----------|----------|--------|----------|
 | **A: Repoint Kafka producers** to the Apache Kafka-compatible endpoint | Producer config + a token callback | Good; tune batching. Default Beta quota 50,000 messages/s per workspace | Kafka partition ordering doesn't carry over (the endpoint is one logical partition) | Beta | Producers use stock Kafka clients and send JSON |
-| **B: Move producers to a Zerobus SDK** | Replace the Kafka client with the SDK | Highest (gRPC, per-stream quotas) | Per stream | Every SDK ([SKILL.md](../SKILL.md#sdks-record-formats-and-working-examples)) | You control the producer code and want throughput, callbacks, and built-in recovery |
+| **B: Move producers to a Zerobus SDK** | Replace the Kafka client with the SDK | Highest (gRPC, per-stream quotas) | Per stream | Every SDK ([choose-an-interface.md](choose-an-interface.md#sdks-record-formats-and-working-examples)) | You control the producer code and want throughput, callbacks, and built-in recovery |
 | **C: Debezium Server** | Config only | High | Per stream | Debezium 3.7+ | CDC via Kafka |
 | **D: Keep Kafka** | - | - | - | - | Multi-consumer / stream processing |
 
@@ -42,7 +42,7 @@ Replace the Kafka client with the SDK for the producer's language: [python-sdk.m
 Use Debezium's built-in Zerobus sink: set `debezium.sink.type=zerobus` with the endpoint, workspace URL, and service principal credentials. Target a Unity Catalog Delta table (with CDC and column mapping disabled). Build current-state tables downstream with AUTO CDC in Lakeflow Spark Declarative Pipelines (see the `databricks-pipelines` skill).
 
 ### Path D: Keep Kafka
-Don't replace a multi-consumer bus. To land a lakehouse copy, have **Databricks read from Kafka**: Lakeflow Spark Declarative Pipelines with `read_kafka` (the `databricks-pipelines` skill), Spark Structured Streaming (the `databricks-spark-structured-streaming` skill), or the managed Kafka connector in Lakeflow Connect (the `databricks-lakeflow-connect` skill). Zerobus isn't involved on this path.
+Don't replace a multi-consumer bus. To land a lakehouse copy, have **Databricks read from Kafka**: Lakeflow Spark Declarative Pipelines with `read_kafka` (the `databricks-pipelines` skill), Spark Structured Streaming (the `databricks-spark-structured-streaming` skill), or the managed Kafka connector in Lakeflow Connect (the `databricks-lakeflow-connect-saas` skill). Zerobus isn't involved on this path.
 
 ## 3. Pre-Migration Inventory
 

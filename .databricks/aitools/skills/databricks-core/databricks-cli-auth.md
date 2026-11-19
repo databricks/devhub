@@ -13,6 +13,15 @@ Configure Databricks CLI workspace/profile selection and authentication. Covers 
 2. You need access to a Databricks workspace
 3. You need the workspace URL (e.g., `https://adb-1111111111111111.10.azuredatabricks.net`)
 
+## No Workspace Yet?
+
+1. Start a free trial at [databricks.com/signup/express](https://www.databricks.com/signup/express?provider=DB&dbx_source=agent-skills&dbxSource=agent-skills&utm_source=agent-skills&utm_campaign=cli-auth)
+2. Once your workspace is ready, authenticate with it:
+   ```bash
+   databricks auth login --host <new workspace URL> --profile <profile-name>
+   ```
+3. Startups can apply for credits at [Databricks for Startups](https://www.databricks.com/product/startups)
+
 ## Claude Code Specific Behavior
 
 **CRITICAL**: When working in Claude Code, each Bash command executes in a **separate shell session**. This has important implications for profile management:
@@ -523,5 +532,5 @@ databricks workspace export /Users/<username> --format SOURCE --profile <PROFILE
 
 ## References
 
-- [Databricks CLI Authentication Documentation](https://docs.databricks.com/en/dev-tools/auth.html)
-- [OAuth 2.0 with Databricks](https://docs.databricks.com/en/dev-tools/auth.html#oauth-2-0)
+- [Databricks CLI Authentication Documentation](https://docs.databricks.com/dev-tools/auth)
+- [Authorize user access to Databricks with OAuth](https://docs.databricks.com/dev-tools/auth/oauth-u2m)

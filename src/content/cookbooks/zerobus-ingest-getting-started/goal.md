@@ -4,7 +4,7 @@ Choose the producer first. Use the SDK path for a service or app that can load t
 
 ### How the steps fit together
 
-Work through the steps in the order below. Each one adds one piece, and by the end the rows are in your table.
+Work through the steps in the following order. Each one adds one piece, and by the end the rows are in your table.
 
 1. **Zerobus Ingest Target Table** — create the managed Delta table, with columns taken from a sample event. Zerobus Ingest never creates or changes the table for you. ([open the step](/templates/zerobus-target-table))
 2. **Zerobus Ingest Service Principal and Grants** — create the service principal, grant it privileges on the table before you hand over any credentials, and confirm a table-scoped token. ([open the step](/templates/zerobus-service-principal-and-grants))
@@ -25,6 +25,6 @@ Complete [Set Up Your Local Dev Environment](/templates/set-up-your-local-dev-en
 
 The agent asks before it creates a catalog, a schema, a table, a service principal, or a grant.
 
-Zerobus Ingest accepts only OAuth tokens for a service principal, which uses a client ID and a client secret. It doesn't document personal access tokens, so this template doesn't use them. The SDKs fetch and refresh tokens for you. A REST producer has to fetch and refresh its own token, which step 4 covers.
+Zerobus Ingest accepts OAuth tokens. This template uses a service principal with a client ID and a client secret. It doesn't document personal access tokens, so this template doesn't use them. The SDKs fetch and refresh tokens for you. A REST producer has to fetch and refresh its own token, which step 4 covers.
 
 For complete projects, see [zerobus-ingest-examples](https://github.com/databricks-solutions/zerobus-ingest-examples).

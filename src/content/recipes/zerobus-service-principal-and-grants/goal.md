@@ -4,7 +4,7 @@ When done, you will have:
 - Grants on the catalog, the schema, and the table, given directly to the service principal
 - A client secret stored as environment variables, and a token probe that confirms the table-scoped token works
 
-Zerobus Ingest authenticates producers with OAuth tokens for a service principal. It doesn't document personal access tokens, so every producer uses a service principal. Zerobus Ingest doesn't run grants for you, so set them before you give a producer the credentials. Set the grants on the table even when you created the table yourself.
+Zerobus Ingest accepts OAuth tokens. This template uses a service principal with a client ID and a client secret. Zerobus Ingest doesn't document personal access tokens. Zerobus Ingest doesn't run grants for you, so set them before you give a producer the credentials. Set the grants on the table even when you created the table yourself.
 
 1. Create the service principal. Ask the user before you create it. Create it without a secret for now, with `databricks service-principals create --display-name "zerobus-producer"`. Note the numeric `id` and the `applicationId` in the output. The `applicationId` is the application ID that the grants use.
 2. Enable the entitlement. In the workspace, go to **Settings** > **Identity and Access** > **Service principals**, open the service principal, and on the **Configurations** tab, make sure **Workspace access** is selected.

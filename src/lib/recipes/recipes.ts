@@ -379,6 +379,45 @@ export const recipes: Recipe[] = [
       "/img/guides/hackathon-app-with-synced-dataset-preview-dark.png",
     unlisted: true,
   },
+  {
+    id: "zerobus-target-table",
+    name: "Zerobus Ingest Target Table",
+    description:
+      "Create the Unity Catalog Delta table that a Zerobus Ingest producer writes to, with columns taken from a sample event.",
+    tags: ["Zerobus Ingest", "Delta Tables", "Unity Catalog", "Schema"],
+    services: ["Unity Catalog", "Data Lakehouse"],
+    isDraft: true,
+  },
+  {
+    id: "zerobus-service-principal-and-grants",
+    name: "Zerobus Ingest Service Principal and Grants",
+    description:
+      "Create a service principal, grant it privileges on the table, and confirm a table-scoped OAuth token before you give a producer its credentials.",
+    tags: ["Zerobus Ingest", "Service Principal", "OAuth", "Grants"],
+    services: ["Unity Catalog", "Data Lakehouse"],
+    prerequisites: ["zerobus-target-table"],
+    isDraft: true,
+  },
+  {
+    id: "zerobus-first-producer-sdk",
+    name: "Zerobus Ingest First Producer with the SDK",
+    description:
+      "Send records into a Zerobus Ingest table from Python or TypeScript with the SDK, using non-blocking ingest, acknowledgments, and a clean flush and close.",
+    tags: ["Zerobus Ingest", "Streaming", "SDK", "Python", "TypeScript"],
+    services: ["Data Lakehouse"],
+    prerequisites: ["zerobus-service-principal-and-grants"],
+    isDraft: true,
+  },
+  {
+    id: "zerobus-first-producer-rest",
+    name: "Zerobus Ingest First Producer over REST",
+    description:
+      "Send JSON records into a Zerobus Ingest table over REST, with a table-scoped OAuth token that the producer refreshes before it expires.",
+    tags: ["Zerobus Ingest", "Streaming", "REST", "OAuth"],
+    services: ["Data Lakehouse"],
+    prerequisites: ["zerobus-service-principal-and-grants"],
+    isDraft: true,
+  },
 ];
 
 const recipeIndex: Record<string, Recipe> = Object.fromEntries(
@@ -408,6 +447,10 @@ export const recipesInOrder: Recipe[] = [
   "lakebase-drizzle-off-platform",
   "volume-file-upload",
   "hackathon-app-with-synced-dataset",
+  "zerobus-target-table",
+  "zerobus-service-principal-and-grants",
+  "zerobus-first-producer-sdk",
+  "zerobus-first-producer-rest",
 ].map((recipeId) => {
   const recipe = recipeIndex[recipeId];
   if (!recipe) {
@@ -521,6 +564,19 @@ export const cookbooks: Cookbook[] = [
       "/img/guides/operational-data-analytics-preview-light.png",
     previewImageDarkUrl:
       "/img/guides/operational-data-analytics-preview-dark.png",
+  }),
+  createCookbook({
+    id: "zerobus-ingest-getting-started",
+    name: "Get Started with Zerobus Ingest",
+    description:
+      "This template takes you from a workspace to records in a Zerobus Ingest table: the target table, a service principal with grants, an SDK or REST producer, and a row check.",
+    recipeIds: [
+      "zerobus-target-table",
+      "zerobus-service-principal-and-grants",
+      "zerobus-first-producer-sdk",
+      "zerobus-first-producer-rest",
+    ],
+    isDraft: true,
   }),
 ];
 

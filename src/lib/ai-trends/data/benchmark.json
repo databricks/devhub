@@ -10,8 +10,8 @@
     {
       "name": "Beam-501B-A23B (claude code)",
       "vendor": "Reflection AI",
-      "harness": "Claude Code",
       "color": "#1e3207",
+      "harness": "Claude Code",
       "quality": 77.7,
       "cost": 0.419,
       "avg_turns": 66.3,
@@ -20,8 +20,8 @@
     {
       "name": "Claude Fable 5.1 (claude code)",
       "vendor": "Anthropic",
-      "harness": "Claude Code",
       "color": "#d97757",
+      "harness": "Claude Code",
       "quality": 96,
       "cost": 7.471,
       "avg_turns": 15.7,
@@ -30,8 +30,8 @@
     {
       "name": "Claude Fable 5.2 (claude code)",
       "vendor": "Anthropic",
-      "harness": "Claude Code",
       "color": "#d97757",
+      "harness": "Claude Code",
       "quality": 92.6,
       "cost": 5.693,
       "avg_turns": 43.2,
@@ -40,8 +40,8 @@
     {
       "name": "Claude Haiku 5.5 (claude code)",
       "vendor": "Anthropic",
-      "harness": "Claude Code",
       "color": "#d97757",
+      "harness": "Claude Code",
       "quality": 85.1,
       "cost": 0.158,
       "avg_turns": 31.4,
@@ -50,8 +50,8 @@
     {
       "name": "Claude Opus 5.5 (codex)",
       "vendor": "Anthropic",
-      "harness": "Codex",
       "color": "#d97757",
+      "harness": "Codex",
       "quality": 90.9,
       "cost": 0.958,
       "avg_turns": 20.7,
@@ -60,8 +60,8 @@
     {
       "name": "Claude Sonnet 5.5 (codex)",
       "vendor": "Anthropic",
-      "harness": "Codex",
       "color": "#d97757",
+      "harness": "Codex",
       "quality": 92.6,
       "cost": 0.45,
       "avg_turns": 18,
@@ -70,8 +70,8 @@
     {
       "name": "DeepSeek V4.1 Flash 1017 (codex)",
       "vendor": "DeepSeek",
-      "harness": "Codex",
       "color": "#6e56f7",
+      "harness": "Codex",
       "quality": 93.1,
       "cost": 1.021,
       "avg_turns": 65.1,
@@ -80,8 +80,8 @@
     {
       "name": "Gemini 3.8 Flash (codex)",
       "vendor": "Google",
-      "harness": "Codex",
       "color": "#4285f4",
+      "harness": "Codex",
       "quality": 82.9,
       "cost": 11.968,
       "avg_turns": 140.2,
@@ -90,8 +90,8 @@
     {
       "name": "Gemini 4 carbon (claude code)",
       "vendor": "Google",
-      "harness": "Claude Code",
       "color": "#4285f4",
+      "harness": "Claude Code",
       "quality": 90.3,
       "cost": 1.903,
       "avg_turns": 62,
@@ -100,8 +100,8 @@
     {
       "name": "Gemini 4 Hydrogen (codex)",
       "vendor": "Google",
-      "harness": "Codex",
       "color": "#4285f4",
+      "harness": "Codex",
       "quality": 90.9,
       "cost": 1.266,
       "avg_turns": 35.9,
@@ -110,8 +110,8 @@
     {
       "name": "Gemini Argon 4 (codex)",
       "vendor": "Google",
-      "harness": "Codex",
       "color": "#4285f4",
+      "harness": "Codex",
       "quality": 85.7,
       "cost": 4.844,
       "avg_turns": 42.9,
@@ -120,8 +120,8 @@
     {
       "name": "GLM 5.3 (claude code)",
       "vendor": "Zhipu",
-      "harness": "Claude Code",
       "color": "#e87ba4",
+      "harness": "Claude Code",
       "quality": 93.1,
       "cost": 2.396,
       "avg_turns": 94.3,
@@ -130,8 +130,8 @@
     {
       "name": "GLM 5.3 Flash (claude code)",
       "vendor": "Zhipu",
-      "harness": "Claude Code",
       "color": "#e87ba4",
+      "harness": "Claude Code",
       "quality": 89.1,
       "cost": 0.178,
       "avg_turns": 68.9,
@@ -140,8 +140,8 @@
     {
       "name": "GPT 6 Luna (claude code)",
       "vendor": "OpenAI",
-      "harness": "Claude Code",
       "color": "#10a37f",
+      "harness": "Claude Code",
       "quality": 89.1,
       "cost": 0.053,
       "avg_turns": 37.1,
@@ -150,38 +150,38 @@
     {
       "name": "GPT 6.1 Terra (claude code)",
       "vendor": "OpenAI",
-      "harness": "Claude Code",
       "color": "#10a37f",
+      "harness": "Claude Code",
       "quality": 89.1,
       "cost": 0.12,
       "avg_turns": 15,
       "avg_latency_min": 5.3
     },
     {
-      "name": "GPT 6.2 Astra (codex)",
+      "name": "GPT 6.2 Astra (claude code)",
       "vendor": "OpenAI",
-      "harness": "Codex",
       "color": "#10a37f",
+      "harness": "Claude Code",
       "quality": 86.9,
-      "cost": 0.725,
-      "avg_turns": null,
-      "avg_latency_min": null
+      "cost": 0.417,
+      "avg_turns": 11.2,
+      "avg_latency_min": 4.3
     },
     {
       "name": "GPT 6.2 Sol (claude code)",
       "vendor": "OpenAI",
-      "harness": "Claude Code",
       "color": "#10a37f",
+      "harness": "Claude Code",
       "quality": 89.1,
       "cost": 0.132,
-      "avg_turns": null,
-      "avg_latency_min": null
+      "avg_turns": 13.1,
+      "avg_latency_min": 4.3
     },
     {
       "name": "Grok 4.7 (codex)",
       "vendor": "SpaceXSI",
-      "harness": "Codex",
       "color": "#000000",
+      "harness": "Codex",
       "quality": 82.3,
       "cost": 1.698,
       "avg_turns": 29.8,
@@ -190,8 +190,8 @@
     {
       "name": "Kimi K3.1 Pro (claude code)",
       "vendor": "Moonshot",
-      "harness": "Claude Code",
       "color": "#1c1c1c",
+      "harness": "Claude Code",
       "quality": 91.4,
       "cost": 0.974,
       "avg_turns": 27.7,
@@ -200,8 +200,8 @@
     {
       "name": "Muse Ember 1.0 (claude code)",
       "vendor": "Meta",
-      "harness": "Claude Code",
       "color": "#0866ff",
+      "harness": "Claude Code",
       "quality": 91.4,
       "cost": 0.038,
       "avg_turns": null,
@@ -210,8 +210,8 @@
     {
       "name": "Muse Spark Open (claude code)",
       "vendor": "Meta",
-      "harness": "Claude Code",
       "color": "#0866ff",
+      "harness": "Claude Code",
       "quality": 80.6,
       "cost": 0.424,
       "avg_turns": 19.7,
@@ -220,8 +220,8 @@
     {
       "name": "Muse Wonder (codex)",
       "vendor": "Meta",
-      "harness": "Codex",
       "color": "#0866ff",
+      "harness": "Codex",
       "quality": 94.9,
       "cost": 1.532,
       "avg_turns": 34.3,

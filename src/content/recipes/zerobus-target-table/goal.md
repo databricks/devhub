@@ -7,8 +7,15 @@ When done, you will have:
 Zerobus Ingest writes into a table that you create and own. It never changes the table schema on its own, and it rejects records with fields that don't match the table. The table is the contract for every producer, so design it before you write a producer.
 
 1. Confirm the catalog and schema. Check that both exist and that you can create tables in the schema. If either one is missing, ask the user before you create it.
-2. Design the columns from a sample event. Give each field a Delta type that Zerobus Ingest supports. The [supported data types](https://docs.databricks.com/ingestion/zerobus-concepts#type-support) list shows the mapping. Use `TIMESTAMP` for time fields. Producers send `TIMESTAMP` values as epoch microseconds, as numbers, not as strings.
-3. Create the table with the columns from step 2. A managed Delta table or a streaming table both work. Keep each field name exactly as the sample event spells it:
+2. Design the columns from a sample event. Use this sample event, or replace its fields with your own:
+
+   ```json
+   { "device_name": "sensor-01", "temp": 21, "event_time": 1795000000000000 }
+   ```
+
+   Give each field a Delta type that Zerobus Ingest supports. The [supported data types](https://docs.databricks.com/ingestion/zerobus-concepts#type-support) list shows the mapping. For this sample event, `device_name` is `STRING`, `temp` is `INT`, and `event_time` is `TIMESTAMP`. Producers send `TIMESTAMP` values as epoch microseconds, as numbers, not as strings.
+
+3. Create the table with the columns from step 2. Zerobus Ingest can write to both managed Delta tables and [streaming tables](https://docs.databricks.com/ingestion/zerobus-ingest#create-or-identify-the-target-table), which work the same way, with the same limits and quotas. Keep each field name exactly as the sample event spells it:
 
    ```sql
    CREATE TABLE <catalog>.<schema>.<table> (

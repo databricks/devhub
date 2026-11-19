@@ -31,3 +31,9 @@ export function buildTemplateItems(includeDrafts: boolean): TemplateItem[] {
 
   return [...cookbookItems, ...recipeItems, ...exampleItems];
 }
+
+export function filterZerobusTemplateItems(
+  items: TemplateItem[],
+): TemplateItem[] {
+  return items.filter((item) => item.data.services.includes("Zerobus Ingest"));
+}

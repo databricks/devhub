@@ -2,11 +2,15 @@ import type { ReactNode } from "react";
 
 import { getReplitTemplateIds } from "@/lib/content-markdown";
 import { absoluteSiteUrl, getMetadata } from "@/lib/get-metadata";
-import { buildTemplateItems } from "@/lib/templates/template-items";
+import {
+  buildTemplateItems,
+  filterZerobusTemplateItems,
+} from "@/lib/templates/template-items";
 import Footer from "@/components/footer";
 import CTA from "@/components/home/cta";
 import { Hero } from "@/components/templates/hero";
 import { TemplateItemsSection } from "@/components/templates/template-items-section";
+import { ZerobusTemplatesSection } from "@/components/templates/zerobus-templates-section";
 
 const pageUrl = absoluteSiteUrl("/templates");
 
@@ -42,6 +46,9 @@ export default function TemplatesPage(): ReactNode {
       <Hero />
       <div className="bg-[#f9f7f4] text-black">
         <div className="bg-orange h-12" aria-hidden="true" />
+        <ZerobusTemplatesSection
+          items={filterZerobusTemplateItems(templateItems)}
+        />
         <TemplateItemsSection
           items={templateItems}
           replitTemplateIds={replitTemplateIds}

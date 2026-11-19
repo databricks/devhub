@@ -9,6 +9,10 @@ import {
   type Recipe,
   type Service,
 } from "../src/lib/recipes/recipes";
+import {
+  buildTemplateItems,
+  filterZerobusTemplateItems,
+} from "../src/lib/templates/template-items";
 
 const lakebasePostgresRecipe: Recipe = {
   id: "lakebase-thing",
@@ -254,6 +258,14 @@ describe("filterTemplates against real recipe data", () => {
     for (const item of both) {
       expect(item.services).toContain("Databricks Apps");
       expect(item.services).toContain("Lakebase Postgres");
+    }
+  });
+
+  test("Zerobus Ingest section lists only Zerobus Ingest templates", () => {
+    const zerobusItems = filterZerobusTemplateItems(buildTemplateItems(true));
+    expect(zerobusItems.length).toBeGreaterThan(0);
+    for (const item of zerobusItems) {
+      expect(item.data.services).toContain("Zerobus Ingest");
     }
   });
 });

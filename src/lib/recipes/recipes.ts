@@ -7,6 +7,7 @@ export const SERVICES = [
   "Data Lakehouse",
   "Lakeflow Pipelines",
   "Unity Catalog",
+  "Zerobus Ingest",
 ] as const;
 
 export type Service = (typeof SERVICES)[number];
@@ -385,7 +386,7 @@ export const recipes: Recipe[] = [
     description:
       "Create the Unity Catalog Delta table that a Zerobus Ingest producer writes to, with columns taken from a sample event.",
     tags: ["Zerobus Ingest", "Delta Tables", "Unity Catalog", "Schema"],
-    services: ["Unity Catalog", "Data Lakehouse"],
+    services: ["Zerobus Ingest", "Unity Catalog", "Data Lakehouse"],
     isDraft: true,
   },
   {
@@ -394,7 +395,7 @@ export const recipes: Recipe[] = [
     description:
       "Create a service principal, grant it privileges on the table, and confirm a table-scoped OAuth token before you give a producer its credentials.",
     tags: ["Zerobus Ingest", "Service Principal", "OAuth", "Grants"],
-    services: ["Unity Catalog", "Data Lakehouse"],
+    services: ["Zerobus Ingest", "Unity Catalog", "Data Lakehouse"],
     prerequisites: ["zerobus-target-table"],
     isDraft: true,
   },
@@ -404,7 +405,7 @@ export const recipes: Recipe[] = [
     description:
       "Send records into a Zerobus Ingest table from Python or TypeScript with the SDK, using non-blocking ingest, acknowledgments, and a clean flush and close.",
     tags: ["Zerobus Ingest", "Streaming", "SDK", "Python", "TypeScript"],
-    services: ["Data Lakehouse"],
+    services: ["Zerobus Ingest", "Data Lakehouse"],
     prerequisites: ["zerobus-service-principal-and-grants"],
     isDraft: true,
   },
@@ -414,7 +415,7 @@ export const recipes: Recipe[] = [
     description:
       "Send JSON records into a Zerobus Ingest table over REST, with a table-scoped OAuth token that the producer refreshes before it expires.",
     tags: ["Zerobus Ingest", "Streaming", "REST", "OAuth"],
-    services: ["Data Lakehouse"],
+    services: ["Zerobus Ingest", "Data Lakehouse"],
     prerequisites: ["zerobus-service-principal-and-grants"],
     isDraft: true,
   },

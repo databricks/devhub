@@ -1,51 +1,42 @@
 import type { ReactNode } from "react";
 
-import { RichText } from "./rich-text";
-
-const TITLE_CLASS =
-  "font-heading text-foreground [&_strong]:text-db-lava text-2xl leading-tight font-medium tracking-[-0.02em] text-balance md:text-[1.75rem] [&_strong]:font-medium";
-
-/** A second title inside a section: same level and type as the section title, no rule or number. */
-export function SubsectionTitle({ title }: { title: string }): ReactNode {
-  return (
-    <h2 className={TITLE_CLASS}>
-      <RichText text={title} />
-    </h2>
-  );
-}
+import { SectionKicker } from "@/components/products/section-kicker";
 
 /**
- * Report-style section opener: a hairline rule, a numbered mono eyebrow, the
- * section title and an optional short intro. Every section on the page uses
- * it, so the numbering and rhythm stay consistent.
+ * Section opener in the same style as the /mvps section headings: a
+ * bracketed kicker, then the takeaway as the title, followed by a grey
+ * description of what the charts show. A follow-up block inside a section
+ * leaves out the kicker.
  */
 export function SectionHeading({
-  index,
   eyebrow,
   title,
+  description,
   intro,
 }: {
-  index: number;
-  eyebrow: string;
+  eyebrow?: string;
   title: string;
+  description?: string;
   intro?: string;
 }): ReactNode {
   return (
-    <div className="border-foreground/20 border-t pt-10">
-      <div className="flex flex-col gap-2">
-        <p className="text-foreground/65 font-mono text-[11px] tracking-[0.14em] uppercase">
-          <span className="text-db-lava">{String(index).padStart(2, "0")}</span>
-          <span aria-hidden="true" className="text-foreground/40 mx-2">
-            /
-          </span>
+    <div className="flex flex-col">
+      {eyebrow ? (
+        <SectionKicker className="text-grey-40 mb-4 md:mb-6">
           {eyebrow}
-        </p>
-        <h2 className={TITLE_CLASS}>
-          <RichText text={title} />
-        </h2>
-      </div>
+        </SectionKicker>
+      ) : null}
+      <h2 className="max-w-4xl text-2xl/tight font-normal tracking-[-0.04em] text-pretty text-black md:text-4xl/tight xl:text-[2.75rem]/[1.25]">
+        {title}
+        {description ? (
+          <>
+            {" "}
+            <span className="text-grey-40">{description}</span>
+          </>
+        ) : null}
+      </h2>
       {intro ? (
-        <p className="text-foreground/70 mt-3 max-w-2xl text-[15px] leading-relaxed text-pretty">
+        <p className="mt-4 max-w-2xl text-base/6 tracking-tight text-pretty text-black/80">
           {intro}
         </p>
       ) : null}

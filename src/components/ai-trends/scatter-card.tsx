@@ -13,7 +13,7 @@ const CANVAS_ID = "scatterChart";
 type ScatterCardProps = Omit<
   ComponentProps<typeof ScatterChart>,
   "selectedFamilies" | "onSelectedFamiliesChange"
-> & { title: string; updated: string; note?: string; shareVersion: string };
+> & { title: string; note?: string; shareVersion: string };
 
 /**
  * The scatter card owns the family filter so "Copy image" can copy the
@@ -21,7 +21,6 @@ type ScatterCardProps = Omit<
  */
 export function ScatterCard({
   title,
-  updated,
   note,
   shareVersion,
   ...chart
@@ -42,7 +41,6 @@ export function ScatterCard({
   return (
     <ChartCard
       title={title}
-      updated={updated}
       note={note}
       shareSlug="scatter"
       shareVersion={shareVersion}

@@ -26,15 +26,19 @@ import {
   type DatalabelsCtx,
 } from "./scatter-scale-utils";
 
-/** Logo markers are drawn at this size; hit testing uses half of it as radius. */
-const LOGO_SIZE = 24;
-const NARROW_LOGO_SIZE = 18;
-const LABEL_FONT_SIZE = 9.5;
+const POINT_RADIUS = 4.5;
+const FRONTIER_POINT_RADIUS = 6;
+const LABEL_FONT_SIZE = 10.5;
 const LABEL_OFFSET = 10;
 const LABEL_PADDING = 2;
 // Extra room around each label so near-touching labels aren't hidden as overlaps.
 const LABEL_GAP = 6;
-const LEADER_COLOR = "rgba(68,68,68,0.45)";
+const LEADER_COLOR = "rgba(11,32,38,0.35)";
+const FRONTIER_COLOR = "#ff3621";
+/** Provider logo drawn inside each frontier label, left of the name. */
+const LOGO_SIZE = 12;
+const LOGO_GAP = 4;
+const LOGO_ROOM = LOGO_SIZE + LOGO_GAP;
 
 type ScatterPoint = {
   x: number;
@@ -42,7 +46,18 @@ type ScatterPoint = {
   label: string;
   frontier: boolean;
   harness: string;
+  logo?: string;
   place?: LabelPlacement;
+};
+
+/** The bits of chartjs-plugin-datalabels' per-element state the logos read. */
+type DatalabelsElement = {
+  $datalabels?: {
+    $layout?: {
+      _visible: boolean;
+      _box: { _rect: { x: number; y: number; w: number; h: number } };
+    };
+  }[];
 };
 
 type HoveredModel = {
@@ -79,7 +94,6 @@ export function ScatterChart({
 }) {
   const [hovered, setHovered] = useState<HoveredModel | null>(null);
   const narrow = useIsNarrow();
-  const logoSize = narrow ? NARROW_LOGO_SIZE : LOGO_SIZE;
 
   const wrapperRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
@@ -107,42 +121,32 @@ export function ScatterChart({
         label: m.name,
         frontier: paretoSet.has(m.name),
         harness: m.harness,
+        logo: getVendorLogo(m.vendor),
       });
     });
 
     const datasets: object[] = [];
+    const isFrontier = (ctx: { raw: unknown }) =>
+      (ctx.raw as ScatterPoint).frontier;
     vendorMap.forEach(({ color, pts }, vendor) => {
-      const logoSrc = getVendorLogo(vendor);
-      let logo: HTMLImageElement | undefined;
-      if (logoSrc) {
-        logo = new Image(logoSize, logoSize);
-        // Redraw once the logo has loaded; until then the point is invisible.
-        logo.onload = () => chartRef.current?.draw();
-        logo.src = logoSrc;
-      }
       datasets.push({
         label: vendor,
         type: "scatter",
-        backgroundColor: (ctx: { raw: unknown }) => {
-          const pt = ctx.raw as ScatterPoint;
-          return pt.frontier ? color : `${color}BB`;
-        },
+        backgroundColor: (ctx: { raw: unknown }) =>
+          isFrontier(ctx) ? color : `${color}8C`,
         ...SCATTER_POINT_STYLES,
-        ...(logo
-          ? {
-              pointStyle: logo,
-              pointRadius: logoSize / 2,
-              pointHoverRadius: logoSize / 2,
-            }
-          : {}),
+        pointRadius: (ctx: { raw: unknown }) =>
+          isFrontier(ctx) ? FRONTIER_POINT_RADIUS : POINT_RADIUS,
+        pointHoverRadius: (ctx: { raw: unknown }) =>
+          (isFrontier(ctx) ? FRONTIER_POINT_RADIUS : POINT_RADIUS) + 2,
         data: pts,
         datalabels: {
+          // Only frontier points carry a label; the rest show on hover.
           display: (ctx: DatalabelsCtx) => {
             const pt = ctx.dataset.data[ctx.dataIndex] as ScatterPoint;
-            if (narrow || pt.place?.hidden) return false;
-            return pt.frontier ? true : "auto";
+            return !narrow && pt.frontier && !pt.place?.hidden;
           },
-          color: "#444",
+          color: "#0b2026",
           font: { size: LABEL_FONT_SIZE, weight: "500" },
           formatter: (v: unknown) => (v as ScatterPoint).label,
           align: (ctx: DatalabelsCtx) =>
@@ -152,9 +156,17 @@ export function ScatterChart({
             (ctx.dataset.data[ctx.dataIndex] as ScatterPoint).place?.offset ??
             LABEL_OFFSET,
           clamp: true,
-          padding: LABEL_PADDING,
-          backgroundColor: "rgba(255,255,255,0.88)",
-          borderRadius: 3,
+          padding: (ctx: DatalabelsCtx) => ({
+            top: LABEL_PADDING,
+            bottom: LABEL_PADDING,
+            right: LABEL_PADDING,
+            left:
+              LABEL_PADDING +
+              ((ctx.dataset.data[ctx.dataIndex] as ScatterPoint).logo
+                ? LOGO_ROOM
+                : 0),
+          }),
+          backgroundColor: "rgba(255,255,255,0.9)",
         },
       });
     });
@@ -163,26 +175,25 @@ export function ScatterChart({
       .filter((m) => paretoSet.has(m.name))
       .sort((a, b) => a.cost - b.cost)
       .map((m) => ({ x: m.cost, y: m.quality }));
+    // Past the best model nothing improves, so the frontier runs flat to the edge.
+    const best = frontierPts.at(-1);
+    if (best) frontierPts.push({ x: xMax, y: best.y });
 
     datasets.push({
       label: "Pareto frontier",
       type: "line",
-      // Highest order draws first, so the line sits beneath every logo.
+      // Highest order draws first, so the line sits beneath every point.
       order: 1,
       data: frontierPts,
-      borderColor: "#171715",
-      borderDash: [9, 5],
-      borderWidth: 2.5,
+      borderColor: FRONTIER_COLOR,
+      borderWidth: 2,
       pointRadius: 0,
-      backgroundColor: "transparent",
+      fill: false,
       showLine: true,
       datalabels: { display: false },
     });
 
-    // Logos are line art with transparent gaps; a white disc behind each one
-    // keeps the frontier line from showing through, so every logo reads as
-    // sitting on top of the line.
-    // Before labels are laid out, give each one a side where it fits.
+    // Before labels are laid out, give each frontier label a side where it fits.
     const labelPlacementPlugin = {
       id: "labelPlacement",
       afterLayout(chart: Chart) {
@@ -193,16 +204,21 @@ export function ScatterChart({
         const points = chart.data.datasets.flatMap((ds, di) =>
           ds.label === "Pareto frontier" || !chart.isDatasetVisible(di)
             ? []
-            : (ds.data as ScatterPoint[]),
+            : (ds.data as ScatterPoint[]).filter((pt) => pt.frontier),
         );
         const placements = placeLabels(
           points.map((pt) => ({
             x: scales.x.getPixelForValue(pt.x),
             y: scales.y.getPixelForValue(pt.y),
             width:
-              ctx.measureText(pt.label).width + LABEL_PADDING * 2 + LABEL_GAP,
+              ctx.measureText(pt.label).width +
+              LABEL_PADDING * 2 +
+              LABEL_GAP +
+              // Datalabels keeps the text centred and grows the box leftwards,
+              // so reserve the logo's room on both sides.
+              (pt.logo ? LOGO_ROOM * 2 : 0),
             height: LABEL_FONT_SIZE * 1.2 + LABEL_PADDING * 2 + LABEL_GAP,
-            marker: logoSize,
+            marker: FRONTIER_POINT_RADIUS * 2,
             priority: (pt.frontier ? 1000 : 0) + pt.y,
             required: pt.frontier,
           })),
@@ -216,14 +232,14 @@ export function ScatterChart({
       },
     };
 
-    const logoBackdropPlugin = {
-      id: "logoBackdrop",
+    const leaderLinePlugin = {
+      id: "leaderLines",
       afterDatasetDraw(chart: Chart, args: { index: number }) {
         if (chart.data.datasets[args.index]?.label !== "Pareto frontier")
           return;
         const { ctx } = chart;
         ctx.save();
-        // Leader lines run from a pushed-out label to its logo, under the logos.
+        // Leader lines run from a pushed-out label to its point, under the points.
         ctx.strokeStyle = LEADER_COLOR;
         ctx.lineWidth = 1;
         chart.data.datasets.forEach((ds, di) => {
@@ -242,14 +258,44 @@ export function ScatterChart({
             ctx.stroke();
           });
         });
-        ctx.fillStyle = "#ffffff";
+        ctx.restore();
+      },
+    };
+
+    const logoImages = new Map<string, HTMLImageElement>();
+    const labelLogoPlugin = {
+      id: "labelLogos",
+      afterDatasetsDraw(chart: Chart) {
+        if (narrow) return;
+        const { ctx } = chart;
+        ctx.save();
         chart.data.datasets.forEach((ds, di) => {
           if (ds.label === "Pareto frontier" || !chart.isDatasetVisible(di))
             return;
-          chart.getDatasetMeta(di).data.forEach((pt) => {
-            ctx.beginPath();
-            ctx.arc(pt.x, pt.y, logoSize / 2 + 1, 0, Math.PI * 2);
-            ctx.fill();
+          const elements = chart.getDatasetMeta(di).data;
+          (ds.data as ScatterPoint[]).forEach((pt, pi) => {
+            const { logo } = pt;
+            if (!pt.frontier || !logo) return;
+            // The label's drawn frame, as chartjs-plugin-datalabels laid it out.
+            const layout = (elements[pi] as unknown as DatalabelsElement)
+              .$datalabels?.[0]?.$layout;
+            if (!layout?._visible) return;
+            let img = logoImages.get(logo);
+            if (!img) {
+              img = new Image(LOGO_SIZE, LOGO_SIZE);
+              img.onload = () => chart.draw();
+              img.src = logo;
+              logoImages.set(logo, img);
+            }
+            if (!img.complete) return;
+            const frame = layout._box._rect;
+            ctx.drawImage(
+              img,
+              frame.x + LABEL_PADDING,
+              frame.y + (frame.h - LOGO_SIZE) / 2,
+              LOGO_SIZE,
+              LOGO_SIZE,
+            );
           });
         });
         ctx.restore();
@@ -369,11 +415,12 @@ export function ScatterChart({
       plugins: [
         labelPlacementPlugin,
         ChartDataLabels,
-        logoBackdropPlugin,
+        labelLogoPlugin,
+        leaderLinePlugin,
         overlayPlugin,
       ],
     } as unknown as ChartConfiguration<"scatter">;
-  }, [models, paretoNames, axis, narrow, logoSize]);
+  }, [models, paretoNames, axis, narrow]);
 
   useEffect(() => {
     const chart = chartRef.current;
@@ -433,13 +480,15 @@ export function ScatterChart({
           <div
             role="tooltip"
             style={{ left: tooltipLeft, top: tooltipTop, width: 200 }}
-            className="pointer-events-none absolute z-10 rounded-lg bg-neutral-900 px-3 py-2 text-xs text-white shadow-lg"
+            className="pointer-events-none absolute z-10 bg-black px-3 py-2.5 text-xs/normal text-white"
           >
             <div className="font-semibold">{hovered.name}</div>
             <div>Harness: {hovered.harness}</div>
             <div>Cost/task: ${hovered.cost.toFixed(2)}</div>
             <div>Quality: {hovered.quality}%</div>
-            {hovered.frontier && <div>&#9733; Pareto frontier</div>}
+            {hovered.frontier && (
+              <div className="text-orange">On the frontier</div>
+            )}
           </div>
         )}
         <div

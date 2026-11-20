@@ -12,7 +12,6 @@ type ChartCopy = { title: string; description: string; note?: string };
 export function ShareSection({
   weeks,
   layers,
-  updated,
   token,
   wallet,
   slugs,
@@ -22,7 +21,6 @@ export function ShareSection({
 }: {
   weeks: string[];
   layers: StackLayer[];
-  updated: string;
   token: ChartCopy;
   wallet: ChartCopy;
   slugs: { token: string; wallet: string };
@@ -37,13 +35,12 @@ export function ShareSection({
   ] as const;
 
   return (
-    <div className="grid min-w-0 grid-cols-1 items-stretch gap-6 lg:grid-cols-2">
+    <div className="grid min-w-0 grid-cols-1 items-stretch gap-6 xl:grid-cols-2">
       {cards.map(({ metric, copy, yAxisTitle }) => (
         <ChartCard
           key={metric}
           className="h-full"
           title={copy.title}
-          updated={updated}
           placeholder={metric === "wallet" && walletPlaceholder}
           note={copy.note}
           shareSlug={slugs[metric]}

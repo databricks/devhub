@@ -202,12 +202,12 @@ export function ShareControl({
 
   return (
     <div className="relative flex items-center">
-      <div className="flex items-stretch overflow-hidden rounded-full border border-black/10 bg-white transition-colors hover:border-black/20">
+      <div className="flex h-7.5 items-stretch border border-black/20 text-black/60 transition-colors hover:border-black">
         <button
           type="button"
           onClick={shareOnX}
           aria-label="Share on X"
-          className="flex items-center gap-1.5 px-2.5 py-1 text-xs text-black/60 transition-colors hover:bg-black/5 hover:text-black"
+          className="flex items-center gap-2 pr-2.5 pl-3 font-mono text-sm leading-none font-medium tracking-normal uppercase transition-colors hover:text-black [&_svg]:size-3.5"
         >
           <XIcon />
           <span>Share</span>
@@ -219,7 +219,7 @@ export function ShareControl({
           aria-haspopup="menu"
           aria-expanded={open}
           aria-label="More share options"
-          className="flex items-center border-l border-black/10 px-2 text-black/50 transition-colors hover:bg-black/5 hover:text-black"
+          className="flex items-center border-l border-black/20 px-2 transition-colors hover:text-black aria-expanded:text-black [&_svg]:size-3.5"
         >
           <ChevronIcon />
         </button>
@@ -227,7 +227,7 @@ export function ShareControl({
       {feedback ? (
         <span
           role="status"
-          className="absolute top-full right-0 z-50 mt-1 rounded-lg border border-black/10 bg-white px-3 py-1.5 text-xs whitespace-nowrap text-black/70 shadow-md"
+          className="absolute top-full left-0 z-50 mt-2 border border-black bg-white px-3 py-2 font-mono text-xs/none font-medium whitespace-nowrap text-black uppercase sm:right-0 sm:left-auto"
         >
           {feedback}
         </span>
@@ -237,7 +237,7 @@ export function ShareControl({
           ref={menuRef}
           role="menu"
           onKeyDown={handleMenuKeyDown}
-          className="absolute top-full right-0 z-50 mt-1 min-w-[140px] rounded-lg border border-black/10 bg-white py-1 shadow-md"
+          className="absolute top-full left-0 z-50 mt-2 flex min-w-44 flex-col gap-4 border border-black bg-white p-4 sm:right-0 sm:left-auto"
         >
           <button
             type="button"
@@ -246,7 +246,7 @@ export function ShareControl({
               setOpen(false);
               shareOnLinkedIn();
             }}
-            className="flex w-full items-center gap-2 px-3 py-1.5 text-xs text-black/70 transition-colors hover:bg-black/5"
+            className="flex w-full items-center gap-2.5 font-mono text-sm leading-none font-medium tracking-normal text-black/60 uppercase transition-colors outline-none hover:text-black focus-visible:text-black [&_svg]:size-3.5"
           >
             <LinkedInIcon />
             LinkedIn
@@ -255,7 +255,7 @@ export function ShareControl({
             type="button"
             role="menuitem"
             onClick={handleCopyImage}
-            className="flex w-full items-center gap-2 px-3 py-1.5 text-xs text-black/70 transition-colors hover:bg-black/5"
+            className="flex w-full items-center gap-2.5 font-mono text-sm leading-none font-medium tracking-normal text-black/60 uppercase transition-colors outline-none hover:text-black focus-visible:text-black [&_svg]:size-3.5"
           >
             <CopyIcon />
             Copy image
@@ -264,7 +264,7 @@ export function ShareControl({
             type="button"
             role="menuitem"
             onClick={handleCopyLink}
-            className="flex w-full items-center gap-2 px-3 py-1.5 text-xs text-black/70 transition-colors hover:bg-black/5"
+            className="flex w-full items-center gap-2.5 font-mono text-sm leading-none font-medium tracking-normal text-black/60 uppercase transition-colors outline-none hover:text-black focus-visible:text-black [&_svg]:size-3.5"
           >
             <CopyIcon />
             Copy link

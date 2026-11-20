@@ -93,13 +93,11 @@ export function ShareAreaChart({
   );
 
   return (
-    <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:gap-5">
-      <div className="relative h-80 min-w-0 lg:flex-1">
+    <div className="flex flex-col gap-5">
+      <div className="relative h-80 min-w-0 lg:h-96">
         <canvas id={canvasId} ref={canvasRef} />
       </div>
-      <div className="shrink-0 lg:w-44 lg:border-l lg:border-black/10 lg:pl-4">
-        <ShareLegend groups={legend} />
-      </div>
+      <ShareLegend groups={legend} />
     </div>
   );
 }

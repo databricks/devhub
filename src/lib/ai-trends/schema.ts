@@ -169,6 +169,7 @@ const panelCopy = z.object({
 const sectionCopy = z.object({
   eyebrow: z.string().min(1),
   title: z.string().min(1),
+  description: z.string().optional(),
   intro: z.string(),
 });
 

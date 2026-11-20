@@ -39,8 +39,10 @@ export { default as ChartDataLabels } from "chartjs-plugin-datalabels";
 
 export const CHART_GRID = "#EBEBEB";
 export const CHART_MUTED = "#6B6B6B";
-/** Series color for single-series line charts (spend, open-weight share). */
-export const CHART_BLUE = "#2a78d6";
+/** Series color for single-series line charts (spend): DevHub orange. */
+export const CHART_SERIES = "#ff5f46";
+/** Muted navy wash under the spend line. */
+export const CHART_AREA_FILL = "rgba(11,32,38,0.05)";
 
 /** Axis title in the shared muted style; every chart axis on the page has one. */
 export function axisTitle(text: string) {

@@ -4,7 +4,6 @@ import type { ReactNode } from "react";
 import type { Chart, ChartConfiguration, Plugin } from "chart.js";
 
 import {
-  axisTitle,
   CHART_GRID,
   CHART_MUTED,
   ChartDataLabels,
@@ -14,6 +13,9 @@ import { useChart } from "@/lib/ai-trends/use-chart";
 import { getVendorLogo } from "@/lib/ai-trends/vendor-logos";
 
 const LOGO_SIZE = 18;
+const TICK_FONT_SIZE = 11;
+/** Room between a model name and its bar, where the logo sits. */
+const TICK_PADDING = LOGO_SIZE + 8;
 
 type Unit = "percent" | "minutes" | "usd";
 
@@ -83,7 +85,6 @@ function BarChartPanel({ panel }: { panel: BarPanel }): ReactNode {
           {
             data: bars.map(({ value }) => value),
             backgroundColor: bars.map(({ color }) => color),
-            borderRadius: 3,
             maxBarThickness: 18,
           },
         ],
@@ -119,35 +120,58 @@ function BarChartPanel({ panel }: { panel: BarPanel }): ReactNode {
           x: {
             beginAtZero: true,
             grid: { color: CHART_GRID },
-            title: axisTitle(axis),
             ticks: { font: { size: 10 }, color: CHART_MUTED, maxTicksLimit: 5 },
           },
           y: {
             grid: { display: false },
+            // The bars' own category gaps already clear the first and last
+            // names, so drop the extra room Chart.js reserves above and below.
+            afterFit(scale) {
+              scale.paddingTop = 0;
+              scale.paddingBottom = 0;
+              // Chart.js caps the axis width on narrow canvases and clips the
+              // names; keep it wide enough for the longest one in full.
+              const { ctx } = scale;
+              ctx.save();
+              ctx.font = `${TICK_FONT_SIZE}px ${getComputedStyle(scale.chart.canvas).fontFamily}`;
+              const widest = Math.max(
+                ...bars.flatMap(({ label }) =>
+                  [wrapLabel(label)]
+                    .flat()
+                    .map((line) => ctx.measureText(line).width),
+                ),
+              );
+              ctx.restore();
+              // Plus the 8px tick mark length Chart.js still reserves, and a margin.
+              scale.width = Math.max(scale.width, widest + TICK_PADDING + 12);
+            },
             ticks: {
-              padding: LOGO_SIZE + 8,
+              padding: TICK_PADDING,
               autoSkip: false,
-              font: { size: 11 },
+              font: { size: TICK_FONT_SIZE },
               color: CHART_MUTED,
             },
           },
         },
       },
     }),
-    [bars, unit, axis],
+    [bars, unit],
   );
 
   return (
-    <div className="flex min-w-0 flex-col gap-1 pt-5 first:pt-0 lg:pt-0 lg:pr-8 lg:last:pr-0">
-      <p className="font-heading text-lg font-medium tracking-[-0.01em] text-black">
+    <div className="flex min-w-0 flex-col gap-1 py-8 first:pt-0 last:pb-0 xl:py-0 xl:pr-8 xl:last:pr-0">
+      <p className="text-xl/snug font-normal tracking-tight text-black md:text-2xl/snug">
         {title}
       </p>
-      <p className="text-foreground/65 text-xs">{caption}</p>
-      <div className="relative mt-3 h-[360px]">
+      <p className="text-grey-40 text-sm tracking-tight">{caption}</p>
+      <div className="relative mt-3 h-[300px] xl:h-[360px]">
         <canvas id={canvasId} ref={canvasRef} />
       </div>
+      {/* In HTML, not on the canvas: Chart.js squeezes an axis title that is
+          wider than the plot, which it always is on a phone. */}
+      <p className="text-grey-40 text-center text-xs">{axis}</p>
       {missing.length > 0 ? (
-        <p className="text-xs text-black/60">
+        <p className="text-grey-40 text-sm tracking-tight">
           Not ranked, no timing data: {missing.join(", ")}.
         </p>
       ) : null}
@@ -157,7 +181,7 @@ function BarChartPanel({ panel }: { panel: BarPanel }): ReactNode {
 
 export function TopModelBars({ panels }: { panels: BarPanel[] }): ReactNode {
   return (
-    <div className="divide-foreground/10 grid grid-cols-1 gap-8 divide-y lg:grid-cols-3 lg:divide-x lg:divide-y-0">
+    <div className="divide-foreground/10 grid grid-cols-1 divide-y xl:grid-cols-3 xl:gap-8 xl:divide-x xl:divide-y-0">
       {panels.map((panel) => (
         <BarChartPanel key={panel.canvasId} panel={panel} />
       ))}

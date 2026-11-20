@@ -167,6 +167,28 @@ test.describe("all pages load without errors", () => {
   }
 });
 
+test("AI Index desktop contents continues keyboard navigation in the selected section", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto("/ai-index");
+
+  const benchmark = page.locator("#benchmark");
+  await expect(
+    benchmark.getByRole("button", { name: /cost \$.*, quality / }).first(),
+  ).toBeAttached();
+
+  const contents = page.getByRole("navigation", { name: "On this page" });
+  await contents.getByRole("link", { name: "Coding Frontier" }).focus();
+  await page.keyboard.press("Enter");
+  await expect(page).toHaveURL(/\/ai-index#benchmark$/);
+
+  await page.keyboard.press("Tab");
+  await expect(
+    benchmark.getByRole("button", { name: "Share on X" }),
+  ).toBeFocused();
+});
+
 test.describe("global visual parity", () => {
   test("uses production font rendering defaults", async ({ page }) => {
     await page.goto("/templates/ai-chat-app");

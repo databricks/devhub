@@ -1,2 +1,0 @@
-- **The tables and grants.** Complete [Create OpenTelemetry Tables](/templates/zerobus-otel-tables) and [Zerobus Ingest Service Principal and Grants](/templates/zerobus-service-principal-and-grants) first. Grant access before you give the tool any credentials.
-- **Access to the tool's config.** The tool's config file must be readable by the user the tool runs as, and you must be able to restart the tool.

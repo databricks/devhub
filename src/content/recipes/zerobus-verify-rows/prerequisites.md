@@ -1,2 +1,0 @@
-- **A producer that has sent records.** Complete [Zerobus Ingest First Producer with the SDK](/templates/zerobus-first-producer-sdk) or [Zerobus Ingest First Producer over REST](/templates/zerobus-first-producer-rest) first.
-- **SQL access.** A SQL warehouse or the SQL editor, for the `SELECT` query.

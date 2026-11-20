@@ -3,6 +3,7 @@ When done, you will have:
 - A producer that sends JSON records to a Zerobus Ingest table over REST
 - A table-scoped OAuth token that the producer requests again before it expires
 - A producer that gets a new token and retries once after an HTTP 401 response
+- A row count that rose by the number of records the producer sent
 
 Use REST when the producer can't load an SDK, for example in an edge runtime, or when the language has no SDK. REST accepts JSON only.
 
@@ -36,8 +37,21 @@ Read the REST reference in the [`databricks-zerobus-ingest` skill](https://githu
 
    The table entry must set `"operations": ["zerobuswrite"]`. The [REST example in the Zerobus Ingest docs](https://docs.databricks.com/ingestion/zerobus-ingest#write) shows the full request. Expected: the response contains an `access_token`.
 
-2. Send a test batch. Send a JSON array of records shaped like the sample event in the [target table step](/templates/zerobus-target-table) in a `POST` request to `<ZEROBUS_SERVER_ENDPOINT>/zerobus/v1/tables/<catalog>.<schema>.<table>/insert`. Set `Content-Type: application/json` and `Authorization: Bearer <token>`. Send `TIMESTAMP` fields as epoch microseconds, as numbers. Expected: HTTP 200 with an empty JSON object, `{}`.
+2. Send a test batch. Send a JSON array of records shaped like the table you created in the [setup recipe](/templates/zerobus-ingest-setup) in a `POST` request to `<ZEROBUS_SERVER_ENDPOINT>/zerobus/v1/tables/<catalog>.<schema>.<table>/insert`. Set `Content-Type: application/json` and `Authorization: Bearer <token>`. Send `TIMESTAMP` fields as epoch microseconds, as numbers. Expected: HTTP 200 with an empty JSON object, `{}`.
+
 3. Build the long-running sender. Cache the token. Request a new token five minutes before the current one expires, because tokens last about one hour. On an HTTP 401 response, request a new token and retry the request once. Send records in arrays rather than one request per record. The default limit is 10,000 REST requests per second.
-4. Handle rejected requests. An HTTP 400 response means a record or value doesn't fit the table, so fix the record or the table before you send it again. An HTTP 429 response means the request rate is over the limit, so batch records and slow down. Error 4024 means a grant is missing on the table itself, so run the grants step again.
+
+4. Handle rejected requests. An HTTP 400 response means a record or value doesn't fit the table, so fix the record or the table before you send it again. An HTTP 429 response means the request rate is over the limit, so batch records and slow down. Error 4024 means a grant is missing on the table itself, so run the grants step in the setup recipe again.
+
+5. Check the rows. Wait about 5 seconds after the producer's last send. Then run this query, with the table and timestamp column from the setup recipe:
+
+   ```sql
+   SELECT count(*) AS row_count, max(<timestamp-column>) AS latest
+   FROM <catalog>.<schema>.<table>;
+   ```
+
+   Expected: `row_count` rose by the number of records the producer sent, and `latest` is close to the send time. Records are durable within about 150 milliseconds and queryable within about 5 seconds, according to the [latency figures](https://docs.databricks.com/ingestion/zerobus-quotas#latency). An acknowledgment confirms durability, not that the rows are queryable.
+
+   If the count doesn't change, use the troubleshooting reference in the [`databricks-zerobus-ingest` skill](https://github.com/databricks/databricks-agent-skills/tree/main/skills/databricks-zerobus-ingest).
 
 Zerobus Ingest delivers at least once. A retry can resend records that already landed, so the table can hold duplicate rows. When duplicates matter, deduplicate on a key in the queries that read the table.

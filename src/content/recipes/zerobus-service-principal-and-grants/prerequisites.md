@@ -1,4 +1,0 @@
-- **A table to grant on.** Create it first with [Zerobus Ingest Target Table](/templates/zerobus-target-table).
-- **Permission to create service principals and grant privileges.** You need permission to create service principals in the workspace, and permission to grant privileges on the catalog, the schema, and the table.
-- **SQL access.** A SQL warehouse or the SQL editor, for the `GRANT` and `SHOW GRANTS` statements.
-- **Databricks CLI.** Installed and authenticated to the workspace, for the service principal and secret commands.

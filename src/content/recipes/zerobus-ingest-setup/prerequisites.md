@@ -1,0 +1,7 @@
+- **Set up your local dev environment.** Complete [Set Up Your Local Dev Environment](/templates/set-up-your-local-dev-environment) first.
+- **Unity Catalog catalog and schema.** You need a catalog and a schema where you can create tables, and permission to create service principals and grant privileges on the catalog, the schema, and the table.
+- **A region that supports Zerobus Ingest.** Run `databricks metastores summary` and check that its region appears in the [region list](https://docs.databricks.com/resources/feature-region-support#ingestion).
+- **A sample event, for your own table.** One example record, in JSON, with the field names and types that your producer will send.
+- **The tool and its signals, for the OpenTelemetry tables.** Know which OpenTelemetry-compatible tool you run, its version, and which signals it sends: traces, logs, or metrics. If you don't know the tool's name, find it in the tool's config file or running process. Don't guess it from the application's programming language.
+- **Databricks CLI.** Installed and authenticated to the workspace, for `databricks metastores summary`, the service principal commands, and the secret command.
+- **SQL access.** A SQL warehouse or the SQL editor, for the `CREATE TABLE`, `DESCRIBE TABLE`, `GRANT`, and `SHOW GRANTS` statements.

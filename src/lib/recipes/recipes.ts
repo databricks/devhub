@@ -380,71 +380,68 @@ export const recipes: Recipe[] = [
     unlisted: true,
   },
   {
-    id: "zerobus-target-table",
-    name: "Zerobus Ingest Target Table",
+    id: "zerobus-ingest-setup",
+    name: "Set Up Zerobus Ingest",
     description:
-      "Create the Unity Catalog Delta table that a Zerobus Ingest producer writes to, with columns taken from a sample event.",
-    tags: ["Zerobus Ingest", "Delta Tables", "Unity Catalog", "Schema"],
+      "Create a Zerobus Ingest target table, either your own from a sample event or the predefined OpenTelemetry tables, then set up a service principal with grants and confirm a table-scoped token before you give a producer its credentials.",
+    tags: [
+      "Zerobus Ingest",
+      "Delta Tables",
+      "Unity Catalog",
+      "Service Principal",
+      "OAuth",
+      "Grants",
+      "OpenTelemetry",
+    ],
     services: ["Unity Catalog", "Data Lakehouse"],
+    prerequisites: ["set-up-your-local-dev-environment"],
+    previewImageLightUrl: "/img/guides/zerobus-ingest-setup-preview-light.png",
+    previewImageDarkUrl: "/img/guides/zerobus-ingest-setup-preview-dark.png",
   },
   {
-    id: "zerobus-service-principal-and-grants",
-    name: "Zerobus Ingest Service Principal and Grants",
+    id: "zerobus-ingest-sdk-producer",
+    name: "Send Records with the Zerobus Ingest SDK",
     description:
-      "Create a service principal, grant it privileges on the table, and confirm a table-scoped OAuth token before you give a producer its credentials.",
-    tags: ["Zerobus Ingest", "Service Principal", "OAuth", "Grants"],
-    services: ["Unity Catalog", "Data Lakehouse"],
-    prerequisites: ["zerobus-target-table"],
-  },
-  {
-    id: "zerobus-first-producer-sdk",
-    name: "Zerobus Ingest First Producer with the SDK",
-    description:
-      "Send records into a Zerobus Ingest table from Python or TypeScript with the SDK, using non-blocking ingest, acknowledgments, and a clean flush and close.",
+      "Send records into a Zerobus Ingest table from Python or TypeScript with the SDK, using non-blocking ingest, acknowledgments, and a clean flush and close, then check that the rows landed.",
     tags: ["Zerobus Ingest", "Streaming", "SDK", "Python", "TypeScript"],
     services: ["Data Lakehouse"],
-    prerequisites: ["zerobus-service-principal-and-grants"],
+    prerequisites: ["zerobus-ingest-setup"],
+    previewImageLightUrl:
+      "/img/guides/zerobus-ingest-sdk-producer-preview-light.png",
+    previewImageDarkUrl:
+      "/img/guides/zerobus-ingest-sdk-producer-preview-dark.png",
   },
   {
-    id: "zerobus-first-producer-rest",
-    name: "Zerobus Ingest First Producer over REST",
+    id: "zerobus-ingest-rest-producer",
+    name: "Send Records with the Zerobus Ingest REST API",
     description:
-      "Send JSON records into a Zerobus Ingest table over REST, with a table-scoped OAuth token that the producer refreshes before it expires.",
+      "Send JSON records into a Zerobus Ingest table over REST, with a table-scoped OAuth token that the producer refreshes before it expires, then check that the rows landed.",
     tags: ["Zerobus Ingest", "Streaming", "REST", "OAuth"],
     services: ["Data Lakehouse"],
-    prerequisites: ["zerobus-service-principal-and-grants"],
+    prerequisites: ["zerobus-ingest-setup"],
+    previewImageLightUrl:
+      "/img/guides/zerobus-ingest-rest-producer-preview-light.png",
+    previewImageDarkUrl:
+      "/img/guides/zerobus-ingest-rest-producer-preview-dark.png",
   },
   {
-    id: "zerobus-verify-rows",
-    name: "Zerobus Ingest Verify Rows",
+    id: "zerobus-ingest-otel-export",
+    name: "Export OpenTelemetry Signals to Zerobus Ingest",
     description:
-      "Check that the rows a Zerobus Ingest producer sent landed in the target table, with a row count and latest timestamp.",
-    tags: ["Zerobus Ingest", "Delta Tables", "Unity Catalog", "Verification"],
-    services: ["Unity Catalog", "Data Lakehouse"],
-  },
-  {
-    id: "zerobus-otel-tables",
-    name: "Create OpenTelemetry Tables",
-    description:
-      "Create the three predefined OpenTelemetry tables in Unity Catalog that Zerobus Ingest writes traces, logs, and metrics to.",
-    tags: ["Zerobus Ingest", "OpenTelemetry", "Unity Catalog", "Delta"],
-    services: ["Unity Catalog", "Data Lakehouse"],
-  },
-  {
-    id: "zerobus-otel-exporter",
-    name: "Configure the OpenTelemetry Exporter for Zerobus Ingest",
-    description:
-      "Use a native Zerobus Ingest sink, or set up one OpenTelemetry exporter per signal with a table-scoped token that the tool refreshes before it expires.",
-    tags: ["Zerobus Ingest", "OpenTelemetry", "OAuth", "Exporter"],
+      "Send traces, logs, and metrics from an OpenTelemetry-compatible tool through its native Zerobus Ingest sink, or through one exporter per signal with a table-scoped token that the tool refreshes before it expires, then verify each signal's table.",
+    tags: [
+      "Zerobus Ingest",
+      "OpenTelemetry",
+      "OAuth",
+      "Exporter",
+      "Verification",
+    ],
     services: ["Data Lakehouse"],
-  },
-  {
-    id: "zerobus-otel-verify",
-    name: "Verify OpenTelemetry Rows",
-    description:
-      "Check that traces, logs, and metrics from an OpenTelemetry-compatible tool are landing in their Zerobus Ingest tables, one signal at a time.",
-    tags: ["Zerobus Ingest", "OpenTelemetry", "Unity Catalog", "Delta"],
-    services: ["Unity Catalog", "Data Lakehouse"],
+    prerequisites: ["zerobus-ingest-setup"],
+    previewImageLightUrl:
+      "/img/guides/zerobus-ingest-otel-export-preview-light.png",
+    previewImageDarkUrl:
+      "/img/guides/zerobus-ingest-otel-export-preview-dark.png",
   },
 ];
 
@@ -475,14 +472,10 @@ export const recipesInOrder: Recipe[] = [
   "lakebase-drizzle-off-platform",
   "volume-file-upload",
   "hackathon-app-with-synced-dataset",
-  "zerobus-target-table",
-  "zerobus-service-principal-and-grants",
-  "zerobus-first-producer-sdk",
-  "zerobus-first-producer-rest",
-  "zerobus-verify-rows",
-  "zerobus-otel-tables",
-  "zerobus-otel-exporter",
-  "zerobus-otel-verify",
+  "zerobus-ingest-setup",
+  "zerobus-ingest-sdk-producer",
+  "zerobus-ingest-rest-producer",
+  "zerobus-ingest-otel-export",
 ].map((recipeId) => {
   const recipe = recipeIndex[recipeId];
   if (!recipe) {
@@ -603,11 +596,9 @@ export const cookbooks: Cookbook[] = [
     description:
       "This template takes you from a workspace to records in a Zerobus Ingest table: the target table, a service principal with grants, an SDK or REST producer, and a row check.",
     recipeIds: [
-      "zerobus-target-table",
-      "zerobus-service-principal-and-grants",
-      "zerobus-first-producer-sdk",
-      "zerobus-first-producer-rest",
-      "zerobus-verify-rows",
+      "zerobus-ingest-setup",
+      "zerobus-ingest-sdk-producer",
+      "zerobus-ingest-rest-producer",
     ],
     previewImageLightUrl:
       "/img/guides/zerobus-ingest-getting-started-preview-light.png",
@@ -619,12 +610,7 @@ export const cookbooks: Cookbook[] = [
     name: "Send OpenTelemetry Data to Zerobus Ingest",
     description:
       "Send traces, logs, and metrics from the OpenTelemetry-compatible tool you already run to Delta tables with Zerobus Ingest, with no message bus in between.",
-    recipeIds: [
-      "zerobus-otel-tables",
-      "zerobus-service-principal-and-grants",
-      "zerobus-otel-exporter",
-      "zerobus-otel-verify",
-    ],
+    recipeIds: ["zerobus-ingest-setup", "zerobus-ingest-otel-export"],
     previewImageLightUrl:
       "/img/guides/zerobus-ingest-otel-collectors-preview-light.png",
     previewImageDarkUrl:

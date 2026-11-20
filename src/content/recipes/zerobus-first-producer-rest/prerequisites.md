@@ -1,2 +1,0 @@
-- **An HTTP client.** Use `curl` for the first test, or your language's HTTP library for the producer.
-- **A service principal and a table.** Complete [Zerobus Ingest Service Principal and Grants](/templates/zerobus-service-principal-and-grants) first, which also covers the table.

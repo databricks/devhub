@@ -2,8 +2,6 @@ Zerobus Ingest writes records straight into a Unity Catalog Delta table, with no
 
 ### Components
 
-1. **Zerobus Ingest Target Table** — create the managed Delta table, with columns taken from a sample event.
-2. **Zerobus Ingest Service Principal and Grants** — create a service principal, grant it privileges on the table, and confirm a table-scoped token before you give a producer its credentials.
-3. **Zerobus Ingest First Producer with the SDK** — send records from Python or TypeScript, with non-blocking ingest and acknowledgments.
-4. **Zerobus Ingest First Producer over REST** — send JSON records over REST, with a token that the producer refreshes before it expires.
-5. **Zerobus Ingest Verify Rows** — check the row count and latest timestamp in the table after the producer sends records.
+1. **Set Up Zerobus Ingest** — create the target table from a sample event, a service principal with grants, and a token check before you give a producer its credentials.
+2. **Send Records with the Zerobus Ingest SDK** — send records from Python or TypeScript, with non-blocking ingest and acknowledgments, then check the rows.
+3. **Send Records with the Zerobus Ingest REST API** — send JSON records over REST, with a token that the producer refreshes before it expires, then check the rows.

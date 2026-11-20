@@ -1,3 +1,0 @@
-- **The tool and its signals.** Know which OpenTelemetry-compatible tool you run, its version, and which signals it sends: traces, logs, or metrics. If you don't know the tool's name, find it in the tool's config file or running process. Don't guess it from the application's programming language.
-- **A SQL warehouse, and rights to create tables and a service principal in the target catalog.** Use a SQL warehouse or the SQL editor for the `CREATE TABLE` statements.
-- **The ability to restart the tool.** Confirm it with the user before you continue.

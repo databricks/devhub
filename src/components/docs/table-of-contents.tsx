@@ -8,7 +8,6 @@ import {
   type MouseEvent,
   type ReactNode,
 } from "react";
-import Link from "next/link";
 
 import { cn } from "@/lib/utils";
 
@@ -119,6 +118,17 @@ export function TableOfContents({
 
   const handleLinkClick = useCallback(
     (id: string) => (event: MouseEvent<HTMLAnchorElement>) => {
+      // Native fragment navigation advances keyboard focus into the section.
+      if (
+        event.detail === 0 ||
+        event.altKey ||
+        event.ctrlKey ||
+        event.metaKey ||
+        event.shiftKey
+      ) {
+        return;
+      }
+
       event.preventDefault();
       document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
       history.pushState(null, "", `#${id}`);
@@ -139,7 +149,7 @@ export function TableOfContents({
       <ol className="mt-3.5 flex list-none flex-col gap-y-3.5 p-0">
         {items.map(({ anchor, title }) => (
           <li className="flex min-w-0" key={anchor}>
-            <Link
+            <a
               className={cn(
                 "line-clamp-2 w-full min-w-0 text-sm leading-snug font-normal break-words no-underline",
                 currentAnchor === anchor

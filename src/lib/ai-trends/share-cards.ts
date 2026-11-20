@@ -19,6 +19,8 @@ export type ShareCard = {
   description: string;
   updated: string;
   placeholder?: boolean;
+  /** Bump when the PNG rendering changes independently of its inputs. */
+  imageRevision?: number;
 };
 
 const { charts } = contentData;
@@ -76,6 +78,7 @@ const CARDS: ShareCard[] = [
     title: charts.spend.title,
     description: charts.spend.description,
     updated: formatDate(industryData.spend.as_of),
+    imageRevision: 1,
   },
 ];
 
@@ -157,9 +160,8 @@ function hash(text: string): string {
 }
 
 /**
- * Changes whenever the card's copy, date, or chart data changes. X caches
- * link cards and their images by URL, so share links carry it as `?v=` to
- * get a fresh preview after a data update.
+ * Social platforms cache share pages and images by URL. The version covers
+ * the card's copy, date, chart data, and any explicit image revision.
  */
 export function getShareVersion(slug: string): string {
   const card = getShareCard(slug);

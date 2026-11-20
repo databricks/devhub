@@ -40,6 +40,10 @@ describe("AI Index share previews", () => {
     "utf-8",
   );
 
+  test("Spend uses a fresh URL for the redesigned image", () => {
+    expect(getShareVersion("spend")).not.toBe("8v72ji");
+  });
+
   test.each(getShareSlugs())("%s: share page has preview tags", (slug) => {
     const card = getShareCard(slug);
     const html = readFileSync(resolve(SHARE_DIR, `${slug}.html`), "utf-8");

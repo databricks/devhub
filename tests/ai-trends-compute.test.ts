@@ -279,6 +279,17 @@ describe("share stacking", () => {
 
   for (const key of ["proprietary", "open_source"] as const) {
     for (const metric of ["token", "wallet"] as const) {
+      test(`${key} ${metric} legend reads the stack top to bottom`, () => {
+        const layers = getMetricLayers(
+          getStackLayers(industryData.share.groups[key]),
+          metric,
+        );
+        const legendOrder = getLegendGroups(layers).flatMap((g) =>
+          g.items.map((i) => i.label),
+        );
+        expect(legendOrder).toEqual(layers.map((l) => l.label).reverse());
+      });
+
       test(`${key} ${metric} shares sum to ~100 each week`, () => {
         const layers = getStackLayers(industryData.share.groups[key]);
         industryData.share.weeks.forEach((_, i) => {

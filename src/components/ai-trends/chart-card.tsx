@@ -51,11 +51,6 @@ export function ChartCard({
             <h3 className="text-xl/snug font-normal tracking-tight text-pretty text-black md:text-2xl/snug">
               {title}
             </h3>
-            {note ? (
-              <p className="text-grey-40 mt-2 max-w-3xl text-sm/normal tracking-tight text-pretty">
-                {note}
-              </p>
-            ) : null}
           </div>
           {placeholder || shareSlug ? (
             <div className="flex shrink-0 items-center gap-2 sm:ml-auto">
@@ -82,6 +77,13 @@ export function ChartCard({
         </p>
       ) : null}
       <div className="min-w-0 flex-none">{children}</div>
+      {note ? (
+        <div className="pt-5 md:pt-6">
+          <p className="border-db-navy/15 text-grey-40 border-t pt-4 text-sm/normal tracking-tight text-pretty">
+            {note}
+          </p>
+        </div>
+      ) : null}
     </Card>
   );
 }

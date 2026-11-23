@@ -11,39 +11,33 @@
   "sections": {
     "proprietary": {
       "eyebrow": "Usage",
-      "title": "Anthropic leads, but OpenAI has more than doubled its token share.",
-      "description": "Token and wallet share by proprietary provider.",
+      "title": "Token and wallet share by proprietary provider",
       "intro": ""
     },
     "open_source": {
       "eyebrow": "Usage",
-      "title": "DeepSeek went from zero to over a quarter of open-weight tokens.",
-      "description": "Token and wallet share by open-weight provider.",
+      "title": "Token and wallet share by open-weight provider",
       "intro": ""
     },
     "long_term": {
       "eyebrow": "Multi-AI",
-      "title": "Enterprises run more than one model provider.",
-      "description": "How enterprises mix models over time.",
+      "title": "How enterprises mix models over time",
       "intro": ""
     },
     "spend": {
       "eyebrow": "Spend",
-      "title": "Heavy users spend hundreds of times more than the median user.",
-      "description": "What a user spends in a week.",
+      "title": "What a user spends in a week",
       "intro": ""
     },
     "frontier": {
       "eyebrow": "Coding Frontier",
-      "title": "Near-top coding quality now costs cents per task.",
-      "description": "Cost and quality frontier for coding agents.",
+      "title": "Cost/quality frontier for coding",
       "intro": "Measured on an internal benchmark built from Unity Gateway traces of real enterprise coding tasks from the Databricks engineering organization."
     },
     "changelog": {
       "eyebrow": "Further reading",
-      "title": "Publications.",
-      "intro": "",
-      "description": "Research behind the index."
+      "title": "Publications",
+      "intro": ""
     }
   },
   "charts": {

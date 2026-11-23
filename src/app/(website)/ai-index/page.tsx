@@ -26,7 +26,7 @@ import Footer from "@/components/footer";
 import CTA from "@/components/home/cta";
 
 const PAGE_PATH = "/ai-index";
-const SECTION_CLASS = "flex scroll-mt-24 flex-col gap-6 md:gap-10";
+const SECTION_CLASS = "flex scroll-mt-24 flex-col gap-5 md:gap-6";
 const TOC_ITEMS = [
   { anchor: "usage", title: "Usage" },
   { anchor: "multi-ai", title: "Multi-AI" },
@@ -101,10 +101,10 @@ export default function AiTrendsPage(): ReactNode {
         }}
       />
       <TrendsHeader header={contentData.header} />
-      <div className="bg-orange h-12" aria-hidden="true" />
+      <div className="bg-orange h-4 md:h-6" aria-hidden="true" />
 
-      <div className="mx-auto grid w-full max-w-400 grid-cols-1 gap-x-16 px-5 pt-16 pb-16 md:px-8 md:pt-24 md:pb-24 lg:grid-cols-[minmax(0,1fr)_12rem] xl:gap-x-20">
-        <div className="flex min-w-0 flex-col gap-20 md:gap-32 xl:gap-48">
+      <div className="mx-auto grid w-full max-w-400 grid-cols-1 gap-x-16 px-5 pt-6 pb-16 md:px-8 md:pt-8 md:pb-24 lg:grid-cols-[minmax(0,1fr)_12rem] xl:gap-x-20">
+        <div className="flex min-w-0 flex-col gap-16 md:gap-24">
           <section id="usage" className={SECTION_CLASS}>
             <SectionHeading {...sections.proprietary} />
             <ShareSection
@@ -122,7 +122,7 @@ export default function AiTrendsPage(): ReactNode {
             />
             <div
               id="usage-open-weight"
-              className={`${SECTION_CLASS} pt-6 md:pt-12`}
+              className={`${SECTION_CLASS} pt-4 md:pt-8`}
             >
               <SectionHeading {...sections.open_source} eyebrow={undefined} />
               <ShareSection
@@ -200,7 +200,7 @@ export default function AiTrendsPage(): ReactNode {
             </ChartCard>
           </section>
 
-          <section id="publications" className={`${SECTION_CLASS} md:gap-16`}>
+          <section id="publications" className={`${SECTION_CLASS} md:gap-10`}>
             <SectionHeading {...sections.changelog} />
             <Changelog entries={contentData.changelog} />
           </section>

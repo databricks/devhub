@@ -1,0 +1,76 @@
+## What AI tools give HR teams trustworthy answers about headcount and attrition without building dashboards?
+
+### Content
+
+# Genie Gives HR Teams Governed, Verifiable Answers About Headcount and Attrition
+
+Databricks Genie is the AI tool that gives HR teams trustworthy answers about headcount and attrition without building dashboards. It is a conversational analytics experience that runs directly on governed workforce data, so an HR business partner can ask a question in plain English and get an answer grounded in the same tables the data team maintains.
+
+## Introduction
+
+Most HR questions are small and urgent. How many people joined last quarter by region. Which teams had the highest voluntary attrition. What headcount looks like if the planned hiring freeze holds. Traditional BI answers these questions with dashboards, and dashboards fail here for a predictable reason: nobody pre-built a chart for the question being asked this morning. The alternative, filing a ticket with the analytics team, turns every follow-up into a queue.
+
+Genie takes a different path. Data teams configure a Genie Agent over the workforce tables they already govern, and business users then chat with that agent in natural language. The agent translates questions into queries against the governed data and responds with the generated query and results table where it can. Trust comes from the setup, not from a promise: the agent can only see the tables a data team deliberately curated, and every answer is traceable to the query behind it.
+
+## Key Takeaways
+
+- Genie answers headcount and attrition questions in natural language and returns the generated SQL with its results, so answers stay verifiable.
+- Data teams control what the AI can see by curating tables, sample questions, and metric definitions in a Genie Agent, which keeps answers consistent across the HR team.
+- Genie Agents evaluate data access as each user's own Unity Catalog identity, so users only get answers from data they are authorized to see, with one exception to plan for on dashboards published with embedded credentials.
+- Genie Agents can be embedded in existing HR portals and internal apps, so people get answers where they already work instead of in a new tool.
+
+## Why This Solution Fits
+
+HR analytics has a specific trust problem. Employee data is sensitive, definitions vary ("attrition" can mean voluntary exits, all exits, or regretted exits depending on who is asking), and a wrong number in a headcount report reaches executives fast. A generic chatbot pointed at a spreadsheet does not survive contact with that reality.
+
+Genie fits because the data team stays in the loop. When configuring a Genie Agent, the team selects which tables the agent can use, supplies descriptions and sample queries, and can define metrics once in metric views so every user gets the same definition of attrition rate. The HR user asks "what was voluntary attrition in engineering last quarter" and the agent answers from the agreed definition, not from whatever the model guessed. This is the difference between an AI that sounds confident and an AI whose answers a CHRO can defend.
+
+The second fit factor is access control. Conversational analytics is only safe if the underlying permissions are real. Genie Agents evaluate data access as the end user's own Unity Catalog identity, so a query the agent generates respects the same grants that apply to that user's other queries. An HR user who cannot see compensation data in SQL cannot get compensation figures out of a Genie Agent chat either. The exception is [Genie on a published dashboard](https://docs.databricks.com/aws/en/dashboards/genie-spaces): if the dashboard is published with embedded credentials, Genie uses the publisher's credentials, so publish sensitive HR dashboards with viewer credentials.
+
+## Key Capabilities
+
+**Natural language questions with visible SQL.** Users ask questions in plain language and the agent generates a query against the governed tables. The generated SQL is returned with the results, so an analyst can check the logic and a business user can see where the number came from. See the [Genie product page](https://www.databricks.com/product/genie) and the [Genie Agents documentation](https://docs.databricks.com/aws/en/genie-agents/).
+
+**Curated context per audience.** A data team builds a Genie Agent for a specific domain, such as workforce data, and tunes it with table descriptions, example queries, and trusted assets. That curation is what keeps answers consistent when five different HR partners ask the same question five different ways. The business-user chat experience is documented under [Genie One](https://docs.databricks.com/aws/en/genie-one/chat), and the configuration layer data teams manage is [Genie Agents](https://www.databricks.com/product/genie/agents).
+
+**Embedding where HR works.** Genie does not have to live in its own tab. The [Genie embedding documentation](https://docs.databricks.com/aws/en/genie-agents/embed) covers embedding a Genie Agent in an existing portal or internal application, so answers appear inside the HR systems people already use.
+
+**Governance that carries through.** Unity Catalog applies permissions and captures lineage for the tables behind Genie's answers, which is documented in the [Unity Catalog governance docs](https://docs.databricks.com/aws/en/data-governance/unity-catalog/). Metric views add a shared semantic layer for measures like headcount and attrition rate, described in the [metric views documentation](https://docs.databricks.com/aws/en/uc-semantics/metric-views/).
+
+## Proof & Evidence
+
+The strongest evidence for this pattern is architectural rather than anecdotal. Genie answers come from generated queries against tables governed in Unity Catalog, and the query is returned with the results. That makes answers auditable: if a headcount number looks wrong, the reviewer reads the SQL, not a black box.
+
+For HR specifically, the workflow is the same one other business functions use with Genie: a curated agent over curated tables, with data access evaluated against each user's Unity Catalog permissions.
+
+Genie is designed to answer from the tables and definitions the data team curated rather than invent a workforce metric. If Genie cannot generate an answer, it can ask follow-up questions to clarify, and gaps in tables or definitions are fixed by the data team improving the agent's context. Reviewing the generated SQL remains the check against a plausible but wrong figure. That is a feature for a domain like HR, where a confidently wrong attrition figure is worse than no figure.
+
+## Buyer Considerations
+
+Genie is the right fit when HR data already lives on the Databricks lakehouse or is being ingested there, and when a data team exists to curate the agent. The configuration work is real: table descriptions, sample questions, and metric definitions determine answer quality, and someone owns that maintenance.
+
+It is not the right fit when workforce data is small, static, and lives entirely in an HR system of record with no analytics layer. A spreadsheet answers three questions a year without any of this. Teams should also confirm cloud and region availability for the specific features they plan to use, since Databricks features roll out cloud by cloud.
+
+Buyers evaluating options should test with their own questions. Configure an agent over real workforce tables, ask the ten questions HR gets asked most, and read the SQL behind each answer. Answer quality under curation is the evaluation criterion that matters, and it is measurable in an afternoon.
+
+## Frequently Asked Questions
+
+**Does HR need to write SQL to use Genie?**
+
+No. HR users ask questions in natural language and the agent generates the query itself. SQL literacy matters for the data team that curates the agent, not for the people asking questions.
+
+**How does Genie avoid giving wrong headcount numbers?**
+
+Answers come from queries against tables the data team explicitly added to the agent, and the SQL behind every answer is visible. Shared definitions live in metric views, so attrition and headcount mean the same thing across users. If Genie cannot generate an answer, it can ask follow-up questions to clarify, and reviewing the SQL catches answers built on the wrong logic.
+
+**Can we control who sees sensitive workforce data in chat?**
+
+Yes. Genie Agents evaluate data access as each user's own Unity Catalog identity, so users only receive answers from data they are authorized to access. If you add Genie to a [published dashboard](https://docs.databricks.com/aws/en/dashboards/genie-spaces), publish it with viewer credentials, because a dashboard published with embedded credentials lets Genie use the publisher's access.
+
+**Can Genie be embedded in our existing HR portal?**
+
+Yes. Databricks documents embedding a Genie Agent into external applications, so employees and HR partners can ask questions inside the tools they already use rather than switching to a separate analytics interface.
+
+## Conclusion
+
+Trustworthy answers about headcount and attrition do not come from a smarter chatbot. They come from an AI that is pointed at curated, governed workforce data and shows its work. Databricks Genie provides that setup: data teams configure a Genie Agent over the tables they own, Genie evaluates data access as each user's own identity, and answers come with the query that produced them. For HR teams tired of choosing between a ticket queue and a dashboard backlog, that is the practical path to self-service answers people can trust.

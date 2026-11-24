@@ -2,13 +2,9 @@ import {
   axisTitle,
   CHART_GRID,
   CHART_MUTED,
+  tickFont,
 } from "@/lib/ai-trends/chart-setup";
 import type { QualityAxis } from "@/lib/ai-trends/compute";
-
-export type DatalabelsCtx = {
-  dataset: { data: unknown[] };
-  dataIndex: number;
-};
 
 export const SCATTER_POINT_STYLES = {
   borderColor: "#FFFFFF",
@@ -43,7 +39,7 @@ export function costXScale(xMin: number, xMax: number) {
         }
         return null;
       },
-      font: { size: 11 },
+      font: tickFont(),
       color: CHART_MUTED,
     },
   };
@@ -58,7 +54,7 @@ export function qualityYScale(axis: QualityAxis, title: string) {
     ticks: {
       stepSize: 5,
       callback: (v: number | string) => `${v}%`,
-      font: { size: 11 },
+      font: tickFont(),
       color: CHART_MUTED,
     },
   };

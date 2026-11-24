@@ -6,12 +6,13 @@ import {
   getNiceMax,
   getParetoNames,
   getQualityAxis,
-  getStackLayers,
   getTopModelPanels,
 } from "@/lib/ai-trends/compute";
 import { benchmarkData, contentData, industryData } from "@/lib/ai-trends/data";
+import { formatDate } from "@/lib/ai-trends/format";
 import { getShareTitle, getShareVersion } from "@/lib/ai-trends/share-cards";
 import { absoluteSiteUrl, getMetadata } from "@/lib/get-metadata";
+import { BrandStrip } from "@/components/ui/brand-strip";
 import { Changelog } from "@/components/ai-trends/changelog";
 import { ChartCard } from "@/components/ai-trends/chart-card";
 import { LongTermSection } from "@/components/ai-trends/long-term-section";
@@ -26,7 +27,7 @@ import Footer from "@/components/footer";
 import CTA from "@/components/home/cta";
 
 const PAGE_PATH = "/ai-index";
-const SECTION_CLASS = "flex scroll-mt-24 flex-col gap-5 md:gap-6";
+const SECTION_CLASS = "flex scroll-mt-24 flex-col gap-6 md:gap-8";
 const TOC_ITEMS = [
   { anchor: "usage", title: "Usage" },
   { anchor: "multi-ai", title: "Multi-AI" },
@@ -51,21 +52,18 @@ function getTopModelBarPanels() {
   const copy = contentData.charts.top_models.panels;
   return [
     {
-      canvasId: "topQualityChart",
       ...copy.quality,
       unit: "percent" as const,
       bars: top.quality,
       missing: [],
     },
     {
-      canvasId: "topTimeChart",
       ...copy.time,
       unit: "minutes" as const,
       bars: top.time,
       missing: top.missingTime,
     },
     {
-      canvasId: "topCostChart",
       ...copy.cost,
       unit: "usd" as const,
       bars: top.cost,
@@ -76,6 +74,7 @@ function getTopModelBarPanels() {
 
 export default function AiTrendsPage(): ReactNode {
   const { models, run_date: runDate } = benchmarkData;
+  const benchmarkDate = formatDate(runDate);
   const { charts, sections } = contentData;
   const pricedModels = getBestPerModel(models);
   const { share, spend, long_term: longTerm } = industryData;
@@ -101,15 +100,16 @@ export default function AiTrendsPage(): ReactNode {
         }}
       />
       <TrendsHeader header={contentData.header} />
-      <div className="bg-orange h-4 md:h-6" aria-hidden="true" />
+      <BrandStrip className="h-12 md:h-12" />
 
-      <div className="mx-auto grid w-full max-w-400 grid-cols-1 gap-x-16 px-5 pt-6 pb-16 md:px-8 md:pt-8 md:pb-24 lg:grid-cols-[minmax(0,1fr)_12rem] xl:gap-x-20">
-        <div className="flex min-w-0 flex-col gap-16 md:gap-24">
+      <div className="mx-auto grid w-full max-w-400 grid-cols-1 gap-x-16 px-5 pt-6 pb-16 md:px-8 md:pb-24 lg:grid-cols-[minmax(0,1fr)_12rem] xl:gap-x-20">
+        <div className="flex min-w-0 flex-col gap-16 md:gap-24 xl:gap-32">
           <section id="usage" className={SECTION_CLASS}>
             <SectionHeading {...sections.proprietary} />
             <ShareSection
               weeks={share.weeks}
-              layers={getStackLayers(share.groups.proprietary, brandColors)}
+              group={share.groups.proprietary}
+              brandColors={brandColors}
               token={charts.token_share}
               wallet={charts.wallet_share}
               slugs={{ token: "token-share", wallet: "wallet-share" }}
@@ -122,12 +122,13 @@ export default function AiTrendsPage(): ReactNode {
             />
             <div
               id="usage-open-weight"
-              className={`${SECTION_CLASS} pt-4 md:pt-8`}
+              className={`${SECTION_CLASS} pt-6 md:pt-12`}
             >
               <SectionHeading {...sections.open_source} eyebrow={undefined} />
               <ShareSection
                 weeks={share.weeks}
-                layers={getStackLayers(share.groups.open_source, brandColors)}
+                group={share.groups.open_source}
+                brandColors={brandColors}
                 token={charts.open_source_token_share}
                 wallet={charts.open_source_wallet_share}
                 slugs={{
@@ -162,7 +163,7 @@ export default function AiTrendsPage(): ReactNode {
           <section id="spend-trends" className={SECTION_CLASS}>
             <SectionHeading {...sections.spend} />
             <ChartCard
-              title={charts.spend.title}
+              title={charts.spend.heading}
               note={charts.spend.note}
               shareSlug="spend"
               shareVersion={getShareVersion("spend")}
@@ -185,9 +186,11 @@ export default function AiTrendsPage(): ReactNode {
             <SectionHeading {...sections.frontier} />
             <ScatterCard
               title={charts.scatter.title}
+              heading={charts.scatter.heading}
               note={charts.scatter.note}
               shareVersion={getShareVersion("scatter")}
               models={pricedModels}
+              benchmarkDate={benchmarkDate}
               paretoNames={getParetoNames(pricedModels)}
               axis={getQualityAxis(
                 pricedModels.map(({ quality }) => quality),
@@ -200,7 +203,7 @@ export default function AiTrendsPage(): ReactNode {
             </ChartCard>
           </section>
 
-          <section id="publications" className={`${SECTION_CLASS} md:gap-10`}>
+          <section id="publications" className={`${SECTION_CLASS} md:gap-16`}>
             <SectionHeading {...sections.changelog} />
             <Changelog entries={contentData.changelog} />
           </section>

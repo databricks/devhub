@@ -2,14 +2,6 @@ import type { BenchmarkModel, ShareGroup, StackSeries } from "./schema";
 
 export type QualityAxis = { min: number; max: number };
 
-export type StackLayer = {
-  label: string;
-  provider: string;
-  color: string;
-  token: number[];
-  wallet: number[];
-};
-
 /** One stacked series as a chart draws it: a value per week. */
 export type ChartLayer = {
   label: string;
@@ -19,9 +11,11 @@ export type ChartLayer = {
   values: number[];
 };
 
-export type LegendGroup = {
+export type ProviderShareLayer = {
   provider: string;
-  items: { label: string; color: string }[];
+  color: string;
+  values: number[];
+  models: { label: string; values: number[] }[];
 };
 
 export type FamilyOption = { label: string; color: string };
@@ -337,47 +331,29 @@ export function getProviderOrder(group: ShareGroup): string[] {
     );
 }
 
-/**
- * Layers in stacking order, bottom to top. Providers are ordered top to
- * bottom by `getProviderOrder`, so the last provider sits at the bottom;
- * within a provider the oldest model is lowest and the newest highest.
- * Colors depend only on the group, so the token and wallet charts share them.
- */
-export function getStackLayers(
+/** Provider totals in stack order, with the original series for the breakdown. */
+export function getProviderShareLayers(
   group: ShareGroup,
-  brandColors: Record<string, string> = {},
-): StackLayer[] {
-  const providersByName = new Map(group.providers.map((p) => [p.name, p]));
-  return [...getProviderOrder(group)].reverse().flatMap((name) => {
-    const provider = providersByName.get(name);
-    if (!provider) return [];
-    const models = group.series.filter((s) => s.provider === provider.name);
-    const shades = getModelShades(
-      brandColors[provider.name] ?? provider.color,
-      models.length,
-    );
-    return models.map(({ label, token, wallet }, i) => ({
-      label,
-      provider: provider.name,
-      color: shades[i],
-      token,
-      wallet,
-    }));
-  });
-}
-
-/** Legend entries top to bottom, matching the visual stacking order. */
-export function getMetricLayers(
-  layers: StackLayer[],
   metric: "token" | "wallet",
-): ChartLayer[] {
-  return layers.map(({ label, provider, color, ...values }) => ({
-    label,
-    group: provider,
-    tooltip: `${label} · ${provider}`,
-    color,
-    values: values[metric],
-  }));
+  brandColors: Record<string, string>,
+): ProviderShareLayer[] {
+  const colors = new Map(
+    group.providers.map(({ name, color }) => [name, color]),
+  );
+  return getProviderOrder(group)
+    .reverse()
+    .flatMap((provider) => {
+      const color = brandColors[provider] ?? colors.get(provider);
+      const models = group.series
+        .filter((series) => series.provider === provider)
+        .map(({ label, ...series }) => ({ label, values: series[metric] }));
+      if (!color || models.length === 0) return [];
+
+      const values = models[0].values.map((_, week) =>
+        models.reduce((total, model) => total + model.values[week], 0),
+      );
+      return [{ provider, color, values, models }];
+    });
 }
 
 /** Layers for a stack with no provider grouping; `group` titles the legend. */
@@ -417,15 +393,4 @@ export function getAtLeastLayers(
     const atLeast = `${parseInt(label, 10)}+ providers`;
     return { label: atLeast, group, tooltip: atLeast, color, values: running };
   });
-}
-
-export function getLegendGroups(layers: ChartLayer[]): LegendGroup[] {
-  const groups: LegendGroup[] = [];
-  for (const layer of [...layers].reverse()) {
-    const item = { label: layer.label, color: layer.color };
-    const last = groups[groups.length - 1];
-    if (last?.provider === layer.group) last.items.push(item);
-    else groups.push({ provider: layer.group, items: [item] });
-  }
-  return groups;
 }

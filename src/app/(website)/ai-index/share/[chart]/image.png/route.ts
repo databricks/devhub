@@ -4,6 +4,7 @@ import { join } from "node:path";
 import { notFound } from "next/navigation";
 import { ImageResponse } from "next/og";
 
+import { loadBrandLogo } from "@/lib/ai-trends/og/brand-logo";
 import { OG_SIZE } from "@/lib/ai-trends/og/frame";
 import { renderShareCard } from "@/lib/ai-trends/og/render";
 import { getShareCard, getShareSlugs } from "@/lib/ai-trends/share-cards";
@@ -38,7 +39,7 @@ export async function GET(
   const card = getShareCard(chart);
   if (!card) notFound();
   return new ImageResponse(
-    renderShareCard(card, await loadLogoDataUris()),
+    renderShareCard(card, await loadLogoDataUris(), await loadBrandLogo()),
     OG_SIZE,
   );
 }

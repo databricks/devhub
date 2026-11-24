@@ -175,6 +175,8 @@ const sectionCopy = z.object({
 
 const chartCopy = z.object({
   title: z.string().min(1),
+  /** Short card heading; the full `title` names the chart when shared. */
+  heading: z.string().min(1),
   description: z.string().min(1),
   note: z.string().optional(),
 });

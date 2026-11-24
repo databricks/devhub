@@ -20,6 +20,7 @@ export function ChartCard({
   shareVersion,
   shareTitle,
   getShareImage,
+  actions,
   children,
   className,
 }: {
@@ -34,6 +35,8 @@ export function ChartCard({
   /** The share card title, for the X post text, when it differs from `title`. */
   shareTitle?: string;
   getShareImage?: () => Promise<Blob>;
+  /** Chart controls shown in the header, before Share. */
+  actions?: ReactNode;
   children?: ReactNode;
   className?: string;
 }): ReactNode {
@@ -48,17 +51,18 @@ export function ChartCard({
       {title ? (
         <div className="mb-4 flex flex-wrap items-start gap-x-3 gap-y-3 md:mb-5">
           <div className="min-w-0 grow basis-full sm:basis-0">
-            <h3 className="text-xl/snug font-normal tracking-tight text-pretty text-black md:text-2xl/snug">
+            <h3 className="text-lg/snug font-normal tracking-tight text-pretty text-black md:text-xl/snug">
               {title}
             </h3>
           </div>
-          {placeholder || shareSlug ? (
-            <div className="flex shrink-0 items-center gap-2 sm:ml-auto">
+          {placeholder || shareSlug || actions ? (
+            <div className="flex max-w-full shrink-0 flex-wrap items-center gap-2 sm:ml-auto">
               {placeholder ? (
                 <span className="border-orange text-orange border px-1.5 py-1 font-mono text-xs/none font-medium uppercase">
                   Placeholder data
                 </span>
               ) : null}
+              {actions}
               {shareSlug ? (
                 <ShareControl
                   shareSlug={shareSlug}
@@ -78,8 +82,8 @@ export function ChartCard({
       ) : null}
       <div className="min-w-0 flex-none">{children}</div>
       {note ? (
-        <div className="pt-5 md:pt-6">
-          <p className="border-db-navy/15 text-grey-40 border-t pt-4 text-sm/normal tracking-tight text-pretty">
+        <div className="mt-auto pt-5">
+          <p className="text-grey-40 border-t border-black/10 pt-4 text-xs/5 tracking-tight text-pretty">
             {note}
           </p>
         </div>

@@ -4,17 +4,15 @@ import {
   getAtLeastLayers,
   getBestPerModel,
   getFamilies,
-  getLegendGroups,
-  getMetricLayers,
   getModelShades,
   getNiceMax,
   getParetoNames,
   getPricedModels,
   getProviderOrder,
+  getProviderShareLayers,
   getQualityAxis,
   getSeriesLayers,
   getSpendAxis,
-  getStackLayers,
   getTopModelPanels,
 } from "../src/lib/ai-trends/compute";
 import { benchmarkData, industryData } from "../src/lib/ai-trends/data";
@@ -243,41 +241,38 @@ describe("share stacking", () => {
     }
   });
 
-  test("stacks the last provider at the bottom, oldest model lowest", () => {
-    expect(getStackLayers(group).map((l) => l.label)).toEqual([
-      "B1",
-      "Older A",
-      "A1",
-    ]);
-  });
-
-  test("colors depend only on the group, so token and wallet share them", () => {
-    expect(getStackLayers(group)).toEqual(getStackLayers(group));
-    const [older, newest] = getStackLayers(group).filter(
-      (l) => l.provider === "A",
-    );
-    expect(older.color).not.toBe(newest.color);
-  });
-
-  test("brand colors override provider colors", () => {
-    const [b] = getStackLayers(group, { B: "#00ff00" });
-    expect(b.color).toBe("#00ff00");
-  });
-
-  test("legend lists providers top to bottom with newest models first", () => {
-    const legend = getLegendGroups(
-      getMetricLayers(getStackLayers(group), "token"),
-    );
-    expect(legend.map((g) => g.provider)).toEqual(["A", "B"]);
-    expect(legend[0].items.map((i) => i.label)).toEqual(["A1", "Older A"]);
+  test("provider bars retain the original model shares for each metric", () => {
+    const token = getProviderShareLayers(group, "token", { A: "#ff0000" });
+    const wallet = getProviderShareLayers(group, "wallet", { A: "#ff0000" });
+    expect(token.map(({ provider }) => provider)).toEqual(["B", "A"]);
+    expect(token[1]).toEqual({
+      provider: "A",
+      color: "#ff0000",
+      values: [70, 70],
+      models: [
+        { label: "Older A", values: [10, 20] },
+        { label: "A1", values: [60, 50] },
+      ],
+    });
+    expect(wallet[1]).toMatchObject({
+      values: [55, 55],
+      models: [
+        { label: "Older A", values: [5, 5] },
+        { label: "A1", values: [50, 50] },
+      ],
+    });
   });
 
   for (const key of ["proprietary", "open_source"] as const) {
     for (const metric of ["token", "wallet"] as const) {
       test(`${key} ${metric} shares sum to ~100 each week`, () => {
-        const layers = getStackLayers(industryData.share.groups[key]);
+        const layers = getProviderShareLayers(
+          industryData.share.groups[key],
+          metric,
+          {},
+        );
         industryData.share.weeks.forEach((_, i) => {
-          const total = layers.reduce((sum, l) => sum + l[metric][i], 0);
+          const total = layers.reduce((sum, l) => sum + l.values[i], 0);
           expect(total).toBeCloseTo(100, 0);
         });
       });
@@ -332,23 +327,25 @@ describe("long-term stacks", () => {
       expect(v + single.values[i]).toBeCloseTo(100, 0),
     );
   });
-
-  test("legend lists the top of the stack first under one heading", () => {
-    const legend = getLegendGroups(
-      getSeriesLayers(industryData.long_term.providers_used, "Providers used"),
-    );
-    expect(legend).toHaveLength(1);
-    expect(legend[0].provider).toBe("Providers used");
-    expect(legend[0].items.map((i) => i.label)).toEqual([
-      "1 provider",
-      "2 providers",
-      "3 providers",
-      "4+ providers",
-    ]);
-  });
 });
 
 describe("industry data", () => {
+  test("model rankings and share charts use the same provider colors", () => {
+    const colors = new Map(
+      getFamilies(models).map(({ label, color }) => [label, color]),
+    );
+    expect(new Set(colors.values()).size).toBe(colors.size);
+    for (const model of models) {
+      expect(model.color).toBe(colors.get(model.vendor));
+    }
+    for (const group of Object.values(industryData.share.groups)) {
+      for (const provider of group.providers) {
+        if (colors.has(provider.name))
+          expect(provider.color).toBe(colors.get(provider.name));
+      }
+    }
+  });
+
   test("wallet data is not flagged as placeholder", () => {
     expect(industryData.share.wallet_placeholder).not.toBe(true);
   });

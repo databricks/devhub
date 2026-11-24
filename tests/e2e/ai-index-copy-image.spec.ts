@@ -94,7 +94,11 @@ test.describe("AI Index Copy image", () => {
   test("a filtered scatter copies the filtered canvas", async ({ page }) => {
     const card = page.locator('[id="scatter"]');
     await card.scrollIntoViewIfNeeded();
-    await card.getByRole("button", { name: "Anthropic", exact: true }).click();
+    const anthropic = card.getByRole("button", {
+      name: "Anthropic",
+      exact: true,
+    });
+    await anthropic.click();
     // The canvas copy is the chart's backing store plus 24 CSS px of padding
     // on each side, scaled the same way.
     const expectedWidth = await card.locator("canvas").evaluate((canvas) => {
@@ -106,7 +110,7 @@ test.describe("AI Index Copy image", () => {
     expect(filtered.width).toBe(expectedWidth);
     expect(filtered).not.toEqual(SHARE_CARD);
 
-    await card.getByRole("button", { name: "All", exact: true }).click();
+    await anthropic.click();
     expect(await copyImage(page, card)).toEqual(SHARE_CARD);
   });
 });

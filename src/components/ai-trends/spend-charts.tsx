@@ -10,10 +10,19 @@ import {
   CHART_MUTED,
   CHART_SERIES,
   ChartDataLabels,
+  tickFont,
 } from "@/lib/ai-trends/chart-setup";
 import { SPEND_MAX_TICKS } from "@/lib/ai-trends/compute";
 import { formatSpendCentsTick, formatSpendTick } from "@/lib/ai-trends/format";
+import { hoverGuidePlugin } from "@/lib/ai-trends/hover-guide";
 import { useChart } from "@/lib/ai-trends/use-chart";
+
+import { ChartPointTooltip, useChartTooltip } from "./chart-tooltip";
+
+const usd = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+});
 
 function SpendPanel({
   canvasId,
@@ -32,10 +41,15 @@ function SpendPanel({
 }): ReactNode {
   // A single period has no line to draw, so its point and value carry the panel.
   const single = data.length === 1;
+  const { tooltip, external } = useChartTooltip<"line">(([item]) => ({
+    title: `${label} weekly spend`,
+    date: `Week of ${item.label}`,
+    rows: [{ label: "Spend per user", value: usd.format(item.parsed.y) }],
+  }));
   const { canvasRef } = useChart<"line">(
     (): ChartConfiguration<"line"> => ({
       type: "line",
-      plugins: [ChartDataLabels],
+      plugins: [ChartDataLabels, hoverGuidePlugin],
       data: {
         labels: weeks,
         datasets: [
@@ -47,6 +61,10 @@ function SpendPanel({
             borderWidth: 2,
             pointRadius: single ? 5 : 0,
             pointBackgroundColor: CHART_SERIES,
+            pointHoverRadius: 4,
+            pointHoverBackgroundColor: CHART_SERIES,
+            pointHoverBorderColor: "#ffffff",
+            pointHoverBorderWidth: 2,
             tension: 0.35,
           },
         ],
@@ -58,15 +76,7 @@ function SpendPanel({
         interaction: { mode: "index", intersect: false },
         plugins: {
           legend: { display: false },
-          tooltip: {
-            callbacks: {
-              label: (c) =>
-                `$${c.parsed.y.toLocaleString("en-US", {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}`,
-            },
-          },
+          tooltip: { enabled: false, external },
           datalabels: single
             ? {
                 display: true,
@@ -75,12 +85,7 @@ function SpendPanel({
                 offset: 6,
                 color: "rgb(0, 0, 0)",
                 font: { size: 13, weight: 600 },
-                formatter: (v: number) =>
-                  "$" +
-                  v.toLocaleString("en-US", {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  }),
+                formatter: (v: number) => usd.format(v),
               }
             : { display: false },
         },
@@ -88,8 +93,9 @@ function SpendPanel({
           x: {
             offset: single,
             grid: { display: false },
+            border: { color: CHART_MUTED },
             ticks: {
-              font: { size: 11 },
+              font: tickFont(),
               color: CHART_MUTED,
               maxTicksLimit: 7,
               maxRotation: 0,
@@ -100,9 +106,10 @@ function SpendPanel({
             min: 0,
             suggestedMax: yMax,
             grid: { color: CHART_GRID },
+            border: { display: false },
             title: axisTitle("Spend per user (USD)"),
             ticks: {
-              font: { size: 11 },
+              font: tickFont(),
               color: CHART_MUTED,
               maxTicksLimit: SPEND_MAX_TICKS,
               callback: (v) =>
@@ -112,7 +119,7 @@ function SpendPanel({
         },
       },
     }),
-    [weeks, data, yMax, tickFmt, single],
+    [weeks, data, yMax, tickFmt, single, label],
   );
 
   return (
@@ -122,6 +129,7 @@ function SpendPanel({
       </p>
       <div className="relative h-[200px]">
         <canvas id={canvasId} ref={canvasRef} />
+        <ChartPointTooltip tooltip={tooltip} />
       </div>
     </div>
   );

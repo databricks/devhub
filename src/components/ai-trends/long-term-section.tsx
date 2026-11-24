@@ -1,10 +1,6 @@
 import type { ReactNode } from "react";
 
-import {
-  getAtLeastLayers,
-  getLegendGroups,
-  getSeriesLayers,
-} from "@/lib/ai-trends/compute";
+import { getAtLeastLayers, getSeriesLayers } from "@/lib/ai-trends/compute";
 import type { StackSeries } from "@/lib/ai-trends/schema";
 import { getShareTitle, getShareVersion } from "@/lib/ai-trends/share-cards";
 
@@ -12,7 +8,7 @@ import { ChartCard } from "./chart-card";
 import { ShareAreaChart } from "./share-area-chart";
 import { StackedShareChart } from "./stacked-share-chart";
 
-type ChartCopy = { title: string; note?: string; legend: string };
+type ChartCopy = { heading: string; note?: string; legend: string };
 
 export function LongTermSection({
   weeks,
@@ -35,7 +31,7 @@ export function LongTermSection({
     <div className="grid min-w-0 grid-cols-1 items-stretch gap-6 xl:grid-cols-2">
       <ChartCard
         className="h-full"
-        title={providers.copy.title}
+        title={providers.copy.heading}
         note={providers.copy.note}
         shareSlug="providers-used"
         shareVersion={getShareVersion("providers-used")}
@@ -44,14 +40,13 @@ export function LongTermSection({
         <ShareAreaChart
           weeks={weeks}
           layers={providerLayers}
-          legend={getLegendGroups(providerLayers)}
           canvasId="providersUsedChart"
           yAxisTitle="% of active companies"
         />
       </ChartCard>
       <ChartCard
         className="h-full"
-        title={openWeight.copy.title}
+        title={openWeight.copy.heading}
         note={openWeight.copy.note}
         shareSlug="open-weight-share"
         shareVersion={getShareVersion("open-weight-share")}
@@ -60,9 +55,9 @@ export function LongTermSection({
         <StackedShareChart
           weeks={weeks}
           layers={openWeightLayers}
-          legend={getLegendGroups(openWeightLayers)}
           canvasId="openWeightShareChart"
           yAxisTitle="% of token volume"
+          tooltipTitle="Token share by model type"
           showHalfLine
         />
       </ChartCard>

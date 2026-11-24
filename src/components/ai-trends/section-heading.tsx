@@ -3,10 +3,9 @@ import type { ReactNode } from "react";
 import { SectionKicker } from "@/components/products/section-kicker";
 
 /**
- * Section opener in the DevHub style: a bracketed kicker, then a short
- * descriptive title (an optional grey description can follow). Titles
- * describe the chart, not the takeaway, so the data can update without
- * rewriting copy. A follow-up block inside a section leaves out the kicker.
+ * Section opener in the same style as the /mvps section headings: a
+ * bracketed kicker, then the section title and optional description.
+ * A follow-up block inside a section leaves out the kicker.
  */
 export function SectionHeading({
   eyebrow,
@@ -22,11 +21,9 @@ export function SectionHeading({
   return (
     <div className="flex flex-col">
       {eyebrow ? (
-        <SectionKicker className="text-grey-40 mb-3 md:mb-4">
-          {eyebrow}
-        </SectionKicker>
+        <SectionKicker className="text-grey-40 mb-4">{eyebrow}</SectionKicker>
       ) : null}
-      <h2 className="max-w-4xl text-2xl/tight font-normal tracking-[-0.03em] text-pretty text-black md:text-[1.75rem]/tight">
+      <h2 className="max-w-4xl text-2xl/tight font-normal tracking-[-0.04em] text-pretty text-black md:text-4xl/tight">
         {title}
         {description ? (
           <>

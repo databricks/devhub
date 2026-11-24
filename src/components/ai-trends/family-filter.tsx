@@ -8,19 +8,19 @@ import { cn } from "@/lib/utils";
 
 /**
  * Multi-select mono toggles in brackets, each with its provider logo, in the
- * DevHub kicker style. An empty
- * selection means every family is shown, so "All" is active exactly when
- * nothing is picked.
+ * DevHub kicker style. An empty selection shows every family.
  */
 export function FamilyFilter({
   families,
   selected,
   onChange,
+  onPreviewChange,
   label,
 }: {
   families: FamilyOption[];
   selected: string[];
   onChange: (selected: string[]) => void;
+  onPreviewChange: (family: string | null) => void;
   label: string;
 }): ReactNode {
   const toggle = (family: string) =>
@@ -39,15 +39,13 @@ export function FamilyFilter({
       <span className="text-grey-40 font-mono text-sm/none font-medium uppercase">
         {label}:
       </span>
-      <Toggle active={selected.length === 0} onClick={() => onChange([])}>
-        All
-      </Toggle>
       {families.map(({ label: family }) => (
         <Toggle
           key={family}
           active={selected.includes(family)}
           logo={getVendorLogo(family)}
           onClick={() => toggle(family)}
+          onPreview={(preview) => onPreviewChange(preview ? family : null)}
         >
           {family}
         </Toggle>
@@ -60,11 +58,13 @@ function Toggle({
   active,
   logo,
   onClick,
+  onPreview,
   children,
 }: {
   active: boolean;
   logo?: string;
   onClick: () => void;
+  onPreview: (preview: boolean) => void;
   children: string;
 }): ReactNode {
   return (
@@ -72,6 +72,11 @@ function Toggle({
       type="button"
       aria-pressed={active}
       onClick={onClick}
+      onPointerEnter={(event) => {
+        if (event.pointerType !== "touch") onPreview(true);
+      }}
+      onPointerLeave={() => onPreview(false)}
+      onPointerCancel={() => onPreview(false)}
       className={cn(
         "inline-flex min-h-7 items-center font-mono text-sm/none font-medium uppercase transition-colors",
         active ? "text-orange" : "text-grey-40 hover:text-black",

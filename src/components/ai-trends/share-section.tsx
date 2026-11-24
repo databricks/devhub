@@ -12,7 +12,7 @@ type ChartCopy = { title: string; description: string; note?: string };
 export function ShareSection({
   weeks,
   layers,
-  updated,
+  dateLabel,
   token,
   wallet,
   slugs,
@@ -22,7 +22,7 @@ export function ShareSection({
 }: {
   weeks: string[];
   layers: StackLayer[];
-  updated: string;
+  dateLabel: string;
   token: ChartCopy;
   wallet: ChartCopy;
   slugs: { token: string; wallet: string };
@@ -43,7 +43,7 @@ export function ShareSection({
           key={metric}
           className="h-full"
           title={copy.title}
-          updated={updated}
+          dateLabel={dateLabel}
           placeholder={metric === "wallet" && walletPlaceholder}
           note={copy.note}
           shareSlug={slugs[metric]}

@@ -13,7 +13,7 @@ function requireShareVersion(slug: string, version?: string): string {
 export function ChartCard({
   id,
   title,
-  updated,
+  dateLabel,
   placeholder = false,
   description,
   note,
@@ -26,7 +26,7 @@ export function ChartCard({
 }: {
   id?: string;
   title?: string;
-  updated?: string;
+  dateLabel?: string;
   placeholder?: boolean;
   description?: ReactNode;
   note?: ReactNode;
@@ -51,10 +51,8 @@ export function ChartCard({
         <div className="mb-4 flex flex-wrap items-start gap-x-3 gap-y-2">
           <div className="min-w-0 grow basis-full sm:basis-0">
             <h3 className="text-foreground text-base font-semibold">{title}</h3>
-            {updated ? (
-              <p className="text-foreground/65 mt-1 text-xs">
-                Updated {updated}
-              </p>
+            {dateLabel ? (
+              <p className="text-foreground/65 mt-1 text-xs">{dateLabel}</p>
             ) : null}
           </div>
           {placeholder || shareSlug ? (

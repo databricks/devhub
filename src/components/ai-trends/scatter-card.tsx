@@ -1,19 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import type { ComponentProps, ReactNode } from "react";
-
-import { renderCanvasImage } from "@/lib/ai-trends/share-image";
 
 import { ChartCard } from "./chart-card";
 import { ScatterChart } from "./scatter-chart";
-
-const CANVAS_ID = "scatterChart";
+import type { ScatterChartHandle } from "./scatter-chart";
 
 type ScatterCardProps = Omit<
   ComponentProps<typeof ScatterChart>,
-  "selectedFamilies" | "onSelectedFamiliesChange"
-> & { title: string; updated: string; note?: string; shareVersion: string };
+  "ref" | "selectedFamilies" | "onSelectedFamiliesChange"
+> & { title: string; heading: string; note?: string; shareVersion: string };
 
 /**
  * The scatter card owns the family filter so "Copy image" can copy the
@@ -21,35 +18,39 @@ type ScatterCardProps = Omit<
  */
 export function ScatterCard({
   title,
-  updated,
+  heading,
   note,
   shareVersion,
   ...chart
 }: ScatterCardProps): ReactNode {
+  const scatterRef = useRef<ScatterChartHandle>(null);
   const [selectedFamilies, setSelectedFamilies] = useState<string[]>([]);
   const selectedLabels = chart.families
     .map(({ label }) => label)
     .filter((label) => selectedFamilies.includes(label));
+  const isFiltered =
+    selectedLabels.length > 0 && selectedLabels.length < chart.families.length;
 
   function getFilteredImage(): Promise<Blob> {
-    const canvas = document.getElementById(CANVAS_ID);
-    if (!(canvas instanceof HTMLCanvasElement)) {
-      return Promise.reject(new Error(`No #${CANVAS_ID} canvas`));
-    }
-    return renderCanvasImage(canvas, `${title}: ${selectedLabels.join(", ")}`);
+    return (
+      scatterRef.current?.renderFilteredImage(
+        `${title}: ${selectedLabels.join(", ")}`,
+      ) ?? Promise.reject(new Error("Scatter chart is not ready"))
+    );
   }
 
   return (
     <ChartCard
-      title={title}
-      updated={updated}
+      title={heading}
+      shareTitle={title}
       note={note}
       shareSlug="scatter"
       shareVersion={shareVersion}
-      getShareImage={selectedLabels.length > 0 ? getFilteredImage : undefined}
+      getShareImage={isFiltered ? getFilteredImage : undefined}
     >
       <ScatterChart
         {...chart}
+        ref={scatterRef}
         selectedFamilies={selectedFamilies}
         onSelectedFamiliesChange={setSelectedFamilies}
       />

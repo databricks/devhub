@@ -3,6 +3,8 @@ import type { CSSProperties, ReactNode } from "react";
 export const OG_SIZE = { width: 1200, height: 630 };
 export const CHART_WIDTH = 1104;
 export const CHART_HEIGHT = 384;
+/** Room a chart leaves under its plot for an `OgLegend` row. */
+export const OG_LEGEND_HEIGHT = 40;
 
 // Mirrors the page palette in src/css/custom.css (--db-navy, --db-paper,
 // --db-lava); image rendering can't read Tailwind tokens.
@@ -13,6 +15,10 @@ export const PAPER = "#f9f7f4";
 export const LAVA = "#ff3621";
 
 const SITE_LABEL = "developers.databricks.com/ai-index";
+const FOOTER_HEIGHT = 58;
+// The logo file's own proportions (viewBox 712.77 x 112.97).
+const LOGO_HEIGHT = 22;
+const LOGO_WIDTH = Math.round((LOGO_HEIGHT * 712.77) / 112.97);
 
 export function OgLabel({
   x,
@@ -62,14 +68,73 @@ export function OgLabel({
   );
 }
 
-export function OgAccent(): ReactNode {
+export type OgLegendData = {
+  /** Names what the series are, when the chart title doesn't. */
+  heading?: string;
+  items: { label: string; value: string; color: string }[];
+};
+
+/** The page's chart legend: a row of series, each with its latest value. */
+export function OgLegend({ heading, items }: OgLegendData): ReactNode {
   return (
-    <div style={{ display: "flex", width: 72, height: 6, background: LAVA }} />
+    <div
+      style={{
+        display: "flex",
+        alignItems: "flex-end",
+        height: OG_LEGEND_HEIGHT,
+        fontSize: 17,
+        lineHeight: 1,
+        color: INK,
+      }}
+    >
+      {heading ? (
+        <div
+          style={{
+            display: "flex",
+            marginRight: 20,
+            fontSize: 14,
+            letterSpacing: 0.8,
+            color: MUTED,
+          }}
+        >
+          {`${heading.toUpperCase()}:`}
+        </div>
+      ) : null}
+      {items.map(({ label, value, color }) => (
+        <div
+          key={label}
+          style={{ display: "flex", alignItems: "center", marginRight: 30 }}
+        >
+          <div
+            style={{
+              display: "flex",
+              width: 12,
+              height: 12,
+              marginRight: 8,
+              background: color,
+            }}
+          />
+          {label}
+          <div style={{ display: "flex", marginLeft: 8, color: MUTED }}>
+            {value}
+          </div>
+        </div>
+      ))}
+    </div>
   );
 }
 
-/** Paper background and the Databricks footer shared by every card. */
-export function OgPage({ children }: { children: ReactNode }): ReactNode {
+/**
+ * Paper background and the Databricks footer shared by every card. `logo` is
+ * the Databricks logo as an image source (see `loadBrandLogo`).
+ */
+export function OgPage({
+  logo,
+  children,
+}: {
+  logo: string;
+  children: ReactNode;
+}): ReactNode {
   return (
     <div
       style={{
@@ -79,7 +144,7 @@ export function OgPage({ children }: { children: ReactNode }): ReactNode {
         flexDirection: "column",
         background: PAPER,
         color: INK,
-        padding: "40px 48px 0",
+        padding: "44px 48px 0",
         position: "relative",
       }}
     >
@@ -90,7 +155,7 @@ export function OgPage({ children }: { children: ReactNode }): ReactNode {
           left: 48,
           right: 48,
           bottom: 0,
-          height: 44,
+          height: FOOTER_HEIGHT,
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
@@ -99,9 +164,7 @@ export function OgPage({ children }: { children: ReactNode }): ReactNode {
           color: MUTED,
         }}
       >
-        <div style={{ display: "flex", color: LAVA, fontWeight: 700 }}>
-          Databricks
-        </div>
+        <img src={logo} alt="" width={LOGO_WIDTH} height={LOGO_HEIGHT} />
         <div style={{ display: "flex" }}>{SITE_LABEL}</div>
       </div>
     </div>
@@ -111,21 +174,21 @@ export function OgPage({ children }: { children: ReactNode }): ReactNode {
 export function OgFrame({
   title,
   updated,
+  logo,
   placeholder = false,
   children,
 }: {
   title: string;
   updated: string;
+  logo: string;
   placeholder?: boolean;
   children: ReactNode;
 }): ReactNode {
   return (
-    <OgPage>
-      <OgAccent />
+    <OgPage logo={logo}>
       <div
         style={{
           display: "flex",
-          marginTop: 20,
           fontSize: title.length > 50 ? 38 : 44,
           fontWeight: 600,
           lineHeight: 1.1,
@@ -145,7 +208,7 @@ export function OgFrame({
           position: "relative",
           width: CHART_WIDTH,
           height: CHART_HEIGHT,
-          marginTop: 22,
+          marginTop: 24,
         }}
       >
         {children}

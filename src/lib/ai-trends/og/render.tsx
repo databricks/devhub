@@ -4,14 +4,13 @@ import {
   getAtLeastLayers,
   getBestPerModel,
   getFamilies,
-  getLegendGroups,
-  getMetricLayers,
   getParetoNames,
+  getProviderShareLayers,
   getQualityAxis,
   getSeriesLayers,
   getSpendAxis,
-  getStackLayers,
 } from "@/lib/ai-trends/compute";
+import type { ChartLayer } from "@/lib/ai-trends/compute";
 import { benchmarkData, contentData, industryData } from "@/lib/ai-trends/data";
 import {
   formatDate,
@@ -23,13 +22,14 @@ import type { ShareCard } from "@/lib/ai-trends/share-cards";
 import {
   CHART_HEIGHT,
   CHART_WIDTH,
-  INK,
   LAVA,
   MUTED,
-  OgAccent,
+  OG_LEGEND_HEIGHT,
   OgFrame,
+  OgLegend,
   OgPage,
 } from "./frame";
+import type { OgLegendData } from "./frame";
 import { OgLines, OgSpendPanels } from "./lines";
 import { OgScatter } from "./scatter";
 import { OgStackedBars } from "./stacked";
@@ -43,21 +43,39 @@ function renderStackedShare(
   const brandColors = Object.fromEntries(
     getFamilies(benchmarkData.models).map(({ label, color }) => [label, color]),
   );
-  const layers = getMetricLayers(
-    getStackLayers(industryData.share.groups[group], brandColors),
+  // Provider totals, as the page draws the chart before any switch is used.
+  const layers = getProviderShareLayers(
+    industryData.share.groups[group],
     metric,
-  );
+    brandColors,
+  ).map(({ provider, color, values }) => ({
+    label: provider,
+    group: "",
+    tooltip: provider,
+    color,
+    values,
+  }));
   return (
     <OgStackedBars
       weeks={industryData.share.weeks}
       layers={layers}
-      legend={getLegendGroups(layers)}
+      legend={getValueLegend(layers)}
       showHalfLine={group === "proprietary"}
     />
   );
 }
 
-const OG_LEGEND_HEIGHT = 34;
+/** The page legend: each series, top of the stack first, with its latest value. */
+function getValueLegend(layers: ChartLayer[]): OgLegendData {
+  return {
+    heading: layers[0]?.group || undefined,
+    items: [...layers].reverse().map(({ label, color, values }) => ({
+      label,
+      color,
+      value: `${(values.at(-1) ?? 0).toFixed(1)}%`,
+    })),
+  };
+}
 
 function renderOpenWeightShare(): ReactNode {
   const layers = getSeriesLayers(
@@ -68,57 +86,31 @@ function renderOpenWeightShare(): ReactNode {
     <OgStackedBars
       weeks={industryData.long_term.weeks}
       layers={layers}
-      legend={getLegendGroups(layers)}
+      legend={getValueLegend(layers)}
       showHalfLine
     />
   );
 }
 
-/** Nested areas, largest drawn first, with a one-row legend above. */
+/** Nested areas, largest drawn first, over the legend row. */
 function renderProvidersUsed(): ReactNode {
   const { weeks, providers_used: buckets } = industryData.long_term;
   const layers = getAtLeastLayers(
     buckets,
     contentData.charts.providers_used.legend,
-  ).reverse();
+  );
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
-      <div
-        style={{
-          display: "flex",
-          height: OG_LEGEND_HEIGHT,
-          alignItems: "center",
-          fontSize: 15,
-          color: INK,
-        }}
-      >
-        {layers.map(({ label, color }) => (
-          <div
-            key={label}
-            style={{ display: "flex", alignItems: "center", marginRight: 24 }}
-          >
-            <div
-              style={{
-                display: "flex",
-                width: 12,
-                height: 12,
-                marginRight: 8,
-                background: color,
-              }}
-            />
-            {label}
-          </div>
-        ))}
-      </div>
       <OgLines
         weeks={weeks}
-        series={layers}
+        series={[...layers].reverse()}
         yMax={100}
         yStep={25}
         formatY={(v) => `${v}%`}
         height={CHART_HEIGHT - OG_LEGEND_HEIGHT}
         fill
       />
+      <OgLegend {...getValueLegend(layers)} />
     </div>
   );
 }
@@ -184,9 +176,11 @@ function renderChart(slug: string, logos: Record<string, string>): ReactNode {
 export function renderShareCard(
   card: ShareCard,
   logos: Record<string, string>,
+  brandLogo: string,
 ): ReactElement {
   return (
     <OgFrame
+      logo={brandLogo}
       title={card.title}
       updated={card.updated}
       placeholder={card.placeholder}
@@ -207,7 +201,7 @@ function getIntroLead(): string {
  * The /ai-index page card: the index title and intro lead over the
  * proprietary token share chart, which illustrates the page as a whole.
  */
-export function renderIndexCard(): ReactElement {
+export function renderIndexCard(brandLogo: string): ReactElement {
   const { header } = contentData;
   const updated = [
     industryData.share.as_of,
@@ -215,12 +209,10 @@ export function renderIndexCard(): ReactElement {
     benchmarkData.run_date,
   ].sort()[2];
   return (
-    <OgPage>
-      <OgAccent />
+    <OgPage logo={brandLogo}>
       <div
         style={{
           display: "flex",
-          marginTop: 18,
           fontSize: 56,
           fontWeight: 600,
           lineHeight: 1.1,

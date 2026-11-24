@@ -15,10 +15,9 @@ export type LabelItem = {
 
 /**
  * Where a label sits: `angle` is the direction from the marker in degrees,
- * clockwise from the right (-90 is above), and `offset` the gap between the
- * marker and the label's nearest edge or corner. Both are what
- * chartjs-plugin-datalabels takes as `align` and `offset`. `leader` asks for a
- * line back to the marker; `hidden` means no spot was free.
+ * clockwise from the right (-90 is above), and `offset` the distance from the
+ * marker to the label. `leader` asks for a line back to the marker; `hidden`
+ * means no spot was free.
  */
 export type LabelPlacement = {
   angle: number;
@@ -74,6 +73,37 @@ const HIDDEN: LabelPlacement = {
   hidden: true,
 };
 
+/** Search the edges of occupied boxes for the nearest remaining space. */
+function closestClearBox(
+  item: LabelItem,
+  area: Box,
+  obstacles: Box[],
+): Box | undefined {
+  const { x, y, width, height } = item;
+  const lefts = [area.left, area.right - width, x - width / 2];
+  const tops = [area.top, area.bottom - height, y - height / 2];
+  for (const box of obstacles) {
+    lefts.push(box.left - width, box.right);
+    tops.push(box.top - height, box.bottom);
+  }
+
+  let best: Box | undefined;
+  let distance = Infinity;
+  for (const left of lefts) {
+    if (left < area.left || left + width > area.right) continue;
+    for (const top of tops) {
+      if (top < area.top || top + height > area.bottom) continue;
+      const score = (left + width / 2 - x) ** 2 + (top + height / 2 - y) ** 2;
+      if (score >= distance) continue;
+      const box = { left, top, right: left + width, bottom: top + height };
+      if (obstacles.some((obstacle) => overlaps(box, obstacle))) continue;
+      best = box;
+      distance = score;
+    }
+  }
+  return best;
+}
+
 function placeInOrder(
   items: LabelItem[],
   order: number[],
@@ -110,6 +140,22 @@ function placeInOrder(
       placed.push(box);
       continue;
     }
+    if (items[i].required) {
+      const box = closestClearBox(items[i], area, [...markers, ...placed]);
+      if (box) {
+        const dx = (box.left + box.right) / 2 - items[i].x;
+        const dy = (box.top + box.bottom) / 2 - items[i].y;
+        placements[i] = {
+          angle: (Math.atan2(dy, dx) * 180) / Math.PI,
+          offset: Math.hypot(dx, dy),
+          leader: true,
+          hidden: false,
+          box,
+        };
+        placed.push(box);
+        continue;
+      }
+    }
     unplaced.push(i);
     if (!items[i].required) continue;
     // A required label with no clear spot covers as little marker area as it can.
@@ -141,7 +187,8 @@ function placeInOrder(
 /**
  * Gives each label a spot that stays inside `area` and covers no other label
  * and no marker: the four sides first, then the four corners, then the same
- * eight a ring further out with a leader line. Labels are placed in priority
+ * eight a ring further out with a leader line. Required labels can search
+ * the remaining space. Labels are placed in priority
  * order; when one is left without a spot, it moves to the front of the order
  * and placement reruns, and the arrangement that leaves the fewest labels
  * without a spot wins. Optional labels with no spot are hidden (the tooltip

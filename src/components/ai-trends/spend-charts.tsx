@@ -5,14 +5,24 @@ import type { ChartConfiguration } from "chart.js";
 
 import {
   axisTitle,
-  CHART_BLUE,
+  CHART_AREA_FILL,
   CHART_GRID,
   CHART_MUTED,
+  CHART_SERIES,
   ChartDataLabels,
+  tickFont,
 } from "@/lib/ai-trends/chart-setup";
 import { SPEND_MAX_TICKS } from "@/lib/ai-trends/compute";
 import { formatSpendCentsTick, formatSpendTick } from "@/lib/ai-trends/format";
+import { hoverGuidePlugin } from "@/lib/ai-trends/hover-guide";
 import { useChart } from "@/lib/ai-trends/use-chart";
+
+import { ChartPointTooltip, useChartTooltip } from "./chart-tooltip";
+
+const usd = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+});
 
 function SpendPanel({
   canvasId,
@@ -31,21 +41,30 @@ function SpendPanel({
 }): ReactNode {
   // A single period has no line to draw, so its point and value carry the panel.
   const single = data.length === 1;
+  const { tooltip, external } = useChartTooltip<"line">(([item]) => ({
+    title: `${label} weekly spend`,
+    date: `Week of ${item.label}`,
+    rows: [{ label: "Spend per user", value: usd.format(item.parsed.y) }],
+  }));
   const { canvasRef } = useChart<"line">(
     (): ChartConfiguration<"line"> => ({
       type: "line",
-      plugins: [ChartDataLabels],
+      plugins: [ChartDataLabels, hoverGuidePlugin],
       data: {
         labels: weeks,
         datasets: [
           {
             data,
-            borderColor: CHART_BLUE,
-            backgroundColor: CHART_BLUE + "33",
+            borderColor: CHART_SERIES,
+            backgroundColor: CHART_AREA_FILL,
             fill: true,
             borderWidth: 2,
             pointRadius: single ? 5 : 0,
-            pointBackgroundColor: CHART_BLUE,
+            pointBackgroundColor: CHART_SERIES,
+            pointHoverRadius: 4,
+            pointHoverBackgroundColor: CHART_SERIES,
+            pointHoverBorderColor: "#ffffff",
+            pointHoverBorderWidth: 2,
             tension: 0.35,
           },
         ],
@@ -57,15 +76,7 @@ function SpendPanel({
         interaction: { mode: "index", intersect: false },
         plugins: {
           legend: { display: false },
-          tooltip: {
-            callbacks: {
-              label: (c) =>
-                `$${c.parsed.y.toLocaleString("en-US", {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}`,
-            },
-          },
+          tooltip: { enabled: false, external },
           datalabels: single
             ? {
                 display: true,
@@ -74,12 +85,7 @@ function SpendPanel({
                 offset: 6,
                 color: "rgb(0, 0, 0)",
                 font: { size: 13, weight: 600 },
-                formatter: (v: number) =>
-                  "$" +
-                  v.toLocaleString("en-US", {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  }),
+                formatter: (v: number) => usd.format(v),
               }
             : { display: false },
         },
@@ -87,8 +93,9 @@ function SpendPanel({
           x: {
             offset: single,
             grid: { display: false },
+            border: { color: CHART_MUTED },
             ticks: {
-              font: { size: 11 },
+              font: tickFont(),
               color: CHART_MUTED,
               maxTicksLimit: 7,
               maxRotation: 0,
@@ -99,9 +106,10 @@ function SpendPanel({
             min: 0,
             suggestedMax: yMax,
             grid: { color: CHART_GRID },
+            border: { display: false },
             title: axisTitle("Spend per user (USD)"),
             ticks: {
-              font: { size: 11 },
+              font: tickFont(),
               color: CHART_MUTED,
               maxTicksLimit: SPEND_MAX_TICKS,
               callback: (v) =>
@@ -111,16 +119,17 @@ function SpendPanel({
         },
       },
     }),
-    [weeks, data, yMax, tickFmt, single],
+    [weeks, data, yMax, tickFmt, single, label],
   );
 
   return (
-    <div className="flex min-w-0 flex-col gap-2 pt-5 first:pt-0 md:pt-0 md:pr-8 md:last:pr-0">
-      <p className="font-heading text-foreground text-center text-sm font-semibold">
+    <div className="flex min-w-0 flex-col gap-2 pt-6 pb-5 first:pt-0 last:pb-0 md:py-0 md:pr-8 md:last:pr-0">
+      <p className="text-grey-40 font-mono text-sm/none font-medium uppercase">
         {label}
       </p>
       <div className="relative h-[200px]">
         <canvas id={canvasId} ref={canvasRef} />
+        <ChartPointTooltip tooltip={tooltip} />
       </div>
     </div>
   );
@@ -138,7 +147,7 @@ export function SpendCharts({
   labels: { p50: string; p90: string; p99: string };
 }): ReactNode {
   return (
-    <div className="divide-foreground/10 grid grid-cols-1 gap-6 divide-y md:grid-cols-3 md:gap-8 md:divide-x md:divide-y-0">
+    <div className="divide-foreground/10 grid grid-cols-1 divide-y md:grid-cols-3 md:gap-8 md:divide-x md:divide-y-0">
       <SpendPanel
         canvasId="spendP50"
         weeks={weeks}

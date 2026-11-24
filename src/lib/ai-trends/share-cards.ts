@@ -19,6 +19,8 @@ export type ShareCard = {
   description: string;
   updated: string;
   placeholder?: boolean;
+  /** Bump when the PNG rendering changes independently of its inputs. */
+  imageRevision?: number;
 };
 
 const { charts } = contentData;
@@ -32,18 +34,21 @@ const CARDS: ShareCard[] = [
     title: charts.scatter.title,
     description: charts.scatter.description,
     updated: formatDate(benchmarkData.run_date),
+    imageRevision: 3,
   },
   {
     slug: "token-share",
     title: charts.token_share.title,
     description: charts.token_share.description,
     updated: shareUpdated,
+    imageRevision: 2,
   },
   {
     slug: "wallet-share",
     title: charts.wallet_share.title,
     description: charts.wallet_share.description,
     updated: shareUpdated,
+    imageRevision: 2,
     placeholder: walletPlaceholder,
   },
   {
@@ -51,12 +56,14 @@ const CARDS: ShareCard[] = [
     title: charts.open_source_token_share.title,
     description: charts.open_source_token_share.description,
     updated: shareUpdated,
+    imageRevision: 2,
   },
   {
     slug: "open-source-wallet-share",
     title: charts.open_source_wallet_share.title,
     description: charts.open_source_wallet_share.description,
     updated: shareUpdated,
+    imageRevision: 2,
     placeholder: walletPlaceholder,
   },
   {
@@ -64,18 +71,21 @@ const CARDS: ShareCard[] = [
     title: charts.providers_used.title,
     description: charts.providers_used.description,
     updated: longTermUpdated,
+    imageRevision: 2,
   },
   {
     slug: "open-weight-share",
     title: charts.open_weight_share.title,
     description: charts.open_weight_share.description,
     updated: longTermUpdated,
+    imageRevision: 2,
   },
   {
     slug: "spend",
     title: charts.spend.title,
     description: charts.spend.description,
     updated: formatDate(industryData.spend.as_of),
+    imageRevision: 3,
   },
 ];
 
@@ -157,9 +167,8 @@ function hash(text: string): string {
 }
 
 /**
- * Changes whenever the card's copy, date, or chart data changes. X caches
- * link cards and their images by URL, so share links carry it as `?v=` to
- * get a fresh preview after a data update.
+ * Social platforms cache share pages and images by URL. The version covers
+ * the card's copy, date, chart data, and any explicit image revision.
  */
 export function getShareVersion(slug: string): string {
   const card = getShareCard(slug);

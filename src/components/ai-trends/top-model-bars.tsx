@@ -1,27 +1,13 @@
-"use client";
-
 import type { ReactNode } from "react";
-import type { Chart, ChartConfiguration, Plugin } from "chart.js";
 
-import {
-  axisTitle,
-  CHART_GRID,
-  CHART_MUTED,
-  ChartDataLabels,
-} from "@/lib/ai-trends/chart-setup";
 import type { MetricBar } from "@/lib/ai-trends/compute";
-import { useChart } from "@/lib/ai-trends/use-chart";
 import { getVendorLogo } from "@/lib/ai-trends/vendor-logos";
-
-const LOGO_SIZE = 18;
 
 type Unit = "percent" | "minutes" | "usd";
 
 export type BarPanel = {
-  canvasId: string;
   title: string;
   caption: string;
-  axis: string;
   unit: Unit;
   bars: MetricBar[];
   missing: string[];
@@ -33,121 +19,59 @@ function formatValue(unit: Unit, value: number): string {
   return `$${value.toFixed(2)}`;
 }
 
-/** Draws each bar's provider logo just left of the model-name axis. */
-function logoAxisPlugin(bars: MetricBar[]): Plugin<"bar"> {
-  const logos = bars.map(({ vendor }) => {
-    const src = getVendorLogo(vendor);
-    if (!src) return null;
-    const img = new Image(LOGO_SIZE, LOGO_SIZE);
-    img.src = src;
-    return img;
-  });
-  return {
-    id: "logoAxis",
-    afterDraw(chart: Chart<"bar">) {
-      const y = chart.scales.y;
-      logos.forEach((img, i) => {
-        if (!img) return;
-        if (!img.complete) {
-          img.onload = () => chart.draw();
-          return;
-        }
-        chart.ctx.drawImage(
-          img,
-          y.right - LOGO_SIZE - 4,
-          y.getPixelForTick(i) - LOGO_SIZE / 2,
-          LOGO_SIZE,
-          LOGO_SIZE,
-        );
-      });
-    },
-  };
-}
-
-/** Splits a long model name over two lines so it fits beside its bar. */
-function wrapLabel(label: string): string | string[] {
-  if (label.length <= 18) return label;
-  const cut = label.lastIndexOf(" ", 18);
-  return cut > 0 ? [label.slice(0, cut), label.slice(cut + 1)] : label;
-}
-
-function BarChartPanel({ panel }: { panel: BarPanel }): ReactNode {
-  const { canvasId, title, caption, axis, unit, bars, missing } = panel;
-  const { canvasRef } = useChart<"bar">(
-    (): ChartConfiguration<"bar"> => ({
-      type: "bar",
-      plugins: [ChartDataLabels, logoAxisPlugin(bars)],
-      data: {
-        labels: bars.map(({ label }) => wrapLabel(label)),
-        datasets: [
-          {
-            data: bars.map(({ value }) => value),
-            backgroundColor: bars.map(({ color }) => color),
-            borderRadius: 3,
-            maxBarThickness: 18,
-          },
-        ],
-      },
-      options: {
-        indexAxis: "y",
-        responsive: true,
-        maintainAspectRatio: false,
-        layout: { padding: { right: 52 } },
-        plugins: {
-          legend: { display: false },
-          tooltip: {
-            callbacks: {
-              title: (items) => {
-                const bar = bars[items[0]?.dataIndex ?? 0];
-                return bar ? `${bar.label} (${bar.harness})` : "";
-              },
-              label: (c) => formatValue(unit, Number(c.raw)),
-            },
-          },
-          datalabels: {
-            anchor: "end",
-            align: "right",
-            offset: 4,
-            clamp: false,
-            clip: false,
-            color: "rgb(0, 0, 0)",
-            font: { size: 10, weight: 600 },
-            formatter: (v: number) => formatValue(unit, v),
-          },
-        },
-        scales: {
-          x: {
-            beginAtZero: true,
-            grid: { color: CHART_GRID },
-            title: axisTitle(axis),
-            ticks: { font: { size: 10 }, color: CHART_MUTED, maxTicksLimit: 5 },
-          },
-          y: {
-            grid: { display: false },
-            ticks: {
-              padding: LOGO_SIZE + 8,
-              autoSkip: false,
-              font: { size: 11 },
-              color: CHART_MUTED,
-            },
-          },
-        },
-      },
-    }),
-    [bars, unit, axis],
-  );
+function RankedPanel({ panel }: { panel: BarPanel }): ReactNode {
+  const { title, caption, unit, bars, missing } = panel;
+  // Pass rates share the 0-100 scale; time and cost run to the largest value.
+  const scale =
+    unit === "percent" ? 100 : Math.max(...bars.map(({ value }) => value));
 
   return (
-    <div className="flex min-w-0 flex-col gap-1 pt-5 first:pt-0 lg:pt-0 lg:pr-8 lg:last:pr-0">
-      <p className="font-heading text-lg font-medium tracking-[-0.01em] text-black">
-        {title}
-      </p>
-      <p className="text-foreground/65 text-xs">{caption}</p>
-      <div className="relative mt-3 h-[360px]">
-        <canvas id={canvasId} ref={canvasRef} />
+    <div className="flex min-w-0 flex-col gap-5 py-8 first:pt-0 last:pb-0 xl:py-0 xl:pr-8 xl:last:pr-0">
+      <div className="flex flex-col gap-1">
+        <p className="text-lg/snug font-normal tracking-tight text-black md:text-xl/snug">
+          {title}
+        </p>
+        <p className="text-grey-40 text-sm tracking-tight">{caption}</p>
       </div>
+      <ol className="flex flex-col">
+        {bars.map(({ label, harness, vendor, color, value }) => {
+          const logo = getVendorLogo(vendor);
+          return (
+            <li key={label} className="flex flex-col">
+              <div className="flex items-center gap-2 py-2.5 text-sm/none tracking-tight">
+                {logo ? (
+                  <img src={logo} alt="" className="size-4 shrink-0" />
+                ) : (
+                  <span
+                    aria-hidden
+                    className="size-4 shrink-0 rounded-full"
+                    style={{ backgroundColor: color }}
+                  />
+                )}
+                <span className="truncate text-black">{label}</span>
+                <span className="text-grey-40 min-w-0 flex-1 truncate text-xs/none">
+                  {harness}
+                </span>
+                <span className="font-mono text-xs/none text-black tabular-nums">
+                  {formatValue(unit, value)}
+                </span>
+              </div>
+              {/* The row rule doubles as a meter of the row's value. */}
+              <div aria-hidden className="h-0.5 bg-black/10">
+                <div
+                  className="h-full"
+                  style={{
+                    width: `${(value / scale) * 100}%`,
+                    backgroundColor: color,
+                  }}
+                />
+              </div>
+            </li>
+          );
+        })}
+      </ol>
       {missing.length > 0 ? (
-        <p className="text-xs text-black/60">
+        <p className="text-grey-40 text-sm tracking-tight">
           Not ranked, no timing data: {missing.join(", ")}.
         </p>
       ) : null}
@@ -157,9 +81,9 @@ function BarChartPanel({ panel }: { panel: BarPanel }): ReactNode {
 
 export function TopModelBars({ panels }: { panels: BarPanel[] }): ReactNode {
   return (
-    <div className="divide-foreground/10 grid grid-cols-1 gap-8 divide-y lg:grid-cols-3 lg:divide-x lg:divide-y-0">
+    <div className="divide-foreground/10 grid grid-cols-1 divide-y xl:grid-cols-3 xl:gap-8 xl:divide-x xl:divide-y-0">
       {panels.map((panel) => (
-        <BarChartPanel key={panel.canvasId} panel={panel} />
+        <RankedPanel key={panel.title} panel={panel} />
       ))}
     </div>
   );

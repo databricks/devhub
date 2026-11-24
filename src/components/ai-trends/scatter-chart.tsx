@@ -1,52 +1,65 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { Chart, type ChartConfiguration } from "chart.js";
+import { useEffect, useImperativeHandle, useRef, useState } from "react";
+import type { Ref } from "react";
+import { Chart, type ChartConfiguration, type Plugin } from "chart.js";
 
-import {
-  applyChartDefaults,
-  ChartDataLabels,
-} from "@/lib/ai-trends/chart-setup";
+import { applyChartDefaults } from "@/lib/ai-trends/chart-setup";
 import type { FamilyOption, QualityAxis } from "@/lib/ai-trends/compute";
 import {
   placeLabels,
   type LabelPlacement,
 } from "@/lib/ai-trends/label-placement";
 import type { BenchmarkModel } from "@/lib/ai-trends/schema";
+import { renderCanvasImage } from "@/lib/ai-trends/share-image";
 import { useChart } from "@/lib/ai-trends/use-chart";
 import { useIsNarrow } from "@/lib/ai-trends/use-narrow";
 import { getVendorLogo } from "@/lib/ai-trends/vendor-logos";
 
+import { ChartPointTooltip } from "./chart-tooltip";
 import { FamilyFilter } from "./family-filter";
 import {
   computeCostRange,
   costXScale,
   qualityYScale,
   SCATTER_POINT_STYLES,
-  type DatalabelsCtx,
 } from "./scatter-scale-utils";
 
-/** Logo markers are drawn at this size; hit testing uses half of it as radius. */
-const LOGO_SIZE = 24;
-const NARROW_LOGO_SIZE = 18;
-const LABEL_FONT_SIZE = 9.5;
+const POINT_RADIUS = 4.5;
+const FRONTIER_POINT_RADIUS = 6;
+const LABEL_FONT_SIZE = 11.5;
+const LABEL_LETTER_SPACING = "-0.2px";
 const LABEL_OFFSET = 10;
 const LABEL_PADDING = 2;
-// Extra room around each label so near-touching labels aren't hidden as overlaps.
-const LABEL_GAP = 6;
-const LEADER_COLOR = "rgba(68,68,68,0.45)";
+const LABEL_GAP = 4;
+const LEADER_COLOR = "rgba(11,32,38,0.35)";
+const FRONTIER_COLOR = "#ff3621";
+const PREVIEW_DIMMED_OPACITY = 0.4;
+
+const FRONTIER_LABEL = "Pareto frontier";
+/** The provider logo is the marker; frontier models get a larger one. */
+const LOGO_SIZE = 14;
+const FRONTIER_LOGO_SIZE = 18;
+/** White disc behind a logo, so grid lines and the frontier don't cut it. */
+const LOGO_HALO = 2.5;
+/** Names off the frontier are set lighter, so the frontier reads first. */
+const OFF_FRONTIER_LABEL_OPACITY = 0.6;
 
 type ScatterPoint = {
   x: number;
   y: number;
   label: string;
+  displayName: string;
   frontier: boolean;
   harness: string;
+  logo?: string;
   place?: LabelPlacement;
 };
 
 type HoveredModel = {
   name: string;
+  provider?: string;
+
   harness: string;
   cost: number;
   quality: number;
@@ -62,24 +75,50 @@ type OverlayItem = {
   model: string;
 };
 
+export type ScatterChartHandle = {
+  renderFilteredImage: (title: string) => Promise<Blob>;
+};
+
+function setFamilyVisibility(
+  chart: Chart<"scatter">,
+  selectedFamilies: string[],
+  previewing: boolean,
+) {
+  chart.data.datasets.forEach(({ label }, i) => {
+    if (label === FRONTIER_LABEL) return;
+    chart.setDatasetVisibility(
+      i,
+      previewing ||
+        selectedFamilies.length === 0 ||
+        selectedFamilies.includes(String(label)),
+    );
+  });
+  chart.update("none");
+}
+
 export function ScatterChart({
+  ref,
   models,
   paretoNames,
   axis,
   families,
+  benchmarkDate,
   selectedFamilies,
   onSelectedFamiliesChange,
 }: {
+  ref: Ref<ScatterChartHandle>;
   models: BenchmarkModel[];
   paretoNames: string[];
   axis: QualityAxis;
   families: FamilyOption[];
+  benchmarkDate: string;
   selectedFamilies: string[];
   onSelectedFamiliesChange: (selected: string[]) => void;
 }) {
   const [hovered, setHovered] = useState<HoveredModel | null>(null);
+  const [hoveredFamily, setHoveredFamily] = useState<string | null>(null);
+  const previewFamiliesRef = useRef<Set<string> | null>(null);
   const narrow = useIsNarrow();
-  const logoSize = narrow ? NARROW_LOGO_SIZE : LOGO_SIZE;
 
   const wrapperRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
@@ -95,6 +134,15 @@ export function ScatterChart({
     circlesRef.current = [];
 
     const paretoSet = new Set(paretoNames);
+    const familyOpacity = (family: string | undefined) => {
+      const preview = previewFamiliesRef.current;
+      return preview &&
+        family &&
+        family !== FRONTIER_LABEL &&
+        !preview.has(family)
+        ? PREVIEW_DIMMED_OPACITY
+        : 1;
+    };
 
     const vendorMap = new Map<string, { color: string; pts: ScatterPoint[] }>();
     models.forEach((m) => {
@@ -105,57 +153,46 @@ export function ScatterChart({
         x: m.cost,
         y: m.quality,
         label: m.name,
+        // The harness stays in the tooltip; the label is the model alone.
+        displayName: m.name.replace(/\s+\([^)]*\)$/, ""),
         frontier: paretoSet.has(m.name),
         harness: m.harness,
+        logo: getVendorLogo(m.vendor),
       });
     });
 
     const datasets: object[] = [];
+    const isFrontier = (ctx: { raw: unknown }) =>
+      (ctx.raw as ScatterPoint).frontier;
+    const markerSize = (pt: ScatterPoint) =>
+      pt.logo
+        ? pt.frontier
+          ? FRONTIER_LOGO_SIZE
+          : LOGO_SIZE
+        : (pt.frontier ? FRONTIER_POINT_RADIUS : POINT_RADIUS) * 2;
+    // A phone has no room for every name: only the frontier is named there,
+    // the rest are read from the tooltip.
+    const isLabeled = (pt: ScatterPoint) => !narrow || pt.frontier;
+
     vendorMap.forEach(({ color, pts }, vendor) => {
-      const logoSrc = getVendorLogo(vendor);
-      let logo: HTMLImageElement | undefined;
-      if (logoSrc) {
-        logo = new Image(logoSize, logoSize);
-        // Redraw once the logo has loaded; until then the point is invisible.
-        logo.onload = () => chartRef.current?.draw();
-        logo.src = logoSrc;
-      }
       datasets.push({
         label: vendor,
         type: "scatter",
-        backgroundColor: (ctx: { raw: unknown }) => {
-          const pt = ctx.raw as ScatterPoint;
-          return pt.frontier ? color : `${color}BB`;
-        },
+        backgroundColor: (ctx: { raw: unknown }) =>
+          isFrontier(ctx) || previewFamiliesRef.current ? color : `${color}8C`,
         ...SCATTER_POINT_STYLES,
-        ...(logo
-          ? {
-              pointStyle: logo,
-              pointRadius: logoSize / 2,
-              pointHoverRadius: logoSize / 2,
-            }
-          : {}),
+        // A logo stands in for the dot; only providers without one keep it.
+        pointRadius: (ctx: { raw: unknown }) =>
+          (ctx.raw as ScatterPoint).logo
+            ? 0
+            : isFrontier(ctx)
+              ? FRONTIER_POINT_RADIUS
+              : POINT_RADIUS,
+        pointHoverRadius: (ctx: { raw: unknown }) =>
+          (ctx.raw as ScatterPoint).logo
+            ? 0
+            : (isFrontier(ctx) ? FRONTIER_POINT_RADIUS : POINT_RADIUS) + 2,
         data: pts,
-        datalabels: {
-          display: (ctx: DatalabelsCtx) => {
-            const pt = ctx.dataset.data[ctx.dataIndex] as ScatterPoint;
-            if (narrow || pt.place?.hidden) return false;
-            return pt.frontier ? true : "auto";
-          },
-          color: "#444",
-          font: { size: LABEL_FONT_SIZE, weight: "500" },
-          formatter: (v: unknown) => (v as ScatterPoint).label,
-          align: (ctx: DatalabelsCtx) =>
-            (ctx.dataset.data[ctx.dataIndex] as ScatterPoint).place?.angle ??
-            -90,
-          offset: (ctx: DatalabelsCtx) =>
-            (ctx.dataset.data[ctx.dataIndex] as ScatterPoint).place?.offset ??
-            LABEL_OFFSET,
-          clamp: true,
-          padding: LABEL_PADDING,
-          backgroundColor: "rgba(255,255,255,0.88)",
-          borderRadius: 3,
-        },
       });
     });
 
@@ -163,35 +200,35 @@ export function ScatterChart({
       .filter((m) => paretoSet.has(m.name))
       .sort((a, b) => a.cost - b.cost)
       .map((m) => ({ x: m.cost, y: m.quality }));
+    // Past the best model nothing improves, so the frontier runs flat to the edge.
+    const best = frontierPts.at(-1);
+    if (best) frontierPts.push({ x: xMax, y: best.y });
 
     datasets.push({
-      label: "Pareto frontier",
+      label: FRONTIER_LABEL,
       type: "line",
-      // Highest order draws first, so the line sits beneath every logo.
+      // Highest order draws first, so the line sits beneath every point.
       order: 1,
       data: frontierPts,
-      borderColor: "#171715",
-      borderDash: [9, 5],
-      borderWidth: 2.5,
+      borderColor: FRONTIER_COLOR,
+      borderWidth: 2,
       pointRadius: 0,
-      backgroundColor: "transparent",
+      fill: false,
       showLine: true,
-      datalabels: { display: false },
     });
 
-    // Logos are line art with transparent gaps; a white disc behind each one
-    // keeps the frontier line from showing through, so every logo reads as
-    // sitting on top of the line.
-    // Before labels are laid out, give each one a side where it fits.
+    const labelFont = `500 ${LABEL_FONT_SIZE}px ${Chart.defaults.font.family}`;
+    const labelHeight = LABEL_FONT_SIZE * 1.2 + LABEL_PADDING * 2;
+
     const labelPlacementPlugin = {
       id: "labelPlacement",
       afterLayout(chart: Chart) {
-        if (narrow) return;
         const { ctx, chartArea, scales } = chart;
         ctx.save();
-        ctx.font = `500 ${LABEL_FONT_SIZE}px ${Chart.defaults.font.family}`;
+        ctx.font = labelFont;
+        ctx.letterSpacing = LABEL_LETTER_SPACING;
         const points = chart.data.datasets.flatMap((ds, di) =>
-          ds.label === "Pareto frontier" || !chart.isDatasetVisible(di)
+          ds.label === FRONTIER_LABEL || !chart.isDatasetVisible(di)
             ? []
             : (ds.data as ScatterPoint[]),
         );
@@ -199,12 +236,16 @@ export function ScatterChart({
           points.map((pt) => ({
             x: scales.x.getPixelForValue(pt.x),
             y: scales.y.getPixelForValue(pt.y),
-            width:
-              ctx.measureText(pt.label).width + LABEL_PADDING * 2 + LABEL_GAP,
-            height: LABEL_FONT_SIZE * 1.2 + LABEL_PADDING * 2 + LABEL_GAP,
-            marker: logoSize,
+            // An unlabeled point takes no room but still keeps its marker clear.
+            width: isLabeled(pt)
+              ? ctx.measureText(pt.displayName).width +
+                LABEL_PADDING * 2 +
+                LABEL_GAP
+              : 0,
+            height: isLabeled(pt) ? labelHeight + LABEL_GAP : 0,
+            marker: markerSize(pt) + LOGO_HALO * 2,
             priority: (pt.frontier ? 1000 : 0) + pt.y,
-            required: pt.frontier,
+            required: true,
           })),
           chartArea,
           LABEL_OFFSET,
@@ -216,22 +257,38 @@ export function ScatterChart({
       },
     };
 
-    const logoBackdropPlugin = {
-      id: "logoBackdrop",
+    const previewOpacityPlugin: Plugin<"scatter"> = {
+      id: "familyPreviewOpacity",
+      beforeDatasetDraw(chart, { index }) {
+        const opacity = familyOpacity(chart.data.datasets[index]?.label);
+        if (opacity === 1) return;
+        chart.ctx.save();
+        chart.ctx.globalAlpha *= opacity;
+      },
+      afterDatasetDraw(chart, { index }) {
+        if (familyOpacity(chart.data.datasets[index]?.label) < 1)
+          chart.ctx.restore();
+      },
+    };
+
+    const leaderLinePlugin = {
+      id: "leaderLines",
       afterDatasetDraw(chart: Chart, args: { index: number }) {
-        if (chart.data.datasets[args.index]?.label !== "Pareto frontier")
-          return;
+        if (chart.data.datasets[args.index]?.label !== FRONTIER_LABEL) return;
         const { ctx } = chart;
         ctx.save();
-        // Leader lines run from a pushed-out label to its logo, under the logos.
+        // Leader lines run from a pushed-out label to its point, under the points.
         ctx.strokeStyle = LEADER_COLOR;
         ctx.lineWidth = 1;
         chart.data.datasets.forEach((ds, di) => {
-          if (ds.label === "Pareto frontier" || !chart.isDatasetVisible(di))
+          if (ds.label === FRONTIER_LABEL || !chart.isDatasetVisible(di))
             return;
+          ctx.globalAlpha = familyOpacity(ds.label);
           chart.getDatasetMeta(di).data.forEach((el, pi) => {
-            const { place } = ds.data[pi] as ScatterPoint;
-            if (narrow || !place?.leader || place.hidden || !place.box) return;
+            const point = ds.data[pi] as ScatterPoint;
+            const { place } = point;
+            if (!isLabeled(point)) return;
+            if (!place?.leader || place.hidden || !place.box) return;
             const { left, right, top, bottom } = place.box;
             ctx.beginPath();
             ctx.moveTo(el.x, el.y);
@@ -242,14 +299,74 @@ export function ScatterChart({
             ctx.stroke();
           });
         });
-        ctx.fillStyle = "#ffffff";
+        ctx.restore();
+      },
+    };
+
+    const logoImages = new Map<string, HTMLImageElement>();
+    const logoMarkerPlugin = {
+      id: "logoMarkers",
+      afterDatasetsDraw(chart: Chart) {
+        const { ctx } = chart;
+        ctx.save();
+        ctx.fillStyle = "#fff";
+        // Frontier models last, so their logos sit on top of the rest.
+        for (const frontier of [false, true]) {
+          chart.data.datasets.forEach((ds, di) => {
+            if (ds.label === FRONTIER_LABEL || !chart.isDatasetVisible(di))
+              return;
+            chart.getDatasetMeta(di).data.forEach((el, pi) => {
+              const point = ds.data[pi] as ScatterPoint;
+              if (!point.logo || point.frontier !== frontier) return;
+              let img = logoImages.get(point.logo);
+              if (!img) {
+                img = new Image();
+                img.onload = () => chart.draw();
+                img.src = point.logo;
+                logoImages.set(point.logo, img);
+              }
+              const size = markerSize(point);
+              ctx.globalAlpha = familyOpacity(ds.label);
+              ctx.beginPath();
+              ctx.arc(el.x, el.y, size / 2 + LOGO_HALO, 0, Math.PI * 2);
+              ctx.fill();
+              if (!img.complete || img.naturalWidth === 0) return;
+
+              ctx.drawImage(img, el.x - size / 2, el.y - size / 2, size, size);
+            });
+          });
+        }
+        ctx.restore();
+      },
+    };
+
+    const pointLabelPlugin = {
+      id: "pointLabels",
+      afterDatasetsDraw(chart: Chart) {
+        const { ctx } = chart;
+        ctx.save();
+        ctx.font = labelFont;
+        ctx.letterSpacing = LABEL_LETTER_SPACING;
+        ctx.textBaseline = "middle";
+        ctx.strokeStyle = "#fff";
+        ctx.lineWidth = 2.75;
+        ctx.lineJoin = "round";
+        ctx.fillStyle = "#0b2026";
         chart.data.datasets.forEach((ds, di) => {
-          if (ds.label === "Pareto frontier" || !chart.isDatasetVisible(di))
+          if (ds.label === FRONTIER_LABEL || !chart.isDatasetVisible(di))
             return;
-          chart.getDatasetMeta(di).data.forEach((pt) => {
-            ctx.beginPath();
-            ctx.arc(pt.x, pt.y, logoSize / 2 + 1, 0, Math.PI * 2);
-            ctx.fill();
+          ctx.globalAlpha = familyOpacity(ds.label);
+          (ds.data as ScatterPoint[]).forEach((point) => {
+            const { place, displayName } = point;
+            if (!isLabeled(point) || place?.hidden || !place?.box) return;
+            ctx.globalAlpha =
+              familyOpacity(ds.label) *
+              (point.frontier ? 1 : OFF_FRONTIER_LABEL_OPACITY);
+            const { left, top, bottom } = place.box;
+            const x = left + LABEL_GAP / 2 + LABEL_PADDING;
+            const y = (top + bottom) / 2;
+            ctx.strokeText(displayName, x, y);
+            ctx.fillText(displayName, x, y);
           });
         });
         ctx.restore();
@@ -263,7 +380,7 @@ export function ScatterChart({
 
         if (overlay && circlesRef.current.length === 0) {
           chart.data.datasets.forEach((ds, di) => {
-            if (ds.label === "Pareto frontier") return;
+            if (ds.label === FRONTIER_LABEL) return;
             (ds.data as ScatterPoint[]).forEach((pt, pi) => {
               const btn = document.createElement("button");
               btn.type = "button";
@@ -283,6 +400,8 @@ export function ScatterChart({
                 if (!el) return;
                 setHovered({
                   name: pt.label,
+                  provider: ds.label,
+
                   harness: pt.harness,
                   cost: pt.x,
                   quality: pt.y,
@@ -312,6 +431,7 @@ export function ScatterChart({
               btn.addEventListener("click", showTip);
               btn.addEventListener("blur", hideTip);
               btn.addEventListener("keydown", (e) => {
+                if (e.key === "Escape") hideTip();
                 if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
                 e.preventDefault();
                 const dir = e.key === "ArrowRight" ? 1 : -1;
@@ -359,7 +479,6 @@ export function ScatterChart({
         plugins: {
           legend: { display: false },
           tooltip: { enabled: false },
-          datalabels: { display: false },
         },
         scales: {
           x: costXScale(xMin, xMax),
@@ -368,38 +487,52 @@ export function ScatterChart({
       },
       plugins: [
         labelPlacementPlugin,
-        ChartDataLabels,
-        logoBackdropPlugin,
+        previewOpacityPlugin,
+        logoMarkerPlugin,
+        pointLabelPlugin,
+        leaderLinePlugin,
         overlayPlugin,
       ],
     } as unknown as ChartConfiguration<"scatter">;
-  }, [models, paretoNames, axis, narrow, logoSize]);
+  }, [models, paretoNames, axis, narrow]);
 
   useEffect(() => {
     const chart = chartRef.current;
     if (!chart) return;
-    chart.data.datasets.forEach((ds, i) => {
-      if (ds.label === "Pareto frontier") return;
-      chart.setDatasetVisibility(
-        i,
-        selectedFamilies.length === 0 ||
-          selectedFamilies.includes(String(ds.label)),
-      );
-    });
-    chart.update();
-  }, [selectedFamilies, chartRef, narrow]);
+    previewFamiliesRef.current = hoveredFamily
+      ? new Set([...selectedFamilies, hoveredFamily])
+      : null;
+    setFamilyVisibility(chart, selectedFamilies, hoveredFamily !== null);
+  }, [
+    selectedFamilies,
+    hoveredFamily,
+    chartRef,
+    narrow,
+    models,
+    paretoNames,
+    axis,
+  ]);
 
-  let tooltipLeft = 0;
-  let tooltipTop = 0;
-  if (hovered && wrapperRef.current) {
-    const tooltipWidth = 200;
-    tooltipLeft = Math.min(
-      Math.max(hovered.canvasX - tooltipWidth / 2, 4),
-      wrapperRef.current.offsetWidth - tooltipWidth - 4,
-    );
-    tooltipTop =
-      hovered.canvasY - 112 >= 4 ? hovered.canvasY - 112 : hovered.canvasY + 12;
-  }
+  useImperativeHandle(ref, () => ({
+    async renderFilteredImage(title) {
+      const chart = chartRef.current;
+      if (!chart) throw new Error("Scatter chart is not ready");
+
+      const preview = previewFamiliesRef.current;
+      chart.stop();
+      previewFamiliesRef.current = null;
+      try {
+        setFamilyVisibility(chart, selectedFamilies, false);
+        // Copies the pixels now, before the asynchronous PNG encoding.
+        return renderCanvasImage(chart.canvas, title);
+      } finally {
+        if (preview) {
+          previewFamiliesRef.current = preview;
+          setFamilyVisibility(chart, selectedFamilies, true);
+        }
+      }
+    },
+  }));
 
   return (
     <div className="flex flex-col gap-3">
@@ -407,11 +540,12 @@ export function ScatterChart({
         families={families}
         selected={selectedFamilies}
         onChange={onSelectedFamiliesChange}
+        onPreviewChange={setHoveredFamily}
         label="Model family"
       />
       <div
         ref={wrapperRef}
-        className="relative h-[420px]"
+        className="relative h-[540px] min-[360px]:h-[420px]"
         onClick={(e) => {
           if (e.target instanceof HTMLButtonElement) return;
           setHovered(null);
@@ -429,18 +563,35 @@ export function ScatterChart({
           ref={overlayRef}
           className="pointer-events-none absolute inset-0"
         />
-        {hovered && (
-          <div
-            role="tooltip"
-            style={{ left: tooltipLeft, top: tooltipTop, width: 200 }}
-            className="pointer-events-none absolute z-10 rounded-lg bg-neutral-900 px-3 py-2 text-xs text-white shadow-lg"
-          >
-            <div className="font-semibold">{hovered.name}</div>
-            <div>Harness: {hovered.harness}</div>
-            <div>Cost/task: ${hovered.cost.toFixed(2)}</div>
-            <div>Quality: {hovered.quality}%</div>
-            {hovered.frontier && <div>&#9733; Pareto frontier</div>}
-          </div>
+        {hovered && wrapperRef.current && (
+          <ChartPointTooltip
+            tooltip={{
+              title: hovered.name,
+              date: benchmarkDate,
+              x: hovered.canvasX,
+              y: hovered.canvasY,
+              width: wrapperRef.current.clientWidth,
+              height: wrapperRef.current.clientHeight,
+              rows: [
+                ...(hovered.provider
+                  ? [
+                      {
+                        label: "Provider",
+                        value: hovered.provider,
+                        icon: getVendorLogo(hovered.provider),
+                      },
+                    ]
+                  : []),
+                { label: "Harness", value: hovered.harness },
+                {
+                  label: "Cost per task",
+                  value: `$${hovered.cost.toFixed(2)}`,
+                },
+                { label: "Quality", value: `${hovered.quality}%` },
+              ],
+              note: hovered.frontier ? "On the frontier" : undefined,
+            }}
+          />
         )}
         <div
           ref={announceRef}

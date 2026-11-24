@@ -7,18 +7,20 @@ import { getVendorLogo } from "@/lib/ai-trends/vendor-logos";
 import { cn } from "@/lib/utils";
 
 /**
- * Multi-select chips. An empty selection means every family is shown, so
- * "All" is active exactly when nothing is picked.
+ * Multi-select mono toggles in brackets, each with its provider logo, in the
+ * DevHub kicker style. An empty selection shows every family.
  */
 export function FamilyFilter({
   families,
   selected,
   onChange,
+  onPreviewChange,
   label,
 }: {
   families: FamilyOption[];
   selected: string[];
   onChange: (selected: string[]) => void;
+  onPreviewChange: (family: string | null) => void;
   label: string;
 }): ReactNode {
   const toggle = (family: string) =>
@@ -32,69 +34,67 @@ export function FamilyFilter({
     <div
       role="group"
       aria-label={label}
-      className="mb-1 flex flex-wrap items-center gap-2"
+      className="flex flex-wrap items-center gap-x-4 gap-y-2"
     >
-      <span className="mr-0.5 text-[11px] font-semibold tracking-wider text-black/55 uppercase">
-        {label}
+      <span className="text-grey-40 font-mono text-sm/none font-medium uppercase">
+        {label}:
       </span>
-      <Chip active={selected.length === 0} onClick={() => onChange([])}>
-        All
-      </Chip>
-      {families.map(({ label: family, color }) => (
-        <Chip
+      {families.map(({ label: family }) => (
+        <Toggle
           key={family}
           active={selected.includes(family)}
+          logo={getVendorLogo(family)}
           onClick={() => toggle(family)}
+          onPreview={(preview) => onPreviewChange(preview ? family : null)}
         >
-          <VendorMark family={family} color={color} />
           {family}
-        </Chip>
+        </Toggle>
       ))}
     </div>
   );
 }
 
-function VendorMark({
-  family,
-  color,
-}: {
-  family: string;
-  color: string;
-}): ReactNode {
-  const logo = getVendorLogo(family);
-  return logo ? (
-    <img src={logo} alt="" aria-hidden="true" className="size-3.5" />
-  ) : (
-    <span
-      aria-hidden="true"
-      className="size-2.25 rounded-xs"
-      style={{ backgroundColor: color }}
-    />
-  );
-}
-
-function Chip({
+function Toggle({
   active,
+  logo,
   onClick,
+  onPreview,
   children,
 }: {
   active: boolean;
+  logo?: string;
   onClick: () => void;
-  children: ReactNode;
+  onPreview: (preview: boolean) => void;
+  children: string;
 }): ReactNode {
   return (
     <button
       type="button"
       aria-pressed={active}
       onClick={onClick}
+      onPointerEnter={(event) => {
+        if (event.pointerType !== "touch") onPreview(true);
+      }}
+      onPointerLeave={() => onPreview(false)}
+      onPointerCancel={() => onPreview(false)}
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs transition-colors",
-        active
-          ? "border-db-lava/30 bg-db-lava/10 text-db-lava font-medium"
-          : "border-black/10 text-black/60 hover:border-black/25 hover:text-black",
+        "inline-flex min-h-7 items-center font-mono text-sm/none font-medium uppercase transition-colors",
+        active ? "text-orange" : "text-grey-40 hover:text-black",
       )}
     >
-      {children}
+      <span aria-hidden="true">[</span>
+      {logo ? (
+        <img
+          src={logo}
+          alt=""
+          aria-hidden="true"
+          width={14}
+          height={14}
+          className="mx-1 size-3.5 shrink-0"
+        />
+      ) : null}
+      <span>{children}</span>
+      <span aria-hidden="true">]</span>
     </button>
   );
 }

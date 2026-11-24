@@ -13,7 +13,6 @@ function requireShareVersion(slug: string, version?: string): string {
 export function ChartCard({
   id,
   title,
-  updated,
   placeholder = false,
   description,
   note,
@@ -21,12 +20,12 @@ export function ChartCard({
   shareVersion,
   shareTitle,
   getShareImage,
+  actions,
   children,
   className,
 }: {
   id?: string;
   title?: string;
-  updated?: string;
   placeholder?: boolean;
   description?: ReactNode;
   note?: ReactNode;
@@ -36,6 +35,8 @@ export function ChartCard({
   /** The share card title, for the X post text, when it differs from `title`. */
   shareTitle?: string;
   getShareImage?: () => Promise<Blob>;
+  /** Chart controls shown in the header, before Share. */
+  actions?: ReactNode;
   children?: ReactNode;
   className?: string;
 }): ReactNode {
@@ -43,27 +44,25 @@ export function ChartCard({
     <Card
       id={shareSlug ?? id}
       className={cn(
-        "border-foreground/15 flex min-w-0 scroll-mt-24 flex-col gap-0 rounded-lg border bg-white p-4 shadow-none md:px-6 md:pt-4 md:pb-6",
+        "border-db-navy flex min-w-0 scroll-mt-24 flex-col gap-0 rounded-none border bg-white p-4 shadow-none md:px-6 md:pt-5 md:pb-6",
         className,
       )}
     >
       {title ? (
-        <div className="mb-4 flex flex-wrap items-start gap-x-3 gap-y-2">
+        <div className="mb-4 flex flex-wrap items-start gap-x-3 gap-y-3 md:mb-5">
           <div className="min-w-0 grow basis-full sm:basis-0">
-            <h3 className="text-foreground text-base font-semibold">{title}</h3>
-            {updated ? (
-              <p className="text-foreground/65 mt-1 text-xs">
-                Updated {updated}
-              </p>
-            ) : null}
+            <h3 className="text-lg/snug font-normal tracking-tight text-pretty text-black md:text-xl/snug">
+              {title}
+            </h3>
           </div>
-          {placeholder || shareSlug ? (
-            <div className="ml-auto flex shrink-0 items-center gap-2">
+          {placeholder || shareSlug || actions ? (
+            <div className="flex max-w-full shrink-0 flex-wrap items-center gap-2 sm:ml-auto">
               {placeholder ? (
-                <span className="bg-orange/15 text-orange rounded-full px-2.5 py-0.5 text-xs font-medium">
+                <span className="border-orange text-orange border px-1.5 py-1 font-mono text-xs/none font-medium uppercase">
                   Placeholder data
                 </span>
               ) : null}
+              {actions}
               {shareSlug ? (
                 <ShareControl
                   shareSlug={shareSlug}
@@ -77,13 +76,17 @@ export function ChartCard({
         </div>
       ) : null}
       {description ? (
-        <p className="mb-5 max-w-4xl text-sm text-black/60">{description}</p>
+        <p className="mb-5 max-w-4xl text-sm tracking-tight text-black/80">
+          {description}
+        </p>
       ) : null}
       <div className="min-w-0 flex-none">{children}</div>
       {note ? (
-        <p className="border-foreground/10 text-foreground/65 mt-5 border-t pt-4 text-xs leading-relaxed">
-          {note}
-        </p>
+        <div className="mt-auto pt-5">
+          <p className="text-grey-40 border-t border-black/10 pt-4 text-xs/5 tracking-tight text-pretty">
+            {note}
+          </p>
+        </div>
       ) : null}
     </Card>
   );

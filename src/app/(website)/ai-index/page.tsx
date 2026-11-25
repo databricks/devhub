@@ -106,6 +106,7 @@ export default function AiTrendsPage(): ReactNode {
       <div className="mx-auto flex w-full max-w-360 flex-col gap-10 px-5 pb-16 md:px-8 md:pb-24">
         <section id="usage" className="flex scroll-mt-24 flex-col gap-5">
           <SectionHeading
+            compactTop
             index={1}
             eyebrow={sections.proprietary.eyebrow}
             title={sections.proprietary.title}

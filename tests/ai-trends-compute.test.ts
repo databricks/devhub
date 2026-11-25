@@ -197,6 +197,45 @@ describe("getModelShades", () => {
   test("is deterministic", () => {
     expect(getModelShades("#d97706", 5)).toEqual(getModelShades("#d97706", 5));
   });
+
+  test("Moonshot's #1c1c1c keeps its brand color as the newest and gets a visible middle shade", () => {
+    expect(getModelShades("#1c1c1c", 3)).toEqual([
+      "#999999",
+      "#5a5a5a",
+      "#1c1c1c",
+    ]);
+  });
+
+  /** WCAG relative luminance, the measure the darkening floor uses. */
+  const relativeLuminance = (hex: string) => {
+    const [r, g, b] = [1, 3, 5].map((i) => {
+      const c = parseInt(hex.slice(i, i + 2), 16) / 255;
+      return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+    });
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  };
+
+  test.each(["#1c1c1c", "#000000", "#1e3207"])(
+    "near-black base %s: newest shade is the base, luminance strictly falls with age",
+    (base) => {
+      for (let count = 2; count <= 6; count++) {
+        const shades = getModelShades(base, count);
+        expect(shades.at(-1)).toBe(base);
+        for (let i = 1; i < count; i++)
+          expect(relativeLuminance(shades[i])).toBeLessThan(
+            relativeLuminance(shades[i - 1]),
+          );
+      }
+    },
+  );
+
+  test("a base above the floor keeps the full darkening toward black", () => {
+    expect(getModelShades("#d97757", 3)).toEqual([
+      "#e6a692",
+      "#da7a5b",
+      "#98533d",
+    ]);
+  });
 });
 
 describe("share stacking", () => {
@@ -537,6 +576,22 @@ describe("industry data", () => {
         ).toBeGreaterThanOrEqual(2);
       }
     }
+  });
+
+  test("Kimi K3 and Kimi K3.1 Pro read as different shades", () => {
+    const moonshot = industryData.share.groups.open_source.series.filter(
+      ({ provider }) => provider === "Moonshot",
+    );
+    const brand = getFamilies(models).find(
+      ({ label }) => label === "Moonshot",
+    )?.color;
+    if (!brand) throw new Error("No Moonshot family in the benchmark data");
+    const shades = getModelShades(brand, moonshot.length);
+    const shadeOf = (label: string) =>
+      shades[moonshot.findIndex((s) => s.label === label)];
+    expect(
+      deltaE(shadeOf("Kimi K3"), shadeOf("Kimi K3.1 Pro")),
+    ).toBeGreaterThanOrEqual(20);
   });
 });
 

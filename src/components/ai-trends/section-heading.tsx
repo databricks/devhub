@@ -24,14 +24,23 @@ export function SectionHeading({
   eyebrow,
   title,
   intro,
+  compactTop = false,
 }: {
   index: number;
   eyebrow: string;
   title: string;
   intro?: string;
+  /** Less space above the rule's label, for the first section under the page header. */
+  compactTop?: boolean;
 }): ReactNode {
   return (
-    <div className="border-foreground/20 border-t pt-10">
+    <div
+      className={
+        compactTop
+          ? "border-foreground/20 border-t pt-7"
+          : "border-foreground/20 border-t pt-10"
+      }
+    >
       <div className="flex flex-col gap-2">
         <p className="text-foreground/65 font-mono text-[11px] tracking-[0.14em] uppercase">
           <span className="text-db-lava">{String(index).padStart(2, "0")}</span>

@@ -93,7 +93,7 @@
       "color": "#4285f4",
       "harness": "Claude Code",
       "quality": 90.3,
-      "cost": 1.903,
+      "cost": 3.807,
       "avg_turns": 62,
       "avg_latency_min": 26.6
     },

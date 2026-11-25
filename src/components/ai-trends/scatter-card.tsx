@@ -5,6 +5,7 @@ import type { ComponentProps, ReactNode } from "react";
 
 import { getLabeledNames } from "@/lib/ai-trends/compute";
 import { renderCanvasImage } from "@/lib/ai-trends/share-image";
+import { useIsNarrow } from "@/lib/ai-trends/use-narrow";
 
 import { ChartCard } from "./chart-card";
 import { ScatterChart } from "./scatter-chart";
@@ -36,6 +37,8 @@ export function ScatterCard({
   ...chart
 }: ScatterCardProps): ReactNode {
   const [selectedFamilies, setSelectedFamilies] = useState<string[]>([]);
+  // The chart draws no labels on narrow screens, so the filtered note would be wrong there.
+  const narrow = useIsNarrow();
   const labeled = useMemo(
     () => getLabeledNames(chart.models, chart.paretoNames, selectedFamilies),
     [chart.models, chart.paretoNames, selectedFamilies],
@@ -56,7 +59,7 @@ export function ScatterCard({
     <ChartCard
       title={title}
       dateLabel={dateLabel}
-      note={labeled.all && noteFiltered ? noteFiltered : note}
+      note={labeled.all && !narrow && noteFiltered ? noteFiltered : note}
       shareSlug="scatter"
       shareVersion={shareVersion}
       getShareImage={selectedLabels.length > 0 ? getFilteredImage : undefined}

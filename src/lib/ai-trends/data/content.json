@@ -44,7 +44,8 @@
     "scatter": {
       "title": "Cost per Task vs Quality",
       "description": "Pass rate against average cost per task on Databricks' internal coding benchmark, one point per model. Hover over a point for exact values.",
-      "note": "Built from internal benchmarks on the Databricks codebase. Each model is shown in the harness, Claude Code or Codex, that sits closest to the frontier."
+      "note": "Built from internal benchmarks on the Databricks codebase. Each model is shown in the harness, Claude Code or Codex, that sits closest to the frontier. Labeled points are on the frontier: no other model is both cheaper and better. Hover or tap any point to see its model and harness.",
+      "note_filtered": "Built from internal benchmarks on the Databricks codebase. Each model is shown in the harness, Claude Code or Codex, that sits closest to the frontier. Labels show every model in the selected families. The dashed line is still the frontier across all models. Hover or tap any point to see its model and harness."
     },
     "top_models": {
       "panels": {

@@ -176,6 +176,8 @@ const chartCopy = z.object({
   title: z.string().min(1),
   description: z.string().min(1),
   note: z.string().optional(),
+  /** The note while a family filter labels every visible point. */
+  note_filtered: z.string().optional(),
 });
 
 export const contentDataSchema = z.object({

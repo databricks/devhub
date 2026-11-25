@@ -69,6 +69,7 @@ export function ScatterChart({
   families,
   selectedFamilies,
   onSelectedFamiliesChange,
+  labeledNames,
 }: {
   models: BenchmarkModel[];
   paretoNames: string[];
@@ -76,6 +77,8 @@ export function ScatterChart({
   families: FamilyOption[];
   selectedFamilies: string[];
   onSelectedFamiliesChange: (selected: string[]) => void;
+  /** Points that carry a label; the rest show their name on hover or tap. */
+  labeledNames: Set<string>;
 }) {
   const [hovered, setHovered] = useState<HoveredModel | null>(null);
   const narrow = useIsNarrow();
@@ -85,6 +88,9 @@ export function ScatterChart({
   const overlayRef = useRef<HTMLDivElement>(null);
   const announceRef = useRef<HTMLDivElement>(null);
   const circlesRef = useRef<OverlayItem[]>([]);
+  // Read by the chart's label callbacks, so a filter change only needs an update.
+  const labeledRef = useRef(labeledNames);
+  labeledRef.current = labeledNames;
 
   const { xMin, xMax } = computeCostRange(models);
 
@@ -140,7 +146,7 @@ export function ScatterChart({
           display: (ctx: DatalabelsCtx) => {
             const pt = ctx.dataset.data[ctx.dataIndex] as ScatterPoint;
             if (narrow || pt.place?.hidden) return false;
-            return pt.frontier ? true : "auto";
+            return labeledRef.current.has(pt.label);
           },
           color: "#444",
           font: { size: LABEL_FONT_SIZE, weight: "500" },
@@ -204,7 +210,8 @@ export function ScatterChart({
             height: LABEL_FONT_SIZE * 1.2 + LABEL_PADDING * 2 + LABEL_GAP,
             marker: logoSize,
             priority: (pt.frontier ? 1000 : 0) + pt.y,
-            required: pt.frontier,
+            required: labeledRef.current.has(pt.label),
+            labeled: labeledRef.current.has(pt.label),
           })),
           chartArea,
           LABEL_OFFSET,
@@ -387,7 +394,7 @@ export function ScatterChart({
       );
     });
     chart.update();
-  }, [selectedFamilies, chartRef, narrow]);
+  }, [selectedFamilies, labeledNames, chartRef, narrow]);
 
   let tooltipLeft = 0;
   let tooltipTop = 0;

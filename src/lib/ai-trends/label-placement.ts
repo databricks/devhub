@@ -11,6 +11,8 @@ export type LabelItem = {
   priority: number;
   /** Must stay visible even when no spot is free. */
   required: boolean;
+  /** False for a point drawn without a label: its marker is still kept clear. */
+  labeled?: boolean;
 };
 
 /**
@@ -91,6 +93,7 @@ function placeInOrder(
   const placements = items.map(() => HIDDEN);
   const unplaced: number[] = [];
   for (const i of order) {
+    if (items[i].labeled === false) continue;
     const fits = (box: Box) =>
       inside(box, area) && !placed.some((p) => overlaps(box, p));
     const coversMarker = (box: Box) =>

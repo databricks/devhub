@@ -247,6 +247,33 @@ export function getSpendAxis(values: number[]): { max: number; step: number } {
   return { max: Math.ceil(suggested / step - 1e-9) * step, step };
 }
 
+/** With this many points or fewer on screen, every point gets a label. */
+export const LABEL_ALL_MAX = 10;
+
+/**
+ * Which scatter points carry a label: only the frontier, unless a family
+ * filter leaves LABEL_ALL_MAX points or fewer, when every visible point does.
+ * The frontier itself stays the one computed over all models.
+ */
+export function getLabeledNames(
+  models: BenchmarkModel[],
+  paretoNames: string[],
+  selectedFamilies: string[],
+): { names: Set<string>; all: boolean } {
+  const visible =
+    selectedFamilies.length === 0
+      ? models
+      : models.filter((m) => selectedFamilies.includes(m.vendor));
+  const all = selectedFamilies.length > 0 && visible.length <= LABEL_ALL_MAX;
+  const pareto = new Set(paretoNames);
+  return {
+    names: new Set(
+      visible.filter((m) => all || pareto.has(m.name)).map((m) => m.name),
+    ),
+    all,
+  };
+}
+
 export function getFamilies(models: BenchmarkModel[]): FamilyOption[] {
   const seen = new Map<string, string>();
   for (const m of models) {

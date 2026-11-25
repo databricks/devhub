@@ -261,6 +261,12 @@ const MAX_LIGHTEN = 0.55;
 const NEWEST_DARKEN = 0.3;
 /** Palest shade must still read as a filled band on a white card. */
 const MIN_SHADE_CONTRAST = 2.05;
+/**
+ * The newest shade may darken toward black, but not below this relative
+ * luminance (about L* 20). A near-black brand (Moonshot's #1c1c1c) would
+ * otherwise darken into a shade no one can tell from its neighbour.
+ */
+const MIN_NEWEST_LUMINANCE = 0.03;
 
 function mixHex(hex: string, target: number, amount: number): string {
   const channels = [1, 3, 5].map((start) =>
@@ -305,11 +311,33 @@ function lightenHeadroom(baseColor: string): number {
   return lo;
 }
 
+/**
+ * How far the newest shade may darken toward black. NEWEST_DARKEN returned
+ * exactly whenever it stays above MIN_NEWEST_LUMINANCE, so every base that
+ * already clears the floor keeps its shades unchanged. A base already below
+ * the floor keeps its brand color (0). Otherwise bisect for the largest
+ * darkening that still clears the floor.
+ */
+function darkenHeadroom(baseColor: string): number {
+  if (luminance(mixHex(baseColor, 0, NEWEST_DARKEN)) >= MIN_NEWEST_LUMINANCE)
+    return NEWEST_DARKEN;
+  if (luminance(baseColor) < MIN_NEWEST_LUMINANCE) return 0;
+  let lo = 0;
+  let hi = NEWEST_DARKEN;
+  for (let i = 0; i < 12; i++) {
+    const mid = (lo + hi) / 2;
+    if (luminance(mixHex(baseColor, 0, mid)) >= MIN_NEWEST_LUMINANCE) lo = mid;
+    else hi = mid;
+  }
+  return lo;
+}
+
 export function getModelShades(baseColor: string, count: number): string[] {
   if (count === 1) return [baseColor];
   const lighten = lightenHeadroom(baseColor);
+  const darken = darkenHeadroom(baseColor);
   return Array.from({ length: count }, (_, i) => {
-    const amount = lighten - (lighten + NEWEST_DARKEN) * (i / (count - 1));
+    const amount = lighten - (lighten + darken) * (i / (count - 1));
     return amount >= 0
       ? mixHex(baseColor, 255, amount)
       : mixHex(baseColor, 0, -amount);

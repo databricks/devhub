@@ -1,6 +1,6 @@
 {
-  "source": "Databricks internal coding benchmark, aggregate results exported 2026-11-18, filtered to the latest model per class, plus Claude Fable 5.1",
-  "run_date": "2026-11-18",
+  "source": "Databricks internal coding benchmark, aggregate results exported 2026-11-19, filtered to the latest model per class, plus Claude Fable 5.1",
+  "run_date": "2026-11-19",
   "meta": {
     "quality_metric": "aggregate_best_score",
     "quality_metric_label": "Aggregate pass rate",

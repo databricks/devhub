@@ -312,11 +312,9 @@ function lightenHeadroom(baseColor: string): number {
 }
 
 /**
- * How far the newest shade may darken toward black. NEWEST_DARKEN returned
- * exactly whenever it stays above MIN_NEWEST_LUMINANCE, so every base that
- * already clears the floor keeps its shades unchanged. A base already below
- * the floor keeps its brand color (0). Otherwise bisect for the largest
- * darkening that still clears the floor.
+ * How far the newest shade may darken toward black. Returns NEWEST_DARKEN
+ * exactly when full darkening clears MIN_NEWEST_LUMINANCE, so brands that
+ * were never too dark keep the shades they already had.
  */
 function darkenHeadroom(baseColor: string): number {
   if (luminance(mixHex(baseColor, 0, NEWEST_DARKEN)) >= MIN_NEWEST_LUMINANCE)

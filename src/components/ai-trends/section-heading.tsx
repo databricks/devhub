@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
 
+import { cn } from "@/lib/utils";
+
 import { RichText } from "./rich-text";
 
 const TITLE_CLASS =
@@ -35,11 +37,10 @@ export function SectionHeading({
 }): ReactNode {
   return (
     <div
-      className={
-        compactTop
-          ? "border-foreground/20 border-t pt-7"
-          : "border-foreground/20 border-t pt-10"
-      }
+      className={cn(
+        "border-foreground/20 border-t",
+        compactTop ? "pt-7" : "pt-10",
+      )}
     >
       <div className="flex flex-col gap-2">
         <p className="text-foreground/65 font-mono text-[11px] tracking-[0.14em] uppercase">

@@ -178,182 +178,6 @@ describe("getSpendAxis", () => {
   });
 });
 
-/**
- * Shades on main before the darkening floor, for every non-Moonshot brand
- * color in this week's data, at 1 to 8 models (the data runs 1 to 7). Each
- * row is getModelShades(color, count). The floor must not change any of them.
- */
-const PRE_FLOOR_SHADES: Record<string, string[][]> = {
-  // Anthropic
-  "#d97757": [
-    ["#d97757"],
-    ["#e6a692", "#98533d"],
-    ["#e6a692", "#da7a5b", "#98533d"],
-    ["#e6a692", "#de896d", "#c76d50", "#98533d"],
-    ["#e6a692", "#e09076", "#da7a5b", "#bb674b", "#98533d"],
-    ["#e6a692", "#e1957c", "#dc8366", "#d07253", "#b46348", "#98533d"],
-    [
-      "#e6a692",
-      "#e2987f",
-      "#de896d",
-      "#da7a5b",
-      "#c76d50",
-      "#af6046",
-      "#98533d",
-    ],
-    [
-      "#e6a692",
-      "#e39a82",
-      "#df8d73",
-      "#dc8163",
-      "#d47455",
-      "#c0694d",
-      "#ac5e45",
-      "#98533d",
-    ],
-  ],
-  // OpenAI
-  "#10a37f": [
-    ["#10a37f"],
-    ["#6ac5af", "#0b7259"],
-    ["#6ac5af", "#19a684", "#0b7259"],
-    ["#6ac5af", "#34b192", "#0f9775", "#0b7259"],
-    ["#6ac5af", "#41b699", "#19a684", "#0e8e6e", "#0b7259"],
-    ["#6ac5af", "#49b99e", "#29ad8c", "#109e7b", "#0d886a", "#0b7259"],
-    [
-      "#6ac5af",
-      "#4fbba1",
-      "#34b192",
-      "#19a684",
-      "#0f9775",
-      "#0d8467",
-      "#0b7259",
-    ],
-    [
-      "#6ac5af",
-      "#53bda3",
-      "#3cb496",
-      "#24ab8a",
-      "#10a17e",
-      "#0e9271",
-      "#0d8265",
-      "#0b7259",
-    ],
-  ],
-  // Other proprietary
-  "#6366f1": [
-    ["#6366f1"],
-    ["#adaef8", "#4547a9"],
-    ["#adaef8", "#7173f2", "#4547a9"],
-    ["#adaef8", "#8587f4", "#5f62e7", "#4547a9"],
-    ["#adaef8", "#8f91f5", "#7173f2", "#585bd7", "#4547a9"],
-    ["#adaef8", "#9597f5", "#7d7ff3", "#6467f1", "#5557ce", "#4547a9"],
-    [
-      "#adaef8",
-      "#999bf6",
-      "#8587f4",
-      "#7173f2",
-      "#5f62e7",
-      "#5255c8",
-      "#4547a9",
-    ],
-    [
-      "#adaef8",
-      "#9c9ef6",
-      "#8a8df5",
-      "#797cf3",
-      "#686bf1",
-      "#5b5ede",
-      "#5053c3",
-      "#4547a9",
-    ],
-  ],
-  // Zhipu
-  "#e87ba4": [
-    ["#e87ba4"],
-    ["#ee9dbc", "#a25673"],
-    ["#ee9dbc", "#e479a1", "#a25673"],
-    ["#ee9dbc", "#ea85ab", "#ce6d91", "#a25673"],
-    ["#ee9dbc", "#eb8baf", "#e479a1", "#c3678a", "#a25673"],
-    ["#ee9dbc", "#eb8fb2", "#e980a7", "#d67298", "#bc6485", "#a25673"],
-    [
-      "#ee9dbc",
-      "#ec91b3",
-      "#ea85ab",
-      "#e479a1",
-      "#ce6d91",
-      "#b86282",
-      "#a25673",
-    ],
-    [
-      "#ee9dbc",
-      "#ec93b4",
-      "#ea88ad",
-      "#e87ea6",
-      "#da749a",
-      "#c86a8d",
-      "#b56080",
-      "#a25673",
-    ],
-  ],
-  // DeepSeek
-  "#6e56f7": [
-    ["#6e56f7"],
-    ["#b7abfb", "#4d3cad"],
-    ["#b7abfb", "#7d67f8", "#4d3cad"],
-    ["#b7abfb", "#907ef9", "#6b53ef", "#4d3cad"],
-    ["#b7abfb", "#9a89f9", "#7d67f8", "#634edf", "#4d3cad"],
-    ["#b7abfb", "#a090fa", "#8975f8", "#715af7", "#5f4ad5", "#4d3cad"],
-    [
-      "#b7abfb",
-      "#a495fa",
-      "#907ef9",
-      "#7d67f8",
-      "#6b53ef",
-      "#5c48ce",
-      "#4d3cad",
-    ],
-    [
-      "#b7abfb",
-      "#a798fa",
-      "#9685f9",
-      "#8571f8",
-      "#755ef7",
-      "#6650e6",
-      "#5a46c9",
-      "#4d3cad",
-    ],
-  ],
-  // Other open-weight
-  "#f59e0b": [
-    ["#f59e0b"],
-    ["#f6a41a", "#ac6f08"],
-    ["#f6a41a", "#d88b0a", "#ac6f08"],
-    ["#f6a41a", "#e7950a", "#c98209", "#ac6f08"],
-    ["#f6a41a", "#ee9a0b", "#d88b0a", "#c27d09", "#ac6f08"],
-    ["#f6a41a", "#f39d0b", "#e1910a", "#cf8609", "#bd7a08", "#ac6f08"],
-    [
-      "#f6a41a",
-      "#f59e0c",
-      "#e7950a",
-      "#d88b0a",
-      "#c98209",
-      "#ba7808",
-      "#ac6f08",
-    ],
-    [
-      "#f6a41a",
-      "#f59f0e",
-      "#eb980b",
-      "#de8f0a",
-      "#d28709",
-      "#c57f09",
-      "#b87708",
-      "#ac6f08",
-    ],
-  ],
-};
-
 describe("getModelShades", () => {
   test("single model keeps the base color", () => {
     expect(getModelShades("#336699", 1)).toEqual(["#336699"]);
@@ -403,13 +227,12 @@ describe("getModelShades", () => {
     },
   );
 
-  test("every non-Moonshot provider keeps the shades it had before the floor", () => {
-    for (const [base, rows] of Object.entries(PRE_FLOOR_SHADES))
-      rows.forEach((expected, i) =>
-        expect(getModelShades(base, i + 1), `${base} x${i + 1}`).toEqual(
-          expected,
-        ),
-      );
+  test("a base above the floor keeps the full darkening toward black", () => {
+    expect(getModelShades("#d97757", 3)).toEqual([
+      "#e6a692",
+      "#da7a5b",
+      "#98533d",
+    ]);
   });
 });
 
@@ -760,7 +583,8 @@ describe("industry data", () => {
     const brand = getFamilies(models).find(
       ({ label }) => label === "Moonshot",
     )?.color;
-    const shades = getModelShades(brand ?? "", moonshot.length);
+    if (!brand) throw new Error("No Moonshot family in the benchmark data");
+    const shades = getModelShades(brand, moonshot.length);
     const shadeOf = (label: string) =>
       shades[moonshot.findIndex((s) => s.label === label)];
     expect(

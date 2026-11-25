@@ -213,6 +213,7 @@ export default function AiTrendsPage(): ReactNode {
             title={charts.scatter.title}
             dateLabel={formatBenchmarkRun(runDate)}
             note={charts.scatter.note}
+            noteFiltered={charts.scatter.note_filtered}
             shareVersion={getShareVersion("scatter")}
             models={pricedModels}
             paretoNames={getParetoNames(pricedModels)}

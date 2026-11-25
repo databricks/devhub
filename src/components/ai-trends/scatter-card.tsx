@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import type { ComponentProps, ReactNode } from "react";
 
+import { getLabeledNames } from "@/lib/ai-trends/compute";
 import { renderCanvasImage } from "@/lib/ai-trends/share-image";
+import { useIsNarrow } from "@/lib/ai-trends/use-narrow";
 
 import { ChartCard } from "./chart-card";
 import { ScatterChart } from "./scatter-chart";
@@ -12,8 +14,15 @@ const CANVAS_ID = "scatterChart";
 
 type ScatterCardProps = Omit<
   ComponentProps<typeof ScatterChart>,
-  "selectedFamilies" | "onSelectedFamiliesChange"
-> & { title: string; dateLabel: string; note?: string; shareVersion: string };
+  "selectedFamilies" | "onSelectedFamiliesChange" | "labeledNames"
+> & {
+  title: string;
+  dateLabel: string;
+  note?: string;
+  /** The note while a family filter labels every visible point. */
+  noteFiltered?: string;
+  shareVersion: string;
+};
 
 /**
  * The scatter card owns the family filter so "Copy image" can copy the
@@ -23,10 +32,17 @@ export function ScatterCard({
   title,
   dateLabel,
   note,
+  noteFiltered,
   shareVersion,
   ...chart
 }: ScatterCardProps): ReactNode {
   const [selectedFamilies, setSelectedFamilies] = useState<string[]>([]);
+  // The chart draws no labels on narrow screens, so the filtered note would be wrong there.
+  const narrow = useIsNarrow();
+  const labeled = useMemo(
+    () => getLabeledNames(chart.models, chart.paretoNames, selectedFamilies),
+    [chart.models, chart.paretoNames, selectedFamilies],
+  );
   const selectedLabels = chart.families
     .map(({ label }) => label)
     .filter((label) => selectedFamilies.includes(label));
@@ -43,7 +59,7 @@ export function ScatterCard({
     <ChartCard
       title={title}
       dateLabel={dateLabel}
-      note={note}
+      note={labeled.all && !narrow && noteFiltered ? noteFiltered : note}
       shareSlug="scatter"
       shareVersion={shareVersion}
       getShareImage={selectedLabels.length > 0 ? getFilteredImage : undefined}
@@ -52,6 +68,7 @@ export function ScatterCard({
         {...chart}
         selectedFamilies={selectedFamilies}
         onSelectedFamiliesChange={setSelectedFamilies}
+        labeledNames={labeled.names}
       />
     </ChartCard>
   );

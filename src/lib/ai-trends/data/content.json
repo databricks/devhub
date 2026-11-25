@@ -44,7 +44,8 @@
     "scatter": {
       "title": "Cost per Task vs Quality",
       "description": "Pass rate against average cost per task on Databricks' internal coding benchmark, one point per model. Hover over a point for exact values.",
-      "note": "Built from internal benchmarks on the Databricks codebase. Each model is shown in the harness, Claude Code or Codex, that sits closest to the frontier."
+      "note": "Built from internal benchmarks on the Databricks codebase. Each model is shown in the harness, Claude Code or Codex, that sits closest to the frontier. Labeled points are on the frontier: no other model is both cheaper and better. Hover or tap any point to see its model and harness.",
+      "note_filtered": "Built from internal benchmarks on the Databricks codebase. Each model is shown in the harness, Claude Code or Codex, that sits closest to the frontier. Labels show every model in the selected families. The dashed line is still the frontier across all models. Hover or tap any point to see its model and harness."
     },
     "top_models": {
       "panels": {
@@ -68,12 +69,12 @@
     "token_share": {
       "title": "Unity Gateway Token Share - Proprietary Models",
       "description": "Weekly share of Unity Gateway tokens across proprietary models.",
-      "note": "Input plus output tokens routed through Unity Gateway, including traffic routed to external model providers."
+      "note": "Input plus output tokens routed through Unity Gateway, including traffic routed to external model providers. Older OpenAI Models includes GPT 5.6 Sol, OpenAI's largest named model Jul–mid Sep."
     },
     "wallet_share": {
       "title": "Unity Gateway Wallet Share - Proprietary Models",
       "description": "Weekly share of list-price spend across proprietary models on Unity Gateway.",
-      "note": "Tokens priced at each provider's published list price, with cache reads at the cache-read rate. Includes traffic routed to external model providers; not what Databricks bills."
+      "note": "Tokens priced at each provider's published list price, with cache reads at the cache-read rate. Includes traffic routed to external model providers; not what Databricks bills. Older OpenAI Models includes GPT 5.6 Sol, OpenAI's largest named model Jul–early Sep."
     },
     "spend": {
       "title": "Unity Gateway User Spend Percentiles (Weekly)",
@@ -88,7 +89,7 @@
     "open_source_token_share": {
       "title": "Unity Gateway Token Share - Open-Weight Models",
       "description": "Weekly share of Unity Gateway tokens across open-weight models.",
-      "note": "Input plus output tokens routed through Unity Gateway, including traffic routed to external model providers."
+      "note": "Input plus output tokens routed through Unity Gateway, including traffic routed to external model providers. Older DeepSeek Models includes DS V4 Flash, DeepSeek's largest named model early Aug–mid Sep."
     },
     "open_source_wallet_share": {
       "title": "Unity Gateway Wallet Share - Open-Weight Models",

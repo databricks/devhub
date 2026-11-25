@@ -1,6 +1,6 @@
 {
-  "source": "Databricks internal coding benchmark, aggregate results exported 2026-11-18, filtered to the latest model per class, plus Claude Fable 5.1",
-  "run_date": "2026-11-18",
+  "source": "Databricks internal coding benchmark, aggregate results exported 2026-11-19, filtered to the latest model per class, plus Claude Fable 5.1",
+  "run_date": "2026-11-19",
   "meta": {
     "quality_metric": "aggregate_best_score",
     "quality_metric_label": "Aggregate pass rate",
@@ -93,7 +93,7 @@
       "color": "#4285f4",
       "harness": "Claude Code",
       "quality": 90.3,
-      "cost": 1.903,
+      "cost": 3.807,
       "avg_turns": 62,
       "avg_latency_min": 26.6
     },
@@ -113,7 +113,7 @@
       "color": "#4285f4",
       "harness": "Codex",
       "quality": 85.7,
-      "cost": 4.844,
+      "cost": 9.689,
       "avg_turns": 42.9,
       "avg_latency_min": 23.4
     },
@@ -226,6 +226,16 @@
       "cost": 1.532,
       "avg_turns": 34.3,
       "avg_latency_min": 5.2
+    },
+    {
+      "name": "Gemini 4 Neon (codex)",
+      "vendor": "Google",
+      "color": "#4285f4",
+      "harness": "Codex",
+      "quality": 91.4,
+      "cost": 3.998,
+      "avg_turns": 46.4,
+      "avg_latency_min": 21.1
     }
   ]
 }

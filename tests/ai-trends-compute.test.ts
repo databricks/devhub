@@ -4,6 +4,7 @@ import {
   getAtLeastLayers,
   getBestPerModel,
   getFamilies,
+  getLabeledNames,
   getLegendGroups,
   getMetricLayers,
   getModelShades,
@@ -16,6 +17,7 @@ import {
   getSpendAxis,
   getStackLayers,
   getTopModelPanels,
+  LABEL_ALL_MAX,
 } from "../src/lib/ai-trends/compute";
 import { benchmarkData, industryData } from "../src/lib/ai-trends/data";
 import {
@@ -597,6 +599,48 @@ describe("getTopModelPanels", () => {
   });
 });
 
+describe("getLabeledNames", () => {
+  const priced = getBestPerModel(models);
+  const pareto = getParetoNames(priced);
+
+  test("with no filter, only frontier points are labeled", () => {
+    const { names, all } = getLabeledNames(priced, pareto, []);
+    expect(all).toBe(false);
+    expect([...names].sort()).toEqual([...pareto].sort());
+  });
+
+  test("a filter leaving few points labels every visible point", () => {
+    const pool = [
+      makeModel("A1", 90, 1, "h", "A"),
+      makeModel("A2", 80, 2, "h", "A"),
+      makeModel("B1", 95, 0.5, "h", "B"),
+    ];
+    const { names, all } = getLabeledNames(pool, ["B1"], ["A"]);
+    expect(all).toBe(true);
+    expect([...names].sort()).toEqual(["A1", "A2"]);
+  });
+
+  test("a filter leaving more than the cap labels only its frontier points", () => {
+    const pool = Array.from({ length: LABEL_ALL_MAX + 1 }, (_, i) =>
+      makeModel(`A${i}`, 80 + i, 1 + i, "h", "A"),
+    );
+    const { names, all } = getLabeledNames(pool, ["A0", "A3"], ["A"]);
+    expect(all).toBe(false);
+    expect([...names].sort()).toEqual(["A0", "A3"]);
+  });
+
+  test("the frontier stays global: a family's best point isn't labeled as frontier", () => {
+    const pool = [
+      ...Array.from({ length: LABEL_ALL_MAX + 1 }, (_, i) =>
+        makeModel(`A${i}`, 80 + i * 0.1, 5 + i, "h", "A"),
+      ),
+      makeModel("B1", 99, 0.5, "h", "B"),
+    ];
+    const { names } = getLabeledNames(pool, ["B1"], ["A"]);
+    expect(names.size).toBe(0);
+  });
+});
+
 describe("placeLabels", () => {
   const area = { left: 0, top: 0, right: 400, bottom: 300 };
   const item = (x: number, y: number, priority: number, required = false) => ({
@@ -660,6 +704,18 @@ describe("placeLabels", () => {
       });
     });
     expect(placements.some((p) => p.leader && !p.hidden)).toBe(true);
+  });
+
+  test("an unlabeled point gets no label but keeps its logo clear", () => {
+    const placements = placeLabels(
+      [item(100, 100, 1), { ...item(100, 70, 2), labeled: false }],
+      area,
+      10,
+    );
+    expect(placements[1].hidden).toBe(true);
+    // The labeled point can't go on top: the unlabeled logo sits there.
+    expect(placements[0].hidden).toBe(false);
+    expect(placements[0].angle).not.toBe(-90);
   });
 
   test("hides an optional label with no clear spot but keeps a required one", () => {

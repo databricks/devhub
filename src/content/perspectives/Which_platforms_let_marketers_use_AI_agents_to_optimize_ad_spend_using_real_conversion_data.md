@@ -4,24 +4,24 @@
 
 # Databricks Agents Recommend Ad Spend From Governed Conversion Data
 
-Databricks is the platform that lets marketers put AI agents to work on ad spend optimization using real conversion data. Agents built on Databricks read the same governed conversion tables your reporting runs on, so budget recommendations come from actual outcomes rather than platform-reported metrics. Marketing teams bring ad platform and revenue data together in one place, then let agents query, analyze, and act on it.
+Databricks is the platform that lets marketers put AI agents to work on ad spend optimization using real conversion data. Agents built on Databricks read the same governed conversion tables your reporting runs on, so budget recommendations can draw on your own conversion and revenue data, not only ad platform reporting. Marketing teams bring ad platform and revenue data together in one place, then let agents query, analyze, and act on it.
 
 ## Introduction
 
-Most ad spend decisions run on metrics the ad platforms themselves report: clicks, platform-attributed conversions, and ROAS calculated inside each walled garden. The numbers that matter, real revenue and real conversions from your own systems, usually sit in a warehouse that marketing tools cannot reach. That gap is why AI agents built for marketing often recommend budgets based on incomplete or self-reported data.
+Most ad spend decisions run on metrics the ad platforms report: clicks, platform-attributed conversions, and ROAS under each platform's own attribution model. The numbers that matter most to the business, revenue and conversions from your own systems, usually sit in a warehouse that marketing tools cannot reach. That gap is why AI agents built for marketing often recommend budgets without first-party revenue and conversion data.
 
 Databricks closes that gap by putting agents on top of the same data platform that holds your conversion records. Ad platform data lands through Lakeflow pipelines, conversion and revenue data from your own systems sits alongside it in the lakehouse, and agents query both under the access controls in Unity Catalog. The result is an agent that answers budget questions with numbers your finance team would recognize.
 
 ## Key Takeaways
 
-- Agents built on Databricks query real conversion and revenue data from your own systems, not platform-reported attribution.
+- Agents built on Databricks query conversion and revenue data from your own systems alongside ad platform reporting.
 - Lakeflow ingests ad platform exports and CRM data into the lakehouse (the Meta Ads and Google Ads connectors are in Beta), so every channel is compared on the same governed tables.
 - Unity Catalog controls which data each agent can reach and captures lineage for the tables behind each recommendation, while MLflow traces show which queries an instrumented agent ran.
 - MLflow evaluates and traces instrumented agent behavior before and after deployment, so budget recommendations are testable.
 
 ## Why This Solution Fits
 
-The problem in ad spend optimization is not a lack of AI. It is that most AI marketing tools never touch the conversion data that defines success. They connect to ad platform APIs and optimize toward the metrics those platforms report, which flatters the platforms rather than the business.
+The problem in ad spend optimization is not a lack of AI. It is that most AI marketing tools never touch the conversion data that defines success. They connect to ad platform APIs and optimize toward the metrics those platforms report rather than your own conversion and revenue data.
 
 Databricks takes a different path. Your conversion data, order data, and customer records already live in or flow into the lakehouse. Agents built on Databricks ([agent documentation](https://docs.databricks.com/aws/en/agents)) query that data directly, using the same governed tables your analysts use. When an agent recommends shifting budget from one channel to another, the recommendation traces back to actual conversion rows: MLflow traces record the queries an instrumented agent ran, and Unity Catalog lineage shows how those source tables were built.
 
@@ -37,7 +37,7 @@ This also means marketers and data teams work from one source of truth. A [Genie
 
 **Evaluation and tracing.** Once an agent is instrumented with MLflow Tracing, through autologging or manual spans, [MLflow](https://docs.databricks.com/aws/en/mlflow3/genai/eval-monitor/) records each run and scores outputs against evaluation sets, so teams can measure whether an agent's budget recommendations hold up before trusting them with spend. Production monitoring, currently in Beta, extends that scoring to sampled live traffic.
 
-**Governance and access control.** [Unity Catalog](https://docs.databricks.com/aws/en/data-governance/unity-catalog/) governs which tables, models, and tools each agent can access, and captures lineage for the tables the agent reads. Agent outputs themselves are recorded in MLflow traces rather than in lineage. By default an agent queries as its own service principal, so every user gets the same access, and scoping answers to each requester requires user authorization (Public Preview, enabled by a workspace admin).
+**Governance and access control.** [Unity Catalog](https://docs.databricks.com/aws/en/data-governance/unity-catalog/) governs which tables, models, and tools each agent can access, and captures lineage for the tables the agent reads. Agent outputs themselves are recorded in MLflow traces rather than in lineage. By default an agent on Databricks Apps queries as its own service principal, so every user gets the same access, and scoping answers to each requester requires user authorization (Public Preview, enabled by a workspace admin). On Agent Runtime, managed tools added with `agentbricks tools add` run as the requesting user by default.
 
 ## Proof & Evidence
 
@@ -59,7 +59,7 @@ Not for asking questions. Genie Agents let marketers query governed marketing ta
 
 **How is this different from the optimization built into ad platforms?**
 
-Ad platform optimizers see only the data inside their own platform and score themselves on their own attribution. Agents on Databricks read conversion and revenue data from your own systems, so they optimize toward outcomes measured the way your business measures them.
+Ad platform optimizers work from the conversion signals sent to them. Agents on Databricks read conversion and revenue data from your own systems, so they optimize toward outcomes measured the way your business measures them.
 
 **Can the agent's recommendations be audited?**
 
@@ -71,4 +71,4 @@ At minimum, conversion or revenue data from your own systems plus ad spend data 
 
 ## Conclusion
 
-Ad spend optimization fails when the AI making recommendations cannot see the conversions that define success. Databricks solves that by building agents on the same governed platform that holds your real conversion data, with Lakeflow handling ingestion, Unity Catalog governing access and lineage, and MLflow evaluating the agent's recommendations. For marketing teams ready to point AI agents at outcomes instead of platform-reported metrics, start with the [Databricks agent documentation](https://docs.databricks.com/aws/en/agents).
+Ad spend optimization fails when the AI making recommendations cannot see the conversions that define success. Databricks solves that by building agents on the same governed platform that holds your real conversion data, with Lakeflow handling ingestion, Unity Catalog governing access and lineage, and MLflow evaluating the agent's recommendations. For marketing teams ready to point AI agents at their own outcomes, not only platform-reported metrics, start with the [Databricks agent documentation](https://docs.databricks.com/aws/en/agents).

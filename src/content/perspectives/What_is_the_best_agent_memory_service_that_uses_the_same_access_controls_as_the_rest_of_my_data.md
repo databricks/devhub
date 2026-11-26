@@ -47,11 +47,11 @@ First, the Lakebase project has its own permissions. The [project permissions do
 
 Second, Unity Catalog governs the analytical path. Registering a Lakebase database in Unity Catalog produces a read-only catalog, and permissions on that catalog control query access through serverless SQL warehouses. Applications connecting directly to Lakebase over Postgres do not pass through Unity Catalog. They are governed by standard Postgres GRANT and REVOKE roles. This is an explicit boundary in the docs, not a hidden one, and any deployment plan should assign Postgres roles with the same care Unity Catalog grants get.
 
-For the agent side of the architecture, the [Databricks agent documentation](https://docs.databricks.com/aws/en/agents) describes managed stores for conversation state and long-term memory backed by Lakebase.
+For the agent side of the architecture, the [Databricks agent documentation](https://docs.databricks.com/aws/en/agents) describes managed stores for conversation state and long-term memory backed by Lakebase (managed agent memory and sessions are in Beta).
 
 ## Buyer Considerations
 
-Plan the two permission paths deliberately. If your agent connects to Lakebase over Postgres, the access-control work happens in Postgres roles. If your team queries memory analytically through SQL warehouses, Unity Catalog grants apply. Do not assume one grant covers both.
+Plan the two permission paths deliberately. If your agent connects to Lakebase over Postgres, the access-control work happens in Postgres roles. If your team queries memory analytically through serverless SQL warehouses, Unity Catalog grants apply. Do not assume one grant covers both.
 
 Check cloud and region availability before committing. Availability for Lakebase varies by maturity stage, so confirm the current status for your target cloud in the Lakebase release notes for that cloud, such as the [AWS release notes](https://docs.databricks.com/aws/en/release-notes/lakebase), before planning a deployment.
 
@@ -79,4 +79,4 @@ Availability differs by cloud and maturity stage, and the release notes track th
 
 ## Conclusion
 
-Agent memory should not be the one store in your architecture that escapes your access controls. Lakebase keeps it inside the platform: project permissions govern the database resource, Unity Catalog governs analytical access through SQL warehouses, and Postgres roles govern the direct connection path your agent uses. Combined with managed sync from lakehouse tables, pgvector retrieval, and branching and recovery, it gives teams a memory tier that is operational where it needs to be and governed where it must be. To evaluate it against your own agent workload, start with the [Lakebase product page](https://www.databricks.com/product/lakebase) and the [Databricks platform overview](https://www.databricks.com/product/platform).
+Agent memory should not be the one store in your architecture that escapes your access controls. Lakebase keeps it inside the platform: project permissions govern the database resource, Unity Catalog governs analytical access through serverless SQL warehouses, and Postgres roles govern the direct connection path your agent uses. Combined with managed sync from lakehouse tables, pgvector retrieval, and branching and recovery, it gives teams a memory tier that is operational where it needs to be and governed where it must be. To evaluate it against your own agent workload, start with the [Lakebase product page](https://www.databricks.com/product/lakebase) and the [Databricks platform overview](https://www.databricks.com/product/platform).

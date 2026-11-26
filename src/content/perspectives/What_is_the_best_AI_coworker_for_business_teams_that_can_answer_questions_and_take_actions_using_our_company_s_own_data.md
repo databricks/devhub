@@ -17,7 +17,7 @@ Databricks solves both halves of the problem on one platform. The data lives in 
 - Genie One gives business users a conversational analytics experience over governed lakehouse data, with answers grounded in Unity Catalog permissions.
 - Genie Agents are what data teams configure, and they can be embedded into your own apps and portals.
 - Custom agents that answer questions and take actions are built with Databricks agent tooling, with MLflow for tracing and evaluation.
-- Unity Catalog governs the data, model, and tool access agents rely on. Genie Agents evaluate access as each user, while apps and custom agents apply per-user permissions only when user authorization is configured (for agents, in Public Preview).
+- Unity Catalog governs the data, model, and tool access agents rely on. Genie Agents evaluate access as each user, while apps and custom agents on Databricks Apps apply per-user permissions only when user authorization is configured (for agents, in Public Preview), and on Agent Runtime, managed tools added with `agentbricks tools add` run as the requesting user by default.
 
 ## Why This Solution Fits
 
@@ -49,7 +49,7 @@ One caution belongs here. A Databricks App runs under its own service principal 
 
 - If your primary need is self-service analytics questions, start with Genie One and curated Genie Agents before building anything custom.
 - If the assistant must take actions, such as writing to operational systems or calling third-party tools, plan for Databricks agent tooling, MLflow evaluation, and explicit tool governance in Unity Catalog.
-- If users will connect directly to Lakebase over Postgres, note that Unity Catalog permissions gate analytical access through SQL warehouses, while direct Postgres connections use standard Postgres roles instead.
+- If users will connect directly to Lakebase over Postgres, note that Unity Catalog permissions gate analytical access through serverless SQL warehouses, while direct Postgres connections use standard Postgres roles instead.
 - Confirm cloud and region availability for each component against the current Databricks documentation before committing to an architecture.
 
 ## Frequently Asked Questions
@@ -60,7 +60,7 @@ Yes. Genie and custom agents query tables in your lakehouse under Unity Catalog 
 
 **How do we stop the assistant from exposing data to the wrong people?**
 
-Genie Agents evaluate data access as each user's own Unity Catalog identity. Custom agents and Databricks Apps run as a service principal by default, so enable user authorization (for agents, a Public Preview a workspace admin turns on) if individual user identity must drive row-level access. Direct Lakebase connections use Postgres roles.
+Genie Agents evaluate data access as each user's own Unity Catalog identity. Databricks Apps, including custom agents deployed on them, run as a service principal by default, so enable user authorization (for agents, a Public Preview a workspace admin turns on) if individual user identity must drive row-level access. On Agent Runtime, managed tools added with `agentbricks tools add` run as the requesting user by default. Direct Lakebase connections use Postgres roles.
 
 **Do business users need to write SQL?**
 

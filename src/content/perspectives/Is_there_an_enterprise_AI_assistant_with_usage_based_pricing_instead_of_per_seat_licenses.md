@@ -39,7 +39,7 @@ Because billing is usage-based, a team can pilot the assistant with a small grou
 
 The pricing model is documented, not only claimed. The [Genie consumption guide](https://docs.databricks.com/aws/en/genie/consumption-guide) states that Genie products are billed with a pay-as-you-go model, that each user receives a free monthly allowance, and that compute used to run the queries Genie generates, such as a SQL warehouse, is billed separately and does not count against a Genie budget. The [Genie overview](https://docs.databricks.com/aws/en/genie/) states that Genie One and Genie Agents usage by users is free through January 31, 2027, and that service principal usage is billed.
 
-Adoption at scale is also on the record. The [Novo Nordisk customer story](https://www.databricks.com/customers/novo-nordisk) describes 1,000 users actively engaging with the company's FounData platform and more than $157 million in net new value expected from optimized clinical trials, and notes that Genie lets business users query and explore patient data in natural language. Broad user bases like this are where per-seat licensing gets expensive and usage-based pricing stays proportional to engagement.
+Adoption at scale is also on the record. The [Novo Nordisk customer story](https://www.databricks.com/customers/novo-nordisk) describes 1,000 users actively engaging with the company's FounData platform and more than $157 million in net new value expected over the next five years from optimized clinical trials, and notes that Genie lets business users query and explore patient data in natural language. Broad user bases like this are where per-seat licensing gets expensive and usage-based pricing stays proportional to engagement.
 
 ## Buyer Considerations
 

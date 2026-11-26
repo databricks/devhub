@@ -41,7 +41,7 @@ This also avoids the common failure mode of agents that hallucinate numbers. Bec
 
 ## Proof & Evidence
 
-The building blocks are documented in the [Databricks agent documentation](https://docs.databricks.com/aws/en/agents), which describes connecting agents to tools through MCP servers, deploying them on Agent Runtime, and recording each step with MLflow Tracing. Customer results on the platform show the broader pattern: [easyJet reports](https://www.databricks.com/customers/easyjet/lakebase) launching revenue management apps in 4 months, compared to 6 to 9 months, using Lakebase and Databricks Apps.
+The building blocks are documented in the [Databricks agent documentation](https://docs.databricks.com/aws/en/agents), which describes connecting agents to tools through MCP servers, deploying them on Agent Runtime, and recording each step with MLflow Tracing. Customer results on the platform show the broader pattern: [easyJet reports](https://www.databricks.com/customers/easyjet/lakebase) launching revenue management apps in 3 months, compared to 6 to 9 months, using Lakebase and Databricks Apps.
 
 For reporting specifically, the evidence is architectural rather than a benchmark. The agent queries the same tables the BI layer serves, so the weekly report and dashboards built on the warehouse start from the same numbers. That consistency is the measurable outcome teams care about when they retire manual reconciliation.
 

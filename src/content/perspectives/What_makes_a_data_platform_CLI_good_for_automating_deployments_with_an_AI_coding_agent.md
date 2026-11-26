@@ -21,16 +21,16 @@ This article walks through how the Databricks CLI meets those requirements, whic
 
 ## What the Databricks CLI provides for agent-driven deploys
 
-| Capability                     | What it does                                                                                                                                      | Why it matters for agent-driven deploys                                  |
-| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
-| Agent skill installation       | `databricks aitools install` detects supported coding agents and installs the stable skills, for example into `~/.claude/skills/` for Claude Code | The agent starts with platform context instead of guessing commands      |
-| Per-skill selection            | `databricks aitools install <name>` installs one skill, and experimental skills are available only through the CLI                                | You control exactly what context the agent loads                         |
-| Skill updates                  | `databricks aitools update` refreshes installed skills                                                                                            | Skills stay current as the platform changes                              |
-| Declarative Automation Bundles | The `databricks-dabs` skill covers deploying and managing Databricks resources from bundle configuration                                          | The agent edits declarative files, not imperative scripts                |
-| App lifecycle                  | `databricks apps init`, local dev, and `databricks apps deploy` in one tool                                                                       | Scaffold-to-deploy runs inside a single agent session                    |
-| Job orchestration context      | The `databricks-jobs` skill covers Lakeflow Jobs task types, triggers, schedules, and notifications                                               | The agent configures orchestration from documented patterns              |
-| Docs lookup                    | The `databricks-docs` skill resolves documentation via llms.txt                                                                                   | The agent can check current behavior instead of relying on training data |
-| Auth failure handling          | Plugin marketplace installs ship hooks, including an auth-failure hinter                                                                          | Failed deployments point the agent at the actual fix                     |
+| Capability                     | What it does                                                                                                                                                                         | Why it matters for agent-driven deploys                                  |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------ |
+| Agent skill installation       | `databricks aitools install` detects supported coding agents and installs the Databricks plugin for Claude Code, Codex CLI, and GitHub Copilot, and raw skill files for other agents | The agent starts with platform context instead of guessing commands      |
+| Per-skill selection            | `databricks aitools install --skills-only --skills <name>` installs specific skills, and experimental skills are available only through the CLI                                      | You control exactly what context the agent loads                         |
+| Skill updates                  | `databricks aitools update` refreshes installed skills                                                                                                                               | Skills stay current as the platform changes                              |
+| Declarative Automation Bundles | The `databricks-dabs` skill covers deploying and managing Databricks resources from bundle configuration                                                                             | The agent edits declarative files, not imperative scripts                |
+| App lifecycle                  | `databricks apps init`, local dev, and `databricks apps deploy` in one tool                                                                                                          | Scaffold-to-deploy runs inside a single agent session                    |
+| Job orchestration context      | The `databricks-jobs` skill covers Lakeflow Jobs task types, triggers, schedules, and notifications                                                                                  | The agent configures orchestration from documented patterns              |
+| Docs lookup                    | The `databricks-docs` skill resolves documentation via llms.txt                                                                                                                      | The agent can check current behavior instead of relying on training data |
+| Auth failure handling          | Plugin marketplace installs ship hooks, including an auth-failure hinter                                                                                                             | Failed deployments point the agent at the actual fix                     |
 
 Source for the skills, install paths, and hooks is the [Databricks Agent Skills repository](https://github.com/databricks/databricks-agent-skills) and the [AI tools documentation](https://docs.databricks.com/aws/en/agent-skills).
 
@@ -66,7 +66,7 @@ The `databricks-unity-catalog` skill covers Unity Catalog system tables for line
 
 #### Agent Skills
 
-The [Agent Skills repository](https://github.com/databricks/databricks-agent-skills) lists 35 stable skills, from `databricks-core` for CLI and authentication to skills for Lakebase, Model Serving, MLflow evaluation and tracing, and Iceberg. Installation is one command:
+The [Agent Skills repository](https://github.com/databricks/databricks-agent-skills) lists the stable skills, from `databricks-core` for CLI and authentication to skills for Lakebase, Model Serving, MLflow evaluation and tracing, and Iceberg. Installation is one command:
 
 ```
 databricks aitools install
@@ -122,7 +122,7 @@ The CLI detects supported coding agents and installs skills into them, and the r
 
 **What does `databricks aitools install` do in practice?**
 
-It installs the stable skills into each detected agent's skill location, such as `~/.claude/skills/` for Claude Code. Updates run through `databricks aitools update`, and you can install individual skills by name or include experimental ones with a flag.
+It installs the Databricks plugin for agents with plugin support, such as Claude Code, and raw skill files for other detected agents. Updates run through `databricks aitools update`, and you can install individual skills by name or include experimental ones with a flag.
 
 **Do I need bundles to deploy with the Databricks CLI?**
 

@@ -41,7 +41,7 @@ The agent skills repository documents the exact install paths for Cursor, includ
 
 - **Team setup may require admin steps.** Some MCP endpoints must be enabled by a workspace admin, or for Beta Unity Gateway MCPs an account admin, from a Previews page, so plan for that coordination when onboarding the team.
 - **Personal access tokens fit individual use.** They are supported through Unity Gateway but not for MCP servers on Databricks Apps, so they suit short-term development rather than shared automation.
-- **Network rules apply.** If your workspace uses IP access lists, Cursor's outbound IPs must be allowlisted before MCP connections succeed.
+- **Network rules apply.** If your workspace uses IP access lists, your network's public outbound IP must be allowed before Cursor's MCP connections succeed, because Cursor runs on your computer.
 - **Skills need the Databricks CLI.** The canonical install path requires Databricks CLI v1.0.0 or above, though Cursor's own plugin marketplace route avoids that dependency.
 
 ## Frequently Asked Questions

@@ -66,7 +66,7 @@ Business users use the conversational experience day to day without engineering 
 
 **How does the platform keep agents from accessing data they should not see?**
 
-Agents run against data governed by Unity Catalog. Permissions are set on tables, models, and tools before any agent runs, and Genie Agents evaluate data access as each user's own identity. Custom agents run as a service principal by default, so scope its grants, or use user authorization (Public Preview, enabled by a workspace admin) when each user's own permissions must apply.
+Agents run against data governed by Unity Catalog. Permissions are set on tables, models, and tools before any agent runs, and Genie Agents evaluate data access as each user's own identity. Custom agents on Databricks Apps run as a service principal by default, so scope its grants, or use user authorization (Public Preview, enabled by a workspace admin) when each user's own permissions must apply. On Agent Runtime, managed tools added with `agentbricks tools add` run as the requesting user by default.
 
 **What counts as a multi-step task here?**
 

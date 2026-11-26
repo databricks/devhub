@@ -14,7 +14,7 @@ This matters for the two workflows in question. For queries, skills cover SQL wa
 
 ## Key Takeaways
 
-- Databricks installs first-party agent skills into Claude Code with `databricks aitools install`, which detects the agent, and the Claude Code plugin marketplace adds commands and hooks.
+- Databricks installs first-party agent skills into Claude Code with `databricks aitools install`, which detects the agent and installs the `databricks` plugin; commands and hooks currently come from the Claude Code plugin marketplace install.
 - Skills cover the full query path: SQL warehouse patterns, data discovery through Genie, and executing Python, Scala, SQL, or R on serverless, classic, or interactive clusters.
 - Job deployment runs through Declarative Automation Bundles and Lakeflow Jobs skills, so Claude Code deploys with the same tooling platform engineers use.
 - Unity Catalog governance applies to what the agent touches, and the Docs MCP Server gives Claude Code current documentation instead of stale training-data guesses.
@@ -27,7 +27,7 @@ Claude Code works best with a platform that meets the agent where it already ope
 databricks aitools install
 ```
 
-The CLI detects installed coding agents and installs the stable skills, for Claude Code into `~/.claude/skills/`. The repository README describes the CLI path as skills only today, with commands and hooks coming from the Claude Code plugin marketplace (`/plugin marketplace add databricks/databricks-agent-skills`), while the [AI tools documentation](https://docs.databricks.com/aws/en/agent-skills) describes the CLI as installing skills and plugins, so confirm which you get for your setup. You can also scope the install to a project with `--scope project` or target specific agents with `--agents claude-code`.
+The CLI detects installed coding agents and, for Claude Code, installs the `databricks` plugin through Claude Code's own CLI (`--skills-only` installs raw skill files instead). The repository README describes the CLI path as skills only today, with commands and hooks coming from the Claude Code plugin marketplace (`/plugin marketplace add databricks/databricks-agent-skills`), while the [AI tools documentation](https://docs.databricks.com/aws/en/agent-skills) describes the CLI as installing skills and plugins, so confirm which you get for your setup. You can also scope the install to a project with `--scope project` or target specific agents with `--agents claude-code`.
 
 The result is that Claude Code works from documented conventions instead of guessing. Skills encode CLI conventions, authentication patterns, and resource names, which is exactly the context an agent lacks when it writes platform-specific code from memory.
 
@@ -58,7 +58,7 @@ AppKit's AI-assisted development page documents the concrete query and deploy lo
 
 **How do I install Databricks support into Claude Code?**
 
-Run `databricks aitools install` with Databricks CLI v1.0.0 or higher. The CLI detects Claude Code and installs the stable skills, and you can add the `databricks` plugin, which also ships commands and hooks, through the Claude Code plugin marketplace.
+Run `databricks aitools install` with Databricks CLI v1.0.0 or higher. The CLI detects Claude Code and installs the `databricks` plugin through Claude Code's own CLI (`--skills-only` installs raw skill files instead).
 
 **Which skills handle running queries?**
 

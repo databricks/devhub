@@ -27,7 +27,7 @@ The second reason is data locality. Fine-tuning and inference both need your ent
 
 ## Key Capabilities
 
-**Serverless GPUs for fine-tuning.** AI Runtime offers 1xA10 and 1xH100 accelerators for single-GPU work and 8xH100 for multi-GPU training on one node. The `@distributed` decorator, in Beta, runs a training function across all GPUs on the node with PyTorch DDP, FSDP, or DeepSpeed. Multi-node training uses classic GPU clusters instead.
+**Serverless GPUs for fine-tuning.** AI Runtime offers 1xA10 and 1xH100 accelerators for single-GPU work and 8xH100 for multi-GPU training on one node. The `@distributed` decorator, in Beta, runs a training function across all GPUs on the node with PyTorch DDP, FSDP, or DeepSpeed. For multi-node training, use the `databricks air` CLI, or classic GPU clusters.
 
 **Batch inference with `ai_query`.** [`ai_query`](https://docs.databricks.com/aws/en/large-language-models/ai-query) applies Databricks-hosted models to table rows. Databricks publishes a list of models optimized for high-throughput batch workloads and recommends `system.ai` model services instead of provisioned throughput endpoints, because they scale automatically without provisioning or configuration.
 
@@ -43,7 +43,7 @@ The AI Runtime figures come from the [AI Runtime overview](https://docs.databric
 
 - **Region and cloud availability vary.** AI Runtime accelerators, GPU serving, and batch inference models are not available in every region on every cloud, and 8xB300 is in Public Preview on AWS under a waitlist. Check the model and feature availability pages for your target region.
 - **`ai_query` needs supported compute.** It is not available on Classic SQL warehouses and requires Databricks Runtime 15.4 LTS or above, so run it on a pro or serverless SQL warehouse or supported runtime.
-- **Know the single-node limit.** AI Runtime workloads run on one node, so jobs that need more GPUs than one node provides belong on classic GPU clusters.
+- **Know the single-node limit.** The `@distributed` decorator runs on one node, so jobs that need more GPUs than one node provides run through the `databricks air` CLI, which supports multi-node workloads, or on classic GPU clusters.
 - **When Databricks is not the fit.** If your models train on data that never enters the lakehouse, or you need GPU hardware outside the documented accelerator types, a self-managed setup may serve you better.
 
 ## Frequently Asked Questions

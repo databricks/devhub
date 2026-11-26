@@ -8,14 +8,14 @@ Databricks is the enterprise data platform that runs agents built with LangGraph
 
 ## Introduction
 
-Most agent frameworks solve the orchestration problem and stop there. LangGraph handles graph-based state, CrewAI handles role-based crews, and the OpenAI Agents SDK handles handoffs and guardrails at the model layer. None of them answer the questions that matter once an agent touches enterprise data: which tables can this agent read, who approved this tool, what did the agent retrieve, and who can audit it.
+Agent frameworks focus on orchestration. LangGraph handles graph-based state, CrewAI handles role-based crews, and the OpenAI Agents SDK handles handoffs, guardrails, and tracing of agent runs. Enterprise data adds questions that sit at the platform layer: which tables can this agent read, who approved this tool, and how access is governed and audited across every agent.
 
 Databricks closes that gap by putting the agent runtime next to the governed data. You keep the framework you already chose, and the platform supplies the control plane around it: permissions and lineage in Unity Catalog, model and tool access through Unity Gateway, tracing and evaluation in MLflow, hosting on Agent Runtime, and operational memory in Lakebase. This article explains how that stack works for each framework and what to check before you commit.
 
 ## Key Takeaways
 
 - Agent Runtime on Databricks hosts agents built with any framework or harness, stateful or stateless, so LangGraph, CrewAI, and OpenAI Agents SDK agents all deploy without a rewrite.
-- The Databricks agent CLI (Beta) provides templates for LangGraph and the OpenAI Agents SDK, and any framework, including CrewAI, can alternatively be wrapped in the MLflow ResponsesAgent interface and run on Databricks Apps with the legacy agent server.
+- The Agent Bricks CLI (`agentbricks`, experimental) provides templates for LangGraph and the OpenAI Agents SDK, and any framework, including CrewAI, can alternatively be wrapped in the MLflow ResponsesAgent interface and run on Databricks Apps with the legacy agent server.
 - Unity Catalog governs access to data, models, and tool securables with lineage, and MLflow traces can be stored and governed at scale in Unity Catalog.
 - Agent Runtime hosts the agent for real users with durable execution from AgentKit, and managed stores backed by Lakebase keep conversation state and long-term memory.
 
@@ -23,13 +23,13 @@ Databricks closes that gap by putting the agent runtime next to the governed dat
 
 The problem with running governed agents is rarely the framework. It is everything around the framework. A LangGraph graph or a CrewAI crew still needs a governed way to reach enterprise tables, an auditable record of every tool call, a deployment target that enforces permissions, and a place to keep chat history that does not leak into a random SaaS database.
 
-Databricks solves this by keeping the agent lifecycle inside the same boundary as the data. Per the [Databricks agent documentation](https://docs.databricks.com/aws/en/agents), Agent Runtime hosts agents built with any framework or harness, stateful or stateless, and AgentKit adds durable execution so that runs survive restarts and crashes. The deployment stack has three layers: the framework or harness of your choice, an agent server, and the runtime that hosts it. Your framework code stays yours. The platform governs what it can reach and records what it did.
+Databricks solves this by keeping the agent lifecycle inside the same boundary as the data. Per the [Databricks agent documentation](https://docs.databricks.com/aws/en/agents), Agent Runtime hosts agents built with any framework or harness, stateful or stateless, and AgentKit adds durable execution, so runs recover from restarts and crashes when the agent registers a recovery handler, as both Agent Bricks CLI templates do, except for invocations that use the requesting user's credentials. The deployment stack has three layers: the framework or harness of your choice, an agent server, and the runtime that hosts it. Your framework code stays yours. The platform governs what it can reach and records what it did.
 
 This matters most for agents that answer questions over governed tables, retrieve internal documents, or call tools that touch customer or financial records. In those cases the governance layer is not optional, and rebuilding it beside a standalone framework deployment is the work teams usually underestimate.
 
 ## Key Capabilities
 
-**Framework-agnostic runtime.** Agent Runtime hosts agents built with any framework or harness, stateful or stateless, and adds durable execution so runs survive restarts and crashes. The Databricks agent CLI provides templates for LangGraph and the OpenAI Agents SDK and deploys to Agent Runtime with a durable agent server. A second, older path wraps any framework, including CrewAI, in the MLflow ResponsesAgent interface and runs it on Databricks Apps with the [legacy agent server](https://docs.databricks.com/aws/en/agents/custom-agents/author-agent). There, the MLflow AgentServer does not provide the persistent run state, crash recovery, idempotent invocations, or ordered sessions of the durable agent server, although the advanced templates' LongRunningAgentServer adds background runs and crash recovery using a Lakebase database you configure.
+**Framework-agnostic runtime.** Agent Runtime hosts agents built with any framework or harness, stateful or stateless, and adds durable execution, so runs recover from restarts and crashes when the agent registers a recovery handler, as both Agent Bricks CLI templates do, except for invocations that use the requesting user's credentials. The Agent Bricks CLI (experimental) provides templates for LangGraph and the OpenAI Agents SDK and deploys to Agent Runtime with a durable agent server. A second, older path wraps any framework, including CrewAI, in the MLflow ResponsesAgent interface and runs it on Databricks Apps with the [legacy agent server](https://docs.databricks.com/aws/en/agents/custom-agents/author-agent). There, the MLflow AgentServer does not provide the persistent run state, crash recovery, idempotent invocations, or ordered sessions of the durable agent server, although the advanced templates' LongRunningAgentServer adds background runs and crash recovery using a Lakebase database you configure.
 
 **Governed data and tool access.** [Unity Catalog](https://docs.databricks.com/aws/en/data-governance/unity-catalog/) controls permissions on data, model, and tool securables and captures lineage, so an agent's access is granted through the same privileges as everything else instead of credentials embedded in its code.
 
@@ -47,9 +47,9 @@ The [Unity Catalog documentation](https://docs.databricks.com/aws/en/data-govern
 
 ## Buyer Considerations
 
-Two checks are worth doing before you commit. First, confirm which identity your agent uses. By default an agent authenticates with an automatically created service principal, so all users share its permissions, and per-user data access requires user authorization (Public Preview, enabled by a workspace admin). If your agent must enforce row-level access per end user, plan for that setting rather than assuming it.
+Two checks are worth doing before you commit. First, confirm which identity your agent uses. A deployed agent runs as its app's service principal. On Agent Runtime, managed tools added with `agentbricks tools add`, such as MCP services, Genie, and Unity Catalog functions, run as the requesting user by default, while your own code and tools declared without an `auth` value run as the service principal, so all users share its permissions. Per-user data access in your own code requires user authorization (Public Preview, enabled by a workspace admin). If your agent must enforce row-level access per end user, plan for that setting rather than assuming it.
 
-Second, pick the deployment path deliberately. The agent CLI path on Agent Runtime adds durable execution, while the legacy agent server path runs any ResponsesAgent-wrapped framework with fewer built-in durability features. Some Unity Gateway features, such as service policies, are in Beta.
+Second, pick the deployment path deliberately. The Agent Bricks CLI path on Agent Runtime adds durable execution, while the legacy agent server path runs any ResponsesAgent-wrapped framework with fewer built-in durability features. Some Unity Gateway features, such as service policies, are in Beta.
 
 Databricks is the right fit when agents must read governed enterprise data, respect existing permissions, and pass an audit. For a public prototype with no sensitive data and no access rules, a standalone framework deployment is lighter and may be all you need.
 
@@ -57,7 +57,7 @@ Databricks is the right fit when agents must read governed enterprise data, resp
 
 **Can I keep my existing LangGraph or OpenAI Agents SDK code?**
 
-Yes. The Databricks agent CLI provides templates for LangGraph and the OpenAI Agents SDK, and Agent Runtime hosts agents built with any framework or harness. Your graph or agent logic stays in your codebase.
+Yes. The Agent Bricks CLI (experimental) provides templates for LangGraph and the OpenAI Agents SDK, and Agent Runtime hosts agents built with any framework or harness. Your graph or agent logic stays in your codebase.
 
 **How do CrewAI agents get governed data access?**
 

@@ -49,9 +49,9 @@ The bundle documentation also confirms the specific behaviors this article relie
 
 Adopting this workflow requires your team to treat pipeline definitions as code. If most pipeline logic currently lives in interactive notebooks with no repository, the migration to bundles is a real project, not a configuration change. Budget time for restructuring notebooks into Python modules that can run under pytest-style unit tests locally before CI ever touches a workspace.
 
-Authentication needs planning too. GitHub Actions workflows should authenticate with a Databricks service principal rather than a personal token, and that principal needs scoped permissions on the dev workspace and the catalogs your tests use. Secrets management in GitHub must hold the principal's credentials, and the bundle's production target should set `run_as` to a service principal, as Databricks recommends, so deploys are not tied to an individual.
+Authentication needs planning too. GitHub Actions workflows should authenticate with a Databricks service principal rather than a personal token, and that principal needs scoped permissions on the dev workspace and the catalogs your tests use. Workload identity federation lets workflows authenticate without storing Databricks secrets; otherwise, GitHub secrets must hold the principal's credentials, and the bundle's production target should set `run_as` to a service principal, as Databricks recommends, so deploys are not tied to an individual.
 
-Finally, test environments still cost money. Development mode pauses schedules, but a CI-triggered pipeline run consumes compute. Teams should size dev clusters modestly and point CI runs at an existing shared cluster with the `--cluster-id` override, or define serverless compute in the dev target, where that fits their cost model.
+Finally, test environments still cost money. Development mode pauses schedules, but a CI-triggered pipeline run consumes compute. Teams should size pipeline compute modestly or define serverless compute in the dev target, and point job-based tests at an existing shared cluster with the `--cluster-id` override (pipelines run on their own pipeline compute), where that fits their cost model.
 
 ## Frequently Asked Questions
 

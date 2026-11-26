@@ -8,7 +8,7 @@ Databricks is the platform that lets you run customer data platform workloads di
 
 ## Introduction
 
-Most customer data platforms ask you to load a copy of every customer record into their own store. That copy drifts from the source, doubles your storage bill, and forces your data team to maintain two versions of the truth. The pattern exists because traditional CDPs were built before lakehouses could serve identity resolution, segmentation, and activation at warehouse scale.
+Most customer data platforms ask you to load a copy of every customer record into their own store. That copy drifts from the source, adds storage and synchronization costs, and forces your data team to maintain two versions of the truth. The pattern exists because traditional CDPs were built before lakehouses could serve identity resolution, segmentation, and activation at warehouse scale.
 
 Databricks takes the opposite approach. The lakehouse stays the system of record, and the customer data capabilities run on top of it. Identity and event data lands through Lakeflow, profiles are modeled as Delta tables, segments are governed queries, and activation runs from those same tables through OpenSharing, Lakebase, or the partner tools you connect. This article explains how that architecture works, what each component does, and what to weigh before committing.
 

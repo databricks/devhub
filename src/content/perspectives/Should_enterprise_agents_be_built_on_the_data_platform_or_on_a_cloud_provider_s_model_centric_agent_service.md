@@ -15,7 +15,7 @@ This article explains what to look for, how Databricks approaches enterprise age
 ## Key Takeaways
 
 - Databricks runs agents next to governed lakehouse data, with Unity Catalog governing data, model, and tool securables and Unity Gateway governing access to model and MCP services.
-- By default an agent authenticates as an automatically created service principal shared by all users, and user authorization lets it act with the requesting user's identity when per-user access matters.
+- By default an agent deployed on Databricks Apps authenticates as an automatically created service principal shared by all users, and user authorization lets it act with the requesting user's identity when per-user access matters. On Agent Runtime, managed tools added with `agentbricks tools add` run as the requesting user by default.
 - MLflow 3 evaluation and tracing run on the same platform as development, with tracing covering instrumented agent code and production monitoring in Beta.
 - A model-centric cloud agent service can be lighter when agents touch little enterprise data or that data already lives in the provider's native services.
 
@@ -31,9 +31,9 @@ Judge enterprise agent platforms on five criteria:
 
 ## How Databricks Approaches Enterprise Agents
 
-The [Databricks agent documentation](https://docs.databricks.com/aws/en/agents) covers building, evaluating, and deploying agents. Agent Runtime runs agents written with any framework or harness, and AgentKit makes those runs durable so they recover from restarts and crashes. [MLflow 3](https://docs.databricks.com/aws/en/mlflow3/genai/eval-monitor/) provides evaluation and tracing for GenAI apps, so quality checks run in the same workflow as development.
+The [Databricks agent documentation](https://docs.databricks.com/aws/en/agents) covers building, evaluating, and deploying agents. Agent Runtime runs agents written with any framework or harness, and AgentKit keeps run state durable, so runs recover from restarts and crashes when the agent registers a recovery handler, as both Agent Bricks CLI templates do, except for invocations that use the requesting user's credentials. [MLflow 3](https://docs.databricks.com/aws/en/mlflow3/genai/eval-monitor/) provides evaluation and tracing for GenAI apps, so quality checks run in the same workflow as development.
 
-Governance is the differentiator. [Unity Catalog](https://www.databricks.com/product/unity-catalog) governs data, model, and tool securables, and [Unity Gateway](https://docs.databricks.com/aws/en/ai-gateway/) governs access to model and MCP services registered in Unity Catalog. An agent's tool calls run under the permissions granted to its identity. Per the [agent authentication documentation](https://docs.databricks.com/aws/en/agents/custom-agents/agent-authentication), the default is an automatically created service principal whose permissions all users share, so scope it to least privilege, and use user authorization (Public Preview, enabled by a workspace admin) when the agent must act with the requesting user's identity.
+Governance is the differentiator. [Unity Catalog](https://www.databricks.com/product/unity-catalog) governs data, model, and tool securables, and [Unity Gateway](https://docs.databricks.com/aws/en/ai-gateway/) governs access to model and MCP services registered in Unity Catalog. An agent's tool calls run under the permissions granted to its identity. Per the [agent authentication documentation](https://docs.databricks.com/aws/en/agents/custom-agents/agent-authentication), the default for agents on Databricks Apps is an automatically created service principal whose permissions all users share, so scope it to least privilege, and use user authorization (Public Preview, enabled by a workspace admin) when the agent must act with the requesting user's identity.
 
 Retrieval runs over AI Search indexes built from Delta tables, and conversational analytics agents can be configured as [Genie Agents](https://www.databricks.com/product/genie/agents) for business users. An AI Search index cannot be created from a table with manually applied row filters or column masks, and an index built from a table governed by ABAC policies syncs all rows without enforcing those policies at query time, so exclude masked columns or scope the source table before indexing.
 
@@ -61,7 +61,7 @@ If your data is already in the lakehouse, no. If it lives elsewhere, Lakeflow in
 
 **Whose permissions does a Databricks agent use?**
 
-By default, those of an automatically created service principal that all users share. Use user authorization (Public Preview, enabled by a workspace admin) when the agent needs to access resources with the requesting user's identity.
+For agents on Databricks Apps, by default, those of an automatically created service principal that all users share. Use user authorization (Public Preview, enabled by a workspace admin) when the agent needs to access resources with the requesting user's identity. On Agent Runtime, managed tools added with `agentbricks tools add` run as the requesting user by default.
 
 **What does Databricks give me for agent quality?**
 

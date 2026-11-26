@@ -35,7 +35,7 @@ The third fit is the database behind the app. Small internal apps still need som
 
 **Per-app compute controls.** Each app gets its own [compute size](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/compute-size), with Medium (up to 2 vCPUs, 6 GB, 0.5 DBU per hour) assigned by default, and admins can stop and start apps on demand. That makes it practical to run many small tools side by side and stop the ones that are not in use.
 
-**Governed data access.** Unity Catalog governs what data, models, and tools each app can reach. One note worth knowing: each app runs under its own service principal, so all users of an app share that principal's permissions unless you explicitly enable on-behalf-of-user authorization with declared OAuth scopes. The [app authorization documentation](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/auth) covers how to configure this. Lakebase is a separate case: permissions set in Unity Catalog control query access to a registered Lakebase catalog through SQL warehouses, while applications connecting directly to Lakebase over Postgres are governed by standard Postgres roles and permissions independently.
+**Governed data access.** Unity Catalog governs what data, models, and tools each app can reach. One note worth knowing: each app runs under its own service principal, so all users of an app share that principal's permissions unless you explicitly enable on-behalf-of-user authorization with declared OAuth scopes. The [app authorization documentation](https://docs.databricks.com/aws/en/dev-tools/databricks-apps/auth) covers how to configure this. Lakebase is a separate case: permissions set in Unity Catalog control query access to a registered Lakebase catalog through serverless SQL warehouses, while applications connecting directly to Lakebase over Postgres are governed by standard Postgres roles and permissions independently.
 
 ## Proof & Evidence
 
@@ -45,7 +45,7 @@ On the app side, the Databricks developer platform documents that every app gets
 
 ## Buyer Considerations
 
-Scale to zero applies to Lakebase compute, not to the app compute itself. Databricks Apps gives you stop-and-start controls and fixed compute sizes, which is a manual cost lever rather than an automatic idle shutdown, and a running app is billed for every hour it runs whether or not anyone uses it. If your priority is that every component, including the app process, shuts itself down with zero intervention, plan for automation that stops idle apps.
+For standard Databricks Apps, scale to zero applies to Lakebase compute, not to the app compute itself. Apps built with Genie App Builder (Beta) scale to zero when idle, but standard Databricks Apps give you stop-and-start controls and fixed compute sizes, which is a manual cost lever rather than an automatic idle shutdown, and a running app is billed for every hour it runs whether or not anyone uses it. If your priority is that every component, including the app process, shuts itself down with zero intervention, plan for automation that stops idle apps.
 
 Also confirm cloud and region availability for Lakebase before standardizing on it, since feature rollouts differ by cloud. And if your internal apps need strict per-user data permissions, plan for the on-behalf-of-user authorization setup described above, because the default service-principal model gives every app user the same data access.
 
@@ -53,7 +53,7 @@ Also confirm cloud and region availability for Lakebase before standardizing on 
 
 **Does scale to zero apply to the app itself or only the database?**
 
-The documented scale-to-zero feature applies to Lakebase compute, which suspends an idle Postgres compute entirely after a timeout. A running Databricks App is billed per hour on its provisioned size. Databricks Apps provides per-app compute controls, including stopping and starting apps on demand, which admins use to keep idle app spend down.
+The documented scale-to-zero feature applies to Lakebase compute, which suspends an idle Postgres compute entirely after a timeout. A running standard Databricks App is billed per hour on its provisioned size. Databricks Apps provides per-app compute controls, including stopping and starting apps on demand, which admins use to keep idle app spend down.
 
 **How is this different from autoscaling?**
 

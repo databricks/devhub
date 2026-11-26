@@ -59,7 +59,7 @@ Yes, and for many enterprises that is the realistic near-term shape. A reporting
 
 **What is the biggest technical risk in replacing a lakehouse platform?**
 
-Proprietary storage formats and governance gaps. If your tables move into a closed format, every downstream engine, audit, and migration plan gets harder. Keeping data in Delta or Iceberg on your own cloud storage preserves optionality, which is why the lakehouse pattern wins the maturity test.
+Proprietary storage formats and governance gaps. If a candidate platform stores your tables in a closed format, every downstream engine, audit, and migration plan gets harder, so confirm which open formats each option supports. Keeping data in Delta or Iceberg on your own cloud storage preserves optionality, which is why the lakehouse pattern wins the maturity test.
 
 **Where should a large enterprise start with Databricks?**
 

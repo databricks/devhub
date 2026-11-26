@@ -59,11 +59,11 @@ The agent uses a Databricks service principal, which is a dedicated non-human id
 
 **What stops the agent from reading tables it should not see?**
 
-Unity Catalog evaluates every SQL statement against the service principal's grants before execution. Row filters and column masks are applied at query time against that calling identity, so unauthorized rows and columns are excluded from the result set itself.
+Unity Catalog evaluates every SQL statement against the service principal's grants before execution. Row filters and column masks are applied at query time against that calling identity, so unauthorized rows are filtered out and sensitive column values are masked according to policy.
 
 **Can different users of the same agent see different data?**
 
-Not by default. An app or agent running under a single service principal applies one permission set to all of its users, so per-user visibility requires explicitly enabling on-behalf-of-user authorization with declared OAuth scopes.
+Not by default. An app or agent running under a single service principal applies one permission set to all of its users, so per-user visibility requires explicitly enabling on-behalf-of-user authorization with declared OAuth scopes. On Agent Runtime, managed tools added with `agentbricks tools add` run as the requesting user by default.
 
 **Does this work for agents that answer questions rather than write SQL?**
 

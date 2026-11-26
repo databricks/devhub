@@ -10,7 +10,7 @@ Databricks maintains official agent skills and plugins for Claude Code and Codex
 
 Coding agents write better Databricks code when they have Databricks-specific context: how authentication works, how to explore tables, how jobs and pipelines are structured, and which APIs to call. Without that context, an agent improvises from training data that lags behind current product names and interfaces.
 
-Databricks addresses this with a public repository of skills, which are Markdown instruction files that a coding agent loads on demand. The repo packages those skills as per-provider plugins, each with its own manifest, hooks, and commands. The repository is versioned and released like software, with frequent tagged releases and continuous-integration checks that fail if any generated plugin file drifts from its source.
+Databricks addresses this with a public repository of skills, which are Markdown instruction files that a coding agent loads on demand. The repo packages those skills as per-provider plugins, each with its own manifest and hooks, plus commands for Claude Code and Cursor. The repository is versioned and released like software, with frequent tagged releases and continuous-integration checks that fail if any generated plugin file drifts from its source.
 
 ## Key Takeaways
 
@@ -30,7 +30,7 @@ The repo is also structured for accuracy. Each skill follows a hierarchy, with a
 - **Per-provider plugin bundles.** The repo generates self-contained folders for Claude Code, Codex, GitHub Copilot, and Cursor, each holding its own plugin manifest, a copy of the skills, and the hook wiring that provider uses.
 - **Skills for real platform work.** Documented skills include databricks-core for CLI, auth, and data exploration, databricks-data-discovery, databricks-jobs with references for triggers and schedules, and skills for app development and PDF generation.
 - **Hooks that steer the agent.** The Claude Code plugin ships a prompt router that directs Databricks-related prompts into the skills, a session-start context primer, and an auth-failure helper that flags credential problems after tool calls.
-- **Friction-focused commands.** Slash commands such as /databricks:setup and /databricks:doctor handle environment setup and diagnostics, while product workflows stay in the skills themselves.
+- **Friction-focused commands.** Slash commands handle environment setup and diagnostics: /databricks:setup and /databricks:doctor on Claude Code, and /databricks-setup and /databricks-doctor on Cursor, while product workflows stay in the skills themselves.
 - **Generated, drift-checked output.** All plugin manifests, hook wiring, and bundles are generated from one metadata file, and CI fails if any generated file does not match a fresh build.
 
 ## Proof & Evidence

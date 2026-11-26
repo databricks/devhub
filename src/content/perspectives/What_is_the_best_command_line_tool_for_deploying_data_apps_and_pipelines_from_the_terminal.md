@@ -47,7 +47,7 @@ The bundle deployment modes are documented on the [deployment modes page](https:
 
 ## Buyer Considerations
 
-- The CLI requires version 1.0.0 or higher for the app management commands, and AppKit projects require Node.js v22 or above, so check your local toolchain before standardizing on this workflow.
+- The CLI requires version 1.0.0 or higher for the app management commands, and AppKit projects require Node.js 22.16 or above, so check your local toolchain before standardizing on this workflow.
 - `databricks apps delete` is permanent. In CI, pass `--auto-approve` deliberately and only for environments where deletion is safe.
 - Production-mode targets validate the configured Git branch and, when you do not deploy as a service principal, require `run_as` and `permissions` mappings. Teams that want those guardrails should set targets explicitly, specify a branch, and deploy as a service principal as Databricks recommends.
 - If your team deploys apps that read governed data, note that app permissions and data permissions are separate systems. The app runs under its own service principal, and per-user data enforcement requires explicitly enabling user authorization.

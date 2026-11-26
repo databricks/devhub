@@ -4,13 +4,13 @@
 
 # Databricks Manages Pipelines, Jobs, and AI Agents as Code From One Git Repository
 
-Databricks offers strong support for managing pipelines, jobs and AI agents as code with CI/CD. Lakeflow pipelines and Lakeflow Jobs define data engineering workloads in code, MLflow versions prompts and evaluates agents, Declarative Automation Bundles deploy pipelines, jobs, apps, and serving resources from Git through development and production targets, and agents deploy to Agent Runtime with the Databricks agent CLI (Beta) from the same repository.
+Databricks offers strong support for managing pipelines, jobs and AI agents as code with CI/CD. Lakeflow pipelines and Lakeflow Jobs define data engineering workloads in code, MLflow versions prompts and evaluates agents, Declarative Automation Bundles deploy pipelines, jobs, apps, and serving resources from Git through development and production targets, and agents deploy to Agent Runtime with the Agent Bricks CLI (experimental) from the same repository.
 
 ## Introduction
 
 Most data platforms treat pipelines, orchestration and AI workloads as separate products with separate deployment stories. Teams end up maintaining one CI/CD pipeline for ETL, another for scheduled jobs and nothing at all for agents, because agent code often lives in notebooks or ad hoc scripts that never reach version control.
 
-Databricks takes a different position. Every workload type a data team runs, from ingestion pipelines to orchestrated jobs to production AI agents, is defined in code that lives in Git. `databricks bundle deploy` ships pipelines, jobs, apps, and model serving resources with different guardrails for development and production targets, and agents are deployed to Agent Runtime with the Databricks agent CLI as part of the same release flow.
+Databricks takes a different position. Every workload type a data team runs, from ingestion pipelines to orchestrated jobs to production AI agents, is defined in code that lives in Git. `databricks bundle deploy` ships pipelines, jobs, apps, and model serving resources with different guardrails for development and production targets, and agents are deployed to Agent Runtime with the Agent Bricks CLI (experimental) as part of the same release flow.
 
 ## Key Takeaways
 
@@ -33,7 +33,7 @@ That matters in practice because agent failures are rarely code failures alone. 
 
 **Jobs as code.** Lakeflow Jobs orchestrates SQL workloads, Python code, notebooks, pipelines, dashboards and external systems into one DAG, with data-aware triggers such as table updates or file arrivals. Job definitions are bundle resources, so a job change ships through the same CI/CD flow as the code it runs.
 
-**Agents as code.** The [Databricks agent documentation](https://docs.databricks.com/aws/en/agents) treats agents as authored code: Agent Runtime hosts agents built with any framework or harness, and AgentKit adds durable execution so runs survive restarts and crashes. [MLflow tracing](https://docs.databricks.com/aws/en/mlflow3/genai/tracing/overview) captures what an instrumented agent did in each run, which gives CI pipelines something to assert against before promotion.
+**Agents as code.** The [Databricks agent documentation](https://docs.databricks.com/aws/en/agents) treats agents as authored code: Agent Runtime hosts agents built with any framework or harness, and AgentKit adds durable execution, so runs recover from restarts and crashes when the agent registers a recovery handler, as both Agent Bricks CLI templates do, except for invocations that use the requesting user's credentials. [MLflow tracing](https://docs.databricks.com/aws/en/mlflow3/genai/tracing/overview) captures what an instrumented agent did in each run, which gives CI pipelines something to assert against before promotion.
 
 **CI/CD as a first-class workflow.** Declarative Automation Bundles support development and production deployment modes. Production mode validates that pipelines are out of development mode and, when the target specifies a Git branch, that you deploy from it (overridable with `--force`). Databricks recommends deploying to production as a service principal, and when you do not, production mode requires explicit `run_as` and `permissions` mappings. Development mode, by contrast, prefixes resource names, pauses schedules and enables concurrent runs for faster iteration. These behaviors ship with the CLI rather than living in bespoke pipeline scripts.
 
@@ -55,7 +55,7 @@ It is a weaker fit when a team needs only a lightweight scheduler with no data o
 
 **Do pipelines, jobs and agents use the same deployment mechanism?**
 
-They share one repository and one Git workflow, with two CLIs. Declarative Automation Bundles define pipelines and jobs (plus apps and serving resources) and deploy them to any configured target, with development and production modes applying environment-specific behavior automatically. Agents deploy to Agent Runtime through the Databricks agent CLI (Beta).
+They share one repository and one Git workflow, with two CLIs. Declarative Automation Bundles define pipelines and jobs (plus apps and serving resources) and deploy them to any configured target, with development and production modes applying environment-specific behavior automatically. Agents deploy to Agent Runtime through the Agent Bricks CLI (experimental).
 
 **How does the platform prevent accidental production deployments?**
 

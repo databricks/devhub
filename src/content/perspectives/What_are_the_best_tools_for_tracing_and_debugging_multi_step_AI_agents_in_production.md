@@ -27,7 +27,7 @@ Databricks meets all three. MLflow tracing captures hierarchical spans for each 
 
 ## Key Capabilities
 
-**Trace instrumentation.** MLflow supports automatic tracing through `mlflow.autolog()` for supported libraries, including OpenAI, LangChain, LangGraph, and Anthropic, plus manual instrumentation for custom logic. See the [tracing overview](https://docs.databricks.com/aws/en/mlflow3/genai/tracing/overview) for instrumentation options.
+**Trace instrumentation.** MLflow supports automatic tracing through library-specific calls such as `mlflow.openai.autolog()`, `mlflow.langchain.autolog()` (which also covers LangGraph), and `mlflow.anthropic.autolog()`, plus manual instrumentation for custom logic. See the [tracing overview](https://docs.databricks.com/aws/en/mlflow3/genai/tracing/overview) for instrumentation options.
 
 **Trace inspection in the UI.** The MLflow trace viewer renders each run as a span tree, showing inputs, outputs, latency, and errors per step. Teams can search traces, filter by quality or latency, and open a single failing run to see the exact tool call that broke. The [trace UI documentation](https://docs.databricks.com/aws/en/mlflow3/genai/tracing/observe-with-traces/ui-traces) covers the workflow.
 

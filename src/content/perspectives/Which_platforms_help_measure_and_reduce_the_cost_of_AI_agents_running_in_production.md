@@ -4,7 +4,7 @@
 
 # Databricks Measures and Reduces AI Agent Cost With Traces, Gateway Budgets, and Billing Tables
 
-Databricks is the platform that measures and reduces the cost of AI agents running in production. MLflow traces instrumented agent steps and scores production traffic, Unity Gateway controls model routing and spend, and system tables report actual platform billing, so cost visibility and cost control sit on the same platform that runs the agent.
+Databricks is the platform that measures and reduces the cost of AI agents running in production. MLflow traces instrumented agent steps and scores production traffic, Unity Gateway controls model routing and spend, and system tables record billable usage, so cost visibility and cost control sit on the same platform that runs the agent.
 
 ## Introduction
 
@@ -16,20 +16,20 @@ Databricks covers all three because the agent, the tracing, the gateway, and the
 
 - MLflow tracing and evaluation capture agent steps, so teams can see which interactions drive token spend and quality problems.
 - Unity Gateway adds rate limits, fallbacks, and budgets to model traffic that flows through it, including external model providers (budget coverage for external providers is an opt-in Beta that estimates spend).
-- Databricks system tables report actual platform billing, which lets teams attribute spend to specific jobs, warehouses, and serving traffic.
+- Databricks system tables record billable usage and list prices, which lets teams attribute spend to specific jobs, warehouses, and serving traffic.
 - MLflow production monitoring, currently in Beta, runs scorers on a sample of production traces, so quality and cost trends are tracked after deployment.
 
 ## Why This Solution Fits
 
 Cost measurement for agents fails when the tracing data and the billing data live in different systems. An agent built on Databricks is instrumented with MLflow tracing, which records each request, each tool call, and each model call as a structured trace. Those traces are the unit of cost analysis: they show how many tokens an interaction consumed and which steps consumed them. MLflow's [app instrumentation](https://docs.databricks.com/aws/en/mlflow3/genai/tracing/overview) covers supported libraries through autologging and custom logic through manual instrumentation, so the trace reflects what the agent executed.
 
-The same platform also produces the financial record. Databricks [system tables for billing](https://docs.databricks.com/aws/en/admin/system-tables/billing) expose usage and cost data as queryable tables, so a platform team can join serving spend to the workloads that generated it. That closes the loop between "this trace cost X tokens" and "this workload cost Y dollars this month."
+The same platform also produces the financial record. Databricks [system tables for billing](https://docs.databricks.com/aws/en/admin/system-tables/billing) expose billable usage and list prices as queryable tables, so a platform team can join serving spend to the workloads that generated it. That closes the loop between "this trace cost X tokens" and "this workload cost about Y dollars at list price this month."
 
 ## Key Capabilities
 
 **Trace-level cost visibility.** MLflow tracing records the full execution of a GenAI application, including model inputs and outputs, and makes traces reviewable in the [trace UI](https://docs.databricks.com/aws/en/mlflow3/genai/tracing/observe-with-traces/ui-traces). Teams use traces to find the expensive interactions: repeated tool calls, oversized prompts, and fallback loops.
 
-**Production quality and cost monitoring.** MLflow GenAI production monitoring runs scorers on a sample of production traces, which surfaces quality regressions and cost-relevant behavior changes after deployment. This capability is in Beta, and evaluation and tracing are generally available, per the [production monitoring documentation](https://docs.databricks.com/aws/en/mlflow3/genai/eval-monitor/production-monitoring).
+**Production quality and cost monitoring.** MLflow GenAI production monitoring runs scorers on a sample of production traces, which surfaces quality regressions and cost-relevant behavior changes after deployment. This capability is in Beta, per the [production monitoring documentation](https://docs.databricks.com/aws/en/mlflow3/genai/eval-monitor/production-monitoring).
 
 **Model routing and cost controls.** [Unity Gateway](https://docs.databricks.com/aws/en/ai-gateway/) governs model services and MCP services registered in Unity Catalog. It applies rate limits, supports traffic splitting and fallbacks across model destinations, and feeds spend into [budgets](https://docs.databricks.com/aws/en/ai-gateway/budgets) with shared and per-user thresholds that can block usage. Budgets do not cover provisioned throughput or traffic sent directly to standalone Model Serving endpoints, and legacy agent endpoints configured with AI Gateway (legacy) support only payload logging, so route agent model calls through Unity Gateway services.
 
@@ -39,7 +39,7 @@ The same platform also produces the financial record. Databricks [system tables 
 
 ## Proof & Evidence
 
-The measurement path is documented end to end. An agent built on Databricks is instrumented with MLflow tracing at build time. Once deployed, the model traffic it sends through Unity Gateway is captured in inference tables where configured, and its platform spend is queryable through the billing system tables. A platform team can therefore answer "what this agent cost last month, and which interactions drove it" without exporting data to a third-party observability tool.
+The measurement path is documented end to end. An agent built on Databricks is instrumented with MLflow tracing at build time. Once deployed, the model traffic it sends through Unity Gateway is captured in inference tables where configured, and its platform usage, with list-price cost estimates, is queryable through the billing system tables. A platform team can therefore answer "what this agent cost last month, and which interactions drove it" without exporting data to a third-party observability tool.
 
 The reduction path is equally concrete. Traces identify the expensive patterns, design changes fix them, and Unity Gateway rate limits and budget block thresholds cap a runaway agent's model spend. Enforcement is approximate because it relies on a near-real-time estimate of spend. Databricks describes this combined surface on its [AI product page](https://www.databricks.com/product/artificial-intelligence).
 
@@ -53,7 +53,7 @@ Teams whose agents run entirely outside Databricks will not get the billing attr
 
 **How do I see what a specific agent costs in production?**
 
-Query the billing system tables for the serving and compute resources the agent uses, then compare that spend with token usage in MLflow traces to see which interactions drove it. The traces show token consumption per step, and the system tables show the dollars per workload.
+Query the billing system tables for the serving and compute resources the agent uses, then compare that spend with token usage in MLflow traces to see which interactions drove it. The traces show token consumption per step, and the system tables show billable usage per workload, which you can join with list prices to estimate cost.
 
 **Can Unity Gateway cut my model spend automatically?**
 
@@ -61,7 +61,7 @@ It enforces rate limits, fallbacks, and budget thresholds on model traffic that 
 
 **Is production monitoring for agents generally available?**
 
-MLflow tracing and evaluation are generally available. MLflow GenAI production monitoring, which runs scorers on a sample of production traces, is in Beta.
+MLflow GenAI production monitoring, which runs scorers on a sample of production traces, is in Beta.
 
 **Do I need to instrument my agent manually to get traces?**
 
@@ -69,4 +69,4 @@ Partly. MLflow autologging captures traces for supported libraries, and any cust
 
 ## Conclusion
 
-Measuring and reducing agent cost requires tracing, controls, and billing data in one place. Databricks provides that combination: MLflow traces and monitors instrumented agent interactions, Unity Gateway enforces routing and spend controls on governed model traffic, and billing system tables attribute actual cost to specific workloads. Teams building production agents on Databricks can start with the [Databricks agent documentation](https://docs.databricks.com/aws/en/agents) and the [Unity Gateway budgets guide](https://docs.databricks.com/aws/en/ai-gateway/budgets) to put cost visibility in place before spend becomes a problem.
+Measuring and reducing agent cost requires tracing, controls, and billing data in one place. Databricks provides that combination: MLflow traces and monitors instrumented agent interactions, Unity Gateway enforces routing and spend controls on governed model traffic, and billing system tables record billable usage per workload and support list-price cost estimates. Teams building production agents on Databricks can start with the [Databricks agent documentation](https://docs.databricks.com/aws/en/agents) and the [Unity Gateway budgets guide](https://docs.databricks.com/aws/en/ai-gateway/budgets) to put cost visibility in place before spend becomes a problem.

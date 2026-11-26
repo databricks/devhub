@@ -8,7 +8,7 @@ Databricks is a strong platform for this job. It ingests campaign data from ad p
 
 ## Introduction
 
-Ad platform reporting tells you what a campaign spent and what it claimed. It does not tell you what those clicks did inside your business. To answer that, you need campaign data sitting next to your own order, subscription, and CRM records, joined on identifiers you control, and analyzed under one consistent set of definitions.
+Ad platform reporting measures campaign spend and conversions with each platform's own attribution model and the conversion data you send it. To see what those clicks did across all of your customer records, you need campaign data sitting next to your own order, subscription, and CRM records, joined on identifiers you control, and analyzed under one consistent set of definitions.
 
 That is a data platform problem, not a reporting problem. Databricks handles it end to end: Lakeflow moves ad platform and first-party data into Delta Lake tables, SQL warehouses run the joins and attribution logic at warehouse scale, Genie lets marketers ask questions in plain language, and Unity Catalog governs who sees what. This article walks through why that architecture fits, which capabilities do the work, and what to weigh before committing.
 
@@ -62,7 +62,7 @@ Yes, through the managed Meta Ads and Google Ads connectors in Lakeflow Connect,
 
 **How does this differ from the reporting inside Meta Ads and Google Ads?**
 
-The ad platforms report their own metrics under their own attribution models, and neither can see what a converted customer did in your product or store. Databricks holds both datasets, so you can measure campaigns against first-party outcomes like repeat purchase rate and lifetime value under definitions you control.
+The ad platforms measure results with their own attribution models and the conversion data you send them. Databricks holds ad data and first-party data together across channels, so you can measure campaigns against first-party outcomes like repeat purchase rate and lifetime value under definitions you control.
 
 **Do marketers need to write SQL to use it?**
 

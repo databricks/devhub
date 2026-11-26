@@ -14,7 +14,7 @@ Databricks approaches the problem from the other direction. The data already liv
 
 ## Key Takeaways
 
-- Databricks DevHub brings coding agents such as Cursor, Claude Code, and Codex directly against your governed lakehouse, so generated code starts from real schemas and real permissions.
+- Databricks DevHub gives coding agents such as Cursor, Claude Code, and Codex Databricks-specific docs, templates, and skills, and with an authenticated Databricks CLI or Databricks MCP servers they work against real schemas under your Unity Catalog permissions.
 - Databricks Apps hosts internal data and AI apps inside the platform, which removes the export-to-a-separate-host step where most governance reviews stall.
 - Lakebase adds serverless Postgres for app state, chat history, and low-latency reads, with pgvector support and sync from lakehouse tables.
 - Unity Catalog governs data, model, and tool access with lineage, and AppKit gives TypeScript apps typed SDK access with caching, retries, and observability built in.

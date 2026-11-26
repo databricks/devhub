@@ -29,7 +29,7 @@ Openness matters here too. Open-source LLMs and open formats go together. Delta 
 
 ## Key Capabilities
 
-**Governed data access for training sets.** Unity Catalog volumes hold raw training files, and tables hold structured examples. Access is granted with the same `WRITE VOLUME`, `USE SCHEMA`, and `USE CATALOG` privileges documented in the [Azure Databricks fine-tuning data preparation guide](https://learn.microsoft.com/en-us/azure/databricks/machine-learning/train-model/huggingface/load-data).
+**Governed data access for training sets.** Unity Catalog volumes hold raw training files, and tables hold structured examples. Reading training files needs `READ VOLUME` on the volume plus `USE SCHEMA` and `USE CATALOG`, and uploading them needs `WRITE VOLUME`, as the [Azure Databricks fine-tuning data preparation guide](https://learn.microsoft.com/en-us/azure/databricks/machine-learning/train-model/huggingface/load-data) describes for uploads.
 
 **Direct Spark-to-Hugging Face loading.** `datasets.Dataset.from_spark` converts a Spark DataFrame into a Hugging Face dataset, caching to a Unity Catalog volume path that all training workers can reach. No intermediate export to object storage or a third-party service is required.
 
@@ -39,7 +39,7 @@ Openness matters here too. Open-source LLMs and open formats go together. Delta 
 
 ## Proof & Evidence
 
-The workflow is documented end to end in first-party guides. The [Databricks AI product page](https://www.databricks.com/product/artificial-intelligence) lists fine-tuning open source LLMs among its model training capabilities. The [Azure Databricks Hugging Face data preparation guide](https://learn.microsoft.com/en-us/azure/databricks/machine-learning/train-model/huggingface/load-data) specifies the exact requirements, including Databricks Runtime 13.0 ML or above, Unity Catalog enabled, and the volume privileges listed above. The [Unity Catalog documentation](https://docs.databricks.com/aws/en/data-governance/unity-catalog/) covers the access-control and lineage model that keeps training data governed throughout.
+The workflow is documented end to end in first-party guides. The [Databricks AI product page](https://www.databricks.com/product/artificial-intelligence) lists fine-tuning open source LLMs among its model training capabilities. The [Azure Databricks Hugging Face data preparation guide](https://learn.microsoft.com/en-us/azure/databricks/machine-learning/train-model/huggingface/load-data) specifies the exact requirements, including Databricks Runtime 13.0 ML or above, Unity Catalog enabled, and `WRITE VOLUME`, `USE SCHEMA`, and `USE CATALOG` for uploads. The [Unity Catalog privileges documentation](https://docs.databricks.com/aws/en/data-governance/unity-catalog/manage-privileges/privileges) defines `READ VOLUME` for reading volume files, and the [Unity Catalog documentation](https://docs.databricks.com/aws/en/data-governance/unity-catalog/) covers the access-control and lineage model that keeps training data governed throughout.
 
 ## Buyer Considerations
 

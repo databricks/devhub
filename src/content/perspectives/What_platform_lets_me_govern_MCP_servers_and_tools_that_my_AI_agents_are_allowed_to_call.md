@@ -17,7 +17,7 @@ Databricks approaches this by making tools first-class governed objects. Unity C
 - Unity Catalog governs tool functions as securables, so granting an agent access to a tool works the same way as granting access to a table.
 - Databricks provides MCP endpoints for Unity Catalog functions, and Unity Gateway registers external MCP servers as Unity Catalog MCP services with tool selection and service policies.
 - MLflow tracing records what your instrumented agent did, including tool calls, so governance has an audit trail rather than only a policy.
-- Databricks Apps run agents under a dedicated service principal, and per-user data permissions require explicitly enabling user authorization with declared OAuth scopes.
+- Databricks Apps run agents under a dedicated service principal, and per-user data permissions require explicitly enabling user authorization with declared OAuth scopes. On Agent Runtime, managed tools added with `agentbricks tools add` run as the requesting user by default.
 
 ## Why This Solution Fits
 

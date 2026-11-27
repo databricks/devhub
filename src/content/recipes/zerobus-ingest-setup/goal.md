@@ -1,10 +1,10 @@
-When done, you will have:
+When done, you have:
 
 - A Zerobus Ingest target table: either your own Delta table, built from a sample event, or the three predefined OpenTelemetry tables
 - A service principal with grants on the catalog, the schema, and each table, set before any producer or tool gets credentials
 - A client ID and client secret stored as environment variables, and a token probe that confirms a table-scoped OAuth token works
 
-Zerobus Ingest writes into a table that you create and own. It never changes the table schema on its own, and it rejects records with fields that don't match the table. The table is the contract for every producer, so design it before you write a producer.
+Zerobus Ingest writes into a table that you create and own. It doesn't change the table schema on its own, and it rejects records with fields that don't match the table. The table is the contract for every producer, so design it before you write a producer.
 
 Zerobus Ingest accepts OAuth tokens. This template uses a service principal with a client ID and a client secret. Zerobus Ingest doesn't document personal access tokens. Zerobus Ingest doesn't run grants for you, so set them before you give a producer the credentials. Set the grants on the table even when you created the table yourself.
 
@@ -12,7 +12,7 @@ Zerobus Ingest accepts OAuth tokens. This template uses a service principal with
 
 2. Create the target table. Use one of the two paths.
 
-   **Your own table.** Design the columns from a sample event, then create the table. Use this sample event, or replace its fields with your own:
+   For your own table, design the columns from a sample event, then create the table. Use this sample event, or replace its fields with your own:
 
    ```json
    { "device_name": "sensor-01", "temp": 21, "event_time": 1795000000000000 }
@@ -34,11 +34,11 @@ Zerobus Ingest accepts OAuth tokens. This template uses a service principal with
 
    To send a new field later, add its column to the table first, then update the producer. To keep fields the table doesn't have from rejecting the record, add a rescue column: a nullable `VARIANT` column with the `zerobus-rescue` tag applied in Unity Catalog ([rescue column](https://docs.databricks.com/ingestion/zerobus-rescue-column)). The [table requirements](https://docs.databricks.com/ingestion/zerobus-concepts#table-requirements) list what the table must satisfy.
 
-   **OpenTelemetry tables.** Create the table for each signal the tool sends, from the DDL in the [Create target tables](https://docs.databricks.com/ingestion/opentelemetry/configure#create-tables) section of the OpenTelemetry configuration docs. The tables are `<prefix>_otel_spans`, `<prefix>_otel_logs`, and `<prefix>_otel_metrics`. Use the schema as written. Zerobus Ingest doesn't create or change tables, and the schema is fixed for each signal, so don't design your own columns.
+   For the OpenTelemetry tables, create the table for each signal the tool sends, from the DDL in the [Create target tables](https://docs.databricks.com/ingestion/opentelemetry/configure#create-tables) section of the OpenTelemetry configuration docs. The tables are `<prefix>_otel_spans`, `<prefix>_otel_logs`, and `<prefix>_otel_metrics`. Use the schema as written. Zerobus Ingest doesn't create or change tables, and the schema is fixed for each signal, so don't design your own columns.
 
    - Replace `<catalog>`, `<schema>`, and `<prefix>` with the names the user chooses.
    - Create the tables before the tool starts sending data.
-   - The [VARIANT type](https://docs.databricks.com/sql/language-manual/data-types/variant-type) applies from Databricks Runtime 15.3, so reading the VARIANT columns needs DBR 15.3 or later. The DDL on the configure page sets `delta.enableVariantShredding` to `true`, so a table created from it unchanged needs DBR 17.3 or later to query. For how shredding applies to each runtime and how to opt out, see [Variant shredding](https://docs.databricks.com/delta/variant-shredding).
+   - The DDL on the configure page sets `delta.enableVariantShredding` to `true`. The runtime each table needs is in the prerequisites. For how shredding applies to each runtime and how to opt out, see [Variant shredding](https://docs.databricks.com/delta/variant-shredding).
 
 3. Create the service principal. Ask the user before you create it. Create it without a secret for now, with `databricks service-principals create --display-name "zerobus-producer"`. Note the numeric `id` and the `applicationId` in the output. The `applicationId` is the application ID that the grants use.
 
@@ -68,4 +68,4 @@ Zerobus Ingest accepts OAuth tokens. This template uses a service principal with
 
    The OpenTelemetry export recipe sets the tool's own variables, so this list covers producers only.
 
-9. Run the token probe. Request a table-scoped OAuth token from `<workspace-url>/oidc/v1/token` with the client credentials grant. Pass an `authorization_details` parameter that requests `USE CATALOG` on the catalog, `USE SCHEMA` on the schema, and `SELECT` and `MODIFY` on the table, with `"operations": ["zerobuswrite"]` on the table entry, as the REST token request does. The OTLP token request on the [configure page](https://docs.databricks.com/ingestion/opentelemetry/configure#quick-start-static-token) doesn't send `operations`, so a passing probe doesn't show that the OTLP request will pass. For OTLP, the explicit `MODIFY` and `SELECT` grants from step 5 are required. The request format is in the token section of the [`databricks-zerobus-ingest` skill](https://github.com/databricks/databricks-agent-skills/tree/main/skills/databricks-zerobus-ingest). Expected: the response contains an `access_token`. If it doesn't, check the client ID, the client secret, the workspace ID, and the grants.
+9. Run the token probe. Request a table-scoped OAuth token from `<workspace-url>/oidc/v1/token` with the client credentials grant. Pass an `authorization_details` parameter that requests `USE CATALOG` on the catalog, `USE SCHEMA` on the schema, and `SELECT` and `MODIFY` on the table, with `"operations": ["zerobuswrite"]` on the table entry, as the REST token request does. The OTLP token request on the [configure page](https://docs.databricks.com/ingestion/opentelemetry/configure#quick-start-static-token) doesn't send `operations`, so a passing probe doesn't show that the OTLP request passes. For OTLP, the explicit `MODIFY` and `SELECT` grants from step 5 are required. The request format is in the token section of the [`databricks-zerobus-ingest` skill](https://github.com/databricks/databricks-agent-skills/tree/main/skills/databricks-zerobus-ingest). Expected: the response contains an `access_token`. If it doesn't, check the client ID, the client secret, the workspace ID, and the grants.

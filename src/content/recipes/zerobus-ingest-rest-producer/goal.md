@@ -1,8 +1,8 @@
-When done, you will have:
+When done, you have:
 
 - A producer that sends JSON records to a Zerobus Ingest table over REST
 - A table-scoped OAuth token that the producer requests again before it expires
-- A producer that gets a new token and retries once after an HTTP 401 response
+- A producer that gets a new token and retries one time after an HTTP 401 response
 - A row count that rose by the number of records the producer sent
 
 Use REST when the producer can't load an SDK, for example in an edge runtime, or when the language has no SDK. REST accepts JSON records sent as `application/json` or `application/jsonl`.
@@ -39,7 +39,7 @@ Read the REST reference in the [`databricks-zerobus-ingest` skill](https://githu
 
 2. Send a test batch. Send a JSON array of records shaped like the table you created in the [setup recipe](/templates/zerobus-ingest-setup) in a `POST` request to `<ZEROBUS_SERVER_ENDPOINT>/zerobus/v1/tables/<catalog>.<schema>.<table>/insert`. Set `Content-Type: application/json` and `Authorization: Bearer <token>`. Send `TIMESTAMP` fields as epoch microseconds. Expected: HTTP 200 with an empty JSON object, `{}`.
 
-3. Build the long-running sender. Cache the token. Request a new token five minutes before the token expires, because tokens last about one hour. On an HTTP 401 response, request a new token and retry the request once. Send records in arrays rather than one request per record. The default limit is 10,000 REST requests per second.
+3. Build the long-running sender. Cache the token. Request a new token five minutes before the token expires, because [tokens expire every hour](https://docs.databricks.com/ingestion/zerobus-ingest). On an HTTP 401 response, request a new token and retry the request one time. Send records in arrays rather than one request per record. The [default quota](https://docs.databricks.com/ingestion/zerobus-quotas) is 10,000 REST requests per second.
 
 4. Handle rejected requests. An HTTP 400 response means the request is invalid, such as a missing required field, an invalid schema, or an unsupported record format. Fix the request and send it again. An HTTP 403 response means the caller doesn't have sufficient privileges, so check the grants in the setup recipe. An HTTP 429 response means the request rate is over the limit, so batch records and slow down. To capture fields the table doesn't have instead of rejecting the record, add a rescue column ([rescue column](https://docs.databricks.com/ingestion/zerobus-rescue-column)).
 
@@ -50,8 +50,8 @@ Read the REST reference in the [`databricks-zerobus-ingest` skill](https://githu
    FROM <catalog>.<schema>.<table>;
    ```
 
-   Expected: `row_count` rose by the number of records the producer sent, and `latest` is close to the send time. Records are durable within about 150 milliseconds and queryable within about 5 seconds, according to the [latency figures](https://docs.databricks.com/ingestion/zerobus-quotas#latency). An acknowledgment confirms durability, not that the rows are queryable.
+   Expected: `row_count` rose by the number of records the producer sent, and `latest` is close to the send time. For the expected delay, see the [latency figures](https://docs.databricks.com/ingestion/zerobus-quotas#latency). An acknowledgment confirms durability, not that the rows are queryable.
 
    If the count doesn't change, use the troubleshooting reference in the [`databricks-zerobus-ingest` skill](https://github.com/databricks/databricks-agent-skills/tree/main/skills/databricks-zerobus-ingest).
 
-Zerobus Ingest delivers at least once when the client retries records that aren't acknowledged. A retry can resend records that already landed, so the table can hold duplicate rows. When duplicates matter, deduplicate on a key in the queries that read the table.
+Zerobus Ingest provides [at-least-once delivery](https://docs.databricks.com/ingestion/zerobus-quotas) when the protocol provides a durability acknowledgment and the client retries records that aren't acknowledged. A retry can resend records that already landed, so the table can hold duplicate rows. When duplicates matter, deduplicate on a key in the queries that read the table.

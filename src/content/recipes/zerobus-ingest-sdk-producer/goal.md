@@ -1,11 +1,11 @@
-When done, you will have:
+When done, you have:
 
 - A producer that sends JSON records into a Zerobus Ingest table with the SDK, without blocking on each record
 - Acknowledgments that log the offsets Zerobus Ingest stored, and any errors
 - A producer that flushes and closes its stream when it finishes
 - A row count that rose by the number of records the producer sent
 
-Use the SDK for a service or app that can load it. Start with Python, and use the TypeScript SDK when the user needs Node.js. Rust, Go, Java, C++, and .NET aren't covered by this template yet. For those languages, use the SDK references in the [`databricks-zerobus-ingest` skill](https://github.com/databricks/databricks-agent-skills/tree/main/skills/databricks-zerobus-ingest).
+Use the SDK for a service or app that can load it. Start with Python, and use the TypeScript SDK when the user needs Node.js. Rust, Go, Java, C++, and .NET aren't covered by this template. For those languages, use the SDK references in the [`databricks-zerobus-ingest` skill](https://github.com/databricks/databricks-agent-skills/tree/main/skills/databricks-zerobus-ingest).
 
 Read the Python or TypeScript reference in that skill before you write the producer. It covers the install steps, the producer APIs, and the record formats. The SDK fetches and refreshes tokens for you.
 
@@ -24,7 +24,7 @@ Read the Python or TypeScript reference in that skill before you write the produ
      )
      ```
 
-     Send each record with `ingest_record_offset`, which queues the record and returns. Without a descriptor, the SDK sends JSON. Call `flush()` once after the last record, and call `close()` in a `finally` block.
+     Send each record with `ingest_record_offset`, which queues the record and returns. Without a descriptor, the SDK sends JSON. Call `flush()` one time after the last record, and call `close()` in a `finally` block.
 
    - TypeScript: create a `ZerobusSdk` client with the server endpoint and the workspace URL, then open the stream with `createStream(tableProperties, clientId, clientSecret, options)`. Pass `{ tableName }` as the table properties, and set `recordType` to `RecordType.Json` in the options, because the default is Protobuf. Send each record with `await ingestRecordOffset(...)`. For TypeScript, call `flush()` on an interval to log progress. Call `flush()` and then `close()` in a `finally` block.
    - Both languages: send `TIMESTAMP` fields as epoch microseconds.
@@ -40,10 +40,10 @@ Read the Python or TypeScript reference in that skill before you write the produ
    FROM <catalog>.<schema>.<table>;
    ```
 
-   Expected: `row_count` rose by the number of records the producer sent, and `latest` is close to the send time. Records are durable within about 150 milliseconds and queryable within about 5 seconds, according to the [latency figures](https://docs.databricks.com/ingestion/zerobus-quotas#latency). An acknowledgment confirms durability, not that the rows are queryable.
+   Expected: `row_count` rose by the number of records the producer sent, and `latest` is close to the send time. Time to durability is about 150 milliseconds, and time to table is about 5 seconds, according to the [latency figures](https://docs.databricks.com/ingestion/zerobus-quotas#latency). An acknowledgment confirms durability, not that the rows are queryable.
 
    If the count doesn't change, use the troubleshooting reference in the [`databricks-zerobus-ingest` skill](https://github.com/databricks/databricks-agent-skills/tree/main/skills/databricks-zerobus-ingest).
 
-Zerobus Ingest delivers at least once when the client retries records that aren't acknowledged. A retry can resend records that already landed, so the table can hold duplicate rows. When duplicates matter, deduplicate on a key in the queries that read the table.
+Zerobus Ingest provides [at-least-once delivery](https://docs.databricks.com/ingestion/zerobus-quotas) when the protocol provides a durability acknowledgment and the client retries records that aren't acknowledged. A retry can resend records that already landed, so the table can hold duplicate rows. When duplicates matter, deduplicate on a key in the queries that read the table.
 
 For a complete project, see [zerobus-ingest-examples](https://github.com/databricks-solutions/zerobus-ingest-examples).

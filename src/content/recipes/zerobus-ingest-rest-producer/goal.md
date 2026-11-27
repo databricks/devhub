@@ -5,7 +5,7 @@ When done, you will have:
 - A producer that gets a new token and retries once after an HTTP 401 response
 - A row count that rose by the number of records the producer sent
 
-Use REST when the producer can't load an SDK, for example in an edge runtime, or when the language has no SDK. REST accepts JSON only.
+Use REST when the producer can't load an SDK, for example in an edge runtime, or when the language has no SDK. REST accepts JSON records sent as `application/json` or `application/jsonl`.
 
 Read the REST reference in the [`databricks-zerobus-ingest` skill](https://github.com/databricks/databricks-agent-skills/tree/main/skills/databricks-zerobus-ingest) before you write the producer. It has the token request and a sender example.
 
@@ -37,11 +37,11 @@ Read the REST reference in the [`databricks-zerobus-ingest` skill](https://githu
 
    The table entry must set `"operations": ["zerobuswrite"]`. The [REST example in the Zerobus Ingest docs](https://docs.databricks.com/ingestion/zerobus-ingest#write) shows the full request. Expected: the response contains an `access_token`.
 
-2. Send a test batch. Send a JSON array of records shaped like the table you created in the [setup recipe](/templates/zerobus-ingest-setup) in a `POST` request to `<ZEROBUS_SERVER_ENDPOINT>/zerobus/v1/tables/<catalog>.<schema>.<table>/insert`. Set `Content-Type: application/json` and `Authorization: Bearer <token>`. Send `TIMESTAMP` fields as epoch microseconds, as numbers. Expected: HTTP 200 with an empty JSON object, `{}`.
+2. Send a test batch. Send a JSON array of records shaped like the table you created in the [setup recipe](/templates/zerobus-ingest-setup) in a `POST` request to `<ZEROBUS_SERVER_ENDPOINT>/zerobus/v1/tables/<catalog>.<schema>.<table>/insert`. Set `Content-Type: application/json` and `Authorization: Bearer <token>`. Send `TIMESTAMP` fields as epoch microseconds. Expected: HTTP 200 with an empty JSON object, `{}`.
 
-3. Build the long-running sender. Cache the token. Request a new token five minutes before the current one expires, because tokens last about one hour. On an HTTP 401 response, request a new token and retry the request once. Send records in arrays rather than one request per record. The default limit is 10,000 REST requests per second.
+3. Build the long-running sender. Cache the token. Request a new token five minutes before the token expires, because tokens last about one hour. On an HTTP 401 response, request a new token and retry the request once. Send records in arrays rather than one request per record. The default limit is 10,000 REST requests per second.
 
-4. Handle rejected requests. An HTTP 400 response means a record or value doesn't fit the table, so fix the record or the table before you send it again. An HTTP 429 response means the request rate is over the limit, so batch records and slow down. Error 4024 means a grant is missing on the table itself, so run the grants step in the setup recipe again.
+4. Handle rejected requests. An HTTP 400 response means the request is invalid, such as a missing required field, an invalid schema, or an unsupported record format. Fix the request and send it again. An HTTP 403 response means the caller doesn't have sufficient privileges, so check the grants in the setup recipe. An HTTP 429 response means the request rate is over the limit, so batch records and slow down. To capture fields the table doesn't have instead of rejecting the record, add a rescue column ([rescue column](https://docs.databricks.com/ingestion/zerobus-rescue-column)).
 
 5. Check the rows. Wait about 5 seconds after the producer's last send. Then run this query, with the table and timestamp column from the setup recipe:
 
@@ -54,4 +54,4 @@ Read the REST reference in the [`databricks-zerobus-ingest` skill](https://githu
 
    If the count doesn't change, use the troubleshooting reference in the [`databricks-zerobus-ingest` skill](https://github.com/databricks/databricks-agent-skills/tree/main/skills/databricks-zerobus-ingest).
 
-Zerobus Ingest delivers at least once. A retry can resend records that already landed, so the table can hold duplicate rows. When duplicates matter, deduplicate on a key in the queries that read the table.
+Zerobus Ingest delivers at least once when the client retries records that aren't acknowledged. A retry can resend records that already landed, so the table can hold duplicate rows. When duplicates matter, deduplicate on a key in the queries that read the table.

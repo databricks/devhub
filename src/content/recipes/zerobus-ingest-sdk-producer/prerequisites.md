@@ -1,5 +1,3 @@
-- **Python 3.9 to 3.14, or Node.js 16 or later.** Install the version for the language you choose, with `pip` for Python or `npm` for TypeScript.
-- **A platform with a prebuilt SDK binary.** Python wheels cover Linux with glibc 2.34 or later, macOS, and Windows on x86_64. TypeScript prebuilds cover Linux with glibc, macOS, and Windows on x64. On other platforms, build the SDK from source, as the build-from-source reference in the [`databricks-zerobus-ingest` skill](https://github.com/databricks/databricks-agent-skills/tree/main/skills/databricks-zerobus-ingest) describes.
-- **CA certificates in a slim container image.** If you run the TypeScript producer in a slim Node image, such as `node:22-slim`, install `ca-certificates` first. Without it, the TypeScript SDK fails with a TLS connection error.
+- **Python 3.9 or higher, or Node.js 16 or higher.** Install the version for the language you choose, with `pip` for Python or `npm` for TypeScript.
 - **A service principal and a table.** Complete [Set Up Zerobus Ingest](/templates/zerobus-ingest-setup) first. It covers the table, the grants, and the environment variables this producer reads.
 - **SQL access.** A SQL warehouse or the SQL editor, for the row check query.

@@ -26,12 +26,12 @@ Read the Python or TypeScript reference in that skill before you write the produ
 
      Send each record with `ingest_record_offset`, which queues the record and returns. Without a descriptor, the SDK sends JSON. Call `flush()` once after the last record, and call `close()` in a `finally` block.
 
-   - TypeScript: create a `ZerobusSdk` client with the server endpoint and the workspace URL, then open the stream with `createStream(tableProperties, clientId, clientSecret, options)`. Pass `{ tableName }` as the table properties, and set `recordType` to `RecordType.Json` in the options, because the default is Protobuf. Send each record with `await ingestRecordOffset(...)`. The TypeScript SDK has no acknowledgment callback, so call `flush()` on an interval to log progress. Call `flush()` and then `close()` in a `finally` block.
-   - Both languages: send `TIMESTAMP` fields as epoch microseconds, as numbers.
+   - TypeScript: create a `ZerobusSdk` client with the server endpoint and the workspace URL, then open the stream with `createStream(tableProperties, clientId, clientSecret, options)`. Pass `{ tableName }` as the table properties, and set `recordType` to `RecordType.Json` in the options, because the default is Protobuf. Send each record with `await ingestRecordOffset(...)`. For TypeScript, call `flush()` on an interval to log progress. Call `flush()` and then `close()` in a `finally` block.
+   - Both languages: send `TIMESTAMP` fields as epoch microseconds.
 
 3. Send a test batch of 10 to 100 records. Expected: the producer exits without an error, and the log shows the acknowledged offsets.
 
-4. Handle errors. The SDK retries transient errors and recovers the stream itself. Handle the errors it raises, such as invalid credentials, missing grants, or a missing table. Don't write your own retry loop around the ingest calls.
+4. Handle errors. The SDK retries transient errors and recovers the stream itself. Handle the errors it raises, such as invalid credentials, missing grants, or a missing table. Don't write your own retry loop around the ingest calls. To capture fields the table doesn't have instead of rejecting the record, add a rescue column ([rescue column](https://docs.databricks.com/ingestion/zerobus-rescue-column)).
 
 5. Check the rows. Wait about 5 seconds after the producer's last send. Then run this query, with the table and timestamp column from the setup recipe:
 
@@ -44,6 +44,6 @@ Read the Python or TypeScript reference in that skill before you write the produ
 
    If the count doesn't change, use the troubleshooting reference in the [`databricks-zerobus-ingest` skill](https://github.com/databricks/databricks-agent-skills/tree/main/skills/databricks-zerobus-ingest).
 
-Zerobus Ingest delivers at least once. A retry can resend records that already landed, so the table can hold duplicate rows. When duplicates matter, deduplicate on a key in the queries that read the table.
+Zerobus Ingest delivers at least once when the client retries records that aren't acknowledged. A retry can resend records that already landed, so the table can hold duplicate rows. When duplicates matter, deduplicate on a key in the queries that read the table.
 
 For a complete project, see [zerobus-ingest-examples](https://github.com/databricks-solutions/zerobus-ingest-examples).

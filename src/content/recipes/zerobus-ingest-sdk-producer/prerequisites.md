@@ -1,0 +1,3 @@
+- **Python 3.9 or higher, or Node.js 16 or higher.** Install the version for the language you choose, with `pip` for Python or `npm` for TypeScript.
+- **A service principal and a table.** Complete [Set Up Zerobus Ingest](/templates/zerobus-ingest-setup) first. It covers the table, the grants, and the environment variables this producer reads.
+- **SQL access.** A SQL warehouse or the SQL editor, for the row check query.

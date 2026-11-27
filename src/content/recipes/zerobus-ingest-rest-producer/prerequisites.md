@@ -1,0 +1,3 @@
+- **An HTTP client.** Use `curl` for the first test, or your language's HTTP library for the producer.
+- **A service principal and a table.** Complete [Set Up Zerobus Ingest](/templates/zerobus-ingest-setup) first. It covers the table, the grants, and the credentials this producer uses.
+- **SQL access.** A SQL warehouse or the SQL editor, for the row check query.

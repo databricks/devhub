@@ -41,6 +41,7 @@ Each one combines the wiring on the pages above into a working pattern.
 | --------------------------------------------------------------------- | ------------------------------------------------------------------- |
 | Replicate a UC table into Lakebase for low-latency reads              | [Sync Tables (Autoscaling)](/templates/sync-tables-autoscaling)     |
 | Stand up the full UC + Lakebase Change Data Feed + medallion pipeline | [Operational Data Analytics](/templates/operational-data-analytics) |
+| Land app or service records in a Zerobus Ingest table                 | [Zerobus Ingest](/templates/zerobus-ingest-getting-started)         |
 
 ## Where to next
 
